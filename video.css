@@ -1,23 +1,28 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
 .main-content p:has(video) {
-    display: flex;          /* Включаем флекс, чтобы gap работал */
-    flex-wrap: wrap;        /* Разрешаем перенос на новые строки */
-    gap: 15px;              /* УНИФИКАЦИЯ: такой же зазор между видео, как у фото */
     margin: 1em 0 !important;
-    line-height: normal;
+    line-height: 0; /* Убирает лишние зазоры между строками инлайн-элементов */
 }
 
 .main-content video {
-    display: block;         /* Внутри флекса лучше использовать block */
+    display: inline-block !important;
+    vertical-align: top;
     height: 250px !important;
     width: auto !important;
     
-    /* Чтобы два видео + gap 15px точно влезли в одну строку на ПК */
-    max-width: calc(50% - 8px) !important; 
+    /* Чтобы два видео влезли в ряд с учетом зазора */
+    max-width: calc(50% - 10px) !important; 
+    
+    margin-right: 12px;   /* Зазор справа */
+    margin-bottom: 12px;  /* Зазор СНИЗУ (как у фото), чтобы ряды не слипались */
     
     border-radius: 8px;
     background: #000;
     object-fit: contain;
-    flex-shrink: 0;         /* Чтобы видео не сжималось */
+}
+
+/* Убираем правый отступ у крайнего видео в строке, чтобы не ломать край */
+.main-content video:last-child {
+    margin-right: 0;
 }

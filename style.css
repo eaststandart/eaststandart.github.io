@@ -314,8 +314,7 @@ p:has(img) + blockquote {
         flex: 0 0 auto !important;
     }
     .main-content p:has(video) {
-        display: flex !important;
-        flex-direction: row !important;
+
         gap: 15px !important;
     }
 

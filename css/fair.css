@@ -27,6 +27,7 @@
     object-fit: cover;
     border-radius: 50% !important;
     flex-shrink: 0;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
 }
 
 .fair-list h3 {

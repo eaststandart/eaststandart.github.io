@@ -239,111 +239,22 @@ p:has(img) + blockquote {
     font-size: 1.2rem; /* Смайлик чуть крупнее текста */
 }
 
-/* 5. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 900px) {
-    h1 { font-size: 1.5rem; margin: 5px 0 10px 0 !important; }
-    header { margin: 10px 0 20px 0; }
-
-    .content-wrapper { 
-        width: 100% !important; 
-        max-width: 100% !important;
-        padding: 15px 12px !important; /* УНИФИКАЦИЯ ОТСТУПОВ: 12px */
-        border-radius: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Вертикальный режим (Portrait) */
-    @media (orientation: portrait) {
-        .main-content p:has(img) {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 1.2em !important; 
-        }
-
-        .main-content p img:not(.content-img) {
-            height: auto !important;    
-            width: 100% !important;
-            margin: 0 !important;
-        }
-        
-        .main-content p img:not(.content-img):active {
-            transform: scale(1.2);
-        }
-    }
+/* Видео в ряд на ПК — по логике фото */
+.main-content video {
+    display: inline-block !important;
+    vertical-align: top;
+    height: 250px !important;
+    width: auto !important;
+    margin-right: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background: #000;
 }
 
-    /* Видео в столбик (Portrait) — отдельно для отладки */
-    @media (orientation: portrait) {
-        .main-content p:has(video) {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 1.2em !important; 
-        }
-
-        .main-content p video {
-            height: auto !important;    
-            width: 100% !important;
-            margin: 0 !important;
-        }
-
-    /* Видео в столбик на мобильном */
-    .main-content video {
-        display: block !important;    /* Каждое с новой строки */
-        width: 100% !important;       /* На всю ширину */
-        height: auto !important;      /* Пропорционально */
-        margin: 0 0 1.2em 0 !important;
-    }
-
-        
-    }
-
-/* Специально для горизонтального режима (Landscape) */
-@media (max-height: 500px) and (orientation: landscape) {
-    /* Твои старые стили для картинок в статьях */
-    .main-content p img:not(.content-img) {
-        height: 180px !important;
-        width: auto !important;
-        flex: 0 0 auto !important;
-    }
-    .main-content p:has(img) {
-        gap: 15px !important;
-    }
-
-    /* Видео в ряд (Landscape) — отдельно для отладки */
-    .main-content p video {
-        height: 180px !important;
-        width: auto !important;
-        flex: 0 0 auto !important;
-    }
-    .main-content p:has(video) {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 15px !important;
-    }
-
-        /* Видео в ряд в горизонтальном режиме */
-    .main-content video {
-        display: inline-block !important;
-        height: 180px !important;    /* Как у фото в горизонте */
-        width: auto !important;
-        margin-right: 12px !important;
-        margin-bottom: 0 !important;
-    }
-    
-    /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */
-    .grid-container,
-    .diary-list, 
-    .fair-list, 
-    .project-grid {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Две колонки */
-        gap: 10px !important;
-    }
-
-    /* УНИФИКАЦИЯ ИКОНОК: устанавливаем 40px для всех разделов */
-    .fair-img-round, 
-    .item-image-round {
-        width: 40px !important;
-        height: 40px !important;
-    }
+/* Контейнер для видео */
+.main-content p:has(video) {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 15px;
 }
+

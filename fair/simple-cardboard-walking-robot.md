@@ -17,6 +17,8 @@ parent_url: "/fair/"
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
 
+![](/projects/1.webm)
+
 #### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot/simple-cardboard-walking-robot.pdf)
 2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot/simple-cardboard-walking-robot.dxf)

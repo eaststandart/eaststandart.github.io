@@ -3,19 +3,26 @@
 .main-content p:has(video) {
     display: block;
     margin: 1em 0 !important;
+    /* Отрицательный отступ снизу компенсирует зазоры последнего ряда */
+    margin-bottom: calc(1em - 15px) !important; 
 }
 
 .main-content video {
-    height: 250px !important;    /* Фиксированная высота как у фото */
-    width: auto !important;      /* Ширина пропорциональна */
-    max-width: 100%;             /* Не дает выходить за границы */
+    height: 250px !important;    /* Как у фото */
+    width: auto !important;
+    max-width: 100%;
     
-    display: inline-block;       /* Чтобы стояли в ряд */
+    display: inline-block !important;
     vertical-align: top;
     
-    margin-right: 15px;          /* Зазор сбоку (как у фото) */
-    margin-bottom: 15px;         /* Зазор между рядами (как у фото) */
+    margin-right: 15px;          /* Зазор сбоку */
+    margin-bottom: 15px;         /* Зазор между рядами */
     
     border-radius: 8px;
     background: #000;
+}
+
+/* Удаляем правый отступ у видео, если оно одно или последнее в Markdown */
+.main-content video:last-child {
+    margin-right: 0;
 }

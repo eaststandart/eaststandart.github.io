@@ -144,12 +144,11 @@ p:has(img) + blockquote {
     cursor: zoom-out;
 }
 
-
 /* Видео на ПК */
 .main-content video {
     display: inline-block !important; /* В ряд */
-    height: 250px         /* Высота как у фото */
-    width: auto !important;
+    height: 250px  !important;        /* Высота как у фото */
+    width: auto 
     max-width: 100%;
     vertical-align: top;
     margin: 0 10px 15px 0;           /* Зазоры */

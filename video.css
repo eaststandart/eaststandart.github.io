@@ -1,28 +1,45 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-/* 1. ПРИНУДИТЕЛЬНЫЙ РЯД ДЛЯ ВСЕХ ВИДЕО */
+/* 1. КОНТЕЙНЕР (Jekyll оборачивает видео в тег P) */
+.main-content p:has(video) {
+    display: flex !important;
+    flex-direction: row !important; /* Принудительно в ряд */
+    flex-wrap: wrap;               /* Позволяет перенос, если видео много */
+    gap: 15px;                      /* Зазор между видео */
+    margin: 1.2em 0 !important;     /* Отступ от текста */
+    align-items: flex-start;
+}
+
+/* 2. ВИДЕО (Параметры из теста) */
 .main-content video {
-    display: inline-block !important; /* В ряд */
-    vertical-align: top !important;
-    height: 250px !important;        /* Высота как у фото */
-    width: auto !important;
-    max-width: 100% !important;
+    height: 250px !important;       /* Фиксированная высота как у фото */
+    width: auto !important;         /* Пропорциональная ширина */
+    flex: 0 0 auto !important;      /* Запрещаем видео растягиваться и сжиматься */
+    max-width: 100%;
     border-radius: 8px;
     background: #000;
-    margin-bottom: 15px !important;  /* Отступ вниз */
-    margin-right: 0 !important;      /* Сбрасываем правый отступ */
+    object-fit: contain;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* 2. ЗАЗОР МЕЖДУ ВИДЕО */
-/* Если одно видео идет СРАЗУ за другим — добавляем левый отступ 15px */
-.main-content video + video {
-    margin-left: 15px !important;
+/* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (Тот же стандарт, что для фото) */
+
+/* Вертикальный режим: видео в столбик на всю ширину */
+@media (max-width: 600px) and (orientation: portrait) {
+    .main-content p:has(video) {
+        flex-direction: column !important;
+    }
+    .main-content video {
+        width: 100% !important;
+        height: auto !important;    /* Свободная высота для мобилок */
+        max-width: 100% !important;
+    }
 }
 
-/* 3. КОРРЕКЦИЯ КОНТЕЙНЕРА */
-/* Чтобы видео не "прилипали" к тексту сверху */
-.main-content p:has(video) {
-    display: block !important;
-    margin: 1em 0 !important;
-    line-height: 0; /* Убирает лишние зазоры под видео */
+/* Горизонтальный режим: видео в ряд, но ниже */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content video {
+        height: 180px !important;    /* Как у фото в горизонте */
+        width: auto !important;
+    }
 }

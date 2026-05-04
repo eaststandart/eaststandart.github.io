@@ -144,15 +144,6 @@ p:has(img) + blockquote {
     cursor: zoom-out;
 }
 
-/* Видео и другие медиа */
-.main-content video, .video-item video {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-    border-radius: 8px;
-}
-
 .back-link {
     text-decoration: none;
     color: var(--card-tech);

@@ -1,30 +1,15 @@
-/* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
+/* --- ТОЛЬКО ДЛЯ ПК --- */
 
-/* 1. ПК ВЕРСИЯ (Копируем логику фото) */
 .main-content video {
-    height: 250px !important;    /* Такая же высота */
-    width: auto !important;      /* Пропорции */
-    max-width: 100%;
-    display: inline-block;
+    display: inline-block !important; /* ПРИНУДИТЕЛЬНО В РЯД */
+    height: 250px !important;         /* ФИКСИРОВАННАЯ ВЫСОТА */
+    width: auto !important;           /* ШИРИНА ПО ПРОПОРЦИЯМ */
+    
     vertical-align: top;
-    margin-right: 15px;          /* Зазор сбоку */
-    margin-bottom: 15px;         /* Зазор снизу */
+    margin-right: 15px;               /* ЗАЗОР МЕЖДУ НИМИ */
+    margin-bottom: 15px;              /* ЗАЗОР МЕЖДУ РЯДАМИ */
+    
+    max-width: 100%;
     border-radius: 8px;
     background: #000;
-}
-
-/* Убираем отступ у последнего видео, чтобы не ломать край */
-.main-content video:last-child {
-    margin-right: 0;
-}
-
-/* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (Только если нужно) */
-@media (max-width: 600px) {
-    .main-content video {
-        width: 100% !important;   /* На всю ширину */
-        height: auto !important;  /* Высота сама */
-        margin-right: 0 !important;
-        margin-bottom: 1.2em !important;
-        display: block;
-    }
 }

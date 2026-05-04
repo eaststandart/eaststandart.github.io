@@ -1,0 +1,22 @@
+/* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
+
+/* Контейнер, если Jekyll обернул видео в параграф */
+.main-content p:has(video) {
+    display: block; /* Убираем возможные флексы, работаем через inline-block */
+    margin: 1.5em 0;
+}
+
+/* Сами видео-файлы */
+.main-content video {
+    display: inline-block !important; /* Принудительно в ряд */
+    vertical-align: top;             /* Выравнивание по верхнему краю */
+    height: 250px !important;        /* Фиксированная высота как у фото */
+    width: auto !important;          /* Пропорциональная ширина */
+    max-width: 100%;                 /* Чтобы не вылетало за экран */
+    margin-right: 12px;              /* Зазор между видео */
+    margin-bottom: 15px;             /* Зазор снизу, если видео перешло на новую строку */
+    border-radius: 8px;
+    background: #000;                /* Фон для пустых зон в плеере */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+

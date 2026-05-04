@@ -9,9 +9,15 @@ parent_url: "/fair/"
 
 Шагающий робот из картона, приводимый в движение электромотором, и оснащённый самодельным редуктором с ременной передачей. 
 
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp)
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-5.webp)
+
 #### Файлы проекта
-1. 📄[Сборочный чертеж, PDF](/files/simple-cardboard-walking-robot.pdf)
-2. 📐[Сборочный чертеж, LibreCAD](/files/simple-cardboard-walking-robot.dxf)
+1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot/simple-cardboard-walking-robot.pdf)
+2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot/simple-cardboard-walking-robot.dxf)
 
 > Примечание:
 > - Принцип работы гофрированного картона [Гофрокартон (гофрированный картон)](https://www.antech.ru/wiki/stati/gofrokarton/)

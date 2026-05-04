@@ -7,7 +7,7 @@ custom_css: ["/css/fair.css"]
 Работы юных инженеров и мастеров.
 
 <div class="fair-list">
-    <a href="project-1.html" class="fair-card">
+    <a href="simple-cardboard-walking-robot.html" class="fair-card">
         <img src="/inspiration/img/through-hole-red-led-2.webp" class="fair-img-round">
         <h3>Робот двуногий шагающий из картона</h3>
     </a>

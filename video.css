@@ -1,26 +1,15 @@
-/* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
-
-.main-content p:has(video) {
-    margin: 1em 0 !important; /* Стандартный отступ как у обычного текста */
-    line-height: 0;           /* Убирает лишние микро-отступы внутри строки */
-}
+/* --- ТОЛЬКО ДЛЯ ПК --- */
 
 .main-content video {
-    display: inline-block !important;
+    display: inline-block !important; /* ПРИНУДИТЕЛЬНО В РЯД */
+    height: 250px !important;         /* ФИКСИРОВАННАЯ ВЫСОТА */
+    width: auto !important;           /* ШИРИНА ПО ПРОПОРЦИЯМ */
+    
     vertical-align: top;
-    height: 250px !important;
-    width: auto !important;
-    max-width: calc(50% - 15px) !important; 
+    margin-right: 15px;               /* ЗАЗОР МЕЖДУ НИМИ */
+    margin-bottom: 15px;              /* ЗАЗОР МЕЖДУ РЯДАМИ */
     
-    margin-right: 12px;
-    /* УБРАЛИ margin-bottom: 15px; чтобы не двоился отступ */
-    margin-bottom: 0 !important; 
-    
+    max-width: 100%;
     border-radius: 8px;
     background: #000;
-    object-fit: contain;
-}
-
-.main-content video:last-child {
-    margin-right: 0;
 }

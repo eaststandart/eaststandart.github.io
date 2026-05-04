@@ -148,10 +148,10 @@ p:has(img) + blockquote {
 .main-content video {
     display: inline-block !important; /* В ряд */
     height: 250px  !important;        /* Высота как у фото */
-    width: auto 
+    width: auto !important;
     max-width: 100%;
     vertical-align: top;
-    margin: 0 10px 15px 0;           /* Зазоры */
+    margin: 0 0px 0px 0;           /* Зазоры */
     border-radius: 8px;
     background: #000;
 }

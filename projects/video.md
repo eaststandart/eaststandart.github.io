@@ -1,14 +1,5 @@
 ---
 layout: default
-title: Пример
-tags: [видео, электроника]
-sources: "[Публичная библиотека]"
-parent_name: "Проекты"
-parent_url: "/projects/"
----
-
----
-layout: default
 title: Тест видео в ряд
 ---
 

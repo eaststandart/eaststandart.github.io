@@ -12,7 +12,7 @@ parent_url: "/projects/"
 ![](1.webm)
 ![](1.webm)
 
-
+<video src="/projects/1.webm" controls></video>
 <video src="1.webm" controls></video>
 
 <!-- БЛОК ВИДЕО (теперь 4 штуки в ряд на ПК) -->

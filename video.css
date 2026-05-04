@@ -1,28 +1,30 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-.main-content p:has(video) {
-    display: block;
-    margin: 1em 0 !important;
-    /* Отрицательный отступ снизу компенсирует зазоры последнего ряда */
-    margin-bottom: calc(1em - 15px) !important; 
-}
-
+/* 1. ПК ВЕРСИЯ (Копируем логику фото) */
 .main-content video {
-    height: 250px !important;    /* Как у фото */
-    width: auto !important;
+    height: 250px !important;    /* Такая же высота */
+    width: auto !important;      /* Пропорции */
     max-width: 100%;
-    
-    display: inline-block !important;
+    display: inline-block;
     vertical-align: top;
-    
     margin-right: 15px;          /* Зазор сбоку */
-    margin-bottom: 15px;         /* Зазор между рядами */
-    
+    margin-bottom: 15px;         /* Зазор снизу */
     border-radius: 8px;
     background: #000;
 }
 
-/* Удаляем правый отступ у видео, если оно одно или последнее в Markdown */
+/* Убираем отступ у последнего видео, чтобы не ломать край */
 .main-content video:last-child {
     margin-right: 0;
+}
+
+/* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (Только если нужно) */
+@media (max-width: 600px) {
+    .main-content video {
+        width: 100% !important;   /* На всю ширину */
+        height: auto !important;  /* Высота сама */
+        margin-right: 0 !important;
+        margin-bottom: 1.2em !important;
+        display: block;
+    }
 }

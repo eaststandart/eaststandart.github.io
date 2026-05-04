@@ -1,15 +1,45 @@
-/* --- ТОЛЬКО ДЛЯ ПК --- */
+/* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-.main-content video {
-    display: inline-block !important; /* ПРИНУДИТЕЛЬНО В РЯД */
-    height: 250px !important;         /* ФИКСИРОВАННАЯ ВЫСОТА */
-    width: auto !important;           /* ШИРИНА ПО ПРОПОРЦИЯМ */
-    
-    vertical-align: top;
-    margin-right: 15px;               /* ЗАЗОР МЕЖДУ НИМИ */
-    margin-bottom: 15px;              /* ЗАЗОР МЕЖДУ РЯДАМИ */
-    
+/* Контейнер из теста */
+.video-test-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+    align-items: flex-start;
+}
+
+/* Видео из теста */
+.video-test-row video {
+    height: 250px !important; 
+    width: auto !important;   
+    flex: 0 0 auto !important; 
     max-width: 100%;
     border-radius: 8px;
     background: #000;
+    object-fit: contain;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ (из теста) */
+@media (max-width: 600px) and (orientation: portrait) {
+    .video-test-row {
+        flex-direction: column !important;
+    }
+    .video-test-row video {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .video-test-row {
+        flex-direction: row !important;
+        gap: 10px;
+    }
+    .video-test-row video {
+        height: 180px !important;
+        width: auto !important;
+    }
 }

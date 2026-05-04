@@ -1,15 +1,26 @@
-/* --- ТОЛЬКО ДЛЯ ПК --- */
+/* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
+/* Контейнер: если видео внутри параграфа, делаем его гибким рядом */
+.main-content p:has(video) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+    margin: 1em 0 !important;
+}
+
+/* Сами видео-файлы на ПК */
 .main-content video {
-    display: inline-block !important; /* ПРИНУДИТЕЛЬНО В РЯД */
-    height: 250px !important;         /* ФИКСИРОВАННАЯ ВЫСОТА */
-    width: auto !important;           /* ШИРИНА ПО ПРОПОРЦИЯМ */
-    
-    vertical-align: top;
-    margin-right: 15px;               /* ЗАЗОР МЕЖДУ НИМИ */
-    margin-bottom: 15px;              /* ЗАЗОР МЕЖДУ РЯДАМИ */
-    
+    height: 250px !important;    /* Такая же высота, как у фото */
+    width: auto !important;      /* Пропорции сохраняются */
     max-width: 100%;
     border-radius: 8px;
     background: #000;
+    flex-shrink: 0;              /* Чтобы видео не сжималось по ширине */
+    object-fit: contain;
+}
+
+/* Убираем лишние отступы Jekyll, если они есть */
+.main-content p video {
+    margin: 0 !important;
 }

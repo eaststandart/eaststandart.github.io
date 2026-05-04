@@ -15,10 +15,13 @@ parent_url: "/fair/"
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-5.webp)
 
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
+![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
+
 #### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot/simple-cardboard-walking-robot.pdf)
 2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot/simple-cardboard-walking-robot.dxf)
 
 > Примечание:
-> - Принцип работы гофрированного картона [Гофрокартон (гофрированный картон)](https://www.antech.ru/wiki/stati/gofrokarton/)
-> - [Шагающие машины ВНИИ Трансмаш (шагающий движитель). 1980 г.](https://youtu.be/hQSO-6LvINQ)
+> Принцип работы гофрированного картона [Гофрокартон (гофрированный картон)](https://www.antech.ru/wiki/stati/gofrokarton/)
+> [Шагающие машины ВНИИ Трансмаш (шагающий движитель). 1980 г.](https://youtu.be/hQSO-6LvINQ)

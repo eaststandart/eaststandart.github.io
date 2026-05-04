@@ -4,12 +4,12 @@ title: Ярмарка поделок
 custom_css: ["/css/fair.css"]
 ---
 
-Здесь представлены лучшие работы наших юных инженеров и мастеров.
+Работы юных инженеров и мастеров.
 
 <div class="fair-list">
     <a href="project-1.html" class="fair-card">
         <img src="/inspiration/img/through-hole-red-led-2.webp" class="fair-img-round">
-        <h3>Автомобиль с полным приводом из картона</h3>
+        <h3>Робот двуногий шагающий из картона</h3>
     </a>
     
     <a href="project-2.html" class="fair-card">

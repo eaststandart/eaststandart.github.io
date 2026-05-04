@@ -8,7 +8,7 @@ custom_css: ["/css/fair.css"]
 
 <div class="fair-list">
     <a href="simple-cardboard-walking-robot.html" class="fair-card">
-        <img src="/inspiration/img/through-hole-red-led-2.webp" class="fair-img-round">
+        <img src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp" class="fair-img-round">
         <h3>Робот двуногий шагающий из картона</h3>
     </a>
     

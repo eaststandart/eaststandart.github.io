@@ -148,7 +148,7 @@ p:has(img) + blockquote {
 /* Видео на ПК */
 .main-content video {
     display: inline-block !important; /* В ряд */
-    height: 250px !important;         /* Высота как у фото */
+    height: 250px         /* Высота как у фото */
     width: auto !important;
     max-width: 100%;
     vertical-align: top;

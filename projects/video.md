@@ -7,7 +7,6 @@ title: Тест видео в ряд
 
 <video src="1.webm" controls></video>
 <video src="1.webm" controls></video>
-
-Текст под видео+
+Текст под видео!
 
 

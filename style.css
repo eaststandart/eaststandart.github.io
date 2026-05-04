@@ -113,24 +113,23 @@ p:has(img) + blockquote {
     padding: 10px 20px 20px 20px;
 }
 
-/* ВИДЕО В РЯД (Унификация с фото) */
+/* Видео в ряд на ПК — отдельно для отладки */
 .main-content p:has(video) {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap; /* Позволяем перенос, если видео реально много */
+    flex-wrap: wrap;
     gap: 15px;
     margin: 1em 0 !important;
     align-items: flex-start;
 }
 
 .main-content video {
-    height: 250px !important; /* Фиксированная высота как у фото */
+    height: 250px !important;
     width: auto !important;
-    flex: 0 0 auto !important; /* Не дает видео раздуваться */
+    flex: 0 0 auto !important;
     max-width: 100%;
     border-radius: 8px;
     background: #000;
-    object-fit: contain;
 }
 
 /* --- ЕДИНЫЙ БЛОК КАРТИНОК В СТАТЬЯХ (MARKDOWN) --- */
@@ -245,27 +244,22 @@ p:has(img) + blockquote {
     .content-wrapper { 
         width: 100% !important; 
         max-width: 100% !important;
-        padding: 15px 12px !important; 
+        padding: 15px 12px !important; /* УНИФИКАЦИЯ ОТСТУПОВ: 12px */
         border-radius: 0 !important;
         margin: 0 !important;
     }
 
     /* Вертикальный режим (Portrait) */
     @media (orientation: portrait) {
-        /* Контейнеры для фото и видео в столбик */
-        .main-content p:has(img),
-        .main-content p:has(video) {
+        .main-content p:has(img) {
             display: flex !important;
             flex-direction: column !important;
             gap: 1.2em !important; 
         }
 
-        /* Фото и Видео на всю ширину */
-        .main-content p img:not(.content-img),
-        .main-content p video {
+        .main-content p img:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
-            max-width: 100% !important;
             margin: 0 !important;
         }
         
@@ -275,34 +269,56 @@ p:has(img) + blockquote {
     }
 }
 
+    /* Видео в столбик (Portrait) — отдельно для отладки */
+    @media (orientation: portrait) {
+        .main-content p:has(video) {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.2em !important; 
+        }
+
+        .main-content p video {
+            height: auto !important;    
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+
 /* Специально для горизонтального режима (Landscape) */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Фото и Видео в один ряд высотой 180px */
-    .main-content p img:not(.content-img),
+    /* Твои старые стили для картинок в статьях */
+    .main-content p img:not(.content-img) {
+        height: 180px !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+    .main-content p:has(img) {
+        gap: 15px !important;
+    }
+
+    /* Видео в ряд (Landscape) — отдельно для отладки */
     .main-content p video {
         height: 180px !important;
         width: auto !important;
         flex: 0 0 auto !important;
     }
-    
-    .main-content p:has(img),
     .main-content p:has(video) {
         display: flex !important;
         flex-direction: row !important;
         gap: 15px !important;
     }
-
-    /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК */
+    
+    /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */
     .grid-container,
     .diary-list, 
     .fair-list, 
     .project-grid {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; 
+        grid-template-columns: 1fr 1fr !important; /* Две колонки */
         gap: 10px !important;
     }
 
-    /* УНИФИКАЦИЯ ИКОНОК */
+    /* УНИФИКАЦИЯ ИКОНОК: устанавливаем 40px для всех разделов */
     .fair-img-round, 
     .item-image-round {
         width: 40px !important;

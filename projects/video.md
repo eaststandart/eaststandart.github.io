@@ -7,6 +7,12 @@ parent_name: "Проекты"
 parent_url: "/projects/"
 ---
 
+![](1.webm)
+![](1.webm)
+![](1.webm)
+![](1.webm)
+
+
 <!-- БЛОК ФОТО -->
 <div class="media-row">
     <img src="/biblio/img/borisov-v-g-enciklopediya-yunogo-radiolyubitelya-konstruktora-2001.webp" class="book-page-cover">

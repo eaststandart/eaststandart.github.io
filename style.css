@@ -146,12 +146,12 @@ p:has(img) + blockquote {
 
 /* Видео на ПК */
 .main-content video {
-    display: flex; /* В ряд */
-    height: 250px  !important;        /* Высота как у фото */
+    display: inline-block !important; /* В ряд */
+    height: 180px  !important;        /* Высота как у фото */
     width: auto !important;
     max-width: 100%;
     vertical-align: top;
-    margin: 0 0px 0px 0;           /* Зазоры */
+    margin: 0 10px 10px 0;           /* Зазоры */
     border-radius: 8px;
     background: #000;
 }

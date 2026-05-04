@@ -21,7 +21,7 @@ parent_url: "/fair/"
 1\. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot/simple-cardboard-walking-robot.pdf)
 2\. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot/simple-cardboard-walking-robot.dxf)
 
-> Примечание:
+> **Примечание:**
 > 
 > Принцип работы гофрированного картона [Гофрокартон (гофрированный картон)](https://www.antech.ru/wiki/stati/gofrokarton/)
 > 

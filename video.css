@@ -1,28 +1,21 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
 .main-content p:has(video) {
+    display: block;
     margin: 1em 0 !important;
-    line-height: 0; /* Убирает лишние зазоры между строками инлайн-элементов */
 }
 
 .main-content video {
-    display: inline-block !important;
+    height: 250px !important;    /* Фиксированная высота как у фото */
+    width: auto !important;      /* Ширина пропорциональна */
+    max-width: 100%;             /* Не дает выходить за границы */
+    
+    display: inline-block;       /* Чтобы стояли в ряд */
     vertical-align: top;
-    height: 250px !important;
-    width: auto !important;
     
-    /* Чтобы два видео влезли в ряд с учетом зазора */
-    max-width: calc(50% - 10px) !important; 
-    
-    margin-right: 12px;   /* Зазор справа */
-    margin-bottom: 12px;  /* Зазор СНИЗУ (как у фото), чтобы ряды не слипались */
+    margin-right: 15px;          /* Зазор сбоку (как у фото) */
+    margin-bottom: 15px;         /* Зазор между рядами (как у фото) */
     
     border-radius: 8px;
     background: #000;
-    object-fit: contain;
-}
-
-/* Убираем правый отступ у крайнего видео в строке, чтобы не ломать край */
-.main-content video:last-child {
-    margin-right: 0;
 }

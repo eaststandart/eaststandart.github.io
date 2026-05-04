@@ -7,7 +7,7 @@ parent_name: "Поделки"
 parent_url: "/fair/"
 ---
 
-Шагающий робот из картона, приводимый в движение электромотором, и оснащённый самодельным редуктором с ременной передачей. 
+Шагающий робот из картона, приводимый в движение электромотором, и оснащённый самодельным редуктором с ременной передачей.
 
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)

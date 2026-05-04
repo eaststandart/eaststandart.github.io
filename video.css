@@ -1,27 +1,28 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
+/* 1. ПРИНУДИТЕЛЬНЫЙ РЯД ДЛЯ ВСЕХ ВИДЕО */
 .main-content video {
-    /* Принудительно ставим в ряд */
-    display: inline-block !important; 
-    vertical-align: top;
-    
-    /* Размеры как у фото */
-    height: 250px !important;
+    display: inline-block !important; /* В ряд */
+    vertical-align: top !important;
+    height: 250px !important;        /* Высота как у фото */
     width: auto !important;
-    max-width: 100%;
-    
-    /* Отступы как у фото */
-    margin-right: 15px !important;
-    margin-bottom: 15px !important;
-    
+    max-width: 100% !important;
     border-radius: 8px;
     background: #000;
+    margin-bottom: 15px !important;  /* Отступ вниз */
+    margin-right: 0 !important;      /* Сбрасываем правый отступ */
 }
 
-/* Чтобы видео не вылезало за края контейнера */
-.main-content {
-    word-spacing: -1em; /* Убирает лишние микро-зазоры между видео */
+/* 2. ЗАЗОР МЕЖДУ ВИДЕО */
+/* Если одно видео идет СРАЗУ за другим — добавляем левый отступ 15px */
+.main-content video + video {
+    margin-left: 15px !important;
 }
-.main-content video {
-    word-spacing: normal;
+
+/* 3. КОРРЕКЦИЯ КОНТЕЙНЕРА */
+/* Чтобы видео не "прилипали" к тексту сверху */
+.main-content p:has(video) {
+    display: block !important;
+    margin: 1em 0 !important;
+    line-height: 0; /* Убирает лишние зазоры под видео */
 }

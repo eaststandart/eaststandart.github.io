@@ -123,11 +123,14 @@ p:has(img) + blockquote {
     align-items: flex-start;
 }
 
+/* Видео в ряд на ПК */
 .main-content video {
-    height: 250px !important;
+    display: inline-block !important; /* Позволяет стоять в ряд */
+    vertical-align: top;
+    height: 250px !important;      /* Высота как у фото */
     width: auto !important;
-    flex: 0 0 auto !important;
-    max-width: 100%;
+    margin-right: 12px;           /* Зазор между видео */
+    margin-bottom: 15px;          /* Зазор снизу */
     border-radius: 8px;
     background: #000;
 }
@@ -282,6 +285,16 @@ p:has(img) + blockquote {
             width: 100% !important;
             margin: 0 !important;
         }
+
+    /* Видео в столбик на мобильном */
+    .main-content video {
+        display: block !important;    /* Каждое с новой строки */
+        width: 100% !important;       /* На всю ширину */
+        height: auto !important;      /* Пропорционально */
+        margin: 0 0 1.2em 0 !important;
+    }
+
+        
     }
 
 /* Специально для горизонтального режима (Landscape) */
@@ -306,6 +319,15 @@ p:has(img) + blockquote {
         display: flex !important;
         flex-direction: row !important;
         gap: 15px !important;
+    }
+
+        /* Видео в ряд в горизонтальном режиме */
+    .main-content video {
+        display: inline-block !important;
+        height: 180px !important;    /* Как у фото в горизонте */
+        width: auto !important;
+        margin-right: 12px !important;
+        margin-bottom: 0 !important;
     }
     
     /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */

@@ -15,8 +15,9 @@ parent_url: "/projects/"
 <video src="/projects/1.webm" controls></video>
 <video src="1.webm" controls></video>
 <video controls><source src="1.webm" type="video/webm"></video>
+<video controls><source src="/projects/1.webm" type="video/webm"></video>
 
-<!-- БЛОК ВИДЕО (теперь 4 штуки в ряд на ПК) -->
+БЛОК ВИДЕО (теперь 4 штуки в ряд на ПК
 <div class="media-row">
     <div class="video-item">
         <video controls><source src="/projects/1.webm" type="video/webm"></video>

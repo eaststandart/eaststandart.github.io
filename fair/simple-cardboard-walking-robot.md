@@ -3,7 +3,7 @@ layout: default
 title: Робот двуногий шагающий из картона
 icon: "/img/icons/simple-cardboard-walking-robot.webp"
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
-sources: "[Walking Robot – Templates pdf – Blackfish](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
+sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
 parent_name: "Поделки"
 parent_url: "/fair/"
 ---

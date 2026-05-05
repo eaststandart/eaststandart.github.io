@@ -4,7 +4,7 @@ title: Ярмарка поделок
 custom_css: ["/css/fair.css"]
 ---
 
-Работы юных инженеров и мастеров.
+Проекты для юных инженеров.
 
 <div class="fair-list">
   {% for project in site.fair %}

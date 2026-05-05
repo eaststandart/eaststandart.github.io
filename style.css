@@ -63,11 +63,16 @@ h1 {
 
 /* Прижимаем любой контент под H3 (8px для воздуха) */
 .main-content h3 + p,
-.main-content h3 + ul,
-.main-content h3 + ol,
 .main-content h3 + .video-test-row {
     margin-top: 8px !important; 
 }
+
+/* Прижимаем список под H3 */
+.main-content h3 + ul,
+.main-content h3 + ol {
+    margin-top: 10px !important; 
+}
+
 
 /* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
 .video-test-row + h3,

@@ -1,4 +1,13 @@
 collections:
   fair:
     output: true
+    # :name возьмет имя файла (robot), получится /fair/robot/
     permalink: /fair/:name/
+
+# Чтобы картинки из _fair были доступны по адресу /fair/...
+# мы явно говорим Jekyll копировать их в корень будущего сайта
+defaults:
+  - scope:
+      path: "_fair"
+    values:
+      permalink: /fair/:path

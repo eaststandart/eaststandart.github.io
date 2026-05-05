@@ -1,46 +1,44 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-/* Используем двойной селектор для максимальной силы */
-.main-content .video-test-row {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    gap: 15px !important;
-    margin: 20px 0 !important;
-    align-items: flex-start !important;
+.video-test-row {
+    display: block !important;
     width: 100% !important;
+    margin: 10px 0 0 0 !important; 
+    clear: both;
+    line-height: 0; /* Убирает пустоту под видео */
 }
 
-.main-content .video-test-row video {
-    display: block !important; /* Чтобы внутри флекса не было зазоров */
-    height: 250px !important; 
-    width: auto !important;   
-    flex: 0 0 auto !important; 
-    max-width: 100% !important;
+.video-test-row video {
+    display: inline-block !important;
+    vertical-align: top !important;
+    height: 250px !important; /* Вернул твой стандарт 250px, как у фото */
+    width: auto !important;
+    margin-right: 12px !important;
+    margin-bottom: 12px !important; 
     border-radius: 8px !important;
     background: #000 !important;
-    object-fit: contain !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Убираем отступ у последнего видео в ряду */
+.video-test-row video:last-child {
+    margin-right: 0 !important;
+}
+
+/* Подтягиваем текст, если он идет сразу после блока видео */
+.video-test-row + p {
+    margin-top: 5px !important;
 }
 
 /* МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 600px) and (orientation: portrait) {
-    .main-content .video-test-row {
-        flex-direction: column !important;
+@media (max-width: 600px) {
+    .video-test-row {
+        line-height: normal; /* Возвращаем для столбика */
     }
-    .main-content .video-test-row video {
+    .video-test-row video {
+        display: block !important; /* В столбик */
         width: 100% !important;
         height: auto !important;
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .main-content .video-test-row {
-        flex-direction: row !important;
-        gap: 10px !important;
-    }
-    .main-content .video-test-row video {
-        height: 180px !important;
-        width: auto !important;
+        margin: 0 0 15px 0 !important;
     }
 }

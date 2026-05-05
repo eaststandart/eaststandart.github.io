@@ -49,9 +49,16 @@ h1 {
 .main-content h3 {
     /* Сверху 1em (как у абзаца), снизу прижимаем к контенту */
     margin: 1em 0 0 0 !important; 
-    font-size: 1.3rem; /* Чуть крупнее, чем H4 */
+    font-size: 1.2rem; /* Чуть крупнее, чем H4 */
     color: var(--text-color);
     line-height: 1.2;
+}
+
+/* Обнуляем нижние отступы у заголовков h3 и h4 */
+.main-content h1,
+.main-content h3, 
+.main-content h4 {
+    margin-bottom: 0 !important;
 }
 
 /* Прижимаем любой контент, который идет СРАЗУ за H3 */

@@ -65,7 +65,7 @@ h1 {
 .main-content h3 + ul,
 .main-content h3 + ol,
 .main-content h3 + .video-test-row {
-    margin-top: 10px !important; /* Небольшой зазор в 5px для "воздуха" */
+    margin-top: 20px !important; /* Небольшой зазор в 5px для "воздуха" */
 }
 
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */

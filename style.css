@@ -52,6 +52,16 @@ h1 {
     line-height: 1.2;
 }
 
+/* Обнуляем нижний отступ заголовка */
+.main-content h3 {
+    margin-bottom: 0 !important;
+}
+
+/* Обнуляем верхний отступ текста, который идет СРАЗУ за h4 */
+.main-content h3 + p {
+    margin-top: 0 !important;
+}
+
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
 .bibliography-footer {
     margin-top: 15px;

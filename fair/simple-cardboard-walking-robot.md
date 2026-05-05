@@ -15,17 +15,17 @@ parent_url: "/fair/"
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
-> **Смотри также:** [принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/)
+> **Смотри также:** [принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
-
-> **Смотри также:** [Шагающие машины ВНИИ Трансмаш (шагающий движитель). 1980 г.](https://youtu.be/hQSO-6LvINQ)
 
 <div class="video-test-row">
     <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm" controls></video>
     <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm" controls></video>
 </div>
+
+> **Смотри также:** [Шагающие машины ВНИИ Трансмаш (шагающий движитель). 1980 г.](https://youtu.be/hQSO-6LvINQ).
 
 ### Развитие проекта
 Возможны варианты модификации робота путем добавления в его конструкцию светодиодов для зажигания глаз, функции дистанционного управления и разворота при встрече с препятствием.

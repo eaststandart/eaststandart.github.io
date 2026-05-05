@@ -1,45 +1,24 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-/* Контейнер из теста */
 .video-test-row {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-    align-items: flex-start;
+    flex-wrap: wrap !important; /* Разрешаем перенос, чтобы не ломать экран */
+    gap: 15px !important;
+    margin: 20px 0 !important;
+    align-items: flex-start !important;
+    width: 100% !important;     /* ТЕСТ: принудительная ширина контейнера */
 }
 
-/* Видео из теста */
 .video-test-row video {
     height: 250px !important; 
     width: auto !important;   
     flex: 0 0 auto !important; 
-    max-width: 100%;
-    border-radius: 8px;
-    background: #000;
-    object-fit: contain;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 100% !important; /* ТЕСТ: не даем выходить за контейнер */
+    border-radius: 8px !important;
+    background: #000 !important;
+    object-fit: contain !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    display: block !important;  /* Чтобы внутри флекса вел себя как блок */
 }
 
-/* МОБИЛЬНАЯ АДАПТАЦИЯ (из теста) */
-@media (max-width: 600px) and (orientation: portrait) {
-    .video-test-row {
-        flex-direction: column !important;
-    }
-    .video-test-row video {
-        width: 100% !important;
-        height: auto !important;
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .video-test-row {
-        flex-direction: row !important;
-        gap: 10px;
-    }
-    .video-test-row video {
-        height: 180px !important;
-        width: auto !important;
-    }
-}

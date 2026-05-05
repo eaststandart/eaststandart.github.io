@@ -7,34 +7,10 @@ custom_css: ["/css/fair.css"]
 Работы юных инженеров и мастеров.
 
 <div class="fair-list">
-    <a href="simple-cardboard-walking-robot.html" class="fair-card">
-        <img src="/img/icons/simple-cardboard-walking-robot.webp" class="fair-img-round">
-        <h3>Робот двуногий шагающий из картона</h3>
+  {% for project in site.fair %}
+    <a href="{{ project.url }}" class="fair-card">
+        <img src="/img/icons/{{ project.icon }}" class="fair-img-round">
+        <h3>{{ project.title }}</h3>
     </a>
-    
-    <a href="project-2.html" class="fair-card">
-        <img src="/img/icons/through-hole-red-led-2.web" class="fair-img-round">
-        <h3>Название поделки</h3>
-    </a>
-
-    <a href="project-1.html" class="fair-card">
-        <img src="/img/icons/through-hole-red-led-2.web" class="fair-img-round">
-        <h3>Название поделки</h3>
-    </a>
-    
-    <a href="project-2.html" class="fair-card">
-        <img src="/img/icons/through-hole-red-led-2.web" class="fair-img-round">
-        <h3>Название поделки</h3>
-    </a>
-
-    <a href="project-1.html" class="fair-card">
-        <img src="/img/icons/through-hole-red-led-2.web" class="fair-img-round">
-        <h3>Название поделки</h3>
-    </a>
-    
-    <a href="project-2.html" class="fair-card">
-        <img src="/img/icons/through-hole-red-led-2.web" class="fair-img-round">
-        <h3>Название поделки</h3>
-    </a>
-    
+  {% endfor %}
 </div>

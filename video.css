@@ -58,19 +58,24 @@
     .video-test-row {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important; /* Запрещаем перенос, чтобы заставить их быть в ряд */
+        /* ЗАПРЕЩАЕМ перенос, чтобы они не падали друг под друга */
+        flex-wrap: nowrap !important; 
+        /* РАЗРЕШАЕМ прокрутку вбок, если видео много */
+        overflow-x: auto !important; 
         gap: 12px !important;
-        overflow-x: auto; /* Если видео очень широкие, появится аккуратный боковой скролл */
+        padding-bottom: 5px; /* Зазор для полосы прокрутки, если она появится */
+        -webkit-overflow-scrolling: touch; /* Плавный скролл на iPhone */
     }
     
     .video-test-row video {
-        height: 180px !important; /* Как у фото */
+        height: 180px !important; 
         width: auto !important;
-        /* Ограничиваем ширину, чтобы два видео + gap влезли в экран */
-        max-width: calc(50% - 10px) !important; 
+        /* Устанавливаем минимальную ширину, чтобы видео не превращались в узкие полоски */
+        min-width: 200px; 
         flex: 0 0 auto !important;
-        margin: 0 !important; /* Убираем лишние отступы */
+        margin: 0 !important;
     }
 }
+
 
 

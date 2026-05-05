@@ -24,13 +24,13 @@ title: Тест видео в ряд
 Текст над видео для проверки отступов.
 
 <div class="video-test-row">
-<video src="/project/1.webm" controls></video>
+<video src="/projects/1.webm" controls></video>
 </div>
 
 Текст над видео для проверки отступов.
 <div class="video-test-row">
-<video src="/project/1.webm"></video>
-<video src="/project/1.webm"></video>
-<video src="/project/1.webm"></video>
-<video src="/project/1.webm"></video>
+<video src="/projects/1.webm"></video>
+<video src="/projects/1.webm"></video>
+<video src="/projects/1.webm"></video>
+<video src="/projects/1.webm"></video>
 </div>

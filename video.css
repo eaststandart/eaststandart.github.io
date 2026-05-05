@@ -3,15 +3,15 @@
 .video-test-row {
     display: block !important;
     width: 100% !important;
-    margin: 10px 0 0 0 !important; 
+    margin: 12px 0 0 0 !important; /* Унифицировали 12px как везде */
     clear: both;
-    line-height: 0; /* Убирает пустоту под видео */
+    line-height: 0; 
 }
 
 .video-test-row video {
     display: inline-block !important;
     vertical-align: top !important;
-    height: 250px !important; /* Вернул твой стандарт 250px, как у фото */
+    height: 250px !important; 
     width: auto !important;
     margin-right: 12px !important;
     margin-bottom: 12px !important; 
@@ -20,20 +20,17 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Убираем отступ у последнего видео в ряду */
 .video-test-row video:last-child {
     margin-right: 0 !important;
 }
 
-/* Подтягиваем текст, если он идет сразу после блока видео */
 .video-test-row + p {
     margin-top: 5px !important;
 }
 
-/* МОБИЛЬНАЯ АДАПТАЦИЯ (video.css) */
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
 @media (max-width: 600px) {
     .video-test-row {
-        /* Меняем на flex-column, как у фото */
         display: flex !important;
         flex-direction: column !important;
         gap: 1.2em !important; 
@@ -44,12 +41,10 @@
 
     .video-test-row video {
         display: block !important;
-        /* Убираем все боковые марджины, которые выталкивают за экран */
         margin: 0 !important; 
         width: 100% !important;
         height: auto !important;
         max-width: 100% !important;
-        box-sizing: border-box !important;
     }
 }
 
@@ -58,19 +53,16 @@
     .video-test-row {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important; /* Принудительно в одну строку */
-        gap: 10px !important;
-        justify-content: flex-start;
+        flex-wrap: wrap !important; 
+        gap: 12px !important;
+        margin-top: 10px !important; /* Чтобы не липло к тексту сверху */
     }
     
     .video-test-row video {
-        height: 180px !important;    /* Высота как у фото */
-        width: auto !important;
-        /* АВТО-УЖАТИЕ: */
-        /* Если видео 4, то каждое максимум 25%. Если 2 — то по 50% */
-        flex: 1 1 auto !important;   
-        max-width: calc(25% - 10px) !important; 
-        min-width: 100px;            /* Чтобы совсем в нитку не превратились */
+        height: 180px !important;    
+        width: auto !important;      
+        max-width: 100% !important;  
+        flex: 0 1 auto !important;   
         object-fit: contain;
         margin: 0 !important;
     }

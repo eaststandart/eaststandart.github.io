@@ -21,11 +21,6 @@ title: Тест видео в ряд
     }
 </style>
 
-<div class="video-test-row">
-    <video src="/video/clip1.mp4" controls></video>
-    <video src="/video/clip2.mp4" controls></video>
-</div>
-
 Текст над видео для проверки отступов.
 
 <div class="video-test-row">
@@ -34,8 +29,8 @@ title: Тест видео в ряд
 
 Текст над видео для проверки отступов.
 <div class="video-test-row">
-<video src="1.webm"></video>
-<video src="1.webm"></video>
-<video src="1.webm"></video>
-<video src="1.webm"></video>
+<video src="/project/1.webm"></video>
+<video src="/project/1.webm"></video>
+<video src="/project/1.webm"></video>
+<video src="/project/1.webm"></video>
 </div>

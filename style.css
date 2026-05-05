@@ -45,6 +45,13 @@ h1 {
     line-height: 1.2;
 }
 
+.main-content h3 {
+    margin: 20px 0 5px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
+    font-size: 1.2rem;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
 .bibliography-footer {
     margin-top: 15px;

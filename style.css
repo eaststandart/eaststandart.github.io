@@ -56,7 +56,7 @@ h1 {
 
 /* Обнуляем нижние отступы у заголовков h3 и h4 */
 .main-content h1,
- {
+.main-content h3 {
     margin-bottom: 0 !important;
 }
 

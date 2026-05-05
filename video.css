@@ -1,24 +1,46 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-.video-test-row {
+/* Используем двойной селектор для максимальной силы */
+.main-content .video-test-row {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important; /* Разрешаем перенос, чтобы не ломать экран */
+    flex-wrap: wrap !important;
     gap: 15px !important;
     margin: 20px 0 !important;
     align-items: flex-start !important;
-    width: 100% !important;     /* ТЕСТ: принудительная ширина контейнера */
+    width: 100% !important;
 }
 
-.video-test-row video {
+.main-content .video-test-row video {
+    display: block !important; /* Чтобы внутри флекса не было зазоров */
     height: 250px !important; 
     width: auto !important;   
     flex: 0 0 auto !important; 
-    max-width: 100% !important; /* ТЕСТ: не даем выходить за контейнер */
+    max-width: 100% !important;
     border-radius: 8px !important;
     background: #000 !important;
     object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
-    display: block !important;  /* Чтобы внутри флекса вел себя как блок */
 }
 
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 600px) and (orientation: portrait) {
+    .main-content .video-test-row {
+        flex-direction: column !important;
+    }
+    .main-content .video-test-row video {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content .video-test-row {
+        flex-direction: row !important;
+        gap: 10px !important;
+    }
+    .main-content .video-test-row video {
+        height: 180px !important;
+        width: auto !important;
+    }
+}

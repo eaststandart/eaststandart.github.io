@@ -47,34 +47,35 @@ h1 {
 
 /* Настройка заголовка H3 внутри статей */
 .main-content h3 {
-    /* Сверху 1em (как у абзаца), снизу прижимаем к контенту */
-    margin: 1em 0 0 0 !important; 
-    font-size: 1.2rem; /* Чуть крупнее, чем H4 */
+    /* Базовый отступ сверху 1em, снизу обнуляем */
+    margin: 0 0 0 0 !important; 
+    font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;
-}
-
-/* Обнуляем нижние отступы у заголовков h3 и h4 */
-.main-content h1,
-.main-content h3 {
+    /* Убедимся, что нижний марджин всегда 0 */
     margin-bottom: 0 !important;
 }
 
-/* Прижимаем любой контент, который идет СРАЗУ за H3 */
+/* Обнуляем нижний отступ у H1 (заголовка страницы) */
+.main-content h1 {
+    margin-bottom: 0 !important;
+}
+
+/* Прижимаем любой контент под H3 (8px для воздуха) */
 .main-content h3 + p,
-.main-content h3 + ul,
-.main-content h3 + ol,
 .main-content h3 + .video-test-row {
-    margin-top: 8px !important; /* Небольшой зазор в 5px для "воздуха" */
+    margin-top: 5px !important; 
 }
 
-/* Если H3 идет сразу после блока с видео, чуть увеличиваем отступ для "воздуха" */
-.video-test-row + h3 {
-    margin-top: 1.2em !important;
+/* Прижимаем список под H3 */
+.main-content h3 + ul,
+.main-content h3 + ol {
+    margin-top: 8px !important; 
 }
 
-/* Аналогично для картинок, если они не в тексте, а отдельным блоком */
-p:has(img) + h3 {
+/* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
+.video-test-row + h3,
+.main-content p:has(img) + h3 {
     margin-top: 1.2em !important;
 }
 

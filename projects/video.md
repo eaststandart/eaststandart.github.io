@@ -36,6 +36,8 @@ title: Тест видео в ряд
 <video src="/projects/1.webm" controls></video>
 </div>
 
+Текст над видео для проверки отступов.
+
 <div class="video-test-row">
 <video src="/projects/1.webm" controls></video>
 <video src="/projects/1.webm" controls></video>

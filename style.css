@@ -46,7 +46,7 @@ h1 {
 }
 
 .main-content h3 {
-    margin: 15px 0 0px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
+    margin: 0px 0 0px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
     font-size: 1.2rem;
     color: var(--text-color);
     line-height: 1.2;

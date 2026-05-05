@@ -55,14 +55,15 @@
         flex-direction: row !important;
         flex-wrap: wrap !important; 
         gap: 12px !important;
-        margin-top: 10px !important; /* Чтобы не липло к тексту сверху */
+        margin-top: 10px !important;
     }
     
     .video-test-row video {
         height: 180px !important;    
         width: auto !important;      
-        max-width: 100% !important;  
-        flex: 0 1 auto !important;   
+        /* ГАРАНТИРУЕМ 2 ВИДЕО В РЯД: */
+        max-width: calc(50% - 10px) !important;  
+        flex: 1 1 auto !important;   /* Позволяем чуть-чуть растянуться до краев */
         object-fit: contain;
         margin: 0 !important;
     }

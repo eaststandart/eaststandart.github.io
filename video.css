@@ -1,76 +1,61 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
+/* 1. ПК ВЕРСИЯ (Основана на логике фото) */
 .video-test-row {
-    display: block !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important; /* Чтобы переносились на новую строку */
+    gap: 15px !important;       /* Зазор как у фото */
+    margin: 12px 0 0 0 !important;
     width: 100% !important;
-    margin: 12px 0 0 0 !important; /* Унифицировали 12px как везде */
-    clear: both;
-    line-height: 0; 
+    align-items: flex-start !important;
 }
 
 .video-test-row video {
-    display: inline-block !important;
-    vertical-align: top !important;
-    height: 250px !important; 
+    /* Ограничиваем высоту (как у фото) */
+    height: 250px !important;
+    max-height: 250px !important;
     width: auto !important;
-    margin-right: 12px !important;
-    margin-bottom: 12px !important; 
+    
+    /* Страховка: не шире половины контента, чтобы двое встали в ряд */
+    max-width: calc(50% - 10px) !important;
+    
+    flex: 0 1 auto !important; /* Позволяет ужиматься, если не влезают */
     border-radius: 8px !important;
     background: #000 !important;
+    object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.video-test-row video:last-child {
-    margin-right: 0 !important;
-}
-
-.video-test-row + p {
-    margin-top: 5px !important;
-}
-
-/* МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 600px) {
+/* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ) */
+@media (max-width: 600px) and (orientation: portrait) {
     .video-test-row {
-        display: flex !important;
         flex-direction: column !important;
-        gap: 1.2em !important; 
-        line-height: normal;
-        margin-top: 10px !important;
-        width: 100% !important;
+        gap: 1.2em !important;
     }
-
     .video-test-row video {
-        display: block !important;
-        margin: 0 !important; 
         width: 100% !important;
-        height: auto !important;
         max-width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        margin: 0 !important;
     }
 }
 
-/* Горизонтальный режим (Landscape) */
+/* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ) */
 @media (max-height: 500px) and (orientation: landscape) {
     .video-test-row {
-        display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        /* Уменьшаем зазор, чтобы освободить место для видео */
-        gap: 8px !important; 
-        margin-top: 10px !important;
-        justify-content: flex-start !important;
+        gap: 10px !important;
     }
-    
     .video-test-row video {
-        /* ГЛАВНОЕ: Ширина 48% заставит их встать по два */
+        /* Твой рабочий вариант для 2-х в ряд */
         width: calc(50% - 8px) !important; 
         max-width: calc(50% - 8px) !important;
-        /* Высота АВТО, иначе они не влезут по ширине */
         height: auto !important; 
-        /* Но ограничим максимальную высоту, чтобы не были гигантскими */
         max-height: 180px !important; 
-        
         flex: 0 0 auto !important;
         object-fit: contain;
-        margin: 0 !important;
     }
 }

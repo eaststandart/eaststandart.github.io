@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Тест видео в ряд
-custom_css: ["/css/video.css"]
+custom_css: ["/video.css"]
 ---
 
 Текст над видео для проверки отступов.

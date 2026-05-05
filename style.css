@@ -45,28 +45,21 @@ h1 {
     line-height: 1.2;
 }
 
+/* Настройка заголовка H3 внутри статей */
 .main-content h3 {
-    margin: 20px 0 15px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
-    font-size: 1.2rem;
+    /* Сверху 1em (как у абзаца), снизу прижимаем к контенту */
+    margin: 1em 0 0 0 !important; 
+    font-size: 1.3rem; /* Чуть крупнее, чем H4 */
     color: var(--text-color);
     line-height: 1.2;
 }
 
-/* Обнуляем нижние отступы у заголовков h3 и h4 */
-.main-content h1,
-.main-content h3, 
-.main-content h4 {
-    margin-bottom: 0 !important;
-}
-
-/* Обнуляем верхние отступы у текста и списков, если они идут СРАЗУ за заголовком */
-.main-content h1 + p,
-.main-content h1 + ul,
-.main-content h1 + ol,
+/* Прижимаем любой контент, который идет СРАЗУ за H3 */
 .main-content h3 + p,
 .main-content h3 + ul,
-.main-content h3 + ol {
-    margin-top: 0 !important;
+.main-content h3 + ol,
+.main-content h3 + .video-test-row {
+    margin-top: 5px !important; /* Небольшой зазор в 5px для "воздуха" */
 }
 
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */

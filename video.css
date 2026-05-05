@@ -53,18 +53,23 @@
     .video-test-row {
         display: flex !important;
         flex-direction: row !important;
+        /* Разрешаем перенос, чтобы они могли встать 2 на 2 */
         flex-wrap: wrap !important; 
         gap: 12px !important;
         margin-top: 10px !important;
+        justify-content: flex-start; /* Выравнивание по левому краю */
     }
     
     .video-test-row video {
-        height: 180px !important;    
-        width: auto !important;      
-        /* ГАРАНТИРУЕМ 2 ВИДЕО В РЯД: */
-        max-width: calc(50% - 10px) !important;  
-        flex: 1 1 auto !important;   /* Позволяем чуть-чуть растянуться до краев */
+        height: 180px !important; /* Как у фото */
+        width: auto !important;
+        /* ГЛАВНОЕ ПРАВИЛО: ровно половина экрана минус зазор */
+        /* Это заставит видео вставать строго по 2 в ряд */
+        flex: 0 0 calc(50% - 10px) !important; 
+        max-width: calc(50% - 10px) !important; 
+        
         object-fit: contain;
         margin: 0 !important;
     }
 }
+

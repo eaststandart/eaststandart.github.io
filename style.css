@@ -45,11 +45,37 @@ h1 {
     line-height: 1.2;
 }
 
+/* Настройка заголовка H3 внутри статей */
 .main-content h3 {
-    margin: 0px 0 0px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
-    font-size: 1.2rem;
+    /* Сверху 1em (как у абзаца), снизу прижимаем к контенту */
+    margin: 1em 0 0 0 !important; 
+    font-size: 1.2rem; /* Чуть крупнее, чем H4 */
     color: var(--text-color);
     line-height: 1.2;
+}
+
+/* Обнуляем нижние отступы у заголовков h3 и h4 */
+.main-content h1,
+ {
+    margin-bottom: 0 !important;
+}
+
+/* Прижимаем любой контент, который идет СРАЗУ за H3 */
+.main-content h3 + p,
+.main-content h3 + ul,
+.main-content h3 + ol,
+.main-content h3 + .video-test-row {
+    margin-top: 8px !important; /* Небольшой зазор в 5px для "воздуха" */
+}
+
+/* Если H3 идет сразу после блока с видео, чуть увеличиваем отступ для "воздуха" */
+.video-test-row + h3 {
+    margin-top: 1.2em !important;
+}
+
+/* Аналогично для картинок, если они не в тексте, а отдельным блоком */
+p:has(img) + h3 {
+    margin-top: 1.2em !important;
 }
 
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */

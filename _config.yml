@@ -1,5 +1,4 @@
 collections:
   fair:
     output: true
-    permalink: /fair/:name/
-
+    permalink: /fair/:path/

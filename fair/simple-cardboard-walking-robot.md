@@ -8,14 +8,14 @@ parent_url: "/fair/"
 ---
 
 ### Описание проекта
-Шагающий робот [гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/), приводимый в движение электромотором, и оснащённый самодельным редуктором с ременной передачей.
+Шагающий робот из картона, приводимый в движение электромотором, и оснащённый самодельным редуктором с ременной передачей.
 
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
-**Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/)
+> **Смотри также:** [принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/)
 
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.

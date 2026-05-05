@@ -46,21 +46,29 @@ h1 {
 }
 
 .main-content h3 {
-    margin: 20px 0 0px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
+    margin: 20px 0 5px 0 !important; /* Сверху оставляем место, снизу — прижимаем */
     font-size: 1.2rem;
     color: var(--text-color);
     line-height: 1.2;
 }
 
-/* Обнуляем нижний отступ заголовка */
-.main-content h3 {
+/* Обнуляем нижние отступы у заголовков h3 и h4 */
+.main-content h1,
+.main-content h3, 
+.main-content h4 {
     margin-bottom: 0 !important;
 }
 
-/* Обнуляем верхний отступ текста, который идет СРАЗУ за h4 */
-.main-content h3 + p {
+/* Обнуляем верхние отступы у текста и списков, если они идут СРАЗУ за заголовком */
+.main-content h1 + p,
+.main-content h1 + ul,
+.main-content h1 + ol,
+.main-content h3 + p,
+.main-content h3 + ul,
+.main-content h3 + ol {
     margin-top: 0 !important;
 }
+
 
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
 .bibliography-footer {

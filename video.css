@@ -30,15 +30,39 @@
     margin-top: 5px !important;
 }
 
-/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+/* МОБИЛЬНАЯ АДАПТАЦИЯ (video.css) */
 @media (max-width: 600px) {
     .video-test-row {
-        line-height: normal; /* Возвращаем для столбика */
+        /* Меняем на flex-column, как у фото */
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.2em !important; 
+        line-height: normal;
+        margin-top: 10px !important;
+        width: 100% !important;
     }
+
     .video-test-row video {
-        display: block !important; /* В столбик */
+        display: block !important;
+        /* Убираем все боковые марджины, которые выталкивают за экран */
+        margin: 0 !important; 
         width: 100% !important;
         height: auto !important;
-        margin: 0 0 15px 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 }
+
+/* Горизонтальный режим (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .video-test-row {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+    .video-test-row video {
+        height: 180px !important; /* Как у фото */
+        width: auto !important;
+    }
+}
+

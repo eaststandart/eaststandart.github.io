@@ -70,12 +70,12 @@ h1 {
 
 /* Если H3 идет сразу после блока с видео, чуть увеличиваем отступ для "воздуха" */
 .video-test-row + h3 {
-    margin-top: 1.5em !important;
+    margin-top: 1.2em !important;
 }
 
 /* Аналогично для картинок, если они не в тексте, а отдельным блоком */
 p:has(img) + h3 {
-    margin-top: 1.5em !important;
+    margin-top: 1.2em !important;
 }
 
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */

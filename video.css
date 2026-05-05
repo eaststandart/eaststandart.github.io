@@ -1,46 +1,76 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-/* Используем двойной селектор для максимальной силы */
-.main-content .video-test-row {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    gap: 15px !important;
-    margin: 20px 0 !important;
-    align-items: flex-start !important;
+.video-test-row {
+    display: block !important;
     width: 100% !important;
+    margin: 12px 0 0 0 !important; /* Унифицировали 12px как везде */
+    clear: both;
+    line-height: 0; 
 }
 
-.main-content .video-test-row video {
-    display: block !important; /* Чтобы внутри флекса не было зазоров */
+.video-test-row video {
+    display: inline-block !important;
+    vertical-align: top !important;
     height: 250px !important; 
-    width: auto !important;   
-    flex: 0 0 auto !important; 
-    max-width: 100% !important;
+    width: auto !important;
+    margin-right: 12px !important;
+    margin-bottom: 12px !important; 
     border-radius: 8px !important;
     background: #000 !important;
-    object-fit: contain !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.video-test-row video:last-child {
+    margin-right: 0 !important;
+}
+
+.video-test-row + p {
+    margin-top: 5px !important;
 }
 
 /* МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 600px) and (orientation: portrait) {
-    .main-content .video-test-row {
+@media (max-width: 600px) {
+    .video-test-row {
+        display: flex !important;
         flex-direction: column !important;
+        gap: 1.2em !important; 
+        line-height: normal;
+        margin-top: 10px !important;
+        width: 100% !important;
     }
-    .main-content .video-test-row video {
+
+    .video-test-row video {
+        display: block !important;
+        margin: 0 !important; 
         width: 100% !important;
         height: auto !important;
+        max-width: 100% !important;
     }
 }
 
+/* Горизонтальный режим (Landscape) */
 @media (max-height: 500px) and (orientation: landscape) {
-    .main-content .video-test-row {
+    .video-test-row {
+        display: flex !important;
         flex-direction: row !important;
-        gap: 10px !important;
+        flex-wrap: wrap !important;
+        /* Уменьшаем зазор, чтобы освободить место для видео */
+        gap: 8px !important; 
+        margin-top: 10px !important;
+        justify-content: flex-start !important;
     }
-    .main-content .video-test-row video {
-        height: 180px !important;
-        width: auto !important;
+    
+    .video-test-row video {
+        /* ГЛАВНОЕ: Ширина 48% заставит их встать по два */
+        width: calc(50% - 8px) !important; 
+        max-width: calc(50% - 8px) !important;
+        /* Высота АВТО, иначе они не влезут по ширине */
+        height: auto !important; 
+        /* Но ограничим максимальную высоту, чтобы не были гигантскими */
+        max-height: 180px !important; 
+        
+        flex: 0 0 auto !important;
+        object-fit: contain;
+        margin: 0 !important;
     }
 }

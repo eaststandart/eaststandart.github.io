@@ -35,3 +35,8 @@ title: Тест видео в ряд
 <video src="/projects/1.webm" controls></video>
 <video src="/projects/1.webm" controls></video>
 </div>
+
+<div class="video-test-row">
+<video src="/projects/1.webm" controls></video>
+<video src="/projects/1.webm" controls></video>
+</div>

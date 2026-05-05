@@ -2,3 +2,6 @@ collections:
   fair:
     output: true
     permalink: /fair/:name/
+
+# Добавь это, чтобы картинки из _fair переносились в готовый сайт
+include: ["_fair"] 

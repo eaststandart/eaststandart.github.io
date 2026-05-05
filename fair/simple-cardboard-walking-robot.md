@@ -14,10 +14,10 @@ parent_url: "/fair/"
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
-![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
-![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
-
-![](/projects/1.webm)
+<div class="video-test-row">
+    <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm" controls></video>
+    <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm" controls></video>
+</div>
 
 #### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot/simple-cardboard-walking-robot.pdf)

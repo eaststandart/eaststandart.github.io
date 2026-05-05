@@ -58,24 +58,20 @@
     .video-test-row {
         display: flex !important;
         flex-direction: row !important;
-        /* ЗАПРЕЩАЕМ перенос, чтобы они не падали друг под друга */
-        flex-wrap: nowrap !important; 
-        /* РАЗРЕШАЕМ прокрутку вбок, если видео много */
-        overflow-x: auto !important; 
-        gap: 12px !important;
-        padding-bottom: 5px; /* Зазор для полосы прокрутки, если она появится */
-        -webkit-overflow-scrolling: touch; /* Плавный скролл на iPhone */
+        flex-wrap: nowrap !important; /* Принудительно в одну строку */
+        gap: 10px !important;
+        justify-content: flex-start;
     }
     
     .video-test-row video {
-        height: 180px !important; 
+        height: 180px !important;    /* Высота как у фото */
         width: auto !important;
-        /* Устанавливаем минимальную ширину, чтобы видео не превращались в узкие полоски */
-        min-width: 200px; 
-        flex: 0 0 auto !important;
+        /* АВТО-УЖАТИЕ: */
+        /* Если видео 4, то каждое максимум 25%. Если 2 — то по 50% */
+        flex: 1 1 auto !important;   
+        max-width: calc(25% - 10px) !important; 
+        min-width: 100px;            /* Чтобы совсем в нитку не превратились */
+        object-fit: contain;
         margin: 0 !important;
     }
 }
-
-
-

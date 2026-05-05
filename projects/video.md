@@ -27,7 +27,7 @@ title: Тест видео в ряд
 
     /* Убираем отступ у текста, который идет сразу после блока видео */
     .video-test-row + p {
-        margin-top: 5px !important;
+        margin-top: 0px !important;
     }
 </style>
 

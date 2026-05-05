@@ -51,21 +51,22 @@
 /* Горизонтальный режим (Landscape) */
 @media (max-height: 500px) and (orientation: landscape) {
     .video-test-row {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important; /* Разрешаем перенос на второй ряд */
-        gap: 10px !important;       /* Небольшой зазор */
+        display: grid !important; /* Меняем flex на grid */
+        grid-template-columns: 1fr 1fr !important; /* Ровно 2 колонки */
+        gap: 12px !important;     /* Зазор между ними */
         margin-top: 10px !important;
+        width: 100% !important;
     }
     
     .video-test-row video {
-        /* Высота может чуть уменьшиться, чтобы вписать пропорции */
-        height: 160px !important; 
-        width: auto !important;
-        
-        /* ЖЕСТКО: ровно половина экрана минус зазор */
-        flex: 0 0 calc(50% - 5px) !important; 
-        max-width: calc(50% - 5px) !important; 
+        width: 100% !important;   /* Видео занимает всю свою колонку */
+        height: 180px !important;  /* Высота как у фото */
+        object-fit: cover !important; /* Чтобы видео заполнило прямоугольник без черных дыр */
+        margin: 0 !important;
+        max-width: none !important; /* Убираем все старые ограничения */
+    }
+}
+
         
         object-fit: cover; /* Или contain, если не хочешь обрезки краев */
         margin: 0 !important;

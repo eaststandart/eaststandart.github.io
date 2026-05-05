@@ -83,6 +83,40 @@
         <a href="https://creativecommons.org" target="_blank" style="color: #7f8c8d; text-decoration: underline;">CC BY 4.0</a> (с указанием авторства). 
     </p> 
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Находим все ссылки, заканчивающиеся на видео-форматы
+    const videoLinks = document.querySelectorAll('.main-content a[href$=".mp4"], .main-content a[href$=".webm"]');
+    
+    videoLinks.forEach(link => {
+        // Создаем элемент video
+        const video = document.createElement('video');
+        video.src = link.getAttribute('href');
+        video.controls = true;
+
+        // Находим родительский абзац (p)
+        const parentP = link.parentElement;
+
+        // Создаем нашу обертку .video-test-row, если её еще нет в этом абзаце
+        let container = parentP.querySelector('.video-test-row');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'video-test-row';
+            parentP.insertAdjacentElement('beforebegin', container);
+        }
+
+        // Переносим видео в контейнер и удаляем старую ссылку
+        container.appendChild(video);
+        link.remove();
+
+        // Если в абзаце больше ничего не осталось, удаляем и сам абзац
+        if (parentP.textContent.trim() === '' && parentP.children.length === 0) {
+            parentP.remove();
+        }
+    });
+});
+</script>
     
 </body>
 </html>

@@ -25,7 +25,19 @@ title: Тест видео в ряд
     }
 </style>
 
+Текст
+
 <div class="video-test-row">
     <video src="/projects/1.webm" controls></video>
     <video src="/projects/1.webm" controls></video>
+    <video src="/projects/1.webm" controls></video>
+    <video src="/projects/1.webm" controls></video>
 </div>
+
+текст
+
+<div class="video-test-row">
+    <video src="/projects/1.webm" controls></video>
+</div>
+
+текст

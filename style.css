@@ -54,6 +54,7 @@ h1 {
     line-height: 1.2;
     /* Убедимся, что нижний марджин всегда 0 */
     margin-bottom: 0 !important;
+    margin-top: 0 !important;
 }
 
 /* Обнуляем нижний отступ у H1 (заголовка страницы) */
@@ -72,7 +73,6 @@ h1 {
 .main-content h3 + ol {
     margin-top: 10px !important; 
 }
-
 
 /* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
 .video-test-row + h3,

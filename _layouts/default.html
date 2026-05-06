@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -35,11 +35,9 @@
 
 <div class="main-content">
     {% assign path = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
-    
-    {% capture search_text %}{{ '{{' }}path}}{% endcapture %}
-    {{ content | replace: search_text, path }}
+    {{ content }}
 </div>
-    
+   
     <!-- Универсальный блок библиографии -->
     {% if page.bibliography %}
     <div class="bibliography-footer">

@@ -12,7 +12,7 @@ permalink: /simple-cardboard-walking-robot/
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
 ![](simple-cardboard-walking-robot-1.webp)
-![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
+![](simple-cardboard-walking-robot-2.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 

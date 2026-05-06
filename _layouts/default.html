@@ -91,23 +91,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
     if (!currentSection) return;
 
-    // Тот самый путь к складу (/_test/robot/)
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
-
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        // 1. Сначала ПРАВИМ ПУТИ всем картинкам (это твой проверенный метод)
-        const allImgs = p.querySelectorAll('img');
-        allImgs.forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                // Прямо здесь дописываем путь
-                img.src = projectPath + src;
-            }
-        });
-
-        // 2. А теперь твоя логика группировки видео в div
+        // 1. СНАЧАЛА ВИДЕО: ищем теги, которые должны стать плеерами
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
         if (fakeVideos.length > 0) {
@@ -116,22 +104,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
             fakeVideos.forEach(img => {
                 const video = document.createElement('video');
-                // ВАЖНО: берем img.src, который МЫ УЖЕ ИСПРАВИЛИ выше
-                video.src = img.src; 
+                let rawSrc = img.getAttribute('src');
+                // Сразу даем правильный путь, чтобы не было 404
+                video.src = (rawSrc.startsWith('http') || rawSrc.startsWith('/')) ? rawSrc : projectPath + rawSrc;
                 video.controls = true;
                 container.appendChild(video);
-                img.remove();
+                img.remove(); // Удаляем картинку до того, как браузер её загрузит
             });
-
             p.insertAdjacentElement('beforebegin', container);
+        }
 
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
+        // 2. ПОТОМ КАРТИНКИ: только те, что остались (настоящие фото)
+        const realImgs = p.querySelectorAll('img');
+        realImgs.forEach(img => {
+            let src = img.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                img.src = projectPath + src;
             }
+        });
+
+        if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+            p.remove();
         }
     });
 });
 </script>
+
     
 </body>
 </html>

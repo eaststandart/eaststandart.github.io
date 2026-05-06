@@ -86,61 +86,36 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-    const sections = ['fair', 'test', 'biblio', 'diary'];
-    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
-    if (!currentSection) return;
-
-    const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
-
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        // Находим все картинки в абзаце
-        const imgs = p.querySelectorAll('img');
-        if (imgs.length === 0) return;
-
-        // Проверяем, есть ли среди них видео-файлы
-        const hasVideo = Array.from(imgs).some(img => {
-            let src = img.getAttribute('src');
-            return src && (src.endsWith('.mp4') || src.endsWith('.webm'));
-        });
-
-        if (hasVideo) {
-            // Если есть видео — создаем ряд
+        // Ищем только "картинки", которые на самом деле видео (результат ![video])
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+        
+        if (fakeVideos.length > 0) {
+            // 1. Создаем тот самый контейнер-ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
-            imgs.forEach(img => {
-                let src = img.getAttribute('src');
-                let fullSrc = (src.startsWith('http') || src.startsWith('/')) ? src : projectPath + src;
-
-                if (src.endsWith('.mp4') || src.endsWith('.webm')) {
-                    const video = document.createElement('video');
-                    video.src = fullSrc;
-                    video.controls = true;
-                    container.appendChild(video);
-                } else {
-                    // Если в одном ряду с видео затесалось фото
-                    img.src = fullSrc;
-                    container.appendChild(img.cloneNode(true));
-                }
+            fakeVideos.forEach(img => {
+                // 2. Создаем тег video
+                const video = document.createElement('video');
+                video.src = img.getAttribute('src');
+                video.controls = true;
+                
+                // 3. Кладем видео в контейнер
+                container.appendChild(video);
+                // 4. Удаляем старый тег img
                 img.remove();
             });
-            p.parentNode.insertBefore(container, p);
-        } else {
-            // Если в абзаце только обычные фото — просто правим им пути
-            imgs.forEach(img => {
-                let src = img.getAttribute('src');
-                if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                    img.src = projectPath + src;
-                }
-            });
-        }
 
-        // Удаляем пустой абзац
-        if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-            p.remove();
+            // 5. Ставим весь контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Чистим пустой абзац
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                p.remove();
+            }
         }
     });
 });

@@ -21,16 +21,16 @@ parent_url: "/fair/"
 
 DEBUG: {{ ppath }}
 
-{% assign dpath = page.path | replace: page.name, '' | prepend: '/' %} DEBUG: {{ dpath }}
+{% assign dpath = page.path | replace: page.name, '' | prepend: '/' %} DEBUGd: {{ dpath }}
 
-{% assign fpath = page.path | split: '/' | last | prepend: '/' | prepend: page.path | replace: page.path, '' | split: '/' | size | minus: 1 | assign: 'ignore' %}{% assign ppath = page.path | split: '/' | slice: 0, last_index | join: '/' | prepend: '/' | append: '/' %} DEBUG: {{ fpath }}
+{% assign fpath = page.path | split: '/' | last | prepend: '/' | prepend: page.path | replace: page.path, '' | split: '/' | size | minus: 1 | assign: 'ignore' %}{% assign ppath = page.path | split: '/' | slice: 0, last_index | join: '/' | prepend: '/' | append: '/' %} DEBUGf: {{ fpath }}
 
-{% capture gpath %}/{{ page.path | replace: page.name, '' }}{% endcapture %} DEBUG: {{ gpath }}
+{% capture gpath %}/{{ page.path | replace: page.name, '' }}{% endcapture %} DEBUGg: {{ gpath }}
 
-{% assign hpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %} DEBUG: {{ hpath }}
+{% assign hpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %} DEBUGh: {{ hpath }}
 
 {% assign folder = page.path | split: '/' | last %}
-{% assign kpath = page.path | replace: folder, '' | prepend: '/' %} DEBUG: {{ kpath }}
+{% assign kpath = page.path | replace: folder, '' | prepend: '/' %} DEBUGk: {{ kpath }}
 
 
 ### Описание проекта

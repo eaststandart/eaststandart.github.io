@@ -1,7 +1,7 @@
 collections:
   test:
     output: true
-    permalink: /fair/:name/
+    permalink: /test/:name/
 
 # Заставляем Jekyll просто копировать папку с файлами как есть
 include: ["_test"]

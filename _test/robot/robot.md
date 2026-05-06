@@ -8,10 +8,12 @@ parent_name: "Поделки"
 parent_url: "/fair/"
 ---
 
+{% assign ppath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
+
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
-![](simple-cardboard-walking-robot-1.webp)
+![]({{ ppath }}simple-cardboard-walking-robot-1.webp)
 ![](simple-cardboard-walking-robot-2.webp)
 ![](simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot-4.webp)

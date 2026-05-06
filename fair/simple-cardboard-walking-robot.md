@@ -20,10 +20,8 @@ parent_url: "/fair/"
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
 
-<div class="video-test-row">
-    <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm" controls></video>
-    <video src="simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm" controls></video>
-</div>
+![video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
+![video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
 
 > **Смотри также:** [Шагающие машины ВНИИ Трансмаш, 1980 год](https://youtu.be/hQSO-6LvINQ).
 

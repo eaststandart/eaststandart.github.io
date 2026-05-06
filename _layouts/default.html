@@ -91,39 +91,56 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
     if (!currentSection) return;
 
-    // Формируем путь к складу (/_test/robot/)
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // 1. Исправляем пути для всех медиа сразу
-    const allMedia = document.querySelectorAll('.main-content img, .main-content video');
-    allMedia.forEach(item => {
-        let src = item.getAttribute('src');
-        if (src && !src.startsWith('http') && !src.startsWith('/')) {
-            item.setAttribute('src', projectPath + src);
-        }
-    });
-
-    // 2. Группируем видео в ряды
     const paragraphs = document.querySelectorAll('.main-content p');
+
     paragraphs.forEach(p => {
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        if (fakeVideos.length > 0) {
+        // Находим все картинки в абзаце
+        const imgs = p.querySelectorAll('img');
+        if (imgs.length === 0) return;
+
+        // Проверяем, есть ли среди них видео-файлы
+        const hasVideo = Array.from(imgs).some(img => {
+            let src = img.getAttribute('src');
+            return src && (src.endsWith('.mp4') || src.endsWith('.webm'));
+        });
+
+        if (hasVideo) {
+            // Если есть видео — создаем ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
-            fakeVideos.forEach(img => {
-                const video = document.createElement('video');
-                
-                // Берем уже исправленный путь из img.src, чтобы видео не давало 404
-                video.src = img.src; 
-                
-                video.controls = true;
-                container.appendChild(video);
+
+            imgs.forEach(img => {
+                let src = img.getAttribute('src');
+                let fullSrc = (src.startsWith('http') || src.startsWith('/')) ? src : projectPath + src;
+
+                if (src.endsWith('.mp4') || src.endsWith('.webm')) {
+                    const video = document.createElement('video');
+                    video.src = fullSrc;
+                    video.controls = true;
+                    container.appendChild(video);
+                } else {
+                    // Если в одном ряду с видео затесалось фото
+                    img.src = fullSrc;
+                    container.appendChild(img.cloneNode(true));
+                }
                 img.remove();
             });
-            p.insertAdjacentElement('beforebegin', container);
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
+            p.parentNode.insertBefore(container, p);
+        } else {
+            // Если в абзаце только обычные фото — просто правим им пути
+            imgs.forEach(img => {
+                let src = img.getAttribute('src');
+                if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                    img.src = projectPath + src;
+                }
+            });
+        }
+
+        // Удаляем пустой абзац
+        if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+            p.remove();
         }
     });
 });

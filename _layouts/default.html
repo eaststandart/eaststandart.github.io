@@ -86,46 +86,37 @@
    
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-    
-    // 1. Сначала превращаем ссылки на видео в плееры (для всех ссылок в статье)
-    const videoLinks = document.querySelectorAll('.main-content a[href$=".mp4"], .main-content a[href$=".webm"]');
-    
-    videoLinks.forEach(link => {
-        const video = document.createElement('video');
-        video.src = link.getAttribute('href');
-        video.controls = true;
+    // 1. Находим все абзацы, которые содержат ссылки на видео
+    const paragraphs = document.querySelectorAll('.main-content p');
+
+    paragraphs.forEach(p => {
+        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
         
-        // Оборачиваем в наш класс для рядов, если нужно
-        if (!link.parentElement.classList.contains('video-test-row')) {
+        if (links.length > 0) {
+            // Создаем нашу обертку
             const container = document.createElement('div');
             container.className = 'video-test-row';
-            link.parentNode.insertBefore(container, link);
-            container.appendChild(video);
-        } else {
-            link.parentElement.appendChild(video);
-        }
-        link.remove();
-    });
 
-    // 2. Теперь исправляем пути для ВСЕХ медиа (картинки и видео)
-    if (loc.includes('/fair/') || loc.includes('/biblio/')) {
-        // Вычисляем путь к папке (из /fair/robot/ делаем /_fair/robot/)
-        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
+            links.forEach(link => {
+                const video = document.createElement('video');
+                video.src = link.getAttribute('href');
+                video.controls = true;
+                container.appendChild(video);
+                link.remove(); // Удаляем ссылку
+            });
 
-        // Находим абсолютно все картинки и видео в контенте
-        const elements = document.querySelectorAll('.main-content img, .main-content video');
+            // Вставляем контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
 
-        elements.forEach(item => {
-            let src = item.getAttribute('src');
-            // Если путь относительный (не начинается с / или http)
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
+            // Если в абзаце была только ссылка, удаляем пустой абзац
+            if (p.textContent.trim() === "") {
+                p.remove();
             }
-        });
-    }
+        }
+    });
 });
 </script>
+
 
 </body>
 </html>

@@ -7,10 +7,10 @@ custom_css: ["/css/fair.css"]
 Проекты для юных инженеров.
 
 <div class="fair-list">
-  {% for project in site.test%}
-    <a href="{{ project.url }}" class="fair-card">
-        <img src="{{ project.icon }}" class="fair-img-round">
-        <h3>{{ project.title }}</h3>
+  {% for item in site.test %}
+    <a href="{{ item.url }}" class="fair-card">
+        <img src="{{ item.icon }}" class="fair-img-round">
+        <h3>{{ item.title }}</h3>
     </a>
   {% endfor %}
 </div>

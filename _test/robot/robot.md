@@ -16,7 +16,7 @@ parent_url: "/fair/"
 ![]({{ ppath }}simple-cardboard-walking-robot-1.webp)
 ![]({{ ppath }}simple-cardboard-walking-robot-2.webp)
 ![]({{ ppath }}simple-cardboard-walking-robot-3.webp)
-![]{{ ppath }}simple-cardboard-walking-robot-4.webp)
+![]({{ ppath }}simple-cardboard-walking-robot-4.webp)
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 

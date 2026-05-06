@@ -33,7 +33,63 @@
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 
-<div class="main-content">    
+<div class="main-content">
+<script>
+        (function() {
+            // Вычисляем путь один раз
+            const loc = window.location.pathname;
+            if (!loc.includes('/fair/') && !loc.includes('/biblio/')) return;
+            const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
+
+            // Создаем MutationObserver, чтобы ловить теги ДО того, как они отрисуются
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType !== 1) return; // Пропускаем текст
+                        
+                        // Ищем картинки-видео и обычные картинки в добавленном узле
+                        const media = node.querySelectorAll ? node.querySelectorAll('img') : [];
+                        
+                        // Если сам узел - картинка
+                        const imgs = node.tagName === 'IMG' ? [node] : Array.from(media);
+
+                        imgs.forEach(img => {
+                            const src = img.getAttribute('src');
+                            if (!src || src.startsWith('http') || src.startsWith('/')) return;
+
+                            const fullPath = projectPath + src;
+                            
+                            // Если это видео (скрытое под видом картинки)
+                            if (src.endsWith('.webm') || src.endsWith('.mp4')) {
+                                const video = document.createElement('video');
+                                video.src = fullPath;
+                                video.controls = true;
+                                
+                                // Создаем контейнер-ряд, если его нет
+                                let container = img.closest('.video-test-row');
+                                if (!container) {
+                                    container = document.createElement('div');
+                                    container.className = 'video-test-row';
+                                    img.parentNode.insertBefore(container, img);
+                                }
+                                container.appendChild(video);
+                                img.remove();
+                            } else {
+                                // Если это обычная картинка - просто правим путь
+                                img.src = fullPath;
+                            }
+                        });
+                    });
+                });
+            });
+
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+            
+            // Отключаем обсерватор через 3 секунды (когда всё точно загрузилось)
+            setTimeout(() => observer.disconnect(), 3000);
+        })();
+    </script>
+    
     {{ content }}
 </div>
    
@@ -84,51 +140,6 @@
     </p> 
 </footer>
    
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-
-    // 1. Ищем абзацы с "картинками"-видео (синтаксис ![video](file.webm))
-    const paragraphs = document.querySelectorAll('.main-content p');
-
-    paragraphs.forEach(p => {
-        // Ищем только теги <img>, которые ведут на видео-файлы
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        if (fakeVideos.length > 0) {
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-
-            fakeVideos.forEach(img => {
-                const video = document.createElement('video');
-                video.src = img.getAttribute('src');
-                video.controls = true;
-                container.appendChild(video);
-                img.remove();
-            });
-
-            p.parentNode.insertBefore(container, p);
-            
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
-        }
-    });
-
-    // 2. Исправляем пути для всех медиа в коллекции
-    if (loc.includes('/fair/') || loc.includes('/biblio/')) {
-        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
-        const elements = document.querySelectorAll('.main-content img, .main-content video');
-
-        elements.forEach(item => {
-            let src = item.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
-            }
-        });
-    }
-});
-</script>
 
 </body>
 </html>

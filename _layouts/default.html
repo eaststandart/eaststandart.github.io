@@ -15,7 +15,7 @@
 {% endif %}
 </head>
 <body>
-{% assign dpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
+
 <div class="content-wrapper">
         
     <!-- Блок навигации -->
@@ -33,10 +33,10 @@
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 
-<div class="main-content">    
-    {{ content }}
-</div>
-   
+    <div class="main-content">
+        {{ content }}
+    </div>
+    
     <!-- Универсальный блок библиографии -->
     {% if page.bibliography %}
     <div class="bibliography-footer">
@@ -83,54 +83,39 @@
         <a href="https://creativecommons.org" target="_blank" style="color: #7f8c8d; text-decoration: underline;">CC BY 4.0</a> (с указанием авторства). 
     </p> 
 </footer>
-   
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-
-    // 1. Ищем абзацы, внутри которых есть "ошибочные" картинки-видео
+    // 1. Находим все абзацы, которые содержат ссылки на видео
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
         
-        if (fakeVideos.length > 0) {
-            // Создаем ОДИН контейнер для всех видео этого абзаца
+        if (links.length > 0) {
+            // Создаем нашу обертку
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
-            fakeVideos.forEach(img => {
+            links.forEach(link => {
                 const video = document.createElement('video');
-                video.src = img.getAttribute('src');
+                video.src = link.getAttribute('href');
                 video.controls = true;
                 container.appendChild(video);
-                img.remove(); // Удаляем картинку-заглушку
+                link.remove(); // Удаляем ссылку
             });
 
-            // Вставляем контейнер перед абзацем (или вместо него)
-            p.parentNode.insertBefore(container, p);
-            
-            // Если в абзаце больше ничего не осталось, удаляем его
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+            // Вставляем контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Если в абзаце была только ссылка, удаляем пустой абзац
+            if (p.textContent.trim() === "") {
                 p.remove();
             }
         }
     });
-
-    // 2. Исправляем пути для всех медиа (включая обычные фото и новые видео)
-    if (loc.includes('/fair/') || loc.includes('/biblio/')) {
-        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
-        const elements = document.querySelectorAll('.main-content img, .main-content video');
-
-        elements.forEach(item => {
-            let src = item.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
-            }
-        });
-    }
 });
 </script>
-
+    
 </body>
 </html>

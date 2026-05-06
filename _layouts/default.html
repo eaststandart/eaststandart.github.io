@@ -91,12 +91,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
     if (!currentSection) return;
 
-    // Гарантируем правильный путь к складу (/_test/robot/)
+    // Формируем путь к складу (/_test/robot/)
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // Находим все картинки и видео сразу
+    // 1. Исправляем пути для всех медиа сразу
     const allMedia = document.querySelectorAll('.main-content img, .main-content video');
-    
     allMedia.forEach(item => {
         let src = item.getAttribute('src');
         if (src && !src.startsWith('http') && !src.startsWith('/')) {
@@ -104,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Твоя логика группировки видео в div.video-test-row
+    // 2. Группируем видео в ряды
     const paragraphs = document.querySelectorAll('.main-content p');
     paragraphs.forEach(p => {
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
@@ -113,7 +112,10 @@ document.addEventListener("DOMContentLoaded", function() {
             container.className = 'video-test-row';
             fakeVideos.forEach(img => {
                 const video = document.createElement('video');
+                
+                // Берем уже исправленный путь из img.src, чтобы видео не давало 404
                 video.src = img.src; 
+                
                 video.controls = true;
                 container.appendChild(video);
                 img.remove();

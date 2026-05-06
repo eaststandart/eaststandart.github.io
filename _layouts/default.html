@@ -118,10 +118,16 @@ document.addEventListener("DOMContentLoaded", function() {
         const realImgs = p.querySelectorAll('img');
         realImgs.forEach(img => {
             let src = img.getAttribute('src');
+            
+            // Если путь относительный
             if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                // Временно подменяем на прозрачный пиксель или пустоту, 
+                // чтобы браузер перестал долбиться по старому адресу
+                img.setAttribute('loading', 'lazy'); 
                 img.src = projectPath + src;
             }
         });
+
 
         if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
             p.remove();

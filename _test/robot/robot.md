@@ -14,17 +14,17 @@ parent_url: "/fair/"
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
 ![]({{ ppath }}simple-cardboard-walking-robot-1.webp)
-![](simple-cardboard-walking-robot-2.webp)
-![](simple-cardboard-walking-robot-3.webp)
-![](simple-cardboard-walking-robot-4.webp)
+![]({{ ppath }}simple-cardboard-walking-robot-2.webp)
+![]({{ ppath }}simple-cardboard-walking-robot-3.webp)
+![]{{ ppath }}simple-cardboard-walking-robot-4.webp)
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
 
-![](simple-cardboard-walking-robot-1.webm)
-![](simple-cardboard-walking-robot-2.webm)
+![]({{ ppath }}simple-cardboard-walking-robot-1.webm)
+![]({{ ppath }}simple-cardboard-walking-robot-2.webm)
 
 > **Смотри также:** [Шагающие машины ВНИИ Трансмаш, 1980 год](https://youtu.be/hQSO-6LvINQ).
 

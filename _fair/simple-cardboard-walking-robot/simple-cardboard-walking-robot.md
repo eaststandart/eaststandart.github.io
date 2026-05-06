@@ -21,6 +21,8 @@ parent_url: "/fair/"
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
 
+![video](simple-cardboard-walking-robot-1.webm)
+![video](simple-cardboard-walking-robot-2.webm)
 ![](simple-cardboard-walking-robot-1.webm)
 ![](simple-cardboard-walking-robot-2.webm)
 

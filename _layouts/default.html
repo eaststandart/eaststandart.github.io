@@ -86,33 +86,46 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const paragraphs = document.querySelectorAll('.main-content p');
+    const loc = window.location.pathname;
+    const sections = ['fair', 'test', 'biblio', 'diary'];
+    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
+    if (!currentSection) return;
 
+    const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
+
+    // 1. Исправляем пути
+    const allMedia = document.querySelectorAll('.main-content img');
+    allMedia.forEach(img => {
+        let src = img.getAttribute('src');
+        if (src && !src.startsWith('http') && !src.startsWith('/')) {
+            // Если это видео, замаскированное под картинку, 
+            // временно отключаем src, чтобы не было 404
+            if (src.endsWith('.webm') || src.endsWith('.mp4')) {
+                img.setAttribute('data-src', projectPath + src);
+                img.src = ''; 
+            } else {
+                img.src = projectPath + src;
+            }
+        }
+    });
+
+    // 2. Твоя логика группировки
+    const paragraphs = document.querySelectorAll('.main-content p');
     paragraphs.forEach(p => {
-        // Ищем только "картинки", которые на самом деле видео (результат ![video])
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
+        // Ищем картинки с видео-расширениями или наши data-src
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"], img[data-src]');
         if (fakeVideos.length > 0) {
-            // 1. Создаем тот самый контейнер-ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
-
             fakeVideos.forEach(img => {
-                // 2. Создаем тег video
                 const video = document.createElement('video');
-                video.src = img.getAttribute('src');
+                // Берем путь из исправленного data-src или src
+                video.src = img.getAttribute('data-src') || img.src; 
                 video.controls = true;
-                
-                // 3. Кладем видео в контейнер
                 container.appendChild(video);
-                // 4. Удаляем старый тег img
                 img.remove();
             });
-
-            // 5. Ставим весь контейнер перед абзацем
             p.insertAdjacentElement('beforebegin', container);
-
-            // Чистим пустой абзац
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
@@ -120,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
     
 </body>
 </html>

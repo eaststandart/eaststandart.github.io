@@ -84,43 +84,6 @@
     </p> 
 </footer>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const paragraphs = document.querySelectorAll('.main-content p');
-
-    paragraphs.forEach(p => {
-        // Ищем только "картинки", которые на самом деле видео (результат ![video])
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        if (fakeVideos.length > 0) {
-            // 1. Создаем тот самый контейнер-ряд
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-
-            fakeVideos.forEach(img => {
-                // 2. Создаем тег video
-                const video = document.createElement('video');
-                video.src = img.getAttribute('src');
-                video.controls = true;
-                
-                // 3. Кладем видео в контейнер
-                container.appendChild(video);
-                // 4. Удаляем старый тег img
-                img.remove();
-            });
-
-            // 5. Ставим весь контейнер перед абзацем
-            p.insertAdjacentElement('beforebegin', container);
-
-            // Чистим пустой абзац
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
-        }
-    });
-});
-</script>
-
     
 </body>
 </html>

@@ -36,7 +36,7 @@
 <div class="main-content">
     {% assign path = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
     
-    {% capture search_text %}{{ '{{' }} path }}{% endcapture %}
+    {% capture search_text %}{{ '{{' }}path}}{% endcapture %}
     {{ content | replace: search_text, path }}
 </div>
     

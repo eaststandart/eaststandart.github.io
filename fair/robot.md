@@ -8,6 +8,8 @@ parent_name: "Поделки"
 parent_url: "/fair/"
 ---
 
+{% assign dpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
+
 {{path}}
 {{ path }}
 {{dpath}}

@@ -86,6 +86,32 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    const loc = window.location.pathname;
+    
+    // Работаем только если мы внутри разделов коллекции (fair, biblio и т.д.)
+    if (loc.startsWith('/fair/') || loc.startsWith('/biblio/')) {
+        
+        // Превращаем URL /fair/robot/ в путь к файлам /_fair/robot/
+        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
+        
+        // Находим все картинки и видео
+        const media = document.querySelectorAll('.main-content img, .main-content video, .main-content source');
+
+        media.forEach(item => {
+            const attr = item.tagName === 'SOURCE' ? 'src' : 'src'; // для простоты
+            let src = item.getAttribute('src');
+
+            // Если путь относительный (не начинается на http или /)
+            if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                item.setAttribute('src', projectPath + src);
+            }
+        });
+    }
+});
+</script>
+    
+<script>
+document.addEventListener("DOMContentLoaded", function() {
     // 1. Находим все абзацы, которые содержат ссылки на видео
     const paragraphs = document.querySelectorAll('.main-content p');
 
@@ -116,6 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-    
+     
 </body>
 </html>

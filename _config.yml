@@ -1,4 +1,4 @@
-collections:
+collections: 
   test:
     output: true
     permalink: /test/:name/

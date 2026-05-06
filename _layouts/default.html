@@ -85,52 +85,62 @@
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // ОПРЕДЕЛЕНИЕ ПУТИ (Добавили этот блок)
+(function() {
     const loc = window.location.pathname;
     const sections = ['fair', 'test', 'biblio', 'diary'];
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
     if (!currentSection) return;
+
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // ТВОЙ АБЗАЦ (Без изменений в логике)
-    const paragraphs = document.querySelectorAll('.main-content p');
+    // 1. МГНОВЕННАЯ ПОДМЕНА ПУТЕЙ (убирает 404 ошибки)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType !== 1) return;
+                const imgs = node.tagName === 'IMG' ? [node] : node.querySelectorAll('img');
+                imgs.forEach(img => {
+                    let src = img.getAttribute('src');
+                    if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                        img.src = projectPath + src;
+                    }
+                });
+            });
+        });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
 
-    paragraphs.forEach(p => {
-        // Исправляем пути для обычных картинок в абзаце (Чтобы не было 404)
-        const allImgs = p.querySelectorAll('img');
-        allImgs.forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                img.src = projectPath + src;
+    // 2. ТВОЙ АБЗАЦ (группировка видео в ряды)
+    document.addEventListener("DOMContentLoaded", function() {
+        observer.disconnect(); // Останавливаем слежку после загрузки страницы
+
+        const paragraphs = document.querySelectorAll('.main-content p');
+        paragraphs.forEach(p => {
+            const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+            
+            if (fakeVideos.length > 0) {
+                const container = document.createElement('div');
+                container.className = 'video-test-row';
+
+                fakeVideos.forEach(img => {
+                    const video = document.createElement('video');
+                    video.src = img.src; // Берем уже исправленный путь
+                    video.controls = true;
+                    container.appendChild(video);
+                    img.remove();
+                });
+
+                p.insertAdjacentElement('beforebegin', container);
+
+                if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                    p.remove();
+                }
             }
         });
-
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        if (fakeVideos.length > 0) {
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-
-            fakeVideos.forEach(img => {
-                const video = document.createElement('video');
-                // Используем уже исправленный путь из img.src
-                video.src = img.src;
-                video.controls = true;
-                
-                container.appendChild(video);
-                img.remove();
-            });
-
-            p.insertAdjacentElement('beforebegin', container);
-
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
-        }
     });
-});
+})();
 </script>
+
     
 </body>
 </html>

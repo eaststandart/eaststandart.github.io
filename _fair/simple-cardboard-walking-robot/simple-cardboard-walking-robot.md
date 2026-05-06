@@ -12,7 +12,7 @@ parent_url: "/fair/"
 
 {% assign pppath = ppath | replace: "/", "/"  %} DEBUG: {{ pppath }}
 
-{% assign ppppath =  page.path | replace: "page.name", "/"  | replace: page.name, ""  %} DEBUG: {{ ppppath }}
+{% assign ppppath =  page.path | replace: "page.name", "/"  %} DEBUG: {{ ppppath }}
 
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.

@@ -86,34 +86,36 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Находим все абзацы, которые содержат ссылки на видео
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
+        // Находим только теги <img>, которые ведут на видео-файлы
+        // (Это результат синтаксиса ![video](file.webm))
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
-        if (links.length > 0) {
-            // Создаем нашу обертку
+        if (fakeVideos.length > 0) {
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
-            links.forEach(link => {
+            fakeVideos.forEach(img => {
                 const video = document.createElement('video');
-                video.src = link.getAttribute('href');
+                // Берем путь из атрибута src
+                video.src = img.getAttribute('src');
                 video.controls = true;
                 container.appendChild(video);
-                link.remove(); // Удаляем ссылку
+                img.remove(); // Удаляем картинку-заглушку
             });
 
-            // Вставляем контейнер перед абзацем
+            // Вставляем контейнер с плеерами перед абзацем
             p.insertAdjacentElement('beforebegin', container);
 
-            // Если в абзаце была только ссылка, удаляем пустой абзац
-            if (p.textContent.trim() === "") {
+            // Если в абзаце были только эти "картинки", удаляем пустой абзац
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
         }
     });
+    // Обычные ссылки <a> скрипт теперь просто игнорирует
 });
 </script>
     

@@ -36,11 +36,8 @@
 <div class="main-content">
     {% assign path = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
     
-    {% comment %} 
-       Эта магия заменяет текст {{ path }} внутри контента 
-       на реальное значение переменной path 
-    {% endcomment %}
-    {{ content | replace: '{{ path }}', path }}
+    {% capture search_text %}{{ '{{' }} path }}{% endcapture %}
+    {{ content | replace: search_text, path }}
 </div>
     
     <!-- Универсальный блок библиографии -->

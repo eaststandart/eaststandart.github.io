@@ -3,5 +3,4 @@ collections:
     output: true
     permalink: /test/:name/
 
-# Заставляем Jekyll просто копировать папку с файлами как есть
 include: ["_test"]

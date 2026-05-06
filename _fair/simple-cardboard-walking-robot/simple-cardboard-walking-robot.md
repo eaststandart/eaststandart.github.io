@@ -7,7 +7,9 @@ sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templ
 parent_name: "Поделки"
 parent_url: "/fair/"
 ---
-{{ ppath }}
+
+{% assign ppath = page.url | replace: 'index.html', '' | replace: '.html', '/' %} DEBUG: {{ ppath }}
+
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 

@@ -6,7 +6,7 @@
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/video.css">
+    <link rel="stylesheet" href="/css/video.css">
     <!-- Подключение дополнительных стилей, если они указаны в YAML страницы -->
     {% if page.custom_css %}
      {% for style in page.custom_css %}
@@ -86,47 +86,45 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Сначала определяем путь к коллекции (добавил эту строку)
     const loc = window.location.pathname;
-    const projectPath = loc.replace(/^\/(fair|test|biblio)\//, '/_$1/');
+    const sections = ['fair', 'test', 'biblio', 'diary'];
+    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
+    if (!currentSection) return;
 
+    // Формируем путь к складу (/_test/robot/)
+    const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
+
+    // 1. Исправляем пути для всех медиа сразу
+    const allMedia = document.querySelectorAll('.main-content img, .main-content video');
+    allMedia.forEach(item => {
+        let src = item.getAttribute('src');
+        if (src && !src.startsWith('http') && !src.startsWith('/')) {
+            item.setAttribute('src', projectPath + src);
+        }
+    });
+
+    // 2. Группируем видео в ряды
     const paragraphs = document.querySelectorAll('.main-content p');
-
     paragraphs.forEach(p => {
-        // Ищем только "картинки", которые на самом деле видео
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
         if (fakeVideos.length > 0) {
             const container = document.createElement('div');
             container.className = 'video-test-row';
-
             fakeVideos.forEach(img => {
                 const video = document.createElement('video');
-                let src = img.getAttribute('src');
                 
-                // Добавляем путь к файлу (исправил здесь)
-                video.src = (src.startsWith('http') || src.startsWith('/')) ? src : projectPath + src;
+                // Берем уже исправленный путь из img.src, чтобы видео не давало 404
+                video.src = img.src; 
                 
                 video.controls = true;
                 container.appendChild(video);
                 img.remove();
             });
-
             p.insertAdjacentElement('beforebegin', container);
-
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
         }
-
-        // 2. Исправляем пути для обычных фото (добавил этот блок, чтобы фото не пропадали)
-        const images = p.querySelectorAll('img');
-        images.forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                img.src = projectPath + src;
-            }
-        });
     });
 });
 </script>

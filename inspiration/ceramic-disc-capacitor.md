@@ -15,6 +15,3 @@ parent_url: "/inspiration/"
 
 ![](img/ceramic-disc-capacitor-2.webp)
 ![](img/ceramic-disc-capacitor-3.webp)
-![](img/ceramic-disc-capacitor-3.webp)
-
-ааа

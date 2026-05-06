@@ -22,6 +22,8 @@ parent_url: "/fair/"
 
 ![video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
 ![video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
+![video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
+[video](simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
 
 > **Смотри также:** [Шагающие машины ВНИИ Трансмаш, 1980 год](https://youtu.be/hQSO-6LvINQ).
 

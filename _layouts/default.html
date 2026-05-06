@@ -85,61 +85,48 @@
 </footer>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function() {
+    // 1. Сначала определяем путь к коллекции (добавил эту строку)
     const loc = window.location.pathname;
-    // Проверяем, что мы в папке коллекции (test, fair, biblio и т.д.)
-    const sections = ['test', 'fair', 'biblio', 'diary'];
-    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
-    
-    if (currentSection) {
-        // Из /test/robot/ делаем путь к файлам /_test/robot/
-        const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
+    const projectPath = loc.replace(/^\/(fair|test|biblio)\//, '/_$1/');
 
-        // Обрабатываем картинки и видео
-        const media = document.querySelectorAll('.main-content img, .main-content video');
-        media.forEach(item => {
-            let src = item.getAttribute('src');
-            // Если путь относительный (не начинается с / или http)
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
-            }
-        });
-    }
-});
-    
-document.addEventListener("DOMContentLoaded", function() {
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        // Ищем только "картинки", которые на самом деле видео (результат ![video])
+        // Ищем только "картинки", которые на самом деле видео
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
         if (fakeVideos.length > 0) {
-            // 1. Создаем тот самый контейнер-ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
             fakeVideos.forEach(img => {
-                // 2. Создаем тег video
                 const video = document.createElement('video');
-                video.src = img.getAttribute('src');
-                video.controls = true;
+                let src = img.getAttribute('src');
                 
-                // 3. Кладем видео в контейнер
+                // Добавляем путь к файлу (исправил здесь)
+                video.src = (src.startsWith('http') || src.startsWith('/')) ? src : projectPath + src;
+                
+                video.controls = true;
                 container.appendChild(video);
-                // 4. Удаляем старый тег img
                 img.remove();
             });
 
-            // 5. Ставим весь контейнер перед абзацем
             p.insertAdjacentElement('beforebegin', container);
 
-            // Чистим пустой абзац
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
         }
+
+        // 2. Исправляем пути для обычных фото (добавил этот блок, чтобы фото не пропадали)
+        const images = p.querySelectorAll('img');
+        images.forEach(img => {
+            let src = img.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                img.src = projectPath + src;
+            }
+        });
     });
 });
 </script>

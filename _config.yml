@@ -1,6 +1,0 @@
-collections:
-  test:
-    output: true
-    permalink: /test/:name/
-
-include: ["_test"]

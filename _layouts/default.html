@@ -86,56 +86,40 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-    const sections = ['fair', 'test', 'biblio', 'diary'];
-    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
-    if (!currentSection) return;
-
-    const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        // 1. СНАЧАЛА ВИДЕО: ищем теги, которые должны стать плеерами
+        // Ищем только "картинки", которые на самом деле видео (результат ![video])
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
         if (fakeVideos.length > 0) {
+            // 1. Создаем тот самый контейнер-ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
             fakeVideos.forEach(img => {
+                // 2. Создаем тег video
                 const video = document.createElement('video');
-                let rawSrc = img.getAttribute('src');
-                // Сразу даем правильный путь, чтобы не было 404
-                video.src = (rawSrc.startsWith('http') || rawSrc.startsWith('/')) ? rawSrc : projectPath + rawSrc;
+                video.src = img.getAttribute('src');
                 video.controls = true;
+                
+                // 3. Кладем видео в контейнер
                 container.appendChild(video);
-                img.remove(); // Удаляем картинку до того, как браузер её загрузит
+                // 4. Удаляем старый тег img
+                img.remove();
             });
+
+            // 5. Ставим весь контейнер перед абзацем
             p.insertAdjacentElement('beforebegin', container);
-        }
 
-        // 2. ПОТОМ КАРТИНКИ: только те, что остались (настоящие фото)
-        const realImgs = p.querySelectorAll('img');
-        realImgs.forEach(img => {
-            let src = img.getAttribute('src');
-            
-            // Если путь относительный
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                // Временно подменяем на прозрачный пиксель или пустоту, 
-                // чтобы браузер перестал долбиться по старому адресу
-                img.setAttribute('loading', 'lazy'); 
-                img.src = projectPath + src;
+            // Чистим пустой абзац
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                p.remove();
             }
-        });
-
-
-        if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-            p.remove();
         }
     });
 });
 </script>
-
     
 </body>
 </html>

@@ -87,37 +87,58 @@
 <script>
 (function() {
     const loc = window.location.pathname;
-    const sections = ['fair', 'test', 'biblio', 'diary'];
+    const sections = ['fair', 'test', 'biblio', 'diary', 'projects'];
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
+    
     if (!currentSection) return;
 
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // Наблюдатель за появлением элементов (срабатывает мгновенно)
+    // 1. Мгновенная подмена путей (чтобы не было 404 в консоли)
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
                 if (node.nodeType !== 1) return;
-                
                 const imgs = node.tagName === 'IMG' ? [node] : node.querySelectorAll('img');
                 imgs.forEach(img => {
                     let src = img.getAttribute('src');
                     if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                        // ПОДМЕНЯЕМ ПУТЬ МГНОВЕННО
                         img.src = projectPath + src;
                     }
                 });
             });
         });
     });
-
     observer.observe(document.documentElement, { childList: true, subtree: true });
-    
-    // Оставляем твой код для сборки видео в div (DOMContentLoaded)
+
+    // 2. Группировка видео в ряды и создание плееров
     document.addEventListener("DOMContentLoaded", function() {
-        observer.disconnect(); // Останавливаем наблюдатель
-        // Твой код с paragraphs.forEach (для сборки видео в div)
-        // ... (вставь сюда свой блок с fakeVideos) ...
+        observer.disconnect(); // Останавливаем слежку после загрузки
+
+        const paragraphs = document.querySelectorAll('.main-content p');
+        paragraphs.forEach(p => {
+            const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+            
+            if (fakeVideos.length > 0) {
+                const container = document.createElement('div');
+                container.className = 'video-test-row';
+
+                fakeVideos.forEach(img => {
+                    const video = document.createElement('video');
+                    // Путь уже исправлен первым этапом (observer)
+                    video.src = img.src; 
+                    video.controls = true;
+                    container.appendChild(video);
+                    img.remove();
+                });
+
+                p.insertAdjacentElement('beforebegin', container);
+
+                if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                    p.remove();
+                }
+            }
+        });
     });
 })();
 </script>

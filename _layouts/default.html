@@ -85,60 +85,53 @@
 </footer>
 
 <script>
-(function() {
-    // 1. СРАЗУ вычисляем правильный путь, не дожидаясь загрузки страницы
+document.addEventListener("DOMContentLoaded", function() {
     const loc = window.location.pathname;
     const sections = ['fair', 'test', 'biblio', 'diary'];
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
-    
     if (!currentSection) return;
+
+    // Тот самый путь к складу (/_test/robot/)
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // 2. ФУНКЦИЯ ИСПРАВЛЕНИЯ (чтобы не дублировать код)
-    function fixMedia(el) {
-        let src = el.getAttribute('src');
-        if (src && !src.startsWith('http') && !src.startsWith('/')) {
-            el.src = projectPath + src;
-        }
-    }
+    const paragraphs = document.querySelectorAll('.main-content p');
 
-    // 3. ПЕРЕХВАТ (Запускается мгновенно)
-    // Это единственный способ убрать 404. Мы "ловим" теги в момент их рождения.
-    const observer = new MutationObserver((mutations) => {
-        for (let m of mutations) {
-            for (let node of m.addedNodes) {
-                if (node.nodeType !== 1) continue;
-                if (node.tagName === 'IMG') fixMedia(node);
-                node.querySelectorAll && node.querySelectorAll('img').forEach(fixMedia);
-            }
-        }
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-
-    // 4. ТВОЙ АБЗАЦ (Сборка видео в ряды - когда страница готова)
-    document.addEventListener("DOMContentLoaded", function() {
-        observer.disconnect(); // Нам больше не нужно следить
-
-        document.querySelectorAll('.main-content p').forEach(p => {
-            const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-            if (fakeVideos.length > 0) {
-                const container = document.createElement('div');
-                container.className = 'video-test-row';
-                fakeVideos.forEach(img => {
-                    const video = document.createElement('video');
-                    video.src = img.src; // Здесь путь уже исправлен на шаге №3
-                    video.controls = true;
-                    container.appendChild(video);
-                    img.remove();
-                });
-                p.insertAdjacentElement('beforebegin', container);
-                if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) p.remove();
+    paragraphs.forEach(p => {
+        // 1. Сначала ПРАВИМ ПУТИ всем картинкам (это твой проверенный метод)
+        const allImgs = p.querySelectorAll('img');
+        allImgs.forEach(img => {
+            let src = img.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                // Прямо здесь дописываем путь
+                img.src = projectPath + src;
             }
         });
-    });
-})();
-</script>
 
+        // 2. А теперь твоя логика группировки видео в div
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+        
+        if (fakeVideos.length > 0) {
+            const container = document.createElement('div');
+            container.className = 'video-test-row';
+
+            fakeVideos.forEach(img => {
+                const video = document.createElement('video');
+                // ВАЖНО: берем img.src, который МЫ УЖЕ ИСПРАВИЛИ выше
+                video.src = img.src; 
+                video.controls = true;
+                container.appendChild(video);
+                img.remove();
+            });
+
+            p.insertAdjacentElement('beforebegin', container);
+
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                p.remove();
+            }
+        }
+    });
+});
+</script>
     
 </body>
 </html>

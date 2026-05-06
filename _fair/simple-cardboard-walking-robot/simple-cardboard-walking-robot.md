@@ -8,8 +8,6 @@ parent_name: "Поделки"
 parent_url: "/fair/"
 ---
 
-<-- {% assign ppath = page.path | replace: ".md", "/"  | replace: page.name, "" | prepend: "/" %} DEBUG: {{ ppath }} -->
-
 {% assign parts = page.path | split: "/" %}
 {% assign last_index = parts.size | minus: 1 %}
 {% assign ppath = "/" %}

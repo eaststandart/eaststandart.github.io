@@ -8,7 +8,7 @@ parent_name: "Поделки"
 parent_url: "/fair/"
 ---
 
-
+<-- {% assign ppath = page.path | replace: ".md", "/"  | replace: page.name, "" | prepend: "/" %} DEBUG: {{ ppath }} -->
 
 {% assign parts = page.path | split: "/" %}
 {% assign last_index = parts.size | minus: 1 %}
@@ -20,6 +20,18 @@ parent_url: "/fair/"
 {% endfor %}
 
 DEBUG: {{ ppath }}
+
+{% assign dpath = page.path | replace: page.name, '' | prepend: '/' %} DEBUG: {{ dpath }}
+
+{% assign fpath = page.path | split: '/' | last | prepend: '/' | prepend: page.path | replace: page.path, '' | split: '/' | size | minus: 1 | assign: 'ignore' %}{% assign ppath = page.path | split: '/' | slice: 0, last_index | join: '/' | prepend: '/' | append: '/' %} DEBUG: {{ fpath }}
+
+{% capture gpath %}/{{ page.path | replace: page.name, '' }}{% endcapture %} DEBUG: {{ gpath }}
+
+{% assign hpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %} DEBUG: {{ hpath }}
+
+{% assign folder = page.path | split: '/' | last %}
+{% assign kpath = page.path | replace: folder, '' | prepend: '/' %} DEBUG: {{ kpath }}
+
 
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.

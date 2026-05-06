@@ -85,55 +85,59 @@
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+(function() {
     const loc = window.location.pathname;
-    
-    // 1. Определяем, в какой мы коллекции (test, fair, biblio...)
-    const sections = ['test', 'fair', 'biblio', 'diary'];
+    const sections = ['fair', 'test', 'biblio', 'diary'];
     const currentSection = sections.find(s => loc.includes('/' + s + '/'));
     if (!currentSection) return;
 
-    // Формируем путь к папке (/_test/robot/)
     const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
 
-    // 2. Обрабатываем контент
-    const paragraphs = document.querySelectorAll('.main-content p');
-
-    paragraphs.forEach(p => {
-        // Сначала правим пути всем картинкам, чтобы они подгрузились
-        const allImgs = p.querySelectorAll('img');
-        allImgs.forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                img.src = projectPath + src;
-            }
-        });
-
-        // Теперь твоя логика группировки видео в div
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        if (fakeVideos.length > 0) {
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-
-            fakeVideos.forEach(img => {
-                const video = document.createElement('video');
-                video.src = img.src; // Берем путь, который уже исправили выше
-                video.controls = true;
-                container.appendChild(video);
-                img.remove();
-            });
-
-            p.insertAdjacentElement('beforebegin', container);
-
-            // Чистим пустой абзац
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
+    // --- МИКРО-ДОБАВКА (Перехват 404) ---
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                if (node.nodeType !== 1) continue;
+                const imgs = node.tagName === 'IMG' ? [node] : node.querySelectorAll('img');
+                for (const img of imgs) {
+                    const src = img.getAttribute('src');
+                    if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                        img.src = projectPath + src;
+                    }
+                }
             }
         }
     });
-});
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    // ------------------------------------
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Когда страница загружена, обсерватор больше не нужен
+        observer.disconnect();
+
+        const paragraphs = document.querySelectorAll('.main-content p');
+        paragraphs.forEach(p => {
+            const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+            if (fakeVideos.length > 0) {
+                const container = document.createElement('div');
+                container.className = 'video-test-row';
+                fakeVideos.forEach(img => {
+                    const video = document.createElement('video');
+                    video.src = img.src; 
+                    video.controls = true;
+                    container.appendChild(video);
+                    img.remove();
+                });
+                p.insertAdjacentElement('beforebegin', container);
+                if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                    p.remove();
+                }
+            }
+        });
+    });
+})();
 </script>
+
     
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -33,10 +33,15 @@
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 
-    <div class="main-content">
-        {% assign ppath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
-        {{ content }}
-    </div>
+<div class="main-content">
+    {% assign path = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
+    
+    {% comment %} 
+       Эта магия заменяет текст {{ path }} внутри контента 
+       на реальное значение переменной ppath 
+    {% endcomment %}
+    {{ content | replace: '{{ path }}', path }}
+</div>
     
     <!-- Универсальный блок библиографии -->
     {% if page.bibliography %}

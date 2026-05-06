@@ -1,20 +1,16 @@
 ---
 layout: default
-title: Тестовая страница проекта
-sources: |
-  * Журнал "Радио" №5
-  * Журнал "Юный техник": [сайт](https://example.com)
-tags: [arduino, робототехника, электроника]
+title: Ярмарка поделок
+custom_css: ["/css/fair.css"]
 ---
 
-Это описание проекта, написанное на **Markdown**. Теперь оно выглядит красиво, потому что использует шаблон из папки `_layouts`.
+Проекты для юных инженеров.
 
-### Что можно добавить:
-* Списки компонентов.
-* Схемы (просто вставьте картинку).
-* Код программы.
-
-Вот пример вставки кода для Arduino:
-`void setup() { pinMode(13, OUTPUT); }`
-
-![Пример картинки](img/logo.svg)
+<div class="fair-list">
+  {% for project in site.test%}
+    <a href="{{ project.url }}" class="fair-card">
+        <img src="{{ project.icon }}" class="fair-img-round">
+        <h3>{{ project.title }}</h3>
+    </a>
+  {% endfor %}
+</div>

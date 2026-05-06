@@ -86,37 +86,51 @@
    
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Находим все абзацы, которые содержат ссылки на видео
+    const loc = window.location.pathname;
+
+    // 1. Ищем абзацы, внутри которых есть "ошибочные" картинки-видео
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
-        if (links.length > 0) {
-            // Создаем нашу обертку
+        if (fakeVideos.length > 0) {
+            // Создаем ОДИН контейнер для всех видео этого абзаца
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
-            links.forEach(link => {
+            fakeVideos.forEach(img => {
                 const video = document.createElement('video');
-                video.src = link.getAttribute('href');
+                video.src = img.getAttribute('src');
                 video.controls = true;
                 container.appendChild(video);
-                link.remove(); // Удаляем ссылку
+                img.remove(); // Удаляем картинку-заглушку
             });
 
-            // Вставляем контейнер перед абзацем
-            p.insertAdjacentElement('beforebegin', container);
-
-            // Если в абзаце была только ссылка, удаляем пустой абзац
-            if (p.textContent.trim() === "") {
+            // Вставляем контейнер перед абзацем (или вместо него)
+            p.parentNode.insertBefore(container, p);
+            
+            // Если в абзаце больше ничего не осталось, удаляем его
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
         }
     });
+
+    // 2. Исправляем пути для всех медиа (включая обычные фото и новые видео)
+    if (loc.includes('/fair/') || loc.includes('/biblio/')) {
+        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
+        const elements = document.querySelectorAll('.main-content img, .main-content video');
+
+        elements.forEach(item => {
+            let src = item.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                item.setAttribute('src', projectPath + src);
+            }
+        });
+    }
 });
 </script>
-
 
 </body>
 </html>

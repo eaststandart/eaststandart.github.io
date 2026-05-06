@@ -86,38 +86,34 @@
    
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
+    // 1. Находим все абзацы, которые содержат ссылки на видео
+    const paragraphs = document.querySelectorAll('.main-content p');
 
-    // 1. Исправляем ошибку парсера: превращаем <img> с видео-файлами в <video>
-    const fakeVideos = document.querySelectorAll('.main-content img[src$=".mp4"], .main-content img[src$=".webm"]');
-    
-    fakeVideos.forEach(img => {
-        const video = document.createElement('video');
-        video.src = img.getAttribute('src');
-        video.controls = true;
+    paragraphs.forEach(p => {
+        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
         
-        // Оборачиваем в контейнер для рядов (video.css)
-        const container = document.createElement('div');
-        container.className = 'video-test-row';
-        img.parentNode.insertBefore(container, img);
-        container.appendChild(video);
-        
-        img.remove(); // Удаляем неправильный тег img
-    });
+        if (links.length > 0) {
+            // Создаем нашу обертку
+            const container = document.createElement('div');
+            container.className = 'video-test-row';
 
-    // 2. Теперь исправляем пути для всех медиа (и для фото, и для уже созданных видео)
-    if (loc.includes('/fair/') || loc.includes('/biblio/')) {
-        const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
-        const elements = document.querySelectorAll('.main-content img, .main-content video');
+            links.forEach(link => {
+                const video = document.createElement('video');
+                video.src = link.getAttribute('href');
+                video.controls = true;
+                container.appendChild(video);
+                link.remove(); // Удаляем ссылку
+            });
 
-        elements.forEach(item => {
-            let src = item.getAttribute('src');
-            // Если путь относительный (начинается с имени файла)
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
+            // Вставляем контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Если в абзаце была только ссылка, удаляем пустой абзац
+            if (p.textContent.trim() === "") {
+                p.remove();
             }
-        });
-    }
+        }
+    });
 });
 </script>
 

@@ -87,38 +87,32 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const loc = window.location.pathname;
+
+    // 1. Исправляем ошибку парсера: превращаем <img> с видео-файлами в <video>
+    const fakeVideos = document.querySelectorAll('.main-content img[src$=".mp4"], .main-content img[src$=".webm"]');
     
-    // 1. Сначала превращаем ссылки на видео в плееры (для всех ссылок в статье)
-    const videoLinks = document.querySelectorAll('.main-content a[href$=".mp4"], .main-content a[href$=".webm"]');
-    
-    videoLinks.forEach(link => {
+    fakeVideos.forEach(img => {
         const video = document.createElement('video');
-        video.src = link.getAttribute('href');
+        video.src = img.getAttribute('src');
         video.controls = true;
         
-        // Оборачиваем в наш класс для рядов, если нужно
-        if (!link.parentElement.classList.contains('video-test-row')) {
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-            link.parentNode.insertBefore(container, link);
-            container.appendChild(video);
-        } else {
-            link.parentElement.appendChild(video);
-        }
-        link.remove();
+        // Оборачиваем в контейнер для рядов (video.css)
+        const container = document.createElement('div');
+        container.className = 'video-test-row';
+        img.parentNode.insertBefore(container, img);
+        container.appendChild(video);
+        
+        img.remove(); // Удаляем неправильный тег img
     });
 
-    // 2. Теперь исправляем пути для ВСЕХ медиа (картинки и видео)
+    // 2. Теперь исправляем пути для всех медиа (и для фото, и для уже созданных видео)
     if (loc.includes('/fair/') || loc.includes('/biblio/')) {
-        // Вычисляем путь к папке (из /fair/robot/ делаем /_fair/robot/)
         const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
-
-        // Находим абсолютно все картинки и видео в контенте
         const elements = document.querySelectorAll('.main-content img, .main-content video');
 
         elements.forEach(item => {
             let src = item.getAttribute('src');
-            // Если путь относительный (не начинается с / или http)
+            // Если путь относительный (начинается с имени файла)
             if (src && !src.startsWith('http') && !src.startsWith('/')) {
                 item.setAttribute('src', projectPath + src);
             }
@@ -126,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+
 
 </body>
 </html>

@@ -10,7 +10,7 @@ parent_url: "/fair/"
 
 {% assign ppath = page.path | replace: ".md", "/"  | replace: page.name, "" | prepend: "/" %} DEBUG: {{ ppath }}
 
-{% assign pppath = ppath | replace: "/", "/"  |  prepend: "/" %} DEBUG: {{ pppath }}
+{% assign pppath = ppath | replace: "/", "/"  %} DEBUG: {{ pppath }}
 
 {% assign ppppath =  page.path | replace: page.name, "/"  | replace: page.name, ""  %} DEBUG: {{ ppppath }}
 

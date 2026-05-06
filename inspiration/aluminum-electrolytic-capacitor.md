@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Алюминиевый электролитический конденсатор
 tags: [красотаэлектронныхкомпонентов, электролитическийконденсатор, конденсатор]
 sources: "Schlaepfer E., Oskay W., Open Circuits: The Inner Beauty of Electronic Components, 2023, p. 37"

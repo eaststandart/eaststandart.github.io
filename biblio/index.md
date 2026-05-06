@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Список литературы
 custom_css: ["/css/biblio.css"]
 ---

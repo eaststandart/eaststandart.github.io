@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Аналоговый стрелочный измерительный прибор
 tags: [красотаэлектронныхкомпонентов, гальванометр]
 sources: "Schlaepfer E., Oskay W., Open Circuits: The Inner Beauty of Electronic Components, 2023, pp. 216-217"

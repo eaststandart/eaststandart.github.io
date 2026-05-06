@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Красный светодиод с выводами для сквозного монтажа
 tags: [красотаэлектронныхкомпонентов, красныйсветодиод, светодиод]
 sources: "Schlaepfer E., Oskay W., Open Circuits: The Inner Beauty of Electronic Components, 2023, pp. 88-89"

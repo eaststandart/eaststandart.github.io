@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Ярмарка поделок
 custom_css: ["/css/fair.css"]
 ---

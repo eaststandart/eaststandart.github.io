@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Техническое вдохновение
 custom_css: ["/css/fair.css"]
 ---

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Заметки по схемотехнике
 parent_name: "Дневник"
 parent_url: "/diary/"

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Дневник инженера
 custom_css: ["/css/diary.css"]
 ---

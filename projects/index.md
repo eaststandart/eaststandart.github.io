@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Учебные проекты
 custom_css: ["/css/projects.css"]
 ---

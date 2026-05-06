@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Углеродный пленочный резистор
 tags: [красотаэлектронныхкомпонентов, углеродныйпленочныйрезистор, резистор]
 sources: "Schlaepfer E., Oskay W., Open Circuits: The Inner Beauty of Electronic Components, 2023, pp. 16-17"

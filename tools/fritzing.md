@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Fritzing
 sources: "[Fritzing](https://fritzing.org/)"
 tags: [fritzing, программа, электроника]

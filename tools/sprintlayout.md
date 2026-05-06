@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Sprint Layout
 sources: "[Sprint Layout](https://sprint-layout.ru/)"
 tags: [sprintlayout, программа, электроника]

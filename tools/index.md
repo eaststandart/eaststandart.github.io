@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Полезные инструменты
 custom_css: ["/css/tools.css"]
 ---

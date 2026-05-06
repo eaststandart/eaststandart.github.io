@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Книга юного техника
 bibliography: "Киселёв Л. Книга юного техника. — Советские учебники, 2025. — 240 с. — ISBN 978-5-907435-42-1."
 sources: "[Киселёв Л., Книга юного техника, 1948 г.](https://konzeptual.ru/kniga-yunogo-tehnika-1948-11426/)"

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Тест видео в ряд
 ---
 

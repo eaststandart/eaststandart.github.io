@@ -15,7 +15,7 @@
 {% endif %}
 </head>
 <body>
-{% assign dpath = page.path | split: "/" | compact | pop | join: "/" | prepend: "/" | append: "/" %}
+
 <div class="content-wrapper">
         
     <!-- Блок навигации -->
@@ -33,66 +33,10 @@
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 
-<div class="main-content">
-<script>
-        (function() {
-            // Вычисляем путь один раз
-            const loc = window.location.pathname;
-            if (!loc.includes('/fair/') && !loc.includes('/biblio/')) return;
-            const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
-
-            // Создаем MutationObserver, чтобы ловить теги ДО того, как они отрисуются
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.nodeType !== 1) return; // Пропускаем текст
-                        
-                        // Ищем картинки-видео и обычные картинки в добавленном узле
-                        const media = node.querySelectorAll ? node.querySelectorAll('img') : [];
-                        
-                        // Если сам узел - картинка
-                        const imgs = node.tagName === 'IMG' ? [node] : Array.from(media);
-
-                        imgs.forEach(img => {
-                            const src = img.getAttribute('src');
-                            if (!src || src.startsWith('http') || src.startsWith('/')) return;
-
-                            const fullPath = projectPath + src;
-                            
-                            // Если это видео (скрытое под видом картинки)
-                            if (src.endsWith('.webm') || src.endsWith('.mp4')) {
-                                const video = document.createElement('video');
-                                video.src = fullPath;
-                                video.controls = true;
-                                
-                                // Создаем контейнер-ряд, если его нет
-                                let container = img.closest('.video-test-row');
-                                if (!container) {
-                                    container = document.createElement('div');
-                                    container.className = 'video-test-row';
-                                    img.parentNode.insertBefore(container, img);
-                                }
-                                container.appendChild(video);
-                                img.remove();
-                            } else {
-                                // Если это обычная картинка - просто правим путь
-                                img.src = fullPath;
-                            }
-                        });
-                    });
-                });
-            });
-
-            observer.observe(document.documentElement, { childList: true, subtree: true });
-            
-            // Отключаем обсерватор через 3 секунды (когда всё точно загрузилось)
-            setTimeout(() => observer.disconnect(), 3000);
-        })();
-    </script>
+    <div class="main-content">
+        {{ content }}
+    </div>
     
-    {{ content }}
-</div>
-   
     <!-- Универсальный блок библиографии -->
     {% if page.bibliography %}
     <div class="bibliography-footer">
@@ -139,7 +83,39 @@
         <a href="https://creativecommons.org" target="_blank" style="color: #7f8c8d; text-decoration: underline;">CC BY 4.0</a> (с указанием авторства). 
     </p> 
 </footer>
-   
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Находим все абзацы, которые содержат ссылки на видео
+    const paragraphs = document.querySelectorAll('.main-content p');
+
+    paragraphs.forEach(p => {
+        const links = p.querySelectorAll('a[href$=".mp4"], a[href$=".webm"]');
+        
+        if (links.length > 0) {
+            // Создаем нашу обертку
+            const container = document.createElement('div');
+            container.className = 'video-test-row';
+
+            links.forEach(link => {
+                const video = document.createElement('video');
+                video.src = link.getAttribute('href');
+                video.controls = true;
+                container.appendChild(video);
+                link.remove(); // Удаляем ссылку
+            });
+
+            // Вставляем контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Если в абзаце была только ссылка, удаляем пустой абзац
+            if (p.textContent.trim() === "") {
+                p.remove();
+            }
+        }
+    });
+});
+</script>
+    
 </body>
 </html>

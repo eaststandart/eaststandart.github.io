@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Робот двуногий шагающий из картона
-icon: "/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot.webp"
+icon: "{{ hpath }}simple-cardboard-walking-robot.webp"
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
 parent_name: "Поделки"
@@ -36,7 +36,7 @@ DEBUG: {{ ppath }}
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
-![]({{ path }}simple-cardboard-walking-robot-1.webp)
+![]({{ hpath }}simple-cardboard-walking-robot-1.webp)
 ![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
 ![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
 ![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)

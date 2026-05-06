@@ -12,9 +12,9 @@ parent_url: "/fair/"
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
 ![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp)
-![](/fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
-![]((simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
-![](simple-cardboard-walking-robot-4.webp)
+![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
+![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
+![](/_fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 

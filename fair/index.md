@@ -1,10 +1,9 @@
 ---
 layout: page
+description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
 custom_css: ["/css/fair.css"]
 ---
-
-Работы юных инженеров и мастеров.
 
 {% for post in site.posts %}
   <div style="display: flex; margin-bottom: 40px; align-items: start;">

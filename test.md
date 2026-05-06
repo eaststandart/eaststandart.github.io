@@ -1,10 +1,9 @@
 ---
 layout: page
+description: Проекты для юных инженеров.
 title: Ярмарка поделок
 custom_css: ["/css/fair.css"]
 ---
-
-Проекты для юных инженеров.
 
 <div class="fair-list">
   {% for item in site.test %}

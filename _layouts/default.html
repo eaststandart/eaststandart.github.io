@@ -85,29 +85,6 @@
 </footer>
 
 <script>
-
-document.addEventListener("DOMContentLoaded", function() {
-    const loc = window.location.pathname;
-    // Проверяем, что мы в папке коллекции (test, fair, biblio и т.д.)
-    const sections = ['test', 'fair', 'biblio', 'diary'];
-    const currentSection = sections.find(s => loc.includes('/' + s + '/'));
-    
-    if (currentSection) {
-        // Из /test/robot/ делаем путь к файлам /_test/robot/
-        const projectPath = loc.replace('/' + currentSection + '/', '/_' + currentSection + '/');
-
-        // Обрабатываем картинки и видео
-        const media = document.querySelectorAll('.main-content img, .main-content video');
-        media.forEach(item => {
-            let src = item.getAttribute('src');
-            // Если путь относительный (не начинается с / или http)
-            if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                item.setAttribute('src', projectPath + src);
-            }
-        });
-    }
-});
-    
 document.addEventListener("DOMContentLoaded", function() {
     const paragraphs = document.querySelectorAll('.main-content p');
 

@@ -88,14 +88,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     const loc = window.location.pathname;
 
-    // 1. Ищем абзацы, внутри которых есть "ошибочные" картинки-видео
+    // 1. Ищем абзацы с "картинками"-видео (синтаксис ![video](file.webm))
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
+        // Ищем только теги <img>, которые ведут на видео-файлы
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
         if (fakeVideos.length > 0) {
-            // Создаем ОДИН контейнер для всех видео этого абзаца
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
@@ -104,20 +104,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 video.src = img.getAttribute('src');
                 video.controls = true;
                 container.appendChild(video);
-                img.remove(); // Удаляем картинку-заглушку
+                img.remove();
             });
 
-            // Вставляем контейнер перед абзацем (или вместо него)
             p.parentNode.insertBefore(container, p);
             
-            // Если в абзаце больше ничего не осталось, удаляем его
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }
         }
     });
 
-    // 2. Исправляем пути для всех медиа (включая обычные фото и новые видео)
+    // 2. Исправляем пути для всех медиа в коллекции
     if (loc.includes('/fair/') || loc.includes('/biblio/')) {
         const projectPath = loc.replace(/^\/(fair|biblio)\//, '/_$1/');
         const elements = document.querySelectorAll('.main-content img, .main-content video');

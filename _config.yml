@@ -11,10 +11,10 @@ url: https://eaststandart.github.io
 collections:
   fair:
     output: true
-    permalink: /fair/:path/
+    permalink: /fair/:name/
   projects:
     output: true
-    permalink: /projects/:path/
+    permalink: /projects/:name/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

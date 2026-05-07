@@ -28,31 +28,28 @@
         
 <!-- Блок навигации -->
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-    <a href="{{ '/' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+    <a href="/" class="back-link" style="color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% comment %} Разбиваем путь /fair/simple-robot/ на части. compact убирает пустые места из-за слэшей {% endcomment %}
-    {% assign url_parts = page.permalink | split: '/' | compact %}
-
-    {% comment %} 
-       Если частей больше 1 (например, ["fair", "robot"]), значит это вложенная страница.
-       Если часть всего 1 (["fair"]), значит мы на странице самого раздела и ссылку на родителя не выводим.
-    {% endcomment %}
+    {% assign url_parts = page.url | split: '/' | compact %}
+    
     {% if url_parts.size > 1 %}
-        <span style="color: #ccc; margin: 0 5px;">|</span>
+        {% comment %} Определяем путь к родителю, например /fair/ {% endcomment %}
+        {% assign parent_url = url_parts | first | prepend: '/' | append: '/' %}
         
-        {% assign parent_slug = url_parts | first %}
-        {% assign parent_path = parent_slug | prepend: '/' | append: '/' %}
+        {% comment %} Достаем данные СТРОГО одной этой страницы {% endcomment %}
+        {% assign parent_page = site.pages | where: "permalink", parent_url | first %}
 
-        <a href="{{ parent_path | relative_url }}" class="back-link" style="margin-bottom: 0;">
-            {% comment %} Сопоставляем техническое имя с красивым названием раздела {% endcomment %}
-            {% if parent_slug == "fair" %}Ярмарка
-            {% elsif parent_slug == "projects" %}Проекты
-            {% else %}{{ parent_slug | capitalize }}{% endif %}
-        </a>
+        {% if parent_page %}
+            <span style="color: #ccc; margin: 0 5px;">|</span>
+            <a href="{{ parent_url }}" class="back-link">
+                {% comment %} Берем shortname, если его нет — title, если и его нет — просто имя папки {% endcomment %}
+                {{ parent_page.shortname | default: parent_page.title | default: url_parts.first }}
+            </a>
+        {% endif %}
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="{{ '/tags.html' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+    <a href="/tags.html" class="back-link" style="color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 

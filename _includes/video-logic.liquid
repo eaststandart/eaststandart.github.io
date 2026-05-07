@@ -2,35 +2,45 @@
 document.addEventListener("DOMContentLoaded", function() {
     const paragraphs = document.querySelectorAll('.main-content p');
 
+    // 1. Создаем "наблюдатель", который следит за появлением видео в поле зрения
+    const videoObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const video = entry.target;
+                // Когда видео попало в кадр, разрешаем ему грузить данные
+                video.preload = "metadata"; 
+                // Перестаем следить за этим видео
+                observer.unobserve(video);
+            }
+        });
+    }, { rootMargin: "200px" }); // Начинать загрузку за 200px до появления на экране
+
     paragraphs.forEach(p => {
-        // Ищем только "картинки", которые на самом деле видео (результат ![video])
         const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
         
         if (fakeVideos.length > 0) {
-            // 1. Создаем тот самый контейнер-ряд
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
             fakeVideos.forEach(img => {
-                // 2. Создаем тег video
                 const video = document.createElement('video');
                 video.src = img.getAttribute('src');
                 video.controls = true;
-                video.preload = "metadata";
-                video.muted = true; 
+                video.muted = true;
                 video.setAttribute('playsinline', '');
                 
-                // 3. Кладем видео в контейнер
+                // ВАЖНО: Сначала запрещаем загрузку
+                video.preload = "none"; 
+
+                // Добавляем видео в список наблюдения
+                videoObserver.observe(video);
+
                 container.appendChild(video);
-                
-                // 4. Удаляем старый тег img
                 img.remove();
             });
 
-            // 5. Ставим весь контейнер перед абзацем
             p.insertAdjacentElement('beforebegin', container);
 
-            // Чистим пустой абзац
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }

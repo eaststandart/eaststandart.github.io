@@ -103,9 +103,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 const video = document.createElement('video');
                 video.src = img.getAttribute('src');
                 video.controls = true;
+                video.preload = "metadata";
+                video.muted = true; 
+                video.setAttribute('playsinline', '');
                 
                 // 3. Кладем видео в контейнер
                 container.appendChild(video);
+                
                 // 4. Удаляем старый тег img
                 img.remove();
             });

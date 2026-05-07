@@ -26,18 +26,32 @@
 
 <div class="content-wrapper">
         
-    <!-- Блок навигации -->
-    <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-        <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+<!-- Блок навигации -->
+<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+    <a href="{{ '/' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-        {% if page.parent_url %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ page.parent_url }}" class="back-link" style="margin-bottom: 0;">{{ page.parent_name }}</a>
-        {% endif %}
-
+    {% comment %} 
+      Разбиваем permalink на части по слешу, убираем пустые элементы и последнюю часть 
+    {% endcomment %}
+    {% assign url_parts = page.permalink | split: '/' | compact %}
+    
+    {% if url_parts.size > 1 %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
-    </div>
+        
+        {% comment %} Собираем путь родителя: берем первую часть (например, fair) {% endcomment %}
+        {% assign parent_path = url_parts | first | prepend: '/' | append: '/' %}
+        
+        <a href="{{ parent_path | relative_url }}" class="back-link" style="margin-bottom: 0;">
+            {% comment %} 
+              Если хочешь красивое имя вместо "fair", можно сделать проверку:
+            {% endcomment %}
+            {% if parent_path == '/fair/' %}Ярмарка{% else %}{{ url_parts | first | capitalize }}{% endif %}
+        </a>
+    {% endif %}
+
+    <span style="color: #ccc; margin: 0 5px;">|</span>
+    <a href="{{ '/tags.html' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+</div>
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 

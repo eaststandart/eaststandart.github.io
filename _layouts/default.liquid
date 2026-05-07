@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/video.css">
+    {% if page.custom_css %}
+        {% for style in page.custom_css %}
+            <link rel="stylesheet" href="{{ style }}">
+        {% endfor %}
+    {% endif %}
+</head>
+<body>
+
+    <!-- В это место Jekyll вставит fair.liquid или контент обычной страницы -->
+    {{ content }}
+
+<footer class="license-footer">
+    <p>© 2026 Творческая лаборатория познавательного развития</p>
+    <p style="font-size: 0.8rem; color: #7f8c8d;">
+        Материалы доступны по лицензии <a href="https://creativecommons.org">CC BY 4.0</a>
+    </p> 
+</footer>
+
+<!-- Скрипт оставляем тут, он нужен всем видео на сайте -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // ... твой код скрипта без изменений ...
+});
+</script>
+</body>
+</html>

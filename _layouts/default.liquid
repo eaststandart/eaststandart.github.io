@@ -28,31 +28,16 @@
         
 <!-- Блок навигации -->
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-    <a href="{{ '/' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+    <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% comment %} Разбиваем путь /fair/simple-robot/ на части. compact убирает пустые места из-за слэшей {% endcomment %}
-    {% assign url_parts = page.permalink | split: '/' | compact %}
-
-    {% comment %} 
-       Если частей больше 1 (например, ["fair", "robot"]), значит это вложенная страница.
-       Если часть всего 1 (["fair"]), значит мы на странице самого раздела и ссылку на родителя не выводим.
-    {% endcomment %}
-    {% if url_parts.size > 1 %}
+    {% comment %} Проверяем: если мы НЕ на самой странице ярмарки, но в её подразделе {% endcomment %}
+    {% if page.url contains '/fair/' and page.url != '/fair/' %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        
-        {% assign parent_slug = url_parts | first %}
-        {% assign parent_path = parent_slug | prepend: '/' | append: '/' %}
-
-        <a href="{{ parent_path | relative_url }}" class="back-link" style="margin-bottom: 0;">
-            {% comment %} Сопоставляем техническое имя с красивым названием раздела {% endcomment %}
-            {% if parent_slug == "fair" %}Ярмарка
-            {% elsif parent_slug == "projects" %}Проекты
-            {% else %}{{ parent_slug | capitalize }}{% endif %}
-        </a>
+        <a href="/fair/" class="back-link" style="margin-bottom: 0;">Поделки</a>
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="{{ '/tags.html' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+    <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 

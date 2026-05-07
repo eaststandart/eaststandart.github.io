@@ -33,17 +33,16 @@
     {% assign url_parts = page.url | split: '/' | compact %}
     
     {% if url_parts.size > 1 %}
-        {% comment %} Определяем путь к родителю, например /fair/ {% endcomment %}
+        {% comment %} Формируем путь родителя, например /fair/ {% endcomment %}
         {% assign parent_url = url_parts | first | prepend: '/' | append: '/' %}
         
-        {% comment %} Достаем данные СТРОГО одной этой страницы {% endcomment %}
+        {% comment %} Ищем страницу с таким permalink {% endcomment %}
         {% assign parent_page = site.pages | where: "permalink", parent_url | first %}
 
         {% if parent_page %}
             <span style="color: #ccc; margin: 0 5px;">|</span>
             <a href="{{ parent_url }}" class="back-link">
-                {% comment %} Берем shortname, если его нет — title, если и его нет — просто имя папки {% endcomment %}
-                {{ parent_page.shortname | default: parent_page.title | default: url_parts.first }}
+                {{ parent_page.shortname | default: parent_page.title }}
             </a>
         {% endif %}
     {% endif %}

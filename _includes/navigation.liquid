@@ -1,14 +1,16 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% if page.git-section %}
-        {% comment %} Ищем страницу, у которой permalink совпадает с разделом проекта {% endcomment %}
-        {% assign section_url = page.git-section | prepend: '/' | append: '/' %}
-        {% assign parent_page = site.pages | where: "permalink", section_url | first %}
+    {% assign parts = page.url | split: '/' %}
+    {% comment %} parts[1] — это первая папка в пути (например, 'fair') {% endcomment %}
+    {% if parts.size > 2 %}
+        {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
+        {% comment %} Ищем главную страницу раздела (index.md в папке fair) {% endcomment %}
+        {% assign parent_page = site.pages | where: "url", parent_url | first %}
 
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="{{ section_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
-            {{ parent_page.navname | default: parent_page.title | default: page.git-section }}
+        <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
+            {{ parent_page.navname | default: parent_page.title | default: parts[1] }}
         </a>
     {% endif %}
 

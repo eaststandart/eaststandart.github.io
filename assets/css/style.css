@@ -45,40 +45,6 @@ h1 {
     line-height: 1.2;
 }
 
-/* Настройка заголовка H3 внутри статей */
-.main-content h3 {
-    /* Базовый отступ сверху 1em, снизу обнуляем */
-    margin: 0 0 0 0 !important; 
-    font-size: 1.2rem; 
-    color: var(--text-color);
-    line-height: 1.2;
-    /* Убедимся, что нижний марджин всегда 0 */
-    margin-bottom: 0 !important;
-}
-
-/* Обнуляем нижний отступ у H1 (заголовка страницы) */
-.main-content h1 {
-    margin-bottom: 0 !important;
-}
-
-/* Прижимаем любой контент под H3 (8px для воздуха) */
-.main-content h3 + p,
-.main-content h3 + .video-test-row {
-    margin-top: 5px !important; 
-}
-
-/* Прижимаем список под H3 */
-.main-content h3 + ul,
-.main-content h3 + ol {
-    margin-top: 8px !important; 
-}
-
-/* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
-.video-test-row + h3,
-.main-content p:has(img) + h3 {
-    margin-top: 1.2em !important;
-}
-
 /* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
 .bibliography-footer {
     margin-top: 15px;
@@ -145,6 +111,45 @@ p:has(img) + blockquote {
     width: 100%;       
     margin: 15px auto; 
     padding: 10px 20px 20px 20px;
+}
+
+/* Настройка заголовка H3 внутри статей */
+.main-content h3 {
+    /* Базовый отступ сверху 1em, снизу обнуляем */
+    margin: 1.5em 0 0 0 !important; 
+    font-size: 1.2rem; 
+    color: var(--text-color);
+    line-height: 1.2;
+    /* Убедимся, что нижний марджин всегда 0 */
+    margin-bottom: 0 !important;
+}
+
+/* Обнуляем отступ сверху ТОЛЬКО для самого первого заголовка в статье */
+.main-content h3:first-of-type {
+    margin-top: 10px !important;
+}
+
+/* Обнуляем нижний отступ у H1 (заголовка страницы) */
+.main-content h1 {
+    margin-bottom: 0 !important;
+}
+
+/* Прижимаем любой контент под H3 (8px для воздуха) */
+.main-content h3 + p,
+.main-content h3 + .video-test-row {
+    margin-top: 5px !important; 
+}
+
+/* Прижимаем список под H3 */
+.main-content h3 + ul,
+.main-content h3 + ol {
+    margin-top: 8px !important; 
+}
+
+/* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
+.video-test-row + h3,
+.main-content p:has(img) + h3 {
+    margin-top: 1.2em !important;
 }
 
 /* --- ЕДИНЫЙ БЛОК КАРТИНОК В СТАТЬЯХ (MARKDOWN) --- */

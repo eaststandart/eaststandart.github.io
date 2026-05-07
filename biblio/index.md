@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Список литературы
-navname: "Литература"
+git-title: "Литература"
 custom_css: ["/assets/css/biblio.css"]
 ---
 

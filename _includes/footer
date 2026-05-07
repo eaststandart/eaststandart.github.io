@@ -1,0 +1,8 @@
+<footer class="license-footer">
+    <p class="copyright">
+        © {{ "now" | date: "%Y" }} Творческая лаборатория познавательного развития
+    </p>
+    <p class="license-info">
+        Материалы сайта доступны по лицензии <a href="https://creativecommons.org" target="_blank">CC BY 4.0</a> (с указанием авторства). 
+    </p> 
+</footer>

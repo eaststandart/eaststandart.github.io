@@ -230,6 +230,22 @@ p:has(img) + blockquote {
     width: 100%; 
 }
 
+.license-footer .footer-copyright {
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.license-footer .footer-license-text {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.license-footer .footer-license-text a {
+    color: #7f8c8d;
+    text-decoration: underline;
+}
+
 .tg-button {
     display: inline-flex;
     align-items: center;

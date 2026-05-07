@@ -1,7 +1,7 @@
 ---
-layout: default
+layout: page
 title: Список литературы
-navname: "Литература1"
+navname: "Литература"
 custom_css: ["/assets/css/biblio.css"]
 ---
 

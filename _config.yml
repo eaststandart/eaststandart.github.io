@@ -22,3 +22,17 @@ collections:
 
 # Includes & excludes
 include: ["_pages"]
+
+# Sitemap settings
+defaults:
+  - scope:
+      path: ""
+      type: "fair"
+    values:
+      render_with_liquid: false
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      render_with_liquid: false
+      

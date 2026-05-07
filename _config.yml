@@ -8,13 +8,6 @@ url: https://eaststandart.github.io
 # Collections
 # -----------------------------------------------------------------------------
 
-collections:
-  fair:
-    output: true
-    permalink: /fair/:name/
-  projects:
-    output: true
-    permalink: /projects/:name/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
@@ -22,3 +15,4 @@ collections:
 
 # Includes & excludes
 include: ["_pages"]
+

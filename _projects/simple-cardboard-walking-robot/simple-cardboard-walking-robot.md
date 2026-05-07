@@ -4,7 +4,9 @@ title: Робот двуногий шагающий из картона
 description: Проект предназначен для развития навыков конструирования.
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot – Templates pdf – Blackfish](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
-date: 2026-05-07
+git-section: fair
+git-img: "simple-cardboard-walking-robot"
+published: 2026-05-07
 permalink: /fair/simple-cardboard-walking-robot/
 ---
 

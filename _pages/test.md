@@ -1,8 +1,7 @@
 ---
 layout: page
-description: Работы юных инженеров и мастеров.
+description: Работы юных инженеров и мастеров. ТЕСТ
 title: Ярмарка поделок
-custom_css: ["/assets/css/fair.css"]
 permalink: /test/
 ---
 

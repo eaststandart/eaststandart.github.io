@@ -27,28 +27,35 @@
 <div class="content-wrapper">
         
 <!-- Блок навигации -->
-<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-    <a href="/" class="back-link" style="color: #3498db; font-weight: normal;">← Главная</a>
+<div class="navigation-header" style="border: 2px solid blue; padding: 10px; font-family: monospace;">
+    {% assign parts = page.url | split: '/' %}
+    
+    DEBUG ARRAY:
+    {% for p in parts %}
+      {{ forloop.index }}: [{{ p }}] |
+    {% endfor %}
+    <br>
+    SIZE: {{ parts.size }}
 
-    {% comment %} Отрезаем всё лишнее и берем первое слово из адреса {% endcomment %}
-    {% assign parts = page.url | split: '/' | compact %}
-    {% assign parent_slug = parts.first %}
+    <hr>
+
+    <a href="/">← Главная</a>
 
     {% comment %} 
-       Если страниц в пути больше одной (например, /fair/robot/), 
-       выводим ссылку на раздел.
+       Пробуем найти первый элемент, который НЕ пустой.
+       Обычно в /fair/robot/ это: 1:[], 2:[fair], 3:[robot]
     {% endcomment %}
-    {% if parts.size > 1 %}
-        <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="/{{ parent_slug }}/" class="back-link" style="margin-bottom: 0;">
-            {% if parent_slug == "fair" %}Поделки{% else %}{{ parent_slug | capitalize }}{% endif %}
+    {% assign parent_dir = "" %}
+    {% if parts[1] != "" %}{% assign parent_dir = parts[1] %}
+    {% elsif parts[2] != "" %}{% assign parent_dir = parts[2] %}{% endif %}
+
+    {% if parent_dir != "" and page.url != "/fair/" and page.url != "/fair" %}
+        <span>|</span>
+        <a href="/{{ parent_dir }}/">
+            {% if parent_dir == "fair" %}Поделки{% else %}{{ parent_dir }}{% endif %}
         </a>
     {% endif %}
-
-    <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="/tags.html" class="back-link" style="color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
-
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 

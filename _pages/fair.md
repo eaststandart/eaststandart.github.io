@@ -6,7 +6,7 @@ permalink: /fair/
 ---
 
 <div class="fair-list">
-    <a href="simple-cardboard-walking-robot.html" class="fair-card">
+    <a href="/fair/simple-cardboard-walking-robot/" class="fair-card">
         <img src="simple-cardboard-walking-robot.webp" class="fair-img-round">
         <h3>Робот двуногий шагающий из картона</h3>
     </a>

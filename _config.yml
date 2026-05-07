@@ -22,4 +22,5 @@ collections:
 
 # Includes & excludes
 include: ["_pages"]
-     
+
+keep_files: [".webp", ".png", ".jpg"]

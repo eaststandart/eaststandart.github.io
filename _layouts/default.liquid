@@ -7,6 +7,11 @@
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/video.css">
+    {% if page.custom_css %}
+      {% for style in page.custom_css %}
+        <link rel="stylesheet" href="{{ style | relative_url }}">
+      {% endfor %}
+    {% endif %}
 </head>
 <body>
 

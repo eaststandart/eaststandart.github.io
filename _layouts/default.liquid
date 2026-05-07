@@ -30,26 +30,20 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% assign url_parts = page.url | split: '/' | compact %}
-    
-    {% if url_parts.size > 1 %}
-        {% comment %} Формируем путь родителя, например /fair/ {% endcomment %}
-        {% assign parent_url = url_parts | first | prepend: '/' | append: '/' %}
-        
-        {% comment %} Ищем страницу с таким permalink {% endcomment %}
-        {% assign parent_page = site.pages | where: "permalink", parent_url | first %}
+    {% assign parts = page.permalink | split: '/' | compact %}
 
-        {% if parent_page %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ parent_url }}" class="back-link">
-                {{ parent_page.shortname | default: parent_page.title }}
-            </a>
-        {% endif %}
+    {% if parts.size > 1 %}
+        <span style="color: #ccc; margin: 0 5px;">|</span>
+        {% comment %} Берем первую часть (fair), окружаем слэшами и выводим как ссылку {% endcomment %}
+        <a href="/{{ parts[0] }}/" class="back-link">
+            {% if parts[0] == "fair" %}Поделки{% else %}{{ parts[0] | capitalize }}{% endif %}
+        </a>
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>
     <a href="/tags.html" class="back-link" style="color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
+
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 

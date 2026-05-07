@@ -27,21 +27,28 @@
 <div class="content-wrapper">
         
 <!-- Блок навигации -->
-<div class="navigation-header" style="border: 2px solid red; padding: 10px;">
-    <!-- Тестовый вывод -->
-    DEBUG: 
-    Полный URL: {{ page.url }} | 
-    Первая часть: {% assign parts = page.url | split: '/' | compact %}[{{ parts.first }}] | 
-    Количество частей: {{ parts.size }}
+<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+    <a href="/" class="back-link" style="color: #3498db; font-weight: normal;">← Главная</a>
 
-    <hr>
+    {% comment %} Отрезаем всё лишнее и берем первое слово из адреса {% endcomment %}
+    {% assign parts = page.url | split: '/' | compact %}
+    {% assign parent_slug = parts.first %}
 
-    <a href="/">← Главная</a>
+    {% comment %} 
+       Если страниц в пути больше одной (например, /fair/robot/), 
+       выводим ссылку на раздел.
+    {% endcomment %}
     {% if parts.size > 1 %}
-        <span>|</span>
-        <a href="/{{ parts.first }}/">Ссылка: /{{ parts.first }}/</a>
+        <span style="color: #ccc; margin: 0 5px;">|</span>
+        <a href="/{{ parent_slug }}/" class="back-link" style="margin-bottom: 0;">
+            {% if parent_slug == "fair" %}Поделки{% else %}{{ parent_slug | capitalize }}{% endif %}
+        </a>
     {% endif %}
+
+    <span style="color: #ccc; margin: 0 5px;">|</span>
+    <a href="/tags.html" class="back-link" style="color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
+
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 

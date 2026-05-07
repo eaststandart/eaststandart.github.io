@@ -1,10 +1,8 @@
 ---
-layout: page
+layout: fair
+description: Моменты, которые помогают в техническом творчестве и инженерном поиске.
 title: Техническое вдохновение
-custom_css: ["/assets/css/fair.css"]
 ---
-
-Моменты, которые помогают в техническом творчестве и инженерном поиске.
 
 <div class="fair-list">
     <a href="our-dream.html" class="fair-card">

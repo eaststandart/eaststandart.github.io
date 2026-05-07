@@ -129,6 +129,12 @@ p:has(img) + blockquote {
     margin-top: 10px !important;
 }
 
+.page-description {
+    margin-bottom: 20px;
+    font-style: italic; /* например, для красоты */
+    color: #666;
+}
+
 /* Обнуляем нижний отступ у H1 (заголовка страницы) */
 .main-content h1 {
     margin-bottom: 0 !important;

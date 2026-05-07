@@ -85,56 +85,7 @@
     </p> 
 </footer>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const paragraphs = document.querySelectorAll('.main-content p');
 
-    // 1. Создаем "наблюдатель", который следит за появлением видео в поле зрения
-    const videoObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const video = entry.target;
-                // Когда видео попало в кадр, разрешаем ему грузить данные
-                video.preload = "metadata"; 
-                // Перестаем следить за этим видео
-                observer.unobserve(video);
-            }
-        });
-    }, { rootMargin: "200px" }); // Начинать загрузку за 200px до появления на экране
-
-    paragraphs.forEach(p => {
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        if (fakeVideos.length > 0) {
-            const container = document.createElement('div');
-            container.className = 'video-test-row';
-
-            fakeVideos.forEach(img => {
-                const video = document.createElement('video');
-                video.src = img.getAttribute('src');
-                video.controls = true;
-                video.muted = true;
-                video.setAttribute('playsinline', '');
-                
-                // ВАЖНО: Сначала запрещаем загрузку
-                video.preload = "none"; 
-
-                // Добавляем видео в список наблюдения
-                videoObserver.observe(video);
-
-                container.appendChild(video);
-                img.remove();
-            });
-
-            p.insertAdjacentElement('beforebegin', container);
-
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
-        }
-    });
-});
-</script>
     
 </body>
 </html>

@@ -30,22 +30,24 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="{{ '/' | relative_url }}" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% comment %} 
-      Разбиваем permalink на части по слешу, убираем пустые элементы и последнюю часть 
-    {% endcomment %}
+    {% comment %} Разбиваем путь /fair/simple-robot/ на части. compact убирает пустые места из-за слэшей {% endcomment %}
     {% assign url_parts = page.permalink | split: '/' | compact %}
-    
+
+    {% comment %} 
+       Если частей больше 1 (например, ["fair", "robot"]), значит это вложенная страница.
+       Если часть всего 1 (["fair"]), значит мы на странице самого раздела и ссылку на родителя не выводим.
+    {% endcomment %}
     {% if url_parts.size > 1 %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
         
-        {% comment %} Собираем путь родителя: берем первую часть (например, fair) {% endcomment %}
-        {% assign parent_path = url_parts | first | prepend: '/' | append: '/' %}
-        
+        {% assign parent_slug = url_parts | first %}
+        {% assign parent_path = parent_slug | prepend: '/' | append: '/' %}
+
         <a href="{{ parent_path | relative_url }}" class="back-link" style="margin-bottom: 0;">
-            {% comment %} 
-              Если хочешь красивое имя вместо "fair", можно сделать проверку:
-            {% endcomment %}
-            {% if parent_path == '/fair/' %}Ярмарка{% else %}{{ url_parts | first | capitalize }}{% endif %}
+            {% comment %} Сопоставляем техническое имя с красивым названием раздела {% endcomment %}
+            {% if parent_slug == "fair" %}Ярмарка
+            {% elsif parent_slug == "projects" %}Проекты
+            {% else %}{{ parent_slug | capitalize }}{% endif %}
         </a>
     {% endif %}
 

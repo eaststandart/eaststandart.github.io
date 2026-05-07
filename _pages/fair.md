@@ -2,7 +2,7 @@
 layout: fair
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
-shortname: "Поделки"
+navname: "Поделки"
 permalink: /fair/
 ---
 

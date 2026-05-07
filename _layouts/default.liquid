@@ -30,22 +30,20 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% comment %} Режем путь /fair/robot/ на части и берем первую {% endcomment %}
-    {% assign url_parts = page.permalink | split: '/' | compact %}
-    {% assign first_dir = url_parts.first %}
+    {% assign parts = page.url | split: '/' | compact %}
+    {% assign first_part = parts[0] %}
 
-    {% comment %} Если мы внутри раздела (частей больше одной) {% endcomment %}
-    {% if url_parts.size > 1 %}
+    {% if parts.size > 1 %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        {% comment %} Формируем ссылку и имя родителя автоматически {% endcomment %}
-        <a href="/{{ first_dir }}/" class="back-link" style="margin-bottom: 0;">
-            {% if first_dir == "fair" %}Поделки{% else %}{{ first_dir | capitalize }}{% endif %}
+        <a href="/{{ first_part }}/" class="back-link" style="margin-bottom: 0;">
+            {% if first_part == "fair" %}Поделки{% else %}{{ first_part | capitalize }}{% endif %}
         </a>
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>
     <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
+
 
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 

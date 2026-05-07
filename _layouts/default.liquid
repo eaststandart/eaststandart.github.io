@@ -27,27 +27,19 @@
 <div class="content-wrapper">
         
 <!-- Блок навигации -->
-<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-    <a href="/" class="back-link" style="color: #3498db; font-weight: normal;">← Главная</a>
-
-    {% comment %} Берем именно свойство permalink из шапки файла {% endcomment %}
+<div class="navigation-header" style="border: 2px solid green; padding: 10px; font-family: monospace;">
+    DEBUG PERMALINK:
     {% if page.permalink %}
-        {% assign parts = page.permalink | split: '/' | compact %}
-        {% comment %} 
-           Если в permalink больше одного сегмента (напр. fair и robot), 
-           значит это вложенная страница.
-        {% endcomment %}
-        {% if parts.size > 1 %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            {% assign parent_slug = parts.first %}
-            <a href="/{{ parent_slug }}/" class="back-link">
-                {% if parent_slug == "fair" %}Поделки{% else %}{{ parent_slug | capitalize }}{% endif %}
-            </a>
-        {% endif %}
+        Значение: [{{ page.permalink }}] |
+        {% assign p_parts = page.permalink | split: '/' | compact %}
+        Кол-во сегментов: {{ p_parts.size }} |
+        Первый сегмент: [{{ p_parts.first }}]
+    {% else %}
+        Свойство permalink НЕ НАЙДЕНО в этом файле
     {% endif %}
 
-    <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="/tags.html" class="back-link" style="color: #3498db; font-weight: normal;"># Поиск</a>
+    <hr>
+    <a href="/">← Главная</a>
 </div>
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 

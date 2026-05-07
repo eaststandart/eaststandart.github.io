@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: fair
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
-custom_css: ["/assets/css/fair.css"]
 ---
 
 <div class="fair-list">

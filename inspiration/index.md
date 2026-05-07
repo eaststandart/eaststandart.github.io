@@ -1,7 +1,8 @@
 ---
-layout: fair
+layout: default
 description: Моменты, которые помогают в техническом творчестве и инженерном поиске.
 title: Техническое вдохновение
+custom_css: ["/assets/css/fair.css"]
 ---
 
 <div class="fair-list">

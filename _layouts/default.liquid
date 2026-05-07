@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/video.css">
+    <!-- Подключение дополнительных стилей, если они указаны в YAML страницы -->
     {% if page.custom_css %}
       {% for style in page.custom_css %}
         <link rel="stylesheet" href="{{ style | relative_url }}">
@@ -15,21 +16,111 @@
 </head>
 <body>
 
-    <!-- В это место Jekyll вставит fair.liquid или контент обычной страницы -->
-    {{ content }}
+<div class="content-wrapper">
+        
+    <!-- Блок навигации -->
+    <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+        <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+
+        {% if page.parent_url %}
+            <span style="color: #ccc; margin: 0 5px;">|</span>
+            <a href="{{ page.parent_url }}" class="back-link" style="margin-bottom: 0;">{{ page.parent_name }}</a>
+        {% endif %}
+
+        <span style="color: #ccc; margin: 0 5px;">|</span>
+        <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+    </div>
+
+    <h1 style="margin-top: 0;">{{ page.title }}</h1> 
+
+    <div class="main-content">
+        {{ page.description }}
+        {{ content }}
+    </div>
+    
+    <!-- Универсальный блок библиографии -->
+    {% if page.bibliography %}
+    <div class="bibliography-footer">
+        <strong>Библиографическое описание:</strong>
+        
+        {% if page.bibliography.first %}
+            <ol style="margin: 0; padding-left: 25px;">
+                {% for item in page.bibliography %}
+                <li style="margin-bottom: 8px;">{{ item | markdownify | remove: '<p>' | remove: '</p>' }}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            {{ page.bibliography | markdownify }}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if page.sources %}
+    <div class="sources-inline">
+        <strong>Источники:</strong> 
+        <div class="sources-content">
+            {{ page.sources | markdownify }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if page.tags %}
+    <div class="tag-container">
+        {% for tag in page.tags %}
+        {% assign tag_clean = tag | replace: '#', '' | strip %}
+        <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
 
 <footer class="license-footer">
-    <p>© 2026 Творческая лаборатория познавательного развития</p>
-    <p style="font-size: 0.8rem; color: #7f8c8d;">
-        Материалы доступны по лицензии <a href="https://creativecommons.org">CC BY 4.0</a>
+    <p style="margin-top: 0px; margin-bottom: 5px;">
+        © 2026 Творческая лаборатория познавательного развития
+    </p>
+    <p style="font-size: 0.8rem; color: #7f8c8d; margin: 0;">
+        Материалы сайта доступны по лицензии 
+        <a href="https://creativecommons.org" target="_blank" style="color: #7f8c8d; text-decoration: underline;">CC BY 4.0</a> (с указанием авторства). 
     </p> 
 </footer>
 
-<!-- Скрипт оставляем тут, он нужен всем видео на сайте -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // ... твой код скрипта без изменений ...
+    const paragraphs = document.querySelectorAll('.main-content p');
+
+    paragraphs.forEach(p => {
+        // Ищем только "картинки", которые на самом деле видео (результат ![video])
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+        
+        if (fakeVideos.length > 0) {
+            // 1. Создаем тот самый контейнер-ряд
+            const container = document.createElement('div');
+            container.className = 'video-test-row';
+
+            fakeVideos.forEach(img => {
+                // 2. Создаем тег video
+                const video = document.createElement('video');
+                video.src = img.getAttribute('src');
+                video.controls = true;
+                
+                // 3. Кладем видео в контейнер
+                container.appendChild(video);
+                // 4. Удаляем старый тег img
+                img.remove();
+            });
+
+            // 5. Ставим весь контейнер перед абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Чистим пустой абзац
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                p.remove();
+            }
+        }
+    });
 });
 </script>
+    
 </body>
 </html>

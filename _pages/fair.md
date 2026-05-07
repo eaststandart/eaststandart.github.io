@@ -6,4 +6,5 @@ navname: "Поделки"
 permalink: /fair/
 ---
 
+{% assign current_items = site.fair %}
 {% include project-gallery.liquid %}

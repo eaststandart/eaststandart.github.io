@@ -27,19 +27,30 @@
 <div class="content-wrapper">
         
 <!-- Блок навигации -->
-<div class="navigation-header" style="border: 2px solid green; padding: 10px; font-family: monospace;">
-    DEBUG PERMALINK:
+<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+    <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+
     {% if page.permalink %}
-        Значение: [{{ page.permalink }}] |
-        {% assign p_parts = page.permalink | split: '/' | compact %}
-        Кол-во сегментов: {{ p_parts.size }} |
-        Первый сегмент: [{{ p_parts.first }}]
-    {% else %}
-        Свойство permalink НЕ НАЙДЕНО в этом файле
+        {% assign p_parts = page.permalink | split: '/' %}
+        {% comment %} 
+           Так как p_parts[0] всегда пустой из-за первого слэша, 
+           нужное нам слово (fair) всегда находится во втором элементе: p_parts[1]
+        {% endcomment %}
+        {% assign parent_slug = p_parts[1] %}
+
+        {% comment %} 
+           Если сегментов 3 или больше — значит это вложенная страница 
+        {% endcomment %}
+        {% if p_parts.size > 2 %}
+            <span style="color: #ccc; margin: 0 5px;">|</span>
+            <a href="/{{ parent_slug }}/" class="back-link" style="margin-bottom: 0;">
+                {% if parent_slug == "fair" %}Поделки{% else %}{{ parent_slug | capitalize }}{% endif %}
+            </a>
+        {% endif %}
     {% endif %}
 
-    <hr>
-    <a href="/">← Главная</a>
+    <span style="color: #ccc; margin: 0 5px;">|</span>
+    <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 

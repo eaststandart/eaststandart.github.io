@@ -11,6 +11,7 @@ url: https://eaststandart.github.io
 collections:
   projects:
     output: true
+    strict_front_matter: false
   posts:
     output: true
 

@@ -1,6 +1,6 @@
 ---
 layout: fair
-description: Работы юных инженеров и мастеров. ТЕСТ
+description: ТЕСТ
 title: Ярмарка поделок
 permalink: /test/
 ---

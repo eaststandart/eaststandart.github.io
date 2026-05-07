@@ -2,6 +2,7 @@
 layout: fair
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
+permalink: /fair/
 ---
 
 <div class="fair-list">

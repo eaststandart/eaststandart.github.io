@@ -7,7 +7,7 @@ sources: "[Walking Robot – Templates pdf – Blackfish](https://blackfishspace
 git-section: "fair"
 git-img: "simple-cardboard-walking-robot"
 published: 2026-05-07
-permalink: /fair/simple-cardboard-walking-robot/
+permalink: /projects/simple-cardboard-walking-robot/
 ---
 
 ### Описание проекта

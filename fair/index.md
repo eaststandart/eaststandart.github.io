@@ -2,7 +2,7 @@
 layout: fair
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
-navname: "Поделки"
+navname: "Поделки1"
 ---
 
 <div class="fair-list">

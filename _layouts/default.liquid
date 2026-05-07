@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="/assets/css/video.css">
     <!-- Подключение дополнительных стилей, если они указаны в YAML страницы -->
     {% if page.custom_css %}
-     {% for style in page.custom_css %}
-     <link rel="stylesheet" href="{{ style }}">
-  {% endfor %}
-{% endif %}
+      {% for style in page.custom_css %}
+        <link rel="stylesheet" href="{{ style | relative_url }}">
+      {% endfor %}
+    {% endif %}
 </head>
 <body>
 

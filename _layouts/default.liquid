@@ -27,17 +27,28 @@
 <div class="content-wrapper">
         
 <!-- Блок навигации -->
-    <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-        <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+    <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-        {% if page.parent_url %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ page.parent_url }}" class="back-link" style="margin-bottom: 0;">{{ page.parent_name }}</a>
-        {% endif %}
+    {% comment %} Извлекаем первый сегмент из URL страницы {% endcomment %}
+    {% assign url_parts = page.url | split: '/' | compact %}
+    {% assign first_segment = url_parts | first %}
 
+    {% comment %} 
+       Если сегментов больше 1 — мы в подразделе (например, /fair/robot/).
+       Выводим ссылку на родителя.
+    {% endcomment %}
+    {% if url_parts.size > 1 %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
-    </div>
+        <a href="/{{ first_segment }}/" class="back-link" style="margin-bottom: 0;">
+            {% if first_segment == "fair" %}Поделки{% else %}{{ first_segment | capitalize }}{% endif %}
+        </a>
+    {% endif %}
+
+    <span style="color: #ccc; margin: 0 5px;">|</span>
+    <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+</div>
+
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 

@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: fair
 description: Работы юных инженеров и мастеров. ТЕСТ
 title: Ярмарка поделок
 permalink: /test/

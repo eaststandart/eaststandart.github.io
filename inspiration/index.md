@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Техническое вдохновение
-custom_css: ["/css/fair.css"]
+custom_css: ["/assets/css/fair.css"]
 ---
 
 Моменты, которые помогают в техническом творчестве и инженерном поиске.

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Список литературы
-custom_css: ["/css/biblio.css"]
+custom_css: ["/assets/css/biblio.css"]
 ---
 
 Рекомендуемые книги и учебники, проверенные временем и практикой.

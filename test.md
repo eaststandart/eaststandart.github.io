@@ -2,7 +2,7 @@
 layout: page
 description: Проекты для юных инженеров.
 title: Ярмарка поделок
-custom_css: ["/css/fair.css"]
+custom_css: ["/assets/css/fair.css"]
 ---
 
 <div class="fair-list">

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Полезные инструменты
-custom_css: ["/css/tools.css"]
+custom_css: ["/assets/css/tools.css"]
 ---
 
 <div class="tool-list">

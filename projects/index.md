@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Учебные проекты
-custom_css: ["/css/projects.css"]
+custom_css: ["/assets/css/projects.css"]
 ---
 
 Выберите интересующее направление для изучения проектов от простых основ до сложных систем.

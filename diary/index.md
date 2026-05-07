@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Дневник инженера
-custom_css: ["/css/diary.css"]
+custom_css: ["/assets/css/diary.css"]
 ---
 
 <div class="diary-list">

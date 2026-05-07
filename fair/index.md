@@ -2,7 +2,7 @@
 layout: page
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
-custom_css: ["/css/fair.css"]
+custom_css: ["/assets/css/fair.css"]
 ---
 
 {% for post in site.posts %}

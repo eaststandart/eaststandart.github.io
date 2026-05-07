@@ -130,7 +130,6 @@ p:has(img) + blockquote {
 }
 
 .page-description {
-    margin-bottom: 20px;
     font-style: italic; /* например, для красоты */
     color: #666;
 }

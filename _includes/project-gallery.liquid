@@ -1,0 +1,33 @@
+{% comment %} 
+  Определяем текущий раздел (например, /fair/ или /projects/) 
+  на основе permalink страницы, где вызван include
+{% endcomment %}
+{% assign current_filter = page.permalink %}
+
+<div class="fair-list">
+  {% assign sorted_items = site.pages | sort: "date" | reverse %}
+  
+  {% for item in sorted_items %}
+    {% comment %} Ищем страницы, путь которых начинается так же, как у текущей {% endcomment %}
+    {% if item.permalink contains current_filter and item.permalink != current_filter %}
+      
+      {% assign path_parts = item.path | split: "/" %}
+      {% assign file_name = path_parts | last | split: "." | first %}
+      
+      {% assign folder_path = "" %}
+      {% for part in path_parts %}
+        {% unless forloop.last %}
+          {% assign folder_path = folder_path | append: "/" | append: part %}
+        {% endunless %}
+      {% endfor %}
+
+      {% assign image_url = folder_path | append: "/" | append: file_name | append: ".webp" %}
+
+      <a href="{{ item.url | relative_url }}" class="fair-card">
+          <img src="{{ image_url | relative_url }}" class="fair-img-round">
+          <h3>{{ item.title }}</h3>
+      </a>
+
+    {% endif %}
+  {% endfor %}
+</div>

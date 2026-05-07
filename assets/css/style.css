@@ -116,7 +116,7 @@ p:has(img) + blockquote {
 /* Настройка заголовка H3 внутри статей */
 .main-content h3 {
     /* Базовый отступ сверху 1em, снизу обнуляем */
-    margin: 1.5em 0 0 0 !important; 
+    margin: 0 0 0 0 !important; 
     font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;

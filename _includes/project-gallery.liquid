@@ -1,40 +1,8 @@
-{% comment %} 
-  Определяем текущий раздел для фильтрации (например, fair)
-{% endcomment %}
-{% assign current_section = page.permalink | remove: "/" %}
+{% for item in sorted_items %}
+  {% if item.git-section == current_section %}
+    <p>DEBUG: Файл лежит тут -> {{ item.path }}</p>
+    <p>DEBUG: Картинку ищем тут -> {{ item.path | replace: ".md", ".webp" | remove_first: "_" }}</p>
+    <hr>
+  {% endif %}
+{% endfor %}
 
-<div class="fair-list">
-  {% comment %} 1. Объединяем проекты и посты в один список {% endcomment %}
-  {% assign all_items = site.projects | concat: site.posts %}
-  
-  {% comment %} 2. Сортируем по дате публикации (от новых к старым) {% endcomment %}
-  {% assign sorted_items = all_items | sort: "published" | reverse %}
-  
-  {% for item in sorted_items %}
-    {% comment %} 3. Выводим только те, что подходят под git-section текущей страницы {% endcomment %}
-    {% if item.git-section == current_section %}
-      
-      {% comment %} Вычисляем физический путь к картинке в папке проекта {% endcomment %}
-      {% assign path_parts = item.path | split: "/" %}
-      {% assign folder_path = "" %}
-      {% for part in path_parts %}
-        {% unless forloop.last %}
-          {% assign folder_path = folder_path | append: "/" | append: part %}
-        {% endunless %}
-      {% endfor %}
-      
-      {% comment %} Убираем техническое подчеркивание коллекции для пути к картинке {% endcomment %}
-      {% assign final_path = folder_path | remove_first: "/_" %}
-      {% assign img_name = path_parts | last | replace: ".md", ".webp" %}
-
-      <a href="{{ item.url | relative_url }}" class="fair-card">
-          <img src="{{ final_path }}/{{ img_name }}" class="fair-img-round">
-          <h3>{{ item.title }}</h3>
-          {% if item.published %}
-            <span style="font-size: 0.7rem; color: #999;">{{ item.published | date: "%d.%m.%Y" }}</span>
-          {% endif %}
-      </a>
-      
-    {% endif %}
-  {% endfor %}
-</div>

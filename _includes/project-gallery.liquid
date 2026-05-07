@@ -1,8 +1,33 @@
-{% for item in sorted_items %}
-  {% if item.git-section == current_section %}
-    <p>DEBUG: Файл лежит тут -> {{ item.path }}</p>
-    <p>DEBUG: Картинку ищем тут -> {{ item.path | replace: ".md", ".webp" | remove_first: "_" }}</p>
-    <hr>
-  {% endif %}
-{% endfor %}
+{% comment %} Определяем раздел (напр. fair) {% endcomment %}
+{% assign current_section = page.permalink | remove: "/" %}
 
+<div class="fair-list">
+  {% comment %} Объединяем коллекции {% endcomment %}
+  {% assign all_items = site.projects | concat: site.posts %}
+  
+  {% for item in all_items %}
+    {% if item.git-section == current_section %}
+      
+      {% comment %} 1. Получаем путь к папке (отрезаем имя файла) {% endcomment %}
+      {% assign parts = item.path | split: "/" %}
+      {% assign folder_path = "" %}
+      {% for part in parts %}
+        {% unless forloop.last %}
+          {% assign folder_path = folder_path | append: part | append: "/" %}
+        {% endunless %}
+      {% endfor %}
+
+      {% comment %} 2. Формируем имя картинки (имя_файла.webp) {% endcomment %}
+      {% assign filename = parts.last | replace: ".md", ".webp" %}
+      
+      {% comment %} 3. Собираем финальный путь, убирая нижнее подчеркивание в начале {% endcomment %}
+      {% assign final_img_url = folder_path | remove_first: "_" | append: filename | prepend: "/" %}
+
+      <a href="{{ item.url | relative_url }}" class="fair-card">
+          <img src="{{ final_img_url | relative_url }}" class="fair-img-round">
+          <h3>{{ item.title }}</h3>
+      </a>
+      
+    {% endif %}
+  {% endfor %}
+</div>

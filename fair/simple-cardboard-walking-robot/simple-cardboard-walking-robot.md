@@ -37,7 +37,7 @@ permalink: /fair/simple-cardboard-walking-robot/
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}
-    {% if post.categories contains "diary" %}
+    {% if post.categories contains "feed" %}
       <li>
         {{ post.date | date: "%d.%m.%Y" }} — 
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>

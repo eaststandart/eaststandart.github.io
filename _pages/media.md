@@ -5,7 +5,6 @@ title: Медиа-материалы проекта
 permalink: /media/
 ---
 
-
 <div id="media-container">
   {% for post in site.posts %}
     {% comment %} Ищем категорию media {% endcomment %}
@@ -33,8 +32,8 @@ permalink: /media/
       var sectionUrl = '/' + nav + '/';
       var sectionName = navTitle ? navTitle : nav;
 
-      var navHtml = '<p style="margin-bottom: 12px;">' + '<hr>' +
-                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>' +
+      var navHtml = '<p style="margin-bottom: 12px;">' +
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>' + '<hr>' +
                     '<span style="color: #ccc; margin: 0 5px;">|</span>' +
                     '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' +
                     '</p>';

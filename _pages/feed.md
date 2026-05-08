@@ -1,8 +1,8 @@
 ---
 layout: default
-description: Новости сайта
+description: Журнал, дневник, блог и прочие записи
 title: Лента новостей
-permalink: /news/
+permalink: /feed/
 ---
 
 <ul>

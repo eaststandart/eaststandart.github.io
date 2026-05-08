@@ -48,10 +48,9 @@ permalink: /fair/simple-cardboard-walking-robot/
 
 ### Фотографии работ
 
-{%- comment -%} Более надежный способ получить раздел и проект {%- endcomment -%}
-{%- assign url_parts = page.url | remove_first: "/" | split: "/" -%}
-{%- assign section_slug = url_parts[0] -%}
-{%- assign project_slug = url_parts[1] -%}
+{%- assign url_parts = page.url | split: "/" -%}
+{%- assign section_slug = url_parts[1] -%}
+{%- assign project_slug = url_parts[2] -%}
 {%- assign section_url = section_slug | prepend: "/" | append: "/" -%}
 {%- assign section_page = site.pages | where: "url", section_url | first -%}
 [Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})

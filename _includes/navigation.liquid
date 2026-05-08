@@ -1,6 +1,9 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
+    {% comment %} Сюда скрипт вставит кнопку Назад на странице фото {% endcomment %}
+    <span id="dynamic-back"></span>
+
     {% if page.categories.size > 0 %}
         {% assign project_slug = page.categories | first %}
         {% assign project_url = project_slug | prepend: '/fair/' | append: '/' %}
@@ -13,7 +16,7 @@
             {% assign parent_page = site.pages | where: "url", parent_url | first %}
             <span style="color: #ccc; margin: 0 5px;">|</span>
             <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
-                {{ parent_page.git-title | default: parent_page.title | default: parts[1] }}
+                {{ parent_page.title | default: parts[1] }}
             </a>
         {% endif %}
     {% endif %}

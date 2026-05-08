@@ -8,7 +8,6 @@ permalink: /fair/
 
 <div class="fair-list">
   {% assign projects = site.pages | where_exp: "item", "item.path contains 'fair/'" %}
-  
   {% for project in projects %}
     {% unless project.url == "/fair/" %}
       <a href="{{ project.url | relative_url }}" class="fair-card">

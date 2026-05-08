@@ -23,40 +23,45 @@ permalink: /media/
 </div>
 
 <script>
-  // 1. Получаем параметры из URL
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
   var nav = urlParams.get('nav');
   var navTitle = urlParams.get('title');
 
-  if (project && nav) {
-    // 2. Строим навигацию под заголовком
+  // Теперь проверяем только наличие проекта
+  if (project) {
     var title = document.querySelector('h1');
     if (title) {
-      var projectUrl = '/' + nav + '/' + project + '/';
-      var sectionUrl = '/' + nav + '/';
-      var sectionName = navTitle ? navTitle : nav;
-
-      var navHtml = '<p style="margin-bottom: 12px;">' +
-                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>' +
-                    '<span style="color: #ccc; margin: 0 5px;">|</span>' +
-                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' +
-                    '</p><hr>';
+      // Ссылка на проект (если nav пустой, попробуем вернуться через историю)
+      var projectUrl = (nav) ? '/' + nav + '/' + project + '/' : 'javascript:history.back()';
       
+      var navHtml = '<p style="margin-bottom: 12px;">' +
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>';
+
+      // Добавляем раздел, только если nav не пустой
+      if (nav) {
+        var sectionUrl = '/' + nav + '/';
+        var sectionName = (navTitle && navTitle !== "") ? navTitle : nav;
+        navHtml += '<span style="color: #ccc; margin: 0 5px;">|</span>' +
+                   '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>';
+      }
+
+      navHtml += '</p><hr>';
       title.insertAdjacentHTML('afterend', navHtml);
     }
 
-    // 3. Фильтруем записи (ищем проект в списке категорий)
+    // Фильтрация постов
     document.querySelectorAll('.media-entry').forEach(function(item) {
-      var categories = item.getAttribute('data-project').split(' ');
-      if (categories.indexOf(project) !== -1) {
+      var cats = item.getAttribute('data-project') || "";
+      if (cats.split(' ').indexOf(project) !== -1) {
         item.style.display = 'block';
       }
     });
   } else {
-    // 4. Если зашли без параметров (напрямую) — показываем всё подряд
+    // Если параметров нет вообще — показываем всё
     document.querySelectorAll('.media-entry').forEach(function(item) {
         item.style.display = 'block';
     });
   }
 </script>
+

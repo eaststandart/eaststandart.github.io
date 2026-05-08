@@ -3,6 +3,7 @@ layout: fair
 description: Работы юных инженеров и мастеров.
 title: Ярмарка поделок
 git-title: "Поделки"
+permalink: /fair/
 ---
 
 <div class="fair-list">

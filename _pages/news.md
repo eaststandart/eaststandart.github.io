@@ -38,4 +38,3 @@ permalink: /news/
   {% endfor %}
 </div>
 
-

@@ -1,10 +1,7 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% if page.backbutton %}
-        <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="javascript:history.back()" class="back-link" style="margin-bottom: 0;">Назад</a>
-    {% elsif page.categories.size > 0 %}
+    {% if page.categories.size > 0 %}
         {% assign project_slug = page.categories | first %}
         {% assign project_url = project_slug | prepend: '/fair/' | append: '/' %}
         <span style="color: #ccc; margin: 0 5px;">|</span>

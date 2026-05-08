@@ -17,6 +17,7 @@ permalink: /photos/
 </div>
 
 <script>
+ const navSlug = urlParams.get('nav'); 
   const urlParams = new URLSearchParams(window.location.search);
   const selectedProject = urlParams.get('project');
 

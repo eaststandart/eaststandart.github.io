@@ -17,10 +17,10 @@ permalink: /photos/
 </div>
 
 <script>
- const navSlug = urlParams.get('nav'); 
   const urlParams = new URLSearchParams(window.location.search);
   const selectedProject = urlParams.get('project');
-
+  const navSlug = urlParams.get('nav'); 
+   
   if (selectedProject) {
     // 1. Находим заголовок h1 и вставляем ссылку ПОСЛЕ него
     const title = document.querySelector('h1');

@@ -1,4 +1,5 @@
-{%- assign project_slug = page.categories | first -%}
-{%- assign project_url = "/fair/" | append: project_slug | append: "/" -%}
+{% assign project_slug = page.categories | first %}
+{% assign project_url = "/fair/" | append: project_slug | append: "/" %}
+{% assign project_page = site.pages | where: "url", project_url | first %}
 <span style="color: #ccc; margin: 0 5px;">|</span>
 <a href="{{ project_url | relative_url }}" class="back-link">Назад</a>

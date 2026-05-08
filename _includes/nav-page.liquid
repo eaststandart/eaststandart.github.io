@@ -1,9 +1,12 @@
-{%- assign parts = page.url | split: '/' -%}
-{%- if parts.size > 2 -%}
-    {%- assign parent_url = "/" | append: parts[1] | append: "/" -%}
-    {%- assign parent_page = site.pages | where: "url", parent_url | first -%}
-    <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="{{ parent_url | relative_url }}" class="back-link">
-        {{ parent_page.navname | default: parent_page.title | default: parts[1] }}
-    </a>
-{%- endif -%}
+{% assign parts = page.url | split: '/' %}
+{% comment %} parts[1] — это первая папка в пути (например, 'fair') {% endcomment %}
+{% if parts.size > 2 %}
+    {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
+    {% comment %} Ищем главную страницу раздела (index.md в папке fair) {% endcomment %}
+    {% assign parent_page = site.pages | where: "url", parent_url | first %}
+
+     <span style="color: #ccc; margin: 0 5px;">|</span>
+     <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
+        {{ parent_page.git-title | default: parent_page.title | default: parts[1] }}
+     </a>
+{% endif %}

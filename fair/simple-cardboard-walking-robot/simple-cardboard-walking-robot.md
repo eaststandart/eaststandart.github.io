@@ -52,12 +52,14 @@ permalink: /fair/simple-cardboard-walking-robot/
 {%- assign section_slug = url_parts[1] -%}
 {%- assign project_slug = url_parts | last -%}
 {%- assign section_page = site.pages | where: "url", "/fair/" | first -%} {% comment %} ищем страницу раздела {% endcomment %}
-[Смотреть все фотографии работ →](/photos/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
+[Смотреть все фотографии работ →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
+
+[Смотреть все медиа-материалы →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle }})
 
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}
-    {% if post.categories contains "photo" %}
+    {% if post.categories contains "media" %}
       <li>
         {{ post.date | date: "%d.%m.%Y" }} — 
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>

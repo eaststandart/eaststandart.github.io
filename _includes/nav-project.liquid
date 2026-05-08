@@ -3,6 +3,4 @@
 {% assign project_page = site.pages | where: "url", project_url | first %}
 
 <span style="color: #ccc; margin: 0 5px;">|</span>
-<a href="{{ project_url | relative_url }}" class="back-link">
-    {{ project_page.title | default: project_slug }}
-</a>
+<a href="{{ project_url | relative_url }}" class="back-link">Назад</a>

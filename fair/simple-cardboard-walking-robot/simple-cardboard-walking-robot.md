@@ -51,7 +51,8 @@ permalink: /fair/simple-cardboard-walking-robot/
 {%- assign url_parts = page.url | split: "/" -%}
 {%- assign section_slug = url_parts[1] -%}
 {%- assign project_slug = url_parts | last -%}
-[Смотреть все фотографии работ →](/photos/?project={{ project_slug }}&nav={{ section_slug }})
+{%- assign section_page = site.pages | where: "url", "/fair/" | first -%} {% comment %} ищем страницу раздела {% endcomment %}
+[Смотреть все фотографии работ →](/photos/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
 
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}

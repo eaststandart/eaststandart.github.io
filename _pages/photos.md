@@ -16,18 +16,18 @@ permalink: /photos/
   {% endfor %}
 </div>
 
-<script> 
+<script>
   const urlParams = new URLSearchParams(window.location.search);
   const selectedProject = urlParams.get('project');
 
   if (selectedProject) {
-    // 1. Вставляем кнопку "Назад" прямо в строку навигации
-    const navContainer = document.getElementById('dynamic-back');
-    if (navContainer) {
-      navContainer.innerHTML = '<span style="color: #ccc; margin: 0 5px;">|</span><a href="javascript:history.back()" class="back-link" style="margin-bottom: 0;">Назад</a>';
+    // 1. Находим заголовок h1 и вставляем ссылку ПОСЛЕ него
+    const title = document.querySelector('h1');
+    if (title) {
+      title.insertAdjacentHTML('afterend', '<p><a href="javascript:history.back()" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a></p>');
     }
 
-    // 2. Фильтруем фото (как и раньше)
+    // 2. Фильтруем фото
     document.querySelectorAll('.photo-entry').forEach(item => {
       if (item.getAttribute('data-project') === selectedProject) {
         item.style.display = 'block';
@@ -40,3 +40,4 @@ permalink: /photos/
     });
   }
 </script>
+

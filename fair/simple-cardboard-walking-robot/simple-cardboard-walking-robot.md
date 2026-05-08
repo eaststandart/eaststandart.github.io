@@ -34,10 +34,11 @@ permalink: /fair/simple-cardboard-walking-robot/
 2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
 
 ### Дневник проекта
+
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}
-    {% if post.categories contains "feed" %}
+    {% if post.categories contains "feed" and post.categories contains "journal" %}
       <li>
         {{ post.date | date: "%d.%m.%Y" }} — 
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
@@ -52,9 +53,7 @@ permalink: /fair/simple-cardboard-walking-robot/
 {%- assign section_slug = url_parts[1] -%}
 {%- assign project_slug = url_parts | last -%}
 {%- assign section_page = site.pages | where: "url", "/fair/" | first -%} {% comment %} ищем страницу раздела {% endcomment %}
-[Смотреть все фотографии работ →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
-
-[Смотреть все медиа-материалы →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle }})
+[Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
 
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}

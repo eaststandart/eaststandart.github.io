@@ -7,25 +7,30 @@ permalink: /media/
 
 <div id="media-container">
   {% for post in site.posts %}
-    {% comment %} Ищем категорию media {% endcomment %}
+    {% comment %} Проверяем, что пост относится к медиа {% endcomment %}
     {% if post.categories contains "media" %}
-      <div class="media-entry" data-project="{{ post.categories | first }}" style="display: none; margin-bottom: 50px;">
+      {% comment %} Передаем ВСЕ категории через пробел в атрибут data-project {% endcomment %}
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 50px;">
         <h3>{{ post.title }}</h3>
-        <small>{{ post.date | date: "%d.%m.%Y" }}</small>
-        <div class="media-content">{{ post.content }}</div>
-        <hr>
+        <small style="color: #888;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        <div class="media-content" style="margin-top: 15px;">
+          {{ post.content }}
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
       </div>
     {% endif %}
   {% endfor %}
 </div>
 
 <script>
+  // 1. Получаем параметры из URL
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
   var nav = urlParams.get('nav');
   var navTitle = urlParams.get('title');
 
   if (project && nav) {
+    // 2. Строим навигацию под заголовком
     var title = document.querySelector('h1');
     if (title) {
       var projectUrl = '/' + nav + '/' + project + '/';
@@ -33,23 +38,25 @@ permalink: /media/
       var sectionName = navTitle ? navTitle : nav;
 
       var navHtml = '<p style="margin-bottom: 12px;">' +
-                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>' +
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>' +
                     '<span style="color: #ccc; margin: 0 5px;">|</span>' +
-                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' + '<hr>' +
-                    '</p>';
+                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' +
+                    '</p><hr>';
       
       title.insertAdjacentHTML('afterend', navHtml);
     }
 
+    // 3. Фильтруем записи (ищем проект в списке категорий)
     document.querySelectorAll('.media-entry').forEach(function(item) {
-      if (item.getAttribute('data-project') === project) {
+      var categories = item.getAttribute('data-project').split(' ');
+      if (categories.indexOf(project) !== -1) {
         item.style.display = 'block';
       }
     });
   } else {
+    // 4. Если зашли без параметров (напрямую) — показываем всё подряд
     document.querySelectorAll('.media-entry').forEach(function(item) {
         item.style.display = 'block';
     });
   }
 </script>
-

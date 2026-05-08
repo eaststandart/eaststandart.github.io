@@ -129,11 +129,6 @@ p:has(img) + blockquote {
     margin-top: 10px !important;
 }
 
-.page-description {
-    font-style: italic; /* например, для красоты */
-    color: #666;
-}
-
 /* Обнуляем нижний отступ у H1 (заголовка страницы) */
 .main-content h1 {
     margin-bottom: 0 !important;
@@ -155,6 +150,11 @@ p:has(img) + blockquote {
 .video-test-row + h3,
 .main-content p:has(img) + h3 {
     margin-top: 1.2em !important;
+}
+
+.page-description {
+    font-style: italic; /* например, для красоты */
+    color: #666;
 }
 
 /* --- ЕДИНЫЙ БЛОК КАРТИНОК В СТАТЬЯХ (MARKDOWN) --- */

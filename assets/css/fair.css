@@ -35,4 +35,5 @@
     color: var(--card-tech);
     font-size: 1.1rem;
     line-height: 1.2;
+    padding: 0;
 }

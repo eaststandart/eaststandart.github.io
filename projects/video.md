@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Тест видео в ряд
+git-title: "Пректы"
 ---
 
 Текст

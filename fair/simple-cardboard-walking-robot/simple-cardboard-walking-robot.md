@@ -32,3 +32,14 @@ permalink: /fair/simple-cardboard-walking-robot/
 ### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot.pdf)
 2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
+
+### Дневник проекта
+<ul>
+  {% assign project_slug = page.url | split: "/" | last %}
+  {% for post in site.categories[project_slug] %}
+    <li>
+      {{ post.date | date: "%d.%m.%Y" }} — 
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>

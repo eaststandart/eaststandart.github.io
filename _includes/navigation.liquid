@@ -2,7 +2,13 @@
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
     {% if page.categories.size > 0 %}
-        {% assign project_slug = page.categories | first %}
+        {% comment %} Ищем в категориях ту, которая является именем папки проекта {% endcomment %}
+        {% assign project_slug = "" %}
+        {% for cat in page.categories %}
+            {% if cat != "feed" and cat != "journal" and cat != "diary" and cat != "media" %}
+                {% assign project_slug = cat %}
+            {% endif %}
+        {% endfor %}
         {% assign project_url = project_slug | prepend: '/fair/' | append: '/' %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
         <a href="{{ project_url | relative_url }}" class="back-link" style="margin-bottom: 0;">Назад</a>

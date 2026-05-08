@@ -17,4 +17,3 @@ permalink: /news/
     </li>
   {% endfor %}
 </ul>
-

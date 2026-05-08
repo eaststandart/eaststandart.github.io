@@ -17,28 +17,37 @@ permalink: /photos/
 </div>
 
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const selectedProject = urlParams.get('project');
-  const navSlug = urlParams.get('nav'); 
-   
+  var urlParams = new URLSearchParams(window.location.search);
+  var selectedProject = urlParams.get('project');
+  var navSlug = urlParams.get('nav'); // Здесь будет 'fair', 'lessons' и т.д.
+
   if (selectedProject) {
-    // 1. Находим заголовок h1 и вставляем ссылку ПОСЛЕ него
-    const title = document.querySelector('h1');
+    var title = document.querySelector('h1');
     if (title) {
-      title.insertAdjacentHTML('afterend', '<p><a href="javascript:history.back()" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a></p>');
+      // Собираем строку: Назад | Раздел
+      var backLink = '<a href="javascript:history.back()" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>';
+      var sectionLink = '';
+
+      if (navSlug) {
+        sectionLink = '<span style="color: #ccc; margin: 0 5px;">|</span>' +
+                      '<a href="/' + navSlug + '/" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Перейти в раздел</a>';
+      }
+
+      title.insertAdjacentHTML('afterend', '<p style="margin-bottom: 20px;">' + backLink + sectionLink + '</p>');
     }
 
-    // 2. Фильтруем фото
-    document.querySelectorAll('.photo-entry').forEach(item => {
+    // Фильтруем фото
+    document.querySelectorAll('.photo-entry').forEach(function(item) {
       if (item.getAttribute('data-project') === selectedProject) {
         item.style.display = 'block';
       }
     });
   } else {
-    // Если параметра нет — показываем всё
-    document.querySelectorAll('.photo-entry').forEach(item => {
+    // Если зашли просто так — показываем всё
+    document.querySelectorAll('.photo-entry').forEach(function(item) {
         item.style.display = 'block';
     });
   }
 </script>
+
 

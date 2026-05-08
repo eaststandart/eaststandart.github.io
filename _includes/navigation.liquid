@@ -15,7 +15,7 @@
         
         <span style="color: #ccc; margin: 0 5px;">|</span>
         <a href="{{ project_page.url | relative_url }}" class="back-link" style="margin-bottom: 0;">Назад</a>
-        {% endif %}
+        {% comment %} УДАЛИЛ ЛИШНИЙ ENDIF ОТСЮДА {% endcomment %}
     {% else %}
         {% assign parts = page.url | split: '/' %}
         {% if parts.size > 2 %}

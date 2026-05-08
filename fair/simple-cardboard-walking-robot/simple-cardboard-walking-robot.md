@@ -38,9 +38,25 @@ permalink: /fair/simple-cardboard-walking-robot/
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}
-    <li>
-      {{ post.date | date: "%d.%m.%Y" }} — 
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    </li>
+    {% if post.categories contains "diary" %}
+      <li>
+        {{ post.date | date: "%d.%m.%Y" }} — 
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endif %}
   {% endfor %}
 </ul>
+
+### Фото работ
+<ul>
+  {% assign project_slug = page.url | split: "/" | last %}
+  {% for post in site.categories[project_slug] %}
+    {% if post.categories contains "foto" %}
+      <li>
+        {{ post.date | date: "%d.%m.%Y" }} — 
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+

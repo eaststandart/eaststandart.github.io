@@ -2,6 +2,7 @@
 layout: default
 title: Фотографии работ участников
 permalink: /photos/
+backbutton: true
 ---
 
 <div id="photos-container">

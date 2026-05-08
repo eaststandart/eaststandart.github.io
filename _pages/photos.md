@@ -16,7 +16,7 @@ permalink: /photos/
   {% endfor %}
 </div>
 
-<script>
+<script> 
   const urlParams = new URLSearchParams(window.location.search);
   const selectedProject = urlParams.get('project');
 
@@ -24,7 +24,7 @@ permalink: /photos/
     // 1. Вставляем кнопку "Назад" прямо в строку навигации
     const navContainer = document.getElementById('dynamic-back');
     if (navContainer) {
-      navContainer.innerHTML = '<span style="color: #ccc; margin: 0 15px;">|</span><a href="javascript:history.back()" class="back-link" style="margin-bottom: 0;">Назад</a>';
+      navContainer.innerHTML = '<span style="color: #ccc; margin: 0 5px;">|</span><a href="javascript:history.back()" class="back-link" style="margin-bottom: 0;">Назад</a>';
     }
 
     // 2. Фильтруем фото (как и раньше)

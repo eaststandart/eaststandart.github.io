@@ -48,10 +48,14 @@ permalink: /fair/simple-cardboard-walking-robot/
 
 ### Фотографии работ
 
-{%- assign url_parts = page.url | split: "/" -%}
-{%- assign section_slug = url_parts[1] -%}
+{%- comment -%} Разрезаем путь страницы на части {%- endcomment -%}
+{%- assign url_parts = page.url | split: "/" | compact -%}
+{%- comment -%} Авто-определение: первая папка — раздел, последняя — проект {%- endcomment -%}
+{%- assign section_slug = url_parts | first -%}
 {%- assign project_slug = url_parts | last -%}
-{%- assign section_page = site.pages | where: "url", "/fair/" | first -%} {% comment %} ищем страницу раздела {% endcomment %}
+{%- comment -%} Универсальный поиск страницы раздела, чтобы взять navtitle {%- endcomment -%}
+{%- assign section_url = section_slug | prepend: "/" | append: "/" -%}
+{%- assign section_page = site.pages | where: "url", section_url | first -%}
 [Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
 
 <ul>

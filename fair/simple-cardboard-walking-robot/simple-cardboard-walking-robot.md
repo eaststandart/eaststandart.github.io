@@ -53,7 +53,6 @@ permalink: /fair/simple-cardboard-walking-robot/
 {%- assign project_slug = url_parts | last -%}
 [Смотреть все фотографии работ →](/photos/?project={{ project_slug }}&nav={{ section_slug }})
 
-
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}

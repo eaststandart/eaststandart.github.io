@@ -18,36 +18,36 @@ permalink: /photos/
 
 <script>
   var urlParams = new URLSearchParams(window.location.search);
-  var selectedProject = urlParams.get('project');
-  var navSlug = urlParams.get('nav'); // Здесь будет 'fair', 'lessons' и т.д.
+  var project = urlParams.get('project');
+  var nav = urlParams.get('nav');
 
-  if (selectedProject) {
+  if (project && nav) {
     var title = document.querySelector('h1');
     if (title) {
-      // Собираем строку: Назад | Раздел
-      var backLink = '<a href="javascript:history.back()" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>';
-      var sectionLink = '';
+      // Строим прямые ссылки на основе полученных параметров
+      var projectUrl = '/' + nav + '/' + project + '/';
+      var sectionUrl = '/' + nav + '/';
 
-      if (navSlug) {
-        sectionLink = '<span style="color: #ccc; margin: 0 5px;">|</span>' +
-                      '<a href="/' + navSlug + '/" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Перейти в раздел</a>';
-      }
-
-      title.insertAdjacentHTML('afterend', '<p style="margin-bottom: 20px;">' + backLink + sectionLink + '</p>');
+      var navHtml = '<p style="margin-bottom: 20px;">' +
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>' +
+                    '<span style="color: #ccc; margin: 0 5px;">|</span>' +
+                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Перейти в раздел</a>' +
+                    '</p>';
+      
+      title.insertAdjacentHTML('afterend', navHtml);
     }
 
     // Фильтруем фото
     document.querySelectorAll('.photo-entry').forEach(function(item) {
-      if (item.getAttribute('data-project') === selectedProject) {
+      if (item.getAttribute('data-project') === project) {
         item.style.display = 'block';
       }
     });
   } else {
-    // Если зашли просто так — показываем всё
+    // Если зашли без параметров — показываем всё
     document.querySelectorAll('.photo-entry').forEach(function(item) {
         item.style.display = 'block';
     });
   }
 </script>
-
 

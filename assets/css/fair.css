@@ -32,6 +32,7 @@
 
 .fair-list h3 {
     margin: 0;
+    margin-top: -10px !important;
     color: var(--card-tech);
     font-size: 1.1rem;
     line-height: 1.2;

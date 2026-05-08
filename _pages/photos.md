@@ -32,7 +32,7 @@ permalink: /photos/
       var navHtml = '<p style="margin-bottom: 20px;">' +
                     '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>' +
                     '<span style="color: #ccc; margin: 0 5px;">|</span>' +
-                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Перейти в раздел: ' + sectionName + '</a>' +
+                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">В раздел: ' + sectionName + '</a>' +
                     '</p>';
       
       title.insertAdjacentHTML('afterend', navHtml);

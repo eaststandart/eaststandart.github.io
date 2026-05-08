@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Учебные проекты
-git-title: "Проекты"
+navtitle: "Проекты"
 custom_css: ["/assets/css/projects.css"]
 ---
 

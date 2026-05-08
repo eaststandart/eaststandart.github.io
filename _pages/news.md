@@ -2,7 +2,6 @@
 layout: default
 description: Новости сайта
 title: Лента новостей
-git-title: "Поделки"
 permalink: /news/
 ---
 

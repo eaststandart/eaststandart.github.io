@@ -2,7 +2,7 @@
 layout: default
 description: Моменты, которые помогают в техническом творчестве и инженерном поиске.
 title: Техническое вдохновение
-git-title: "Вдохновение"
+navtitle: "Вдохновение"
 custom_css: ["/assets/css/fair.css"]
 ---
 

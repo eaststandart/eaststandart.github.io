@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Дневник инженера
-git-title: "Дневник"
+navtitle: "Дневник"
 custom_css: ["/assets/css/diary.css"]
 ---
 

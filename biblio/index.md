@@ -2,7 +2,7 @@
 layout: page
 description: Рекомендуемые книги и учебники, проверенные временем и практикой.
 title: Список литературы
-git-title: "Литература"
+navtitle: "Литература"
 custom_css: ["/assets/css/biblio.css"]
 ---
 

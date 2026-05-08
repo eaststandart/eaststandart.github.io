@@ -48,10 +48,13 @@ permalink: /fair/simple-cardboard-walking-robot/
 </ul>
 
 ### Фотографии работ
+{%- assign project_slug = page.url | split: "/" | last -%}
+[Смотреть все фотографии работ этого проекта →](/photos/?project={{ project_slug }})
+
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}
   {% for post in site.categories[project_slug] %}
-    {% if post.categories contains "foto" %}
+    {% if post.categories contains "photo" %}
       <li>
         {{ post.date | date: "%d.%m.%Y" }} — 
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>

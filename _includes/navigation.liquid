@@ -2,9 +2,20 @@
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
     {% if page.categories.size > 0 %}
-        {% include nav-project.liquid %}
+        {% assign project_slug = page.categories | first %}
+        {% assign project_url = project_slug | prepend: '/fair/' | append: '/' %}
+        <span style="color: #ccc; margin: 0 5px;">|</span>
+        <a href="{{ project_url | relative_url }}" class="back-link" style="margin-bottom: 0;">Назад</a>
     {% else %}
-        {% include nav-page.liquid %}
+        {% assign parts = page.url | split: '/' %}
+        {% if parts.size > 2 %}
+            {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
+            {% assign parent_page = site.pages | where: "url", parent_url | first %}
+            <span style="color: #ccc; margin: 0 5px;">|</span>
+            <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
+                {{ parent_page.git-title | default: parent_page.title | default: parts[1] }}
+            </a>
+        {% endif %}
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>

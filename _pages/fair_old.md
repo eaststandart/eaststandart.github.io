@@ -1,3 +1,11 @@
+---
+layout: fair
+description: Работы юных инженеров и мастеров.
+title: Ярмарка поделок
+git-title: "Поделки"
+permalink: /faird/
+---
+
 <div class="fair-list">
     <a href="/fair/simple-cardboard-walking-robot/" class="fair-card">
         <img src="simple-cardboard-walking-robot/simple-cardboard-walking-robot.webp" class="fair-img-round">

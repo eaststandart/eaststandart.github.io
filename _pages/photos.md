@@ -4,8 +4,6 @@ title: Фотографии работ участников
 permalink: /photos/
 ---
 
-<h1 id="page-title">Фотографии работ</h1>
-
 <div id="photos-container">
   {% for post in site.posts %}
     {% if post.categories contains "photo" %}

@@ -124,10 +124,6 @@ p:has(img) + blockquote {
     margin-bottom: 0 !important;
 }
 
-/* Обнуляем отступ сверху ТОЛЬКО для самого первого заголовка в статье */
-.main-content h3:first-of-type {
-    margin-top: 10px !important;
-}
 
 /* Обнуляем нижний отступ у H1 (заголовка страницы) */
 .main-content h1 {

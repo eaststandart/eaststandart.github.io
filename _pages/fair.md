@@ -12,12 +12,11 @@ permalink: /fair/
   {% for project in projects %}
     {% unless project.url == "/fair/" %}
       <a href="{{ project.url | relative_url }}" class="fair-card">
-        {% comment %} Картинка: имя_папки.webp внутри папки проекта {% endcomment %}
         {% assign folder = project.path | split: "/" | last | replace: ".md", "" %}
-        <img src="{{ project.url | append: folder | append: '.webp' | relative_url }}">
+        {% comment %} Добавили класс fair-img-round {% endcomment %}
+        <img src="{{ project.url | append: folder | append: '.webp' | relative_url }}" class="fair-img-round">
         <h3>{{ project.title }}</h3>
       </a>
     {% endunless %}
   {% endfor %}
 </div>
-

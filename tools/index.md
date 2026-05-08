@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Полезные инструменты
+git-title: "Инструменты"
 custom_css: ["/assets/css/tools.css"]
 ---
 

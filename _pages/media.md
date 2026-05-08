@@ -36,7 +36,7 @@ permalink: /media/
       var projectUrl = (nav) ? '/' + nav + '/' + project + '/' : 'javascript:history.back()';
       
       var navHtml = '<p style="margin-bottom: 12px;">' +
-                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>';
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>';
 
       // Добавляем раздел, только если nav не пустой
       if (nav) {

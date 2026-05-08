@@ -48,32 +48,12 @@ permalink: /fair/simple-cardboard-walking-robot/
 
 ### Фотографии работ
 
-<div style="background: #f0f0f0; padding: 10px; border: 1px solid #ccc; font-family: monospace; font-size: 0.8rem;">
-  <strong>DEBUG INFO:</strong><br>
-  URL: {{ page.url }}<br>
-  {% assign parts = page.url | split: "/" %}
-  {% for part in parts %}
-    Index {{ forloop.index0 }}: "{{ part }}"<br>
-  {% endfor %}
-  ---<br>
-  {%- assign section_slug = parts[1] -%}
-  {%- assign project_slug = parts | last -%}
-  RESULT SECTION: {{ section_slug }}<br>
-  RESULT PROJECT: {{ project_slug }}
-</div>
-
-{%- assign section_url = section_slug | prepend: "/" | append: "/" -%}
-{%- assign section_page = site.pages | where: "url", section_url | first -%}
-
-[Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
-
-
-
 {%- assign url_parts = page.url | split: "/" -%}
 {%- assign section_slug = url_parts[1] -%}
 {%- assign project_slug = url_parts[2] -%}
 {%- assign section_url = section_slug | prepend: "/" | append: "/" -%}
 {%- assign section_page = site.pages | where: "url", section_url | first -%}
+
 [Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
 
 <ul>

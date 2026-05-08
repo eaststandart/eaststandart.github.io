@@ -1,29 +1,21 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    <span id="dynamic-back"></span>
+    {% assign parts = page.url | split: '/' %}
+    {% assign parent_slug = parts[1] %}
 
-    {% if page.categories.size > 0 %}
-        {% comment %} УНИВЕРСАЛЬНЫЙ ПОИСК ДЛЯ ПОСТОВ {% endcomment %}
-        {% assign project_slug = page.categories | first %}
-        {% comment %} Ищем страницу проекта по всему сайту, где permalink или url содержит имя папки {% endcomment %}
-        {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
-        
+    {% if parts.size > 2 %}
+        {% assign parent_url = parent_slug | prepend: '/' | append: '/' %}
+        {% assign parent_page = site.pages | where: "url", parent_url | first %}
+
         <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="{{ project_page.url | relative_url }}" class="back-link" style="margin-bottom: 0;">Назад</a>
-    {% else %}
-        {% comment %} УНИВЕРСАЛЬНЫЙ ПОИСК ДЛЯ СТРАНИЦ {% endcomment %}
-        {% assign parts = page.url | split: '/' %}
-        {% if parts.size > 2 %}
-            {% assign section_slug = parts[1] %}
-            {% assign parent_url = section_slug | prepend: '/' | append: '/' %}
-            {% assign parent_page = site.pages | where: "url", parent_url | first %}
-
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
-                {{ parent_page.git-title | default: parent_page.title | default: section_slug }}
-            </a>
-        {% endif %}
+        <a href="{{ parent_url }}" class="back-link" style="margin-bottom: 0;">
+            {% if parent_page %}
+                {{ parent_page.navname | default: parent_page.title }}
+            {% else %}
+                {{ parent_slug | capitalize }}
+            {% endif %}
+        </a>
     {% endif %}
 
     <span style="color: #ccc; margin: 0 5px;">|</span>

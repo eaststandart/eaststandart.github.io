@@ -50,7 +50,7 @@ permalink: /fair/simple-cardboard-walking-robot/
 ### Фотографии работ
 
 {% assign project_slug = page.url | split: "/" | last %}
-[Смотреть все фотографии проекта →](/photos/?project={{ project_slug }})
+[Все фотографии проекта →](/photos/?project={{ project_slug }})
 
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}

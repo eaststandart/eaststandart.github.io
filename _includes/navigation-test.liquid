@@ -1,18 +1,16 @@
 <div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
     <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
 
-    {% if page.categories.size > 0 %}
-        {%- comment -%} 1. Ищем в категориях ту, которая НЕ является служебной {%- endcomment -%}
-        {%- assign project_slug = "" -%}
-        {%- for cat in page.categories -%}
-            {%- if cat != "feed" and cat != "journal" and cat != "media" and cat != "diary" -%}
-                {%- assign project_slug = cat -%}
-            {%- endif -%}
-        {%- endfor -%}
+    <span id="dynamic-nav-back"></span>
 
-        {%- comment -%} 2. Ищем страницу, в URL которой есть этот slug (автопилот) {%- endcomment -%}
-        {%- assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first -%}
-        
+    {% if page.categories.size > 0 %}
+        {% assign project_slug = "" %}
+        {% for cat in page.categories %}
+            {% if cat != "feed" and cat != "journal" and cat != "media" and cat != "diary" %}
+                {% assign project_slug = cat %}
+            {% endif %}
+        {% endfor %}
+        {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
         <span style="color: #ccc; margin: 0 5px;">|</span>
         <a href="{{ project_page.url | relative_url }}" class="back-link" style="margin-bottom: 0;">Назад</a>
     {% else %}
@@ -30,3 +28,18 @@
     <span style="color: #ccc; margin: 0 5px;">|</span>
     <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
 </div>
+
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var prj = params.get('project'), navDir = params.get('nav');
+    if (prj && navDir) {
+      var bb = document.getElementById('dynamic-nav-back');
+      if (bb) {
+        // Вставляем с пробелом перед чертой, чтобы не прилипало
+        bb.innerHTML = ' <span style="color: #ccc; margin: 0 5px;">|</span> ' +
+                       '<a href="/' + navDir + '/' + prj + '/" class="back-link" style="margin-bottom: 0;">Назад</a>';
+      }
+    }
+  })();
+</script>

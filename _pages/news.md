@@ -4,26 +4,31 @@ title: Тест ленты обновлений
 permalink: /news-test/
 ---
 
-<div class="updates-test-feed" style="margin-top: 20px;">
+<div class="updates-test-feed">
   <ul style="list-style: none; padding: 0;">
-    {% comment %} 
-      Собираем вместе посты и страницы, у которых есть дата в заголовке 
-    {% endcomment %}
+    {% comment %} Собираем контент и фильтруем только те объекты, где дата ВООБЩЕ есть {% endcomment %}
     {% assign all_content = site.posts | concat: site.pages %}
-    {% assign sorted_content = all_content | where_exp: "item", "item.date" | sort: "date" | reverse %}
+    {% assign filtered_content = "" | split: "," %}
+    
+    {% for item in all_content %}
+      {% if item.date %}
+        {% assign filtered_content = filtered_content | push: item %}
+      {% endif %}
+    {% endfor %}
+
+    {% assign sorted_content = filtered_content | sort: "date" | reverse %}
 
     {% for item in sorted_content limit: 10 %}
       <li style="margin-bottom: 12px; border-bottom: 1px solid #f9f9f9; padding-bottom: 8px;">
-        <small style="color: #999; font-family: monospace;">
+        <small style="color: #999;">
           {{ item.date | date: "%d.%m.%Y" }}
         </small>
-        <span style="margin: 0 8px; font-weight: bold; color: #444;">
-          {% if item.path contains '_posts' %} Добавлена запись: {% else %} Новый проект: {% endif %}
+        <span style="margin: 0 8px; font-weight: bold;">
+          {% if item.path contains '_posts' %} Запись: {% else %} Проект: {% endif %}
         </span>
-        <a href="{{ item.url | relative_url }}" style="color: #3498db; text-decoration: none;">
-          {{ item.title }}
-        </a>
+        <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
       </li>
     {% endfor %}
   </ul>
 </div>
+

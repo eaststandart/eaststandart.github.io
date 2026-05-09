@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Попытка устранения раскачивания корпуса робота при ходьбе"
+title: "Тест"
 date: 2026-05-08
 categories: [feed, journal, novyj-robot-shagohod]
 ---

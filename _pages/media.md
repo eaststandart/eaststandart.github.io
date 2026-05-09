@@ -5,4 +5,4 @@ title: Медиа-материалы
 permalink: /media/
 ---
 
-{% include media-logic.liquid category="media" %}
+{% include media-archive.liquid category="media" %}

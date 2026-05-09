@@ -9,24 +9,20 @@ permalink: /news-test/
     {% assign all_content = site.posts | concat: site.pages %}
     
     {% comment %} 
-      Пытаемся отфильтровать те страницы, где в published не просто true, а что-то похожее на дату
+      Фильтруем: берем только посты И страницы, где ДАТА прописана явно,
+      и исключаем главную страницу и поиск.
     {% endcomment %}
-    {% assign updates = all_content | where_exp: "item", "item.published != true" | where_exp: "item", "item.published != false" | sort: "published" | reverse %}
+    {% assign updates = all_content | where_exp: "item", "item.date" | where_exp: "item", "item.url != '/'" | where_exp: "item", "item.url != '/tags.html'" | sort: "date" | reverse %}
 
     {% for item in updates limit: 10 %}
       <li style="margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-        <small style="color: #888;">{{ item.published | date: "%d.%m.%Y" }}</small>
+        <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
         <span style="margin: 0 8px; font-weight: bold;">
-          {% if item.path contains '_posts' %} Запись: {% else %} Проект: {% endif %}
+          {% if item.path contains '_posts' %} Добавлена запись: {% else %} Новый проект: {% endif %}
         </span>
         <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
       </li>
-    {% else %}
-      <li>Эксперимент не удался или обновлений нет.</li>
     {% endfor %}
   </ul>
 </div>
-
-
-
 

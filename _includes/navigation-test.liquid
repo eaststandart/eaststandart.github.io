@@ -31,8 +31,9 @@
     if (prj && navDir) {
       var bb = document.getElementById('dynamic-nav-back');
       if (bb) {
-        // Добавлены точно такие же отступы margin: 0 5px для синхронизации
-        bb.innerHTML = '<span style="color: #ccc; margin: 0 5px;">|</span><a href="/' + navDir + '/' + prj + '/" style="color: #3498db; text-decoration: none; font-weight: normal;">Назад</a>';
+        // Мы задаем разделителю (|) margin справа, а ссылке - margin слева
+        bb.innerHTML = '<span style="color: #ccc; margin-left: 5px; margin-right: 5px;">|</span>' +
+                       '<a href="/' + navDir + '/' + prj + '/" style="color: #3498db; text-decoration: none; font-weight: normal; margin-left: 0px;">Назад</a>';
       }
     }
   })();

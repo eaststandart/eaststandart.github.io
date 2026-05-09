@@ -14,31 +14,17 @@
   {% endfor %}
 </div>
 
-{% comment %} 2. Логика фильтрации и навигации {% endcomment %}
+{% comment %} 2. Логика фильтрации {% endcomment %}
 <script>
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
-  var nav = urlParams.get('nav');
-  var navTitle = urlParams.get('title');
 
   if (project) {
-    var title = document.querySelector('h1');
-    if (title && nav) {
-      var projectUrl = '/' + nav + '/' + project + '/';
-      var sectionUrl = '/' + nav + '/';
-      var sectionName = (navTitle && navTitle !== "") ? navTitle : nav;
-
-      var navHtml = '<p style="margin-bottom: 12px;">' +
-                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">→ Назад к проекту</a>' +
-                    '<span style="color: #ccc; margin: 0 5px;">|</span>' +
-                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' +
-                    '</p><hr>';
-      title.insertAdjacentHTML('afterend', navHtml);
-    }
-
     document.querySelectorAll('.media-entry').forEach(function(item) {
-      var cats = item.getAttribute('data-project').split(' ');
-      if (cats.indexOf(project) !== -1) { item.style.display = 'block'; }
+      var cats = item.getAttribute('data-project') || "";
+      if (cats.split(' ').indexOf(project) !== -1) { 
+        item.style.display = 'block'; 
+      }
     });
   } else {
     document.querySelectorAll('.media-entry').forEach(function(item) {

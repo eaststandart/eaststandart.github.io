@@ -1,0 +1,26 @@
+{% assign url_parts = page.url | split: "/" %}
+{% assign section_slug = url_parts[1] %}
+{% assign project_slug = url_parts[2] %}
+{% assign section_url = section_slug | prepend: "/" | append: "/" %}
+{% assign section_page = site.pages | where: "url", section_url | first %}
+
+<ul>
+  {% comment %} Ссылка в начале списка. Адрес страницы теперь тоже берется из type {% endcomment %}
+  <li>
+    <strong>
+      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}">
+        Смотреть все →
+      </a>
+    </strong>
+  </li>
+
+  {% assign project_slug_last = page.url | split: "/" | last %}
+  {% for post in site.categories[project_slug_last] %}
+    {% if post.categories contains include.type %}
+      <li>
+        {{ post.date | date: "%d.%m.%Y" }} — 
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

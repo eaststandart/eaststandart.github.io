@@ -49,44 +49,5 @@ permalink: /fair/simple-cardboard-walking-robot/
 
 ### Галерея работ
 **Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
-{% include link-to-media.liquid %}
 
----
-
-<div style="background: #fdf6e3; padding: 15px; border: 1px dashed #b58900; font-family: monospace; font-size: 0.85rem; line-height: 1.5;">
-  <strong>ТЕСТ ЛОГИКИ ПУТЕЙ:</strong><br>
-  URL страницы: {{ page.url }}<br>
-  <hr>
-  
-  {% comment %} ТВОЯ ЛОГИКА (ПО ИНДЕКСАМ) {% endcomment %}
-  {% assign parts_yours = page.url | split: "/" %}
-  <strong>Твоя логика (Index 1 и 2):</strong><br>
-  Section [1]: "{{ parts_yours[1] }}"<br>
-  Project [2]: "{{ parts_yours[2] }}"<br>
-  <br>
-
-  {% comment %} МОЯ ЛОГИКА (FIRST/LAST + COMPACT) {% endcomment %}
-  {% assign parts_mine = page.url | split: "/" | compact %}
-  <strong>Моя логика (First и Last + Compact):</strong><br>
-  Section (first): "{{ parts_mine | first }}"<br>
-  Project (last): "{{ parts_mine | last }}"<br>
-  <hr>
-  
-  <strong>КАК ЭТО ПОВЛИЯЕТ НА ССЫЛКУ:</strong><br>
-  Твоя: ?project={{ parts_yours[2] }}&nav={{ parts_yours[1] }}<br>
-  Моя: ?project={{ parts_mine | last }}&nav={{ parts_mine | first }}
-</div>
-
----
-
-<ul>
-  {% assign project_slug = page.url | split: "/" | last %}
-  {% for post in site.categories[project_slug] %}
-    {% if post.categories contains "media" %}
-      <li>
-        {{ post.date | date: "%d.%m.%Y" }} — 
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      </li>
-    {% endif %}
-  {% endfor %}
-</ul>
+{% include project-list.liquid type="media" %}

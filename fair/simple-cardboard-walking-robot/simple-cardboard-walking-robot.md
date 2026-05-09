@@ -4,7 +4,6 @@ description: Развитие навыков конструирования.
 title: Робот двуногий шагающий из картона
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
-published: 2026-05-07
 permalink: /fair/simple-cardboard-walking-robot/
 date: 2026-05-07
 ---

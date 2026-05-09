@@ -1,0 +1,48 @@
+{% comment %} 1. HTML-скелет вывода {% endcomment %}
+<div id="media-container">
+  {% for post in site.posts %}
+    {% if post.categories contains include.category %}
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 50px;">
+        <h3>{{ post.title }}</h3>
+        <small style="color: #888;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        <div class="media-content" style="margin-top: 15px;">
+          {{ post.content }}
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% comment %} 2. Логика фильтрации и навигации {% endcomment %}
+<script>
+  var urlParams = new URLSearchParams(window.location.search);
+  var project = urlParams.get('project');
+  var nav = urlParams.get('nav');
+  var navTitle = urlParams.get('title');
+
+  if (project) {
+    var title = document.querySelector('h1');
+    if (title && nav) {
+      var projectUrl = '/' + nav + '/' + project + '/';
+      var sectionUrl = '/' + nav + '/';
+      var sectionName = (navTitle && navTitle !== "") ? navTitle : nav;
+
+      var navHtml = '<p style="margin-bottom: 12px;">' +
+                    '<a href="' + projectUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">← Назад к проекту</a>' +
+                    '<span style="color: #ccc; margin: 0 5px;">|</span>' +
+                    '<a href="' + sectionUrl + '" style="color: #3498db; text-decoration: none; font-size: 0.9rem;">Раздел: ' + sectionName + '</a>' +
+                    '</p><hr>';
+      title.insertAdjacentHTML('afterend', navHtml);
+    }
+
+    document.querySelectorAll('.media-entry').forEach(function(item) {
+      var cats = item.getAttribute('data-project').split(' ');
+      if (cats.indexOf(project) !== -1) { item.style.display = 'block'; }
+    });
+  } else {
+    document.querySelectorAll('.media-entry').forEach(function(item) {
+        item.style.display = 'block';
+    });
+  }
+</script>

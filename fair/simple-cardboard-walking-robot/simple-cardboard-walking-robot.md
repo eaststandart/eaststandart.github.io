@@ -49,12 +49,35 @@ permalink: /fair/simple-cardboard-walking-robot/
 
 ### Галерея работ
 **Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
-{% assign url_parts = page.url | split: "/" %}
-{% assign section_slug = url_parts[1] %}
-{% assign project_slug = url_parts[2] %}
-{% assign section_url = section_slug | prepend: "/" | append: "/" %}
-{% assign section_page = site.pages | where: "url", section_url | first %}
-[Смотреть все →](/media/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }})
+{% include link-to-media.liquid %}
+
+---
+
+<div style="background: #fdf6e3; padding: 15px; border: 1px dashed #b58900; font-family: monospace; font-size: 0.85rem; line-height: 1.5;">
+  <strong>ТЕСТ ЛОГИКИ ПУТЕЙ:</strong><br>
+  URL страницы: {{ page.url }}<br>
+  <hr>
+  
+  {% comment %} ТВОЯ ЛОГИКА (ПО ИНДЕКСАМ) {% endcomment %}
+  {% assign parts_yours = page.url | split: "/" %}
+  <strong>Твоя логика (Index 1 и 2):</strong><br>
+  Section [1]: "{{ parts_yours[1] }}"<br>
+  Project [2]: "{{ parts_yours[2] }}"<br>
+  <br>
+
+  {% comment %} МОЯ ЛОГИКА (FIRST/LAST + COMPACT) {% endcomment %}
+  {% assign parts_mine = page.url | split: "/" | compact %}
+  <strong>Моя логика (First и Last + Compact):</strong><br>
+  Section (first): "{{ parts_mine | first }}"<br>
+  Project (last): "{{ parts_mine | last }}"<br>
+  <hr>
+  
+  <strong>КАК ЭТО ПОВЛИЯЕТ НА ССЫЛКУ:</strong><br>
+  Твоя: ?project={{ parts_yours[2] }}&nav={{ parts_yours[1] }}<br>
+  Моя: ?project={{ parts_mine | last }}&nav={{ parts_mine | first }}
+</div>
+
+---
 
 <ul>
   {% assign project_slug = page.url | split: "/" | last %}

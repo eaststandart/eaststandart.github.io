@@ -1,6 +1,8 @@
 <div id="nav-container" style="display: block; margin-bottom: 0px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; line-height: 1;">
     <a href="/" style="color: #3498db; text-decoration: none; font-weight: normal;">← Главная</a>
+    
     <span id="dynamic-nav-back"></span>
+
     {% if page.categories.size > 0 %}
         {% assign project_slug = "" %}
         {% for cat in page.categories %}
@@ -14,12 +16,13 @@
     {% else %}
         {% assign parts = page.url | split: "/" %}
         {% if parts.size > 2 %}
-            {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
+            {% assign parent_url = parts | prepend: '/' | append: '/' %}
             {% assign parent_page = site.pages | where: "url", parent_url | first %}
             <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ parent_url | relative_url }}" style="color: #3498db; text-decoration: none; font-weight: normal;">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
+            <a href="{{ parent_url | relative_url }}" style="color: #3498db; text-decoration: none; font-weight: normal;">{{ parent_page.navtitle | default: parent_page.title | default: parts }}</a>
         {% endif %}
     {% endif %}
+
     <span style="color: #ccc; margin: 0 5px;">|</span>
     <a href="/tags.html" style="color: #3498db; text-decoration: none; font-weight: normal;"># Поиск</a>
 </div>
@@ -31,9 +34,9 @@
     if (prj && navDir) {
       var bb = document.getElementById('dynamic-nav-back');
       if (bb) {
-        // Мы задаем разделителю (|) margin справа, а ссылке - margin слева
-        bb.innerHTML = '<span style="color: #ccc; margin-left: 5px; margin-right: 5px;">|</span>' +
-                       '<a href="/' + navDir + '/' + prj + '/" style="color: #3498db; text-decoration: none; font-weight: normal; margin-left: 0px;">Назад</a>';
+        // Вставляем ровно ту же структуру и те же стили, что у Поиска и Разделов
+        bb.innerHTML = '<span style="color: #ccc; margin: 0 5px;">|</span>' +
+                       '<a href="/' + navDir + '/' + prj + '/" style="color: #3498db; text-decoration: none; font-weight: normal;">Назад</a>';
       }
     }
   })();

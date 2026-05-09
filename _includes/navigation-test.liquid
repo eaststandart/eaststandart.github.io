@@ -1,5 +1,5 @@
-<div id="nav-debug-container" style="border: 1px solid red;">
-    <a href="/">← Главная</a>
+<div id="nav-container" style="display: block; margin-bottom: 0px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; line-height: 1;">
+    <a href="/" style="color: #3498db; text-decoration: none; font-weight: normal;">← Главная</a>
     <span id="dynamic-nav-back"></span>
     {% if page.categories.size > 0 %}
         {% assign project_slug = "" %}
@@ -9,34 +9,29 @@
             {% endif %}
         {% endfor %}
         {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
-
-        | <a href="{{ project_page.url | relative_url }}">Назад</a>
+        <span style="color: #ccc; margin: 0 5px;">|</span>
+        <a href="{{ project_page.url | relative_url }}" style="color: #3498db; text-decoration: none; font-weight: normal;">Назад</a>
     {% else %}
-        {% assign parts = page.url | split: '/' %}
+        {% assign parts = page.url | split: "/" %}
         {% if parts.size > 2 %}
             {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
             {% assign parent_page = site.pages | where: "url", parent_url | first %}
-
-            | <a href="{{ parent_url | relative_url }}">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
+            <span style="color: #ccc; margin: 0 5px;">|</span>
+            <a href="{{ parent_url | relative_url }}" style="color: #3498db; text-decoration: none; font-weight: normal;">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
         {% endif %}
     {% endif %}
-
-    | <a href="/tags.html"># Поиск</a>
+    <span style="color: #ccc; margin: 0 5px;">|</span>
+    <a href="/tags.html" style="color: #3498db; text-decoration: none; font-weight: normal;"># Поиск</a>
 </div>
 
 <script>
   (function() {
-    console.log("Debug: Start JS");
     var params = new URLSearchParams(window.location.search);
     var prj = params.get('project'), navDir = params.get('nav');
-    
-    // Дебаг в консоль браузера (F12 -> Console)
-    console.log("Project:", prj, "Nav:", navDir);
-
     if (prj && navDir) {
-      var backBox = document.getElementById('dynamic-nav-back');
-      if (backBox) {
-        backBox.innerHTML = ' | <a href="/' + navDir + '/' + prj + '/">Назад</a>';
+      var bb = document.getElementById('dynamic-nav-back');
+      if (bb) {
+        bb.innerHTML = '<span style="color: #ccc; margin: 0 5px;">|</span><a href="/' + navDir + '/' + prj + '/" style="color: #3498db; text-decoration: none; font-weight: normal;">Назад</a>';
       }
     }
   })();

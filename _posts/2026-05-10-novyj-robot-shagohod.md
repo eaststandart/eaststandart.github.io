@@ -1,0 +1,12 @@
+---
+layout: default
+title: "Попытка устранения раскачивания корпуса робота при ходьбе"
+date: 2026-05-08
+categories: [feed, journal, novyj-robot-shagohod]
+---
+
+ТЕСТ
+
+**Проблема:** при текущем весе и скорости ноги робота деформируются и зацепляются друг за друга из-за раскачивания корпуса.
+
+![video](/fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)

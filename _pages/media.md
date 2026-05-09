@@ -1,7 +1,7 @@
 ---
 layout: default
-description: Фото, видео выполненного пректа от участноков
-title: Медиа-материалы проекта
+description: 
+title: Медиа-материалы
 permalink: /media/
 ---
 

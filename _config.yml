@@ -8,7 +8,7 @@ url: https://eaststandart.github.io
 # Collections
 # -----------------------------------------------------------------------------
 
-permalink: "/:categories/:path/"
+permalink: "/:categories/:basename/"
 
 
 # -----------------------------------------------------------------------------

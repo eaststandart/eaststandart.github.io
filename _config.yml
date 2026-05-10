@@ -8,8 +8,12 @@ url: https://eaststandart.github.io
 # Collections
 # -----------------------------------------------------------------------------
 
-permalink: "/:categories/:path/"
-
+defaults:
+  - scope:
+      path: "fair" # Для всех файлов в этой папке
+      type: "pages"
+    values:
+      permalink: /:categories/:basename/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

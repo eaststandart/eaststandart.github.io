@@ -9,7 +9,7 @@ url: https://eaststandart.github.io
 # -----------------------------------------------------------------------------
 defaults:
   - scope:
-      path: "projects" # Для всех файлов в этой папке
+      path: "fair" # Для всех файлов в этой папке
       type: "pages"
     values:
       permalink: "/:categories/:title/"

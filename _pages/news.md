@@ -23,7 +23,7 @@ permalink: /news-test/
           
           <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
           <span style="margin: 0 8px; font-weight: bold; color: #444;">
-            {% if item.path contains '_posts' %} Добавлена запись: {% else %} Новый проект: {% endif %}
+            {% if item.path contains '_posts' %} Запись: {% else %} Страница: {% endif %}
           </span>
           <a href="{{ item.url | relative_url }}" style="color: #3498db; text-decoration: none;">
             {{ item.title }}

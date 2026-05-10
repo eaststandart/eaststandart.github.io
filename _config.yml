@@ -13,7 +13,7 @@ defaults:
       path: "fair" # Для всех файлов в этой папке
       type: "pages"
     values:
-      permalink: "/:categories/:title/"
+      permalink: "/:categories/:path/"
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

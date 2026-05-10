@@ -10,7 +10,7 @@ url: https://eaststandart.github.io
 
 defaults:
     values:
-      permalink: "/:categories/:path/"
+      permalink: "/:categories/:basename/"
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

@@ -5,7 +5,7 @@ title: Робот новый
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot – Templates pdf – Blackfish](https://blackfishspace.com/)"
 published: 2026-05-06
-categories: [projects]
+categories: [project]
 date: 2026-05-06
 ---
 

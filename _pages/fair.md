@@ -8,7 +8,7 @@ permalink: /fair/
 
 <div class="fair-list">
   {% assign current_section = page.url %}
-  {% assign projects = site.pages | where_exp: "item", "item.url contains current_section" | sort: "published" | reverse %}
+  {% assign projects = site.pages | where_exp: "item", "item.url contains current_section" | sort: "date" | reverse %}
   
   {% for project in projects %}
     {% unless project.url == current_section %}

@@ -7,14 +7,17 @@ permalink: /fair/
 ---
 
 <div class="fair-list">
-  {% assign projects = site.pages | where_exp: "item", "item.path contains 'fair/'" | sort: "published" | reverse %}
+  {% assign current_section = page.url %}
+  {% assign projects = site.pages | where_exp: "item", "item.url contains current_section" | sort: "published" | reverse %}
+  
   {% for project in projects %}
-    {% unless project.url == "/fair/" %}
+    {% unless project.url == current_section %}
       <a href="{{ project.url | relative_url }}" class="fair-card">
-        {% assign folder = project.path | split: "/" | last | replace: ".md", "" %}
+        {% assign folder = project.url | split: "/" | last %}
         <img src="{{ project.url | append: folder | append: '.webp' | relative_url }}" class="fair-img-round">
         <h3>{{ project.title }}</h3>
       </a>
     {% endunless %}
   {% endfor %}
 </div>
+

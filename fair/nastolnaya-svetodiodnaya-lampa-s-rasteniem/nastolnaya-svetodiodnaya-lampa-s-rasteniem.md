@@ -2,7 +2,7 @@
 layout: default
 description: "Развитие навыков конструирования: работа с инструментами и деревом, проектирование деталей и сборка электрической схемы, превращение идей в реальные предметы."
 title: Настольная светодиодная лампа с растением
-tags: [столярноедело, проектучебный, 2класс, проект, настольнаясветодиоднаялампасрастением]
+tags: [столярноедело, проектучебный, 3класс, проект, настольнаясветодиоднаялампасрастением]
 sources: "[Glass bottle crafts](https://ru.pinterest.com/pin/6122149488116170/)"
 date: 2025-10-27
 permalink: /fair/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
@@ -15,7 +15,6 @@ permalink: /fair/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-2.webp)
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-3.webp)
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-4.webp)
-![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-5.webp)
 
 ### Область применения
 Для украшения комнаты или рабочего стола как удобный светильник и уютный уголок для живого комнатного растения.

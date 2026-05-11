@@ -9,7 +9,7 @@ permalink: /fair/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ---
 
 ### Описание проекта
-Создание конструкции простой настольной светодиодной лампы с плафоном и горшочком для комнатного растения из стеклянной бутылки.
+Создание конструкции простой настольной светодиодной лампы с плафоном и горшочком из стеклянной бутылки для комнатного растения.
 
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-1.webp)
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-2.webp)
@@ -17,7 +17,7 @@ permalink: /fair/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ![](nastolnaya-svetodiodnaya-lampa-s-rasteniem-4.webp)
 
 ### Область применения
-Для украшения комнаты или рабочего стола как удобный светильник и уютный уголок для живого комнатного растения.
+Украшение комнаты или рабочего стола как удобный светильник и уютный уголок для живого комнатного растения.
 
 ![video](nastolnaya-svetodiodnaya-lampa-s-rasteniem.webm)
 

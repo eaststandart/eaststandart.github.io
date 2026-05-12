@@ -14,7 +14,7 @@ permalink: /fair/sputnik-1/
 ![](sputnik-1-1.webp)
 ![](sputnik-1-2.webp)
 ![](sputnik-1-3.webp)
-![](sputnik-1-6.webp)
+![](sputnik-1-4.webp)
 
 > **Смотри также:** [Sputnik’s Transmitter Beeps Again \| Hackaday](https://hackaday.com/2016/02/23/sputniks-transmitter-beeps-again/).
 

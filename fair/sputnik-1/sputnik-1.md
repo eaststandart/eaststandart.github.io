@@ -17,7 +17,7 @@ permalink: /fair/sputnik-1/
 ![](sputnik-1-4.webp)
 ![](sputnik-1-5.webp)
 
-> **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
+> **Смотри также:** [Sputnik’s Transmitter Beeps Again \| Hackaday](https://hackaday.com/2016/02/23/sputniks-transmitter-beeps-again/).
 
 ### Область применения
 Украшение интерьера и создание памятной скульптуры великого достижения. Модель служит напоминанием о том, как человечество сделало первый шаг в космос, и вдохновляет юных инженеров на новые открытия и полеты к звездам.

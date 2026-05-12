@@ -10,7 +10,7 @@ permalink: /fair/besprovodnoj-telegraf/
 
 ### Описание проекта
 Создание конструкции беспроводного телеграфа для передачи сообщений азбукой Морзе на частоте 27 МГц.
-![[besprovodnoj-telegraf.webp]]
+
 ![](besprovodnoj-telegraf-1.webp)
 ![](besprovodnoj-telegraf-2.webp)
 

@@ -14,8 +14,6 @@ permalink: /fair/besprovodnoj-telegraf/
 ![](besprovodnoj-telegraf-1.webp)
 ![](besprovodnoj-telegraf-2.webp)
 
-> **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
-
 ### Область применения
 Позволяет исследовать дальность радио-передачи, проницаемость радио волн через различные типы преград, построить диаграмму направленности антенны.
 

@@ -26,11 +26,7 @@ permalink: /fair/sputnik-1/
 ### Развитие проекта
 Установка внутрь корпуса электронного звукового модуля, который будет воспроизводить знаменитые позывные «Бип-Бип». Добавление светодиодной индикации для имитации работы бортовых систем настоящего космического аппарата.
 
-> **Смотри также:** 
-> 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck) и [схему электрическую](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от Fran Blanche – инженера, старшого члена [IEEE](https://www.ieee.org/) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня), известную своими видеороликами об электронике и научных экспериментах.
+> **Смотри также:**
 > 
-> 2\. [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk)
-> 
-> 3\. [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY)
-> 
-> 4\. [FranLab: Home Prototyping Sputnik Beeper Kit PCB](https://youtu.be/whLZphlkSSw)
+> 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck), [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk), [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY), [FranLab: Home Prototyping Sputnik Beeper Kit PCB](https://youtu.be/whLZphlkSSw)
+> 2\. [Схема электрическая модуля звукового](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от Fran Blanche – инженера, старшого члена [IEEE](https://www.ieee.org/) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня), известную своими видеороликами об электронике и научных экспериментах.

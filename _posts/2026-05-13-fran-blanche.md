@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Fran Blanche | Фрэн Бланш"
-tags: "[people, люди, фрэнбланш, franblanche]"
-sources: "http://www.frantone.com/"
+title: "Фрэн Бланш | Fran Blanche"
+tags: [people, люди, фрэнбланш, franblanche]
+sources: "[http://www.frantone.com/](http://www.frantone.com/)"
 date: 2026-05-13
 categories: [feed, people, fran-blanche]
 ---

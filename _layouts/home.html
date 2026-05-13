@@ -39,15 +39,15 @@
             background: #fff; 
         }
 
-/* Финальные стили для блока обновлений */
+/* Красная линия блока */
 .site-news { 
     border-top-color: #cb2431; 
 }
 
-/* Элемент списка новостей */
+/* Компактная строка новости */
 .news-item-compact { 
     display: flex; 
-    align-items: baseline; /* ИСПРАВЛЕНО: выравниваем все элементы строго по нижней линии шрифта */
+    align-items: center; 
     margin-bottom: 4px !important; 
     font-size: 0.9rem; 
     line-height: 1.2; 
@@ -58,41 +58,28 @@
     border: 1px solid transparent;
 }
 
-/* Дата новости */
-.news-item-compact small { 
-    flex-shrink: 0; 
-    font-family: monospace; 
-    color: #6a737d;
-    position: relative;
-    top: -1px; /* Микро-коррекция для моноширинных цифр, если они визуально кажутся выше */
-}
-
-/* Разделитель-стрелочка */
-.news-item-compact span.separator {
-    color: #888;
-    margin-left: 8px;   
-    margin-right: 5px;  
-    display: inline-block;
-    vertical-align: baseline; /* Держим стрелку на линии текста */
-}
-
-
-/* Эффект наведения на ВСЮ плашку */
+/* Эффект наведения на всю строку */
 .news-item-compact:hover { 
     background: #fff; 
     border-color: #ddd; 
     padding-left: 18px; 
 }
 
-/* Ссылка на новость/проект */
+/* Дата и стрелочка в одном стиле */
+.news-item-compact small { 
+    flex-shrink: 0; 
+    font-family: monospace; 
+    color: #6a737d;
+}
+
+/* Ссылка на проект/новость */
 .news-item-compact .item-link { 
-    margin-left: 0;     /* Убрали старый отступ, теперь всё регулирует стрелочка */
     text-decoration: none;
     font-weight: normal;
     transition: 0.2s;
 }
 
-/* Меняем цвет ссылки на черный при наведении на строку */
+/* Цвет текста при наведении */
 .news-item-compact:hover .item-link {
     color: #000 !important;
 }

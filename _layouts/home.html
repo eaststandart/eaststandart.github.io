@@ -44,10 +44,10 @@
     border-top-color: #cb2431; 
 }
 
-/* Элемент списка новостей (вся плашка целиком) */
+/* Элемент списка новостей */
 .news-item-compact { 
     display: flex; 
-    align-items: center; 
+    align-items: baseline; /* ИСПРАВЛЕНО: выравниваем все элементы строго по нижней линии шрифта */
     margin-bottom: 4px !important; 
     font-size: 0.9rem; 
     line-height: 1.2; 
@@ -58,26 +58,30 @@
     border: 1px solid transparent;
 }
 
-/* Эффект наведения на ВСЮ плашку */
-.news-item-compact:hover { 
-    background: #fff; 
-    border-color: #ddd; 
-    padding-left: 18px; 
-}
-
 /* Дата новости */
 .news-item-compact small { 
     flex-shrink: 0; 
     font-family: monospace; 
     color: #6a737d;
+    position: relative;
+    top: -1px; /* Микро-коррекция для моноширинных цифр, если они визуально кажутся выше */
 }
 
-/* Идеальные зазоры и цвет ТОЛЬКО для стрелочки » */
+/* Разделитель-стрелочка */
 .news-item-compact span.separator {
     color: #888;
-    margin-left: 8px;   /* Отлепили от даты */
-    margin-right: 5px;  /* Приблизили к тексту */
+    margin-left: 8px;   
+    margin-right: 5px;  
     display: inline-block;
+    vertical-align: baseline; /* Держим стрелку на линии текста */
+}
+
+
+/* Эффект наведения на ВСЮ плашку */
+.news-item-compact:hover { 
+    background: #fff; 
+    border-color: #ddd; 
+    padding-left: 18px; 
 }
 
 /* Ссылка на новость/проект */

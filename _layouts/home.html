@@ -47,7 +47,7 @@
 /* Компактная строка новости */
 .news-item-compact { 
     display: flex; 
-    align-items: center; 
+    align-items: flex-start; /* ВЕРНУЛИ: выравнивание по верхнему краю, как было раньше */
     margin-bottom: 4px !important; 
     font-size: 0.9rem; 
     line-height: 1.2; 
@@ -65,11 +65,13 @@
     padding-left: 18px; 
 }
 
-/* Дата и стрелочка в одном стиле */
+/* Дата и стрелочка » */
 .news-item-compact small { 
     flex-shrink: 0; 
     font-family: monospace; 
     color: #6a737d;
+    padding-top: 1px; /* ДОБАВЛЕНО: микро-смещение вниз, чтобы компенсировать шрифт */
+    line-height: 1.2;
 }
 
 /* Ссылка на проект/новость */

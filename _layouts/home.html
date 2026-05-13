@@ -65,6 +65,13 @@
     margin-left: 10px; 
     text-decoration: none;
     font-weight: normal;
+    /* Копируем базовые свойства из .project-list a для плавной анимации */
+    display: block;
+    padding: 4px 10px; /* Сделали вертикальный паддинг чуть меньше (4px), чтобы строки оставались компактными */
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: 0.2s;
+    border: 1px solid transparent;
 }
         
         h1 { margin-bottom: 20px !important; }
@@ -84,7 +91,8 @@
             transition: 0.2s;
             border: 1px solid transparent;
         }
-        .project-list a:hover { 
+        .project-list a:hover,
+        .news-item-compact .item-link:hover { 
             background: #fff; 
             color: #000; 
             border-color: #ddd; 

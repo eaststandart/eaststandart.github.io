@@ -9,8 +9,8 @@ permalink: /news/
     {% assign all_content = site.posts | concat: site.pages %}
     
     {% for item in all_content %}
-      {% if item.date and item.url != "/" and item.url != "/tags.html" %}
-        {% comment %} Запоминаем, пост это или нет, для скрипта {% endcomment %}
+      {% comment %} Добавлено исключение самого себя: and item.url != "/news/" {% endcomment %}
+      {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
         {% assign is_post = false %}
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
 
@@ -21,7 +21,6 @@ permalink: /news/
           
           <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
           
-          {% comment %} Убрали слова "Запись" и "Страница", оставили только ссылку {% endcomment %}
           <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
             {{ item.title }}
           </a>
@@ -42,14 +41,13 @@ permalink: /news/
 
     list.innerHTML = '';
     items.slice(0, 10).forEach(function(el) {
-      // КРАСИМ: если пост - серый, если страница - синий
       var isPost = el.getAttribute('data-is-post') === 'true';
       var link = el.querySelector('.item-link');
       
       if (isPost) {
-        link.style.color = '#bbb'; // Светло-серый
+        link.style.color = '#bbb'; 
       } else {
-        link.style.color = '#3498db'; // Синий
+        link.style.color = '#3498db'; 
       }
 
       el.style.display = 'block'; 
@@ -57,4 +55,3 @@ permalink: /news/
     });
   })();
 </script>
-

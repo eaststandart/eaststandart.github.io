@@ -5,6 +5,7 @@ tags: [people, люди, фрэнбланш, franblanche]
 sources: "[http://www.frantone.com/](http://www.frantone.com/)"
 date: 2026-05-13
 categories: [feed, people, fran-blanche]
+permalink: /fair/fran-blanche/
 ---
  
 Fran Blanche – полностью самоучка в области электроники, инженер, старший [член](https://youtu.be/R6iUor38sj8) [IEEE](https://www.ieee.org/) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня), известная своими видеороликами об электронике и научных экспериментах.

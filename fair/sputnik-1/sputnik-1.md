@@ -28,6 +28,6 @@ permalink: /fair/sputnik-1/
 
 > **Смотри также:**
 > 
-> 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck), [FranLab: Home Prototyping Sputnik Beeper Kit PCB](https://youtu.be/whLZphlkSSw), [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY), [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk) от Fran Blanche.
+> 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck), [Updates, More 45's, DSKY Project, Sputnik, Viewer Mail, And Missy! - YouTube](https://youtu.be/hiqibWP2WNA), [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY), [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk) от Fran Blanche.
 > 
 > 2\. [Схема электрическая модуля звукового](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от Fran Blanche.

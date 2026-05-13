@@ -2,7 +2,7 @@
 layout: default
 title: "Фрэн Бланш | Fran Blanche"
 tags: [people, люди, фрэнбланш, franblanche]
-sources: "[http://www.frantone.com/](http://www.frantone.com/), [https://www.youtube.com/@FranLab](https://www.youtube.com/@FranLab)"
+sources: "[http://www.frantone.com/](http://www.frantone.com/), [youtube.com/@FranLab](https://www.youtube.com/@FranLab)"
 date: 2026-05-13
 categories: [feed, fran-blanche, people]
 ---

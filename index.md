@@ -20,25 +20,28 @@ title: Творческая лаборатория познавательног�
         </ul>
     </section>
 
-    <!-- БЛОК 2: ЧТО НОВОГО -->
+        <!-- БЛОК 2: ЧТО НОВОГО -->
     <section class="category-card site-news">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <img src="/assets/icons/logo.svg" alt="🔥" class="section-icon">
-                <h2>What's New?</h2>
+                <h2 style="margin: 0; font-size: 1.3rem; color: #333;">Что нового?</h2>
             </div>
-            <a href="{{ '/news/' | relative_url }}" style="text-decoration: none; font-size: 0.85rem; color: #3498db;">All →</a>
+            <a href="{{ '/news/' | relative_url }}" style="text-decoration: none; font-size: 0.85rem; color: #3498db;">Все →</a>
         </div>
         
-        <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0;">
+        <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0; width: 100%; overflow: hidden;">
             {% assign all_content = site.posts | concat: site.pages %}
             {% for item in all_content %}
               {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
                 {% assign is_post = false %}
                 {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
-                <li class="update-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" style="display: none;">      
-                  <small style="font-family: monospace; color: #6a737d;">{{ item.date | date: "%d.%m.%Y" }}</small>
-                  <a href="{{ item.url | relative_url }}" class="item-link">
+                <li class="update-item" 
+                    data-date="{{ item.date | date: '%Y-%m-%d' }}" 
+                    data-is-post="{{ is_post }}" 
+                    style="display: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; margin-bottom: 6px; font-size: 0.9rem; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">      
+                  <small style="font-family: monospace; color: #6a737d; display: inline-block; vertical-align: middle;">{{ item.date | date: "%d.%m.%Y" }}</small>
+                  <a href="{{ item.url | relative_url }}" class="item-link" style="display: inline-block; vertical-align: middle; width: calc(100% - 85px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left: 10px; text-decoration: none; font-weight: normal;">
                     {{ item.title }}
                   </a>
                 </li>

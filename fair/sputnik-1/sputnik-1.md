@@ -21,7 +21,13 @@ permalink: /fair/sputnik-1/
 ### Область применения
 Украшение интерьера и создание памятной скульптуры великого достижения. Модель служит напоминанием о том, как человечество сделало первый шаг в космос, и вдохновляет юных инженеров на новые открытия и полеты к звездам.
 
+> **Смотри также:** [Model Sputnik Finds Its Voice After Decades Of Silence \| Hackaday](https://hackaday.com/2017/04/25/model-sputnik-finds-its-voice-after-decades-of-silence/)
+
 ### Развитие проекта
 Установка внутрь корпуса электронного звукового модуля, который будет воспроизводить знаменитые позывные «Бип-Бип». Добавление светодиодной индикации для имитации работы бортовых систем настоящего космического аппарата.
 
-> **Смотри также:** [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck) и [схему электрическую](https://www.frantone.com/designwritings/sputnik-schematic-corrected.jpg) от Fran Blanche – инженера, старшого члена [IEEE](https://www.ieee.org/) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня), известную своими видеороликами об электронике и научных экспериментах.
+> **Смотри также:** 
+> 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck) и [схему электрическую](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от Fran Blanche – инженера, старшого члена [IEEE](https://www.ieee.org/) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня), известную своими видеороликами об электронике и научных экспериментах.
+> 2\. [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk)
+> 3\. [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY)
+> 4\. [FranLab: Home Prototyping Sputnik Beeper Kit PCB](https://youtu.be/whLZphlkSSw)

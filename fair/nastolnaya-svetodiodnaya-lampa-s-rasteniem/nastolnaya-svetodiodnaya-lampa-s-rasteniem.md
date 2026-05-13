@@ -27,8 +27,3 @@ permalink: /fair/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](nastolnaya-svetodiodnaya-lampa-s-rasteniem.pdf)
 2. 📐[Сборочный чертеж, LibreCAD](nastolnaya-svetodiodnaya-lampa-s-rasteniem.dxf)
-
-### Галерея работ
-**Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
-
-{% include project-list.liquid type="media" %}

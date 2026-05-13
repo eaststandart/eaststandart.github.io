@@ -1,6 +1,6 @@
 ---
 layout: fair
-description: Работы для юных инженеров и мастеров.
+description: Проекты для юных инженеров и мастеров.
 title: Ярмарка поделок
 navtitle: "Поделки"
 permalink: /fair/

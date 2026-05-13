@@ -44,23 +44,21 @@
     border-top-color: #cb2431; 
 }
 
-/* Элемент списка новостей — теперь эффект ховера живет здесь */
+/* Элемент списка новостей (вся плашка целиком) */
 .news-item-compact { 
     display: flex; 
     align-items: center; 
     margin-bottom: 4px !important; 
     font-size: 0.9rem; 
-    line-height: 1.3; 
-    padding: 3px 8px;
-    border-radius: 6px;
+    line-height: 1.2; 
+    padding: 3px 8px; 
+    border-radius: 6px; 
     background: #f9f9f9;
     transition: 0.2s;
     border: 1px solid transparent;
-    color: #888;       /* Спокойный серый цвет для символа » */
-    margin: 0 4px;
 }
 
-/* Эффект наведения на всю строку новости */
+/* Эффект наведения на ВСЮ плашку */
 .news-item-compact:hover { 
     background: #fff; 
     border-color: #ddd; 
@@ -74,15 +72,23 @@
     color: #6a737d;
 }
 
+/* Идеальные зазоры и цвет ТОЛЬКО для стрелочки » */
+.news-item-compact span.separator {
+    color: #888;
+    margin-left: 8px;   /* Отлепили от даты */
+    margin-right: 5px;  /* Приблизили к тексту */
+    display: inline-block;
+}
+
 /* Ссылка на новость/проект */
 .news-item-compact .item-link { 
-    margin-left: 6px; /* УМЕНЬШИЛИ: чтобы текст аккуратно стоял после стрелочки » (было 10px) */
+    margin-left: 0;     /* Убрали старый отступ, теперь всё регулирует стрелочка */
     text-decoration: none;
     font-weight: normal;
     transition: 0.2s;
 }
 
-/* Меняем цвет текста при наведении на строку */
+/* Меняем цвет ссылки на черный при наведении на строку */
 .news-item-compact:hover .item-link {
     color: #000 !important;
 }

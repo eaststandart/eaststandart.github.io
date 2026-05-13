@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Люди
+navtitle: "Люди"
 permalink: /people/
 ---
 

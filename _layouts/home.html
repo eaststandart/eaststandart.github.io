@@ -44,13 +44,27 @@
     border-top-color: #cb2431; 
 }
 
-/* Элемент списка новостей */
+/* Элемент списка новостей — теперь эффект ховера живет здесь */
 .news-item-compact { 
     display: flex; 
-    align-items: flex-start; /* Чтобы при переносе строки текст шел ровно */
-    margin-bottom: 6px !important; 
+    align-items: center; 
+    margin-bottom: 4px !important; 
     font-size: 0.9rem; 
     line-height: 1.3; 
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #f9f9f9;
+    transition: 0.2s;
+    border: 1px solid transparent;
+    color: #888;       /* Спокойный серый цвет для символа » */
+    margin: 0 4px;
+}
+
+/* Эффект наведения на всю строку новости */
+.news-item-compact:hover { 
+    background: #fff; 
+    border-color: #ddd; 
+    padding-left: 18px; 
 }
 
 /* Дата новости */
@@ -62,9 +76,15 @@
 
 /* Ссылка на новость/проект */
 .news-item-compact .item-link { 
-    margin-left: 10px; 
+    margin-left: 6px; /* УМЕНЬШИЛИ: чтобы текст аккуратно стоял после стрелочки » (было 10px) */
     text-decoration: none;
     font-weight: normal;
+    transition: 0.2s;
+}
+
+/* Меняем цвет текста при наведении на строку */
+.news-item-compact:hover .item-link {
+    color: #000 !important;
 }
         
         h1 { margin-bottom: 20px !important; }
@@ -84,6 +104,7 @@
             transition: 0.2s;
             border: 1px solid transparent;
         }
+        
         .project-list a:hover { 
             background: #fff; 
             color: #000; 

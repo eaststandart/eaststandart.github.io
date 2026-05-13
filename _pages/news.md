@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Тест ленты обновлений
-permalink: /news-test/
+permalink: /news/
 ---
 
 <div class="updates-feed">

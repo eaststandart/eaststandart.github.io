@@ -4,6 +4,7 @@ description: Моменты, которые помогают в техничес
 title: Техническое вдохновение
 navtitle: "Вдохновение"
 custom_css: ["/assets/css/fair.css"]
+emoji: "🚀"
 ---
 
 <div class="fair-list">

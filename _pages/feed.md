@@ -1,7 +1,7 @@
 ---
 layout: default
 description: Журнал, дневник, блог и прочие записи
-title: Лента новостей
+title: Рабочие записи
 permalink: /feed/
 ---
 

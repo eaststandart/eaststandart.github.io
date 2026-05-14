@@ -13,8 +13,6 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 
 ![](vibrohod-iz-zubnoj-shchetki-1.webp)
 ![](vibrohod-iz-zubnoj-shchetki-2.webp)
-![](vibrohod-iz-zubnoj-shchetki-3.webp)
-![](vibrohod-iz-zubnoj-shchetki-4.webp)
 
 > **Примечание:** Виброход — это устройство для движения по твёрдым поверхностям за счет вибрационного движителя. Когда мотор начинает вибрировать, устройство словно подпрыгивает и медленно ползёт по полу или по столу. Если такой мотор поставить на зубную щётку, то щетинки будут отталкиваться от поверхности, и щётка побежит, как будто у неё появились маленькие ножки. 
 
@@ -30,11 +28,6 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 1\. Создания трассы с препятствиями для тестирования проходимости робота.
 2\. Можно провести игры: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).
 3\. Выполнить научный проект: изучить движение роботов [Bristlebot Motion Tracking | Science Project](https://youtu.be/NmMflaqzJXQ)
-
-### Журнал проекта
-**Назначение:** этапы создания, отладка и усовершенствование.
-
-{% include project-list.liquid type="journal" %}
 
 ### Галерея работ
 **Назначение:** демонстрация (фото, видео) выполненного проекта от участников.

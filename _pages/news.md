@@ -13,7 +13,7 @@ permalink: /news/
         {% assign is_post = false %}
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
 
-        <li class="update-item" 
+        <li class="update-item news-item-compact" 
             data-date="{{ item.date | date: '%Y-%m-%d' }}" 
             data-is-post="{{ is_post }}"
             style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">

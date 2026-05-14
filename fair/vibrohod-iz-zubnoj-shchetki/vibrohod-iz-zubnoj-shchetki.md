@@ -3,8 +3,8 @@ layout: default
 description: Развитие навыков конструирования ременного редуктора, создание механизма движения и настройка шагающей конструкции.
 title: Виброход из зубной щетки
 tags: [электроникаисхемотехника, конструированиеимоделирование, проектучебный, 1класс, проект, виброход, виброходиззубнойщетки]
-sources: ["[Build a Bristlebot, a Tiny Toothbrush Robot](https://www.sciencebuddies.org/stem-activities/toothbrush-bristlebot)", "[Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA)"]
-date: 2025-10-25
+sources: "[Build a Bristlebot, a Tiny Toothbrush Robot](https://www.sciencebuddies.org/stem-activities/toothbrush-bristlebot)"
+date: 2025-11-20
 permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 ---
 
@@ -28,6 +28,10 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 
 ### Развитие проекта
 Возможна модификация робота путем установки светодиодов для «зажигания глаз», что позволит роботу передвигаться в ночи и освещать путь в темных зонах других планет. Добавление дистанционного управления  для точной доставки грузов между базами.
+
+Проведениt игр:
+1\. [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots)
+2\. "[Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA)
 
 ### Файлы проекта
 1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot.pdf)

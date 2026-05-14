@@ -3,7 +3,7 @@ layout: default
 description: Развитие навыков работы с ручными инструментами, обработки материалов, моделирования бумажного корпуса и сборки простейшей электрической цепи.
 title: Фонарик светодиодный бумажный
 tags: [электроникаисхемотехника, проектучебный, 0класс, проект, фонариксветодиодныйбумажный]
-sources: "[Instructables Robot Paper LED Flashlight](https://www.instructables.com/Instructables-Robot-Paper-LED-Flashlight/)"
+sources: "[Robot Paper LED Flashlight](https://www.instructables.com/Instructables-Robot-Paper-LED-Flashlight/)"
 date: 2025-11-11
 permalink: /fair/fonarik-svetodiodnyj-bumazhnyj/
 ---

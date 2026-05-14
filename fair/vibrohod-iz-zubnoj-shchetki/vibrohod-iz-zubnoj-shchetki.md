@@ -21,8 +21,8 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 ### Область применения
 Демонстрация принципа работы вибрационного движителя на твердых поверхностях. Моделирование прототипов будущих космических микророботов, способных перемещаться по обшивке орбитальных станций, проникать в труднодоступные узлы кораблей для диагностики, где не справляются обычные колёса.
 
-![video](simple-cardboard-walking-robot-1.webm)
-![video](simple-cardboard-walking-robot-2.webm)
+![video](vibrohod-iz-zubnoj-shchetki-1.webm)
+![video](vibrohod-iz-zubnoj-shchetki-2.webm)
 
 > **Примечание:** Принцип действия виброхода основан на возникновении продольных сил при вибрации гибких щетинок, расположенных наклонно к опорной поверхности (смотри также: [виброходы](https://r9al.ru/2024/vibrohod/index.htm)).
 
@@ -30,10 +30,6 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 1\. Создания трассы с препятствиями для тестирования проходимости робота.
 2\. Можно провести игры: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).
 3\. Выполнить научный проект: изучить движение роботов [Bristlebot Motion Tracking | Science Project](https://youtu.be/NmMflaqzJXQ)
-
-### Файлы проекта
-1. 📄[Сборочный чертеж, PDF](simple-cardboard-walking-robot.pdf)
-2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
 
 ### Журнал проекта
 **Назначение:** этапы создания, отладка и усовершенствование.

@@ -8,14 +8,20 @@ permalink: /news/
 <div class="updates-feed">
   <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0;">
     {% assign all_content = site.posts | concat: site.pages %}
+    
     {% for item in all_content %}
       {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
         {% assign is_post = false %}
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
-        
-        <li class="update-item news-archive-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" style="display: none;">      
+
+        <li class="update-item" 
+            data-date="{{ item.date | date: '%Y-%m-%d' }}" 
+            data-is-post="{{ is_post }}"
+            style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+          
           <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
-          <a href="{{ item.url | relative_url }}" class="item-link">
+          
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
             {{ item.title }}
           </a>
         </li>
@@ -23,6 +29,7 @@ permalink: /news/
     {% endfor %}
   </ul>
   
+  <!-- Блок кнопок пагинации -->
   <div id="pagination-controls" style="margin-top: 25px; display: flex; gap: 8px; justify-content: center;"></div>
 </div>
 
@@ -35,6 +42,7 @@ permalink: /news/
     var itemsPerPage = 10; 
     var currentPage = 1;
 
+    // Сортировка по датам в браузере (не роняет сборку)
     items.sort(function(a, b) {
       return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
     });
@@ -48,6 +56,7 @@ permalink: /news/
       
       items.slice(start, end).forEach(function(el) {
         el.style.display = 'flex'; 
+        el.style.alignItems = 'flex-start'; 
         list.appendChild(el);
       });
 

@@ -5,7 +5,7 @@ navtitle: "Инструменты"
 custom_css: ["/assets/css/tools.css"]
 ---
 
-разбить раздел на программы, сервисы и оборудование – то чем пользуюсь
+разбить на разделы программы, сервисы и оборудование – то чем пользуюсь
 
 <div class="tool-list">
     <a href="sprintlayout.html" class="tool-card">

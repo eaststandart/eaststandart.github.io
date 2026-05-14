@@ -20,25 +20,36 @@ title: Творческая лаборатория познавательног�
         </ul>
     </section>
 
-    <!-- БЛОК 2: ЧТО НОВОГО -->
+      <!-- БЛОК 2: ЧТО НОВОГО -->
     <section class="category-card site-news">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
-                <h2>Что нового?</h2>
+                <img src="/assets/icons/logo.svg" alt="🔥" class="section-icon">
+                <h2 style="margin: 0; font-size: 1.3rem; color: #333;">Что нового?</h2>
             </div>
             <a href="{{ '/news/' | relative_url }}" style="text-decoration: none; font-size: 0.85rem; color: #3498db;">Все →</a>
         </div>
         
         <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0;">
-            {% assign all_content = site.posts | concat: site.pages %}
+            {% comment %} Соединяем посты, страницы и новую коллекцию людей {% endcomment %}
+            {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
+            
             {% for item in all_content %}
               {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
+                
                 {% assign is_post = false %}
+                {% assign is_person = false %}
+                
                 {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
-                <li class="update-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" style="display: none;">      
-                  <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
-                  <a href="{{ item.url | relative_url }}" class="item-link">
+                {% if item.path contains '_people' %}{% assign is_person = true %}{% endif %}
+
+                <li class="update-item" 
+                    data-date="{{ item.date | date: '%Y-%m-%d' }}" 
+                    data-is-post="{{ is_post }}" 
+                    data-is-person="{{ is_person }}"
+                    style="display: none; margin-bottom: 6px; font-size: 0.9rem; line-height: 1.3;">      
+                  <small style="font-family: monospace; color: #6a737d;">{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
+                  <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; font-weight: normal;">
                     {{ item.title }}
                   </a>
                 </li>
@@ -72,15 +83,19 @@ title: Творческая лаборатория познавательног�
       return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
     });
 
-    list.innerHTML = '';
+      list.innerHTML = '';
     items.slice(0, 10).forEach(function(el) {
       var isPost = el.getAttribute('data-is-post') === 'true';
+      var isPerson = el.getAttribute('data-is-person') === 'true';
       var link = el.querySelector('.item-link');
       
-      if (isPost) {
-        link.style.color = '#586069'; 
+      if (isPerson) {
+        link.style.color = '#586069'; // Серый цвет, как у постов
+        link.innerHTML += ' 🧍‍♂️';    // Добавляем эмодзи в конец ссылки
+      } else if (isPost) {
+        link.style.color = '#586069'; // Обычный серый для постов
       } else {
-        link.style.color = '#0366d6'; 
+        link.style.color = '#0366d6'; // Синий для проектов и страниц
       }
 
       el.style.display = 'flex'; 

@@ -6,7 +6,7 @@ permalink: /news/
 
 <div class="updates-feed">
   <ul id="live-updates-list" style="list-style: none; padding: 0;">
-    {% assign all_content = site.posts | concat: site.pages %}
+    {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
     
     {% for item in all_content %}
       {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}

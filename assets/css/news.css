@@ -1,0 +1,56 @@
+/* Увеличенная и плотная строка для страницы ВСЕХ новостей */
+.news-archive-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px !important;
+    font-size: 1rem; /* СДЕЛcomponentАЛИ КРУПНЕЕ: на главной 0.9rem, тут 1rem */
+    line-height: 1.3;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
+
+/* Эффект наведения на всю строку архива */
+.news-archive-item:hover {
+    background: #fff;
+    border-color: #ddd;
+    padding-left: 20px;
+}
+
+/* Дата и стрелочка в архиве */
+.news-archive-item small {
+    flex-shrink: 0;
+    font-family: monospace;
+    color: #6a737d;
+}
+
+/* Ссылка внутри строки архива */
+.news-archive-item .item-link {
+    text-decoration: none;
+    font-weight: normal;
+    transition: 0.2s;
+}
+
+/* Базовые цвета по типам контента (замена стилей из JS) */
+.news-archive-item[data-is-post="true"] .item-link { color: #586069; }
+.news-archive-item[data-is-post="false"] .item-link { color: #0366d6; }
+
+/* Цвет ссылки при наведении на всю плашку */
+.news-archive-item:hover .item-link { color: #000 !important; }
+
+/* Стили для кнопок пагинации */
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #24292e;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.page-btn:hover { background-color: #f6f8fa; border-color: #1b1f2326; }
+.page-btn.active { background-color: #0366d6; color: #fff; border-color: #0366d6; }

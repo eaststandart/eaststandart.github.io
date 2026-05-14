@@ -5,12 +5,6 @@ title: Что нового?
 permalink: /news/
 ---
 
----
-layout: default
-title: Тест ленты обновлений
-permalink: /news/
----
-
 <div class="updates-feed">
   <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0;">
     {% assign all_content = site.posts | concat: site.pages %}

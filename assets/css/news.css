@@ -1,6 +1,6 @@
-/* Настройки шрифтов и цветов для страницы ВСЕХ новостей */
+/* Настройки шрифтов и оригинальных цветов для страницы ВСЕХ новостей */
 .updates-feed .update-item {
-    font-size: 1.1rem; /* Сделали шрифт крупнее, как ты просил */
+    font-size: 1.1rem;
     line-height: 1.4;
 }
 
@@ -10,14 +10,18 @@
     color: #888;
 }
 
-/* Базовые цвета для ссылок (замена стилей из JS) */
-.updates-feed .update-item[data-is-post="true"] .item-link { color: #586069; }  /* Серый для постов */
-.updates-feed .update-item[data-is-post="false"] .item-link { color: #0366d6; } /* Синий для страниц */
+/* ЖЕСТКИЙ ПРИОРИТЕТ: Возвращаем те самые цвета из тестов */
+.updates-feed .update-item[data-is-post="true"] .item-link { 
+    color: #bbb !important; /* Тот самый светло-серый для постов */
+}  
+.updates-feed .update-item[data-is-post="false"] .item-link { 
+    color: #3498db !important; /* Тот самый синий для проектов */
+} 
 
 /* Эффект ховера при наведении на саму ссылку */
 .updates-feed .item-link:hover {
     color: #000 !important;
-    text-decoration: underline !important; /* Классическое подчеркивание при наведении */
+    text-decoration: underline !important;
 }
 
 /* Стили для кнопок пагинации (в стиле GitHub) */
@@ -32,5 +36,12 @@
     font-weight: 600;
     transition: 0.2s;
 }
-.page-btn:hover { background-color: #f6f8fa; border-color: #1b1f2326; }
-.page-btn.active { background-color: #0366d6; color: #fff; border-color: #0366d6; }
+.page-btn:hover { 
+    background-color: #f6f8fa; 
+    border-color: #1b1f2326; 
+}
+.page-btn.active { 
+    background-color: #3498db; /* Синий цвет для активной кнопки */
+    color: #fff; 
+    border-color: #3498db; 
+}

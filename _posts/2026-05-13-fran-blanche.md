@@ -4,7 +4,7 @@ title: "Фрэн Бланш | Fran Blanche"
 tags: [people, люди, фрэнбланш, franblanche]
 sources: "[www.frantone.com](http://www.frantone.com/), [www.youtube.com/@FranLab](https://www.youtube.com/@FranLab)"
 date: 2026-05-13
-categories: [people, fran-blanche]
+categories: [people, fran-blanche, feed]
 ---
  
 Fran Blanche – полностью самоучка в области электроники, инженер, старший член [IEEE](https://www.ieee.org/): [SMIEEE](https://youtu.be/R6iUor38sj8) (это высшая профессиональная категория, которая требует обширного опыта и отражает профессиональные достижения и зрелость. Только 10% из более чем 400 000 членов достигли этого уровня). Известна своими видеороликами об электронике и научных экспериментах.

@@ -11,10 +11,10 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 ### Описание проекта
 Создание конструкции простого виброхода с использованием зубной щетки и миниатюрного вибромотора.
 
-![](simple-cardboard-walking-robot-1.webp)
-![](simple-cardboard-walking-robot-2.webp)
-![](simple-cardboard-walking-robot-3.webp)
-![](simple-cardboard-walking-robot-4.webp)
+![](vibrohod-iz-zubnoj-shchetki-1.webp)
+![](vibrohod-iz-zubnoj-shchetki-2.webp)
+![](vibrohod-iz-zubnoj-shchetki-3.webp)
+![](vibrohod-iz-zubnoj-shchetki-4.webp)
 
 > **Примечание:** Виброход — это устройство для движения по твёрдым поверхностям за счет вибрационного движителя. Когда мотор начинает вибрировать, устройство словно подпрыгивает и медленно ползёт по полу или по столу. Если такой мотор поставить на зубную щётку, то щетинки будут отталкиваться от поверхности, и щётка побежит, как будто у неё появились маленькие ножки. 
 

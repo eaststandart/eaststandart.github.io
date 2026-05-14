@@ -40,7 +40,7 @@ permalink: /news/
     });
 
     list.innerHTML = '';
-    items.slice(0, 10).forEach(function(el) {
+    items.slice(0, 30).forEach(function(el) {
       var isPost = el.getAttribute('data-is-post') === 'true';
       var link = el.querySelector('.item-link');
       

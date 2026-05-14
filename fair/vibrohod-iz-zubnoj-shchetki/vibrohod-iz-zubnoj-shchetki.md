@@ -25,8 +25,8 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 > **Примечание:** Принцип действия виброхода основан на возникновении продольных сил при вибрации гибких щетинок, расположенных наклонно к опорной поверхности (смотри также: [виброходы](https://r9al.ru/2024/vibrohod/index.htm)).
 
 ### Развитие проекта
-1\. Создания трассы с препятствиями для тестирования проходимости робота.\
-2\. Можно провести соревнования: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).\
+1\. Создать трассу с препятствиями для тестирования проходимости робота.\
+2\. Провести соревнования: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).\
 3\. Выполнить научный проект: изучить движение роботов [Science Project: Bristlebot Motion Tracking](https://youtu.be/NmMflaqzJXQ).
 
 ### Галерея работ

@@ -8,6 +8,10 @@ url: https://eaststandart.github.io
 # Collections
 # -----------------------------------------------------------------------------
 
+collections:
+  people:
+    output: true
+    permalink: /people/:basename/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

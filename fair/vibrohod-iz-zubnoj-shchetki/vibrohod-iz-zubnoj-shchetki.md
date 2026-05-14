@@ -29,7 +29,7 @@ permalink: /fair/vibrohod-iz-zubnoj-shchetki/
 
 2\. Можно провести соревнования: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).
 
-3\. Выполнить научный проект: изучить движение роботов [Bristlebot Motion Tracking | Science Project](https://youtu.be/NmMflaqzJXQ).
+3\. Выполнить научный проект: изучить движение роботов [Bristlebot Motion Tracking \| Science Project](https://youtu.be/NmMflaqzJXQ).
 
 ### Галерея работ
 **Назначение:** демонстрация (фото, видео) выполненного проекта от участников.

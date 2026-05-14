@@ -4,30 +4,30 @@ title: Что нового?
 permalink: /news/
 ---
 
-  <ul id="live-updates-list" style="list-style: none; padding: 0; margin: 0;">
-    {% comment %} 1. Твой оригинальный рабочий цикл для постов и страниц {% endcomment %}
-    {% assign main_content = site.posts | concat: site.pages %}
-    {% for item in main_content %}
+<div class="updates-feed">
+  <ul id="live-updates-list" style="list-style: none; padding: 0;">
+    {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
+    
+    {% for item in all_content %}
       {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
         {% assign is_post = false %}
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
-        <li class="update-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-is-person="false" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-          <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">{{ item.title }}</a>
-        </li>
-      {% endif %}
-    {% endfor %}
 
-    {% comment %} 2. ТОЧНО ТАКОЙ ЖЕ безопасный цикл для людей с твоими оригинальными инлайн-стилями {% endcomment %}
-    {% for person in site.people %}
-      {% if person.date %}
-        <li class="update-item" data-date="{{ person.date | date: '%Y-%m-%d' }}" data-is-post="false" data-is-person="true" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-          <small style="color: #888;">{{ person.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
-          <a href="{{ person.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">{{ person.title }}</a>
+        <li class="update-item" 
+            data-date="{{ item.date | date: '%Y-%m-%d' }}" 
+            data-is-post="{{ is_post }}"
+            style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+          
+          <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
+          
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
+            {{ item.title }}
+          </a>
         </li>
       {% endif %}
     {% endfor %}
   </ul>
+</div>
 
 <!-- Контейнер для кнопок страниц -->
 <div id="pagination-controls" style="margin-top: 25px; display: flex; gap: 8px; justify-content: center;"></div>

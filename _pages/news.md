@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Тест ленты обновлений
+title: Что нового?
 permalink: /news/
 ---
 

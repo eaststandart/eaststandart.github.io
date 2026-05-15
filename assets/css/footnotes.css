@@ -31,6 +31,16 @@
     display: inline;             /* Чтобы стрелочка ↩ не прыгала на новую строку */
 }
 
+/* Полностью убираем отступ у последней сноски в списке */
+.footnotes ol li:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Обнуляем скрытые абзацы, если Kramdown вставил их в конце */
+.footnotes p:last-child {
+    margin-bottom: 0 !important;
+}
+
 /* Стрелочка-возврат ↩ в конце сноски */
 .footnotes .reversefootnote {
     margin-left: 5px;            /* Аккуратный отступ от текста */

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Попытка устранения раскачивания корпуса робота при ходьбе"
+title: "Устранение раскачивания корпуса робота при ходьбе"
 date: 2026-05-09
 categories: [feed, journal, simple-cardboard-walking-robot]
 ---

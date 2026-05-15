@@ -1,6 +1,6 @@
 ---
 layout: default
-title: What's New?
+title: Что нового?
 permalink: /news/
 ---
 
@@ -14,28 +14,24 @@ permalink: /news/
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
 
         {% comment %} 
-          1. ИСПРАВЛЕННЫЙ БЛОК: Вычисляем имя родительской папки раздела.
-          Конструкция elsif теперь написана строго по правилам Jekyll.
+          Вычисляем эмодзи точно так же, как на главной 
         {% endcomment %}
-        {% if item.path contains '_people' %}
-          {% assign item_section = "/people/" %}
-        {% else %}
-          {% assign url_parts = item.url | split: "/" %}
-          {% assign first_folder = url_parts[1] %}
-          {% assign item_section = "/" | append: first_folder | append: "/" %}
-          
-          {% if item.path contains '_posts' %}
-            {% assign first_cat = item.categories | first %}
-            {% assign item_section = "/" | append: first_cat | append: "/" %}
-          {% endif %}
+        {% assign url_parts = item.url | split: "/" %}
+        {% assign first_folder = url_parts[1] %}
+        {% assign item_section = "/" | append: first_folder | append: "/" %}
+        
+        {% if item.path contains '_posts' %}
+          {% assign first_cat = item.categories | first %}
+          {% assign item_section = "/" | append: first_cat | append: "/" %}
         {% endif %}
         
         {% assign parent_page = site.pages | where: "permalink", item_section | first %}
         {% assign section_emoji = parent_page.emoji | default: "" %}
 
-        {% comment %} ОПРЕДЕЛЯЕМ ЦВЕТ СТРОКИ ИЗ ТВОЕГО ОРИГИНАЛА {% endcomment %}
-        {% assign text_color = "#3498db" %}
-        {% if is_post %}{% assign text_color = "#bbb" %}{% endif %}
+        {% comment %} Для людей ставим фиксированный маркер {% endcomment %}
+        {% if item.path contains '_people' %}
+          {% assign section_emoji = "🧍‍♂️" %}
+        {% endif %}
 
         <li class="update-item" 
             data-date="{{ item.date | date: '%Y-%m-%d' }}"
@@ -45,7 +41,7 @@ permalink: /news/
           
           <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
           
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px; color: {{ text_color }};">
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
             {{ item.title }}
           </a>
         </li>
@@ -54,5 +50,8 @@ permalink: /news/
   </ul>
 </div>
 
-<!-- ВЫЗОВ УНИВЕРСАЛЬНОЙ ПАГИНАЦИИ -->
+<!-- 1. СНАЧАЛА КРАСИМ И СТАВИМ ЭМОДЗИ НА ВСЕ ЭЛЕМЕНТЫ -->
+{% include news-emoji.liquid %}
+
+<!-- 2. СЛЕДОМ ЧИСТЫЙ МОДУЛЬ БЬЕТ ИХ НА СТРАНИЦЫ ПО 10 ШТУК -->
 {% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 %}

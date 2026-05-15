@@ -8,6 +8,7 @@
 
     <!-- ... БАЗОВЫЕ СТИЛИ ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/footnotes.css">
     <link rel="stylesheet" href="/assets/css/video.css">
 
     <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ВСЕХ ШАБЛОНОВ -->
@@ -52,6 +53,11 @@
         {% endif %}
     </div>
     {% endif %}
+
+    <!-- БЛОК СНОСОК (Будет выводиться первым, если они есть на странице) -->
+    <div class="post-footnotes">
+        {:footnotes}
+    </div>
 
     {% if page.sources %}
     <div class="sources-inline">

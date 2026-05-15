@@ -1,0 +1,27 @@
+/* Контейнер для сносок внизу поста */
+.post-footnotes .footnotes {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #e1e4e8; /* Легкая пунктирная линия сверху */
+}
+
+/* Стилизация списка самих сносок */
+.post-footnotes .footnotes ol {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.post-footnotes .footnotes li {
+    margin-bottom: 6px;
+}
+
+/* Ссылка-возврат (стрелочка ↩), которую Kramdown ставит в конце сноски */
+.post-footnotes .footnotes .reversefootnote {
+    margin-left: 5px;
+    text-decoration: none;
+    color: #0366d6;
+}
+.post-footnotes .footnotes .reversefootnote:hover {
+    text-decoration: underline;
+}

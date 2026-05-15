@@ -1,9 +1,9 @@
 ---
-layout: fair
+layout: faire
 description: Проекты дополнительные для юных инженеров и мастеров к учебной программе.
 title: Ярмарка поделок
 navtitle: "Поделки"
-permalink: /fair/
+permalink: /faire/
 emoji: "🔥"
 ---
 

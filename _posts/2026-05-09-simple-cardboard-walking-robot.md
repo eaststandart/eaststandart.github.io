@@ -17,4 +17,4 @@ categories: [feed, journal, simple-cardboard-walking-robot]
 
 **Рекомендация:** использование более жестких материалов и уменьшение габаритов конструкции.
 
-![video](/fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
+![video](/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)

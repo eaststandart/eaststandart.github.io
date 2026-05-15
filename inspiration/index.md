@@ -3,7 +3,7 @@ layout: default
 description: Моменты, которые помогают в техническом творчестве и инженерном поиске.
 title: Техническое вдохновение
 navtitle: "Вдохновение"
-custom_css: ["/assets/css/fair.css"]
+custom_css: ["/assets/css/faire.css"]
 emoji: "🚀"
 ---
 

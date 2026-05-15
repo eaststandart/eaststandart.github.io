@@ -8,23 +8,23 @@ categories: [media, robot-strannik]
 
 **Фото первого робота «странника»:**
 
-![](/fair/robot-strannik/robot-strannik-05.webp)
-![](/fair/robot-strannik/robot-strannik-06.webp)
-![](/fair/robot-strannik/robot-strannik-07.webp)
-![](/fair/robot-strannik/robot-strannik-08.webp)
+![](/faire/robot-strannik/robot-strannik-05.webp)
+![](/faire/robot-strannik/robot-strannik-06.webp)
+![](/faire/robot-strannik/robot-strannik-07.webp)
+![](/faire/robot-strannik/robot-strannik-08.webp)
 
 **Видео первого робота «странника»:**
 
-![video](/fair/robot-strannik/robot-strannik-3.webm)
+![video](/faire/robot-strannik/robot-strannik-3.webm)
 
 > **Примечание:** второй вариант робота (основной) отличается от первого тем, что у него переработан узел редуктор-колено, для увеличения жесткости, и более широкая основа, для повышения устойчивости при ходьбе.
 
 Тип передвижения робота «странника» воплощен по мотивам советской механической игрушки с заводным механизмом «Робот», СССР, Самара, Завод «Прогресс», 1980 год. Вид ее был такой:
 
-![](/fair/robot-strannik/robot-strannik-09.webp)
-![](/fair/robot-strannik/robot-strannik-10.webp)
-![](/fair/robot-strannik/robot-strannik-11.webp)
-![](/fair/robot-strannik/robot-strannik-12.webp)
-![](/fair/robot-strannik/robot-strannik-13.webp)
+![](/faire/robot-strannik/robot-strannik-09.webp)
+![](/faire/robot-strannik/robot-strannik-10.webp)
+![](/faire/robot-strannik/robot-strannik-11.webp)
+![](/faire/robot-strannik/robot-strannik-12.webp)
+![](/faire/robot-strannik/robot-strannik-13.webp)
 
 > **Примечание:** как двигалась игрушка смотри в [Робот игрушка СССР](https://youtu.be/l33fxFFlkJQ).

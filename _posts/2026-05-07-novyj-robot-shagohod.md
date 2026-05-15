@@ -9,4 +9,4 @@ categories: [feed, journal, novyj-robot-shagohod]
 
 **Проблема:** при текущем весе и скорости ноги робота деформируются и зацепляются друг за друга из-за раскачивания корпуса.
 
-![video](/fair/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
+![video](/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)

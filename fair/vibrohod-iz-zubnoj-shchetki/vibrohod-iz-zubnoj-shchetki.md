@@ -5,7 +5,7 @@ title: Виброход из зубной щетки
 tags: [электроникаисхемотехника, конструированиеимоделирование, проектучебный, 1класс, проект, виброход, виброходиззубнойщетки]
 sources: "[Build a Bristlebot, a Tiny Toothbrush Robot](https://www.sciencebuddies.org/stem-activities/toothbrush-bristlebot), [Building Bristlebots: Basic Toothbrush Robotics](https://www.sciencebuddies.org/blog/building-bristlebots-basic-toothbrush-robotics)"
 date: 2026-05-14
-permalink: /fair/vibrohod-iz-zubnoj-shchetki/
+permalink: /faire/vibrohod-iz-zubnoj-shchetki/
 ---
 
 ### Описание проекта

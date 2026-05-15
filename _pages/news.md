@@ -33,4 +33,4 @@ permalink: /news/
 </div>
 
 <!-- ВЫЗОВ УНИВЕРСАЛЬНОЙ ПАГИНАЦИИ -->
-{% include pagination.liquid list_id="live-updates-list" controls_id="pagination-controls" per_page=10 %}
+{% include pagination.liquid list_id="live-updates-list" controls_id="pagination-controls" per_page=13 %}

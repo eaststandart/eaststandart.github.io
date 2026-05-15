@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Что нового?
+title: What's New?
 permalink: /news/
 ---
 
@@ -14,13 +14,12 @@ permalink: /news/
         {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
 
         {% comment %} 
-          1. УНИВЕРСАЛЬНОЕ ВЫЧИСЛЕНИЕ ЭМОДЗИ РАЗДЕЛА:
-          Смотрим на путь файла. Если он из коллекции людей — сразу берем /people/
+          1. ИСПРАВЛЕННЫЙ БЛОК: Вычисляем имя родительской папки раздела.
+          Конструкция elsif теперь написана строго по правилам Jekyll.
         {% endcomment %}
         {% if item.path contains '_people' %}
           {% assign item_section = "/people/" %}
         {% else %}
-          {% comment %} Для остальных страниц и постов вырезаем имя первой папки {% endcomment %}
           {% assign url_parts = item.url | split: "/" %}
           {% assign first_folder = url_parts[1] %}
           {% assign item_section = "/" | append: first_folder | append: "/" %}
@@ -31,15 +30,13 @@ permalink: /news/
           {% endif %}
         {% endif %}
         
-        {% comment %} Находим главную страницу раздела и вытаскиваем её emoji {% endcomment %}
         {% assign parent_page = site.pages | where: "permalink", item_section | first %}
         {% assign section_emoji = parent_page.emoji | default: "" %}
 
-        {% comment %} ОПРЕДЕЛЯЕМ ЦВЕТ СТРОКИ {% endcomment %}
+        {% comment %} ОПРЕДЕЛЯЕМ ЦВЕТ СТРОКИ ИЗ ТВОЕГО ОРИГИНАЛА {% endcomment %}
         {% assign text_color = "#3498db" %}
         {% if is_post %}{% assign text_color = "#bbb" %}{% endif %}
 
-        {% comment %} ПЕРЕДАЕМ ВЫЧИСЛЕННЫЙ ЭМОДЗИ В data-emoji ДЛЯ СКРИПТА ПАГИНАЦИИ {% endcomment %}
         <li class="update-item" 
             data-date="{{ item.date | date: '%Y-%m-%d' }}"
             data-is-post="{{ is_post }}"

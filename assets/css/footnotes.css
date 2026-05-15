@@ -1,27 +1,36 @@
-/* Контейнер для сносок внизу поста */
-.post-footnotes .footnotes {
-    margin-top: 20px;
-    margin-bottom: 15px;
-    padding-top: 10px;
-    border-top: 1px dashed #e1e4e8; /* Легкая пунктирная линия сверху */
+/* Главный контейнер блока сносок, который создает GitHub Pages */
+.footnotes {
+    margin-top: 30px;            /* Отступ от текста статьи до начала сносок */
+    margin-bottom: 20px;         /* Отступ от сносок до блока Источников */
+    padding-top: 15px;           /* Внутренний отступ от разделительной линии */
+    border-top: 1px dashed #ddd; /* Тонкая пунктирная линия, отделяющая сноски от контента */
 }
 
-/* Стилизация списка самих сносок */
-.post-footnotes .footnotes ol {
-    padding-left: 20px;
+/* Очистка заголовка сносок (если Kramdown добавляет скрытый тег h2) */
+.footnotes h2 {
+    display: none;
+}
+
+/* Нумерованный список сносок */
+.footnotes ol {
+    padding-left: 20px;          /* Отступ слева, чтобы цифры не вылезали за края */
     margin: 0;
 }
 
-.post-footnotes .footnotes li {
-    margin-bottom: 6px;
+/* Элемент списка (каждая отдельная сноска) */
+.footnotes li {
+    margin-bottom: 8px;          /* Расстояние между соседними сносками */
+    line-height: 1.4;            /* Плотность строк внутри одной сноски */
 }
 
-/* Ссылка-возврат (стрелочка ↩), которую Kramdown ставит в конце сноски */
-.post-footnotes .footnotes .reversefootnote {
-    margin-left: 5px;
-    text-decoration: none;
-    color: #0366d6;
+/* Ссылка-возврат (стрелочка ↩), которую гитхаб ставит в конце каждой сноски */
+.footnotes .reversefootnote {
+    margin-left: 6px;            /* Отступ стрелочки от текста сноски */
+    text-decoration: none;       /* Убираем нижнее подчеркивание со стрелки */
+    display: inline-block;
 }
-.post-footnotes .footnotes .reversefootnote:hover {
-    text-decoration: underline;
+
+/* Ховер-эффект для стрелочки возврата */
+.footnotes .reversefootnote:hover {
+    text-decoration: underline;  /* Подчеркивание стрелочки при наведении мыши */
 }

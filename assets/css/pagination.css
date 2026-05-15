@@ -1,10 +1,19 @@
 /* ==========================================================================
-   УНИВЕРСАЛЬНЫЕ СТИЛИ КНОПОК ПАГИНАЦИИ (ПК-версия по умолчанию)
+   БАЗОВЫЙ КОНТЕЙНЕР ПАГИНАЦИИ (Для ПК-версии по умолчанию)
    ========================================================================== */
+.pagination-container {
+    margin-top: 25px;               /* Твой оригинальный отступ от текста до кнопок */
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Обычные кнопки — полная симметрия зазоров */
 .page-btn {
     display: inline-block;
     padding: 6px 12px;
-    margin: 0 3px;                  /* ИСПРАВЛЕНО: Кнопки больше не слипаются */
+    margin: 0 3px;                  /* ИСПРАВЛЕНО: Единый плотный зазор между кнопками */
     border: 1px solid #e1e4e8;
     border-radius: 6px;
     background-color: #fff;
@@ -15,49 +24,52 @@
     box-sizing: border-box;
     transition: background-color 0.2s, border-color 0.2s, color 0.2s;
     user-select: none;
-    -webkit-tap-highlight-color: transparent; /* Убираем синюю вспышку на смартфонах */
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Эффект наведения мыши (Ховер) */
 .page-btn:hover {
     background-color: #f6f8fa;
     border-color: #1b1f2326;
     color: #24292e;
 }
 
-/* Активная (текущая) страница */
 .page-btn.active {
-    background-color: #3498db !important; /* Твой оригинальный синий цвет */
+    background-color: #3498db !important;
     color: #fff !important;
     border-color: #3498db !important;
     cursor: default;
 }
 
 /* ==========================================================================
-   ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (Синхронизировано с твоим max-width: 900px)
+   ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (Для экранов смартфонов до 900px)
    ========================================================================== */
 @media (max-width: 900px) {
+    /* Точечно управляем контейнером кнопок ИМЕННО на Главной странице */
+    #home-news-pagination.pagination-container {
+        margin-top: 15px !important;    /* НАСТРОЙКА: Отодвинули кнопки чуть ниже от текста */
+        margin-bottom: -10px !important; /* НАСТРОЙКА: Прижали кнопки плотнее к нижнему краю квадрата */
+    }
+
     .page-btn {
-        padding: 5px 10px;          /* Уменьшили внутренний размер кнопок */
-        margin: 0 3px;              /* Чуть плотнее сжали зазоры */
-        font-size: 0.85rem;         /* Сделали шрифт компактнее для пальцев */
+        padding: 5px 10px;
+        margin: 0 3px;
+        font-size: 0.85rem;
         border-radius: 5px;
     }
 }
 
 /* ==========================================================================
-   ГОРИЗОНТАЛЬНЫЙ РЕЖИМ СМАРТФОНОВ (Синхронизировано с max-height: 500px)
+   ГОРИЗОНТАЛЬНЫЙ РЕЖИМ СМАРТФОНОВ (Экран на боку)
    ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
-    .page-btn {
-        padding: 4px 8px;           /* Максимальное уплотнение по высоте */
-        margin: 0 3px;
-        font-size: 0.8rem;          /* Самый мелкий инженерный шрифт */
+    #home-news-pagination.pagination-container {
+        margin-top: 10px !important;    /* Плотный зазор от текста в ландшафте */
+        margin-bottom: -12px !important; /* Максимально прижали к дну, убирая пустую дыру */
     }
-    
-    /* Контейнер кнопок на главной зажимаем плотнее под сетку ландшафта */
-    #home-news-pagination,
-    #news-pagination {
-        margin-top: 0px !important; /* Меньше пустых дыр по вертикали */
+
+    .page-btn {
+        padding: 4px 8px;
+        margin: 0 3px;
+        font-size: 0.8rem;
     }
 }

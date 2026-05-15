@@ -66,12 +66,12 @@
     }
 
     #home-news-pagination.pagination-container {
-        margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
+        margin-bottom: -5px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
     .page-btn {
         padding: 5px 10px;
-        margin: 0 3px;
+        margin: 0 2px;
         font-size: 0.85rem;
         border-radius: 5px;
     }
@@ -82,16 +82,16 @@
    ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
     .category-card.site-news #live-updates-list {
-        margin-bottom: 0px !important; /* Уплотненный зазор в горизонтальном режиме */
+        margin-bottom: 10px !important; /* Уплотненный зазор в горизонтальном режиме */
     }
 
     #home-news-pagination.pagination-container {
-        margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
+        margin-bottom: -10px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
     .page-btn {
         padding: 4px 8px;
-        margin: 0 3px;
+        margin: 0 1px;
         font-size: 0.8rem;
     }
 }

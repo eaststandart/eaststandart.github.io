@@ -16,6 +16,7 @@
 .footnotes ol {
     padding-left: 18px;          /* Плотный отступ слева */
     margin: 0;
+    margin-bottom: 0 !important;
 }
 
 .footnotes li {
@@ -28,6 +29,7 @@
 /* Текст внутри абзаца сноски (если Kramdown оборачивает его в <p>) */
 .footnotes li p {
     margin: 0;
+    margin-bottom: 0 !important;
     display: inline;             /* Чтобы стрелочка ↩ не прыгала на новую строку */
 }
 

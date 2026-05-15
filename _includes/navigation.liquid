@@ -7,7 +7,7 @@
     {% if page.categories.size > 0 %}
         {% assign project_slug = "" %}
         {% for cat in page.categories %}
-            {% if cat != "feed" and cat != "journal" and cat != "media" and cat != "diary"%}
+            {% if cat != "journal" and cat != "media" and cat != "diary"%}
                 {% assign project_slug = cat %}
             {% endif %}
         {% endfor %}

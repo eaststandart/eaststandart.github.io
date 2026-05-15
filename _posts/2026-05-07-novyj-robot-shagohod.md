@@ -2,7 +2,7 @@
 layout: default
 title: "Тест"
 date: 2026-05-07
-categories: [feed, journal, novyj-robot-shagohod]
+categories: [journal, novyj-robot-shagohod]
 ---
 
 ТЕСТ

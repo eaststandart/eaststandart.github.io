@@ -16,5 +16,3 @@ categories: [journal, simple-cardboard-walking-robot]
 **Решение:** замена мотора и ШИМ-регулятора на небольшой мотор-редуктор.
 
 **Рекомендация:** использование более жестких материалов и уменьшение габаритов конструкции.
-
-![video](/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)

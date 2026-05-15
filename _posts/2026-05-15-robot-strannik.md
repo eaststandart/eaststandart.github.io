@@ -26,3 +26,5 @@ categories: [media, robot-strannik]
 ![](/fair/robot-strannik/robot-strannik-11.webp)
 ![](/fair/robot-strannik/robot-strannik-12.webp)
 ![](/fair/robot-strannik/robot-strannik-13.webp)
+
+> **Примечание:** как двигался робот смотри в [Робот игрушка СССР](https://youtu.be/l33fxFFlkJQ)

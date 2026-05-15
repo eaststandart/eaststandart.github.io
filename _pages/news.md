@@ -54,4 +54,4 @@ permalink: /news/
 {% include news-emoji.liquid %}
 
 <!-- 2. СЛЕДОМ ЧИСТЫЙ МОДУЛЬ БЬЕТ ИХ НА СТРАНИЦЫ ПО 10 ШТУК -->
-{% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 %}
+{% include pagination-next.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=1 %}

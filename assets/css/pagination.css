@@ -4,7 +4,7 @@
 .page-btn {
     display: inline-block;
     padding: 6px 12px;
-    margin: 0 4px;                  /* ИСПРАВЛЕНО: Кнопки больше не слипаются */
+    margin: 0 2px;                  /* ИСПРАВЛЕНО: Кнопки больше не слипаются */
     border: 1px solid #e1e4e8;
     border-radius: 6px;
     background-color: #fff;
@@ -39,7 +39,7 @@
 @media (max-width: 900px) {
     .page-btn {
         padding: 5px 10px;          /* Уменьшили внутренний размер кнопок */
-        margin: 0 3px;              /* Чуть плотнее сжали зазоры */
+        margin: 0 1px;              /* Чуть плотнее сжали зазоры */
         font-size: 0.85rem;         /* Сделали шрифт компактнее для пальцев */
         border-radius: 5px;
     }

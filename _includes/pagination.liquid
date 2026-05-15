@@ -71,11 +71,7 @@
           btn.addEventListener('click', function() {
             currentPage = pageIndex;
             renderPage(currentPage);
-            
-            // Прокручиваем наверх ТОЛЬКО на большой странице архива
-            if (window.location.pathname.includes('/news/')) {
-              window.scrollTo(0, 0); 
-            }
+            window.scrollTo(0, 0); 
           });
         })(i);
 

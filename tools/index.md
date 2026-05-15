@@ -21,6 +21,7 @@ custom_css: ["/assets/css/tools.css"]
             <h3>Fritzing</h3>
             <p>Проектирование и документирование электронных схем, разводка печатных плат.</p>
         </div>
+    </a>
     <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">
@@ -28,15 +29,13 @@ custom_css: ["/assets/css/tools.css"]
             <p></p>
         </div>
     </a>
-    </a>
-        <a href="#" class="tool-card">
+    <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">
             <h3>SPlan</h3>
             <p></p>
         </div>
     </a> 
-    </a>
     <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">

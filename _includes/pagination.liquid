@@ -1,47 +1,58 @@
 <!-- Контейнер для кнопок страниц -->
-<div id="pagination-controls" style="margin-top: 25px; display: flex; gap: 8px; justify-content: center;"></div>
+<div id="{{ include.controls_id }}" style="margin-top: 25px; display: flex; gap: 8px; justify-content: center;"></div>
 
 <script>
   (function() {
-    var list = document.getElementById('live-updates-list');
-    var controls = document.getElementById('pagination-controls');
-    var items = Array.from(list.getElementsByClassName('update-item'));
+    // Получаем параметры, которые передали при вызове тега include
+    var listId = "{{ include.list_id }}";
+    var controlsId = "{{ include.controls_id }}";
+    var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
 
-    var itemsPerPage = 10; // Твоя норма в 30 пунктов
+    var list = document.getElementById(listId);
+    if (!list) return;
+
+    var controls = document.getElementById(controlsId);
+    if (!controls) return;
+
+    // Берем ВСЕ элементы списка, которые лежат внутри <ul> (независимо от их классов)
+    var items = Array.from(list.children);
     var currentPage = 1;
 
-    // Сортировка элементов по дате
+    // Сортировка по дате (если у элементов есть атрибут data-date)
     items.sort(function(a, b) {
-      return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+      var dateA = a.getAttribute('data-date');
+      var dateB = b.getAttribute('data-date');
+      if (dateA && dateB) {
+        return new Date(dateB) - new Date(dateA);
+      }
+      return 0; // Если дат нет, оставляем оригинальный порядок из Liquid
     });
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Функция отрисовки конкретной страницы
+    // Главная функция переключения страниц
     function renderPage(page) {
       list.innerHTML = '';
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
       
       items.slice(start, end).forEach(function(el) {
-        var isPost = el.getAttribute('data-is-post') === 'true';
-        var link = el.querySelector('.item-link');
+        // ЧИСТЫЙ ВЫВОД: Скрипт просто делает элемент видимым, 
+        // сохраняя его оригинальные цвета, flex-выравнивание и инлайн-стили
+        el.style.setProperty('display', 'flex', 'important'); 
         
-        // ТВОЯ ОРИГИНАЛЬНАЯ КРАСКА ИЗ КОДА
-        if (isPost) {
-          link.style.color = '#bbb'; 
-        } else {
-          link.style.color = '#3498db'; 
+        // Если это страница архива news и там нужен блочный вывод, flex можно переопределить через CSS темы
+        if (window.location.pathname.includes('/news/')) {
+          el.style.setProperty('display', 'block', 'important');
         }
-
-        el.style.display = 'block'; // Твой оригинальный вывод block
+        
         list.appendChild(el);
       });
 
       renderControls();
     }
 
-    // Функция создания кнопок
+    // Функция отрисовки кнопок (стили кнопок в точности твои оригинальные)
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;
@@ -50,7 +61,6 @@
         var btn = document.createElement('button');
         btn.innerText = i;
         
-        // Стили кнопок прямо в JS, чтобы не ломать каскад CSS
         btn.style.padding = '6px 12px';
         btn.style.border = '1px solid #e1e4e8';
         btn.style.borderRadius = '6px';
@@ -59,7 +69,7 @@
         btn.style.fontWeight = '600';
         
         if (i === currentPage) {
-          btn.style.backgroundColor = '#3498db'; // Твой синий для активной
+          btn.style.backgroundColor = '#3498db'; 
           btn.style.color = '#fff';
           btn.style.borderColor = '#3498db';
         } else {

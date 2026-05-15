@@ -3,7 +3,6 @@
 
 <script>
   (function() {
-    // Получаем параметры, которые передали при вызове тега include
     var listId = "{{ include.list_id }}";
     var controlsId = "{{ include.controls_id }}";
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
@@ -14,46 +13,39 @@
     var controls = document.getElementById(controlsId);
     if (!controls) return;
 
-    // Берем ВСЕ элементы списка, которые лежат внутри <ul> (независимо от их классов)
     var items = Array.from(list.children);
     var currentPage = 1;
 
-    // Сортировка по дате (если у элементов есть атрибут data-date)
+    // Твоя оригинальная сортировка по дате
     items.sort(function(a, b) {
       var dateA = a.getAttribute('data-date');
       var dateB = b.getAttribute('data-date');
       if (dateA && dateB) {
         return new Date(dateB) - new Date(dateA);
       }
-      return 0; // Если дат нет, оставляем оригинальный порядок из Liquid
+      return 0; 
     });
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Главная функция переключения страниц
+    // Твоя оригинальная функция отрисовки страницы (без вмешательства в цвета)
     function renderPage(page) {
       list.innerHTML = '';
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
       
       items.slice(start, end).forEach(function(el) {
-        // ЧИСТЫЙ ВЫВОД: Скрипт просто делает элемент видимым, 
-        // сохраняя его оригинальные цвета, flex-выравнивание и инлайн-стили
         el.style.setProperty('display', 'flex', 'important'); 
-        
-        // Если это страница архива news и там нужен блочный вывод, flex можно переопределить через CSS темы
         if (window.location.pathname.includes('/news/')) {
           el.style.setProperty('display', 'block', 'important');
         }
-        
         list.appendChild(el);
       });
 
       renderControls();
     }
 
-    // Функция отрисовки кнопок (стили кнопок в точности твои оригинальные)
-    // Функция создания кнопок — ТЕПЕРЬ БЕЗ ИНЛАЙН СТИЛЕЙ
+    // Твоя оригинальная функция создания кнопок
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;
@@ -61,19 +53,27 @@
       for (var i = 1; i <= totalPages; i++) {
         var btn = document.createElement('button');
         btn.innerText = i;
-        btn.className = 'page-btn'; // Задаем базовый класс
+        btn.className = 'page-btn'; 
         
         if (i === currentPage) {
-          btn.classList.add('active'); // Задаем класс активной страницы
+          btn.classList.add('active'); 
         }
 
         (function(pageIndex) {
           btn.addEventListener('click', function() {
             currentPage = pageIndex;
             renderPage(currentPage);
-            window.scrollTo(0, 0); 
+            
+            // ТОЧЕЧНЫЙ ФИКС: Прокручиваем наверх ТОЛЬКО на большой странице архива
+            if (window.location.pathname.includes('/news/')) {
+              window.scrollTo(0, 0); 
+            }
           });
         })(i);
+
+        controls.appendChild(btn);
+      }
+    }
 
     renderPage(currentPage);
   })();

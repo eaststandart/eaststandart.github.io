@@ -71,13 +71,13 @@
           btn.addEventListener('click', function() {
             currentPage = pageIndex;
             renderPage(currentPage);
-            window.scrollTo(0, 0); 
+            
+            // Прокручиваем наверх ТОЛЬКО на большой странице архива
+            if (window.location.pathname.includes('/news/')) {
+              window.scrollTo(0, 0); 
+            }
           });
         })(i);
-
-        controls.appendChild(btn);
-      }
-    }
 
     renderPage(currentPage);
   })();

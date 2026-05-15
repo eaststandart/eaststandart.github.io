@@ -63,7 +63,7 @@
     </div>
     {% endif %}
 
-    {% if page.tags %}
+    {% if page.tags and page.tags.size > 0 %}
     <div class="tag-container">
         {% for tag in page.tags %}
         {% assign tag_clean = tag | replace: '#', '' | strip %}

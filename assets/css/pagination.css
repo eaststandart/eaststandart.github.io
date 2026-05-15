@@ -58,6 +58,6 @@
     /* Контейнер кнопок на главной зажимаем плотнее под сетку ландшафта */
     #home-news-pagination,
     #news-pagination {
-        margin-top: 10px !important; /* Меньше пустых дыр по вертикали */
+        margin-top: 30px !important; /* Меньше пустых дыр по вертикали */
     }
 }

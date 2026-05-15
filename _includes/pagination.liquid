@@ -53,6 +53,7 @@
     }
 
     // Функция отрисовки кнопок (стили кнопок в точности твои оригинальные)
+    // Функция создания кнопок — ТЕПЕРЬ БЕЗ ИНЛАЙН СТИЛЕЙ
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;
@@ -60,21 +61,10 @@
       for (var i = 1; i <= totalPages; i++) {
         var btn = document.createElement('button');
         btn.innerText = i;
-        
-        btn.style.padding = '6px 12px';
-        btn.style.border = '1px solid #e1e4e8';
-        btn.style.borderRadius = '6px';
-        btn.style.cursor = 'pointer';
-        btn.style.fontSize = '0.9rem';
-        btn.style.fontWeight = '600';
+        btn.className = 'page-btn'; // Задаем базовый класс
         
         if (i === currentPage) {
-          btn.style.backgroundColor = '#3498db'; 
-          btn.style.color = '#fff';
-          btn.style.borderColor = '#3498db';
-        } else {
-          btn.style.backgroundColor = '#fff';
-          btn.style.color = '#24292e';
+          btn.classList.add('active'); // Задаем класс активной страницы
         }
 
         (function(pageIndex) {

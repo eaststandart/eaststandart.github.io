@@ -1,0 +1,63 @@
+/* ==========================================================================
+   УНИВЕРСАЛЬНЫЕ СТИЛИ КНОПОК ПАГИНАЦИИ (ПК-версия по умолчанию)
+   ========================================================================== */
+.page-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 4px;                  /* ИСПРАВЛЕНО: Кнопки больше не слипаются */
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #24292e;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent; /* Убираем синюю вспышку на смартфонах */
+}
+
+/* Эффект наведения мыши (Ховер) */
+.page-btn:hover {
+    background-color: #f6f8fa;
+    border-color: #1b1f2326;
+    color: #24292e;
+}
+
+/* Активная (текущая) страница */
+.page-btn.active {
+    background-color: #3498db !important; /* Твой оригинальный синий цвет */
+    color: #fff !important;
+    border-color: #3498db !important;
+    cursor: default;
+}
+
+/* ==========================================================================
+   ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (Синхронизировано с твоим max-width: 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .page-btn {
+        padding: 5px 10px;          /* Уменьшили внутренний размер кнопок */
+        margin: 0 3px;              /* Чуть плотнее сжали зазоры */
+        font-size: 0.85rem;         /* Сделали шрифт компактнее для пальцев */
+        border-radius: 5px;
+    }
+}
+
+/* ==========================================================================
+   ГОРИЗОНТАЛЬНЫЙ РЕЖИМ СМАРТФОНОВ (Синхронизировано с max-height: 500px)
+   ========================================================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-btn {
+        padding: 4px 8px;           /* Максимальное уплотнение по высоте */
+        margin: 0 2px;
+        font-size: 0.8rem;          /* Самый мелкий инженерный шрифт */
+    }
+    
+    /* Контейнер кнопок на главной зажимаем плотнее под сетку ландшафта */
+    #home-news-pagination,
+    #news-pagination {
+        margin-top: 10px !important; /* Меньше пустых дыр по вертикали */
+    }
+}

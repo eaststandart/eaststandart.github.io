@@ -2,7 +2,7 @@
    БАЗОВЫЙ КОНТЕЙНЕР ПАГИНАЦИИ (Для ПК-версии по умолчанию)
    ========================================================================== */
 .pagination-container {
-    margin-top: 25px;               /* Твой оригинальный отступ от текста до кнопок */
+    margin-top: 20px;               /* Твой оригинальный отступ от текста до кнопок */
     margin-bottom: 0px;
     display: flex;
     justify-content: center;
@@ -47,7 +47,7 @@
     /* Точечно управляем контейнером кнопок ИМЕННО на Главной странице */
     #home-news-pagination.pagination-container {
         margin-top: 15px !important;    /* НАСТРОЙКА: Отодвинули кнопки чуть ниже от текста */
-        margin-bottom: -10px !important; /* НАСТРОЙКА: Прижали кнопки плотнее к нижнему краю квадрата */
+        margin-bottom: 0px !important; /* НАСТРОЙКА: Прижали кнопки плотнее к нижнему краю квадрата */
     }
 
     .page-btn {
@@ -64,7 +64,7 @@
 @media (max-height: 500px) and (orientation: landscape) {
     #home-news-pagination.pagination-container {
         margin-top: 10px !important;    /* Плотный зазор от текста в ландшафте */
-        margin-bottom: -12px !important; /* Максимально прижали к дну, убирая пустую дыру */
+        margin-bottom: 0px !important; /* Максимально прижали к дну, убирая пустую дыру */
     }
 
     .page-btn {

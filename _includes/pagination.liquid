@@ -1,148 +1,175 @@
 <!-- Контейнер для кнопок страниц -->
 <div id="{{ include.controls_id }}" style="margin-top: 25px; display: flex; justify-content: center;"></div>
 
+<!-- Временный контейнер для вывода ошибок прямо на экран, чтобы тебе не искать консоль -->
+<div id="pagination-debug-log" style="color: #cb2431; font-family: monospace; font-size: 0.85rem; text-align: center; margin-top: 10px; font-weight: bold;"></div>
+
 <script>
   (function() {
-    var listId = "{{ include.list_id }}";
-    var controlsId = "{{ include.controls_id }}";
-    var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
-    var pinnedUrl = "{{ include.pinned_url | default: '' }}"; // Принимаем URL для закрепления
+    var debugLog = document.getElementById('pagination-debug-log');
+    
+    try {
+      var listId = "{{ include.list_id }}";
+      var controlsId = "{{ include.controls_id }}";
+      var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
+      var pinnedUrl = "{{ include.pinned_url | default: '' }}";
 
-    var list = document.getElementById(listId);
-    if (!list) return;
-
-    var controls = document.getElementById(controlsId);
-    if (!controls) return;
-
-    var items = Array.from(list.children);
-    var currentPage = 1;
-
-    // 1. Твоя оригинальная сортировка элементов по дате
-    items.sort(function(a, b) {
-      var dateA = a.getAttribute('data-date');
-      var dateB = b.getAttribute('data-date');
-      if (dateA && dateB) {
-        return new Date(dateB) - new Date(dateA);
+      var list = document.getElementById(listId);
+      if (!list) {
+        console.warn("Пагинация: Список с ID '" + listId + "' не найден на странице.");
+        return;
       }
-      return 0; 
-    });
 
-    // 2. УНИВЕРСАЛЬНАЯ РОКИРОВКА: Ищем и закрепляем пост на самом верху массива в памяти
-    if (pinnedUrl !== "") {
-      var pinnedIndex = items.findIndex(function(el) {
-        var aTag = el.querySelector('.item-link');
-        return aTag && aTag.getAttribute('href').includes(pinnedUrl);
+      var controls = document.getElementById(controlsId);
+      if (!controls) {
+        console.warn("Пагинация: Контейнер кнопок '" + controlsId + "' не найден.");
+        return;
+      }
+
+      var items = Array.from(list.children);
+      var currentPage = 1;
+
+      console.log("ПАГИНАЦИЯ ДЕБАГ: Всего элементов найдено в списке: " + items.length);
+
+      // 1. Твоя оригинальная сортировка элементов по дате
+      items.sort(function(a, b) {
+        var dateA = a.getAttribute('data-date');
+        var dateB = b.getAttribute('data-date');
+        if (dateA && dateB) {
+          return new Date(dateB) - new Date(dateA);
+        }
+        return 0; 
       });
 
-      if (pinnedIndex > -1) {
-        // ИСПРАВЛЕНО: Забираем именно элемент [0], извлекая его из массива splice
-        var pinnedItem = items.splice(pinnedIndex, 1)[0]; 
+      // 2. БЛОК ЗАКРЕПЛЕНИЯ С ПОШАГОВЫМ ЛОГИРОВАНИЕМ
+      if (pinnedUrl !== "") {
+        console.log("ПАГИНАЦИЯ ДЕБАГ: Запущен поиск закрепленного URL: " + pinnedUrl);
         
-        if (pinnedItem) {
-          pinnedItem.classList.add('pinned-item'); // Класс для подсветки фона в CSS
-          items.unshift(pinnedItem);               /* Ставим строго на первую позицию (индекс 0) */
-        }
-      }
-    }
-
-    var totalPages = Math.ceil(items.length / itemsPerPage);
-
-    // Твоя оригинальная функция отрисовки конкретной страницы
-    function renderPage(page) {
-      list.innerHTML = '';
-      var start = (page - 1) * itemsPerPage;
-      var end = start + itemsPerPage;
-      
-      items.slice(start, end).forEach(function(el) {
-        el.style.setProperty('display', 'flex', 'important'); 
-        if (window.location.pathname.includes('/news/')) {
-          el.style.setProperty('display', 'block', 'important');
-        }
-        list.appendChild(el);
-      });
-
-      renderControls();
-    }
-
-    // Твоя оригинальная вспомогательная функция для создания одной кнопки
-    function createButton(text, targetPage, isCurrent, isDisabled) {
-      var btn = document.createElement('button');
-      btn.innerText = text;
-      btn.className = 'page-btn';
-      if (isCurrent) btn.classList.add('active');
-      if (isDisabled) {
-        btn.style.opacity = '0.4';
-        btn.style.cursor = 'default';
-      }
-
-      if (!isDisabled && !isCurrent) {
-        btn.addEventListener('click', function() {
-          currentPage = targetPage;
-          renderPage(currentPage);
-          if (window.location.pathname.includes('/news/')) {
-            window.scrollTo(0, 0); 
+        var pinnedIndex = items.findIndex(function(el) {
+          var aTag = el.querySelector('.item-link');
+          if (aTag) {
+            var href = aTag.getAttribute('href');
+            return href && href.includes(pinnedUrl);
           }
+          return false;
         });
-      }
-      return btn;
-    }
 
-    // Твоя оригинальная вспомогательная функция для создания троеточия
-    function createSeparator() {
-      var span = document.createElement('span');
-      span.innerText = '...';
-      span.style.padding = '6px 4px';
-      span.style.color = '#6a737d';
-      span.style.fontSize = '0.9rem';
-      span.style.fontWeight = '600';
-      span.style.userSelect = 'none';
-      return span;
-    }
+        console.log("ПАГИНАЦИЯ ДЕБАГ: Индекс найденного элемента в массиве: " + pinnedIndex);
 
-    // Твоя оригинальная функция создания кнопок пагинации со скользящим окном
-    function renderControls() {
-      controls.innerHTML = '';
-      if (totalPages <= 1) return;
+        if (pinnedIndex > -1) {
+          // Вырезаем элемент из массива (метод splice возвращает массив из 1 элемента)
+          var splicedResult = items.splice(pinnedIndex, 1); 
+          console.log("ПАГИНАЦИЯ ДЕБАГ: Результат splice является массивом? " + Array.isArray(splicedResult));
+          
+          // Достаем из этого мини-массива чистый HTML-элемент
+          var pinnedItem = splicedResult[0];
+          console.log("ПАГИНАЦИЯ ДЕБАГ: Чистый элемент извлечен? " + (pinnedItem ? "Да" : "Нет"));
 
-      // 1. Кнопка НАЗАД
-      controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
-
-      // Расчет диапазона
-      var maxVisible = 5;
-      if (totalPages <= maxVisible) {
-        for (var i = 1; i <= totalPages; i++) {
-          controls.appendChild(createButton(i, i, i === currentPage, false));
-        }
-      } else {
-        var startPage = Math.max(1, currentPage - 1);
-        var endPage = Math.min(totalPages, currentPage + 1);
-
-        if (currentPage <= 2) {
-          endPage = 3;
-        }
-        if (currentPage >= totalPages - 1) {
-          startPage = totalPages - 2;
-        }
-
-        if (startPage > 1) {
-          controls.appendChild(createButton('1', 1, currentPage === 1, false));
-          if (startPage > 2) controls.appendChild(createSeparator());
-        }
-
-        for (var i = startPage; i <= endPage; i++) {
-          controls.appendChild(createButton(i, i, i === currentPage, false));
-        }
-
-        if (endPage < totalPages) {
-          if (endPage < totalPages - 1) controls.appendChild(createSeparator());
-          controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));
+          if (pinnedItem) {
+            pinnedItem.classList.add('pinned-item'); 
+            items.unshift(pinnedItem); // Добавляем в самое начало основного массива данных
+            console.log("ПАГИНАЦИЯ ДЕБАГ: Элемент успешно перемещен на индекс 0.");
+          }
+        } else {
+          console.warn("ПАГИНАЦИЯ ДЕБАГ: Закрепленный URL не найден ни в одной строчке списка.");
         }
       }
 
-      // 2. Кнопка ВПЕРЕД
-      controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
-    }
+      var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    renderPage(currentPage);
+      function renderPage(page) {
+        list.innerHTML = '';
+        var start = (page - 1) * itemsPerPage;
+        var end = start + itemsPerPage;
+        
+        items.slice(start, end).forEach(function(el) {
+          el.style.setProperty('display', 'flex', 'important'); 
+          if (window.location.pathname.includes('/news/')) {
+            el.style.setProperty('display', 'block', 'important');
+          }
+          list.appendChild(el);
+        });
+
+        renderControls();
+      }
+
+      function createButton(text, targetPage, isCurrent, isDisabled) {
+        var btn = document.createElement('button');
+        btn.innerText = text;
+        btn.className = 'page-btn';
+        if (isCurrent) btn.classList.add('active');
+        if (isDisabled) {
+          btn.style.opacity = '0.4';
+          btn.style.cursor = 'default';
+        }
+
+        if (!isDisabled && !isCurrent) {
+          btn.addEventListener('click', function() {
+            currentPage = targetPage;
+            renderPage(currentPage);
+            if (window.location.pathname.includes('/news/')) {
+              window.scrollTo(0, 0); 
+            }
+          });
+        }
+        return btn;
+      }
+
+      function createSeparator() {
+        var span = document.createElement('span');
+        span.innerText = '...';
+        span.style.padding = '6px 4px';
+        span.style.color = '#6a737d';
+        span.style.fontSize = '0.9rem';
+        span.style.fontWeight = '600';
+        span.style.userSelect = 'none';
+        return span;
+      }
+
+      function renderControls() {
+        controls.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
+
+        var maxVisible = 5;
+        if (totalPages <= maxVisible) {
+          for (var i = 1; i <= totalPages; i++) {
+            controls.appendChild(createButton(i, i, i === currentPage, false));
+          }
+        } else {
+          var startPage = Math.max(1, currentPage - 1);
+          var endPage = Math.min(totalPages, currentPage + 1);
+
+          if (currentPage <= 2) { endPage = 3; }
+          if (currentPage >= totalPages - 1) { startPage = totalPages - 2; }
+
+          if (startPage > 1) {
+            controls.appendChild(createButton('1', 1, currentPage === 1, false));
+            if (startPage > 2) controls.appendChild(createSeparator());
+          }
+
+          for (var i = startPage; i <= endPage; i++) {
+            controls.appendChild(createButton(i, i, i === currentPage, false));
+          }
+
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1) controls.appendChild(createSeparator());
+            controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));
+          }
+        }
+
+        controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
+      }
+
+      renderPage(currentPage);
+
+    } catch (error) {
+      // Ловим любую ошибку, не давая скрипту умереть, и выводим её на экран
+      console.error("КРИТИЧЕСКАЯ ОШИБКА ПАГИНАЦИИ:", error);
+      if (debugLog) {
+        debugLog.innerText = "⚠️ Ошибка скрипта: " + error.message + " (см. консоль F12)";
+      }
+    }
   })();
 </script>

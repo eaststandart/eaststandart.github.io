@@ -33,6 +33,10 @@ permalink: /news/
           {% assign section_emoji = "🧍‍♂️" %}
         {% endif %}
 
+        {% comment %} ОПРЕДЕЛЯЕМ АРХИВНЫЕ ЦВЕТА СТРОК ИЗ ТВОЕГО ОРИГИНАЛА {% endcomment %}
+        {% assign text_color = "#3498db" %}
+        {% if is_post %}{% assign text_color = "#bbb" %}{% endif %}
+
         <li class="update-item" 
             data-date="{{ item.date | date: '%Y-%m-%d' }}"
             data-is-post="{{ is_post }}"
@@ -41,7 +45,7 @@ permalink: /news/
           
           <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
           
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px; color: {{ text_color }};">
             {{ item.title }}
           </a>
         </li>
@@ -50,8 +54,5 @@ permalink: /news/
   </ul>
 </div>
 
-<!-- 1. СНАЧАЛА КРАСИМ И СТАВИМ ЭМОДЗИ НА ВСЕ ЭЛЕМЕНТЫ -->
-{% include news-emoji.liquid %}
-
-<!-- 2. СЛЕДОМ ЧИСТЫЙ МОДУЛЬ БЬЕТ ИХ НА СТРАНИЦЫ ПО 10 ШТУК -->
-{% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 %}
+<!-- ЧИСТЫЙ МОДУЛЬ БЬЕТ ИХ НА СТРАНИЦЫ ПО 10 ШТУК -->
+{% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 pinned_url="" %}

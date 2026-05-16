@@ -1,154 +1,203 @@
 <!-- Контейнер для кнопок страниц -->
 <div id="{{ include.controls_id }}" style="margin-top: 25px; display: flex; justify-content: center;"></div>
 
+<!-- Блок вывода инженерных логов прямо на страницу -->
+<div id="pag-debug-panel" style="margin: 15px auto; padding: 15px; max-width: 650px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; color: #856404; font-family: monospace; font-size: 0.85rem; text-align: left; box-sizing: border-box;">
+  <strong style="color: #721c24; font-size: 0.95rem;">⚙️ ЛОГ ОТЛАДКИ СИСТЕМЫ ПАГИНАЦИИ:</strong>
+  <ol id="pag-debug-list" style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.5;"></ol>
+</div>
+
 <script>
   (function() {
-    var listId = "{{ include.list_id }}";
-    var controlsId = "{{ include.controls_id }}";
-    var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
-    var pinnedUrl = "{{ include.pinned_url | default: '' }}";
-
-    var list = document.getElementById(listId);
-    if (!list) return;
-
-    var controls = document.getElementById(controlsId);
-    if (!controls) return;
-
-    // Шаг 1: Собираем абсолютно ВСЕ элементы из Liquid-списка в массив
-    var items = Array.from(list.children);
-    var currentPage = 1;
-
-    // Шаг 2: Хронологическая сортировка ВСЕГО списка по датам в памяти (от новых к старым)
-    items.sort(function(a, b) {
-      var dateA = a.getAttribute('data-date');
-      var dateB = b.getAttribute('data-date');
-      if (dateA && dateB) {
-        return new Date(dateB) - new Date(dateA);
-      }
-      return 0; 
-    });
-
-    // Шаг 3: Изолированная логика закрепления поста на самом верху массива
-    var pinnedItem = null;
-    if (pinnedUrl !== "") {
-      var targetIndex = -1;
-      for (var i = 0; i < items.length; i++) {
-        var aTag = items[i].querySelector('.item-link');
-        if (aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl)) {
-          targetIndex = i;
-          break;
+    var debugList = document.getElementById('pag-debug-list');
+    
+    function addLog(text, isError) {
+      if (debugList) {
+        var li = document.createElement('li');
+        li.innerText = text;
+        if (isError) {
+          li.style.color = '#721c24';
+          li.style.fontWeight = 'bold';
         }
-      }
-
-      if (targetIndex > -1) {
-        pinnedItem = items[targetIndex];
-        pinnedItem.classList.add('pinned-item'); // Добавляем класс для стилизации фона
-        items.splice(targetIndex, 1); // Удаляем из общего массива, чтобы он не дублировался на страницах
+        debugList.appendChild(li);
       }
     }
 
-    // Расчет общего количества страниц (закрепленный пост идет бонусом, поэтому не учитывается)
-    var totalPages = Math.ceil(items.length / itemsPerPage);
+    try {
+      var listId = "{{ include.list_id }}";
+      var controlsId = "{{ include.controls_id }}";
+      var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
+      var pinnedUrl = "{{ include.pinned_url | default: '' }}";
 
-    // Главная функция отрисовки конкретной страницы
-    function renderPage(page) {
-      list.innerHTML = '';
-      
-      // Если задан закрепленный пост — он принудительно выводится ПЕРВЫМ на любой странице
-      if (pinnedItem) {
-        pinnedItem.style.setProperty('display', window.location.pathname.includes('/news/') ? 'block' : 'flex', 'important');
-        list.appendChild(pinnedItem);
+      addLog("Инициализация. Ищем список: '" + listId + "', кнопки: '" + controlsId + "'");
+      addLog("Заданный лимит на страницу (per_page): " + itemsPerPage);
+      addLog("Искомый URL для закрепления: '" + pinnedUrl + "'");
+
+      var list = document.getElementById(listId);
+      if (!list) {
+        addLog("КРИТИЧЕСКАЯ ОШИБКА: Список с ID '" + listId + "' не найден в HTML-коде!", true);
+        return;
       }
 
-      var start = (page - 1) * itemsPerPage;
-      var end = start + itemsPerPage;
-      
-      // Нарезаем и выводим порцию обычных элементов для текущей страницы
-      items.slice(start, end).forEach(function(el) {
-        el.style.setProperty('display', 'flex', 'important'); 
-        if (window.location.pathname.includes('/news/')) {
-          el.style.setProperty('display', 'block', 'important');
+      var controls = document.getElementById(controlsId);
+      if (!controls) {
+        addLog("КРИТИЧЕСКАЯ ОШИБКА: Контейнер кнопок с ID '" + controlsId + "' не найден в HTML-коде!", true);
+        return;
+      }
+
+      var items = Array.from(list.children);
+      addLog("Liquid успешно вывел элементов в дерево HTML: " + items.length);
+
+      if (items.length === 0) {
+        addLog("Предупреждение: Список пуст, сортировка и разбивка отменены.", true);
+        return;
+      }
+
+      // Проверяем наличие дат у первых элементов
+      var sampleDate = items[0] ? items[0].getAttribute('data-date') : null;
+      addLog("Проверка атрибутов. У первого элемента data-date = '" + sampleDate + "'");
+
+      // 1. Сортировка элементов по дате
+      items.sort(function(a, b) {
+        var dateA = a.getAttribute('data-date');
+        var dateB = b.getAttribute('data-date');
+        if (dateA && dateB) {
+          return new Date(dateB) - new Date(dateA);
         }
-        list.appendChild(el);
+        return 0; 
       });
+      addLog("Сортировка по датам в памяти завершена успешно.");
 
-      renderControls();
-    }
-
-    // Вспомогательная функция для создания одной кнопки
-    function createButton(text, targetPage, isCurrent, isDisabled) {
-      var btn = document.createElement('button');
-      btn.innerText = text;
-      btn.className = 'page-btn';
-      if (isCurrent) btn.classList.add('active');
-      if (isDisabled) {
-        btn.style.opacity = '0.4';
-        btn.style.cursor = 'default';
-      }
-
-      if (!isDisabled && !isCurrent) {
-        btn.addEventListener('click', function() {
-          currentPage = targetPage;
-          renderPage(currentPage);
-          if (window.location.pathname.includes('/news/')) {
-            window.scrollTo(0, 0); 
+      // 2. Логика закрепления поста
+      var pinnedItem = null;
+      if (pinnedUrl !== "") {
+        var targetIndex = -1;
+        
+        for (var i = 0; i < items.length; i++) {
+          var aTag = items[i].querySelector('.item-link');
+          var href = aTag ? aTag.getAttribute('href') : null;
+          
+          if (href && href.includes(pinnedUrl)) {
+            targetIndex = i;
+            addLog("УСПЕХ: Закрепляемый пост найден на позиции массива №" + i + " (Заголовок: " + items[i].innerText.trim().split('\n')[0] + ")");
+            break;
           }
+        }
+
+        if (targetIndex > -1) {
+          pinnedItem = items[targetIndex];
+          pinnedItem.classList.add('pinned-item');
+          items.splice(targetIndex, 1);
+          addLog("Закрепленный элемент успешно извлечен из общего хронологического массива.");
+        } else {
+          addLog("Внимание: Ссылка '" + pinnedUrl + "' не совпала ни с одним href в списке.", true);
+        }
+      }
+
+      var totalPages = Math.ceil(items.length / itemsPerPage);
+      addLog("Вычислено страниц для обычных постов (без учета закрепленного): " + totalPages);
+
+      function renderPage(page) {
+        list.innerHTML = '';
+        
+        if (pinnedItem) {
+          pinnedItem.style.setProperty('display', window.location.pathname.includes('/news/') ? 'block' : 'flex', 'important');
+          list.appendChild(pinnedItem);
+        }
+
+        var start = (page - 1) * itemsPerPage;
+        var end = start + itemsPerPage;
+        
+        var pageSlice = items.slice(start, end);
+        addLog("Рендеринг страницы " + page + ". Выводим порцию из " + pageSlice.length + " элементов.");
+
+        pageSlice.forEach(function(el) {
+          el.style.setProperty('display', 'flex', 'important'); 
+          if (window.location.pathname.includes('/news/')) {
+            el.style.setProperty('display', 'block', 'important');
+          }
+          list.appendChild(el);
         });
-      }
-      return btn;
-    }
 
-    // Вспомогательная функция для создания троеточия
-    function createSeparator() {
-      var span = document.createElement('span');
-      span.innerText = '...';
-      span.style.padding = '6px 4px';
-      span.style.color = '#6a737d';
-      span.style.fontSize = '0.9rem';
-      span.style.fontWeight = '600';
-      span.style.userSelect = 'none';
-      return span;
-    }
-
-    // Создание адаптивных кнопок со скользящим окном
-    function renderControls() {
-      controls.innerHTML = '';
-      if (totalPages <= 1) return;
-
-      // Кнопка НАЗАД
-      controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
-
-      var maxVisible = 5;
-      if (totalPages <= maxVisible) {
-        for (var i = 1; i <= totalPages; i++) {
-          controls.appendChild(createButton(i, i, i === currentPage, false));
-        }
-      } else {
-        var startPage = Math.max(1, currentPage - 1);
-        var endPage = Math.min(totalPages, currentPage + 1);
-
-        if (currentPage <= 2) { endPage = 3; }
-        if (currentPage >= totalPages - 1) { startPage = totalPages - 2; }
-
-        if (startPage > 1) {
-          controls.appendChild(createButton('1', 1, currentPage === 1, false));
-          if (startPage > 2) controls.appendChild(createSeparator());
-        }
-
-        for (var i = startPage; i <= endPage; i++) {
-          controls.appendChild(createButton(i, i, i === currentPage, false));
-        }
-
-        if (endPage < totalPages) {
-          if (endPage < totalPages - 1) controls.appendChild(createSeparator());
-          controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));
-        }
+        renderControls();
       }
 
-      // Кнопка ВПЕРЕД
-      controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
-    }
+      function createButton(text, targetPage, isCurrent, isDisabled) {
+        var btn = document.createElement('button');
+        btn.innerText = text;
+        btn.className = 'page-btn';
+        if (isCurrent) btn.classList.add('active');
+        if (isDisabled) {
+          btn.style.opacity = '0.4';
+          btn.style.cursor = 'default';
+        }
 
-    renderPage(currentPage);
+        if (!isDisabled && !isCurrent) {
+          btn.addEventListener('click', function() {
+            currentPage = targetPage;
+            renderPage(currentPage);
+            if (window.location.pathname.includes('/news/')) {
+              window.scrollTo(0, 0); 
+            }
+          });
+        }
+        return btn;
+      }
+
+      function createSeparator() {
+        var span = document.createElement('span');
+        span.innerText = '...';
+        span.style.padding = '6px 4px';
+        span.style.color = '#6a737d';
+        span.style.fontSize = '0.9rem';
+        span.style.fontWeight = '600';
+        span.style.userSelect = 'none';
+        return span;
+      }
+
+      function renderControls() {
+        controls.innerHTML = '';
+        addLog("Запуск функции отрисовки кнопок. Условие (totalPages <= 1) проверено. Значение: " + (totalPages <= 1));
+        if (totalPages <= 1) return;
+
+        controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
+
+        var maxVisible = 5;
+        if (totalPages <= maxVisible) {
+          for (var i = 1; i <= totalPages; i++) {
+            controls.appendChild(createButton(i, i, i === currentPage, false));
+          }
+        } else {
+          var startPage = Math.max(1, currentPage - 1);
+          var endPage = Math.min(totalPages, currentPage + 1);
+
+          if (currentPage <= 2) { endPage = 3; }
+          if (currentPage >= totalPages - 1) { startPage = totalPages - 2; }
+
+          if (startPage > 1) {
+            controls.appendChild(createButton('1', 1, currentPage === 1, false));
+            if (startPage > 2) controls.appendChild(createSeparator());
+          }
+
+          for (var i = startPage; i <= endPage; i++) {
+            controls.appendChild(createButton(i, i, i === currentPage, false));
+          }
+
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1) controls.appendChild(createSeparator());
+            controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));
+          }
+        }
+
+        controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
+        addLog("Кнопки пагинации успешно добавлены в HTML-контейнер.");
+      }
+
+      renderPage(currentPage);
+
+    } catch (gError) {
+      addLog("ФАТАЛЬНЫЙ СБОЙ ВНУТРИ СКРИПТА: " + gError.message, true);
+      console.error(gError);
+    }
   })();
 </script>

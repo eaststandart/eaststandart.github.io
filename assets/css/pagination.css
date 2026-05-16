@@ -108,16 +108,16 @@
 
 /* 1. ЦВЕТА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Внутри карточки обновлений) */
 #live-updates-list .update-item[data-is-post="true"] .item-link {
-    color: #586069 !important; /* Твой оригинальный серый для постов */
+    color: #586069 !important; /* Серый для постов на главной */
 }
 #live-updates-list .update-item[data-is-post="false"] .item-link {
-    color: #0366d6 !important; /* Твой оригинальный синий для проектов/страниц */
+    color: #0366d6 !important; /* Синий для проектов/страниц на главной */
 }
 
-/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ */
+/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ (СИНХРОНИЗИРОВАНО С ГЛАВНОЙ) */
 .updates-feed #live-updates-list .update-item[data-is-post="true"] .item-link {
-    color: #bbb !important;    /* Твой оригинальный архивный серый */
+    color: #586069 !important; /* ИСПРАВЛЕНО: Теперь точно такой же плотный серый, как на главной */
 }
 .updates-feed #live-updates-list .update-item[data-is-post="false"] .item-link {
-    color: #3498db !important; /* Твой оригинальный архивный синий */
+    color: #3498db !important; /* Твой оригинальный архивный синий (оставляем для контраста с линиями) */
 }

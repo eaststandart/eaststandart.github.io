@@ -62,11 +62,11 @@
    ========================================================================= */
 @media (max-width: 900px) {
     .category-card.site-news #live-updates-list {
-        margin-bottom: 12px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
+        margin-bottom: 10px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
     }
 
     #home-news-pagination.pagination-container {
-        margin-bottom: -5px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
+        margin-bottom: -10px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
     .page-btn {

@@ -14,11 +14,11 @@
     var controls = document.getElementById(controlsId);
     if (!controls) return;
 
+    // Шаг 1: Собираем абсолютно ВСЕ элементы из Liquid-списка в массив
     var items = Array.from(list.children);
     var currentPage = 1;
-    var pinnedItem = null;
 
-    // 1. Сортировка элементов по дате
+    // Шаг 2: Хронологическая сортировка ВСЕГО списка по датам в памяти (от новых к старым)
     items.sort(function(a, b) {
       var dateA = a.getAttribute('data-date');
       var dateB = b.getAttribute('data-date');
@@ -28,28 +28,33 @@
       return 0; 
     });
 
-    // 2. Вытаскиваем закрепленный пост из общего массива, чтобы он не участвовал в разбивке по страницам
+    // Шаг 3: Изолированная логика закрепления поста на самом верху массива
+    var pinnedItem = null;
     if (pinnedUrl !== "") {
-      var targetIndex = items.findIndex(function(el) {
-        var aTag = el.querySelector('.item-link');
-        return aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl);
-      });
+      var targetIndex = -1;
+      for (var i = 0; i < items.length; i++) {
+        var aTag = items[i].querySelector('.item-link');
+        if (aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl)) {
+          targetIndex = i;
+          break;
+        }
+      }
 
       if (targetIndex > -1) {
-        pinnedItem = items.splice(targetIndex, 1)[0];
-        if (pinnedItem) {
-          pinnedItem.classList.add('pinned-item');
-        }
+        pinnedItem = items[targetIndex];
+        pinnedItem.classList.add('pinned-item'); // Добавляем класс для стилизации фона
+        items.splice(targetIndex, 1); // Удаляем из общего массива, чтобы он не дублировался на страницах
       }
     }
 
-    // Расчет страниц ведется без учета закрепленного поста (он идет бонусом)
+    // Расчет общего количества страниц (закрепленный пост идет бонусом, поэтому не учитывается)
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
+    // Главная функция отрисовки конкретной страницы
     function renderPage(page) {
       list.innerHTML = '';
       
-      // Если есть закрепленный пост — он ВСЕГДА выводится самым первым на любой странице
+      // Если задан закрепленный пост — он принудительно выводится ПЕРВЫМ на любой странице
       if (pinnedItem) {
         pinnedItem.style.setProperty('display', window.location.pathname.includes('/news/') ? 'block' : 'flex', 'important');
         list.appendChild(pinnedItem);
@@ -58,7 +63,7 @@
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
       
-      // Выводим порцию обычных постов для текущей страницы
+      // Нарезаем и выводим порцию обычных элементов для текущей страницы
       items.slice(start, end).forEach(function(el) {
         el.style.setProperty('display', 'flex', 'important'); 
         if (window.location.pathname.includes('/news/')) {
@@ -70,6 +75,7 @@
       renderControls();
     }
 
+    // Вспомогательная функция для создания одной кнопки
     function createButton(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
       btn.innerText = text;
@@ -92,6 +98,7 @@
       return btn;
     }
 
+    // Вспомогательная функция для создания троеточия
     function createSeparator() {
       var span = document.createElement('span');
       span.innerText = '...';
@@ -103,10 +110,12 @@
       return span;
     }
 
+    // Создание адаптивных кнопок со скользящим окном
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;
 
+      // Кнопка НАЗАД
       controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
 
       var maxVisible = 5;
@@ -136,6 +145,7 @@
         }
       }
 
+      // Кнопка ВПЕРЕД
       controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
     }
 

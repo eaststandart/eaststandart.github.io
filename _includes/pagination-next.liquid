@@ -1,0 +1,34 @@
+<script>
+  (function() {
+    var listId = "{{ include.list_id }}";
+    var pinnedUrl = "{{ include.pinned_url | default: '' }}";
+
+    if (pinnedUrl !== "") {
+      var list = document.getElementById(listId);
+      if (!list) return;
+
+      var items = Array.from(list.children);
+      
+      // Ищем элемент, ссылка внутри которого содержит pinned_url
+      var pinnedItem = items.find(function(el) {
+        var aTag = el.querySelector('.item-link');
+        return aTag && aTag.getAttribute('href').includes(pinnedUrl);
+      });
+
+      // Если нашли — принудительно переносим в самый верх HTML-списка и вешаем класс
+      if (pinnedItem) {
+        pinnedItem.classList.add('pinned-item');
+        list.insertBefore(pinnedItem, list.firstChild);
+        
+        // Ставим маркер-обманку для старого скрипта, чтобы он не утащил её вниз при сортировке
+        var highDate = "9999-12-31";
+        pinnedItem.setAttribute('data-date', highDate);
+      }
+    }
+  })();
+</script>
+
+{% comment %} 
+  Вызываем твой оригинальный файл пагинации, передавая ему все пришедшие параметры 
+{% endcomment %}
+{% include pagination.liquid list_id=include.list_id controls_id=include.controls_id per_page=include.per_page %}

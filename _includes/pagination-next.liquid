@@ -1,3 +1,13 @@
+{% comment %} 
+  1. СНАЧАЛА вызываем твой оригинальный файл пагинации.
+  Он спокойно сортирует элементы, режет по 10 штук и рисует кнопки.
+{% endcomment %}
+{% include pagination.liquid list_id=include.list_id controls_id=include.controls_id per_page=include.per_page %}
+
+{% comment %} 
+  2. ТЕПЕРЬ запускается наш перехватчик и делает рокировку прямо на экране,
+  когда оригинальный скрипт уже завершил свою работу.
+{% endcomment %}
 <script>
   (function() {
     var listId = "{{ include.list_id }}";
@@ -7,28 +17,18 @@
       var list = document.getElementById(listId);
       if (!list) return;
 
+      // Ищем закрепленный элемент среди тех 10 штук, которые вывелись на текущей странице
       var items = Array.from(list.children);
-      
-      // Ищем элемент, ссылка внутри которого содержит pinned_url
       var pinnedItem = items.find(function(el) {
         var aTag = el.querySelector('.item-link');
         return aTag && aTag.getAttribute('href').includes(pinnedUrl);
       });
 
-      // Если нашли — принудительно переносим в самый верх HTML-списка и вешаем класс
+      // Если нашли закрепленный пост на текущей странице — просто двигаем его наверх
       if (pinnedItem) {
-        pinnedItem.classList.add('pinned-item');
-        list.insertBefore(pinnedItem, list.firstChild);
-        
-        // Ставим маркер-обманку для старого скрипта, чтобы он не утащил её вниз при сортировке
-        var highDate = "9999-12-31";
-        pinnedItem.setAttribute('data-date', highDate);
+        pinnedItem.classList.add('pinned-item'); // Вешаем класс подсветки
+        list.insertBefore(pinnedItem, list.firstChild); // Двигаем на самый верх
       }
     }
   })();
 </script>
-
-{% comment %} 
-  Вызываем твой оригинальный файл пагинации, передавая ему все пришедшие параметры 
-{% endcomment %}
-{% include pagination.liquid list_id=include.list_id controls_id=include.controls_id per_page=include.per_page %}

@@ -9,7 +9,7 @@
 /* Заставляем список обновлений забирать всё свободное место, отталкивая кнопки вниз */
 .category-card.site-news #live-updates-list {
     flex-grow: 1 !important;
-    margin-bottom: 10px !important; /* ЖЕСТКИЙ ОТСТУП: зазор от текста до кнопок на ПК */
+    margin-bottom: 15px !important; /* ЖЕСТКИЙ ОТСТУП: зазор от текста до кнопок на ПК */
 }
 
 /* ==========================================================================
@@ -23,7 +23,7 @@
     align-items: center;
     box-sizing: border-box;
     margin-top: 0px !important;     /* Теперь зазор регулируется через маргин списка выше */
-    margin-bottom: -20px !important;  
+    margin-bottom: 0px !important;  
 }
 
 /* Обычные кнопки */

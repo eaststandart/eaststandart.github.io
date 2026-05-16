@@ -43,7 +43,7 @@ permalink: /news/
             data-emoji="{{ section_emoji }}"
             style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
           
-          <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
+          <small class="update-date">{{ item.date | date: "%d.%m.%Y" }}</small>
           
           <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px; color: {{ text_color }};">
             {{ item.title }}

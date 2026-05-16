@@ -121,3 +121,9 @@
 .updates-feed #live-updates-list .update-item[data-is-post="false"] .item-link {
     color: #3498db !important; /* Твой оригинальный архивный синий (оставляем для контраста с линиями) */
 }
+
+.update-item .update-date {
+    color: #6a737d !important;     /* Единый сбалансированный серый цвет для дат */
+    font-family: monospace !important; /* Четкий технический шрифт */
+    flex-shrink: 0;
+}

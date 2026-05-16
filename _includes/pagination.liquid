@@ -27,22 +27,21 @@
       return 0; 
     });
 
-    // ДОБАВЛЕНО: Логика закрепления новости наверху списка
+    // ДОБАВЛЕНО БЕЗОПАСНО: Логика закрепления новости наверху списка
     if (pinnedUrl !== "") {
       var pinnedIndex = items.findIndex(function(el) {
         var aTag = el.querySelector('.item-link');
         if (aTag) {
-          // Проверяем совпадение относительного или полного URL адреса
           return aTag.getAttribute('href').includes(pinnedUrl);
         }
         return false;
       });
 
-      // Если новость найдена — переносим её на индекс 0 и вешаем класс
+      // ИСПРАВЛЕНО: Извлекаем именно сам элемент [0], чтобы не ломать скрипт
       if (pinnedIndex > -1) {
-        var pinnedItem = items.splice(pinnedIndex, 1)[0];
-        pinnedItem.classList.add('pinned-item'); // Класс для подсветки фона в CSS
-        items.unshift(pinnedItem);
+        var pinnedItem = items.splice(pinnedIndex, 1)[0]; 
+        pinnedItem.classList.add('pinned-item'); // Добавляем класс подсветки
+        items.unshift(pinnedItem); // Ставим на индекс 0
       }
     }
 

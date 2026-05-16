@@ -55,4 +55,4 @@ permalink: /news/
 </div>
 
 <!-- ЧИСТЫЙ МОДУЛЬ БЬЕТ ИХ НА СТРАНИЦЫ ПО 10 ШТУК -->
-{% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 pinned_url="" %}
+{% include pagination.liquid list_id="live-updates-list" controls_id="news-pagination" per_page=10 pinned_url="/faire/sputnik-1/" %}

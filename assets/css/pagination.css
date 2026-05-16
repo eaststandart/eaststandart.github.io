@@ -71,7 +71,7 @@
 
     .page-btn {
         padding: 5px 10px;
-        margin: 0 0px;
+        margin: 0 3px;
         font-size: 0.85rem;
         border-radius: 5px;
     }
@@ -91,7 +91,7 @@
 
     .page-btn {
         padding: 4px 8px;
-        margin: 0 0px;
+        margin: 0 2px;
         font-size: 0.8rem;
     }
 }

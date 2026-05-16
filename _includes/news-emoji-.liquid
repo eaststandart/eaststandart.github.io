@@ -1,8 +1,6 @@
 <script>
   (function() {
     var list = document.getElementById('live-updates-list');
-    if (!list) return;
-    
     var items = Array.from(list.getElementsByClassName('update-item'));
 
     items.sort(function(a, b) {
@@ -10,14 +8,12 @@
     });
 
     list.innerHTML = '';
-    // ИСПРАВЛЕНО: Используем forEach для ВСЕХ элементов контента
+    // ИСПРАВЛЕНО: Убрали .slice(0, 10), чтобы скрипт обрабатывал ВСЕ переданные элементы
     items.forEach(function(el) {
       var isPost = el.getAttribute('data-is-post') === 'true';
       var emoji = el.getAttribute('data-emoji'); 
       var link = el.querySelector('.item-link');
       
-      if (!link) return;
-
       if (isPost) {
         link.style.color = '#586069'; 
       } else {

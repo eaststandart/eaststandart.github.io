@@ -16,8 +16,9 @@
 
     var items = Array.from(list.children);
     var currentPage = 1;
+    var pinnedItem = null;
 
-    // 1. Твоя оригинальная сортировка элементов по дате
+    // 1. Сортировка элементов по дате
     items.sort(function(a, b) {
       var dateA = a.getAttribute('data-date');
       var dateB = b.getAttribute('data-date');
@@ -27,35 +28,37 @@
       return 0; 
     });
 
-    // 2. БЕЗОПАСНОЕ ЗАКРЕПЛЕНИЕ: Рокировка элемента в массиве
+    // 2. Вытаскиваем закрепленный пост из общего массива, чтобы он не участвовал в разбивке по страницам
     if (pinnedUrl !== "") {
-      var targetIndex = -1;
-      
-      for (var i = 0; i < items.length; i++) {
-        var aTag = items[i].querySelector('.item-link');
-        if (aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl)) {
-          targetIndex = i;
-          break;
-        }
-      }
+      var targetIndex = items.findIndex(function(el) {
+        var aTag = el.querySelector('.item-link');
+        return aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl);
+      });
 
       if (targetIndex > -1) {
-        var pinnedItem = items[targetIndex];
-        pinnedItem.classList.add('pinned-item'); // Класс подсветки для CSS
-        
-        items.splice(targetIndex, 1);
-        items.unshift(pinnedItem);
+        pinnedItem = items.splice(targetIndex, 1)[0];
+        if (pinnedItem) {
+          pinnedItem.classList.add('pinned-item');
+        }
       }
     }
 
+    // Расчет страниц ведется без учета закрепленного поста (он идет бонусом)
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Твоя оригинальная функция отрисовки конкретной страницы
     function renderPage(page) {
       list.innerHTML = '';
+      
+      // Если есть закрепленный пост — он ВСЕГДА выводится самым первым на любой странице
+      if (pinnedItem) {
+        pinnedItem.style.setProperty('display', window.location.pathname.includes('/news/') ? 'block' : 'flex', 'important');
+        list.appendChild(pinnedItem);
+      }
+
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
       
+      // Выводим порцию обычных постов для текущей страницы
       items.slice(start, end).forEach(function(el) {
         el.style.setProperty('display', 'flex', 'important'); 
         if (window.location.pathname.includes('/news/')) {
@@ -67,7 +70,6 @@
       renderControls();
     }
 
-    // Твоя оригинальная вспомогательная функция для создания одной кнопки
     function createButton(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
       btn.innerText = text;
@@ -90,7 +92,6 @@
       return btn;
     }
 
-    // Твоя оригинальная вспомогательная функция для создания троеточия
     function createSeparator() {
       var span = document.createElement('span');
       span.innerText = '...';
@@ -102,7 +103,6 @@
       return span;
     }
 
-    // Твоя оригинальная функция создания кнопок пагинации со скользящим окном
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;

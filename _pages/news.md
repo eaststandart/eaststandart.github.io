@@ -34,10 +34,11 @@ permalink: /news/
         </li>
       {% endif %}
     {% endfor %}
-    {% comment %} 2. Цикл для коллекции Людей — очищен от ручных эмодзи {% endcomment %}
+
+    {% comment %} 2. Цикл для коллекции Людей — человечка пишем напрямую в data-emoji {% endcomment %}
     {% for person in site.people %}
       {% if person.date %}
-        <li class="update-item" data-date="{{ person.date | date: '%Y-%m-%d' }}" data-is-post="false" data-emoji="" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+        <li class="update-item" data-date="{{ person.date | date: '%Y-%m-%d' }}" data-is-post="false" data-emoji="🧍‍♂️" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
           <small style="color: #888;">{{ person.date | date: "%d.%m.%Y" }}</small>
           <a href="{{ person.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
             {{ person.title }}
@@ -45,6 +46,7 @@ permalink: /news/
         </li>
       {% endif %}
     {% endfor %}
+
   </ul>
 </div>
 

@@ -4,7 +4,7 @@ description: Развитие навыков конструирования ре
 title: Яблоневое дерево
 tags: [электроникаисхемотехника, проектучебный, 1класс, проект, яблоневоедерево]
 sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
-date: 2026-05-08
+date: 2026-05-16
 permalink: /faire/yablonevoe-derevo/
 ---
   

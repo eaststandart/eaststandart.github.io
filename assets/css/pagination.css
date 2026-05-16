@@ -101,3 +101,23 @@
         font-size: 0.8rem;
     }
 }
+
+/* ==========================================================================
+   РАСКРАСКА ССЫЛОК НОВОСТЕЙ СИЛАМИ ЧИСТОГО CSS
+   ========================================================================== */
+
+/* 1. ЦВЕТА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Внутри карточки обновлений) */
+#live-updates-list .update-item[data-is-post="true"] .item-link {
+    color: #586069 !important; /* Твой оригинальный серый для постов */
+}
+#live-updates-list .update-item[data-is-post="false"] .item-link {
+    color: #0366d6 !important; /* Твой оригинальный синий для проектов/страниц */
+}
+
+/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ */
+.updates-feed #live-updates-list .update-item[data-is-post="true"] .item-link {
+    color: #bbb !important;    /* Твой оригинальный архивный серый */
+}
+.updates-feed #live-updates-list .update-item[data-is-post="false"] .item-link {
+    color: #3498db !important; /* Твой оригинальный архивный синий */
+}

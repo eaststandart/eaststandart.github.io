@@ -48,7 +48,7 @@
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // 3. Функция отрисовки страницы с жестким контролем количества строк и выводом эмодзи
+     // 3. Функция отрисовки страницы с контролем лимита и выводом эмодзи (Цвета убраны в CSS)
     function renderPage(page) {
       list.innerHTML = '';
       var isArchive = window.location.pathname.includes('/news/');
@@ -60,16 +60,14 @@
       if (pinnedItem) {
         pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
         
-        // Читаем и приклеиваем эмодзи для закрепленного поста
         var pinnedLink = pinnedItem.querySelector('.item-link');
         var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
+        
         if (pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
           pinnedLink.innerHTML += ' ' + pinnedEmoji;
         }
         
         list.appendChild(pinnedItem);
-        
-        // Раз одно место занято закрепом, обычных постов берем на один меньше
         currentLimit = itemsPerPage - 1;
       }
 
@@ -78,7 +76,6 @@
       
       // Нарезаем и выводим обычные посты
       items.slice(start, end).forEach(function(el) {
-        // Читаем и приклеиваем эмодзи для каждой обычной строки
         var emoji = el.getAttribute('data-emoji');
         var link = el.querySelector('.item-link');
         

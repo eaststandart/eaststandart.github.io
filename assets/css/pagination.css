@@ -137,5 +137,5 @@
 */
 .updates-feed .update-item .update-date {
     color: #888 !important;         /* Твой прежний оригинальный цвет */
-    font-size: 0.8rem !important;   /* УМЕНЬШИЛИ: шрифт стал изящным и мелким в архиве */
+    font-size: 0.85rem !important;   /* УМЕНЬШИЛИ: шрифт стал изящным и мелким в архиве */
 }

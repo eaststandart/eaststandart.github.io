@@ -6,7 +6,6 @@
     var listId = "{{ include.list_id }}";
     var controlsId = "{{ include.controls_id }}";
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
-    var pinnedUrl = "{{ include.pinned_url | default: '' }}"; // Принимаем URL для закрепления
 
     var list = document.getElementById(listId);
     if (!list) return;
@@ -17,7 +16,7 @@
     var items = Array.from(list.children);
     var currentPage = 1;
 
-    // 1. Твоя оригинальная сортировка элементов по дате
+    // Сортировка элементов по дате
     items.sort(function(a, b) {
       var dateA = a.getAttribute('data-date');
       var dateB = b.getAttribute('data-date');
@@ -27,27 +26,8 @@
       return 0; 
     });
 
-    // 2. УНИВЕРСАЛЬНАЯ РОКИРОВКА: Ищем и закрепляем пост на самом верху массива в памяти
-    if (pinnedUrl !== "") {
-      var pinnedIndex = items.findIndex(function(el) {
-        var aTag = el.querySelector('.item-link');
-        return aTag && aTag.getAttribute('href').includes(pinnedUrl);
-      });
-
-      if (pinnedIndex > -1) {
-        // ИСПРАВЛЕНО: Забираем именно элемент [0], извлекая его из массива splice
-        var pinnedItem = items.splice(pinnedIndex, 1)[0]; 
-        
-        if (pinnedItem) {
-          pinnedItem.classList.add('pinned-item'); // Класс для подсветки фона в CSS
-          items.unshift(pinnedItem);               /* Ставим строго на первую позицию (индекс 0) */
-        }
-      }
-    }
-
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Твоя оригинальная функция отрисовки конкретной страницы
     function renderPage(page) {
       list.innerHTML = '';
       var start = (page - 1) * itemsPerPage;
@@ -64,7 +44,7 @@
       renderControls();
     }
 
-    // Твоя оригинальная вспомогательная функция для создания одной кнопки
+    // Вспомогательная функция для создания одной кнопки
     function createButton(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
       btn.innerText = text;
@@ -87,7 +67,7 @@
       return btn;
     }
 
-    // Твоя оригинальная вспомогательная функция для создания троеточия
+    // Вспомогательная функция для создания троеточия
     function createSeparator() {
       var span = document.createElement('span');
       span.innerText = '...';
@@ -99,7 +79,6 @@
       return span;
     }
 
-    // Твоя оригинальная функция создания кнопок пагинации со скользящим окном
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;
@@ -107,16 +86,19 @@
       // 1. Кнопка НАЗАД
       controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
 
-      // Расчет диапазона
+      // ИНЖЕНЕРНЫЙ РАСЧЕТ ДИАПАЗОНА (Выводим не более 5 кнопок страниц за раз)
       var maxVisible = 5;
       if (totalPages <= maxVisible) {
+        // Если всего страниц мало (например, до 5), выводим их все обычным рядом
         for (var i = 1; i <= totalPages; i++) {
           controls.appendChild(createButton(i, i, i === currentPage, false));
         }
       } else {
+        // Если страниц много (больше 5), включаем умное скользящее окно
         var startPage = Math.max(1, currentPage - 1);
         var endPage = Math.min(totalPages, currentPage + 1);
 
+        // Корректируем границы, чтобы всегда показывать блок из 3 центральных кнопок
         if (currentPage <= 2) {
           endPage = 3;
         }
@@ -124,15 +106,18 @@
           startPage = totalPages - 2;
         }
 
+        // Всегда выводим самую первую страницу
         if (startPage > 1) {
           controls.appendChild(createButton('1', 1, currentPage === 1, false));
           if (startPage > 2) controls.appendChild(createSeparator());
         }
 
+        // Выводим центральный рабочий блок кнопок
         for (var i = startPage; i <= endPage; i++) {
           controls.appendChild(createButton(i, i, i === currentPage, false));
         }
 
+        // Всегда выводим самую последнюю страницу
         if (endPage < totalPages) {
           if (endPage < totalPages - 1) controls.appendChild(createSeparator());
           controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));

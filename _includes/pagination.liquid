@@ -48,7 +48,7 @@
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // 3. Функция отрисовки страницы с жестким контролем количества строк
+    // 3. Функция отрисовки страницы с жестким контролем количества строк и выводом эмодзи
     function renderPage(page) {
       list.innerHTML = '';
       var isArchive = window.location.pathname.includes('/news/');
@@ -59,6 +59,14 @@
       // Если задан закрепленный пост — выводим его первым
       if (pinnedItem) {
         pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
+        
+        // Читаем и приклеиваем эмодзи для закрепленного поста
+        var pinnedLink = pinnedItem.querySelector('.item-link');
+        var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
+        if (pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
+          pinnedLink.innerHTML += ' ' + pinnedEmoji;
+        }
+        
         list.appendChild(pinnedItem);
         
         // Раз одно место занято закрепом, обычных постов берем на один меньше
@@ -70,6 +78,14 @@
       
       // Нарезаем и выводим обычные посты
       items.slice(start, end).forEach(function(el) {
+        // Читаем и приклеиваем эмодзи для каждой обычной строки
+        var emoji = el.getAttribute('data-emoji');
+        var link = el.querySelector('.item-link');
+        
+        if (link && emoji && !link.innerHTML.includes(emoji)) {
+          link.innerHTML += ' ' + emoji;
+        }
+
         el.style.setProperty('display', isArchive ? 'block' : 'flex', 'important'); 
         list.appendChild(el);
       });

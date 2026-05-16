@@ -1,27 +1,8 @@
 <!-- Контейнер для кнопок страниц -->
 <div id="{{ include.controls_id }}" style="margin-top: 25px; display: flex; justify-content: center;"></div>
 
-<!-- Инженерная панель отладки прямо на экране сайта -->
-<div id="pag-debug" style="margin: 15px auto; padding: 12px; max-width: 600px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; color: #856404; font-family: monospace; font-size: 0.8rem; text-align: left; display: none;">
-  <strong style="color: #721c24;">⚙️ ОТЛАДКА ЗАКРЕПЛЕНИЯ ПОСТОВ:</strong>
-  <ol id="pag-debug-steps" style="margin: 8px 0 0 0; padding-left: 20px; line-height: 1.4;"></ol>
-</div>
-
 <script>
   (function() {
-    // Функция для вывода логов на экран
-    function logDebug(message, isError) {
-      var panel = document.getElementById('pag-debug');
-      var list = document.getElementById('pag-debug-steps');
-      if (panel && list) {
-        panel.style.display = 'block';
-        var li = document.createElement('li');
-        li.innerText = message;
-        if (isError) li.style.color = '#721c24';
-        list.appendChild(li);
-      }
-    }
-
     var listId = "{{ include.list_id }}";
     var controlsId = "{{ include.controls_id }}";
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
@@ -46,56 +27,30 @@
       return 0; 
     });
 
-    // 2. ИЗОЛИРОВАННЫЙ БЛОК ЗАКРЕПЛЕНИЯ С ПРЕДОХРАНИТЕЛЕМ ОТ ПАДЕНИЯ
+    // 2. БЕЗОПАСНОЕ ЗАКРЕПЛЕНИЕ: Рокировка элемента в массиве
     if (pinnedUrl !== "") {
-      try {
-        logDebug("Запущена проверка. Ищем URL: " + pinnedUrl);
-        logDebug("Всего элементов в списке найдено: " + items.length);
+      var targetIndex = -1;
+      
+      for (var i = 0; i < items.length; i++) {
+        var aTag = items[i].querySelector('.item-link');
+        if (aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl)) {
+          targetIndex = i;
+          break;
+        }
+      }
+
+      if (targetIndex > -1) {
+        var pinnedItem = items[targetIndex];
+        pinnedItem.classList.add('pinned-item'); // Класс подсветки для CSS
         
-        var targetIndex = -1;
-
-        for (var i = 0; i < items.length; i++) {
-          var el = items[i];
-          var aTag = el.querySelector('.item-link');
-          
-          if (!aTag) {
-            logDebug("Строка №" + i + " не содержит класса .item-link", true);
-            continue;
-          }
-
-          var href = aTag.getAttribute('href');
-          if (!href) {
-            logDebug("Строка №" + i + " содержит тег <a>, но у него нет атрибута href", true);
-            continue;
-          }
-
-          if (href.includes(pinnedUrl)) {
-            targetIndex = i;
-            logDebug("УСПЕХ! Элемент найден в массиве на позиции (индекс): " + i);
-            break;
-          }
-        }
-
-        if (targetIndex > -1) {
-          var pinnedItem = items[targetIndex];
-          pinnedItem.classList.add('pinned-item');
-          
-          // Безопасная перестановка в массиве
-          items.splice(targetIndex, 1);
-          items.unshift(pinnedItem);
-          logDebug("Элемент успешно перемещен на самую первую строчку (индекс 0).");
-        } else {
-          logDebug("Внимание: Закрепляемый URL '" + pinnedUrl + "' не найден ни в одной из существующих строк.", true);
-        }
-
-      } catch (pinnedError) {
-        // Если блок закрепления ломается, этот перехватчик спасет кнопки навигации от исчезновения
-        logDebug("КРИТИЧЕСКИЙ СБОЙ ВНУТРИ ЦИКЛА: " + pinnedError.message, true);
+        items.splice(targetIndex, 1);
+        items.unshift(pinnedItem);
       }
     }
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
+    // Твоя оригинальная функция отрисовки конкретной страницы
     function renderPage(page) {
       list.innerHTML = '';
       var start = (page - 1) * itemsPerPage;
@@ -112,6 +67,7 @@
       renderControls();
     }
 
+    // Твоя оригинальная вспомогательная функция для создания одной кнопки
     function createButton(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
       btn.innerText = text;
@@ -134,6 +90,7 @@
       return btn;
     }
 
+    // Твоя оригинальная вспомогательная функция для создания троеточия
     function createSeparator() {
       var span = document.createElement('span');
       span.innerText = '...';
@@ -145,6 +102,7 @@
       return span;
     }
 
+    // Твоя оригинальная функция создания кнопок пагинации со скользящим окном
     function renderControls() {
       controls.innerHTML = '';
       if (totalPages <= 1) return;

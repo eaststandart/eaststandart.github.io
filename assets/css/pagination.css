@@ -23,7 +23,7 @@
     align-items: center;
     box-sizing: border-box;
     margin-top: 0px !important;     /* Теперь зазор регулируется через маргин списка выше */
-    margin-bottom: 0px !important;  
+    margin-bottom: -10px !important;  
 }
 
 /* Обычные кнопки */

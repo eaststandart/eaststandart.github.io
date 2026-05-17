@@ -59,9 +59,9 @@
 }
 
 .page-btn.active {
-    background-color: #3498db !important;
+    background-color: #0366d6 !important;
     color: #fff !important;
-    border-color: #3498db !important;
+    border-color: #0366d6 !important;
     cursor: default;
 }
 

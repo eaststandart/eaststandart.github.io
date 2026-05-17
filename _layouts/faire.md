@@ -1,6 +1,6 @@
 ---
 layout: default
-layout_css: "/assets/css/faire.css"
+custom_css: "/assets/css/faire.css"
 ---
 
 {{ content }}

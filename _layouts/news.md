@@ -1,6 +1,6 @@
 ---
 layout: default
-layout_css: "/assets/css/pagination.css"
+custom_css: "/assets/css/pagination.css"
 ---
 
 {% comment %} 

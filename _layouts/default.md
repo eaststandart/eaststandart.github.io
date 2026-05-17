@@ -13,16 +13,11 @@
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
-    <!-- ... БАЗОВЫЕ СТИЛИ ... -->
+    <!-- ... БАЗОВЫЕ СТИЛИ ДЛЯ ВСЕГО САЙТА ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 
-    <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ПОДКЛЮЧЕНИЯ СТИЛЕЙ ИЗ ДОЧЕРНИХ ШАБЛОНОВ -->
-    {% if layout.layout_css %}
-      <link rel="stylesheet" href="{{ layout.layout_css | relative_url }}">
-    {% endif %}
-
-    <!-- ИСПРАВЛЕНО: СТИЛИ КОНКРЕТНОЙ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКОГО ШАБЛОНА -->
+    <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->
     {% if page.custom_css %}
       {% for style in page.custom_css %}
         <link rel="stylesheet" href="{{ style | relative_url }}">

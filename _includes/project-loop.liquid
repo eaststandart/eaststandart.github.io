@@ -1,27 +1,39 @@
-{% assign all_content = site.posts | concat: site.pages | concat: site.people %}
-{% assign target_folders = include.folder | split: "," %}
+{% comment %} 
+=============================================================================
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ ПРОЕКТА (_includes/project-loop.liquid)
+Назначение: Автоматически собирает посты конкретного робота из папки _posts.
+Применяется: На внутренних страницах проектов (Журнал проекта и Галерея).
+Параметры: 
+  - include.folder (имя папки робота в пути файла).
+  - include.category (journal или media для разделения блоков).
+=============================================================================
+{% endcomment %}
 
-{% for item in all_content %}
-  {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
+<ul class="project-list" style="list-style: none; padding: 0; margin: 0;">
+  
+  {% comment %} Ссылка на общую страницу Журнала или Медиа без всяких фильтров {% endcomment %}
+  <li style="margin-bottom: 12px;">
+    {% if include.category == "journal" %}
+      <a href="{{ '/journal/' | relative_url }}" style="font-weight: bold; color: var(--card-tech);">
+        <strong>Весь журнал проекта →</strong>
+      </a>
+    {% else %}
+      <a href="#смотреть-все-галерея" style="font-weight: bold; color: var(--card-my);">
+        <strong>Смотреть всю галерею →</strong>
+      </a>
+    {% endif %}
+  </li>
+
+  {% comment %} Перебираем стандартные посты сайта {% endcomment %}
+  {% for item in site.posts %}
     
-    {% comment %} 
-      1. ЛОГИКА ФИЛЬТРАЦИИ ПО ПАПКАМ И КАТЕГОРИЯМ
-    {% endcomment %}
-    {% assign is_allowed = true %}
-    
-    <!-- Проверка папки/пути -->
-    {% if include.folder and include.folder != "" %}
-      {% assign is_allowed = false %}
-      {% for folder_name in target_folders %}
-        {% assign clean_folder = folder_name | strip %}
-        {% if item.path contains clean_folder or item.url contains clean_folder %}
-          {% assign is_allowed = true %}
-          {% break %}
-        {% endif %}
-      {% endfor %}
+    {% comment %} 1. Проверяем, относится ли пост к папке этого конкретного робота {% endcomment %}
+    {% assign is_allowed = false %}
+    {% if item.path contains include.folder or item.url contains include.folder %}
+      {% assign is_allowed = true %}
     {% endif %}
 
-    <!-- Проверка категории поста (journal или media) -->
+    {% comment %} 2. Проверяем категорию поста (journal или media) {% endcomment %}
     {% if is_allowed and include.category and include.category != "" %}
       {% assign is_allowed = false %}
       {% if item.categories contains include.category %}
@@ -29,43 +41,18 @@
       {% endif %}
     {% endif %}
 
+    {% comment %} 3. Если все проверки пройдены — выводим компактную строку {% endcomment %}
     {% if is_allowed %}
-    
-      {% assign is_post = false %}
-      {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
-      
-      {% comment %} Автоматическое вычисление эмодзи раздела {% endcomment %}
-      {% assign url_parts = item.url | split: "/" %}
-      {% assign first_folder = url_parts %}
-      {% assign item_section = "/" | append: first_folder | append: "/" %}
-      
-      {% if item.path contains '_posts' %}
-        {% assign first_cat = item.categories | first %}
-        {% assign item_section = "/" | append: first_cat | append: "/" %}
-      {% endif %}
-      
-      {% assign parent_page = site.pages | where: "permalink", item_section | first %}
-      {% assign section_emoji = parent_page.emoji | default: "" %}
+      {% assign is_post = true %}
+      {% if include.category == "media" %}{% assign is_post = false %}{% endif %}
 
-      {% comment %} РЕНДЕРИНГ ДИЗАЙНА {% endcomment %}
-      {% if include.type == "home" %}
-        <!-- Компактный стиль для Главной и страниц Проектов -->
-        <li class="news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}">      
-          <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
-          <a href="{{ item.url | relative_url }}" class="item-link">
-            {{ item.title }}
-          </a>
-        </li>
-      {% elsif include.type == "news" %}
-        <!-- Широкий стиль с линиями для страницы Новостей -->
-        <li class="update-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-          <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
-            {{ item.title }}
-          </a>
-        </li>
-      {% endif %}
-
+      <li class="news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">      
+        <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
+        <a href="{{ item.url | relative_url }}" class="item-link">
+          {{ item.title }}
+        </a>
+      </li>
     {% endif %}
-  {% endif %}
-{% endfor %}
+
+  {% endfor %}
+</ul>

@@ -5,7 +5,8 @@
   {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
     
     {% comment %} 
-      1. УНИВЕРСАЛЬНАЯ ФИЛЬТРАЦИЯ ПО РАЗДЕЛАМ (Проверяет и путь файла, и его URL)
+      1. ИСПРАВЛЕННЫЙ И БЕЗОПАСНЫЙ БЛОК УНИВЕРСАЛЬНОЙ ФИЛЬ Tracy:
+      Тег if теперь открыт строго по правилам Liquid-синтаксиса.
     {% endcomment %}
     {% assign is_allowed = true %}
     {% if include.folder and include.folder != "" %}
@@ -13,7 +14,7 @@
       {% for folder_name in target_folders %}
         {% assign clean_folder = folder_name | strip %}
         {% comment %} Проверяем физический путь ИЛИ реальную ссылку URL постов/страниц {% endcomment %}
-        if item.path contains clean_folder or item.url contains clean_folder
+        {% if item.path contains clean_folder or item.url contains clean_folder %}
           {% assign is_allowed = true %}
           {% break %}
         {% endif %}
@@ -26,7 +27,7 @@
       {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
       
       {% comment %} 
-        2. ИСПРАВЛЕННЫЙ БЛОК ЭМОДЗИ: Возвращаем индекс [1] для точного вырезания корневой папки страниц
+        2. ИСПРАВЛЕННЫЙ БЛОК ЭМОДЗИ: Индекс [1] возвращен на место для точного поиска страниц
       {% endcomment %}
       {% assign url_parts = item.url | split: "/" %}
       {% assign first_folder = url_parts[1] %}

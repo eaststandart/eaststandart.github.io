@@ -43,8 +43,8 @@ permalink: /faire/simple-cardboard-walking-robot/
     </a>
   </li>
 
-  <!-- ПОДКЛЮЧИЛИ НОВЫЙ МОДУЛЬ: Выведет только текстовые журналы этого робота -->
-  {% include project-loop.liquid collection="journal" folder="_posts/simple-cardboard-walking-robot" %}
+  <!-- Вызываем наше оригинальное ядро, требуем только категорию journal -->
+  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
 </ul>
 
 ### Галерея работ
@@ -57,7 +57,6 @@ permalink: /faire/simple-cardboard-walking-robot/
     </a>
   </li>
 
-  <!-- ПОДКЛЮЧИЛИ НОВЫЙ МОДУЛЬ: Выведет только медиа-отчеты этого робота -->
-  {% include project-loop.liquid collection="media" folder="simple-cardboard-walking-robot" %}
+  <!-- Вызываем наше оригинальное ядро, требуем только категорию media -->
+  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="media" %}
 </ul>
-

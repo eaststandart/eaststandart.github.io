@@ -42,7 +42,6 @@
   {% comment %} Вывод компактных строк постов {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
-      {% comment %} ИСПРАВЛЕНО: Тег {% if %} выше открыт корректно. Точное разделение типов journal и media {% endcomment %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 

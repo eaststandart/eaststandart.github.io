@@ -37,18 +37,14 @@ permalink: /faire/simple-cardboard-walking-robot/
 **Назначение:** этапы создания, отладка и усовершенствование.
 
 <ul class="project-list" style="list-style: none; padding: 0; margin: 0;">
-  <!-- Ссылка на полную страницу всего журнала этого робота -->
   <li style="margin-bottom: 12px;">
     <a href="{{ '/journal/' | relative_url }}?project=simple-cardboard-walking-robot" style="font-weight: bold; color: var(--card-tech);">
       <strong>Весь журнал проекта →</strong>
     </a>
   </li>
 
-  {% comment %} 
-    Автоматически выводим только бортовые журналы (посты), 
-    которые относятся к папке этого робота
-  {% endcomment %}
-  {% include news-loop.liquid type="home" folder="/journal/simple-cardboard-walking-robot/" %}
+  <!-- ПОДКЛЮЧИЛИ НОВЫЙ МОДУЛЬ: Выведет только текстовые журналы этого робота -->
+  {% include project-loop.liquid collection="journal" folder="simple-cardboard-walking-robot" %}
 </ul>
 
 ### Галерея работ
@@ -61,8 +57,7 @@ permalink: /faire/simple-cardboard-walking-robot/
     </a>
   </li>
 
-  {% comment %} 
-    Здесь в будущем мы настроим вывод медиа-отчётов участников 
-    по этой же папке проекта
-  {% endcomment %}
+  <!-- ПОДКЛЮЧИЛИ НОВЫЙ МОДУЛЬ: Выведет только медиа-отчеты этого робота -->
+  {% include project-loop.liquid collection="media" folder="simple-cardboard-walking-robot" %}
 </ul>
+

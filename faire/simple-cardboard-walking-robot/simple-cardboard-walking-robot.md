@@ -48,7 +48,7 @@ permalink: /faire/simple-cardboard-walking-robot/
     Автоматически выводим только бортовые журналы (посты), 
     которые относятся к папке этого робота
   {% endcomment %}
-  {% include news-loop.liquid type="home" folder="simple-cardboard-walking-robot" %}
+  {% include news-loop.liquid type="home" folder="/journal/simple-cardboard-walking-robot/" %}
 </ul>
 
 ### Галерея работ

@@ -16,8 +16,8 @@
    БАЗОВЫЙ КОНТЕЙНЕР ПАГИНАЦИИ
    ========================================================================== */
 .pagination-container,
-#news-pagination,
-#journal-pagination {
+ #news-pagination,
+ #journal-pagination {
     width: 100%;
     clear: both;
     display: flex;

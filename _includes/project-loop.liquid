@@ -1,8 +1,8 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С АВТО-РАСКРЫТИЕМ (_includes/project-loop.liquid)
-Назначение: Собирает посты робота. Если строк > 10, прячет их под кнопку "Показать ещё".
-Безопасность: Полностью локальный скрипт, не связан с глобальной пагинацией сайта.
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ДИНАМИЧЕСКОЙ НАСТРОЙКОЙ СТРОК (_includes/project-loop.liquid)
+Назначение: Собирает посты робота. Делит на страницы по лимиту per_page.
+Безопасность: Полностью автономный скрипт пагинации, не влияет на главную и архив.
 =============================================================================
 {% endcomment %}
 
@@ -24,10 +24,11 @@
 {% endfor %}
 
 {% if has_posts %}
-{% comment %} Генерируем уникальный ID для каждого блока (journal или media), чтобы они не конфликтовали {% endcomment %}
+{% comment %} Генерируем уникальные ID для каждого блока на странице {% endcomment %}
 {% assign loop_id = include.type | append: "-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
+<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
   
   {% comment %} Умная ссылка «Смотреть все →» в цвете навигации #3498db {% endcomment %}
   <li class="nav-all-link" style="margin-bottom: 12px;">
@@ -54,52 +55,84 @@
   {% endfor %}
 </ul>
 
+{% comment %} Посадочное место для мини-кнопок локальной пагинации {% endcomment %}
+<div id="{{ ctrl_id }}" style="display: flex; gap: 5px; margin-bottom: 25px;"></div>
+
 {% comment %} 
-  ЛОКАЛЬНЫЙ НЕЗАВИСИМЫЙ СКРИПТ НАРЕЗКИ ПОСТОВ
+  АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИС ДИНАМИЧЕСКИМ ЛИМИТОМ
 {% endcomment %}
 <script>
   (function() {
     var containerId = "{{ loop_id }}";
+    var ctrlId = "{{ ctrl_id }}";
+    
     var ul = document.getElementById(containerId);
-    if (!ul) return;
+    var ctrlDiv = document.getElementById(ctrlId);
+    if (!ul || !ctrlDiv) return;
 
-    // Находим только строки постов, исключая первую ссылку "Смотреть все"
     var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
-    var maxVisible = 10;
+    
+    // ДИНАМИЧЕСКИЙ НАСТРОЕЧНЫЙ ЛИМИТ: берём параметр per_page, если его нет — ставим 5 по умолчанию
+    var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
+    
+    var totalPages = Math.ceil(allItems.length / itemsPerPage);
+    var currentPage = 1;
 
-    if (allItems.length > maxVisible) {
-      // 1. Скрываем все посты, начиная с 11-го
-      for (var i = maxVisible; i < allItems.length; i++) {
-        allItems[i].style.display = 'none';
-      }
+    if (totalPages <= 1) {
+      ctrlDiv.style.display = 'none';
+      return;
+    }
 
-      // 2. Создаем кнопку "Показать ещё посты" в стиле навигации сайта
-      var moreLi = document.createElement('li');
-      moreLi.style.marginTop = '10px';
-      moreLi.style.textAlign = 'left';
+    function showPage(page) {
+      currentPage = page;
+      var start = (page - 1) * itemsPerPage;
+      var end = start + itemsPerPage;
 
-      var moreBtn = document.createElement('button');
-      moreBtn.innerText = 'Показать ещё посты... (+' + (allItems.length - maxVisible) + ')';
-      moreBtn.style.background = 'none';
-      moreBtn.style.border = 'none';
-      moreBtn.style.color = '#3498db';
-      moreBtn.style.fontWeight = 'bold';
-      moreBtn.style.fontSize = '0.9rem';
-      moreBtn.style.cursor = 'pointer';
-      moreBtn.style.padding = '0';
-
-      moreBtn.addEventListener('click', function() {
-        // При клике открываем вообще все скрытые посты этого блока
-        allItems.forEach(function(el) {
-          el.style.display = 'flex';
-        });
-        // Уничтожаем кнопку, так как раскрывать больше нечего
-        moreLi.remove();
+      allItems.forEach(function(el, index) {
+        if (index >= start && index < end) {
+          el.style.setProperty('display', 'flex', 'important');
+        } else {
+          el.style.setProperty('display', 'none', 'important');
+        }
       });
 
-      moreLi.appendChild(moreBtn);
-      ul.appendChild(moreLi);
+      renderButtons();
     }
+
+    function renderButtons() {
+      ctrlDiv.innerHTML = '';
+      
+      for (var i = 1; i <= totalPages; i++) {
+        var btn = document.createElement('button');
+        btn.innerText = i;
+        
+        btn.style.padding = '3px 8px';
+        btn.style.border = '1px solid #e1e4e8';
+        btn.style.borderRadius = '4px';
+        btn.style.cursor = 'pointer';
+        btn.style.fontSize = '0.8rem';
+        btn.style.fontWeight = 'bold';
+        
+        if (i === currentPage) {
+          btn.style.backgroundColor = '#3498db';
+          btn.style.color = '#fff';
+          btn.style.borderColor = '#3498db';
+        } else {
+          btn.style.backgroundColor = '#fff';
+          btn.style.color = '#24292e';
+        }
+
+        (function(pageIndex) {
+          btn.addEventListener('click', function() {
+            showPage(pageIndex);
+          });
+        })(i);
+
+        ctrlDiv.appendChild(btn);
+      }
+    }
+
+    showPage(1);
   })();
 </script>
 {% endif %}

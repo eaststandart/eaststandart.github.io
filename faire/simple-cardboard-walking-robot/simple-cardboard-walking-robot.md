@@ -38,13 +38,13 @@ permalink: /faire/simple-cardboard-walking-robot/
 
 <ul class="project-list" style="list-style: none; padding: 0; margin: 0;">
   <li style="margin-bottom: 12px;">
-    <a href="{{ '/journal/' | relative_url }}?project=simple-cardboard-walking-robot" style="font-weight: bold; color: var(--card-tech);">
+    <a href="{{ '/journal-test/' | relative_url }}?project=simple-cardboard-walking-robot" style="font-weight: bold; color: var(--card-tech);">
       <strong>Весь журнал проекта →</strong>
     </a>
   </li>
 
   <!-- Вызываем наше оригинальное ядро, требуем только категорию journal -->
-  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
+  {% include news-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
 </ul>
 
 
@@ -59,5 +59,5 @@ permalink: /faire/simple-cardboard-walking-robot/
   </li>
 
   <!-- Вызываем наше оригинальное ядро, требуем только категорию media -->
-  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="media" %}
+  {% include news-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="media" %}
 </ul>

@@ -44,7 +44,7 @@ permalink: /faire/simple-cardboard-walking-robot/
   </li>
 
   <!-- Вызываем наше оригинальное ядро, требуем только категорию journal -->
-  {% include news-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
+  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
 </ul>
 
 
@@ -59,5 +59,5 @@ permalink: /faire/simple-cardboard-walking-robot/
   </li>
 
   <!-- Вызываем наше оригинальное ядро, требуем только категорию media -->
-  {% include news-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="media" %}
+  {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="media" %}
 </ul>

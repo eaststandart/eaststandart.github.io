@@ -7,7 +7,7 @@ permalink: /journal-test/
 {% comment %} 
 ТЕСТОВАЯ ИЗОЛИРОВАННАЯ СТРАНИЦА: ЖУРНАЛ С ФИЛЬТРОМ (?project=...)
 Назначение: Безопасная проверка автоматического отсечения чужих постов.
-Зависимости: Использует готовый news-loop.liquid и pagination.liquid.
+Зависимости: Использует готовый project-loop.liquid и pagination.liquid.
 {% endcomment %}
 
 <!-- Ссылки для ручного тестирования фильтра прямо на экране -->
@@ -20,7 +20,7 @@ permalink: /journal-test/
 <div class="updates-feed">
   <ul id="test-updates-list" style="list-style: none; padding: 0;">
     <!-- Вызываем наш универсальный цикл. Выведет пока всё подряд -->
-    {% include news-loop.liquid type="news" folder="" %}
+    {% include project-loop.liquid type="news" folder="" %}
   </ul>
 </div>
 

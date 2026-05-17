@@ -100,13 +100,11 @@
 
     function createBtn(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
-      btn.className = 'page-btn';
+      btn.className = 'page-btn'; // Твой родной класс из pagination.css полностью управляет дизайном!
       btn.innerText = text;
       
-      btn.style.padding = '3px 8px';
-      btn.style.fontSize = '0.8rem';
-      
       if (isCurrent) {
+        // Локальная активная кнопка — красится в цвет навигации сайта
         btn.style.backgroundColor = '#3498db';
         btn.style.color = '#fff';
         btn.style.borderColor = '#3498db';

@@ -1,13 +1,11 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА (_includes/project-loop.liquid)
-Назначение: Автоматически собирает посты конкретного робота из его категории.
-Оригинал: Построен на базе твоего эталонного скрипта project-list.liquid.
-Параметры: include.type ("journal" или "media" для фильтрации категории постов).
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С АВТО-РАСКРЫТИЕМ (_includes/project-loop.liquid)
+Назначение: Собирает посты робота. Если строк > 10, прячет их под кнопку "Показать ещё".
+Безопасность: Полностью локальный скрипт, не связан с глобальной пагинацией сайта.
 =============================================================================
 {% endcomment %}
 
-{% comment %} 1. Автоматическое вычисление адресов и названий разделов из URL страницы {% endcomment %}
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
 {% assign project_slug = url_parts[2] %}
@@ -16,10 +14,7 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
-{% comment %} 
-   2. Счётчик-предохранитель: проверяем, есть ли вообще посты для этого блока, 
-   чтобы не выводить пустые контейнеры, если журнала или галереи не существует.
-{% endcomment %}
+{% comment %} Счётчик-предохранитель наличия постов {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
@@ -29,24 +24,27 @@
 {% endfor %}
 
 {% if has_posts %}
-<ul class="project-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
+{% comment %} Генерируем уникальный ID для каждого блока (journal или media), чтобы они не конфликтовали {% endcomment %}
+{% assign loop_id = include.type | append: "-" | append: project_slug_last %}
+
+<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
   
-  {% comment %} Умная ссылка «Смотреть все →» — теперь строго в цвете навигации #3498db {% endcomment %}
-  <li style="margin-bottom: 12px;">
+  {% comment %} Умная ссылка «Смотреть все →» в цвете навигации #3498db {% endcomment %}
+  <li class="nav-all-link" style="margin-bottom: 12px;">
     <strong>
-      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: #3498db; text-decoration: none;">
+      <a href="{{ '/journal/' | relative_url }}" style="color: #3498db; text-decoration: none;">
         Смотреть все →
       </a>
     </strong>
   </li>
 
-  {% comment %} 3. Вывод самих компактных строк постов по твоей хронологии {% endcomment %}
+  {% comment %} Вывод компактных строк постов {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="news-item-compact" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+      <li class="news-item-compact local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
         <small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
         <a href="{{ post.url | relative_url }}" class="item-link">
           {{ post.title }}
@@ -55,4 +53,53 @@
     {% endif %}
   {% endfor %}
 </ul>
+
+{% comment %} 
+  ЛОКАЛЬНЫЙ НЕЗАВИСИМЫЙ СКРИПТ НАРЕЗКИ ПОСТОВ
+{% endcomment %}
+<script>
+  (function() {
+    var containerId = "{{ loop_id }}";
+    var ul = document.getElementById(containerId);
+    if (!ul) return;
+
+    // Находим только строки постов, исключая первую ссылку "Смотреть все"
+    var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
+    var maxVisible = 10;
+
+    if (allItems.length > maxVisible) {
+      // 1. Скрываем все посты, начиная с 11-го
+      for (var i = maxVisible; i < allItems.length; i++) {
+        allItems[i].style.display = 'none';
+      }
+
+      // 2. Создаем кнопку "Показать ещё посты" в стиле навигации сайта
+      var moreLi = document.createElement('li');
+      moreLi.style.marginTop = '10px';
+      moreLi.style.textAlign = 'left';
+
+      var moreBtn = document.createElement('button');
+      moreBtn.innerText = 'Показать ещё посты... (+' + (allItems.length - maxVisible) + ')';
+      moreBtn.style.background = 'none';
+      moreBtn.style.border = 'none';
+      moreBtn.style.color = '#3498db';
+      moreBtn.style.fontWeight = 'bold';
+      moreBtn.style.fontSize = '0.9rem';
+      moreBtn.style.cursor = 'pointer';
+      moreBtn.style.padding = '0';
+
+      moreBtn.addEventListener('click', function() {
+        // При клике открываем вообще все скрытые посты этого блока
+        allItems.forEach(function(el) {
+          el.style.display = 'flex';
+        });
+        // Уничтожаем кнопку, так как раскрывать больше нечего
+        moreLi.remove();
+      });
+
+      moreLi.appendChild(moreBtn);
+      ul.appendChild(moreLi);
+    }
+  })();
+</script>
 {% endif %}

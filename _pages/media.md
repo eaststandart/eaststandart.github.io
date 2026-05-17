@@ -5,5 +5,5 @@ title: Медиа-материалы
 permalink: /media/
 emoji: "🎬"
 ---
-<!-- emoji: "🎬📸"-->
+
 {% include media-archive.liquid category="media" %}

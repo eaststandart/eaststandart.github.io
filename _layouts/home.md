@@ -1,10 +1,3 @@
-{% comment %} 
-СПЕЦИАЛЬНЫЙ АВТОНОМНЫЙ ШАБЛОН: ГЛАВНАЯ СТРАНИЦА (\_layouts/home.html)
-Назначение: Отображение уникального интерфейса главной страницы с широкой сеткой карточек.
-Изоляция: Работает полностью независимо от default.html, сохраняя собственную геометрию в 1000px.
-Стили: Внутренний тег \<style> содержит правила, которые нужны ТОЛЬКО для главной страницы.
-{% endcomment %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     <style>
         /* Стили только для главной страницы */
@@ -46,52 +40,52 @@
             background: #fff; 
         }
 
-        /* Красная линия блока */
-        .site-news { 
-            border-top-color: #cb2431; 
-        }
+/* Красная линия блока */
+.site-news { 
+    border-top-color: #cb2431; 
+}
 
-        /* Компактная строка новости */
-        .news-item-compact { 
-            display: flex; 
-            align-items: flex-start; 
-            margin-bottom: 4px !important; 
-            font-size: 0.9rem; 
-            line-height: 1.2; 
-            padding: 3px 8px; 
-            border-radius: 6px; 
-            background: #f9f9f9;
-            transition: 0.2s;
-            border: 1px solid transparent;
-        }
+/* Компактная строка новости */
+.news-item-compact { 
+    display: flex; 
+    align-items: flex-start; /* ВЕРНУЛИ: выравнивание по верхнему краю, как было раньше */
+    margin-bottom: 4px !important; 
+    font-size: 0.9rem; 
+    line-height: 1.2; 
+    padding: 3px 8px; 
+    border-radius: 6px; 
+    background: #f9f9f9;
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
 
-        /* Эффект наведения на всю строку */
-        .news-item-compact:hover { 
-            background: #fff; 
-            border-color: #ddd; 
-            padding-left: 18px; 
-        }
+/* Эффект наведения на всю строку */
+.news-item-compact:hover { 
+    background: #fff; 
+    border-color: #ddd; 
+    padding-left: 18px; 
+}
 
-        /* Дата и стрелочка » */
-        .news-item-compact small { 
-            flex-shrink: 0; 
-            font-family: monospace; 
-            color: #6a737d;
-            padding-top: 1px; 
-            line-height: 1.2;
-        }
+/* Дата и стрелочка » */
+.news-item-compact small { 
+    flex-shrink: 0; 
+    font-family: monospace; 
+    color: #6a737d;
+    padding-top: 1px; /* ДОБАВЛЕНО: микро-смещение вниз, чтобы компенсировать шрифт */
+    line-height: 1.2;
+}
 
-        /* Ссылка на проект/новость */
-        .news-item-compact .item-link { 
-            text-decoration: none;
-            font-weight: normal;
-            transition: 0.2s;
-        }
+/* Ссылка на проект/новость */
+.news-item-compact .item-link { 
+    text-decoration: none;
+    font-weight: normal;
+    transition: 0.2s;
+}
 
-        /* Цвет текста при наведении */
-        .news-item-compact:hover .item-link {
-            color: #000 !important;
-        }
+/* Цвет текста при наведении */
+.news-item-compact:hover .item-link {
+    color: #000 !important;
+}
         
         h1 { margin-bottom: 20px !important; }
         h2 { margin: 0; font-size: 1.3rem; color: #333; }
@@ -118,20 +112,20 @@
             padding-left: 18px; 
         }
 
-        @media (max-width: 900px) {
-            .grid-container {
-                max-width: 100% !important;
-                gap: 15px; 
-            }
-            
-            .category-card {
-                padding: 15px !important; 
-            }
+    @media (max-width: 900px) {
+    .grid-container {
+        max-width: 100% !important;
+        gap: 15px; /* Уменьшаем зазор на мобилках */
+    }
+    
+    .category-card {
+        padding: 15px !important; /* Уплотняем карточки на главной */
+    }
 
-            .card-header {
-                margin-bottom: 10px !important;
-            }
-        }
+    .card-header {
+        margin-bottom: 10px !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -143,12 +137,12 @@
     {{ content }}
 
     <footer class="main-footer">
-        <a href="https://t.me" target="_blank" class="tg-button">
+        <a href="https://t.me/eaststandart" target="_blank" class="tg-button">
             <span>✈️</span> Написать в Telegram
         </a>        
     </footer>
 
-    {% include footer.liquid %}
+{% include footer.liquid %}
 
 </body>
 </html>

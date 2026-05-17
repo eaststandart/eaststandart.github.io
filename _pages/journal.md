@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: news
 title: Журнал проекта
 description: Журнал, дневник, блог и прочие записи
 permalink: /journal/

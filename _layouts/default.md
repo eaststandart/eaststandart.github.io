@@ -16,7 +16,7 @@
     <!-- ... БАЗОВЫЕ СТИЛИ ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
-
+<link rel="stylesheet" href="/assets/css/pagination.css">
     <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ПОДКЛЮЧЕНИЯ СТИЛЕЙ ИЗ ДРУГИХ ШАБЛОНОВ -->
     {% if layout.layout_css %}
       <link rel="stylesheet" href="{{ layout.layout_css | relative_url }}">

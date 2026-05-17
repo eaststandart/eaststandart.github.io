@@ -24,7 +24,7 @@
 {% endfor %}
 
 {% if has_posts %}
-{% comment %} Генерируем уникальные ID для каждого блока на странице {% endcomment %}
+{% comment %} Генерируем уникальный ID для каждого блока на странице {% endcomment %}
 {% assign loop_id = include.type | append: "-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
@@ -41,7 +41,8 @@
 
   {% comment %} Вывод компактных строк постов {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
-    {% if post.categories contains include.type %}
+    if post.categories contains include.type
+      {% comment %} ВОЗВРАЩЕНО: Жесткое и точное разделение типов journal и media {% endcomment %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
@@ -55,9 +56,8 @@
   {% endfor %}
 </ul>
 
-{% comment %} Посадочное место для мини-кнопок локальной пагинации {% endcomment %}
+{% comment %} Посадочное место для мини-кнопок локальной пагинации с чистой геометрией {% endcomment %}
 <div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 20px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
-
 
 {% comment %} 
   АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИ С ЕДИНЫМ ДИЗАЙНОМ
@@ -101,15 +101,13 @@
 
     function createBtn(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
-      btn.className = 'page-btn'; // ПОДВЯЗАЛИ НАШ РОДНОЙ КЛАСС ИЗ ПАГИНАЦИИ
+      btn.className = 'page-btn';
       btn.innerText = text;
       
-      // Уменьшаем размер под локальный блок проекта
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
       
       if (isCurrent) {
-        // Локальная активная кнопка — в цвете навигации сайта
         btn.style.backgroundColor = '#3498db';
         btn.style.color = '#fff';
         btn.style.borderColor = '#3498db';

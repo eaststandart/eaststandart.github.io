@@ -33,7 +33,7 @@
   {% comment %} Умная ссылка «Смотреть все →» в цвете навигации #3498db {% endcomment %}
   <li class="nav-all-link" style="margin-bottom: 12px;">
     <strong>
-      <a href="{{ '/journal/' | relative_url }}" style="color: #3498db; text-decoration: none;">
+      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: #3498db; text-decoration: none;">
         Смотреть все →
       </a>
     </strong>

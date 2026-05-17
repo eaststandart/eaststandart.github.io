@@ -1,9 +1,9 @@
 {% comment %} 
 =============================================================================
-ГЛОБАЛЬНЫЙ ШАБЛОН САЙТА: ДЕФОЛТНЫЙ (_layouts/default.html)
-Назначение: Базовый каркас для всех внутренних страниц, статей, книг и журналов.
-Элементы: Содержит общую шапку, подвал, навигацию, блоки тегов, источников и библиографии.
-Связи: Подключает базовый style.css и является родительским для шаблонов faire, news и т.д.
+ГЛОБАЛЬНЫЙ ШАБЛОН САЙТА: КАРКАС (_layouts/default.html)
+Назначение: Базовый скелет для всего сайта (шапка, меню, подвал).
+ВНИМАНИЕ: Очищен от специфики статей (тегов, библиографии, видео-логики).
+Наследование: Является родительским для шаблонов page, faire, news и т.д.
 =============================================================================
 {% endcomment %}
 
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/assets/css/footnotes.css">
     <link rel="stylesheet" href="/assets/css/video.css">
 
-    <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ВСЕХ ШАБЛОНОВ -->
+    <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ПОДКЛЮЧЕНИЯ СТИЛЕЙ ИЗ ДРУГИХ ШАБЛОНОВ -->
     {% if layout.layout_css %}
       <link rel="stylesheet" href="{{ layout.layout_css | relative_url }}">
     {% endif %}
@@ -37,56 +37,21 @@
 
 <div class="content-wrapper">
         
-<!-- Блок навигации -->
-{% include navigation.liquid %}
+    <!-- Блок навигации -->
+    {% include navigation.liquid %}
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1> 
 
     <div class="main-content">
         <p class="page-description">{{ page.description }}</p>
+        
+        {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
         {{ content }}
     </div>
-    
-    <!-- Универсальный блок библиографии -->
-    {% if page.bibliography %}
-    <div class="bibliography-footer">
-        <strong>Библиографическое описание:</strong>
-        
-        {% if page.bibliography.first %}
-            <ol style="margin: 0; padding-left: 25px;">
-                {% for item in page.bibliography %}
-                <li style="margin-bottom: 8px;">{{ item | markdownify | remove: '<p>' | remove: '</p>' }}</li>
-                {% endfor %}
-            </ol>
-        {% else %}
-            {{ page.bibliography | markdownify }}
-        {% endif %}
-    </div>
-    {% endif %}
-
-    {% if page.sources %}
-    <div class="sources-inline">
-        <strong>Источники:</strong> 
-        <div class="sources-content">
-            {{ page.sources | markdownify }}
-        </div>
-    </div>
-    {% endif %}
-
-    {% if page.tags and page.tags.size > 0 %}
-    <div class="tag-container">
-        {% for tag in page.tags %}
-        {% assign tag_clean = tag | replace: '#', '' | strip %}
-        <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-        {% endfor %}
-    </div>
-    {% endif %}
 
 </div>
 
 {% include footer.liquid %}
-
-{% include video-logic.liquid %}
 
 </body>
 </html>

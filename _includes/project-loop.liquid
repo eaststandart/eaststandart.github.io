@@ -3,11 +3,9 @@
 МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ ПРОЕКТА (_includes/project-loop.liquid)
 Назначение: Автоматически собирает кастомные коллекции постов конкретного робота.
 Применяется: Только на внутренних страницах проектов (например, у Картонного робота).
-Связи: Фильтрует записи по параметру include.folder и include.collection.
 =============================================================================
 {% endcomment %}
 
-{% comment. %} Выбираем нужную коллекцию в зависимости от запроса страницы {% endcomment %}
 {% if include.collection == "journal" %}
   {% assign current_collection = site.journal %}
 {% elsif include.collection == "media" %}
@@ -17,10 +15,6 @@
 {% endif %}
 
 {% for item in current_collection %}
-  {% comment %} 
-    ПОДСТРАХОВКА ДАТЫ ДЛЯ КОЛЛЕКЦИЙ:
-    Если в Front Matter файла забыли указать дату, вытаскиваем год/месяц из его пути на диске
-  {% endcomment %}
   {% assign item_date = item.date %}
   {% if item_date == nil and item.path contains "202" %}
     {% assign path_parts = item.path | split: "/" %}
@@ -32,9 +26,6 @@
     {% endfor %}
   {% endif %}
 
-  {% comment %} 
-    ФИЛЬТРАЦИЯ: Проверяем, относится ли этот файл к папке текущего робота
-  {% endcomment %}
   {% assign is_allowed = false %}
   {% if include.folder and include.folder != "" %}
     {% if item.path contains include.folder or item.url contains include.folder %}
@@ -48,8 +39,11 @@
     {% assign is_post = true %}
     {% if include.collection == "media" %}{% assign is_post = false %}{% endif %}
 
-    {% comment %} РЕНДЕРИНГ КОМПАКТНОЙ СТРОКИ (Стиль главной страницы для карточки проекта) {% endcomment %}
-    <li class="update-item news-item-compact" data-date="{{ item_date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">      
+    {% comment %} 
+      ИСПРАВЛЕНО: Убрали класс update-item. 
+      Теперь строки ВСЕГДА видимы на страницах проектов и не прячутся стилями пагинации!
+    {% endcomment %}
+    <li class="news-item-compact" data-date="{{ item_date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">      
       <small>{% if item_date %}{{ item_date | date: "%d.%m.%Y" }}{% else %}запись{% endif %}&nbsp;»&nbsp;</small> 
       <a href="{{ item.url | relative_url }}" class="item-link">
         {{ item.title }}

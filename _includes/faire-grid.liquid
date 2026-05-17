@@ -1,0 +1,22 @@
+{% comment %} 
+=============================================================================
+МОДУЛЬ: АВТОМАТИЧЕСКАЯ СЕТКА ЯРМАРКИ (faire-grid.liquid)
+Назначение: Собирает все страницы внутри раздела /faire/ и выводит их в виде карточек.
+Стили: Оформление завязано на изолированные CSS-классы (.faire-list, .faire-card) в faire.css.
+=============================================================================
+{% endcomment %}
+
+<div class="faire-list">
+  {% assign current_section = page.url %}
+  {% assign projects = site.pages | where_exp: "item", "item.url contains current_section" | sort: "date" | reverse %}
+  
+  {% for project in projects %}
+    {% unless project.url == current_section %}
+      <a href="{{ project.url | relative_url }}" class="faire-card">
+        {% assign folder = project.url | split: "/" | last %}
+        <img src="{{ project.url | append: folder | append: '.webp' | relative_url }}" class="faire-img-round">
+        <h3>{{ project.title }}</h3>
+      </a>
+    {% endunless %}
+  {% endfor %}
+</div>

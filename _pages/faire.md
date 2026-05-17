@@ -7,4 +7,10 @@ permalink: /faire/
 emoji: "🔥"
 ---
 
-{% include project-grid.liquid %}
+{% comment %} 
+РАЗДЕЛ: ЯРМАРКА ПОДЕЛОК
+Назначение: Страница-витрина для вывода списка всех дополнительных поделок.
+Зависимости: Использован шаблон layouts/faire.md и изолированная сетка faire-grid.liquid.
+{% endcomment %}
+
+{% include faire-grid.liquid %}

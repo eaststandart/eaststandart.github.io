@@ -7,7 +7,7 @@ permalink: /news/
 <div class="updates-feed">
   <ul id="live-updates-list" style="list-style: none; padding: 0;">
     <!-- УНИФИЦИРОВАННЫЙ ВЫЗОВ ЦИКЛА ДЛЯ СТРАНИЦЫ АРХИВА -->
-    {% include news-loop.liquid type="news" %}
+    {% include news-loop.liquid type="news" folder="faire" %}
   </ul>
 </div>
 

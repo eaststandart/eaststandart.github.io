@@ -36,7 +36,7 @@ permalink: /faire/simple-cardboard-walking-robot/
 ### Журнал проекта
 *Назначение: этапы создания, отладка и усовершенствование.*
 
-{% include project-loop.liquid type="journal" per_page=3 %}
+{% include project-loop.liquid type="journal" per_page="" %}
 
 ### Галерея работ
 *Назначение: демонстрация (фото, видео) выполненного проекта от участников.*

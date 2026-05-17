@@ -1,79 +1,54 @@
-<!DOCTYPE html> 
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }}</title>
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/video.css">
-    <!-- Подключение дополнительных стилей, если они указаны в YAML страницы -->
-    {% if page.custom_css %}
-     {% for style in page.custom_css %}
-     <link rel="stylesheet" href="{{ style }}">
-  {% endfor %}
-{% endif %}
-</head>
-<body>
+---
+layout: default
+---
+{% comment %} 
+=============================================================================
+СПЕЦИАЛЬНЫЙ ШАБЛОН: СТАТЬИ И КНИГИ (_layouts/page.html)
+Назначение: Отображение конечных страниц контента (описания роботов, заметки, учебные статьи).
+Наследование: Расширяет базовый каркас default.html (автоматически наследует навигацию и подвал).
+Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
+=============================================================================
+{% endcomment %}
 
-<div class="content-wrapper">
-        
-    <!-- Блок навигации -->
-    {% include navigation.liquid %}
+{% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
+{{ content }}
 
-    <h1 style="margin-top: 0;">{{ page.title }}</h1> 
-
-    <div class="main-content">
-        <p class="page-description">{{ page.description }}</p>
-        {{ content }}
-    </div>
+<!-- Универсальный блок библиографии -->
+{% if page.bibliography %}
+<div class="bibliography-footer">
+    <strong>Библиографическое описание:</strong>
     
-    <!-- Универсальный блок библиографии -->
-    {% if page.bibliography %}
-    <div class="bibliography-footer">
-        <strong>Библиографическое описание:</strong>
-        
-        {% if page.bibliography.first %}
-            <ol style="margin: 0; padding-left: 25px;">
-                {% for item in page.bibliography %}
-                <li style="margin-bottom: 8px;">{{ item | markdownify | remove: '<p>' | remove: '</p>' }}</li>
-                {% endfor %}
-            </ol>
-        {% else %}
-            {{ page.bibliography | markdownify }}
-        {% endif %}
-    </div>
+    {% if page.bibliography.first %}
+        <ol style="margin: 0; padding-left: 25px;">
+            {% for item in page.bibliography %}
+            <li style="margin-bottom: 8px;">{{ item | markdownify | remove: '<p>' | remove: '</p>' }}</li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        {{ page.bibliography | markdownify }}
     {% endif %}
-
-    {% if page.sources %}
-    <div class="sources-inline">
-        <strong>Источники:</strong> 
-        <div class="sources-content">
-            {{ page.sources | markdownify }}
-        </div>
-    </div>
-    {% endif %}
-
-    {% if page.tags %}
-    <div class="tag-container">
-        {% for tag in page.tags %}
-        {% assign tag_clean = tag | replace: '#', '' | strip %}
-        <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-        {% endfor %}
-    </div>
-    {% endif %}
-
 </div>
+{% endif %}
 
-<footer class="license-footer">
-    <p style="margin-top: 0px; margin-bottom: 5px;">
-        © 2026 Творческая лаборатория познавательного развития
-    </p>
-    <p style="font-size: 0.8rem; color: #7f8c8d; margin: 0;">
-        Материалы сайта доступны по лицензии 
-        <a href="https://creativecommons.org" target="_blank" style="color: #7f8c8d; text-decoration: underline;">CC BY 4.0</a> (с указанием авторства). 
-    </p> 
-</footer>
-    
-</body>
-</html>
+<!-- Универсальный блок онлайн-источников -->
+{% if page.sources %}
+<div class="sources-inline">
+    <strong>Источники:</strong> 
+    <div class="sources-content">
+        {{ page.sources | markdownify }}
+    </div>
+</div>
+{% endif %}
+
+<!-- Блок кликабельных тегов -->
+{% if page.tags and page.tags.size > 0 %}
+<div class="tag-container">
+    {% for tag in page.tags %}
+    {% assign tag_clean = tag | replace: '#', '' | strip %}
+    <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Подключение логики интерактивных видео-плееров -->
+{% include video-logic.liquid %}

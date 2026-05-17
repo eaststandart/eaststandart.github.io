@@ -17,11 +17,11 @@ permalink: /projects/novyj-robot-shagohod/
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
 ### Журнал проекта
-**Назначение:** этапы создания, отладка и усовершенствование.
+*Назначение: этапы создания, отладка и усовершенствование.*
 
-{% include project-list.liquid type="journal" %}
+{% include project-loop.liquid type="journal" %}
 
 ### Галерея работ
-**Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
+*Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
 
-{% include project-list.liquid type="media" %}
+{% include project-loop.liquid type="media" %}

@@ -125,7 +125,7 @@
     color: #586069 !important; /* Серый для постов на главной */
 }
 #live-updates-list .update-item[data-is-post="false"] .item-link {
-    color: #3498db6 !important; /* Синий для проектов/страниц на главной #0366d*/
+    color: #3498db6 !important; /* Синий для проектов/страниц на главной 0366d*/
 }
 
 /* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ (СИНХРОНИЗИРОВАНО С ГЛАВНОЙ) */

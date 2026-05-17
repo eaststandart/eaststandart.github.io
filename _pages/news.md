@@ -6,9 +6,8 @@ permalink: /news/
 
 <div class="updates-feed">
   <ul id="live-updates-list" style="list-style: none; padding: 0;">
+    {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
     
-    {% comment %} 1. Цикл для постов и страниц разделов {% endcomment %}
-    {% assign all_content = site.posts | concat: site.pages %}
     {% for item in all_content %}
       {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
         {% assign is_post = false %}
@@ -34,19 +33,6 @@ permalink: /news/
         </li>
       {% endif %}
     {% endfor %}
-
-    {% comment %} 2. Цикл для коллекции Людей — человечка пишем напрямую в data-emoji {% endcomment %}
-    {% for person in site.people %}
-      {% if person.date %}
-        <li class="update-item" data-date="{{ person.date | date: '%Y-%m-%d' }}" data-is-post="false" data-emoji="🧍‍♂️" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-          <small style="color: #888;">{{ person.date | date: "%d.%m.%Y" }}</small>
-          <a href="{{ person.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
-            {{ person.title }}
-          </a>
-        </li>
-      {% endif %}
-    {% endfor %}
-
   </ul>
 </div>
 

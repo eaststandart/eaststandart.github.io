@@ -1,58 +1,58 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ ПРОЕКТА (_includes/project-loop.liquid)
-Назначение: Автоматически собирает посты конкретного робота из папки _posts.
-Применяется: На внутренних страницах проектов (Журнал проекта и Галерея).
-Параметры: 
-  - include.folder (имя папки робота в пути файла).
-  - include.category (journal или media для разделения блоков).
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА (_includes/project-loop.liquid)
+Назначение: Автоматически собирает посты конкретного робота из его категории.
+Оригинал: Построен на базе твоего эталонного скрипта project-list.liquid.
+Параметры: include.type ("journal" или "media" для фильтрации категории постов).
 =============================================================================
 {% endcomment %}
 
-<ul class="project-list" style="list-style: none; padding: 0; margin: 0;">
+{% comment %} 1. Автоматическое вычисление адресов и названий разделов из URL страницы {% endcomment %}
+{% assign url_parts = page.url | split: "/" %}
+{% assign section_slug = url_parts[1] %}
+{% assign project_slug = url_parts[2] %}
+{% assign section_url = section_slug | prepend: "/" | append: "/" %}
+{% assign section_page = site.pages | where: "url", section_url | first %}
+
+{% assign project_slug_last = page.url | split: "/" | last %}
+
+{% comment %} 
+   2. Счётчик-предохранитель: проверяем, есть ли вообще посты для этого блока, 
+   чтобы не выводить пустые контейнеры, если журнала или галереи не существует.
+{% endcomment %}
+{% assign has_posts = false %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
+    {% assign has_posts = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if has_posts %}
+<ul class="project-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
   
-  {% comment %} Ссылка на общую страницу Журнала или Медиа без всяких фильтров {% endcomment %}
+  {% comment %} Умная ссылка «Смотреть все →» в начале списка по твоему оригиналу {% endcomment %}
   <li style="margin-bottom: 12px;">
-    {% if include.category == "journal" %}
-      <a href="{{ '/journal/' | relative_url }}" style="font-weight: bold; color: var(--card-tech);">
-        <strong>Весь журнал проекта →</strong>
+    <strong>
+      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: {% if include.type == 'journal' %}var(--card-tech){% else %}var(--card-my){% endif %}; text-decoration: none;">
+        Смотреть все →
       </a>
-    {% else %}
-      <a href="#смотреть-все-галерея" style="font-weight: bold; color: var(--card-my);">
-        <strong>Смотреть всю галерею →</strong>
-      </a>
-    {% endif %}
+    </strong>
   </li>
 
-  {% comment %} Перебираем стандартные посты сайта {% endcomment %}
-  {% for item in site.posts %}
-    
-    {% comment %} 1. Проверяем, относится ли пост к папке этого конкретного робота {% endcomment %}
-    {% assign is_allowed = false %}
-    {% if item.path contains include.folder or item.url contains include.folder %}
-      {% assign is_allowed = true %}
-    {% endif %}
-
-    {% comment %} 2. Проверяем категорию поста (journal или media) {% endcomment %}
-    {% if is_allowed and include.category and include.category != "" %}
-      {% assign is_allowed = false %}
-      {% if item.categories contains include.category %}
-        {% assign is_allowed = true %}
-      {% endif %}
-    {% endif %}
-
-    {% comment %} 3. Если все проверки пройдены — выводим компактную строку {% endcomment %}
-    {% if is_allowed %}
+  {% comment %} 3. Вывод самих компактных строк постов по твоей хронологии {% endcomment %}
+  {% for post in site.categories[project_slug_last] %}
+    {% if post.categories contains include.type %}
       {% assign is_post = true %}
-      {% if include.category == "media" %}{% assign is_post = false %}{% endif %}
+      {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">      
-        <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
-        <a href="{{ item.url | relative_url }}" class="item-link">
-          {{ item.title }}
+      <li class="news-item-compact" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+        <small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
+        <a href="{{ post.url | relative_url }}" class="item-link">
+          {{ post.title }}
         </a>
       </li>
     {% endif %}
-
   {% endfor %}
 </ul>
+{% endif %}

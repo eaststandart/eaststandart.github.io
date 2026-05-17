@@ -24,3 +24,14 @@ emoji: "✍🏻"
   чтобы кнопки на этой странице работали изолированно и не конфликтовали с другими разделами.
 -->
 {% include pagination.liquid list_id="journal-updates-list" controls_id="journal-pagination" per_page=10 pinned_url="" %}
+
+<!--
+---
+layout: default
+title: Журнал проекта
+permalink: /journal/
+emoji: "✍🏻"
+---
+Журнал, дневник, блог и прочие записи
+{% include media-archive.liquid category="journal" %}
+-->

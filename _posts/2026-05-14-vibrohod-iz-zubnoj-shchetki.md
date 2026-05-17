@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: "Виброход из зубной щетки: фото и видео"
 date: 2026-05-14
 categories: [media, vibrohod-iz-zubnoj-shchetki]

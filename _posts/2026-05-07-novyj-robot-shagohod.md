@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: "Тест"
 date: 2026-05-07
 categories: [journal, novyj-robot-shagohod]

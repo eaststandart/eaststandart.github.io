@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: "Робот странник: фото и видео"
 sources: "[Игрушка, шагающий робот, из детства...](https://pikabu.ru/story/igrushka_shagayushchiy_robot_iz_detstva_naydennaya_na_cherdake_v_derevne_u_dedushki_6337680)"
 date: 2026-05-15

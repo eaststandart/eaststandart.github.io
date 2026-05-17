@@ -41,4 +41,4 @@ permalink: /faire/simple-cardboard-walking-robot/
 ### Галерея работ
 *Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
 
-{% include project-loop.liquid type="media" %}
+{% include project-loop.liquid type="media" %} 

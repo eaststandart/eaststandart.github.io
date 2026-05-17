@@ -1,4 +1,10 @@
 /* ==========================================================================
+   СТИЛИ МОДУЛЯ: УНИВЕРСАЛЬНАЯ ПАГИНАЦИЯ (assets/css/pagination.css)
+   Назначение: Управление сеткой контейнеров, кнопками и адаптацией под мобильные.
+   Применяется: На Главной странице, в архиве /news/ и во всех будущих лентах.
+   ========================================================================== */
+
+/* ==========================================================================
    ФИКС СЕТОЧНОГО РАСТЯЖЕНИЯ ДЛЯ БЛОКА НОВОСТЕЙ НА ГЛАВНОЙ
    ========================================================================== */
 .category-card.site-news {
@@ -16,15 +22,15 @@
    БАЗОВЫЙ КОНТЕЙНЕР ПАГИНАЦИИ
    ========================================================================== */
 .pagination-container,
- #news-pagination,
- #journal-pagination {
+#news-pagination,
+#journal-pagination {
     width: 100%;
     clear: both;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 0px !important;     /* Теперь зазор регулируется через маргин списка выше */
+    margin-top: 0px !important;     /* Твоя настройка: зазор регулируется через маргин списка выше */
     margin-bottom: 0px !important;  
 }
 
@@ -73,7 +79,10 @@
         margin-bottom: 10px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
     }
 
-    #home-news-pagination.pagination-container {
+    /* СИНХРОНИЗАЦИЯ: Добавили новые ID, чтобы отступы в архивах на телефонах сжимались точно так же, как на главной */
+    #home-news-pagination.pagination-container,
+    #news-pagination.pagination-container,
+    #journal-pagination.pagination-container {
         margin-bottom: -10px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
@@ -93,7 +102,10 @@
         margin-bottom: 10px !important; /* Уплотненный зазор в горизонтальном режиме */
     }
 
-    #home-news-pagination.pagination-container {
+    /* СИНХРОНИЗАЦИЯ: Добавили новые ID для идеального прижима кнопок на боку в архивах */
+    #home-news-pagination.pagination-container,
+    #news-pagination.pagination-container,
+    #journal-pagination.pagination-container {
         margin-bottom: -10px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 

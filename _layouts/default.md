@@ -16,15 +16,20 @@
     <!-- ... БАЗОВЫЕ СТИЛИ ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
-<link rel="stylesheet" href="/assets/css/pagination.css">
-    <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ПОДКЛЮЧЕНИЯ СТИЛЕЙ ИЗ ДРУГИХ ШАБЛОНОВ -->
+
+    <!-- УНИВЕРСАЛЬНЫЙ КОД ДЛЯ ПОДКЛЮЧЕНИЯ СТИЛЕЙ ИЗ ДОЧЕРНИХ ШАБЛОНОВ -->
     {% if layout.layout_css %}
       <link rel="stylesheet" href="{{ layout.layout_css | relative_url }}">
     {% endif %}
 
-    <!-- СТИЛИ КОНКРЕТНОЙ СТРАНИЦЫ -->
+    <!-- ИСПРАВЛЕНО: СТИЛИ КОНКРЕТНОЙ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКОГО ШАБЛОНА -->
     {% if page.custom_css %}
       {% for style in page.custom_css %}
+        <link rel="stylesheet" href="{{ style | relative_url }}">
+      {% endfor %}
+    {% endif %}
+    {% if layout.custom_css %}
+      {% for style in layout.custom_css %}
         <link rel="stylesheet" href="{{ style | relative_url }}">
       {% endfor %}
     {% endif %}

@@ -1,53 +1,38 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ ПРОЕКТА (_includes/project-loop.liquid)
-Назначение: Автоматически собирает кастомные коллекции постов конкретного робота.
-Применяется: Только на внутренних страницах проектов (например, у Картонного робота).
+ДЕБАГ-ВЕРСИЯ: ЛОКАЛЬНЫЙ ЖУРНАЛ ПРОЕКТА (_includes/project-loop.liquid)
 =============================================================================
 {% endcomment %}
 
-{% if include.collection == "journal" %}
-  {% assign current_collection = site.journal %}
-{% elsif include.collection == "media" %}
-  {% assign current_collection = site.media %}
-{% else %}
-  {% assign current_collection = site.journal | concat: site.media %}
-{% endif %}
+<div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 0.85rem; border-radius: 6px;">
+  <strong>⚙️ ДЕБАГ ЛЕНТЫ ПРОЕКТА (Запрос: {{ include.collection }} | Папка: {{ include.folder }}):</strong>
+  <ul style="margin: 5px 0 0 0; padding-left: 20px;">
+    
+    {% if include.collection == "journal" %}
+      {% assign current_collection = site.journal %}
+      <li>Выбрана коллекция: site.journal (Всего файлов в базе Jekyll: {{ site.journal.size }})</li>
+    {% elsif include.collection == "media" %}
+      {% assign current_collection = site.media %}
+      <li>Выбрана коллекция: site.media (Всего файлов в базе Jekyll: {{ site.media.size }})</li>
+    {% else %}
+      {% assign current_collection = site.journal | concat: site.media %}
+      <li>Выбрана сквозная коллекция (Всего файлов: {{ current_collection.size }})</li>
+    {% endif %}
 
-{% for item in current_collection %}
-  {% assign item_date = item.date %}
-  {% if item_date == nil and item.path contains "202" %}
-    {% assign path_parts = item.path | split: "/" %}
-    {% for part in path_parts %}
-      {% if part contains "202" %}
-        {% assign item_date = part %}
-        {% break %}
+    {% assign found_count = 0 %}
+    {% for item in current_collection %}
+      {% comment %} Проверяем, содержит ли путь или ссылка имя папки робота {% endcomment %}
+      {% if item.path contains include.folder or item.url contains include.folder %}
+        {% assign found_count = found_count | plus: 1 %}
+        
+        {% comment. %} Рендерим элемент списка прямо внутри дебага, чтобы проверить видимость {% endcomment %}
+        <li style="color: #155724; margin-top: 5px;">
+          🟢 Найдено совпадение! Файл: <code style="background:#d4edda;">{{ item.path }}</code> <br>
+          Ссылка: <a href="{{ item.url | relative_url }}" style="color: #0056b3; font-weight: bold;">{{ item.title | default: "Без заголовка" }}</a>
+        </li>
       {% endif %}
     {% endfor %}
-  {% endif %}
-
-  {% assign is_allowed = false %}
-  {% if include.folder and include.folder != "" %}
-    {% if item.path contains include.folder or item.url contains include.folder %}
-      {% assign is_allowed = true %}
-    {% endif %}
-  {% else %}
-    {% assign is_allowed = true %}
-  {% endif %}
-
-  {% if is_allowed and item.url != "/" %}
-    {% assign is_post = true %}
-    {% if include.collection == "media" %}{% assign is_post = false %}{% endif %}
-
-    {% comment %} 
-      ИСПРАВЛЕНО: Убрали класс update-item. 
-      Теперь строки ВСЕГДА видимы на страницах проектов и не прячутся стилями пагинации!
-    {% endcomment %}
-    <li class="news-item-compact" data-date="{{ item_date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">      
-      <small>{% if item_date %}{{ item_date | date: "%d.%m.%Y" }}{% else %}запись{% endif %}&nbsp;»&nbsp;</small> 
-      <a href="{{ item.url | relative_url }}" class="item-link">
-        {{ item.title }}
-      </a>
-    </li>
-  {% endif %}
-{% endfor %}
+    
+    <li style="margin-top: 5px; font-weight: bold;">ИТОГО совпадений для блока найдено: {{ found_count }}</li>
+  </ul>
+</div>

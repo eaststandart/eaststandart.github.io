@@ -320,7 +320,7 @@ p:has(img) + blockquote {
     /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */
     .grid-container,
     .diary-list, 
-    .fair-list, 
+    .faire-list, 
     .project-grid {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important; /* Две колонки */
@@ -328,7 +328,7 @@ p:has(img) + blockquote {
     }
 
     /* УНИФИКАЦИЯ ИКОНОК: устанавливаем 40px для всех разделов */
-    .fair-img-round, 
+    .faire-img-round, 
     .item-image-round {
         width: 40px !important;
         height: 40px !important;

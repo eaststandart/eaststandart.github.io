@@ -1,6 +1,10 @@
-/* --- ЯРМАРКА ПОДЕЛОК (fair.css) --- */
+/* ==========================================================================
+   СТИЛИ РАЗДЕЛА: ЯРМАРКА ПОДЕЛОК (assets/css/faire.css)
+   Назначение: Изолированные стили для отображения карточек поделок и иконок.
+   Применяется: Только в шаблоне layouts/faire.html и сетке faire-grid.liquid.
+   ========================================================================== */
 
-.fair-list {
+.faire-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 12px; 
@@ -8,7 +12,7 @@
     margin: 12px 0 0 0 !important; 
 }
 
-.fair-card {
+.faire-card {
     display: flex;
     flex-direction: row;
     align-items: center; 
@@ -21,7 +25,7 @@
     color: inherit;
 }
 
-.fair-img-round {
+.faire-img-round {
     width: 50px !important;
     height: 50px !important;
     object-fit: cover;
@@ -30,7 +34,7 @@
     box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
 }
 
-.fair-list h3 {
+.faire-list h3 {
     margin: -3px 0 0 0 !important;
     color: var(--card-tech);
     font-size: 1.1rem;

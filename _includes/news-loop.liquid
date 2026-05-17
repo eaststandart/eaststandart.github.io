@@ -1,39 +1,35 @@
 {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
-
-{% comment %} 
-  Превращаем строку с папками (через запятую) в чистый массив для перебора.
-  Если параметр include.folder пустой, то и массив будет пустым.
-{% endcomment %}
 {% assign target_folders = include.folder | split: "," %}
 
 {% for item in all_content %}
   {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
     
     {% comment %} 
-      1. ЛОГИКА ФИЛЬТРАЦИИ ПО ПАПКАМ:
-      По умолчанию считаем, что пост подходит. Но если список папок задан — проверяем его.
+      1. УНИВЕРСАЛЬНАЯ ФИЛЬТРАЦИЯ ПО РАЗДЕЛАМ (Проверяет и путь файла, и его URL)
     {% endcomment %}
     {% assign is_allowed = true %}
     {% if include.folder and include.folder != "" %}
       {% assign is_allowed = false %}
       {% for folder_name in target_folders %}
         {% assign clean_folder = folder_name | strip %}
-        {% if item.path contains clean_folder %}
+        {% comment %} Проверяем физический путь ИЛИ реальную ссылку URL постов/страниц {% endcomment %}
+        if item.path contains clean_folder or item.url contains clean_folder
           {% assign is_allowed = true %}
           {% break %}
         {% endif %}
       {% endfor %}
     {% endif %}
 
-    {% comment %} Выводим строку только если она прошла проверку фильтра {% endcomment %}
     {% if is_allowed %}
     
       {% assign is_post = false %}
       {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
       
-      {% comment %} Автоматическое вычисление эмодзи раздела {% endcomment %}
+      {% comment %} 
+        2. ИСПРАВЛЕННЫЙ БЛОК ЭМОДЗИ: Возвращаем индекс [1] для точного вырезания корневой папки страниц
+      {% endcomment %}
       {% assign url_parts = item.url | split: "/" %}
-      {% assign first_folder = url_parts %}
+      {% assign first_folder = url_parts[1] %}
       {% assign item_section = "/" | append: first_folder | append: "/" %}
       
       {% if item.path contains '_posts' %}
@@ -44,7 +40,7 @@
       {% assign parent_page = site.pages | where: "permalink", item_section | first %}
       {% assign section_emoji = parent_page.emoji | default: "" %}
 
-      {% comment %} РЕНДЕРИНГ ДИЗАЙНА В ЗАВИСИМОСТИ ОТ ПАРАМЕТРА TYPE {% endcomment %}
+      {% comment %} РЕНДЕРИНГ ДИЗАЙНА {% endcomment %}
       {% if include.type == "home" %}
         <!-- Компактный стиль для Главной страницы -->
         <li class="update-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">      
@@ -63,7 +59,6 @@
         </li>
       {% endif %}
 
-    {% endif %}{% comment %} Конец проверки is_allowed {% endcomment %}
-
+    {% endif %}
   {% endif %}
 {% endfor %}

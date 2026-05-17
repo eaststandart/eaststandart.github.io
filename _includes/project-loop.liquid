@@ -1,8 +1,8 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ДИНАМИЧЕСКОЙ НАСТРОЙКОЙ СТРОК (_includes/project-loop.liquid)
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ПОЛНОЙ ПАГИНАЦИЕЙ (_includes/project-loop.liquid)
 Назначение: Собирает посты робота. Делит на страницы по лимиту per_page.
-Безопасность: Полностью автономный скрипт пагинации, не влияет на главную и архив.
+Единообразие: Полностью повторяет внешний вид, стрелочки « » и логику главной пагинации.
 =============================================================================
 {% endcomment %}
 
@@ -56,10 +56,10 @@
 </ul>
 
 {% comment %} Посадочное место для мини-кнопок локальной пагинации {% endcomment %}
-<div id="{{ ctrl_id }}" style="display: flex; gap: 5px; margin-bottom: 25px;"></div>
+<div id="{{ ctrl_id }}" class="pagination-container" style="margin-top: 15px !important; margin-bottom: 25px !important; justify-content: flex-start !important;"></div>
 
 {% comment %} 
-  АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИС ДИНАМИЧЕСКИМ ЛИМИТОМ
+  АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИ С ЕДИНЫМ ДИЗАЙНОМ
 {% endcomment %}
 <script>
   (function() {
@@ -71,10 +71,7 @@
     if (!ul || !ctrlDiv) return;
 
     var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
-    
-    // ДИНАМИЧЕСКИЙ НАСТРОЕЧНЫЙ ЛИМИТ: берём параметр per_page, если его нет — ставим 5 по умолчанию
     var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
-    
     var totalPages = Math.ceil(allItems.length / itemsPerPage);
     var currentPage = 1;
 
@@ -84,7 +81,9 @@
     }
 
     function showPage(page) {
+      if (page < 1 || page > totalPages) return;
       currentPage = page;
+      
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
 
@@ -99,37 +98,45 @@
       renderButtons();
     }
 
+    function createBtn(text, targetPage, isCurrent, isDisabled) {
+      var btn = document.createElement('button');
+      btn.className = 'page-btn'; // ПОДВЯЗАЛИ НАШ РОДНОЙ КЛАСС ИЗ ПАГИНАЦИИ
+      btn.innerText = text;
+      
+      // Уменьшаем размер под локальный блок проекта
+      btn.style.padding = '3px 8px';
+      btn.style.fontSize = '0.8rem';
+      
+      if (isCurrent) {
+        // Локальная активная кнопка — в цвете навигации сайта
+        btn.style.backgroundColor = '#3498db';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#3498db';
+        btn.style.cursor = 'default';
+      } else if (isDisabled) {
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+      } else {
+        btn.addEventListener('click', function() {
+          showPage(targetPage);
+        });
+      }
+      return btn;
+    }
+
     function renderButtons() {
       ctrlDiv.innerHTML = '';
       
+      // Кнопка Назад «
+      ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1));
+
+      // Цифровые страницы
       for (var i = 1; i <= totalPages; i++) {
-        var btn = document.createElement('button');
-        btn.innerText = i;
-        
-        btn.style.padding = '3px 8px';
-        btn.style.border = '1px solid #e1e4e8';
-        btn.style.borderRadius = '4px';
-        btn.style.cursor = 'pointer';
-        btn.style.fontSize = '0.8rem';
-        btn.style.fontWeight = 'bold';
-        
-        if (i === currentPage) {
-          btn.style.backgroundColor = '#3498db';
-          btn.style.color = '#fff';
-          btn.style.borderColor = '#3498db';
-        } else {
-          btn.style.backgroundColor = '#fff';
-          btn.style.color = '#24292e';
-        }
-
-        (function(pageIndex) {
-          btn.addEventListener('click', function() {
-            showPage(pageIndex);
-          });
-        })(i);
-
-        ctrlDiv.appendChild(btn);
+        ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false));
       }
+
+      // Кнопка Вперед »
+      ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages));
     }
 
     showPage(1);

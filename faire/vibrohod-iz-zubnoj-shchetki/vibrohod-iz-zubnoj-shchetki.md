@@ -30,6 +30,6 @@ permalink: /faire/vibrohod-iz-zubnoj-shchetki/
 3\. Выполнить научный проект: изучить движение роботов [Science Project: Bristlebot Motion Tracking](https://youtu.be/NmMflaqzJXQ).
 
 ### Галерея работ
-**Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
+*Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
 
-{% include project-list.liquid type="media" %}
+{% include project-loop.liquid type="media" %}

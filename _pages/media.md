@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: pages
 description: Архив фото, видео и аудио по выполненным проектам
 title: Медиа-материалы
 permalink: /media/

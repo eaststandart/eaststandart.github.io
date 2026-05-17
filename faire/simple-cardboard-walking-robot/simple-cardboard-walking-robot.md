@@ -46,7 +46,8 @@ permalink: /faire/simple-cardboard-walking-robot/
   <!-- Вызываем наше оригинальное ядро, требуем только категорию journal -->
   {% include project-loop.liquid type="home" folder="simple-cardboard-walking-robot" category="journal" %}
 </ul>
-\
+
+
 ### Галерея работ
 **Назначение:** демонстрация (фото, видео) выполненного проекта от участников.
 

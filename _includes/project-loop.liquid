@@ -2,7 +2,7 @@
 =============================================================================
 МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА (_includes/project-loop.liquid)
 Назначение: Автоматически собирает посты конкретного робота по категориям.
-Оригинал: Построен строго по твоей логике project-list.liquid с твоими цветами.
+Оригинал: Построен строго по твоей логике project-list.liquid, очищен от инлайн-стилей.
 =============================================================================
 {% endcomment %}
 
@@ -26,13 +26,10 @@
 {% if has_posts %}
 <ul class="project-list">
   
-  {% comment %} 
-    Умная ссылка «Смотреть все →» по твоему оригиналу.
-    Цвет автоматически переключается: синий для journal, зеленый для media.
-  {% endcomment %}
+  {% comment %} Ссылка «Смотреть все» — строго в едином стиле сайта {% endcomment %}
   <li>
     <strong>
-      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: {% if include.type == 'journal' %}var(--card-tech){% else %}var(--card-my){% endif %};">
+      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}">
         Смотреть все →
       </a>
     </strong>

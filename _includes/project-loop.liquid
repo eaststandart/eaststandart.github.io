@@ -36,18 +36,12 @@
     ВНИМАНИЕ: Текстовая ссылка «Смотреть все» отсюда полностью УДАЛЕНА. 
     Список теперь начинается сразу с компактных строк постов.
   {% endcomment %}
-  {% comment %} Вывод постов у роботов: чистая структура по твоей идее, весь дизайн ушёл в CSS {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="update-item local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
-        <small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
-        <span class="item-text-wrapper">
-          <a href="{{ post.url | relative_url }}" class="item-link">{{ post.title }}</a>
-        </span>
-      </li>
+      <li class="news-item-compact local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji=""><small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small><a href="{{ post.url | relative_url }}" class="item-link">{{ post.title }}</a></li>
     {% endif %}
   {% endfor %}
 </ul>

@@ -94,54 +94,32 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
+      btn.className = 'page-btn';
       btn.innerText = text;
       
-      // ВНОСИМ СТИЛИ ИЗ CSS НАПРЯМУЮ В НАШ ФАЙЛ ДЛЯ ВСЕХ КНОПОК ОДИНАКОВО
-      btn.style.display = 'inline-block';
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
-      btn.style.fontWeight = '600';
       btn.style.textDecoration = 'none';
-      btn.style.border = '1px solid #e1e4e8';
-      btn.style.borderRadius = '5px';
-      btn.style.backgroundColor = '#fff';
-      btn.style.color = '#24292e';
-      btn.style.cursor = 'pointer';
-      btn.style.boxSizing = 'border-box';
-      btn.style.textAlign = 'center';
-      btn.style.margin = '0 3px';
-      btn.style.userSelect = 'none';
 
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
-        // Твоя эталонная настройка высоты строки для стрелки
+        // Твоя эталонная настройка высоты строки
         btn.style.lineHeight = '1.1';
-        // Уплотняем боковые поляเฉพาะ стрелки, чтобы компенсировать её узкую форму
-        btn.style.paddingLeft = '5px';
-        btn.style.paddingRight = '5px';
-        // Возвращаем синий цвет навигации для стрелочки
-        btn.style.color = 'var(--card-tech)';
+        btn.style.display = 'inline-block';
+      } else if (isCurrent) {
+        btn.classList.add('active'); 
+      } else if (isDisabled) {
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
       } else {
-        // Для обычных кнопок навигации высота строки по умолчанию
-        btn.style.lineHeight = 'normal';
-        
-        if (isCurrent) {
-          // Активная кнопка красится в цвет твоей переменной
-          btn.style.backgroundColor = 'var(--card-tech)';
-          btn.style.color = '#fff';
-          btn.style.borderColor = 'var(--card-tech)';
-          btn.style.cursor = 'default';
-        } else if (isDisabled) {
-          btn.style.opacity = '0.4';
-          btn.style.cursor = 'default';
-        }
+        btn.addEventListener('click', function() {
+          showPage(targetPage);
+        });
       }
       return btn;
     }
-
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';

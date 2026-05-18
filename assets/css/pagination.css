@@ -30,7 +30,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 50px !important;     /* Твоя настройка: зазор регулируется через маргин списка выше */
+    margin-top: 0px !important;     /* Твоя настройка: зазор регулируется через маргин списка выше */
     margin-bottom: 0px !important;  
 }
 
@@ -83,7 +83,6 @@
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-top: 0px !important;
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 

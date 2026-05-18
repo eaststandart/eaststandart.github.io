@@ -1,5 +1,9 @@
-<!-- ПОДКЛЮЧАЕМ НАШ НОВЫЙ ИЗОЛИРОВАННЫЙ CSS ДЛЯ КАРТОЧЕК ПРОЕКТОВ -->
-<link rel="stylesheet" href="{{ '/assets/css/project-pagination.css' | relative_url }}">
+{% comment %} 
+=============================================================================
+ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
+Назначение: Финальный тест полной вёрстки строк, цветов и автономных кнопок.
+=============================================================================
+{% endcomment %}
 
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
@@ -9,6 +13,7 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
+{% comment %} Счётчик-предохранитель наличия постов {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
@@ -18,9 +23,11 @@
 {% endfor %}
 
 {% if has_posts %}
+{% comment %} Генерируем уникальный ID для каждого блока на странице {% endcomment %}
 {% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
+{% comment %} Автоматически вычисляем адрес большого архива {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
 <ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
@@ -29,18 +36,28 @@
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
-        <div>
-          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-          <span><a href="{{ post.url | relative_url }}" class="item-link">{{ post.title }}</a></span>
+      <!-- ТВОИ НАСТРОЙКИ: Шаг строк margin-bottom: 3px -->
+      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
+        <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
+          
+          <!-- ТВОИ НАСТРОЙКИ: Цвет даты #888, ПК-ужатость -->
+          <span style="flex-shrink: 0 !important; color: #888 !important; font-family: monospace !important; font-size: 0.8rem !important; line-height: 1.4 !important; font-stretch: condensed !important; letter-spacing: -0.5px !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
+            {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
+          </span>
+          
+          <!-- ТВОИ НАСТРОЙКИ: Текст постов #586069 -->
+          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; line-height: 1.4 !important;">
+            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
+              {{ post.title }}
+            </a>
+          </span>
         </div>
       </li>
     {% endif %}
   {% endfor %}
 </ul>
 
-<!-- ИСПРАВЛЕНО: Добавили класс project-list-ctrl для автоматического подхвата стилей кнопок из нового CSS -->
-<div id="{{ ctrl_id }}" class="pagination-container project-list-ctrl" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 24px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
+<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 24px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
 
 <script>
   (function() {
@@ -77,21 +94,51 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
+      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn';
       btn.innerText = text;
       
-      // ИСПРАВЛЕНО: Никакой инлайн-грязи btn.style! Все свойства ушли в файл project-pagination.css
+      // ВНОСИМ СТИЛИ ИЗ CSS НАПРЯМУЮ В НАШ ФАЙЛ ДЛЯ ВСЕХ КНОПОК ОДИНАКОВО
+      btn.style.display = 'inline-block';
+      btn.style.padding = '3px 8px';
+      btn.style.fontSize = '0.8rem';
+      btn.style.fontWeight = '600';
+      btn.style.textDecoration = 'none';
+      btn.style.border = '1px solid #e1e4e8';
+      btn.style.borderRadius = '5px';
+      btn.style.backgroundColor = '#fff';
+      btn.style.color = '#24292e';
+      btn.style.cursor = 'pointer';
+      btn.style.boxSizing = 'border-box';
+      btn.style.textAlign = 'center';
+      btn.style.margin = '0 3px';
+      btn.style.userSelect = 'none';
+
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
+        // Твоя эталонная настройка высоты строки для стрелки
+        btn.style.lineHeight = '1.1';
+        // Уплотняем боковые поля стрелки, чтобы она была идеальным квадратом
+        btn.style.paddingLeft = '5px';
+        btn.style.paddingRight = '5px';
+        // Возвращаем цвет навигации для стрелочки из переменной
+        btn.style.color = 'var(--card-tech)';
       } else {
+        // Для обычных кнопок навигации высота строки по умолчанию
+        btn.style.lineHeight = 'normal';
+        
         if (isCurrent) {
-          btn.classList.add('active'); 
+          // Активная кнопка красится в цвет твоей переменной
+          btn.style.backgroundColor = 'var(--card-tech)';
+          btn.style.color = '#fff';
+          btn.style.borderColor = 'var(--card-tech)';
+          btn.style.cursor = 'default';
         } else if (isDisabled) {
           btn.style.opacity = '0.4';
           btn.style.cursor = 'default';
         } else {
+          // ОБРАБОТЧИК КЛИКА ВЕРНУЛСЯ НА МЕСТО: Кнопки навигации снова полностью рабочие!
           btn.addEventListener('click', function() {
             showPage(targetPage);
           });
@@ -102,6 +149,7 @@
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
+      // Кнопка со стрелочкой "→" на первом месте слева
       ctrlDiv.appendChild(createBtn('→', null, false, false, true));
 
       if (totalPages > 1) {

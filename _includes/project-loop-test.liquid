@@ -89,51 +89,34 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
       btn.innerText = text;
       
-      // ВНОСИМ СТИЛИ ИЗ CSS НАПРЯМУЮ В НАШ ФАЙЛ ДЛЯ ВСЕХ КНОПОК ОДИНАКОВО
+      // ГЕОМЕТРИЯ КНОПОК ОСТАЁТСЯ ИНЛАЙН В ПОЛНОЙ БЕЗОПАСНОСТИ
       btn.style.display = 'inline-block';
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
-      btn.style.fontWeight = '600';
       btn.style.textDecoration = 'none';
-      btn.style.border = '1px solid #e1e4e8';
-      btn.style.borderRadius = '5px';
-      btn.style.backgroundColor = '#fff';
-      btn.style.color = '#24292e';
-      btn.style.cursor = 'pointer';
       btn.style.boxSizing = 'border-box';
       btn.style.textAlign = 'center';
       btn.style.margin = '0 3px';
-      btn.style.userSelect = 'none';
 
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
-        // Твоя эталонная настройка высоты строки для стрелки
+        // Геометрия тонкой стрелочки на месте
         btn.style.lineHeight = '1.1';
-        // Уплотняем боковые поля стрелки, чтобы она была идеальным квадратом
         btn.style.paddingLeft = '5px';
         btn.style.paddingRight = '5px';
-        // Возвращаем цвет навигации для стрелочки из переменной
-        btn.style.color = 'var(--card-tech)';
       } else {
-        // Для обычных кнопок навигации высота строки по умолчанию
         btn.style.lineHeight = 'normal';
         
         if (isCurrent) {
-          // Активная кнопка красится в цвет твоей переменной
-          btn.style.backgroundColor = 'var(--card-tech)';
-          btn.style.color = '#fff';
-          btn.style.borderColor = 'var(--card-tech)';
-          btn.style.cursor = 'default';
+          btn.classList.add('active'); 
         } else if (isDisabled) {
           btn.style.opacity = '0.4';
           btn.style.cursor = 'default';
         } else {
-          // ОБРАБОТЧИК КЛИКА ВЕРНУЛСЯ НА МЕСТО: Кнопки навигации снова полностью рабочие!
           btn.addEventListener('click', function() {
             showPage(targetPage);
           });

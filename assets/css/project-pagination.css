@@ -59,3 +59,31 @@
     margin: 0 !important;
     padding: 0 !important;
 }
+
+/* ==========================================================================
+   МИКРО-ВЫНОС №3: ЦВЕРА И РАМКИ КНОПОК ПАГИНАЦИИ (assets/css/project-pagination.css)
+   ========================================================================== */
+
+/* Общий дизайн рамок, шрифтов и цветов для всех локальных кнопок робота */
+.pagination-container .page-btn {
+    border: 1px solid #e1e4e8 !important;
+    border-radius: 5px !important;
+    background-color: #fff !important;
+    color: #24292e !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+/* Цвет стрелочки перехода в большой архив */
+.pagination-container .page-btn.archive-btn {
+    color: var(--card-tech) !important;
+}
+
+/* Расцветка активной кнопки выбранной страницы */
+.pagination-container .page-btn.active {
+    background-color: var(--card-tech) !important;
+    color: #fff !important;
+    border-color: var(--card-tech) !important;
+    cursor: default !important;
+}

@@ -1,6 +1,3 @@
-<!-- ПОДКЛЮЧАЕМ НАШ ВЫДЕЛЕННЫЙ CSS ДЛЯ ШРИФТОВ И ЦВЕТОВ -->
-<link rel="stylesheet" href="{{ '/assets/css/project-pagination.css' | relative_url }}">
-
 {% comment %} 
 =============================================================================
 ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
@@ -43,14 +40,14 @@
       <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
         <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
           
-          <!-- ИСПРАВЛЕНО: Убрали цвет и monospace (они в CSS), геометрия 0.8rem на месте -->
-          <span style="flex-shrink: 0 !important; font-size: 0.8rem !important; line-height: 1.4 !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
+          <!-- ТВОИ НАСТРОЙКИ: Цвет даты #888, ПК-ужатость -->
+          <span style="flex-shrink: 0 !important; color: #888 !important; font-family: monospace !important; font-size: 0.8rem !important; line-height: 1.4 !important; font-stretch: condensed !important; letter-spacing: -0.5px !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
           </span>
           
-          <!-- ИСПРАВЛЕНО: Убрали цвет ссылки (он в CSS), геометрия и размер 0.9rem на месте -->
+          <!-- ТВОИ НАСТРОЙКИ: Текст постов #586069 -->
           <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; line-height: 1.4 !important;">
-            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
+            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
               {{ post.title }}
             </a>
           </span>

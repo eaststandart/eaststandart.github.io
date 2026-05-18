@@ -1,7 +1,7 @@
 ---
 layout: news
 title: Журнал проекта
-permalink: /journal/
+permalink: /journal1/
 per_page: 10
 folder: "journal"
 pinned_url: ""

@@ -95,25 +95,19 @@
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn'; 
+      btn.className = 'page-btn';
       btn.innerText = text;
       
-      // Локальные компактные размеры
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
       btn.style.textDecoration = 'none';
-      btn.style.display = 'inline-block';
-      
-      // ИСПРАВЛЕНО: Жёстко зажимаем все кнопки в правильные квадраты (ширина равна высоте)
-      btn.style.minWidth = '24px';       /* Фиксированная минимальная ширина квадрата */
-      btn.style.boxSizing = 'border-box'; /* Защита от раздувания геометрии рамками */
-      btn.style.textAlign = 'center';
 
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
         // Твоя эталонная настройка высоты строки
         btn.style.lineHeight = '1.1';
+        btn.style.display = 'inline-block';
       } else if (isCurrent) {
         btn.classList.add('active'); 
       } else if (isDisabled) {

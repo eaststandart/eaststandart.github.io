@@ -1,16 +1,8 @@
 /* ==========================================================================
-   ИЗОЛИРОВАННЫЕ ШРИФТЫ И ЦВЕТА РОБОТА (assets/css/project-pagination.css)
+   МИКРО-ВЫНОС №1: ЦВЕТ ТЕКСТА ПОСТОВ РОБОТА (assets/css/project-pagination.css)
    ========================================================================== */
 
-/* ЛЕВАЯ КОЛОНКА (ДАТА): Шрифты, ПК-ужатость и цвет #888 */
-.project-list .local-post-item div span:first-child {
-    color: #888 !important;
-    font-family: monospace !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-}
-
-/* ПРАВАЯ КОЛОНКА (ССЫЛКА): Плотный серый цвет постов #586069 */
-.project-list .local-post-item .item-link {
+/* Намертво фиксируем твой утверждённый серый цвет для всех постов */
+.robot-project-list .robot-item-link {
     color: #586069 !important;
 }

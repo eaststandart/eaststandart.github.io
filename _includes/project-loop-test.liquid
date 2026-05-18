@@ -1,8 +1,7 @@
 {% comment %} 
 =============================================================================
 ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
-Назначение: Тест идеального переноса строк методом локального флекс-ряда.
-Дизайн: Все стили прописаны ЖЁСТКО в коде тегов для наглядности дебага.
+Назначение: Тест утверждённых цветов, зазоров и ужатости дат для ПК.
 =============================================================================
 {% endcomment %}
 
@@ -32,34 +31,28 @@
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
 <ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
-  
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <!-- ТЕСТ №11: Жёсткая фиксация утверждённых цветов для дат (#6a737d) и текста постов (#586069) -->
+      <!-- ТВОИ НАСТРОЙКИ: Шаг строк margin-bottom: 3px -->
       <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
-        
         <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
           
-          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости, цвет строго #6a737d -->
+          <!-- ТВОИ НАСТРОЙКИ: Цвет даты #888, ПК-ужатость -->
           <span style="flex-shrink: 0 !important; color: #888 !important; font-family: monospace !important; font-size: 0.8rem !important; line-height: 1.4 !important; font-stretch: condensed !important; letter-spacing: -0.5px !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
           </span>
           
-          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): Единый для всех постов плотный серый цвет строго #586069 -->
+          <!-- ТВОИ НАСТРОЙКИ: Текст постов #586069 -->
           <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; line-height: 1.4 !important;">
             <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
               {{ post.title }}
             </a>
           </span>
-
         </div>
-
       </li>
-
-
     {% endif %}
   {% endfor %}
 </ul>
@@ -91,7 +84,6 @@
 
       allItems.forEach(function(el, index) {
         if (index >= start && index < end) {
-          // Скрипт просто делает строку li видимой, а внутренний div разводит колонки
           el.style.setProperty('display', 'block', 'important');
         } else {
           el.style.setProperty('display', 'none', 'important');
@@ -102,26 +94,17 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn'; // Твой базовый класс из pagination.css
+      btn.className = 'page-btn';
       btn.innerText = text;
       
-      // ИСПРАВЛЕНО: Жёстко выравниваем геометрию кнопок-ссылок и кнопок-цифр один в один
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
       btn.style.textDecoration = 'none';
-      btn.style.display = 'inline-block';
-      btn.style.boxSizing = 'border-box'; // Защита от раздувания квадрата рамками
-      btn.style.lineHeight = '1.2';        /* Синхронизируем высоту текстовой площадки */
-      btn.style.textAlign = 'center';
 
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
-        // Дополнительный микро-фикс высоты, чтобы скомпенсировать разницу тегов <a> и <button>
-        btn.style.height = '24px';
-        btn.style.minWidth = '24px';
       } else if (isCurrent) {
         btn.classList.add('active'); 
       } else if (isDisabled) {
@@ -137,7 +120,7 @@
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      ctrlDiv.appendChild(createBtn('→', null, false, false, true));
+      ctrlDiv.appendChild(createBtn('➜', null, false, false, true));
 
       if (totalPages > 1) {
         ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));

@@ -3,7 +3,7 @@ layout: news
 title: Что нового?
 permalink: /news/
 per_page: 10
-folder: ""
+folder: "journal"
 pinned_url: ""
 ---
 {% comment %} 

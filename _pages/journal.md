@@ -1,6 +1,6 @@
 ---
 layout: news
-title: Журнал проекта
+title: Журнал проектов
 description: Журнал, дневник, блог и прочие записи
 permalink: /journal/
 per_page: 10

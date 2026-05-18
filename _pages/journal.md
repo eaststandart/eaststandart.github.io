@@ -4,6 +4,7 @@ title: Журнал проекта
 permalink: /journal/
 per_page: 10
 folder: journal
+pinned_url: ""
 emoji: "✍🏻"
 ---
 

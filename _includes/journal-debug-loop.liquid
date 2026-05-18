@@ -1,0 +1,69 @@
+{% assign all_content = site.posts | concat: site.pages | concat: site.people %}
+{% assign target_folders = include.folder | split: "," %}
+
+{% for item in all_content %}
+  {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
+    
+    {% assign is_allowed = true %}
+    {% if include.folder and include.folder != "" %}
+      {% assign is_allowed = false %}
+      {% for folder_name in target_folders %}
+        {% assign clean_folder = folder_name | strip %}
+        {% if item.path contains clean_folder or item.url contains clean_folder %}
+          {% assign is_allowed = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if is_allowed %}
+    
+      {% assign is_post = false %}
+      {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
+      
+      {% assign url_parts = item.url | split: "/" %}
+      {% assign first_folder = url_parts[1] %}
+      {% assign item_section = "/" | append: first_folder | append: "/" %}
+      
+      {% if item.path contains '_posts' %}
+        {% assign first_cat = item.categories | first %}
+        {% assign item_section = "/" | append: first_cat | append: "/" %}
+      {% endif %}
+      
+      {% assign parent_page = site.pages | where: "permalink", item_section | first %}
+      {% assign section_emoji = parent_page.emoji | default: "" %}
+
+      {% comment %} РЕНДЕРИНГ ДИЗАЙНА {% endcomment %}
+      {% if include.type == "home" %}
+        <!-- Главную не трогаем -->
+        <li class="update-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">      
+          <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
+          <a href="{{ item.url | relative_url }}" class="item-link">
+            {{ item.title }}
+          </a>
+        </li>
+      {% elsif include.type == "news" %}
+        <!-- ДЕБАГ-ВЕРСИЯ ДЛЯ СТРАНИЦЫ ЖУРНАЛА (Временная подсветка скрытых полей) -->
+        <li class="update-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; background: #fff8e1;">
+          
+          <!-- Подсвечиваем контейнер даты синей рамкой -->
+          <small style="color: #888; border: 1px solid #2196f3; display: inline-block; padding: 2px;">
+            {{ item.date | date: "%d.%m.%Y" }}
+          </small>
+          
+          <!-- Подсвечиваем контейнер ссылки красной рамкой -->
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px; border: 1px solid #f44336; display: inline-block; padding: 2px;">
+            {{ item.title }}
+          </a>
+          
+          <!-- Техническая подпись параметров в конце строки -->
+          <span style="font-family: monospace; font-size: 0.75rem; color: #795548; margin-left: 15px; background: #efebe9; padding: 1px 4px; border-radius: 3px;">
+            [ID: {{ item.id | default: "page" }} | Path contains _posts: {{ is_post }}]
+          </span>
+
+        </li>
+      {% endif %}
+
+    {% endif %}
+  {% endif %}
+{% endfor %}

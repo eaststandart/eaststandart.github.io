@@ -38,19 +38,19 @@
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <!-- ТЕСТ №4: Полная синхронизация шрифтов даты и текста для проверки baseline -->
+      <!-- ТЕСТ №5: Абсолютное равенство размеров шрифтов 1 в 1 для идеального baseline -->
       <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 8px; padding-bottom: 4px;">
         
         <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
           
-          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): УБРАЛИ monospace, шрифт теперь такой же, как у ссылки -->
-          <small style="flex-shrink: 0 !important; color: #6a737d; white-space: nowrap !important; margin-right: 10px !important; border: 1px dashed #2196f3; padding: 1px;">
+          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): Заменили small на span, выставили размер текста 0.9rem и line-height 1.4 -->
+          <span style="flex-shrink: 0 !important; color: #6a737d; font-size: 0.9rem !important; line-height: 1.4 !important; white-space: nowrap !important; margin-right: 10px !important; border: 1px dashed #2196f3; padding: 1px; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
-          </small>
+          </span>
           
-          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): Без изменений, держит baseline -->
-          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; border: 1px dashed #f44336; padding: 1px;">
-            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #0366d6; display: block !important; word-wrap: break-word !important; break-word: break-all !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
+          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): Размер 0.9rem и line-height 1.4 -->
+          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; border: 1px dashed #f44336; padding: 1px; line-height: 1.4 !important;">
+            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #0366d6; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
               {{ post.title }}
             </a>
           </span>

@@ -67,7 +67,7 @@
     if (!ul || !ctrlDiv) return;
 
     var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
-    var itemsPerPage = parseInt("{{ include.per_page }}") || 15; 
+    var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
     var totalPages = Math.ceil(allItems.length / itemsPerPage);
     var currentPage = 1;
 
@@ -83,7 +83,7 @@
 
       allItems.forEach(function(el, index) {
         if (index >= start && index < end) {
-          el.style.setProperty('display', 'flex', 'important');
+          el.style.setProperty('display', 'block', 'important');
         } else {
           el.style.setProperty('display', 'none', 'important');
         }

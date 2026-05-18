@@ -3,17 +3,18 @@
    Назначение: Управление компактной сеткой строк и кнопками внутри карточек роботов.
    ========================================================================== */
 
-/* 1. БАЗОВАЯ СТРУКТУРА СТРОК */
-.project-list {
-    margin-top: 12px !important;    /* ИСПРАВЛЕНО: Вернули аккуратный воздух от верхнего заголовка до первой строки! */
-    margin-bottom: 15px !important; /* Фиксируем нижний отступ до кнопок навигации */
-    padding: 0 !important;
-}
-
+/* 1. БАЗОВАЯ СТРУКТУРА СТРОК (СИНХРОНИЗИРОВАНО С ТЕСТОМ №11) */
 .project-list .local-post-item {
     margin-bottom: 3px !important;
     padding-bottom: 0px !important;
     list-style: none !important;
+}
+
+.project-list .local-post-item div {
+    display: flex !important;
+    align-items: baseline !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости, цвет строго #888 */

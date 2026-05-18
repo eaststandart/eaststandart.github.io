@@ -1,0 +1,143 @@
+{% comment %} 
+=============================================================================
+ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
+Назначение: Тест идеального переноса строк методом локального флекс-ряда.
+Дизайн: Все стили прописаны ЖЁСТКО в коде тегов для наглядности дебага.
+=============================================================================
+{% endcomment %}
+
+{% assign url_parts = page.url | split: "/" %}
+{% assign section_slug = url_parts[1] %}
+{% assign project_slug = url_parts[2] %}
+{% assign section_url = section_slug | prepend: "/" | append: "/" %}
+{% assign section_page = site.pages | where: "url", section_url | first %}
+
+{% assign project_slug_last = page.url | split: "/" | last %}
+
+{% comment %} Счётчик-предохранитель наличия постов {% endcomment %}
+{% assign has_posts = false %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
+    {% assign has_posts = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if has_posts %}
+{% comment %} Генерируем уникальный ID для каждого блока на странице {% endcomment %}
+{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
+
+{% comment %} Автоматически вычисляем адрес большого архива {% endcomment %}
+{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+
+<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
+  
+  {% for post in site.categories[project_slug_last] %}
+    {% if post.categories contains include.type %}
+      {% assign is_post = true %}
+      {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
+
+      <!-- ТЕСТ: Строка li принудительно работает как локальный флекс-ряд для удержания колонок -->
+      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 8px; padding-bottom: 4px; line-height: 1.3;">
+        
+        <div style="display: flex !important; align-items: flex-start !important; width: 100% !important; box-sizing: border-box !important;">
+          
+          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): сжата и неподвижна, имеет синюю тестовую рамку -->
+          <small style="flex-shrink: 0 !important; color: #6a737d; font-family: monospace; white-space: nowrap !important; margin-right: 10px !important; border: 1px dashed #2196f3; padding: 1px;">
+            {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
+          </small>
+          
+          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): твоя обертка span забирает всё свободное место, имеет красную тестовую рамку -->
+          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; border: 1px dashed #f44336; padding: 1px;">
+            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #0366d6; display: block !important; word-wrap: break-word !important; break-word: break-all !important;">
+              {{ post.title }}
+            </a>
+          </span>
+
+        </div>
+
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 24px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
+
+<script>
+  (function() {
+    var containerId = "{{ loop_id }}";
+    var ctrlId = "{{ ctrl_id }}";
+    
+    var ul = document.getElementById(containerId);
+    var ctrlDiv = document.getElementById(ctrlId);
+    if (!ul || !ctrlDiv) return;
+
+    var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
+    var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
+    var totalPages = Math.ceil(allItems.length / itemsPerPage);
+    var currentPage = 1;
+
+    var targetArchiveUrl = "{{ archive_url }}";
+
+    function showPage(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      
+      var start = (page - 1) * itemsPerPage;
+      var end = start + itemsPerPage;
+
+      allItems.forEach(function(el, index) {
+        if (index >= start && index < end) {
+          // Скрипт просто делает строку li видимой, а внутренний div разводит колонки
+          el.style.setProperty('display', 'block', 'important');
+        } else {
+          el.style.setProperty('display', 'none', 'important');
+        }
+      });
+
+      renderButtons();
+    }
+
+    function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
+      var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
+      btn.className = 'page-btn';
+      btn.innerText = text;
+      
+      btn.style.padding = '3px 8px';
+      btn.style.fontSize = '0.8rem';
+      btn.style.textDecoration = 'none';
+
+      if (isArchiveLink) {
+        btn.setAttribute('href', targetArchiveUrl);
+        btn.classList.add('archive-btn');
+      } else if (isCurrent) {
+        btn.classList.add('active'); 
+      } else if (isDisabled) {
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+      } else {
+        btn.addEventListener('click', function() {
+          showPage(targetPage);
+        });
+      }
+      return btn;
+    }
+
+    function renderButtons() {
+      ctrlDiv.innerHTML = '';
+      ctrlDiv.appendChild(createBtn('➜', null, false, false, true));
+
+      if (totalPages > 1) {
+        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));
+        for (var i = 1; i <= totalPages; i++) {
+          ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, false));
+        }
+        ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages, false));
+      }
+    }
+
+    showPage(1);
+  })();
+</script>
+{% endif %}

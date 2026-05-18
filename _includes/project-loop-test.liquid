@@ -1,7 +1,7 @@
 {% comment %} 
 =============================================================================
-ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
-Назначение: Финальный тест полной вёрстки строк, цветов и автономных кнопок.
+ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ С ДВОЙНЫМИ КЛАССАМИ (_includes/project-loop-test.liquid)
+Назначение: Защита вёрстки через двойные классы "robot- + имя". Стили в инлайне.
 =============================================================================
 {% endcomment %}
 
@@ -30,24 +30,26 @@
 {% comment %} Автоматически вычисляем адрес большого архива {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
-<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
+<!-- ТВОЯ ФОРМУЛА: Связали project-list и robot-project-list -->
+<ul id="{{ loop_id }}" class="project-list robot-project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <!-- ТВОИ НАСТРОЙКИ: Шаг строк margin-bottom: 3px -->
-      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
+      <!-- ТВОЯ ФОРМУЛА: Связали local-post-item и robot-local-post-item, отступ строк 3px -->
+      <li class="local-post-item robot-local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
         <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
           
-          <!-- ТВОИ НАСТРОЙКИ: Цвет даты #888, ПК-ужатость -->
+          <!-- Левая колонка (Дата) — все инлайн-свойства сохранены без изменений -->
           <span style="flex-shrink: 0 !important; color: #888 !important; font-family: monospace !important; font-size: 0.8rem !important; line-height: 1.4 !important; font-stretch: condensed !important; letter-spacing: -0.5px !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
           </span>
           
-          <!-- ТВОИ НАСТРОЙКИ: Текст постов #586069 -->
+          <!-- Правая колонка (Текст) -->
           <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; line-height: 1.4 !important;">
-            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
+            <!-- ТВОЯ ФОРМУЛА: Связали item-link и robot-item-link -->
+            <a href="{{ post.url | relative_url }}" class="item-link robot-item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
               {{ post.title }}
             </a>
           </span>
@@ -57,7 +59,7 @@
   {% endfor %}
 </ul>
 
-<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 15px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
+<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 24px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
 
 <script>
   (function() {

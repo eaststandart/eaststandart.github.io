@@ -1,7 +1,7 @@
 /* ==========================================================================
    СТИЛИ МОДУЛЯ: УНИВЕРСАЛЬНАЯ ПАГИНАЦИЯ (assets/css/pagination.css)
    Назначение: Управление сеткой контейнеров, кнопками и адаптацией под мобильные.
-   Применяется: На Главной странице, в архиве /news/ и в архиве /journal/.
+   Применяется: На Главной странице, в архиве /news/ и во всех будущих лентах.
    ========================================================================== */
 
 /* ==========================================================================
@@ -30,11 +30,11 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 0px !important;     /* Зазор регулируется через маргин списка выше */
+    margin-top: 0px !important;     /* Твоя настройка: зазор регулируется через маргин списка выше */
     margin-bottom: 0px !important;  
 }
 
-/* Обычные кнопки страниц */
+/* Обычные кнопки */
 .page-btn {
     display: inline-block;
     padding: 5px 10px;
@@ -58,12 +58,16 @@
     color: #24292e;
 }
 
-/* Активная выбранная страница — полностью на сквозной переменной */
 .page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
     border-color: var(--card-tech) !important;
     cursor: default;
+}
+
+/* Специальная кнопка-стрелка перехода в большой архив */
+.page-btn.archive-btn {
+    color: var(--card-tech) !important; /* ВОЗВРАЩЕНО: Фирменный небесно-синий цвет навигации сайта из CSS! */
 }
 
 /* Временная подсветка фона для закрепленной новости */
@@ -80,11 +84,10 @@
         margin-bottom: 10px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
     }
 
-    /* СИНХРОНИЗАЦИЯ: отступы в архивах на телефонах сжимаются точно так же, как на главной */
+    /* СИНХРОНИЗАЦИЯ: Добавили новые ID, чтобы отступы в архивах на телефонах сжимались точно так же, как на главной */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-top: 0px !important;
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
@@ -104,7 +107,7 @@
         margin-bottom: 10px !important; /* Уплотненный зазор в горизонтальном режиме */
     }
 
-    /* СИНХРОНИЗАЦИЯ: новые ID для идеального прижима кнопок на боку в архивах */
+    /* СИНХРОНИЗАЦИЯ: Добавили новые ID для идеального прижима кнопок на боку в архивах */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
@@ -130,7 +133,7 @@
     color: #0366d6 !important; /* Синий для проектов/страниц на главной */
 }
 
-/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ и /journal/ */
+/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ (СИНХРОНИЗИРОВАНО С ГЛАВНОЙ) */
 .updates-feed #posts-list .update-item[data-is-post="true"] .item-link {
     color: #586069 !important; /* Тот же плотный серый, как на главной */
 }

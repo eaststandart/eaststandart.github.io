@@ -38,19 +38,19 @@
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <!-- ТЕСТ: Строка li принудительно работает как локальный флекс-ряд для удержания колонок -->
-      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 8px; padding-bottom: 4px; line-height: 1.3;">
+      <!-- ТЕСТ №2: Уничтожаем скрытую высоту строки Primer -->
+      <li class="local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 8px; padding-bottom: 4px;">
         
-        <div style="display: flex !important; align-items: flex-start !important; width: 100% !important; box-sizing: border-box !important;">
+        <div style="display: flex !important; align-items: flex-start !important; width: 100% !important; box-sizing: border-box !important; line-height: 1 !important;">
           
-          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): сжата и неподвижна, имеет синюю тестовую рамку -->
-          <small style="flex-shrink: 0 !important; color: #6a737d; font-family: monospace; white-space: nowrap !important; margin-right: 10px !important; border: 1px dashed #2196f3; padding: 1px;">
+          <!-- ЛЕВАЯ КОЛОНКА (ДАТА): принудительно line-height: 1 -->
+          <small style="flex-shrink: 0 !important; color: #6a737d; font-family: monospace; white-space: nowrap !important; margin-right: 10px !important; border: 1px dashed #2196f3; padding: 1px; line-height: 1 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
           </small>
           
-          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): твоя обертка span забирает всё свободное место, имеет красную тестовую рамку -->
-          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; border: 1px dashed #f44336; padding: 1px;">
-            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #0366d6; display: block !important; word-wrap: break-word !important; break-word: break-all !important;">
+          <!-- ПРАВАЯ КОЛОНКА (ТЕКСТ): убрали подушки line-height, выровняли буквы -->
+          <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; border: 1px dashed #f44336; padding: 1px; line-height: 1 !important;">
+            <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; color: #0366d6; display: block !important; word-wrap: break-word !important; break-word: break-all !important; line-height: 1 !important; padding-top: 1px !important; margin: 0 !important;">
               {{ post.title }}
             </a>
           </span>
@@ -58,6 +58,7 @@
         </div>
 
       </li>
+
     {% endif %}
   {% endfor %}
 </ul>

@@ -59,15 +59,15 @@
 }
 
 .page-btn.active {
-    background-color: #3498db !important;
+    background-color: var(--card-tech) !important;
     color: #fff !important;
-    border-color: #3498db !important;
+    border-color: var(--card-tech) !important;
     cursor: default;
 }
 
 /* Специальная кнопка-стрелка перехода в большой архив */
 .page-btn.archive-btn {
-    color: #3498db !important; /* ВОЗВРАЩЕНО: Фирменный небесно-синий цвет навигации сайта из CSS! */
+    color: var(--card-tech) !important; /* ВОЗВРАЩЕНО: Фирменный небесно-синий цвет навигации сайта из CSS! */
 }
 
 /* Временная подсветка фона для закрепленной новости */

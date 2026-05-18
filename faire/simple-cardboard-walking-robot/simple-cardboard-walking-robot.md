@@ -38,6 +38,5 @@ permalink: /faire/simple-cardboard-walking-robot/
 {% include project-loop-test.liquid type="journal" per_page="" %}
 
 ### Галерея работ
-*Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
-
+<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include project-loop-test.liquid type="media" %}

@@ -105,8 +105,8 @@
 
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
+        btn.classList.add('archive-btn'); // ДОБАВЛЕНО: Дали стрелке собственный класс для настройки цвета в CSS!
       } else if (isCurrent) {
-        // ИСПРАВЛЕНО: Просто добавляем класс active, а цвета подтянутся из pagination.css!
         btn.classList.add('active'); 
       } else if (isDisabled) {
         btn.style.opacity = '0.4';

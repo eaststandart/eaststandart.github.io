@@ -1,13 +1,11 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА (_includes/project-loop.liquid)
-Назначение: Автоматически собирает посты конкретного робота из его категории.
-Оригинал: Построен на базе твоего эталонного скрипта project-list.liquid.
-Параметры: include.type ("journal" или "media" для фильтрации категории постов).
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ПОЛНОЙ ПАГИНАЦИЕЙ (_includes/project-loop.liquid)
+Назначение: Собирает посты робота. Делит на страницы по лимиту per_page.
+Единообразие: Полностью повторяет внешний вид, стрелочки « » и логику главной пагинации.
 =============================================================================
 {% endcomment %}
 
-{% comment %} 1. Автоматическое вычисление адресов и названий разделов из URL страницы {% endcomment %}
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
 {% assign project_slug = url_parts[2] %}
@@ -16,10 +14,7 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
-{% comment %} 
-   2. Счётчик-предохранитель: проверяем, есть ли вообще посты для этого блока, 
-   чтобы не выводить пустые контейнеры, если журнала или галереи не существует.
-{% endcomment %}
+{% comment %} Счётчик-предохранитель наличия постов {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
@@ -29,10 +24,14 @@
 {% endfor %}
 
 {% if has_posts %}
-<ul class="project-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
+{% comment %} Генерируем уникальный ID для каждого блока на странице {% endcomment %}
+{% assign loop_id = include.type | append: "-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
+
+<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
   
-  {% comment %} Умная ссылка «Смотреть все →» — теперь строго в цвете навигации #3498db {% endcomment %}
-  <li style="margin-bottom: 12px;">
+  {% comment %} Умная ссылка «Смотреть все →» в цвете навигации #3498db {% endcomment %}
+  <li class="nav-all-link" style="margin-bottom: 12px;">
     <strong>
       <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: #3498db; text-decoration: none;">
         Смотреть все →
@@ -40,13 +39,13 @@
     </strong>
   </li>
 
-  {% comment %} 3. Вывод самих компактных строк постов по твоей хронологии {% endcomment %}
+  {% comment %} Вывод компактных строк постов {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="news-item-compact" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+      <li class="news-item-compact local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
         <small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
         <a href="{{ post.url | relative_url }}" class="item-link">
           {{ post.title }}
@@ -55,4 +54,88 @@
     {% endif %}
   {% endfor %}
 </ul>
+
+{% comment %} Посадочное место для мини-кнопок локальной пагинации с чистой геометрией {% endcomment %}
+<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 20px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
+
+{% comment %} 
+  АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИ С ЕДИНЫМ ДИЗАЙНОМ
+{% endcomment %}
+<script>
+  (function() {
+    var containerId = "{{ loop_id }}";
+    var ctrlId = "{{ ctrl_id }}";
+    
+    var ul = document.getElementById(containerId);
+    var ctrlDiv = document.getElementById(ctrlId);
+    if (!ul || !ctrlDiv) return;
+
+    var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
+    var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
+    var totalPages = Math.ceil(allItems.length / itemsPerPage);
+    var currentPage = 1;
+
+    if (totalPages <= 1) {
+      ctrlDiv.style.display = 'none';
+      return;
+    }
+
+    function showPage(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      
+      var start = (page - 1) * itemsPerPage;
+      var end = start + itemsPerPage;
+
+      allItems.forEach(function(el, index) {
+        if (index >= start && index < end) {
+          el.style.setProperty('display', 'flex', 'important');
+        } else {
+          el.style.setProperty('display', 'none', 'important');
+        }
+      });
+
+      renderButtons();
+    }
+
+    function createBtn(text, targetPage, isCurrent, isDisabled) {
+      var btn = document.createElement('button');
+      btn.className = 'page-btn'; // Твой родной класс из pagination.css полностью управляет дизайном!
+      btn.innerText = text;
+      
+      if (isCurrent) {
+        // Локальная активная кнопка — красится в цвет навигации сайта
+        btn.style.backgroundColor = '#3498db';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#3498db';
+        btn.style.cursor = 'default';
+      } else if (isDisabled) {
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+      } else {
+        btn.addEventListener('click', function() {
+          showPage(targetPage);
+        });
+      }
+      return btn;
+    }
+
+    function renderButtons() {
+      ctrlDiv.innerHTML = '';
+      
+      // Кнопка Назад «
+      ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1));
+
+      // Цифровые страницы
+      for (var i = 1; i <= totalPages; i++) {
+        ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false));
+      }
+
+      // Кнопка Вперед »
+      ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages));
+    }
+
+    showPage(1);
+  })();
+</script>
 {% endif %}

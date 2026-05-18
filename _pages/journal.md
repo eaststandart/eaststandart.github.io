@@ -5,7 +5,7 @@ description: Журнал, дневник, блог и прочие записи
 permalink: /journal/
 per_page: 10
 folder: "journal"
-pinned_url: ""
+pinned_url: "/journal/simple-cardboard-walking-robot"
 emoji: "✍🏻"
 ---
 {% comment %} 

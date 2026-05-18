@@ -1,8 +1,8 @@
 {% comment %} 
 =============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ПОЛНОЙ ПАГИНАЦИЕЙ (_includes/project-loop.liquid)
+МОДУЛЬ: ЛОКАЛЬНЫЙ ЖУРНАЛ И ГАЛЕРЕЯ ПРОЕКТА С ФИКСИРОВАННОЙ КНОПКОЙ АРХИВА (_includes/project-loop.liquid)
 Назначение: Собирает посты робота. Делит на страницы по лимиту per_page.
-Единообразие: Полностью повторяет внешний вид, стрелочки « » и логику главной пагинации.
+Интерфейс: Текстовая ссылка убрана. Внизу всегда есть кнопка "→", ведущая в архив.
 =============================================================================
 {% endcomment %}
 
@@ -28,18 +28,14 @@
 {% assign loop_id = include.type | append: "-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
-  
-  {% comment %} Умная ссылка «Смотреть все →» в цвете навигации #3498db {% endcomment %}
-  <li class="nav-all-link" style="margin-bottom: 12px;">
-    <strong>
-      <a href="/{{ include.type }}/?project={{ project_slug }}&nav={{ section_slug }}&title={{ section_page.navtitle | default: section_slug }}" style="color: #3498db; text-decoration: none;">
-        Смотреть все →
-      </a>
-    </strong>
-  </li>
+{% comment %} Автоматически вычисляем адрес большого архива по твоей оригинальной логике {% endcomment %}
+{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
-  {% comment %} Вывод компактных строк постов {% endcomment %}
+<ul id="{{ loop_id }}" class="project-list" style="list-style: none; padding: 0; margin: 0 0 15px 0;">
+  {% comment %} 
+    ВНИМАНИЕ: Текстовая ссылка «Смотреть все» отсюда полностью УДАЛЕНА. 
+    Список теперь начинается сразу с компактных строк постов.
+  {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
@@ -55,11 +51,11 @@
   {% endfor %}
 </ul>
 
-{% comment %} Посадочное место для мини-кнопок локальной пагинации с чистой геометрией {% endcomment %}
-<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 20px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
+{% comment %} Посадочное место для кнопок пагинации {% endcomment %}
+<div id="{{ ctrl_id }}" class="pagination-container" style="justify-content: flex-start !important; margin-top: 0px !important; margin-bottom: 24px !important; margin-left: 0px !important; margin-right: 0px !important; padding: 0 !important;"></div>
 
 {% comment %} 
-  АВТОНОМНЫЙ СКРИПТ ПОСТРАНИЧНОЙ ЛОКАЛЬНОЙ ПАГИНАЦИИ С ЕДИНЫМ ДИЗАЙНОМ
+  АВТОНОМНЫЙ СКРИПТ ПАГИНАЦИИ С ПОСТОЯННОЙ ПЕРВОЙ КНОПКОЙ "→"
 {% endcomment %}
 <script>
   (function() {
@@ -75,10 +71,8 @@
     var totalPages = Math.ceil(allItems.length / itemsPerPage);
     var currentPage = 1;
 
-    if (totalPages <= 1) {
-      ctrlDiv.style.display = 'none';
-      return;
-    }
+    // Передаем адрес архива из Liquid в JavaScript
+    var targetArchiveUrl = "{{ archive_url }}";
 
     function showPage(page) {
       if (page < 1 || page > totalPages) return;
@@ -98,17 +92,22 @@
       renderButtons();
     }
 
-    function createBtn(text, targetPage, isCurrent, isDisabled) {
-      var btn = document.createElement('button');
-      btn.className = 'page-btn'; // Твой родной класс из pagination.css полностью управляет дизайном!
+    function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
+      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
+      var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
+      btn.className = 'page-btn'; // Твой родной класс полностью берет на себя базовый дизайн!
       btn.innerText = text;
       
-      if (isCurrent) {
-        // Локальная активная кнопка — красится в цвет навигации сайта
-        btn.style.backgroundColor = '#3498db';
-        btn.style.color = '#fff';
-        btn.style.borderColor = '#3498db';
-        btn.style.cursor = 'default';
+      // Локальные компактные размеры (высота под строку постов)
+      btn.style.padding = '3px 8px';
+      btn.style.fontSize = '0.8rem';
+      btn.style.textDecoration = 'none';
+
+      if (isArchiveLink) {
+        btn.setAttribute('href', targetArchiveUrl);
+        btn.classList.add('archive-btn'); // ДОБАВЛЕНО: Дали стрелке собственный класс для настройки цвета в CSS!
+      } else if (isCurrent) {
+        btn.classList.add('active'); 
       } else if (isDisabled) {
         btn.style.opacity = '0.4';
         btn.style.cursor = 'default';
@@ -120,21 +119,29 @@
       return btn;
     }
 
+
     function renderButtons() {
       ctrlDiv.innerHTML = '';
       
-      // Кнопка Назад «
-      ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1));
+      // ШАГ 1: Твоя главная фишка — кнопка "→" ВСЕГДА создаётся на первом месте слева
+      ctrlDiv.appendChild(createBtn('➜', null, false, false, true));
 
-      // Цифровые страницы
-      for (var i = 1; i <= totalPages; i++) {
-        ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false));
+      // ШАГ 2: Остальная навигация генерируется ПРАВЕЕ неё, только если страниц больше одной
+      if (totalPages > 1) {
+        // Кнопка Назад «
+        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));
+
+        // Цифровые кнопки страниц
+        for (var i = 1; i <= totalPages; i++) {
+          ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, false));
+        }
+
+        // Кнопка Вперед »
+        ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages, false));
       }
-
-      // Кнопка Вперед »
-      ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages));
     }
 
+    // Запуск инициализации страницы
     showPage(1);
   })();
 </script>

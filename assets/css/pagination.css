@@ -13,7 +13,7 @@
 }
 
 /* Заставляем список обновлений забирать всё свободное место, отталкивая кнопки вниз */
-.category-card.site-news #live-updates-list {
+.category-card.site-news #posts-list {
     flex-grow: 1 !important;
     margin-bottom: 15px !important; /* ЖЕСТКИЙ ОТСТУП: зазор от текста до кнопок на ПК */
 }
@@ -75,7 +75,7 @@
    ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (max-width: 900px)
    ========================================================================= */
 @media (max-width: 900px) {
-    .category-card.site-news #live-updates-list {
+    .category-card.site-news #posts-list {
         margin-bottom: 10px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
     }
 
@@ -98,7 +98,7 @@
    ГОРИЗОНТАЛЬНЫЙ РЕЖИМ СМАРТФОНОВ (Landscape)
    ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
-    .category-card.site-news #live-updates-list {
+    .category-card.site-news #posts-list {
         margin-bottom: 10px !important; /* Уплотненный зазор в горизонтальном режиме */
     }
 

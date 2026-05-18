@@ -95,7 +95,7 @@
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn';
+      btn.className = 'page-btn'; 
       btn.innerText = text;
       
       btn.style.padding = '3px 8px';
@@ -105,6 +105,9 @@
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
+        // ИСПРАВЛЕНО: Гасим навязанную темой высоту строки, возвращая кнопке-ссылке точные размеры кнопок-цифр!
+        btn.style.lineHeight = '1';
+        btn.style.display = 'inline-block';
       } else if (isCurrent) {
         btn.classList.add('active'); 
       } else if (isDisabled) {
@@ -118,9 +121,10 @@
       return btn;
     }
 
+
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      ctrlDiv.appendChild(createBtn('➜', null, false, false, true));
+      ctrlDiv.appendChild(createBtn('→', null, false, false, true));
 
       if (totalPages > 1) {
         ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));

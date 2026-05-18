@@ -1,5 +1,3 @@
-<!-- ПОДКЛЮЧАЕМ НАШ ВЫДЕЛЕННЫЙ CSS ДЛЯ КОНТРОЛЯ ЦВЕТА -->
-<link rel="stylesheet" href="{{ '/assets/css/project-pagination.css' | relative_url }}">
 {% comment %} 
 =============================================================================
 ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ С ДВОЙНЫМИ КЛАССАМИ (_includes/project-loop-test.liquid)
@@ -39,18 +37,19 @@
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
+      <!-- ТВОЯ ФОРМУЛА: Связали local-post-item и robot-local-post-item, отступ строк 3px -->
       <li class="local-post-item robot-local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="margin-bottom: 3px !important; padding-bottom: 0px !important;">
         <div style="display: flex !important; align-items: baseline !important; width: 100% !important; box-sizing: border-box !important;">
           
-          <!-- Левая колонка (Дата) — в абсолютной сохранности, ничего не трогали -->
+          <!-- Левая колонка (Дата) — все инлайн-свойства сохранены без изменений -->
           <span style="flex-shrink: 0 !important; color: #888 !important; font-family: monospace !important; font-size: 0.8rem !important; line-height: 1.4 !important; font-stretch: condensed !important; letter-spacing: -0.5px !important; white-space: nowrap !important; margin-right: 0px !important; display: inline-block !important; margin-top: 0 !important; margin-bottom: 0 !important;">
             {{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;
           </span>
           
           <!-- Правая колонка (Текст) -->
           <span style="flex-grow: 1 !important; display: block !important; min-width: 0 !important; line-height: 1.4 !important;">
-            <!-- ИСПРАВЛЕНО: Свойство color удалено из инлайна, оно теперь безопасно подтягивается из внешнего CSS! -->
-            <a href="{{ post.url | relative_url }}" class="item-link robot-item-link" style="text-decoration: none; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
+            <!-- ТВОЯ ФОРМУЛА: Связали item-link и robot-item-link -->
+            <a href="{{ post.url | relative_url }}" class="item-link robot-item-link" style="text-decoration: none; color: #586069 !important; display: block !important; word-wrap: break-word !important; break-word: break-all !important; font-size: 0.9rem !important; line-height: 1.4 !important; margin: 0 !important; padding: 0 !important;">
               {{ post.title }}
             </a>
           </span>

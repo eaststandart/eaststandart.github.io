@@ -89,32 +89,20 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
+      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
+      btn.className = 'page-btn'; // Твой базовый класс
       btn.innerText = text;
-      
-      // ГЕОМЕТРИЯ КНОПОК ОСТАЁТСЯ ИНЛАЙН В ПОЛНОЙ БЕЗОПАСНОСТИ
-      btn.style.display = 'inline-block';
-      btn.style.padding = '3px 8px';
-      btn.style.fontSize = '0.8rem';
-      btn.style.textDecoration = 'none';
-      btn.style.boxSizing = 'border-box';
-      btn.style.textAlign = 'center';
-      btn.style.margin = '0 3px';
 
+      // ИСПРАВЛЕНО: Никакой инлайн-грязи! Вся геометрия, цвета и рамки ушли в project-pagination.css
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
-        // Геометрия тонкой стрелочки на месте
-        btn.style.lineHeight = '1.1';
-        btn.style.paddingLeft = '5px';
-        btn.style.paddingRight = '5px';
       } else {
-        btn.style.lineHeight = 'normal';
-        
         if (isCurrent) {
           btn.classList.add('active'); 
         } else if (isDisabled) {
-          btn.style.opacity = '0.4';
+          btn.style.opacity = '0.4'; // Оставляем только системную прозрачность выключенной кнопки
           btn.style.cursor = 'default';
         } else {
           btn.addEventListener('click', function() {

@@ -92,6 +92,7 @@
     padding-left: 5px !important;
     padding-right: 5px !important;
     color: var(--card-tech) !important;
+    text-decoration: none !important; /* ИСПРАВЛЕНО: Намертво гасим браузерное подчёркивание у стрелки-ссылки! */
 }
 
 /* Расцветка активной кнопки выбранной страницы */

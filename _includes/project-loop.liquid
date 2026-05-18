@@ -36,12 +36,20 @@
     ВНИМАНИЕ: Текстовая ссылка «Смотреть все» отсюда полностью УДАЛЕНА. 
     Список теперь начинается сразу с компактных строк постов.
   {% endcomment %}
+  {% comment %} Вывод постов по твоей идее: текст обернут в span для идеального переноса в колонке {% endcomment %}
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 
-      <li class="news-item-compact local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji=""><small>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small><a href="{{ post.url | relative_url }}" class="item-link">{{ post.title }}</a></li>
+      <li class="update-item local-post-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="" style="display: block !important; margin-bottom: 8px; padding-bottom: 4px;">
+        <!-- Левая колонка: Дата -->
+        <small style="display: inline-block; vertical-align: top; font-family: monospace; color: #6a737d;">{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small>
+        <!-- Правая колонка: Обертка текста по твоей логике (забирает оставшееся место) -->
+        <span class="item-text-wrapper" style="display: inline-block; vertical-align: top; width: calc(100% - 105px); padding: 0; margin: 0;">
+          <a href="{{ post.url | relative_url }}" class="item-link" style="text-decoration: none; display: block; line-height: 1.3; padding: 0; margin: 0;">{{ post.title }}</a>
+        </span>
+      </li>
     {% endif %}
   {% endfor %}
 </ul>

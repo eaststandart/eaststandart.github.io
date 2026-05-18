@@ -1,13 +1,13 @@
 {% comment %} 
 =============================================================================
 ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ (_includes/project-loop-test.liquid)
-Назначение: Финальный тест полной вёрстки строк, цветов и автономных кнопок.
+Назначение: Монолитный рабочий эталон. Все стили внутри.
 =============================================================================
 {% endcomment %}
 
 {% assign url_parts = page.url | split: "/" %}
-{% assign section_slug = url_parts[1] %}
-{% assign project_slug = url_parts[2] %}
+{% assign section_slug = url_parts %}
+{% assign project_slug = url_parts %}
 {% assign section_url = section_slug | prepend: "/" | append: "/" %}
 {% assign section_page = site.pages | where: "url", section_url | first %}
 
@@ -94,11 +94,9 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
       btn.innerText = text;
       
-      // ВНОСИМ СТИЛИ ИЗ CSS НАПРЯМУЮ В НАШ ФАЙЛ ДЛЯ ВСЕХ КНОПОК ОДИНАКОВО
       btn.style.display = 'inline-block';
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
@@ -117,19 +115,14 @@
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
         btn.classList.add('archive-btn');
-        // Твоя эталонная настройка высоты строки для стрелки
         btn.style.lineHeight = '1.1';
-        // Уплотняем боковые поля стрелки, чтобы она была идеальным квадратом
         btn.style.paddingLeft = '5px';
         btn.style.paddingRight = '5px';
-        // Возвращаем цвет навигации для стрелочки из переменной
         btn.style.color = 'var(--card-tech)';
       } else {
-        // Для обычных кнопок навигации высота строки по умолчанию
         btn.style.lineHeight = 'normal';
         
         if (isCurrent) {
-          // Активная кнопка красится в цвет твоей переменной
           btn.style.backgroundColor = 'var(--card-tech)';
           btn.style.color = '#fff';
           btn.style.borderColor = 'var(--card-tech)';
@@ -138,7 +131,6 @@
           btn.style.opacity = '0.4';
           btn.style.cursor = 'default';
         } else {
-          // ОБРАБОТЧИК КЛИКА ВЕРНУЛСЯ НА МЕСТО: Кнопки навигации снова полностью рабочие!
           btn.addEventListener('click', function() {
             showPage(targetPage);
           });
@@ -149,7 +141,6 @@
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      // Кнопка со стрелочкой "→" на первом месте слева
       ctrlDiv.appendChild(createBtn('→', null, false, false, true));
 
       if (totalPages > 1) {

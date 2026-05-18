@@ -1,9 +1,9 @@
 ---
 layout: news
-title: Журнал проекта
-permalink: /journal1/
+title: Что нового?
+permalink: /journal/
 per_page: 10
-folder: "journal"
+folder: ""
 pinned_url: ""
 ---
 {% comment %} 

@@ -1,0 +1,86 @@
+/* ==========================================================================
+   ИЗОЛИРОВАННЫЕ СТИЛИ ЛОКАЛЬНОЙ ПАГИНАЦИИ ПРОЕКТОВ (assets/css/project-pagination.css)
+   Назначение: Управление компактной сеткой строк и кнопками внутри карточек роботов.
+   ========================================================================== */
+
+/* 1. БАЗОВАЯ СТРУКТУРА СТРОК (СИНХРОНИЗИРОВАНО С ТЕСТОМ №11) */
+.project-list .local-post-item {
+    margin-bottom: 3px !important;
+    padding-bottom: 0px !important;
+    list-style: none !important;
+}
+
+.project-list .local-post-item div {
+    display: flex !important;
+    align-items: baseline !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости, цвет строго #888 */
+.project-list .local-post-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #888 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    margin-right: 0px !important;
+    display: inline-block !important;
+}
+
+/* ПРАВАЯ КОЛОНКА (ТЕКСТ): Плотный серый цвет постов #586069 */
+.project-list .local-post-item div span:last-child {
+    flex-grow: 1 !important;
+    display: block !important;
+    min-width: 0 !important;
+    line-height: 1.4 !important;
+}
+
+.project-list .local-post-item .item-link {
+    text-decoration: none !important;
+    color: #586069 !important;
+    display: block !important;
+    word-wrap: break-word !important;
+    break-word: break-all !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* 2. БАЗОВЫЙ ДИЗАЙН КНОПОК ПАГИНАЦИИ ИЗ СТИЛЕЙ КЛАССА .page-btn */
+.project-list-ctrl .page-btn {
+    display: inline-block !important;
+    padding: 3px 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    border: 1px solid #e1e4e8 !important;
+    border-radius: 5px !important;
+    background-color: #fff !important;
+    color: #24292e !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    margin: 0 3px !important;
+    user-select: none !important;
+}
+
+/* Кнопка-стрелка перехода в архив */
+.project-list-ctrl .page-btn.archive-btn {
+    line-height: 1.1 !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    color: var(--card-tech) !important;
+}
+
+/* Активная кнопка страницы */
+.project-list-ctrl .page-btn.active {
+    background-color: var(--card-tech) !important;
+    color: #fff !important;
+    border-color: var(--card-tech) !important;
+    cursor: default !important;
+}

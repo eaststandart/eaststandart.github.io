@@ -121,17 +121,17 @@
    ========================================================================== */
 
 /* 1. ЦВЕТА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Внутри карточки обновлений) */
-#live-updates-list .update-item[data-is-post="true"] .item-link {
+#posts-list .update-item[data-is-post="true"] .item-link {
     color: #586069 !important; /* Серый для постов на главной */
 }
-#live-updates-list .update-item[data-is-post="false"] .item-link {
-    color: #0366d6 !important; /* Синий для проектов/страниц на главной #3498db или #0366d6*/
+#posts-list .update-item[data-is-post="false"] .item-link {
+    color: #0366d6 !important; /* Синий для проектов/страниц на главной */
 }
 
 /* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ (СИНХРОНИЗИРОВАНО С ГЛАВНОЙ) */
-.updates-feed #live-updates-list .update-item[data-is-post="true"] .item-link {
-    color: #586069 !important; /* ИСПРАВЛЕНО: Теперь точно такой же плотный серый, как на главной */
+.updates-feed #posts-list .update-item[data-is-post="true"] .item-link {
+    color: #586069 !important; /* Тот же плотный серый, как на главной */
 }
-.updates-feed #live-updates-list .update-item[data-is-post="false"] .item-link {
-    color: #0366d6 !important; /* Твой оригинальный архивный синий (оставляем для контраста с линиями) */
+.updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
+    color: #0366d6 !important; /* Синий для проектов/страниц в архивах */
 }

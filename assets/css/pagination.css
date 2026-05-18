@@ -83,7 +83,7 @@
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-bottom: -10px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
+        margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
     .page-btn {
@@ -106,7 +106,7 @@
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-bottom: -10px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
+        margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
     .page-btn {

@@ -34,10 +34,10 @@ permalink: /faire/simple-cardboard-walking-robot/
 2. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
 
 ### Журнал проекта
-
+<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
 {% include project-loop-test.liquid type="journal" per_page="" %}
 
 ### Галерея работ
 *Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
-*Назначение: этапы создания, отладка и усовершенствование.*
+
 {% include project-loop.liquid type="media" %}

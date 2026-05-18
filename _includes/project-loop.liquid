@@ -93,41 +93,32 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную <button> для переключения листов
+      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn';
+      btn.className = 'page-btn'; // Твой родной класс полностью берет на себя базовый дизайн!
       btn.innerText = text;
       
-      // Локальные компактные размеры
+      // Локальные компактные размеры (высота под строку постов)
       btn.style.padding = '3px 8px';
       btn.style.fontSize = '0.8rem';
       btn.style.textDecoration = 'none';
-      btn.style.display = 'inline-block';
-      btn.style.textAlign = 'center';
 
       if (isArchiveLink) {
-        // Твоя настройка: Кнопка-ссылка "→" всегда горит цветом навигации #3498db
         btn.setAttribute('href', targetArchiveUrl);
-        btn.style.backgroundColor = '#fff';
-        btn.style.color = '#3498db';
-        btn.style.borderColor = '#e1e4e8';
       } else if (isCurrent) {
-        btn.style.backgroundColor = '#3498db';
-        btn.style.color = '#fff';
-        btn.style.borderColor = '#3498db';
-        btn.style.cursor = 'default';
+        // ИСПРАВЛЕНО: Просто добавляем класс active, а цвета подтянутся из pagination.css!
+        btn.classList.add('active'); 
       } else if (isDisabled) {
         btn.style.opacity = '0.4';
         btn.style.cursor = 'default';
       } else {
-        btn.style.backgroundColor = '#fff';
-        btn.style.color = '#24292e';
         btn.addEventListener('click', function() {
           showPage(targetPage);
         });
       }
       return btn;
     }
+
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';

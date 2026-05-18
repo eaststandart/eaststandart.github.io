@@ -1,62 +1,16 @@
 /* ==========================================================================
-   ИЗОЛИРОВАННЫЕ СТИЛИ ОФОРМЛЕНИЯ СПИСКА РОБОТА (assets/css/project-pagination.css)
-   Назначение: Жесткая фиксация геометрии, ужатости дат и цветов постов.
+   ИЗОЛИРОВАННЫЕ ШРИФТЫ И ЦВЕТА РОБОТА (assets/css/project-pagination.css)
    ========================================================================== */
 
-/* Настройки главного контейнера списка */
-.project-list {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 0 15px 0 !important;
-}
-
-/* Твои настройки шага строк margin-bottom: 3px */
-.project-list .local-post-item {
-    margin-bottom: 3px !important;
-    padding-bottom: 0px !important;
-}
-
-/* Внутренний флекс-контейнер для пиксельного baseline-выравнивания */
-.project-list .local-post-item div {
-    display: flex; /* Мягкое свойство без !important, чтобы JavaScript мог прятать строки */
-    align-items: baseline !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости, цвет строго #888 */
+/* ЛЕВАЯ КОЛОНКА (ДАТА): Шрифты, ПК-ужатость и цвет #888 */
 .project-list .local-post-item div span:first-child {
-    flex-shrink: 0 !important;
     color: #888 !important;
     font-family: monospace !important;
-    font-size: 0.8rem !important;
-    line-height: 1.4 !important;
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-    margin-right: 0px !important;
-    display: inline-block !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
 }
 
-/* ПРАВАЯ КОЛОНКА (ТЕКСТОВОЙ БЛОК ССЫЛКИ) */
-.project-list .local-post-item div span:last-child {
-    flex-grow: 1 !important;
-    display: block !important;
-    min-width: 0 !important;
-    line-height: 1.4 !important;
-}
-
-/* Сама ссылка на пост: Твой цвет #586069 */
+/* ПРАВАЯ КОЛОНКА (ССЫЛКА): Плотный серый цвет постов #586069 */
 .project-list .local-post-item .item-link {
-    text-decoration: none !important;
     color: #586069 !important;
-    display: block !important;
-    word-wrap: break-word !important;
-    break-word: break-all !important;
-    font-size: 0.9rem !important;
-    line-height: 1.4 !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }

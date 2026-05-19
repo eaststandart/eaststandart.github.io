@@ -194,7 +194,7 @@
     font-size: 0.75rem !important; /* Родной размер из user agent stylesheet small */
     line-height: 1.2 !important;   /* Твоё родное значение */
     font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
+    letter-spacing: 0px !important;
     white-space: nowrap !important;
     margin: 0 !important;
     padding: 0 !important;

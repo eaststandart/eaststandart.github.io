@@ -176,44 +176,40 @@
 }
 
 /* ==========================================================================
-   ОТЛАДОЧНЫЕ СТИЛИ (DEBUG) ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
    ========================================================================== */
 
-/* Красим главный внутренний контейнер в легкий серый фон */
+/* Идеальное центрирование блоков по вертикальной оси */
 #posts-list .news-item-compact div {
     display: flex !important; 
-    align-items: baseline !important;
+    align-items: center !important;
     width: 100% !important;
-    background-color: #f1f1f1 !important; /* Отладочный фон */
 }
 
-/* Красим зону даты в КРАСНЫЙ цвет */
+/* Настройка компактности текста даты на Главной странице */
 #posts-list .news-item-compact div span:first-child {
     flex-shrink: 0 !important;
     color: #6a737d !important;
     font-family: monospace !important;
     font-size: 0.75rem !important;
-    line-height: 1.2 !important;
+    line-height: 1 !important; /* Обнуляем лишнюю высоту строки */
     font-stretch: condensed !important;
     letter-spacing: 0px !important;
     white-space: nowrap !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
-    background-color: #ffcccc !important; /* ДЕБАГ: КРАСНЫЙ ФОН */
 }
 
-/* Красим зону заголовка в ЗЕЛЕНЫЙ цвет */
+/* Настройка контейнера заголовка на Главной странице */
 #posts-list .news-item-compact div span:last-child {
-    flex-grow: 1 !important;
-    line-height: 1.2 !important;
+    line-height: 1 !important; /* Синхронизируем высоту строки с датой */
     padding: 0 !important;
     margin: 0 !important;
-    background-color: #ccffcc !important; /* ДЕБАГ: ЗЕЛЕНЫЙ ФОН */
 }
 
-/* Проверяем саму ссылку внутри зеленой зоны */
+/* Сама ссылка на публикацию */
 #posts-list .news-item-compact .item-link {
+    font-size: 0.85rem !important;
+    line-height: 1.2 !important;
     display: inline-block !important;
-    background-color: #ffffcc !important; /* ДЕБАГ: ЖЕЛТЫЙ ФОН ССЫЛКИ */
 }

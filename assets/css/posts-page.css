@@ -105,3 +105,10 @@
     color: #fff !important;
     cursor: default !important;
 }
+
+/* Эффект красивого серого фона при наведении на кнопки проекта (кроме активной) */
+.posts-page-btn:not(.active):hover {
+    background-color: #f6f8fa !important;
+    border-color: #1b1f2326 !important;
+    color: #24292e !important;
+}

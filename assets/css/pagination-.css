@@ -43,6 +43,21 @@
    3. СТИЛИ СТРОК КОНТЕНТА (ВЫРАВНИВАНИЕ)
    ========================================================================== */
 
+/* --- ОБЩИЙ СТАНДАРТ КОМПАКТНЫХ ДАТ ДЛЯ ВСЕХ ЛЕНТ САЙТА --- */
+.home-news-feed .news-item-compact div span:first-child,
+.news-feed .news-item div span:first-child,
+.posts-page-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #6a737d !important;         /* Единый фирменный серый цвет темы Primer */
+    font-family: monospace !important;  /* Моноширинный шрифт */
+    font-size: 0.8rem !important;
+    font-stretch: condensed !important; /* Ужатость букв по горизонтали */
+    letter-spacing: -0.5px !important;  /* Плотный межсимвольный интервал */
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
 
 /* Внутренний контейнер строки для пиксельного верхнего выравнивания */
@@ -52,18 +67,9 @@
     width: 100% !important;
 }
 
-/* Настройка компактности текста даты на Главной странице */
+/* Настройка высоты строки и ювелирного сдвига даты на Главной */
 .home-news-feed .news-item-compact div span:first-child {
-    flex-shrink: 0 !important;
-    color: #6a737d !important;         /* Серый цвет темы Primer */
-    font-family: monospace !important;  /* Моноширинный шрифт */
-    font-size: 0.8rem !important;
     line-height: 1.2 !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-    margin: 0 !important;
-    padding: 0 !important;
     padding-top: 1px !important;       /* Ювелирный сдвиг для центрирования по первой строке */
 }
 
@@ -79,8 +85,8 @@
     font-size: 0.9rem !important;
     line-height: 1.2 !important;
     display: block !important;          /* Перевод в block для фиксации даты на первой строке */
-    word-wrap: break-word !important;   /* Защита от разлома длинных слов на мобильных */
-    word-break: break-all !important;  /* Защита от разлома длинных ссылок на мобильных */
+    word-wrap: break-word !important;   
+    word-break: break-all !important;  
 }
 
 /* Раскраска ссылок на Главной: Серый для постов */
@@ -101,19 +107,10 @@
     align-items: baseline !important;
 }
 
-/* Настройка левой колонки компактной даты в архивах */
+/* Настройка высоты строки и отображения даты в архивах */
 .news-feed .news-item div span:first-child {
-    flex-shrink: 0 !important;
-    color: #888 !important;
-    font-family: monospace !important;
-    font-size: 0.8rem !important;
     line-height: 1.4 !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
     display: inline-block !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
 }
 
 /* Настройка правой колонки контейнера заголовка в архивах */
@@ -141,8 +138,8 @@
 
 /* Временная подсветка фона для закрепленной новости */
 .pinned-item {
-    background-color: #fff9e6 !important; /* Лёгкий кремовый фон */
-    border-color: #ffe0b2 !important;     /* Тонкая рамка вокруг плашки */
+    background-color: #fff9e6 !important; 
+    border-color: #ffe0b2 !important;     
 }
 
 
@@ -264,10 +261,10 @@
 /* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
 .posts-page-list {
     padding: 0 !important;
-    margin: 0 0 15px 0 !important; /* Твой зазор 15px до кнопок навигации */
+    margin: 0 0 15px 0 !important; 
 }
 
-/* 2. СТРОКА ПОСТА (Твой шаг строк margin-bottom: 3px) */
+/* 2. СТРОКА ПОСТА */
 .posts-page-item {
     margin-bottom: 3px !important;
 }
@@ -278,19 +275,10 @@
     align-items: baseline !important;
 }
 
-/* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости и цвет #888 */
+/* Настройка высоты строки даты в проектах */
 .posts-page-item div span:first-child {
-    flex-shrink: 0 !important;
-    color: #888 !important;
-    font-family: monospace !important;
-    font-size: 0.8rem !important;
     line-height: 1.4 !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
     display: inline-block !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
 }
 
 /* 4. ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
@@ -299,15 +287,15 @@
     line-height: 1.4 !important;
 }
 
-/* Сама ссылка на пост: Твой плотный серый цвет #586069 */
+/* Сама ссылка на пост */
 .posts-page-link {
     text-decoration: none !important;
     font-size: 0.9rem !important;
     color: #586069 !important;
     display: block !important;
-    word-break: break-all !important;
+    word-wrap: break-word !important;
+    break-word: break-all !important;
 }
-
 
 /* --- Б. Кнопки управления локальной пагинацией проекта --- */
 
@@ -316,11 +304,11 @@
     width: 100% !important;
     clear: both !important;
     display: flex !important;
-    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
+    justify-content: flex-start !important; 
     align-items: center !important;
     box-sizing: border-box !important;
     padding: 0 !important;
-    margin: 0px 0px 20px 0px !important;    /* Твой отступ в одну строку: Вверх(0) Право(0) Вниз(20px) Лево(0) */
+    margin: 0px 0px 20px 0px !important;    
 }
 
 /* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
@@ -342,11 +330,11 @@
     line-height: normal !important;
 }
 
-/* Кнопка стала близнецом навигации, настраиваем только бока для квадрата */
+/* Настройка боков для кнопки "Ёлочки" в проектах */
 .posts-page-btn.posts-page-all-btn {
-    padding-left: 5px !important;   /* Поджатый левый бок как в оригинале проектов */
-    padding-right: 5px !important;  /* Поджатый правый бок как в оригинале проектов */
-    color: var(--card-tech) !important; /* Наш синий цвет для ёлочек */
+    padding-left: 5px !important;   
+    padding-right: 5px !important;  
+    color: var(--card-tech) !important; 
 }
 
 /* Короткий стиль для active-кнопки выбранной страницы */

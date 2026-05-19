@@ -48,15 +48,23 @@
 .news-feed .news-item div span:first-child,
 .posts-page-item div span:first-child {
     flex-shrink: 0 !important;
-    color: #6a737d !important;         /* Единый фирменный серый цвет темы Primer */
-    font-family: monospace !important;  /* Моноширинный шрифт */
+    color: #6a737d !important;         
+    font-family: monospace !important;  
     font-size: 0.8rem !important;
-    font-stretch: condensed !important; /* Ужатость букв по горизонтали */
-    letter-spacing: -0.5px !important;  /* Плотный межсимвольный интервал */
+    font-stretch: condensed !important; 
+    letter-spacing: -0.5px !important;  
     white-space: nowrap !important;
     margin: 0 !important;
     padding: 0 !important;
 }
+
+/* --- ОБЩИЙ СТАНДАРТ ЗАЩИТЫ ОТ РАЗЛОМА СТРОК НА ПК ДЛЯ ВСЕХ ССЫЛОК --- */
+.home-news-feed .item-link,
+.news-feed .item-link,
+.posts-page-link {
+    word-break: break-all !important;   /* На ПК оставлен строго жесткий перенос по буквам */
+}
+
 
 /* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
 
@@ -70,7 +78,7 @@
 /* Настройка высоты строки и ювелирного сдвига даты на Главной */
 .home-news-feed .news-item-compact div span:first-child {
     line-height: 1.2 !important;
-    padding-top: 1px !important;       /* Ювелирный сдвиг для центрирования по первой строке */
+    padding-top: 1px !important;       
 }
 
 /* Настройка контейнера заголовка на Главной странице */
@@ -84,9 +92,7 @@
 .home-news-feed .news-item-compact .item-link {
     font-size: 0.9rem !important;
     line-height: 1.2 !important;
-    display: block !important;          /* Перевод в block для фиксации даты на первой строке */
-    word-wrap: break-word !important;   
-    word-break: break-all !important;  
+    display: block !important;          
 }
 
 /* Раскраска ссылок на Главной: Серый для постов */
@@ -123,8 +129,6 @@
 .news-feed .news-item .item-link {
     font-size: 0.9rem !important;
     display: block !important;
-    word-wrap: break-word !important;
-    word-break: break-all !important;
 }
 
 /* Раскраска ссылок в Архивах: Серый для постов */
@@ -193,19 +197,16 @@
    5. МОБИЛЬНАЯ АДАПТАЦИЯ (ПОРТРЕТНЫЙ РЕЖИМ)
    ========================================================================== */
 @media (max-width: 900px) {
-    /* Аккуратный воздух от текста до кнопок на мобильном */
-    .category-card.site-news #posts-list {
+    .category-card.site-news .home-news-feed {
         margin-bottom: 10px !important; 
     }
 
-    /* Прижимаем кнопки ближе к нижнему краю на мобильном во всех архивах */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
         margin-bottom: 0px !important; 
     }
 
-    /* Синхронное пропорциональное сжатие всех типов кнопок на смартфонах */
     .page-btn,
     .page-btn.home-news-all-btn {
         padding: 5px 10px;
@@ -214,9 +215,15 @@
         border-radius: 5px;
     }
 
-    /* Точечная фиксация верхнего выравнивания ёлочек на телефонах */
     .page-btn.home-news-all-btn {
         vertical-align: top !important;
+    }
+
+    /* ИСПРАВЛЕНО: Включаем мягкий перенос слов только для мобильных */
+    .home-news-feed .item-link,
+    .news-feed .item-link,
+    .posts-page-link {
+        word-wrap: break-word !important;
     }
 }
 
@@ -225,19 +232,16 @@
    6. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬНЫЙ РЕЖИМ)
    ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Уплотнённый зазор в горизонтальном режиме */
-    .category-card.site-news #posts-list {
+    .category-card.site-news .home-news-feed {
         margin-bottom: 10px !important; 
     }
 
-    /* Максимально прижимаем к дну, уничтожая пустую сеточную дыру в Landscape */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
         margin-bottom: 0px !important; 
     }
 
-    /* Синхронное максимальное сжатие кнопок на боку для экономии высоты экрана */
     .page-btn,
     .page-btn.home-news-all-btn {
         padding: 4px 8px;
@@ -245,9 +249,15 @@
         font-size: 0.8rem;
     }
 
-    /* Сохраняем вертикальное выравнивание ёлочек на боку */
     .page-btn.home-news-all-btn {
         vertical-align: top !important;
+    }
+
+    /* ИСПРАВЛЕНО: Включаем мягкий перенос слов и в горизонтальном мобильном режиме */
+    .home-news-feed .item-link,
+    .news-feed .item-link,
+    .posts-page-link {
+        word-wrap: break-word !important;
     }
 }
 

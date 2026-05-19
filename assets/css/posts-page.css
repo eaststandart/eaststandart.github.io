@@ -89,3 +89,20 @@
     color: #fff !important;
     cursor: default !important;
 }
+
+/* ==========================================================================
+   5. ГЕОМЕТРИЯ КОНТЕЙНЕРА КНОПОК ПАГИНАЦИИ (posts-page-ctrl)
+   ========================================================================== */
+.posts-page-ctrl {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 0px !important;       /* Зазор до постов регулируется через маргин списка выше (15px) */
+    margin-bottom: 20px !important;    /* ТВОЯ НАСТРОЙКА: аккуратный отступ до конца карточки/подвала */
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding: 0 !important;
+    clear: both !important;
+}

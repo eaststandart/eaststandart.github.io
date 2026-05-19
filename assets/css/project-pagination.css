@@ -43,6 +43,8 @@
 
 /* Сама ссылка на пост: Твой плотный серый цвет #586069 */
 .robot-item-link {
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
     color: #586069 !important;
     display: block !important;
     word-wrap: break-word !important;

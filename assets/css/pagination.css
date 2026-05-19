@@ -349,5 +349,5 @@
     align-items: center !important;
     box-sizing: border-box !important;
     padding: 0 !important;
-    margin: 0px 0px 20px 0px !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
+    margin: 0 0 1em 0 !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
 }

@@ -1,12 +1,11 @@
 /* ==========================================================================
-   ИЗОЛИРОВАННЫЕ СТИЛИ МОДУЛЯ ПОСТОВ НА СТРАНИЦЕ (assets/css/project-pagination.css)
-   Назначение: Только чистые, понятные имена классов постов и кнопок.
+   ИЗОЛИРОВАННЫЕ СТИЛИ МОДУЛЯ ПОСТОВ НА СТРАНИЦЕ (assets/css/posts-page.css)
    ========================================================================== */
 
 /* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
 .posts-page-list {
     padding: 0 !important;
-    margin: 0 0 15px 0 !important; /* Удерживает твой зазор 15px до кнопок */
+    margin: 0 0 15px 0 !important; /* Твой зазор 15px до кнопок навигации */
 }
 
 /* 2. СТРОКА ПОСТА (Твой шаг строк margin-bottom: 3px) */
@@ -14,10 +13,10 @@
     margin-bottom: 3px !important;
 }
 
-/* Внутренний контейнер строки (Мягкий display без !important, чтобы JS мог скрывать строки) */
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
 .posts-page-item div {
     display: flex; 
-    align-items: baseline !important; /* Намертво держит ровную горизонтальную линию */
+    align-items: baseline !important;
 }
 
 /* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости и цвет #888 */
@@ -52,6 +51,23 @@
 }
 
 /* ==========================================================================
+   5. НОВЫЙ ИЗОЛИРОВАННЫЙ КОНТЕЙНЕР КНОПОК ПАГИНАЦИИ (posts-page-ctrl)
+   ========================================================================== */
+.posts-page-ctrl {
+    width: 100% !important;
+    clear: both !important;
+    display: flex !important;
+    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
+    align-items: center !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin-top: 0px !important;
+    margin-bottom: 20px !important;         /* Твой нижний отступ до конца карточки */
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+/* ==========================================================================
    ЧИСТЫЕ КОРОТКИЕ СТИЛИ КНОПОК ПАГИНАЦИИ (posts-page-btn)
    ========================================================================== */
 
@@ -82,27 +98,10 @@
     color: var(--card-tech) !important;
 }
 
-/* Короткий стиль для активной кнопки выбранной страницы */
+/* Короткий стиль для active-кнопки выбранной страницы */
 .posts-page-btn.active {
     background-color: var(--card-tech) !important;
     border-color: var(--card-tech) !important;
     color: #fff !important;
     cursor: default !important;
-}
-
-/* ==========================================================================
-   5. ГЕОМЕТРИЯ КОНТЕЙНЕРА КНОПОК ПАГИНАЦИИ (posts-page-ctrl)
-   ========================================================================== */
-.posts-page-ctrl {
-    display: flex !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    margin-top: 0px !important;       /* Зазор до постов регулируется через маргин списка выше (15px) */
-    margin-bottom: 20px !important;    /* ТВОЯ НАСТРОЙКА: аккуратный отступ до конца карточки/подвала */
-    margin-left: 0px !important;
-    margin-right: 0px !important;
-    padding: 0 !important;
-    clear: both !important;
 }

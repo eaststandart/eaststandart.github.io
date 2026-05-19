@@ -209,7 +209,7 @@
 
 /* Сама ссылка на публикацию */
 #posts-list .news-item-compact .item-link {
-    font-size: 0.85rem !important;
+    font-size: 0.9rem !important;
     line-height: 1.2 !important;
     display: inline-block !important;
 }

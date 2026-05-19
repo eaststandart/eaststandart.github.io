@@ -221,3 +221,15 @@
     word-break: break-all !important;
 }
 
+
+/* ==========================================================================
+   СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
+   ========================================================================== */
+
+/* Изолированный цвет для стрелки на Главной */
+.page-btn.home-news-all-btn {
+    color: var(--card-tech) !important;
+}
+.page-btn.home-news-all-btn:hover {
+    color: var(--card-tech) !important;
+}

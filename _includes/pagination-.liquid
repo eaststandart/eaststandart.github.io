@@ -128,9 +128,22 @@
     // Функция кнопок со скользящим окном
     function renderControls() {
       controls.innerHTML = '';
+      
+      // ИСПРАВЛЕНО: Теперь создаётся полноценная кнопка <button> вместо ссылки <a>
+      if (controlsId === "home-news-pagination") {
+        var archiveBtn = document.createElement('button');
+        archiveBtn.innerText = '»»';
+        archiveBtn.className = 'page-btn home-news-all-btn';
+        archiveBtn.addEventListener('click', function() {
+          window.location.href = '/news/';
+        });
+        controls.appendChild(archiveBtn);
+      }
+
       if (totalPages <= 1) return;
 
       controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
+
 
       var maxVisible = 5;
       if (totalPages <= maxVisible) {
@@ -161,6 +174,7 @@
 
       controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
     }
+
 
     renderPage(currentPage);
   })();

@@ -7,6 +7,7 @@ per_page: 10
 folder: "journal"
 pinned_url: ""
 emoji: "✍🏻"
+emoji_display: "N"
 ---
 {% comment %} 
 СТРАНИЦА: ГЛАВНЫЙ БОРТОВОЙ ЖУРНАЛ САЙТА (\_pages/journal.md)

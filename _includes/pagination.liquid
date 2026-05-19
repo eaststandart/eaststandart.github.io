@@ -7,6 +7,8 @@
     var controlsId = "{{ include.controls_id }}";
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
     var pinnedUrl = "{{ include.pinned_url | default: '' }}";
+    // ИСПРАВЛЕНО: Принимаем флаг отображения эмодзи (по умолчанию 'Y')
+    var showEmoji = "{{ include.emoji | default: 'Y' }}";
 
     var list = document.getElementById(listId);
     if (!list) return;
@@ -42,18 +44,17 @@
       if (targetIndex > -1) {
         pinnedItem = items[targetIndex];
         pinnedItem.classList.add('pinned-item');
-        items.splice(targetIndex, 1); // Вырезаем из общего массива
+        items.splice(targetIndex, 1); 
       }
     }
 
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-     // 3. Функция отрисовки страницы с контролем лимита и выводом эмодзи (Цвета убраны в CSS)
+    // 3. Функция отрисовки страницы
     function renderPage(page) {
       list.innerHTML = '';
       var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
       
-      // По умолчанию берем полный лимит
       var currentLimit = itemsPerPage;
 
       // Если задан закрепленный пост — выводим его первым
@@ -63,7 +64,8 @@
         var pinnedLink = pinnedItem.querySelector('.item-link');
         var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
         
-        if (pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
+        // ИСПРАВЛЕНО: Дописываем эмодзи только если showEmoji равен 'Y'
+        if (showEmoji === 'Y' && pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
           pinnedLink.innerHTML += ' ' + pinnedEmoji;
         }
         
@@ -79,7 +81,8 @@
         var emoji = el.getAttribute('data-emoji');
         var link = el.querySelector('.item-link');
         
-        if (link && emoji && !link.innerHTML.includes(emoji)) {
+        // ИСПРАВЛЕНО: Дописываем эмодзи только если showEmoji равен 'Y'
+        if (showEmoji === 'Y' && link && emoji && !link.innerHTML.includes(emoji)) {
           link.innerHTML += ' ' + emoji;
         }
 
@@ -129,7 +132,6 @@
     function renderControls() {
       controls.innerHTML = '';
       
-      // ИСПРАВЛЕНО: Теперь создаётся полноценная кнопка <button> вместо ссылки <a>
       if (controlsId === "home-news-pagination") {
         var archiveBtn = document.createElement('button');
         archiveBtn.innerText = '»»';
@@ -143,7 +145,6 @@
       if (totalPages <= 1) return;
 
       controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
-
 
       var maxVisible = 5;
       if (totalPages <= maxVisible) {
@@ -174,7 +175,6 @@
 
       controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
     }
-
 
     renderPage(currentPage);
   })();

@@ -16,4 +16,5 @@ custom_css: "/assets/css/pagination.css"
 </div>
 
 {% assign limit = page.per_page | default: 10 %}
-{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit pinned_url=page.pinned_url %}
+{% assign emoji_flag = page.emoji_display | default: "Y" %}
+{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit pinned_url=page.pinned_url emoji=emoji_flag %}

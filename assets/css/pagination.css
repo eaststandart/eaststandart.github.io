@@ -200,6 +200,6 @@
 
 /* Настройка контейнера заголовка на Главной странице */
 #posts-list .news-item-compact div span:last-child {
-    flex-grow: 1 !important;
-    line-height: 1.4 !important;
+    line-height: 1.2 !important;
 }
+

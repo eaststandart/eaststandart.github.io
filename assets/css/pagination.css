@@ -221,16 +221,22 @@
    СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
    ========================================================================== */
 
-/* Превращаем ссылку-стрелку в аккуратный квадрат и красив в фирменный цвет */
+/* Идеальный геометрический клон кнопок навигации с флекс-центрированием */
 .page-btn.home-news-all-btn {
     text-decoration: none !important;
-    line-height: 1.1 !important;
-    padding-left: 5px !important;
-    padding-right: 5px !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 5px 10px !important;    /* Точные оригинальные отступы кнопок навигации */
+    font-size: 0.9rem !important;     /* Точный оригинальный размер шрифта */
+    font-weight: 600 !important;      /* Точный оригинальный вес шрифта */
+    line-height: 0 !important;         /* Обнуляем текстовую высоту для флекс-выравнивания */
+    height: auto !important;
     color: var(--card-tech) !important;
+    box-sizing: border-box !important;
 }
 
-/* Эффект при наведении на квадратную кнопку */
+/* Эффект при наведении на стрелку-клон */
 .page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa !important;
     color: var(--card-tech) !important;

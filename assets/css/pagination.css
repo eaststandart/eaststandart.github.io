@@ -261,6 +261,11 @@
 
 /* --- А. Разметка и выравнивание строк проекта --- */
 
+.posts-page-list {
+    padding: 0 !important;
+    margin: 0 0 15px 0 !important; /* Твой зазор 15px до кнопок навигации */
+}
+
 .posts-page-item {
     margin-bottom: 3px !important;
 }

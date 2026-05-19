@@ -35,7 +35,8 @@
 }
 
 /* Обычные кнопки */
-.page-btn {
+.page-btn,
+.page-btn.home-news-all-btn {
     display: inline-block;
     padding: 5px 10px;
     margin: 0 3px;                  
@@ -52,7 +53,8 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.page-btn:hover {
+.page-btn:hover,
+.page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa;
     border-color: #1b1f2326;
     color: #24292e;
@@ -86,12 +88,14 @@
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
-    .page-btn {
+    .page-btn,
+    .page-btn.home-news-all-btn {
         padding: 5px 10px;
         margin: 0 3px;
         font-size: 0.85rem;
         border-radius: 5px;
     }
+
 }
 
 /* ==========================================================================
@@ -109,11 +113,13 @@
         margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
-    .page-btn {
+    .page-btn,
+    .page-btn.home-news-all-btn {
         padding: 4px 8px;
         margin: 0 3px;
         font-size: 0.8rem;
     }
+
 }
 
 /* ==========================================================================
@@ -135,3 +141,121 @@
 .updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; /* Синий для проектов/страниц в архивах */
 }
+
+/* ==========================================================================
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ СТРАНИЦ АРХИВОВ (/news/ и /journal/)
+   ========================================================================== */
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
+.updates-feed .update-item div {
+    display: flex !important; 
+    align-items: baseline !important;
+}
+
+/* ЛЕВАЯ КОЛОНКА (ДАТА): Компактные ПК-настройки ужатости и цвет #888 */
+.updates-feed .update-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #888 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
+.updates-feed .update-item div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}
+
+/* Ссылка на публикацию: Уменьшенный размер 0.9rem и защита от переносов */
+.updates-feed .update-item .item-link {
+    font-size: 0.9rem !important;
+    display: block !important;
+    word-wrap: break-word !important;
+    break-word: break-all !important;
+}
+
+/* ==========================================================================
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
+   ========================================================================== */
+
+/* Внутренний контейнер строки: активируем оригинальное верхнее выравнивание */
+#posts-list .news-item-compact div {
+    display: flex !important; 
+    align-items: flex-start !important;
+    width: 100% !important;
+}
+
+/* Настройка компактности текста даты на Главной странице: возвращен padding-top: 1px */
+#posts-list .news-item-compact div span:first-child {
+    flex-shrink: 0 !important;
+    color: #6a737d !important;
+    font-family: monospace !important;
+    font-size: 0.75rem !important; /* Родной размер из user agent stylesheet small */
+    line-height: 1.2 !important;   /* Твоё родное значение */
+    font-stretch: condensed !important;
+    letter-spacing: 0px !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-top: 1px !important;  /* ТОТ САМЫЙ ОРИГИНАЛЬНЫЙ СДВИГ ДЛЯ ВЫРАВНИВАНИЯ */
+}
+
+/* Настройка контейнера заголовка на Главной странице */
+#posts-list .news-item-compact div span:last-child {
+    line-height: 1.2 !important;  /* Синхронизировано с датой */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Сама ссылка на публикацию: работает в режиме block для фиксации на первой строке */
+#posts-list .news-item-compact .item-link {
+    font-size: 0.9rem !important;  /* Родной размер из оригинального .news-item-compact */
+    line-height: 1.2 !important;   /* Твоё родное значение */
+    display: block !important; 
+    word-wrap: break-word !important;
+    word-break: break-all !important;
+}
+
+
+/* ==========================================================================
+   СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
+   ========================================================================== */
+
+
+/* Изолированный цвет для стрелки на Главной */
+.page-btn.home-news-all-btn {
+    color: var(--card-tech) !important;
+}
+.page-btn.home-news-all-btn:hover {
+    color: var(--card-tech) !important;
+}
+
+/* ==========================================================================
+   ФИНАЛЬНЫЕ СТИЛИ КНОПКИ «ЁЛОЧКИ» НА ГЛАВНОЙ (home-news-all-btn)
+   ========================================================================== */
+
+/* Полная синхронизация с базовой навигацией на ПК без искусственных сдвигов */
+.page-btn.home-news-all-btn {
+    line-height: normal !important;     /* Полное совпадение высоты текстового поля */
+    color: var(--card-tech) !important; /* Твой фирменный синий цвет для стрелки */
+}
+
+/* Точечная фиксация выравнивания на мобильных устройствах */
+@media (max-width: 900px) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+

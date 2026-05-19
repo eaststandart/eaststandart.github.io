@@ -1,12 +1,13 @@
 /* ==========================================================================
-   СТИЛИ МОДУЛЯ: УНИВЕРСАЛЬНАЯ ПАГИНАЦИЯ (assets/css/pagination.css)
-   Назначение: Управление сеткой контейнеров, кнопками и адаптацией под мобильные.
-   Применяется: На Главной странице, в архиве /news/ и во всех будущих лентах.
+   МОДУЛЬ: УНИВЕРСАЛЬНАЯ ПАГИНАЦИЯ И ЛЕНТЫ ОБНОВЛЕНИЙ (pagination.css)
    ========================================================================== */
 
+
 /* ==========================================================================
-   ФИКС СЕТОЧНОГО РАСТЯЖЕНИЯ ДЛЯ БЛОКА НОВОСТЕЙ НА ГЛАВНОЙ
+   1. СЕТКА КОНТЕЙНЕРА НА ГЛАВНОЙ
    ========================================================================== */
+
+/* Фикс сеточного растяжения карточки обновлений "Что нового?" */
 .category-card.site-news {
     display: flex !important;
     flex-direction: column !important;
@@ -15,12 +16,15 @@
 /* Заставляем список обновлений забирать всё свободное место, отталкивая кнопки вниз */
 .category-card.site-news #posts-list {
     flex-grow: 1 !important;
-    margin-bottom: 15px !important; /* ЖЕСТКИЙ ОТСТУП: зазор от текста до кнопок на ПК */
+    margin-bottom: 15px !important; /* Жёсткий зазор от текста до кнопок пагинации на ПК */
 }
 
+
 /* ==========================================================================
-   БАЗОВЫЙ КОНТЕЙНЕР ПАГИНАЦИИ
+   2. БАЗОВЫЕ КОНТЕЙНЕРЫ ПАГИНАЦИИ
    ========================================================================== */
+
+/* Общие флекс-настройки для контейнеров кнопок пагинации во всех архивах */
 .pagination-container,
 #news-pagination,
 #journal-pagination {
@@ -30,11 +34,123 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 0px !important;     /* Твоя настройка: зазор регулируется через маргин списка выше */
+    margin-top: 0px !important;     /* Воздух регулируется маргином списка выше */
     margin-bottom: 0px !important;  
 }
 
-/* Обычные кнопки */
+
+/* ==========================================================================
+   3. СТИЛИ СТРОК КОНТЕНТА (ВЫРАВНИВАНИЕ)
+   ========================================================================== */
+
+/* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
+
+/* Внутренний контейнер строки для пиксельного верхнего выравнивания */
+#posts-list .news-item-compact div {
+    display: flex !important; 
+    align-items: flex-start !important;
+    width: 100% !important;
+}
+
+/* Настройка компактности текста даты на Главной странице */
+#posts-list .news-item-compact div span:first-child {
+    flex-shrink: 0 !important;
+    color: #6a737d !important;         /* Серый цвет темы Primer */
+    font-family: monospace !important;  /* Моноширинный шрифт */
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-top: 1px !important;       /* Ювелирный сдвиг для центрирования по первой строке */
+}
+
+/* Настройка контейнера заголовка на Главной странице */
+#posts-list .news-item-compact div span:last-child {
+    line-height: 1.2 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Ссылка на публикацию на Главной странице */
+#posts-list .news-item-compact .item-link {
+    font-size: 0.9rem !important;
+    line-height: 1.2 !important;
+    display: block !important;          /* Перевод в block для фиксации даты на первой строке */
+    word-wrap: break-word !important;   /* Защита от разлома длинных слов на мобильных */
+    word-break: break-all !important;  /* Защита от разлома длинных ссылок на мобильных */
+}
+
+/* Раскраска ссылок на Главной: Серый для постов */
+#posts-list .update-item[data-is-post="true"] .item-link {
+    color: #586069 !important; 
+}
+/* Раскраска ссылок на Главной: Синий для проектов/страниц */
+#posts-list .update-item[data-is-post="false"] .item-link {
+    color: #0366d6 !important; 
+}
+
+
+/* --- Б. СТРАНИЦЫ АРХИВОВ (/news/ и /journal/) --- */
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания в архивах */
+.updates-feed .update-item div {
+    display: flex !important; 
+    align-items: baseline !important;
+}
+
+/* Настройка левой колонки компактной даты в архивах */
+.updates-feed .update-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #888 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Настройка правой колонки контейнера заголовка в архивах */
+.updates-feed .update-item div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}
+
+/* Ссылка на публикацию на страницах архивов */
+.updates-feed .update-item .item-link {
+    font-size: 0.9rem !important;
+    display: block !important;
+    word-wrap: break-word !important;
+    word-break: break-all !important;
+}
+
+/* Раскраска ссылок в Архивах: Серый для постов */
+.updates-feed #posts-list .update-item[data-is-post="true"] .item-link {
+    color: #586069 !important; 
+}
+/* Раскраска ссылок в Архивах: Синий для проектов/страниц */
+.updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
+    color: #0366d6 !important; 
+}
+
+/* Временная подсветка фона для закрепленной новости */
+.pinned-item {
+    background-color: #fff9e6 !important; /* Лёгкий кремовый фон */
+    border-color: #ffe0b2 !important;     /* Тонкая рамка вокруг плашки */
+}
+
+
+/* ==========================================================================
+   4. СТИЛИ КНОПОК ПАГИНАЦИИ (ИНТЕРФЕЙС)
+   ========================================================================== */
+
+/* Обычные кнопки пагинации и кнопка «Ёлочки» на ПК */
 .page-btn,
 .page-btn.home-news-all-btn {
     display: inline-block;
@@ -53,6 +169,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Эффект при наведении на обычные кнопки и на кнопку «Ёлочки» */
 .page-btn:hover,
 .page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa;
@@ -60,6 +177,7 @@
     color: #24292e;
 }
 
+/* Стили для активной выбранной страницы (только для цифр пагинации) */
 .page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
@@ -67,27 +185,30 @@
     cursor: default;
 }
 
-/* Временная подсветка фона для закрепленной новости */
-.pinned-item {
-    background-color: #fff9e6 !important; /* Легкий кремовый фон */
-    border-color: #ffe0b2 !important;     /* Тонкая рамка вокруг плашки */
+/* Изолированные текстовые свойства кнопки «Ёлочки» на Главной */
+.page-btn.home-news-all-btn {
+    line-height: normal !important;     /* Рассчитывается браузером как у соседней навигации */
+    color: var(--card-tech) !important; /* Наш синий цвет для ёлочек */
 }
 
+
 /* ==========================================================================
-   ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (max-width: 900px)
-   ========================================================================= */
+   5. МОБИЛЬНАЯ АДАПТАЦИЯ (ПОРТРЕТНЫЙ РЕЖИМ)
+   ========================================================================== */
 @media (max-width: 900px) {
+    /* Аккуратный воздух от текста до кнопок на мобильном */
     .category-card.site-news #posts-list {
-        margin-bottom: 10px !important; /* НАСТРОЙКА: аккуратный воздух от текста до кнопок на мобильном */
+        margin-bottom: 10px !important; 
     }
 
-    /* СИНХРОНИЗАЦИЯ: Добавили новые ID, чтобы отступы в архивах на телефонах сжимались точно так же, как на главной */
+    /* Прижимаем кнопки ближе к нижнему краю на мобильном во всех архивах */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
+        margin-bottom: 0px !important; 
     }
 
+    /* Синхронное пропорциональное сжатие всех типов кнопок на смартфонах */
     .page-btn,
     .page-btn.home-news-all-btn {
         padding: 5px 10px;
@@ -96,23 +217,30 @@
         border-radius: 5px;
     }
 
+    /* Точечная фиксация верхнего выравнивания ёлочек на телефонах */
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
 }
 
+
 /* ==========================================================================
-   ГОРИЗОНТАЛЬНЫЙ РЕЖИМ СМАРТФОНОВ (Landscape)
+   6. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬНЫЙ РЕЖИМ)
    ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
+    /* Уплотнённый зазор в горизонтальном режиме */
     .category-card.site-news #posts-list {
-        margin-bottom: 10px !important; /* Уплотненный зазор в горизонтальном режиме */
+        margin-bottom: 10px !important; 
     }
 
-    /* СИНХРОНИЗАЦИЯ: Добавили новые ID для идеального прижима кнопок на боку в архивах */
+    /* Максимально прижимаем к дну, уничтожая пустую сеточную дыру в Landscape */
     #home-news-pagination.pagination-container,
     #news-pagination.pagination-container,
     #journal-pagination.pagination-container {
-        margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
+        margin-bottom: 0px !important; 
     }
 
+    /* Синхронное максимальное сжатие кнопок на боку для экономии высоты экрана */
     .page-btn,
     .page-btn.home-news-all-btn {
         padding: 4px 8px;
@@ -120,142 +248,8 @@
         font-size: 0.8rem;
     }
 
-}
-
-/* ==========================================================================
-   РАСКРАСКА ССЫЛОК НОВОСТЕЙ СИЛАМИ ЧИСТОГО CSS
-   ========================================================================== */
-
-/* 1. ЦВЕТА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Внутри карточки обновлений) */
-#posts-list .update-item[data-is-post="true"] .item-link {
-    color: #586069 !important; /* Серый для постов на главной */
-}
-#posts-list .update-item[data-is-post="false"] .item-link {
-    color: #0366d6 !important; /* Синий для проектов/страниц на главной */
-}
-
-/* 2. ЦВЕТА ДЛЯ СТРАНИЦЫ АРХИВА /news/ (СИНХРОНИЗИРОВАНО С ГЛАВНОЙ) */
-.updates-feed #posts-list .update-item[data-is-post="true"] .item-link {
-    color: #586069 !important; /* Тот же плотный серый, как на главной */
-}
-.updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
-    color: #0366d6 !important; /* Синий для проектов/страниц в архивах */
-}
-
-/* ==========================================================================
-   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ СТРАНИЦ АРХИВОВ (/news/ и /journal/)
-   ========================================================================== */
-
-/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
-.updates-feed .update-item div {
-    display: flex !important; 
-    align-items: baseline !important;
-}
-
-/* ЛЕВАЯ КОЛОНКА (ДАТА): Компактные ПК-настройки ужатости и цвет #888 */
-.updates-feed .update-item div span:first-child {
-    flex-shrink: 0 !important;
-    color: #888 !important;
-    font-family: monospace !important;
-    font-size: 0.8rem !important;
-    line-height: 1.4 !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-    display: inline-block !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-/* ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
-.updates-feed .update-item div span:last-child {
-    flex-grow: 1 !important;
-    line-height: 1.4 !important;
-}
-
-/* Ссылка на публикацию: Уменьшенный размер 0.9rem и защита от переносов */
-.updates-feed .update-item .item-link {
-    font-size: 0.9rem !important;
-    display: block !important;
-    word-wrap: break-word !important;
-    break-word: break-all !important;
-}
-
-/* ==========================================================================
-   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
-   ========================================================================== */
-
-/* Внутренний контейнер строки: активируем оригинальное верхнее выравнивание */
-#posts-list .news-item-compact div {
-    display: flex !important; 
-    align-items: flex-start !important;
-    width: 100% !important;
-}
-
-/* Настройка компактности текста даты на Главной странице: возвращен padding-top: 1px */
-#posts-list .news-item-compact div span:first-child {
-    flex-shrink: 0 !important;
-    color: #6a737d !important;
-    font-family: monospace !important;
-    font-size: 0.75rem !important; /* Родной размер из user agent stylesheet small */
-    line-height: 1.2 !important;   /* Твоё родное значение */
-    font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    padding-top: 1px !important;  /* ТОТ САМЫЙ ОРИГИНАЛЬНЫЙ СДВИГ ДЛЯ ВЫРАВНИВАНИЯ */
-}
-
-/* Настройка контейнера заголовка на Главной странице */
-#posts-list .news-item-compact div span:last-child {
-    line-height: 1.2 !important;  /* Синхронизировано с датой */
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Сама ссылка на публикацию: работает в режиме block для фиксации на первой строке */
-#posts-list .news-item-compact .item-link {
-    font-size: 0.9rem !important;  /* Родной размер из оригинального .news-item-compact */
-    line-height: 1.2 !important;   /* Твоё родное значение */
-    display: block !important; 
-    word-wrap: break-word !important;
-    word-break: break-all !important;
-}
-
-
-/* ==========================================================================
-   СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
-   ========================================================================== */
-
-
-/* Изолированный цвет для стрелки на Главной */
-.page-btn.home-news-all-btn {
-    color: var(--card-tech) !important;
-}
-.page-btn.home-news-all-btn:hover {
-    color: var(--card-tech) !important;
-}
-
-/* ==========================================================================
-   ФИНАЛЬНЫЕ СТИЛИ КНОПКИ «ЁЛОЧКИ» НА ГЛАВНОЙ (home-news-all-btn)
-   ========================================================================== */
-
-/* Полная синхронизация с базовой навигацией на ПК без искусственных сдвигов */
-.page-btn.home-news-all-btn {
-    line-height: normal !important;     /* Полное совпадение высоты текстового поля */
-    color: var(--card-tech) !important; /* Твой фирменный синий цвет для стрелки */
-}
-
-/* Точечная фиксация выравнивания на мобильных устройствах */
-@media (max-width: 900px) {
+    /* Сохраняем вертикальное выравнивание ёлочек на боку */
     .page-btn.home-news-all-btn {
         vertical-align: top !important;
     }
 }
-@media (max-height: 500px) and (orientation: landscape) {
-    .page-btn.home-news-all-btn {
-        vertical-align: top !important;
-    }
-}
-

@@ -191,7 +191,7 @@
     flex-shrink: 0 !important;
     color: #6a737d !important;
     font-family: monospace !important;
-    font-size: 0.75rem !important;
+    font-size: 0.8rem !important;
     line-height: 1 !important; /* Обнуляем лишнюю высоту строки */
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;

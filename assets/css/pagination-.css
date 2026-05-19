@@ -253,3 +253,113 @@
         vertical-align: top !important;
     }
 }
+
+
+/* ==========================================================================
+   7. ЛОКАЛЬНЫЕ ЛЕНТЫ ПОСТОВ НА СТРАНИЦАХ ПРОЕКТОВ (ИЗ POSTS-PAGE.CSS)
+   ========================================================================== */
+
+/* --- А. Разметка и выравнивание списка и строк проекта --- */
+
+/* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
+.posts-page-list {
+    padding: 0 !important;
+    margin: 0 0 15px 0 !important; /* Твой зазор 15px до кнопок навигации */
+}
+
+/* 2. СТРОКА ПОСТА (Твой шаг строк margin-bottom: 3px) */
+.posts-page-item {
+    margin-bottom: 3px !important;
+}
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
+.posts-page-item div {
+    display: flex; 
+    align-items: baseline !important;
+}
+
+/* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости и цвет #888 */
+.posts-page-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #888 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* 4. ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
+.posts-page-item div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}
+
+/* Сама ссылка на пост: Твой плотный серый цвет #586069 */
+.posts-page-link {
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    color: #586069 !important;
+    display: block !important;
+    word-break: break-all !important;
+}
+
+
+/* --- Б. Кнопки управления локальной пагинацией проекта --- */
+
+/* 5. НОВЫЙ ИЗОЛИРОВАННЫЙ КОНТЕЙНЕР КНОПОК ПАГИНАЦИИ (posts-page-ctrl) */
+.posts-page-ctrl {
+    width: 100% !important;
+    clear: both !important;
+    display: flex !important;
+    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
+    align-items: center !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0px 0px 20px 0px !important;    /* Твой отступ в одну строку: Вверх(0) Право(0) Вниз(20px) Лево(0) */
+}
+
+/* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
+.posts-page-btn {
+    text-decoration: none !important;
+    cursor: pointer !important;
+    background-color: #fff !important;
+    border-radius: 5px !important;
+    padding: 3px 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #e1e4e8 !important;
+    user-select: none !important;
+    margin: 0 3px !important;
+}
+
+/* Высота строки для обычных кнопок-цифр и елочек */
+.posts-page-btn:not(.posts-page-all-btn) {
+    line-height: normal !important;
+}
+
+/* Кнопка стала близнецом навигации, настраиваем только бока для квадрата */
+.posts-page-btn.posts-page-all-btn {
+    padding-left: 5px !important;   /* Поджатый левый бок как в оригинале проектов */
+    padding-right: 5px !important;  /* Поджатый правый бок как в оригинале проектов */
+    color: var(--card-tech) !important; /* Наш синий цвет для ёлочек */
+}
+
+/* Короткий стиль для active-кнопки выбранной страницы */
+.posts-page-btn.active {
+    background-color: var(--card-tech) !important;
+    border-color: var(--card-tech) !important;
+    color: #fff !important;
+    cursor: default !important;
+}
+
+/* Эффект красивого серого фона при наведении на кнопки проекта (кроме активной) */
+.posts-page-btn:not(.active):hover {
+    background-color: #f6f8fa !important;
+    border-color: #1b1f2326 !important;
+    color: #24292e !important;
+}

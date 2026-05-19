@@ -68,12 +68,12 @@
 .project-page-btn {
     text-decoration: none !important;
     cursor: pointer !important;
+    background-color: #fff !important;
     border-radius: 5px !important;
     padding: 3px 8px !important;
     font-size: 0.8rem !important;
     font-weight: 600 !important;
     border: 1px solid #e1e4e8 !important;
-    background-color: #fff !important;
     user-select: none !important;
     margin: 0 3px !important;
 }
@@ -94,7 +94,4 @@
 /* Короткий стиль для активной кнопки выбранной страницы */
 .project-page-btn.active {
     background-color: var(--card-tech) !important;
-    color: #fff !important;
-    border-color: var(--card-tech) !important;
-    cursor: default !important;
 }

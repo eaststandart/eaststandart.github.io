@@ -185,7 +185,7 @@
     align-items: baseline !important;
 }
 
-/* Настройка компактности текста даты на Главной странице */
+/* Настройка компактности текста даты на Главной странице: убран inline-block */
 #posts-list .news-item-compact div span:first-child {
     flex-shrink: 0 !important;
     color: #6a737d !important;
@@ -195,7 +195,8 @@
     font-stretch: condensed !important;
     letter-spacing: 0px !important;
     white-space: nowrap !important;
-    display: inline-block !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 /* Настройка контейнера заголовка на Главной странице */

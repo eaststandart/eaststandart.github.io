@@ -176,15 +176,16 @@
     font-size: 0.9rem;
 }
 
-/* Общий эффект при наведении на стандартные кнопки и кнопку «Ёлочки» */
-.page-btn:hover,
-.page-btn.home-news-all-btn:hover {
-    background-color: #f6f8fa;
-    border-color: #1b1f2326;
-    color: #24292e;
+/* ИСПРАВЛЕНО: Полное объединение эффекта наведения для ВСЕХ кнопок сайта в одном месте */
+.page-btn:not(.active):hover,
+.page-btn.home-news-all-btn:hover,
+.posts-page-btn:not(.active):hover {
+    background-color: #f6f8fa !important;
+    border-color: #1b1f2326 !important;
+    color: #24292e !important;
 }
 
-/* Стили для активной выбранной страницы (только для цифр пагинации Главной и Архивов) */
+/* Стили для active-кнопки выбранной страницы (только для цифр пагинации Главной и Архивов) */
 .page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
@@ -346,9 +347,3 @@
     cursor: default !important;
 }
 
-/* Эффект красивого серого фона при наведении на кнопки проекта (кроме активной) */
-.posts-page-btn:not(.active):hover {
-    background-color: #f6f8fa !important;
-    border-color: #1b1f2326 !important;
-    color: #24292e !important;
-}

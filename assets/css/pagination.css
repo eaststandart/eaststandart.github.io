@@ -175,3 +175,30 @@
     break-word: break-all !important;
 }
 
+/* ==========================================================================
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
+   ========================================================================== */
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания на Главной */
+#posts-list .news-item-compact div {
+    display: flex !important; 
+    align-items: baseline !important;
+}
+
+/* Настройка компактности текста даты на Главной странице */
+#posts-list .news-item-compact div span:first-child {
+    flex-shrink: 0 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+}
+
+/* Настройка контейнера заголовка на Главной странице */
+#posts-list .news-item-compact div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}

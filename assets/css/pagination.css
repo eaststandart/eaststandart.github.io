@@ -261,6 +261,10 @@
 
 /* --- А. Разметка и выравнивание строк проекта --- */
 
+.posts-page-item {
+    margin-bottom: 3px !important;
+}
+
 /* Внутренний контейнер строки для пиксельного baseline-выравнивания букв */
 .posts-page-item div {
     display: flex !important;

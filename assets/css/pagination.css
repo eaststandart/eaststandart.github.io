@@ -300,25 +300,32 @@
     word-break: break-all !important;
 }
 
+/* Родной контейнер пагинации проекта: возвращаем выравнивание и нижний отступ */
+.posts-page-ctrl {
+    width: 100% !important;
+    clear: both !important;
+    display: flex !important;
+    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
+    align-items: center !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 0 1em 0 !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
+}
 
 /* --- Б. Кнопки управления локальной пагинацией проекта --- */
 
 /* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
 .posts-page-btn {
-    display: inline-block;
-    padding: 3px 8px !important;       /* У проектов оригинальный падинг чуть компактнее */
-    margin: 0 3px !important;
-    border: 1px solid #e1e4e8 !important;
-    border-radius: 5px !important;
-    background-color: #fff !important;
-    color: #24292e !important;
-    font-size: 0.8rem !important;      /* Компактный размер шрифта для кнопок проекта */
-    font-weight: 600 !important;
+    text-decoration: none !important;
     cursor: pointer !important;
-    box-sizing: border-box !important;
-    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    background-color: #fff !important;
+    border-radius: 5px !important;
+    padding: 3px 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #e1e4e8 !important;
     user-select: none !important;
-    -webkit-tap-highlight-color: transparent;
+    margin: 0 3px !important;
 }
 
 /* Высота строки для обычных кнопок-цифр и елочек в проектах */
@@ -348,14 +355,3 @@
     color: var(--card-tech) !important; /* Синий цвет для елочек */
 }
 
-/* Родной контейнер пагинации проекта: возвращаем выравнивание и нижний отступ */
-.posts-page-ctrl {
-    width: 100% !important;
-    clear: both !important;
-    display: flex !important;
-    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
-    align-items: center !important;
-    box-sizing: border-box !important;
-    padding: 0 !important;
-    margin: 0 0 1em 0 !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
-}

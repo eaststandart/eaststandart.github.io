@@ -58,12 +58,14 @@
     padding: 0 !important;
 }
 
-/* --- ОБЩИЙ СТАНДАРТ ЗАЩИТЫ ОТ РАЗЛОМА СТРОК НА ПК ДЛЯ ВСЕХ ССЫЛОК --- */
+/* --- ОБЩИЙ СТАНДАРТ УМНОГО ПЕРЕНОСА СТРОК ДЛЯ ВСЕХ ССЫЛОК САЙТА --- */
 .home-news-feed .item-link,
 .news-feed .item-link,
 .posts-page-link {
-     word-wrap: break-word !important;
+    word-break: break-word !important;  /* Сначала переносит слова ЦЕЛИКОМ, при невозможности — РЕЖЕТ по буквам */
+    hyphens: none !important;           /* Запрещает браузеру глупые слоговые деления с дефисами (ра-бота) */
 }
+
 
 
 /* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
@@ -226,13 +228,6 @@
         vertical-align: top !important;
     }
 
-    .home-news-feed .item-link,
-    .news-feed .item-link,
-    .posts-page-link {
-        word-wrap: break-word !important;
-        word-break: break-all !important;   /* На ПК оставлен строго жесткий перенос по буквам */
-}
-
 }
 
 
@@ -259,14 +254,6 @@
 
     .page-btn.home-news-all-btn {
         vertical-align: top !important;
-    }
-
-    .home-news-feed .item-link,
-    .news-feed .item-link,
-    .posts-page-link {
-        word-wrap: break-word !important;  /* Твой мягкий перенос */
-        word-break: normal !important;     /* Отключает любые скрытые разрезы букв темы */
-        hyphens: none !important;          /* ЖЕСТКИЙ ЗАПРЕТ деления слов дефисами (ра-бота) */
     }
 
 }

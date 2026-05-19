@@ -17,7 +17,6 @@
 .robot-local-post-item div {
     display: flex; 
     align-items: baseline !important; /* Намертво держит ровную горизонтальную линию */
-    box-sizing: border-box !important;
 }
 
 /* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости и цвет #888 */

@@ -339,3 +339,15 @@
     padding-right: 5px !important;
     color: var(--card-tech) !important; /* Синий цвет для елочек */
 }
+
+/* Родной контейнер пагинации проекта: возвращаем выравнивание и нижний отступ */
+.posts-page-ctrl {
+    width: 100% !important;
+    clear: both !important;
+    display: flex !important;
+    justify-content: flex-start !important; /* Выравнивание кнопок по левому краю */
+    align-items: center !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0px 0px 20px 0px !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
+}

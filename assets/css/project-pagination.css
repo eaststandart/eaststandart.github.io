@@ -17,7 +17,6 @@
 .robot-local-post-item div {
     display: flex; 
     align-items: baseline !important; /* Намертво держит ровную горизонтальную линию */
-    width: 100% !important;
     box-sizing: border-box !important;
 }
 

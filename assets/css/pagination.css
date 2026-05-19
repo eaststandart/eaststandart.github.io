@@ -219,12 +219,6 @@
         vertical-align: top !important;
     }
 
-    .home-news-feed .item-link,
-    .news-feed .item-link,
-    .posts-page-link {
-        word-wrap: break-word !important;
-    }
-
 }
 
 

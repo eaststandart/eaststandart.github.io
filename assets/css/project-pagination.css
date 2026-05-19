@@ -78,6 +78,7 @@
     box-sizing: border-box !important;
     text-align: center !important;
     margin: 0 3px !important;
+    text-decoration: none !important;
 }
 
 /* Высота строки для обычных кнопок-цифр и елочек */

@@ -9,7 +9,8 @@ custom_css: "/assets/css/pagination.css"
 
 {{ content }}
 
-<div class="updates-feed">
+<!-- ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ И ЖУРНАЛА -->
+<div class="news-feed">
   <ul id="posts-list" style="list-style: none; padding: 0;">
     {% include news-loop.liquid type="news" folder=page.folder %}
   </ul>

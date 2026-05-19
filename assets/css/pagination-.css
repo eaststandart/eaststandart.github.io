@@ -83,12 +83,12 @@
     word-break: break-all !important;  /* Защита от разлома длинных ссылок на мобильных */
 }
 
-/* Раскраска ссылок на Главной: Серый для постов */
-#posts-list .update-item[data-is-post="true"] .item-link {
+/* ИСПРАВЛЕНО: Раскраска ссылок на Главной: Серый для постов */
+#posts-list .news-item[data-is-post="true"] .item-link {
     color: #586069 !important; 
 }
-/* Раскраска ссылок на Главной: Синий для проектов/страниц */
-#posts-list .update-item[data-is-post="false"] .item-link {
+/* ИСПРАВЛЕНО: Раскраска ссылок на Главной: Синий для проектов/страниц */
+#posts-list .news-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; 
 }
 
@@ -96,13 +96,13 @@
 /* --- Б. СТРАНИЦЫ АРХИВОВ (/news/ и /journal/) --- */
 
 /* Внутренний контейнер строки для пиксельного baseline-выравнивания в архивах */
-.updates-feed .update-item div {
+.updates-feed .news-item div {
     display: flex !important; 
     align-items: baseline !important;
 }
 
 /* Настройка левой колонки компактной даты в архивах */
-.updates-feed .update-item div span:first-child {
+.updates-feed .news-item div span:first-child {
     flex-shrink: 0 !important;
     color: #888 !important;
     font-family: monospace !important;
@@ -117,25 +117,25 @@
 }
 
 /* Настройка правой колонки контейнера заголовка в архивах */
-.updates-feed .update-item div span:last-child {
+.updates-feed .news-item div span:last-child {
     flex-grow: 1 !important;
     line-height: 1.4 !important;
 }
 
 /* Ссылка на публикацию на страницах архивов */
-.updates-feed .update-item .item-link {
+.updates-feed .news-item .item-link {
     font-size: 0.9rem !important;
     display: block !important;
     word-wrap: break-word !important;
     word-break: break-all !important;
 }
 
-/* Раскраска ссылок в Архивах: Серый для постов */
-.updates-feed #posts-list .update-item[data-is-post="true"] .item-link {
+/* ИСПРАВЛЕНО: Раскраска ссылок в Архивах: Серый для постов */
+.updates-feed #posts-list .news-item[data-is-post="true"] .item-link {
     color: #586069 !important; 
 }
-/* Раскраска ссылок в Архивах: Синий для проектов/страниц */
-.updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
+/* ИСПРАВЛЕНО: Раскраска ссылок в Архивах: Синий для проектов/страниц */
+.updates-feed #posts-list .news-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; 
 }
 

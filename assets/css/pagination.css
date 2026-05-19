@@ -291,8 +291,7 @@
     font-size: 0.9rem !important;
     color: #586069 !important;
     display: block !important;
-    word-wrap: break-word !important;
-    break-word: break-all !important;
+    word-break: break-all !important;
 }
 
 /* --- Б. Кнопки управления локальной пагинацией проекта --- */

@@ -238,55 +238,16 @@
 }
 
 /* ==========================================================================
-   ФИКС ВЫСОТЫ И ВЫРАВНИВАНИЯ ДЛЯ КНОПКИ «ЁЛОЧКИ» (home-news-all-btn)
+   ФИНАЛЬНЫЕ СТИЛИ КНОПКИ «ЁЛОЧКИ» НА ГЛАВНОЙ (home-news-all-btn)
    ========================================================================== */
 
-/* Жестко фиксируем высоту строки и вертикальное положение для близнеца навигации */
+/* Полная синхронизация с базовой навигацией на ПК без искусственных сдвигов */
 .page-btn.home-news-all-btn {
-    line-height: normal !important;     /* Убирает разницу в высоте текстового поля */
-    vertical-align: top !important;    /* Выравнивает верхние границы кнопок в один ряд */
-    color: var(--card-tech) !important; /* Твой синий цвет для стрелки */
+    line-height: normal !important;     /* Полное совпадение высоты текстового поля */
+    color: var(--card-tech) !important; /* Твой фирменный синий цвет для стрелки */
 }
 
-/* Фиксируем выравнивание при мобильной адаптации */
-@media (max-width: 900px) {
-    .page-btn.home-news-all-btn {
-        vertical-align: top !important;
-    }
-}
-@media (max-height: 500px) and (orientation: landscape) {
-    .page-btn.home-news-all-btn {
-        vertical-align: top !important;
-    }
-}
-
-/* ==========================================================================
-   ОТЛАДОЧНЫЕ СТИЛИ (DEBUG): ФИКС СМЕЩЕНИЯ КНОПОК НА ПК
-   ========================================================================== */
-
-/* Наша новая кнопка "Ёлочки" — красим в КРАСНЫЙ и переводим на middle */
-.page-btn.home-news-all-btn {
-    line-height: normal !important;     
-    vertical-align: middle !important;  /* ИСПРАВЛЕНО: Спускаем на уровень соседних кнопок */
-    color: var(--card-tech) !important; 
-    background-color: #ffcccc !important; /* ДЕБАГ */
-    border-color: #ff0000 !important;     /* ДЕБАГ */
-}
-
-/* Обычные кнопки (цифры и елочки навигации) — красим в ЗЕЛЕНЫЙ */
-.page-btn:not(.home-news-all-btn) {
-    background-color: #ccffcc !important; /* ДЕБАГ */
-    border-color: #00cc00 !important;     /* ДЕБАГ */
-}
-
-/* Подсвечиваем активную кнопку — красим в ЖЕЛТЫЙ */
-.page-btn.active {
-    background-color: #ffffcc !important; /* ДЕБАГ */
-    border-color: #ffcc00 !important;     /* ДЕБАГ */
-    color: #000 !important;
-}
-
-/* Фиксируем выравнивание при мобильной адаптации (оставляем top для телефонов) */
+/* Точечная фиксация выравнивания на мобильных устройствах */
 @media (max-width: 900px) {
     .page-btn.home-news-all-btn {
         vertical-align: top !important;

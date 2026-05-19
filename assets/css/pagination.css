@@ -59,7 +59,11 @@
 }
 
 /* --- ОБЩИЙ СТАНДАРТ ЗАЩИТЫ ОТ РАЗЛОМА СТРОК НА ПК ДЛЯ ВСЕХ ССЫЛОК --- */
-
+.home-news-feed .item-link,
+.news-feed .item-link,
+.posts-page-link {
+     word-wrap: break-word !important;
+}
 
 
 /* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
@@ -287,7 +291,6 @@
     font-size: 0.9rem !important;
     color: #586069 !important;
     display: block !important;
-    word-break: break-all !important;
 }
 
 /* --- Б. Кнопки управления локальной пагинацией проекта --- */

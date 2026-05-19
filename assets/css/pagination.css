@@ -229,6 +229,7 @@
     .home-news-feed .item-link,
     .news-feed .item-link,
     .posts-page-link {
+        word-wrap: break-word !important;
         word-break: break-all !important;   /* На ПК оставлен строго жесткий перенос по буквам */
 }
 

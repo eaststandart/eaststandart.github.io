@@ -90,12 +90,11 @@
     line-height: normal !important;
 }
 
-/* Короткий стиль для тонкой стрелочки перехода в большой архив проекта */
+/* ИСПРАВЛЕНО: Кнопка стала близнецом навигации, настраиваем только бока для квадрата */
 .posts-page-btn.posts-page-all-btn {
-    line-height: 1.1 !important;
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-    color: var(--card-tech) !important;
+    padding-left: 5px !important;   /* Поджатый левый бок как в оригинале проектов */
+    padding-right: 5px !important;  /* Поджатый правый бок как в оригинале проектов */
+    color: var(--card-tech) !important; /* Наш синий цвет для ёлочек */
 }
 
 /* Короткий стиль для active-кнопки выбранной страницы */

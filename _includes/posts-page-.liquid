@@ -88,17 +88,16 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // ИСПРАВЛЕНО: Теперь всегда создаётся полноценный тег button
-      var btn = document.createElement('button');
+      var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
+      
+      // ИСПРАВЛЕНО: Кнопки создаются со своими новыми чистыми классами из CSS
       btn.className = 'posts-page-btn'; 
       btn.innerText = text;
 
       if (isArchiveLink) {
+        btn.setAttribute('href', targetArchiveUrl);
+        // ИСПРАВЛЕНО: Даём стрелке «Смотреть всё» её новое имя posts-page-all-btn
         btn.classList.add('posts-page-all-btn');
-        // Переход по клику вместо прямой ссылки
-        btn.addEventListener('click', function() {
-          window.location.href = targetArchiveUrl;
-        });
       } else {
         if (isCurrent) {
           btn.classList.add('active'); 
@@ -116,8 +115,8 @@
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      // ИСПРАВЛЕНО: Заменили одиночную стрелку на двойные ёлочки »»
-      ctrlDiv.appendChild(createBtn('»»', null, false, false, true));
+      // Наша стрелочка архива на первом месте
+      ctrlDiv.appendChild(createBtn('→', null, false, false, true));
 
       if (totalPages > 1) {
         ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));

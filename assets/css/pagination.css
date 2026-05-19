@@ -88,13 +88,18 @@
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
-    .page-btn,
-    .page-btn.home-news-all-btn {
+    .page-btn {
         padding: 5px 10px;
         margin: 0 3px;
         font-size: 0.85rem;
         border-radius: 5px;
     }
+
+.page-btn.home-news-all-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+}
+
 }
 
 /* ==========================================================================
@@ -226,7 +231,11 @@
    СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
    ========================================================================== */
 
-
+.page-btn.home-news-all-btn {
+    /* Меняем только боковые падинги (первая цифра — верх/низ, вторая — лево/право) */
+    padding: 5px 10px !important; 
+    color: var(--card-tech) !important;
+}
 
 /* Изолированный цвет для стрелки на Главной */
 .page-btn.home-news-all-btn {

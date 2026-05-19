@@ -88,13 +88,7 @@
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
-    .page-btn {
-        padding: 5px 10px;
-        margin: 0 3px;
-        font-size: 0.85rem;
-        border-radius: 5px;
-    }
-
+    .page-btn,
     .page-btn.home-news-all-btn {
         padding: 5px 10px;
         margin: 0 3px;
@@ -119,12 +113,7 @@
         margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
-    .page-btn {
-        padding: 4px 8px;
-        margin: 0 3px;
-        font-size: 0.8rem;
-    }
-
+    .page-btn,
     .page-btn.home-news-all-btn {
         padding: 4px 8px;
         margin: 0 3px;
@@ -247,3 +236,27 @@
 .page-btn.home-news-all-btn:hover {
     color: var(--card-tech) !important;
 }
+
+/* ==========================================================================
+   ФИКС ВЫСОТЫ И ВЫРАВНИВАНИЯ ДЛЯ КНОПКИ «ЁЛОЧКИ» (home-news-all-btn)
+   ========================================================================== */
+
+/* Жестко фиксируем высоту строки и вертикальное положение для близнеца навигации */
+.page-btn.home-news-all-btn {
+    line-height: normal !important;     /* Убирает разницу в высоте текстового поля */
+    vertical-align: top !important;    /* Выравнивает верхние границы кнопок в один ряд */
+    color: var(--card-tech) !important; /* Твой синий цвет для стрелки */
+}
+
+/* Фиксируем выравнивание при мобильной адаптации */
+@media (max-width: 900px) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+

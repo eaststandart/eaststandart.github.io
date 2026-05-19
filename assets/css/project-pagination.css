@@ -61,11 +61,11 @@
 }
 
 /* ==========================================================================
-   МИКРО-ВЫНОС №3: ЦВЕРА И РАМКИ КНОПОК ПАГИНАЦИИ (assets/css/project-pagination.css)
+   ЧИСТЫЕ КОРОТКИЕ СТИЛИ КНОПОК ПАГИНАЦИИ ПРОЕКТОВ (project-page-btn)
    ========================================================================== */
 
-/* Общий дизайн рамок, шрифтов, цветов И ГЕОМЕТРИИ для всех локальных кнопок робота */
-.pagination-container .page-btn {
+/* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
+.project-page-btn {
     display: inline-block !important;
     padding: 3px 8px !important;
     font-size: 0.8rem !important;
@@ -79,27 +79,26 @@
     box-sizing: border-box !important;
     text-align: center !important;
     margin: 0 3px !important;
+    text-decoration: none !important;
 }
 
-/* Настройки высоты строки для обычных кнопок-цифр и елочек */
-.pagination-container .page-btn:not(.archive-btn) {
+/* Высота строки для обычных кнопок-цифр и елочек */
+.project-page-btn:not(.project-archive-btn) {
     line-height: normal !important;
 }
 
-/* Геометрия тонкой стрелочки перехода в большой архив — ужимаем поля для формы квадрата */
-.pagination-container .page-btn.archive-btn {
+/* Короткий стиль для тонкой стрелочки перехода в большой архив проекта */
+.project-page-btn.project-archive-btn {
     line-height: 1.1 !important;
     padding-left: 5px !important;
     padding-right: 5px !important;
     color: var(--card-tech) !important;
-    text-decoration: none !important; /* ИСПРАВЛЕНО: Намертво гасим браузерное подчёркивание у стрелки-ссылки! */
 }
 
-/* Расцветка активной кнопки выбранной страницы */
-.pagination-container .page-btn.active {
+/* Короткий стиль для активной кнопки выбранной страницы */
+.project-page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
     border-color: var(--card-tech) !important;
     cursor: default !important;
 }
-

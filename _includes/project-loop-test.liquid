@@ -89,20 +89,21 @@
     }
 
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // Если это ссылка в архив, создаем тег <a>, иначе обычную кнопку <button>
       var btn = isArchiveLink ? document.createElement('a') : document.createElement('button');
-      btn.className = 'page-btn'; // Твой базовый класс
+      
+      // ИСПРАВЛЕНО: Даём кнопкам чистое универсальное имя без лишнего robot-
+      btn.className = 'project-page-btn'; 
       btn.innerText = text;
 
-      // ИСПРАВЛЕНО: Никакой инлайн-грязи! Вся геометрия, цвета и рамки ушли в project-pagination.css
       if (isArchiveLink) {
         btn.setAttribute('href', targetArchiveUrl);
-        btn.classList.add('archive-btn');
+        // ИСПРАВЛЕНО: Даём стрелке её чистое имя
+        btn.classList.add('project-archive-btn');
       } else {
         if (isCurrent) {
           btn.classList.add('active'); 
         } else if (isDisabled) {
-          btn.style.opacity = '0.4'; // Оставляем только системную прозрачность выключенной кнопки
+          btn.style.opacity = '0.4'; 
           btn.style.cursor = 'default';
         } else {
           btn.addEventListener('click', function() {

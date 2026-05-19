@@ -182,7 +182,7 @@
 /* Внутренний контейнер строки: активируем оригинальное верхнее выравнивание */
 #posts-list .news-item-compact div {
     display: flex !important; 
-    align-items: baseline !important;
+    align-items: flex-start !important;
     width: 100% !important;
 }
 
@@ -214,6 +214,6 @@
     line-height: 1.2 !important;   /* Твоё родное значение */
     display: block !important; 
     word-wrap: break-word !important;
-    break-word: break-all !important;
+    word-break: break-all !important;
 }
 

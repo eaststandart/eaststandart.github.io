@@ -51,7 +51,7 @@
      // 3. Функция отрисовки страницы с контролем лимита и выводом эмодзи (Цвета убраны в CSS)
     function renderPage(page) {
       list.innerHTML = '';
-      var isArchive = window.location.pathname.includes('/news/');
+      var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
       
       // По умолчанию берем полный лимит
       var currentLimit = itemsPerPage;

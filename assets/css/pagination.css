@@ -176,46 +176,44 @@
 }
 
 /* ==========================================================================
-   ОТЛАДОЧНЫЙ ТЕСТ (DEBUG): ИЩЕМ ВЕРТИКАЛЬНОЕ СМЕЩЕНИЕ
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
    ========================================================================== */
 
-/* Общий контейнер — красим фон в серый */
+/* Внутренний контейнер строки: активируем оригинальное верхнее выравнивание */
 #posts-list .news-item-compact div {
     display: flex !important; 
-    align-items: baseline !important;
+    align-items: flex-start !important;
     width: 100% !important;
-    background-color: #f1f1f1 !important; /* ДЕБАГ: Серый фон контейнера */
 }
 
-/* Дата (span 1) — красим в красный */
+/* Настройка компактности текста даты на Главной странице: возвращен padding-top: 1px */
 #posts-list .news-item-compact div span:first-child {
     flex-shrink: 0 !important;
     color: #6a737d !important;
     font-family: monospace !important;
-    font-size: 0.75rem !important;
-    line-height: 1.2 !important; 
+    font-size: 0.8rem !important; /* Родной размер из user agent stylesheet small */
+    line-height: 1.2 !important;   /* Твоё родное значение */
     font-stretch: condensed !important;
-    letter-spacing: 0px !important;
+    letter-spacing: -0.5px !important;
     white-space: nowrap !important;
     margin: 0 !important;
     padding: 0 !important;
-    background-color: #ffcccc !important; /* ДЕБАГ: Красный фон даты */
+    padding-top: 1px !important;  /* ТОТ САМЫЙ ОРИГИНАЛЬНЫЙ СДВИГ ДЛЯ ВЫРАВНИВАНИЯ */
 }
 
-/* Обёртка заголовка (span 2) — красим в зеленый */
+/* Настройка контейнера заголовка на Главной странице */
 #posts-list .news-item-compact div span:last-child {
-    line-height: 1.2 !important;
+    line-height: 1.2 !important;  /* Синхронизировано с датой */
     padding: 0 !important;
     margin: 0 !important;
-    background-color: #ccffcc !important; /* ДЕБАГ: Зеленый фон обёртки */
 }
 
-/* Сама ссылка (тег а) — красим в желтый */
+/* Сама ссылка на публикацию: работает в режиме block для фиксации на первой строке */
 #posts-list .news-item-compact .item-link {
-    font-size: 0.9rem !important;
-    line-height: 1.2 !important;
+    font-size: 0.9rem !important;  /* Родной размер из оригинального .news-item-compact */
+    line-height: 1.2 !important;   /* Твоё родное значение */
     display: block !important; 
     word-wrap: break-word !important;
     break-word: break-all !important;
-    background-color: #ffffcc !important; /* ДЕБАГ: Желтый фон ссылки */
 }
+

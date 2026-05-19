@@ -264,7 +264,9 @@
     .home-news-feed .item-link,
     .news-feed .item-link,
     .posts-page-link {
-        word-wrap: break-word !important;
+        word-wrap: break-word !important;  /* Твой мягкий перенос */
+        word-break: normal !important;     /* Отключает любые скрытые разрезы букв темы */
+        hyphens: none !important;          /* ЖЕСТКИЙ ЗАПРЕТ деления слов дефисами (ра-бота) */
     }
 
 }

@@ -182,7 +182,7 @@
 /* Идеальное центрирование блоков по вертикальной оси */
 #posts-list .news-item-compact div {
     display: flex !important; 
-    align-items: center !important;
+    align-items: top !important;
     width: 100% !important;
 }
 

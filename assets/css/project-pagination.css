@@ -94,4 +94,6 @@
 /* Короткий стиль для активной кнопки выбранной страницы */
 .project-page-btn.active {
     background-color: var(--card-tech) !important;
+    color: #fff !important;
+    cursor: default !important;
 }

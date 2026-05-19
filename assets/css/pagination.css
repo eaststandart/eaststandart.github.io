@@ -221,23 +221,25 @@
    СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
    ========================================================================== */
 
-/* Идеальный геометрический клон кнопок навигации с флекс-центрированием */
+/* Копия логики из проекта: текстовое поведение с выравниванием по вертикали */
 .page-btn.home-news-all-btn {
     text-decoration: none !important;
-    display: inline-flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 5px 10px !important;    /* Точные оригинальные отступы кнопок навигации */
-    font-size: 0.9rem !important;     /* Точный оригинальный размер шрифта */
-    font-weight: 600 !important;      /* Точный оригинальный вес шрифта */
-    line-height: 0 !important;         /* Обнуляем текстовую высоту для флекс-выравнивания */
-    height: auto !important;
+    display: inline-block !important;
+    vertical-align: middle !important; /* Выравнивает тег ссылки в один ряд с кнопками */
+    line-height: 1.1 !important;        /* Текстовое сжатие высоты строки как в проектах */
+    padding-top: 5px !important;       /* Родной верхний падинг навигации */
+    padding-bottom: 5px !important;    /* Родный нижний падинг навигации */
+    padding-left: 6px !important;      /* Поджатый левый бок для формы квадрата */
+    padding-right: 6px !important;     /* Поджатый правый бок для формы квадрата */
+    font-size: 0.9rem !important;      /* Родной размер шрифта кнопок */
+    font-weight: 600 !important;       /* Родной вес шрифта кнопок */
     color: var(--card-tech) !important;
     box-sizing: border-box !important;
 }
 
-/* Эффект при наведении на стрелку-клон */
+/* Эффект при наведении на стрелку */
 .page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa !important;
     color: var(--card-tech) !important;
 }
+

@@ -188,8 +188,9 @@
 /* Настройка компактности текста даты на Главной странице */
 #posts-list .news-item-compact div span:first-child {
     flex-shrink: 0 !important;
+    color: #586069 !important;
     font-family: monospace !important;
-    font-size: 0.8rem !important;
+    font-size: 0.75rem !important;
     line-height: 1.4 !important;
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;

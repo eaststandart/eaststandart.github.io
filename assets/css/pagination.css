@@ -95,10 +95,12 @@
         border-radius: 5px;
     }
 
-.page-btn.home-news-all-btn {
-    padding: 5px 10px;
-    font-size: 0.85rem;
-}
+    .page-btn.home-news-all-btn {
+        padding: 5px 10px;
+        margin: 0 3px;
+        font-size: 0.85rem;
+        border-radius: 5px;
+    }
 
 }
 
@@ -117,8 +119,7 @@
         margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
-    .page-btn,
-    .page-btn.home-news-all-btn {
+    .page-btn {
         padding: 4px 8px;
         margin: 0 3px;
         font-size: 0.8rem;

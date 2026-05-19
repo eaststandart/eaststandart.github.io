@@ -67,7 +67,6 @@
 /* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
 .project-page-btn {
     text-decoration: none !important;
-    display: inline-block !important;
     border-radius: 5px !important;
     padding: 3px 8px !important;
     font-size: 0.8rem !important;
@@ -75,8 +74,6 @@
     border: 1px solid #e1e4e8 !important;
     background-color: #fff !important;
     user-select: none !important;
-    box-sizing: border-box !important;
-    text-align: center !important;
     margin: 0 3px !important;
 }
 

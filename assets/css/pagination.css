@@ -151,26 +151,32 @@
    4. СТИЛИ КНОПОК ПАГИНАЦИИ (ИНТЕРФЕЙС)
    ========================================================================== */
 
-/* Обычные кнопки пагинации и кнопка «Ёлочки» на ПК */
+/* ОБЩИЙ СТАНДАРТ ГЕОМЕТРИИ, РАМОК И ФОНОВ ДЛЯ ВСЕХ КНОПОК НАВИГАЦИИ САЙТА */
 .page-btn,
-.page-btn.home-news-all-btn {
+.page-btn.home-news-all-btn,
+.posts-page-btn {
     display: inline-block;
-    padding: 5px 10px;
-    margin: 0 3px;                  
-    border: 1px solid #e1e4e8;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #24292e;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    border: 1px solid #e1e4e8 !important;
+    border-radius: 5px !important;
+    background-color: #fff !important;
+    color: #24292e !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
-/* Эффект при наведении на обычные кнопки и на кнопку «Ёлочки» */
+/* Настройки отступов, маргинов и шрифта для обычных кнопок на Главной и в Архивах */
+.page-btn,
+.page-btn.home-news-all-btn {
+    padding: 5px 10px;
+    margin: 0 3px;                  
+    font-size: 0.9rem;
+}
+
+/* Общий эффект при наведении на стандартные кнопки и кнопку «Ёлочки» */
 .page-btn:hover,
 .page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa;
@@ -178,7 +184,7 @@
     color: #24292e;
 }
 
-/* Стили для активной выбранной страницы (только для цифр пагинации) */
+/* Стили для активной выбранной страницы (только для цифр пагинации Главной и Архивов) */
 .page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
@@ -188,8 +194,8 @@
 
 /* Изолированные текстовые свойства кнопки «Ёлочки» на Главной */
 .page-btn.home-news-all-btn {
-    line-height: normal !important;     /* Рассчитывается браузером как у соседней навигации */
-    color: var(--card-tech) !important; /* Наш синий цвет для ёлочек */
+    line-height: normal !important;     
+    color: var(--card-tech) !important; 
 }
 
 
@@ -219,6 +225,12 @@
         vertical-align: top !important;
     }
 
+    .home-news-feed .item-link,
+    .news-feed .item-link,
+    .posts-page-link {
+        word-break: break-all !important;   /* На ПК оставлен строго жесткий перенос по буквам */
+}
+
 }
 
 
@@ -246,12 +258,6 @@
     .page-btn.home-news-all-btn {
         vertical-align: top !important;
     }
-
-.home-news-feed .item-link,
-.news-feed .item-link,
-.posts-page-link {
-    word-break: break-all !important;   /* На ПК оставлен строго жесткий перенос по буквам */
-}
 
 }
 
@@ -313,21 +319,14 @@
     margin: 0px 0px 20px 0px !important;    
 }
 
-/* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
+/* Индивидуальные параметры отступов, маргинов и шрифта кнопок навигации проекта */
 .posts-page-btn {
-    text-decoration: none !important;
-    cursor: pointer !important;
-    background-color: #fff !important;
-    border-radius: 5px !important;
-    padding: 3px 8px !important;
-    font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    border: 1px solid #e1e4e8 !important;
-    user-select: none !important;
+    padding: 3px 8px !important;       
     margin: 0 3px !important;
+    font-size: 0.8rem !important;      
 }
 
-/* Высота строки для обычных кнопок-цифр и елочек */
+/* Высота строки для обычных кнопок-цифр и елочек в проектах */
 .posts-page-btn:not(.posts-page-all-btn) {
     line-height: normal !important;
 }
@@ -339,7 +338,7 @@
     color: var(--card-tech) !important; 
 }
 
-/* Короткий стиль для active-кнопки выбранной страницы */
+/* Короткий стиль для active-кнопки выбранной страницы проекта */
 .posts-page-btn.active {
     background-color: var(--card-tech) !important;
     border-color: var(--card-tech) !important;

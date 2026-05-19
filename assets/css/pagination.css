@@ -193,7 +193,7 @@
     font-size: 0.75rem !important;
     line-height: 1.2 !important;
     font-stretch: condensed !important;
-    letter-spacing: -0.5px !important;
+    letter-spacing: 0px !important;
     white-space: nowrap !important;
     display: inline-block !important;
 }

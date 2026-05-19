@@ -179,9 +179,9 @@
    СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (Блок "Что нового?")
    ========================================================================== */
 
-/* Идеальное центрирование блоков по вертикальной оси */
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания на Главной */
 #posts-list .news-item-compact div {
-    display: flex !important;
+    display: flex !important; 
     align-items: baseline !important;
     width: 100% !important;
 }
@@ -192,7 +192,7 @@
     color: #6a737d !important;
     font-family: monospace !important;
     font-size: 0.8rem !important;
-    line-height: 1 !important; /* Обнуляем лишнюю высоту строки */
+    line-height: 1.2 !important; /* Возвращаем стандартную высоту для baseline */
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;
     white-space: nowrap !important;
@@ -202,14 +202,17 @@
 
 /* Настройка контейнера заголовка на Главной странице */
 #posts-list .news-item-compact div span:last-child {
-    line-height: 1 !important; /* Синхронизируем высоту строки с датой */
+    flex-grow: 1 !important;
+    line-height: 1.2 !important;
     padding: 0 !important;
     margin: 0 !important;
 }
 
-/* Сама ссылка на публикацию */
+/* Сама ссылка на публикацию: переведена в режим block для привязки к первой строке */
 #posts-list .news-item-compact .item-link {
     font-size: 0.9rem !important;
     line-height: 1.2 !important;
-    display: inline-block !important;
+    display: block !important; /* ИСПРАВЛЕНО: теперь как в проектах */
+    word-wrap: break-word !important;
+    break-word: break-all !important;
 }

@@ -285,10 +285,14 @@
     padding: 0 !important;
 }
 
+.posts-page-item div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}
+
 /* Текстовая ссылка на публикацию внутри проекта */
 .posts-page-link {
     font-size: 0.9rem !important;
-    line-height: 1.2 !important;
     display: block !important;          /* Режим block фиксирует дату на первой строке */
     text-decoration: none !important;
     color: #586069 !important;         /* Фирменный серый цвет для постов */
@@ -354,9 +358,4 @@
     box-sizing: border-box !important;
     padding: 0 !important;
     margin: 0 0 1em 0 !important; /* Отступы по часовой стрелке: Вверх(0) Право(0) Вниз(20px) Лево(0) */
-}
-
-.posts-page-item div span:last-child {
-    flex-grow: 1 !important;
-    line-height: 1.4 !important;
 }

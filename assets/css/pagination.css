@@ -219,12 +219,6 @@
         vertical-align: top !important;
     }
 
-    /* ИСПРАВЛЕНО: Включаем мягкий перенос слов только для мобильных */
-    .home-news-feed .item-link,
-    .news-feed .item-link,
-    .posts-page-link {
-        word-wrap: break-word !important;
-    }
 }
 
 

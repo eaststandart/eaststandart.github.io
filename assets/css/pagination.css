@@ -191,7 +191,7 @@
     flex-shrink: 0 !important;
     color: #6a737d !important;
     font-family: monospace !important;
-    font-size: 0.8rem !important; /* Родной размер из user agent stylesheet small */
+    font-size: 0.75rem !important; /* Родной размер из user agent stylesheet small */
     line-height: 1.2 !important;   /* Твоё родное значение */
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;

@@ -221,20 +221,21 @@
    СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
    ========================================================================== */
 
-/* Копия логики из проекта: текстовое поведение с выравниванием по вертикали */
+/* Полная копия геометрии навигации с автоматическим расчётом формы квадрата */
 .page-btn.home-news-all-btn {
     text-decoration: none !important;
     display: inline-block !important;
-    vertical-align: middle !important; /* Выравнивает тег ссылки в один ряд с кнопками */
+    vertical-align: middle !important; /* Убирает разницу между тегами a и button */
     line-height: 1.1 !important;        /* Текстовое сжатие высоты строки как в проектах */
-    padding-top: 5px !important;       /* Родной верхний падинг навигации */
-    padding-bottom: 5px !important;    /* Родный нижний падинг навигации */
-    padding-left: 6px !important;      /* Поджатый левый бок для формы квадрата */
-    padding-right: 6px !important;     /* Поджатый правый бок для формы квадрата */
-    font-size: 0.9rem !important;      /* Родной размер шрифта кнопок */
-    font-weight: 600 !important;       /* Родной вес шрифта кнопок */
+    padding-top: 5px !important;       /* Родной верхний отступ навигации */
+    padding-bottom: 5px !important;    /* Родный нижний отступ навигации */
+    padding-left: 7px !important;      /* Рассчитанный боковой отступ для формы квадрата */
+    padding-right: 7px !important;     /* Рассчитанный боковой отступ для формы квадрата */
+    font-size: 0.9rem !important;      /* Родной размер шрифта кнопок навигации */
+    font-weight: 600 !important;       /* Родной вес шрифта кнопок навигации */
     color: var(--card-tech) !important;
     box-sizing: border-box !important;
+    text-align: center !important;
 }
 
 /* Эффект при наведении на стрелку */

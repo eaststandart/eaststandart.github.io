@@ -4,7 +4,6 @@
 
 /* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
 .robot-project-list {
-    padding: 0 !important;
     margin: 0 0 15px 0 !important; /* Удерживает твой зазор 15px до кнопок */
 }
 

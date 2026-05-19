@@ -45,10 +45,14 @@
       {% if include.type == "home" %}
         <!-- Компактный стиль для Главной страницы -->
         <li class="update-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">      
-          <small>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</small> 
-          <a href="{{ item.url | relative_url }}" class="item-link">
-            {{ item.title }}
-          </a>
+          <div>
+            <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>
+              <a href="{{ item.url | relative_url }}" class="item-link">
+                {{ item.title }}
+              </a>
+            </span>
+          </div>
         </li>
       {% elsif include.type == "news" %}
         <!-- Широкий стиль с линиями для страницы Новостей и Журнала -->

@@ -51,14 +51,19 @@
           </a>
         </li>
       {% elsif include.type == "news" %}
-        <!-- Широкий стиль с линиями для страницы Новостей -->
+        <!-- Широкий стиль с линиями для страницы Новостей и Журнала -->
         <li class="update-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-          <small style="color: #888;">{{ item.date | date: "%d.%m.%Y" }}</small>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none; margin-left: 8px;">
-            {{ item.title }}
-          </a>
+          <div>
+            <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>
+              <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
+                {{ item.title }}
+              </a>
+            </span>
+          </div>
         </li>
       {% endif %}
+
 
     {% endif %}
   {% endif %}

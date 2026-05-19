@@ -97,7 +97,8 @@
 
     .page-btn.home-news-all-btn {
         padding: 5px 10px;
-        font-size: 0.7rem;
+        margin: 0 3px;
+        font-size: 0.8rem;
         border-radius: 5px;
     }
 
@@ -126,7 +127,7 @@
 
     .page-btn.home-news-all-btn {
         padding: 4px 8px;
-        font-size: 0.65rem;
+        margin: 0 3px;
         border-radius: 5px;
     }
 

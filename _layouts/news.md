@@ -1,6 +1,5 @@
 ---
 layout: default
-custom_css: "/assets/css/pagination.css"
 ---
 {% comment %} 
 ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ (\_layouts/news.html)

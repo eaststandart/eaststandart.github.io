@@ -15,7 +15,7 @@
 
     <!-- ... БАЗОВЫЕ СТИЛИ ДЛЯ ВСЕГО САЙТА ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/posts-page.css">
+    <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 
     <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->

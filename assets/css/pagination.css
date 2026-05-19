@@ -253,3 +253,89 @@
         vertical-align: top !important;
     }
 }
+
+
+/* ==========================================================================
+   7. ЛОКАЛЬНЫЕ ЛЕНТЫ ПОСТОВ НА СТРАНИЦАХ ПРОЕКТОВ (ИЗ POSTS-PAGE.CSS)
+   ========================================================================== */
+
+/* --- А. Разметка и выравнивание строк проекта --- */
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания букв */
+.posts-page-item div {
+    display: flex !important;
+    align-items: baseline !important;
+}
+
+/* Настройка моноширинной компактной даты в проектах */
+.posts-page-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #6a737d !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Текстовая ссылка на публикацию внутри проекта */
+.posts-page-link {
+    font-size: 0.9rem !important;
+    line-height: 1.2 !important;
+    display: block !important;          /* Режим block фиксирует дату на первой строке */
+    text-decoration: none !important;
+    color: #586069 !important;         /* Фирменный серый цвет для постов */
+    word-wrap: break-word !important;
+    word-break: break-all !important;
+}
+
+
+/* --- Б. Кнопки управления локальной пагинацией проекта --- */
+
+/* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
+.posts-page-btn {
+    display: inline-block;
+    padding: 3px 8px !important;       /* У проектов оригинальный падинг чуть компактнее */
+    margin: 0 3px !important;
+    border: 1px solid #e1e4e8 !important;
+    border-radius: 5px !important;
+    background-color: #fff !important;
+    color: #24292e !important;
+    font-size: 0.8rem !important;      /* Компактный размер шрифта для кнопок проекта */
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Высота строки для обычных кнопок-цифр и елочек в проектах */
+.posts-page-btn:not(.posts-page-all-btn) {
+    line-height: normal !important;
+}
+
+/* Эффект наведения на локальные кнопки проекта */
+.posts-page-btn:hover {
+    background-color: #f6f8fa !important;
+    border-color: #1b1f2326 !important;
+    color: #24292e !important;
+}
+
+/* Стиль активной выбранной страницы внутри проекта */
+.posts-page-btn.active {
+    background-color: var(--card-tech) !important;
+    color: #fff !important;
+    border-color: var(--card-tech) !important;
+    cursor: default !important;
+}
+
+/* Локальная кнопка «Ёлочки» проекта (posts-page-all-btn) */
+.posts-page-btn.posts-page-all-btn {
+    padding-left: 5px !important;      /* Поджатые оригинальные бока для формы квадрата */
+    padding-right: 5px !important;
+    color: var(--card-tech) !important; /* Синий цвет для елочек */
+}

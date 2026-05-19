@@ -14,9 +14,9 @@
 }
 
 /* Заставляем список обновлений забирать всё свободное место, отталкивая кнопки вниз */
-.category-card.site-news #posts-list {
+.category-card.site-news .home-news-feed {
     flex-grow: 1 !important;
-    margin-bottom: 15px !important; /* Жёсткий зазор от текста до кнопок пагинации на ПК */
+    margin-bottom: 15px !important; 
 }
 
 
@@ -46,14 +46,14 @@
 /* --- А. ГЛАВНАЯ СТРАНИЦА (Карточка "Что нового?") --- */
 
 /* Внутренний контейнер строки для пиксельного верхнего выравнивания */
-#posts-list .news-item-compact div {
+.home-news-feed .news-item-compact div {
     display: flex !important; 
     align-items: flex-start !important;
     width: 100% !important;
 }
 
 /* Настройка компактности текста даты на Главной странице */
-#posts-list .news-item-compact div span:first-child {
+.home-news-feed .news-item-compact div span:first-child {
     flex-shrink: 0 !important;
     color: #6a737d !important;         /* Серый цвет темы Primer */
     font-family: monospace !important;  /* Моноширинный шрифт */
@@ -68,14 +68,14 @@
 }
 
 /* Настройка контейнера заголовка на Главной странице */
-#posts-list .news-item-compact div span:last-child {
+.home-news-feed .news-item-compact div span:last-child {
     line-height: 1.2 !important;
     padding: 0 !important;
     margin: 0 !important;
 }
 
 /* Ссылка на публикацию на Главной странице */
-#posts-list .news-item-compact .item-link {
+.home-news-feed .news-item-compact .item-link {
     font-size: 0.9rem !important;
     line-height: 1.2 !important;
     display: block !important;          /* Перевод в block для фиксации даты на первой строке */
@@ -83,12 +83,12 @@
     word-break: break-all !important;  /* Защита от разлома длинных ссылок на мобильных */
 }
 
-/* ИСПРАВЛЕНО: Раскраска ссылок на Главной: Серый для постов */
-#posts-list .news-item[data-is-post="true"] .item-link {
+/* Раскраска ссылок на Главной: Серый для постов */
+.home-news-feed .news-item[data-is-post="true"] .item-link {
     color: #586069 !important; 
 }
-/* ИСПРАВЛЕНО: Раскраска ссылок на Главной: Синий для проектов/страниц */
-#posts-list .news-item[data-is-post="false"] .item-link {
+/* Раскраска ссылок на Главной: Синий для проектов/страниц */
+.home-news-feed .news-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; 
 }
 
@@ -96,13 +96,13 @@
 /* --- Б. СТРАНИЦЫ АРХИВОВ (/news/ и /journal/) --- */
 
 /* Внутренний контейнер строки для пиксельного baseline-выравнивания в архивах */
-.updates-feed .news-item div {
+.news-feed .news-item div {
     display: flex !important; 
     align-items: baseline !important;
 }
 
 /* Настройка левой колонки компактной даты в архивах */
-.updates-feed .news-item div span:first-child {
+.news-feed .news-item div span:first-child {
     flex-shrink: 0 !important;
     color: #888 !important;
     font-family: monospace !important;
@@ -117,25 +117,25 @@
 }
 
 /* Настройка правой колонки контейнера заголовка в архивах */
-.updates-feed .news-item div span:last-child {
+.news-feed .news-item div span:last-child {
     flex-grow: 1 !important;
     line-height: 1.4 !important;
 }
 
 /* Ссылка на публикацию на страницах архивов */
-.updates-feed .news-item .item-link {
+.news-feed .news-item .item-link {
     font-size: 0.9rem !important;
     display: block !important;
     word-wrap: break-word !important;
     word-break: break-all !important;
 }
 
-/* ИСПРАВЛЕНО: Раскраска ссылок в Архивах: Серый для постов */
-.updates-feed #posts-list .news-item[data-is-post="true"] .item-link {
+/* Раскраска ссылок в Архивах: Серый для постов */
+.news-feed .news-item[data-is-post="true"] .item-link {
     color: #586069 !important; 
 }
-/* ИСПРАВЛЕНО: Раскраска ссылок в Архивах: Синий для проектов/страниц */
-.updates-feed #posts-list .news-item[data-is-post="false"] .item-link {
+/* Раскраска ссылок в Архивах: Синий для проектов/страниц */
+.news-feed .news-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; 
 }
 

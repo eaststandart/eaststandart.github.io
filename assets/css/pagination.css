@@ -35,7 +35,8 @@
 }
 
 /* Обычные кнопки */
-.page-btn {
+.page-btn,
+.page-btn.home-news-all-btn {
     display: inline-block;
     padding: 5px 10px;
     margin: 0 3px;                  
@@ -52,7 +53,8 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.page-btn:hover {
+.page-btn:hover,
+.page-btn.home-news-all-btn:hover {
     background-color: #f6f8fa;
     border-color: #1b1f2326;
     color: #24292e;
@@ -86,7 +88,8 @@
         margin-bottom: 0px !important; /* НАСТРОЙКА: прижали кнопки ближе к нижнему краю на мобильном */
     }
 
-    .page-btn {
+    .page-btn,
+    .page-btn.home-news-all-btn {
         padding: 5px 10px;
         margin: 0 3px;
         font-size: 0.85rem;
@@ -109,7 +112,8 @@
         margin-bottom: 0px !important; /* Максимально прижали к дну, уничтожая пустую сеточную дыру */
     }
 
-    .page-btn {
+    .page-btn,
+    .page-btn.home-news-all-btn {
         padding: 4px 8px;
         margin: 0 3px;
         font-size: 0.8rem;
@@ -215,16 +219,5 @@
     display: block !important; 
     word-wrap: break-word !important;
     word-break: break-all !important;
-}
-
-/* ==========================================================================
-   СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
-   ========================================================================== */
-
-/* Стрелка стала кнопкой! Корректируем только бока для формы идеального квадрата */
-.page-btn.home-news-all-btn {
-    padding-left: 7px !important;  /* Поджатый левый бок для формы квадрата */
-    padding-right: 7px !important; /* Поджатый правый бок для формы квадрата */
-    color: var(--card-tech) !important;
 }
 

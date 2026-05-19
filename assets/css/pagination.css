@@ -217,3 +217,21 @@
     word-break: break-all !important;
 }
 
+/* ==========================================================================
+   СТИЛИ ДЛЯ КВАДРАТНОЙ КНОПКИ-СТРЕЛКИ НА ГЛАВНОЙ (home-news-all-btn)
+   ========================================================================== */
+
+/* Превращаем ссылку-стрелку в аккуратный квадрат и красив в фирменный цвет */
+.page-btn.home-news-all-btn {
+    text-decoration: none !important;
+    line-height: 1.1 !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    color: var(--card-tech) !important;
+}
+
+/* Эффект при наведении на квадратную кнопку */
+.page-btn.home-news-all-btn:hover {
+    background-color: #f6f8fa !important;
+    color: var(--card-tech) !important;
+}

@@ -19,9 +19,9 @@ permalink: /projects/novyj-robot-shagohod/
 ### Журнал проекта
 *Назначение: этапы создания, отладка и усовершенствование.*
 
-{% include project-loop.liquid type="journal" %}
+{% include  posts-page.liquid type="journal" %}
 
 ### Галерея работ
 *Назначение: демонстрация (фото, видео) выполненного проекта от участников.*
 
-{% include project-loop.liquid type="media" %}
+{% include  posts-page.liquid type="media" %}

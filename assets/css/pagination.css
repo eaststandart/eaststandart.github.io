@@ -135,3 +135,43 @@
 .updates-feed #posts-list .update-item[data-is-post="false"] .item-link {
     color: #0366d6 !important; /* Синий для проектов/страниц в архивах */
 }
+
+/* ==========================================================================
+   СИНХРОНИЗАЦИЯ СТИЛЕЙ СТРОК ДЛЯ СТРАНИЦ АРХИВОВ (/news/ и /journal/)
+   ========================================================================== */
+
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
+.updates-feed .update-item div {
+    display: flex !important; 
+    align-items: baseline !important;
+}
+
+/* ЛЕВАЯ КОЛОНКА (ДАТА): Компактные ПК-настройки ужатости и цвет #888 */
+.updates-feed .update-item div span:first-child {
+    flex-shrink: 0 !important;
+    color: #888 !important;
+    font-family: monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    font-stretch: condensed !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
+.updates-feed .update-item div span:last-child {
+    flex-grow: 1 !important;
+    line-height: 1.4 !important;
+}
+
+/* Ссылка на публикацию: Уменьшенный размер 0.9rem и защита от переносов */
+.updates-feed .update-item .item-link {
+    font-size: 0.9rem !important;
+    display: block !important;
+    word-wrap: break-word !important;
+    break-word: break-all !important;
+}
+

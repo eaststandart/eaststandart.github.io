@@ -37,7 +37,6 @@
 /* 4. ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
 .robot-local-post-item div span:last-child {
     flex-grow: 1 !important;
-    display: block !important;
     min-width: 0 !important;
     line-height: 1.4 !important;
 }

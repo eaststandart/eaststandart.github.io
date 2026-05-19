@@ -4,13 +4,13 @@
 
 /* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
 .robot-project-list {
+    padding: 0 !important;
     margin: 0 0 15px 0 !important; /* Удерживает твой зазор 15px до кнопок */
 }
 
 /* 2. СТРОКА ПОСТА (Твой шаг строк margin-bottom: 3px) */
 .robot-local-post-item {
     margin-bottom: 3px !important;
-    padding-bottom: 0px !important;
 }
 
 /* Внутренний контейнер строки (Мягкий display без !important, чтобы JS мог скрывать строки) */

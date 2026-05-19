@@ -4,7 +4,6 @@
 
 /* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
 .robot-project-list {
-    list-style: none !important;
     padding: 0 !important;
     margin: 0 0 15px 0 !important; /* Удерживает твой зазор 15px до кнопок */
 }
@@ -94,6 +93,7 @@
 /* Короткий стиль для активной кнопки выбранной страницы */
 .project-page-btn.active {
     background-color: var(--card-tech) !important;
+    border-color: var(--card-tech) !important;
     color: #fff !important;
     cursor: default !important;
 }

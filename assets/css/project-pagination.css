@@ -1,12 +1,11 @@
 /* ==========================================================================
-   ИЗОЛИРОВАННЫЕ СТИЛИ СПИСКА И ПОСТОВ РОБОТА (assets/css/project-pagination.css)
+   ИЗОЛИРОВАННАЯ ГЕОМЕТРИЯ СПИСКА И ПОСТОВ РОБОТА (assets/css/project-pagination.css)
+   ВНИМАНИЕ: Все системные шрифты, цвета и рамки наследуются автоматически!
    ========================================================================== */
 
-/* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА */
+/* 1. ГЛАВНЫЙ КОНТЕЙНЕР СПИСКА (Удерживает твой оригинальный зазор 15px до кнопок) */
 .robot-project-list {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 0 15px 0 !important; /* Удерживает твой зазор 15px до кнопок */
+    margin: 0 0 15px 0 !important; 
 }
 
 /* 2. СТРОКА ПОСТА (Твой шаг строк margin-bottom: 3px) */
@@ -15,28 +14,23 @@
     padding-bottom: 0px !important;
 }
 
-/* Внутренний контейнер строки (Мягкий display без !important, чтобы JS мог скрывать строки) */
+/* Внутренний контейнер строки для пиксельного baseline-выравнивания */
 .robot-local-post-item div {
     display: flex; 
-    align-items: baseline !important; /* Намертво держит ровную горизонтальную линию */
+    align-items: baseline !important; 
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
-/* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости и цвет #888 */
+/* 3. ЛЕВАЯ КОЛОНКА (ДАТА): Твои ПК-настройки ужатости */
 .robot-local-post-item div span:first-child {
     flex-shrink: 0 !important;
-    color: #888 !important;
-    font-family: monospace !important;
     font-size: 0.8rem !important;
-    line-height: 1.4 !important;
     font-stretch: condensed !important;
     letter-spacing: -0.5px !important;
     white-space: nowrap !important;
     margin-right: 0px !important;
     display: inline-block !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
 }
 
 /* 4. ПРАВАЯ КОЛОНКА (ТЕКСТ ЗАГОЛОВКА) */
@@ -44,61 +38,36 @@
     flex-grow: 1 !important;
     display: block !important;
     min-width: 0 !important;
-    line-height: 1.4 !important;
 }
 
-/* Сама ссылка на пост: Твой плотный серый цвет #586069 */
+/* Наша защита от вылета длинного текста заголовка за рамки */
 .robot-item-link {
-    text-decoration: none !important;
-    color: #586069 !important;
     display: block !important;
     word-wrap: break-word !important;
     break-word: break-all !important;
-    font-size: 0.9rem !important;
-    line-height: 1.4 !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }
 
 /* ==========================================================================
-   ЧИСТЫЕ КОРОТКИЕ СТИЛИ КНОПОК ПАГИНАЦИИ ПРОЕКТОВ (project-page-btn)
+   ЧИСТЫЕ СТИЛИ КНОПОК ПАГИНАЦИИ ПРОЕКТОВ (project-page-btn)
    ========================================================================== */
 
-/* Базовый дизайн и геометрия для всех локальных кнопок навигации проекта */
+/* Наш компактный размер кнопок для карточек роботов */
 .project-page-btn {
-    display: inline-block !important;
     padding: 3px 8px !important;
     font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    border: 1px solid #e1e4e8 !important;
-    border-radius: 5px !important;
-    background-color: #fff !important;
-    color: #24292e !important;
-    cursor: pointer !important;
-    user-select: none !important;
-    box-sizing: border-box !important;
-    text-align: center !important;
     margin: 0 3px !important;
-    text-decoration: none !important;
 }
 
-/* Высота строки для обычных кнопок-цифр и елочек */
-.project-page-btn:not(.project-archive-btn) {
-    line-height: normal !important;
-}
-
-/* Короткий стиль для тонкой стрелочки перехода в большой архив проекта */
+/* Компактная высота строки для тонкой стрелочки перелистывания → */
 .project-page-btn.project-archive-btn {
     line-height: 1.1 !important;
     padding-left: 5px !important;
     padding-right: 5px !important;
-    color: var(--card-tech) !important;
 }
 
-/* Короткий стиль для активной кнопки выбранной страницы */
+/* Активная кнопка красится в цвет системной переменной */
 .project-page-btn.active {
     background-color: var(--card-tech) !important;
     color: #fff !important;
     border-color: var(--card-tech) !important;
-    cursor: default !important;
 }

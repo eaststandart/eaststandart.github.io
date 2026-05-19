@@ -261,25 +261,40 @@
 }
 
 /* ==========================================================================
-   ОТЛАДОЧНЫЕ СТИЛИ (DEBUG) ДЛЯ ПРОВЕРКИ СМЕЩЕНИЯ КНОПОК НА ПК
+   ОТЛАДОЧНЫЕ СТИЛИ (DEBUG): ФИКС СМЕЩЕНИЯ КНОПОК НА ПК
    ========================================================================== */
 
-/* 1. Наша новая кнопка "Ёлочки" — красим фон в ЯРКО-КРАСНЫЙ */
+/* Наша новая кнопка "Ёлочки" — красим в КРАСНЫЙ и переводим на middle */
 .page-btn.home-news-all-btn {
-    background-color: #ffcccc !important; /* ДЕБАГ: Светло-красный фон */
-    border-color: #ff0000 !important;     /* ДЕБАГ: Красная рамка */
+    line-height: normal !important;     
+    vertical-align: middle !important;  /* ИСПРАВЛЕНО: Спускаем на уровень соседних кнопок */
+    color: var(--card-tech) !important; 
+    background-color: #ffcccc !important; /* ДЕБАГ */
+    border-color: #ff0000 !important;     /* ДЕБАГ */
 }
 
-/* 2. Обычные кнопки (цифры и елочки навигации) — красим в ЯРКО-ЗЕЛЕНЫЙ */
-/* Исключаем нашу кнопку, чтобы цвета не смешивались */
+/* Обычные кнопки (цифры и елочки навигации) — красим в ЗЕЛЕНЫЙ */
 .page-btn:not(.home-news-all-btn) {
-    background-color: #ccffcc !important; /* ДЕБАГ: Светло-зеленый фон */
-    border-color: #00cc00 !important;     /* ДЕБАГ: Зеленая рамка */
+    background-color: #ccffcc !important; /* ДЕБАГ */
+    border-color: #00cc00 !important;     /* ДЕБАГ */
 }
 
-/* 3. Подсвечиваем активную кнопку (выбранную страницу) — красим в ЖЕЛТЫЙ */
+/* Подсвечиваем активную кнопку — красим в ЖЕЛТЫЙ */
 .page-btn.active {
-    background-color: #ffffcc !important; /* ДЕБАГ: Желтый фон */
-    border-color: #ffcc00 !important;     /* ДЕБАГ: Желтая рамка */
+    background-color: #ffffcc !important; /* ДЕБАГ */
+    border-color: #ffcc00 !important;     /* ДЕБАГ */
     color: #000 !important;
 }
+
+/* Фиксируем выравнивание при мобильной адаптации (оставляем top для телефонов) */
+@media (max-width: 900px) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-btn.home-news-all-btn {
+        vertical-align: top !important;
+    }
+}
+

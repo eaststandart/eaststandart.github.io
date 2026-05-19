@@ -228,7 +228,7 @@
 
 .page-btn.home-news-all-btn {
     /* Меняем только боковые падинги (первая цифра — верх/низ, вторая — лево/право) */
-    padding: 5px 4px !important; 
+    padding: 5px 6px !important; 
     color: var(--card-tech) !important;
 }
 

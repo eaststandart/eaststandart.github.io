@@ -46,15 +46,26 @@ title: Поиск по тегам
                         {% if p.tags contains tag %}
                             <li style="margin-bottom: 12px; padding: 10px; border-bottom: 1px solid #f0f0f0;">
                                 <a href="{{ p.url | relative_url }}" style="text-decoration: none; color: #3498db; font-weight: 500; font-size: 1.1rem; display: block;">{{ p.title | default: p.url }}</a>
-                                {% comment %} НАДЁЖНЫЙ АЛГОРИТМ ИЗ NEWS-LOOP ДЛЯ ВЫЧИСЛЕНИЯ ЭМОДЗИ РАЗДЕЛА {% endcomment %}
+                                {% comment %} АЛГОРИТМ ИЗ NEWS-LOOP С ВЫВОДОМ ЭМОДЗИ И НАЗВАНИЯ РАЗДЕЛА {% endcomment %}
                                 {% assign url_parts = p.url | split: "/" %}
                                 {% assign first_folder = url_parts[1] %}
                                 {% assign item_section = "/" | append: first_folder | append: "/" %}
                                 
                                 {% assign parent_page = site.pages | where: "permalink", item_section | first %}
-                                {% assign section_emoji = parent_page.emoji | default: "📁" %}
+                                
+                                {% comment %} Проверяем наличие страницы, эмодзи и титла по твоим условиям {% endcomment %}
+                                {% if parent_page %}
+                                    {% assign section_title = parent_page.title | default: parent_page.navtitle | default: first_folder %}
+                                    {% if parent_page.emoji and parent_page.emoji != "" %}
+                                        {% assign section_display = section_title | append: " " | append: parent_page.emoji %}
+                                    {% else %}
+                                        {% assign section_display = section_title %}
+                                    {% endif %}
+                                {% else %}
+                                    {% assign section_display = "Прочее" %}
+                                {% endif %}
 
-                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_emoji }}</span>
+                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_display }}</span>
 
                             </li>
                         {% endif %}

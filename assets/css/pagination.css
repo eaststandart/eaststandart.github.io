@@ -40,34 +40,34 @@
 
 /* Оболочка верхней навигационной шапки хлебных крошек в статьях */
 .navigation-header {
-    margin-bottom: 15px !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    font-size: 0.9rem !important;   /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    border-bottom: 1px solid #f0f0f0 !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    padding-bottom: 8px !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
+    margin-bottom: 15px !important;
+    font-size: 0.9rem !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding-bottom: 8px !important;
 }
 
 /* Вертикальные палочки-разделители внутри крошек */
 .navigation-header .nav-separator {
-    color: #ccc !important;         /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    margin: 0 5px !important;       /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
+    color: #ccc !important;
+    margin: 0 5px !important;
 }
 
 /* Текстовые ссылки "Главная" и "Поиск" в шапке крошек */
 .navigation-header .nav-header-link {
-    margin-bottom: 0 !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    color: #3498db !important;      /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    font-weight: normal !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
+    margin-bottom: 0 !important;
+    color: #3498db !important;
+    font-weight: normal !important;
 }
 
 /* Специфические длинные ссылки крошек с эффектом ellipsis (сжатие трех точек) */
 .navigation-header .nav-ellipsis-link {
-    margin-bottom: 0 !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    max-width: 135px !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    white-space: nowrap !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    overflow: hidden !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    text-overflow: ellipsis !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    display: inline-block !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    vertical-align: bottom !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
+    margin-bottom: 0 !important;
+    max-width: 135px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-block !important;
+    vertical-align: bottom !important;
 }
 
 

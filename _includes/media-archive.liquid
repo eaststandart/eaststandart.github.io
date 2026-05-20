@@ -1,32 +1,59 @@
-{% comment %} 1. HTML-скелет вывода {% endcomment %}
+{% comment %} 
+==========================================================================
+МОДУЛЬ ARCHIVE: МЕДИА-АРХИВ С ФИЛЬТРАЦИЕЙ ПО КАТЕГОРИЯМ (media-archive.liquid)
+Назначение: Вывод публикаций конкретной категории с JS-фильтрацией по проектам.
+========================================================================== 
+{% endcomment %}
+
+
+{% comment %} ==========================================================================
+   1. HTML-СКЕЛЕТ ВЫВОДА ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
+   ========================================================================== {% endcomment %}
 <div id="media-container">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
+    
+      {% comment %} Каждая запись хранит список своих категорий в data-project для скрипта {% endcomment %}
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 50px;">
+        
+        {% comment %} Заголовок публикации и вывод даты в формате ДД.ММ.ГГГГ {% endcomment %}
         <h3>{{ post.title }}</h3>
         <small style="color: #888;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        
+        {% comment %} Основное тело статьи/медиа-контента {% endcomment %}
         <div class="media-content" style="margin-top: 15px;">
           {{ post.content }}
         </div>
+        
+        {% comment %} Нижняя разделительная линия между записями архива {% endcomment %}
         <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+        
       </div>
+      
     {% endif %}
   {% endfor %}
 </div>
 
-{% comment %} 2. Логика фильтрации {% endcomment %}
+
+{% comment %} ==========================================================================
+   2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ СТРОК ИЗ URL-ПАРАМЕТРОВ (?project=имя)
+   ========================================================================== {% endcomment %}
 <script>
+  // Считываем параметры поисковой строки браузера
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
 
+  // Если в URL передан конкретный проект — фильтруем и показываем только его записи
   if (project) {
     document.querySelectorAll('.media-entry').forEach(function(item) {
       var cats = item.getAttribute('data-project') || "";
+      // Проверяем наличие точного совпадения имени проекта в массиве категорий
       if (cats.split(' ').indexOf(project) !== -1) { 
         item.style.display = 'block'; 
       }
     });
   } else {
+    // Если параметра в URL нет — принудительно открываем абсолютно все записи категории
     document.querySelectorAll('.media-entry').forEach(function(item) {
         item.style.display = 'block';
     });

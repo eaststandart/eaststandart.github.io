@@ -1,0 +1,34 @@
+{% comment %} 1. HTML-скелет вывода {% endcomment %}
+<div id="media-container">
+  {% for post in site.posts %}
+    {% if post.categories contains include.category %}
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 50px;">
+        <h3>{{ post.title }}</h3>
+        <small style="color: #888;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        <div class="media-content" style="margin-top: 15px;">
+          {{ post.content }}
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% comment %} 2. Логика фильтрации {% endcomment %}
+<script>
+  var urlParams = new URLSearchParams(window.location.search);
+  var project = urlParams.get('project');
+
+  if (project) {
+    document.querySelectorAll('.media-entry').forEach(function(item) {
+      var cats = item.getAttribute('data-project') || "";
+      if (cats.split(' ').indexOf(project) !== -1) { 
+        item.style.display = 'block'; 
+      }
+    });
+  } else {
+    document.querySelectorAll('.media-entry').forEach(function(item) {
+        item.style.display = 'block';
+    });
+  }
+</script>

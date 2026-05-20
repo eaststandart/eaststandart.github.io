@@ -283,7 +283,7 @@ p:has(img) + blockquote {
 
 /* Стилизация отдельной плашки тега */
 .tag-item {
-    background-color: #3498db;
+    background-color: var(--card-tech);
     color: white !important;
     border-radius: 15px;
     text-decoration: none;

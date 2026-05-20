@@ -12,4 +12,4 @@ emoji_display: "N"
 {% comment %} 
 СТРАНИЦА: ГЛАВНЫЙ БОРТОВОЙ ЖУРНАЛ САЙТА (\_pages/journal.md)
 Назначение: Выводит хронологическую ленту всех записей категории journal.
-{% endcomment %}
+{% endcomment %} 

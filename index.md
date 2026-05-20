@@ -3,7 +3,7 @@ layout: home
 title: Творческая лаборатория познавательного развития
 ---
 
-<div class="grid-container">
+<div class="grid-container"> 
     <!-- БЛОК 1 -->
     <section class="category-card my-projects">
         <div class="card-header">

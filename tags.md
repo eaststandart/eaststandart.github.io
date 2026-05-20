@@ -49,15 +49,10 @@ title: Поиск по тегам
                                 {% assign url_parts = p.url | split: "/" %}
                                 {% assign item_section = "/" | append: url_parts[1] | append: "/" %}
                                 {% assign parent_page = site.pages | where: "permalink", item_section | first %}
-                                
-                                {% comment %} Идеально компактная сборка по твоей схеме: Title + Emoji | Прочее {% endcomment %}
                                 {% assign sec_title = parent_page.title | default: parent_page.navtitle %}
                                 {% assign sec_emoji = parent_page.emoji | default: "" %}
                                 {% assign section_display = sec_title | append: " " | append: sec_emoji | strip | default: "Прочее" %}
-
                                 <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_display }}</span>
-
-
                             </li>
                         {% endif %}
                     {% endfor %}

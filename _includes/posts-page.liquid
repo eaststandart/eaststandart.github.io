@@ -31,11 +31,6 @@
 {% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
-
-<!-- ==========================================================================
-     1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ
-     ========================================================================== -->
-
 <!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}

@@ -1,36 +1,51 @@
-<!-- Контейнер для кнопок страниц -->
+{% comment %} 
+==========================================================================
+МОДУЛЬ ПАГИНАТОРА: СКОЛЬЗЯЩЕЕ ОКНО НАВИГАЦИИ (pagination.liquid)
+Назначение: Клиентская сортировка списков, лимит записей и генерация кнопок страниц.
+========================================================================== 
+{% endcomment %}
+
+<!-- Контейнер для динамического вывода кнопок страниц скриптом -->
 <div id="{{ include.controls_id }}" style="margin-top: 25px; display: flex; justify-content: center;"></div>
 
 <script>
   (function() {
+    // Получаем входные параметры из Liquid-шаблона
     var listId = "{{ include.list_id }}";
     var controlsId = "{{ include.controls_id }}";
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
     var pinnedUrl = "{{ include.pinned_url | default: '' }}";
-    // ИСПРАВЛЕНО: Принимаем флаг отображения эмодзи (по умолчанию 'Y')
-    var showEmoji = "{{ include.emoji | default: 'Y' }}";
+    var showEmoji = "{{ include.emoji | default: 'Y' }}"; // Флаг отображения эмодзи
 
+    // Проверяем физическое наличие элементов списка и управления на странице
     var list = document.getElementById(listId);
     if (!list) return;
 
     var controls = document.getElementById(controlsId);
     if (!controls) return;
 
+    // Превращаем HTML-коллекцию строк в стандартный JS-массив
     var items = Array.from(list.children);
     var currentPage = 1;
     var pinnedItem = null;
 
-    // 1. Хронологическая сортировка всего списка по датам
+
+    // ==========================================================================
+    // 1. ХРОНОЛОГИЧЕСКАЯ СОРТИРОВКА СПИСКА
+    // ==========================================================================
     items.sort(function(a, b) {
       var dateA = a.getAttribute('data-date');
       var dateB = b.getAttribute('data-date');
       if (dateA && dateB) {
-        return new Date(dateB) - new Date(dateA);
+        return new Date(dateB) - new Date(dateA); // Сортируем от новых записей к старым
       }
       return 0; 
     });
 
-    // 2. Изолированная рокировка закрепленного поста
+
+    // ==========================================================================
+    // 2. ИЗОЛИРОВАННАЯ РОКИРОВКА ЗАКРЕПЛЕННОГО ПОСТА (PINNED)
+    // ==========================================================================
     if (pinnedUrl !== "") {
       var targetIndex = -1;
       for (var i = 0; i < items.length; i++) {
@@ -41,6 +56,7 @@
         }
       }
 
+      // Вырезаем закреплённый пост из общей очереди и маркируем его классом
       if (targetIndex > -1) {
         pinnedItem = items[targetIndex];
         pinnedItem.classList.add('pinned-item');
@@ -48,40 +64,46 @@
       }
     }
 
+    // Вычисляем общее количество страниц навигации
     var totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // 3. Функция отрисовки страницы
+
+    // ==========================================================================
+    // 3. ФУНКЦИЯ ОТРИСОВКИ ТЕКУЩЕЙ СТРАНИЦЫ КОНТЕНТА
+    // ==========================================================================
     function renderPage(page) {
       list.innerHTML = '';
-      var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
       
+      // Определяем текущий тип страницы по URL-адресу для назначения блочности
+      var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
       var currentLimit = itemsPerPage;
 
-      // Если задан закрепленный пост — выводим его первым
+      // Если задан закрепленный пост — принудительно выводим его самым первым
       if (pinnedItem) {
         pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
         
         var pinnedLink = pinnedItem.querySelector('.item-link');
         var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
         
-        // ИСПРАВЛЕНО: Дописываем эмодзи только если showEmoji равен 'Y'
+        // Дописываем эмодзи только если активирован флаг showEmoji
         if (showEmoji === 'Y' && pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
           pinnedLink.innerHTML += ' ' + pinnedEmoji;
         }
         
         list.appendChild(pinnedItem);
-        currentLimit = itemsPerPage - 1;
+        currentLimit = itemsPerPage - 1; // Уменьшаем лимит обычных мест на одно закреплённое
       }
 
+      // Нарезаем массив постов под текущую страницу пагинации
       var start = (page - 1) * currentLimit;
       var end = start + currentLimit;
       
-      // Нарезаем и выводим обычные посты
+      // Выводим отфильтрованные строки на экран
       items.slice(start, end).forEach(function(el) {
         var emoji = el.getAttribute('data-emoji');
         var link = el.querySelector('.item-link');
         
-        // ИСПРАВЛЕНО: Дописываем эмодзи только если showEmoji равен 'Y'
+        // Дописываем эмодзи в конец ссылки, если включен флаг управления
         if (showEmoji === 'Y' && link && emoji && !link.innerHTML.includes(emoji)) {
           link.innerHTML += ' ' + emoji;
         }
@@ -90,24 +112,31 @@
         list.appendChild(el);
       });
 
-      renderControls();
+      renderControls(); // Перерисовываем блок кнопок под новую страницу
     }
 
-    // Вспомогательная функция для создания одной кнопки
+
+    // ==========================================================================
+    // 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ГЕНЕРАЦИИ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
+    // ==========================================================================
+
+    // Создание одной кликабельной кнопки пагинации (<button>)
     function createButton(text, targetPage, isCurrent, isDisabled) {
       var btn = document.createElement('button');
       btn.innerText = text;
       btn.className = 'page-btn';
-      if (isCurrent) btn.classList.add('active');
+      if (isCurrent) btn.classList.add('active'); // Подсвечиваем текущую страницу
       if (isDisabled) {
         btn.style.opacity = '0.4';
         btn.style.cursor = 'default';
       }
 
+      // Навешиваем событие клика на активные элементы
       if (!isDisabled && !isCurrent) {
         btn.addEventListener('click', function() {
           currentPage = targetPage;
           renderPage(currentPage);
+          // Делаем плавный автоматический возврат к верху списка на страницах архивов
           if (window.location.pathname.includes('/news/')) {
             window.scrollTo(0, 0); 
           }
@@ -116,7 +145,7 @@
       return btn;
     }
 
-    // Вспомогательная функция для создания троеточия
+    // Создание декоративного элемента троеточия (...) для длинных списков страниц
     function createSeparator() {
       var span = document.createElement('span');
       span.innerText = '...';
@@ -128,10 +157,14 @@
       return span;
     }
 
-    // Функция кнопок со скользящим окном
+
+    // ==========================================================================
+    // 5. ГЕНЕРАЦИЯ БЛОКА КНОПОК ПО СХЕМЕ "СКОЛЬЗЯЩЕГО ОКНА"
+    // ==========================================================================
     function renderControls() {
       controls.innerHTML = '';
       
+      // Выводим квадратную кнопку действия «Ёлочки» на Главной странице
       if (controlsId === "home-news-pagination") {
         var archiveBtn = document.createElement('button');
         archiveBtn.innerText = '»»';
@@ -142,40 +175,49 @@
         controls.appendChild(archiveBtn);
       }
 
+      // Если вся лента уместилась на 1 страницу — скрываем цифровые элементы
       if (totalPages <= 1) return;
 
+      // Кнопка быстрого перехода на шаг назад («)
       controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
 
-      var maxVisible = 5;
+      var maxVisible = 5; // Лимит одновременно видимых цифровых кнопок
       if (totalPages <= maxVisible) {
+        // Простой вывод, если страниц мало
         for (var i = 1; i <= totalPages; i++) {
           controls.appendChild(createButton(i, i, i === currentPage, false));
         }
       } else {
+        // Расчёт скользящего диапазона вокруг текущей выбранной цифры
         var startPage = Math.max(1, currentPage - 1);
         var endPage = Math.min(totalPages, currentPage + 1);
 
         if (currentPage <= 2) { endPage = 3; }
         if (currentPage >= totalPages - 1) { startPage = totalPages - 2; }
 
+        // Собираем левую границу пагинатора с первой страницей и троеточием
         if (startPage > 1) {
           controls.appendChild(createButton('1', 1, currentPage === 1, false));
           if (startPage > 2) controls.appendChild(createSeparator());
         }
 
+        // Выводим центральное ядро скользящего окна
         for (var i = startPage; i <= endPage; i++) {
           controls.appendChild(createButton(i, i, i === currentPage, false));
         }
 
+        // Собираем правую границу пагинатора с троеточием и последней страницей
         if (endPage < totalPages) {
           if (endPage < totalPages - 1) controls.appendChild(createSeparator());
           controls.appendChild(createButton(totalPages, totalPages, currentPage === totalPages, false));
         }
       }
 
+      // Кнопка быстрого перехода на шаг вперёд (»)
       controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
     }
 
+    // Запускаем первичный цикл отрисовки первой страницы при загрузке модуля
     renderPage(currentPage);
   })();
 </script>

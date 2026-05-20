@@ -1,19 +1,29 @@
+{% comment %} 
+==========================================================================
+МОДУЛЬ ЦИКЛА: УНИВЕРСАЛЬНЫЙ СБОРЩИК И ФИЛЬТР ЛЕНТЫ ОБНОВЛЕНИЙ (news-loop.liquid)
+Назначение: Сбор постов, страниц и людей, фильтрация по папкам, расчёт эмодзи и вывод.
+========================================================================== 
+{% endcomment %}
+
+{% comment %} Склеиваем абсолютно весь контент сайта в единый монолитный массив {% endcomment %}
 {% assign all_content = site.posts | concat: site.pages | concat: site.people %}
 {% assign target_folders = include.folder | split: "," %}
 
 {% for item in all_content %}
+  {% comment %} Отсекаем элементы без дат и технические системные страницы сайта {% endcomment %}
   {% if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" %}
     
     {% comment %} 
-      1. ИСПРАВЛЕННЫЙ И БЕЗОПАСНЫЙ БЛОК УНИВЕРСАЛЬНОЙ ФИЛЬ Tracy:
-      Тег if теперь открыт строго по правилам Liquid-синтаксиса.
+      1. БЛОК УНИВЕРСАЛЬНОЙ ФИЛЬТРАЦИИ ПО КАТЕГОРИЯМ/ПАПКАМ (Tracy):
+      Проверяем, входит ли текущий элемент в список разрешённых папок из параметров инклуда.
     {% endcomment %}
     {% assign is_allowed = true %}
     {% if include.folder and include.folder != "" %}
       {% assign is_allowed = false %}
       {% for folder_name in target_folders %}
         {% assign clean_folder = folder_name | strip %}
-        {% comment %} Проверяем физический путь ИЛИ реальную ссылку URL постов/страниц {% endcomment %}
+        
+        {% comment %} Проверяем физический путь в репозитории ИЛИ реальную ссылку URL постов/страниц {% endcomment %}
         {% if item.path contains clean_folder or item.url contains clean_folder %}
           {% assign is_allowed = true %}
           {% break %}
@@ -21,29 +31,39 @@
       {% endfor %}
     {% endif %}
 
+    {% comment %} Если элемент успешно прошёл фильтрацию папок — начинаем обработку {% endcomment %}
     {% if is_allowed %}
     
+      {% comment %} Маркируем элемент: является ли он постом из коллекции _posts (для серого цвета) {% endcomment %}
       {% assign is_post = false %}
       {% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
       
       {% comment %} 
-        2. ИСПРАВЛЕННЫЙ БЛОК ЭМОДЗИ: Индекс [1] возвращен на место для точного поиска страниц
+        2. АВТОМАТИЧЕСКИЙ РАСЧЁТ РОДИТЕЛЬСКОГО ЭМОДЗИ:
+        Индекс [1] извлекает имя первой папки из URL-адреса для точного поиска страниц.
       {% endcomment %}
       {% assign url_parts = item.url | split: "/" %}
       {% assign first_folder = url_parts[1] %}
       {% assign item_section = "/" | append: first_folder | append: "/" %}
       
+      {% comment %} Если это пост — вычисляем раздел по его первой Liquid-категории {% endcomment %}
       {% if item.path contains '_posts' %}
         {% assign first_cat = item.categories | first %}
         {% assign item_section = "/" | append: first_cat | append: "/" %}
       {% endif %}
       
+      {% comment %} Находим главную страницу раздела и забираем её системный значок emoji {% endcomment %}
       {% assign parent_page = site.pages | where: "permalink", item_section | first %}
       {% assign section_emoji = parent_page.emoji | default: "" %}
 
-      {% comment %} РЕНДЕРИНГ ДИЗАЙНА {% endcomment %}
+
+      {% comment %} ==========================================================================
+         3. ШАБЛОНЫ РЕНДЕРИНГА ДИЗАЙНА СТРОК (ИНТЕРФЕЙС)
+         ========================================================================== {% endcomment %}
+         
       {% if include.type == "home" %}
-        <!-- Компактный стиль для Главной страницы -->
+      
+        <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
         <li class="news-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">
           <div>
             <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
@@ -54,8 +74,10 @@
             </span>
           </div>
         </li>
+        
       {% elsif include.type == "news" %}
-        <!-- Широкий стиль с линиями для страницы Новостей и Журнала -->
+      
+        <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
         <li class="news-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
           <div>
             <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
@@ -66,8 +88,8 @@
             </span>
           </div>
         </li>
+        
       {% endif %}
-
 
     {% endif %}
   {% endif %}

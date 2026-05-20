@@ -38,6 +38,13 @@
     margin-bottom: 0px !important;  
 }
 
+/* Универсальный контейнер управляющих кнопок пагинации (ПЕРЕНЕСЕНО ИЗ INLINE) */
+.pagination-controls {
+    margin-top: 25px !important;       /* Твой оригинальный верхний зазор 25px */
+    display: flex !important;          /* Твое флекс-позиционирование */
+    justify-content: center !important;/* Твое центрирование кнопок на странице */
+}
+
 /* Оболочка верхней навигационной шапки хлебных крошек в статьях */
 .navigation-header {
     margin-bottom: 15px !important;

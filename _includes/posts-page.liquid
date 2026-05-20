@@ -31,6 +31,11 @@
 {% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
+
+<!-- ==========================================================================
+     1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ
+     ========================================================================== -->
+
 <!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
@@ -84,7 +89,6 @@
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
 
-      // Переключаем видимость элементов через !important свойства display
       allItems.forEach(function(el, index) {
         if (index >= start && index < end) {
           el.style.setProperty('display', 'block', 'important');
@@ -93,24 +97,25 @@
         }
       });
 
-      renderButtons(); // Перерисовываем навигационную ленту под страницу
+      renderButtons();
     }
 
     // Вспомогательная функция сборки кликабельной кнопки на чистом теге <button>
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
+      // ИСПРАВЛЕНО: Теперь всегда создаётся полноценный тег button
       var btn = document.createElement('button');
       btn.className = 'posts-page-btn'; 
       btn.innerText = text;
 
       if (isArchiveLink) {
         btn.classList.add('posts-page-all-btn');
-        // Стандартное событие перенаправления по клику вместо прямой ссылки тега <a>
+        // Переход по клику вместо прямой ссылки
         btn.addEventListener('click', function() {
           window.location.href = targetArchiveUrl;
         });
       } else {
         if (isCurrent) {
-          btn.classList.add('active'); // Статус текущей выбранной страницы
+          btn.classList.add('active'); 
         } else if (isDisabled) {
           btn.style.opacity = '0.4'; 
           btn.style.cursor = 'default';
@@ -131,7 +136,7 @@
 
       // Если страниц больше одной — рендерим стандартный цифровой блок пагинации
       if (totalPages > 1) {
-        controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1, false));
+        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));
         for (var i = 1; i <= totalPages; i++) {
           ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, false));
         }
@@ -144,3 +149,4 @@
   })();
 </script>
 {% endif %}
+

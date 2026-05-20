@@ -27,15 +27,14 @@
 /* Общие флекс-настройки для контейнеров кнопок пагинации во всех архивах */
 .pagination-container,
 #news-pagination,
-#journal-pagination,
-#home-news-pagination { /* Добавили явный ID главной для переноса отступа из инлайна */
+#journal-pagination {
     width: 100%;
     clear: both;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 25px !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА PAGINATION.LIQUID: Твой жесткий зазор 25px */
+    margin-top: 0px !important;     /* Воздух регулируется маргином списка выше */
     margin-bottom: 0px !important;  
 }
 

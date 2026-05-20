@@ -21,54 +21,21 @@
 
 
 /* ==========================================================================
-   2. БАЗОВЫЕ КОНТЕЙНЕРЫ ПАГИНАЦИИ И ВЕРХНЕЙ НАВИГАЦИИ
+   2. БАЗОВЫЕ КОНТЕЙНЕРЫ ПАГИНАЦИИ
    ========================================================================== */
 
 /* Общие флекс-настройки для контейнеров кнопок пагинации во всех архивах */
 .pagination-container,
 #news-pagination,
-#journal-pagination,
-#home-news-pagination { /* Добавили явный ID главной для переноса отступа из инлайна */
+#journal-pagination {
     width: 100%;
     clear: both;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 25px !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА PAGINATION.LIQUID: Твой жесткий зазор 25px */
+    margin-top: 0px !important;     /* Воздух регулируется маргином списка выше */
     margin-bottom: 0px !important;  
-}
-
-/* Оболочка верхней навигационной шапки хлебных крошек в статьях */
-.navigation-header {
-    margin-bottom: 15px !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    font-size: 0.9rem !important;   /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    border-bottom: 1px solid #f0f0f0 !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    padding-bottom: 8px !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-}
-
-/* Вертикальные палочки-разделители внутри крошек */
-.navigation-header .nav-separator {
-    color: #ccc !important;         /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    margin: 0 5px !important;       /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-}
-
-/* Текстовые ссылки "Главная" и "Поиск" в шапке крошек */
-.navigation-header .nav-header-link {
-    margin-bottom: 0 !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    color: #3498db !important;      /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    font-weight: normal !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-}
-
-/* Специфические длинные ссылки крошек с эффектом ellipsis (сжатие трех точек) */
-.navigation-header .nav-ellipsis-link {
-    margin-bottom: 0 !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    max-width: 135px !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    white-space: nowrap !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    overflow: hidden !important;    /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    text-overflow: ellipsis !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    display: inline-block !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
-    vertical-align: bottom !important; /* ПЕРЕНЕСЕНО ИЗ ИНЛАЙНА */
 }
 
 

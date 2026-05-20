@@ -5,20 +5,15 @@
 ========================================================================== 
 {% endcomment %}
 
-
-{% comment %} ==========================================================================
-   1. HTML-РАЗМЕТКА НАВИГАЦИОННОЙ ШАПКИ
-   ========================================================================== {% endcomment %}
-<div class="navigation-header" style="margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+<!-- Контейнер навигационной шапки переведён на чистый класс -->
+<div class="navigation-header">
     
-    {% comment %} Базовая ссылка возврата на Главную страницу сайта {% endcomment %}
-    <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+    <a href="/" class="back-link nav-header-link">← Главная</a>
 
-    {% comment %} Специфический технический контейнер для инъекции JS-ссылок возврата в архивы {% endcomment %}
+    <!-- Контейнер для инъекции динамических JS-ссылок возврата -->
     <span id="dynamic-nav-back"></span>
 
     {% if page.categories.size > 0 %}
-        {% comment %} Логика вычисления слаг-имени текущего проекта на основе категорий поста {% endcomment %}
         {% assign project_slug = "" %}
         {% for cat in page.categories %}
             {% if cat != "journal" and cat != "media" and cat != "diary"%}
@@ -26,47 +21,38 @@
             {% endif %}
         {% endfor %}
         
-        {% comment %} Ищем саму страницу проекта в массиве site.pages, чьё имя совпадает со слагом {% endcomment %}
         {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
-        <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="{{ project_page.url | relative_url }}" class="back-link" style="margin-bottom: 0; max-width: 135px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: bottom;">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>
+        <span class="nav-separator">|</span>
+        <a href="{{ project_page.url | relative_url }}" class="back-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>
     
     {% else %}
-        {% comment %} Альтернативная логика для страниц без категорий: вычисляем предка по URL-структуре {% endcomment %}
         {% assign parts = page.url | split: '/' %}
         {% if parts.size > 2 %}
             {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
             {% assign parent_page = site.pages | where: "url", parent_url | first %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
+            <span class="nav-separator">|</span>
+            <a href="{{ parent_url | relative_url }}" class="back-link">
                 {{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}
             </a>
         {% endif %}
     {% endif %}
 
-    {% comment %} Финальная неизменяемая кнопка перехода в глобальное облако тегов {% endcomment %}
-    <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+    <span class="nav-separator">|</span>
+    <a href="/tags.html" class="back-link nav-header-link"># Поиск</a>
 </div>
 
-
-{% comment %} ==========================================================================
-   2. JAVASCRIPT-ЛОГИКА СВЯЗЫВАНИЯ СТРАНИЦ ЧЕРЕЗ URL-ПАРАМЕТРЫ (?project=...&nav=...)
-   ========================================================================== {% endcomment %}
 <script>
   (function() {
-    // Парсим параметры текущего адреса страницы
     var params = new URLSearchParams(window.location.search);
     var prj = params.get('project');
     var navDir = params.get('nav');
     
-    // Если параметры проекта и направления навигации переданы — строим дополнительную крошку
     if (prj && navDir) {
       var bb = document.getElementById('dynamic-nav-back');
       if (bb) {
-        // Подставляем разделитель и ссылку, обрезая текст по границам ellipsis при превышении 135px
-        bb.innerHTML = ' <span style="color: #ccc; margin: 0 5px;">|</span> ' +
-                       '<a href="/' + navDir + '/' + prj + '/" class="back-link" style="margin-bottom: 0; max-width: 135px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: bottom;">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>';
+        // ОЧИЩЕНО: Стили внутри генерируемого HTML заменены на чистые классы nav-separator и nav-ellipsis-link
+        bb.innerHTML = ' <span class="nav-separator">|</span> ' +
+                       '<a href="/' + navDir + '/' + prj + '/" class="back-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>';
       }
     }
   })();

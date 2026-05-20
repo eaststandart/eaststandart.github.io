@@ -62,7 +62,7 @@
 /* Текстовые ссылки "Главная" и "Поиск" в шапке крошек */
 .navigation-header .nav-header-link {
     margin-bottom: 0 !important;
-    color: #3498db !important;
+    color: var(--card-tech) !important;
     font-weight: normal !important;
 }
 

@@ -231,7 +231,7 @@
     background-color: var(--card-tech) !important;
     color: #fff !important;
     border-color: var(--card-tech) !important;
-    cursor: default;
+    cursor: default !important;
 }
 
 /* Изолированные текстовые свойства кнопки «Ёлочки» на Главной */

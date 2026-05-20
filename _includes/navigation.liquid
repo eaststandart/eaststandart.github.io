@@ -6,7 +6,7 @@
 {% endcomment %}
 
 <div class="navigation-header">
-    <a href="/" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;">← Главная</a>
+    <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
 
     {% comment %} Место для вставки "Назад" на страницах архивов {% endcomment %}
     <span id="dynamic-nav-back"></span>
@@ -19,22 +19,22 @@
             {% endif %}
         {% endfor %}
         {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
-        <span style="color: #ccc; margin: 0 5px;">|</span>
-        <a href="{{ project_page.url | relative_url }}" class="back-link" style="margin-bottom: 0; max-width: 135px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: bottom;">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>
+        <span class="nav-separator">|</span>
+        <a href="{{ project_page.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>
     {% else %}
         {% assign parts = page.url | split: '/' %}
         {% if parts.size > 2 %}
             {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
             {% assign parent_page = site.pages | where: "url", parent_url | first %}
-            <span style="color: #ccc; margin: 0 5px;">|</span>
-            <a href="{{ parent_url | relative_url }}" class="back-link" style="margin-bottom: 0;">
+            <span class="nav-separator">|</span>
+            <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">
                 {{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}
             </a>
         {% endif %}
     {% endif %}
 
-    <span style="color: #ccc; margin: 0 5px;">|</span>
-    <a href="/tags.html" class="back-link" style="margin-bottom: 0; color: #3498db; font-weight: normal;"># Поиск</a>
+    <span class="nav-separator">|</span>
+    <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>
 
 <script>
@@ -45,8 +45,8 @@
       var bb = document.getElementById('dynamic-nav-back');
       if (bb) {
         // Добавляем пробел перед span и внутри span вокруг палочки, как это делает Jekyll
-        bb.innerHTML = ' <span style="color: #ccc; margin: 0 5px;">|</span> ' +
-                       '<a href="/' + navDir + '/' + prj + '/" class="back-link" style="margin-bottom: 0; max-width: 135px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: bottom;">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>';
+        bb.innerHTML = ' <span class="nav-separator">|</span> ' +
+                       '<a href="/' + navDir + '/' + prj + '/" class="back-link nav-header-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>';
       }
     }
   })();

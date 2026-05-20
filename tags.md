@@ -65,7 +65,7 @@ title: Поиск по тегам
                                     {% assign section_display = "Прочее" %}
                                 {% endif %}
 
-                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_display }}</span>
+                                <span>Раздел: {{ section_display }}</span>
 
                             </li>
                         {% endif %}

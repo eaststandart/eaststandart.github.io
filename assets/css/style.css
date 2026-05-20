@@ -1,13 +1,27 @@
-/* 1. БАЗОВАЯ ГЕОМЕТРИЯ И ЦВЕТА */
-* { box-sizing: border-box; }
+/* ==========================================================================
+   ГЛАВНЫЕ СТИЛИ САЙТА (style.css) — ЧАСТЬ 1
+   Назначение: Базовая геометрия, переменные, глобальные теги, заголовки и цитаты.
+   ========================================================================== */
 
-:root {
-    --primary-bg: #f4f7f6;
-    --card-tech: #3498db; 
-    --card-my: #2ecc71;   
-    --text-color: #2c3e50;
+
+/* ==========================================================================
+   1. БАЗОВАЯ ГЕОМЕТРИЯ, ПЕРЕМЕННЫЕ И ОСНОВНЫЕ ТЕГИ
+   ========================================================================== */
+
+/* Универсальный сброс для правильного расчёта размеров элементов */
+* { 
+    box-sizing: border-box; 
 }
 
+/* Глобальные цветовые переменные темы оформления */
+:root {
+    --primary-bg: #f4f7f6;  /* Основной фоновый цвет сайта */
+    --card-tech: #3498db;   /* Синий фирменный цвет для тех. блоков и ссылок */
+    --card-my: #2ecc71;     /* Зелёный фирменный цвет */
+    --text-color: #2c3e50;  /* Основной глубокий цвет текста */
+}
+
+/* Базовые параметры страницы и шрифтовая сетка */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--primary-bg);
@@ -20,6 +34,12 @@ body {
     min-height: 100vh;
 }
 
+
+/* ==========================================================================
+   2. ШАПКА САЙТА (HEADER) И ОСНОВНОЙ АВАТАР
+   ========================================================================== */
+
+/* Контейнер главной шапки */
 header {
     text-align: center;
     width: 100%;
@@ -29,6 +49,7 @@ header {
     align-items: center;
 }
 
+/* Круглый аватар автора на Главной */
 .main-avatar {
     width: 120px;
     height: 120px;
@@ -39,47 +60,56 @@ header {
     display: block;
 }
 
+
+/* ==========================================================================
+   3. ЗАГОЛОВКИ И ВЕРТИКАЛЬНЫЕ ОТСТУПЫ КОНТЕНТА В СТАТЬЯХ
+   ========================================================================== */
+
+/* Главный заголовок верхнего уровня страницы */
 h1 { 
     margin: 5px 0 15px 0;
     font-size: 2rem; 
     line-height: 1.2;
 }
 
-/* Настройка заголовка H3 внутри статей */
-.main-content h3 {
-    /* Базовый отступ сверху 1em, снизу обнуляем */
-    margin: 0 0 0 0 !important; 
-    font-size: 1.2rem; 
-    color: var(--text-color);
-    line-height: 1.2;
-    /* Убедимся, что нижний марджин всегда 0 */
-    margin-bottom: 0 !important;
-}
-
-/* Обнуляем нижний отступ у H1 (заголовка страницы) */
+/* Обнуляем нижний отступ у H1 внутри области статей */
 .main-content h1 {
     margin-bottom: 0 !important;
 }
 
-/* Прижимаем любой контент под H3 (8px для воздуха) */
+/* Ювелирная настройка заголовков H3 внутри статей */
+.main-content h3 {
+    margin: 0 0 0 0 !important; /* Базовый отступ сверху 1em, снизу обнуляем */
+    font-size: 1.2rem; 
+    color: var(--text-color);
+    line-height: 1.2;
+    margin-bottom: 0 !important; /* Убедимся, что нижний марджин всегда 0 */
+}
+
+/* Прижимаем обычный абзац или строку видео сразу под заголовком H3 (8px для воздуха) */
 .main-content h3 + p,
 .main-content h3 + .video-test-row {
     margin-top: 5px !important; 
 }
 
-/* Прижимаем список под H3 */
+/* Прижимаем упорядоченные и неупорядоченные списки сразу под заголовком H3 */
 .main-content h3 + ul,
 .main-content h3 + ol {
     margin-top: 8px !important; 
 }
 
-/* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
+/* Если H3 идет сразу ПОСЛЕ медиафайлов (видео-строка или абзац с картинкой) — увеличиваем отступ */
 .video-test-row + h3,
 .main-content p:has(img) + h3 {
     margin-top: 1.2em !important;
 }
 
-/* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
+
+/* ==========================================================================
+   4. БЛОК БИБЛИОГРАФИИ И ПОДВАЛ СТАТЬИ
+   ========================================================================== */
+
+/* Общий контейнер библиографии в самом низу публикации */
 .bibliography-footer {
     margin-top: 15px;
     padding: 15px 20px;
@@ -90,28 +120,36 @@ h1 {
     line-height: 1.6;
 }
 
+/* Заголовок внутри библиографии (название раздела) */
 .bibliography-footer strong {
     display: block;
     margin-bottom: 10px; /* Увеличили отступ, чтобы список не лип к заголовку */
     color: var(--text-color);
 }
 
-/* Стили для нумерованного списка внутри */
+/* Стили для нумерованного списка источников внутри библиографии */
 .bibliography-footer ol {
     margin: 0;
-    padding-left: 20px; /* Отступ слева для цифр */
+    padding-left: 20px; /* Отступ слева для корректного выноса цифр */
 }
 
+/* Элемент списка (книга/источник) */
 .bibliography-footer li {
     margin-bottom: 8px; /* Расстояние между книгами */
-    list-style-position: outside; /* Чтобы текст не заходил под цифру */
+    list-style-position: outside; /* Чтобы перенесённый текст не заходил под цифру */
 }
 
+/* Одиночное описание без списка */
 .bibliography-footer p {
     margin: 0; /* Чтобы одиночное описание не имело лишних отступов */
 }
 
-/* ЦИТАТЫ */
+
+/* ==========================================================================
+   5. ОФОРМЛЕНИЕ ТЕКСТОВЫХ ЦИТАТ (BLOCKQUOTE)
+   ========================================================================== */
+
+/* Базовый тег цитирования */
 blockquote {
     margin: 1em 0; /* Внешние отступы от текста не трогаем */
     padding: 15px 20px; /* Внутреннее оформление как у библиографии */
@@ -122,6 +160,7 @@ blockquote {
     line-height: 1.6;
 }
 
+/* Абзац внутри цитаты */
 blockquote p {
     margin: 0; /* Убираем естественные отступы, чтобы текст не "толкал" рамку изнутри */
 }
@@ -133,10 +172,21 @@ blockquote p:not(:last-child) {
 
 /* Если цитата идет сразу после картинки в абзаце */
 p:has(img) + blockquote {
-    margin-top: 1.5em; /* Немного увеличиваем верхний зазор, чтобы компенсировать отсутствие отступа у фото */
+    margin-top: 1.5em; /* Увеличиваем верхний зазор, компенсируя отсутствие отступа у фото */
 }
 
-/* 2. КОНТЕНТНЫЕ СТРАНИЦЫ (СТАТЬИ И КНИГИ) */
+
+/* ==========================================================================
+   ГЛАВНЫЕ СТИЛИ САЙТА (style.css) — ЧАСТЬ 2
+   Назначение: Контентные контейнеры, галереи изображений, теги, подвалы и адаптивность.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   6. КОНТЕНТНЫЕ СТРАНИЦЫ (СТАТЬИ И КНИГИ)
+   ========================================================================== */
+
+/* Главная центральная карточка-оболочка для текстовых материалов */
 .content-wrapper {
     background: white;
     border-radius: 15px;
@@ -147,23 +197,39 @@ p:has(img) + blockquote {
     padding: 10px 20px 20px 20px;
 }
 
+/* Стилизация вводного или подзаголовочного описания страницы */
 .page-description {
-    font-style: italic; /* например, для красоты */
+    font-style: italic; /* Выделение курсивом для визуальной красоты */
     color: #666;
 }
 
-/* --- ЕДИНЫЙ БЛОК КАРТИНОК В СТАТЬЯХ (MARKDOWN) --- */
+/* Ссылка возврата на предыдущую страницу */
+.back-link {
+    text-decoration: none;
+    color: var(--card-tech);
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+
+/* ==========================================================================
+   7. ЕДИНЫЙ БЛОК ГАЛЕРЕИ КАРТИНОК В СТАТЬЯХ (MARKDOWN)
+   ========================================================================== */
+
+/* Абзац, содержащий изображения: флекс-ряд с автоматическим переносом */
 .main-content p:has(img) {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     align-items: flex-start;
-    margin: 1em 0 !important; /* Стандартный, предсказуемый отступ */
+    margin: 1em 0 !important; /* Стандартный, предсказуемый отступ темы */
     padding: 0 !important;
 }
 
+/* Параметры картинок в ряду (исключая специальные контентные изображения) */
 .main-content p img:not(.content-img) {
-    height: 250px;       /* Единая высота для ряда */
+    height: 250px;       /* Единая фиксированная высота для выстраивания ряда */
     width: auto;         
     max-width: 100%;     
     object-fit: contain; 
@@ -175,7 +241,7 @@ p:has(img) + blockquote {
     z-index: 1;
 }
 
-/* Зум при нажатии (без JS) */
+/* Интерактивный зум изображения при удержании клика мышкой (работает без JS) */
 .main-content p img:not(.content-img):active {
     transform: scale(2.0); 
     z-index: 999;          
@@ -183,16 +249,14 @@ p:has(img) + blockquote {
     cursor: zoom-out;
 }
 
-.back-link {
-    text-decoration: none;
-    color: var(--card-tech);
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 15px;
-}
 
-/* 3. ТЕГИ, ИСТОЧНИКИ */
-.sources-inline, .tag-container {
+/* ==========================================================================
+   8. ТЕГИ, ИСТОЧНИКИ И ИНЛАЙН-МЕТАДАННЫЕ
+   ========================================================================== */
+
+/* Базовые контейнеры для вывода списка источников и облака тегов публикации */
+.sources-inline, 
+.tag-container {
     margin-top: 20px;
     padding-top: 15px;
     border-top: 1px dashed #eee;
@@ -203,9 +267,21 @@ p:has(img) + blockquote {
     gap: 10px;
 }
 
-.sources-content p, .sources-content ul, .sources-content li { display: inline !important; margin: 0; padding: 0; }
-.sources-content ul li:not(:last-child)::after { content: ", "; }
+/* Принудительное инлайновое (строчное) отображение элементов внутри источников */
+.sources-content p, 
+.sources-content ul, 
+.sources-content li { 
+    display: inline !important; 
+    margin: 0; 
+    padding: 0; 
+}
 
+/* Символьный разделитель-запятая между элементами списка источников */
+.sources-content ul li:not(:last-child)::after { 
+    content: ", "; 
+}
+
+/* Стилизация отдельной плашки тега */
 .tag-item {
     background-color: #3498db;
     color: white !important;
@@ -219,38 +295,57 @@ p:has(img) + blockquote {
     transition: opacity 0.2s;
 }
 
-.tag-item:hover { opacity: 0.8; }
-.tag-item::before { content: "#"; margin-right: 1px; opacity: 0.7; }
+/* Визуальный отклик тега при наведении */
+.tag-item:hover { 
+    opacity: 0.8; 
+}
 
-/* 4. ПОДВАЛ И КНОПКА TELEGRAM */
+/* Автоматическое добавление знака решётки перед текстом тега */
+.tag-item::before { 
+    content: "#"; 
+    margin-right: 1px; 
+    opacity: 0.7; 
+}
+
+
+/* ==========================================================================
+   9. ПОДВАЛ (FOOTER), КЛИКАБЕЛЬНАЯ КНОПКА TELEGRAM И ЛИЦЕНЗИИ
+   ========================================================================== */
+
+/* Главный подвал разметки */
 .main-footer { 
     margin-top: 30px; 
     text-align: center; 
     width: 100%; 
 }
 
+/* Блок информации о лицензировании и копирайте */
 .license-footer { 
     margin-top: 20px; 
     text-align: center; 
     width: 100%; 
 }
 
+/* Строка копирайта */
 .license-footer .footer-copyright {
     margin-top: 0px;
     margin-bottom: 5px;
 }
 
+/* Текст описания лицензии Creative Commons */
 .license-footer .footer-license-text {
     font-size: 0.8rem;
     color: #7f8c8d;
     margin: 0;
 }
 
+/* Ссылки внутри блока лицензии */
 .license-footer .footer-license-text a {
     color: #7f8c8d;
     text-decoration: underline;
 }
 
+/* Круглая брендовая кнопка перехода в Telegram-канал */
 .tg-button {
     display: inline-flex;
     align-items: center;
@@ -264,70 +359,91 @@ p:has(img) + blockquote {
     transition: background 0.3s;
 }
 
+/* Смена оттенка кнопки Telegram при наведении */
 .tg-button:hover {
     background-color: #0077b5;
 }
 
+/* Увеличение размера смайлика-иконки внутри кнопки Telegram */
 .tg-button span {
-    font-size: 1.2rem; /* Смайлик чуть крупнее текста */
+    font-size: 1.2rem; 
 }
 
-/* 5. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 900px) {
-    h1 { font-size: 1.5rem; margin: 5px 0 10px 0 !important; }
-    header { margin: 10px 0 20px 0; }
 
+/* ==========================================================================
+   10. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (МЕДИА-ЗАПРОСЫ)
+   ========================================================================== */
+
+/* --- А. ОБЩЕЕ СЖАТИЕ ЭКРАНОВ ДО 900px --- */
+@media (max-width: 900px) {
+    /* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
+    h1 { 
+        font-size: 1.5rem; 
+        margin: 5px 0 10px 0 !important; 
+    }
+    
+    /* Сужение воздуха в шапке на смартфонах */
+    header { 
+        margin: 10px 0 20px 0; 
+    }
+
+    /* Унификация отступов карточки: перевод в резиновый full-width режим */
     .content-wrapper { 
         width: 100% !important; 
         max-width: 100% !important;
-        padding: 15px 12px !important; /* УНИФИКАЦИЯ ОТСТУПОВ: 12px */
+        padding: 15px 12px !important; /* Жестко заданный зазор 12px по бокам */
         border-radius: 0 !important;
         margin: 0 !important;
     }
 
-    /* Вертикальный режим (Portrait) */
+    /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {
+        /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */
         .main-content p:has(img) {
             display: flex !important;
             flex-direction: column !important;
             gap: 1.2em !important; 
         }
 
+        /* Картинки растягиваются на всю ширину экрана смартфона */
         .main-content p img:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             margin: 0 !important;
         }
         
+        /* Уменьшенный масштаб зума для предотвращения вылета картинки за дисплей телефона */
         .main-content p img:not(.content-img):active {
             transform: scale(1.2);
         }
     }
 }
 
-/* Специально для горизонтального режима (Landscape) */
+/* --- Б. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Твои старые стили для картинок в статьях */
+    /* Компактная фиксированная высота изображений для экономии высоты экрана */
     .main-content p img:not(.content-img) {
         height: 180px !important;
         width: auto !important;
         flex: 0 0 auto !important;
     }
+    
+    /* Сохранение горизонтального зазора между картинками */
     .main-content p:has(img) {
         gap: 15px !important;
     }
 
-    /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */
+    /* Глобальное уплотнение всех типов карточных сеток для ликвидации пустых дыр */
     .grid-container,
     .diary-list, 
     .faire-list, 
     .project-grid {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Две колонки */
+        grid-template-columns: 1fr 1fr !important; /* Строго двухколоночная структура */
         gap: 10px !important;
     }
 
-    /* УНИФИКАЦИЯ ИКОНОК: устанавливаем 40px для всех разделов */
+    /* Унификация иконок и превью-изображений: фиксация на 40px для всех разделов */
     .faire-img-round, 
     .item-image-round {
         width: 40px !important;

@@ -1,0 +1,336 @@
+/* 1. БАЗОВАЯ ГЕОМЕТРИЯ И ЦВЕТА */
+* { box-sizing: border-box; }
+
+:root {
+    --primary-bg: #f4f7f6;
+    --card-tech: #3498db; 
+    --card-my: #2ecc71;   
+    --text-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    width: 100%;
+    margin: 20px 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    display: block;
+}
+
+h1 { 
+    margin: 5px 0 15px 0;
+    font-size: 2rem; 
+    line-height: 1.2;
+}
+
+/* Настройка заголовка H3 внутри статей */
+.main-content h3 {
+    /* Базовый отступ сверху 1em, снизу обнуляем */
+    margin: 0 0 0 0 !important; 
+    font-size: 1.2rem; 
+    color: var(--text-color);
+    line-height: 1.2;
+    /* Убедимся, что нижний марджин всегда 0 */
+    margin-bottom: 0 !important;
+}
+
+/* Обнуляем нижний отступ у H1 (заголовка страницы) */
+.main-content h1 {
+    margin-bottom: 0 !important;
+}
+
+/* Прижимаем любой контент под H3 (8px для воздуха) */
+.main-content h3 + p,
+.main-content h3 + .video-test-row {
+    margin-top: 5px !important; 
+}
+
+/* Прижимаем список под H3 */
+.main-content h3 + ul,
+.main-content h3 + ol {
+    margin-top: 8px !important; 
+}
+
+/* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ */
+.video-test-row + h3,
+.main-content p:has(img) + h3 {
+    margin-top: 1.2em !important;
+}
+
+/* БЛОК БИБЛИОГРАФИИ В ПОДВАЛЕ СТАТЬИ */
+.bibliography-footer {
+    margin-top: 15px;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-left: 5px solid var(--card-tech);
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.bibliography-footer strong {
+    display: block;
+    margin-bottom: 10px; /* Увеличили отступ, чтобы список не лип к заголовку */
+    color: var(--text-color);
+}
+
+/* Стили для нумерованного списка внутри */
+.bibliography-footer ol {
+    margin: 0;
+    padding-left: 20px; /* Отступ слева для цифр */
+}
+
+.bibliography-footer li {
+    margin-bottom: 8px; /* Расстояние между книгами */
+    list-style-position: outside; /* Чтобы текст не заходил под цифру */
+}
+
+.bibliography-footer p {
+    margin: 0; /* Чтобы одиночное описание не имело лишних отступов */
+}
+
+/* ЦИТАТЫ */
+blockquote {
+    margin: 1em 0; /* Внешние отступы от текста не трогаем */
+    padding: 15px 20px; /* Внутреннее оформление как у библиографии */
+    background-color: #f9f9f9;
+    border-left: 5px solid var(--card-tech);
+    color: #555;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+blockquote p {
+    margin: 0; /* Убираем естественные отступы, чтобы текст не "толкал" рамку изнутри */
+}
+
+/* Если внутри цитаты несколько абзацев, добавляем зазор между ними */
+blockquote p:not(:last-child) {
+    margin-bottom: 10px; 
+}
+
+/* Если цитата идет сразу после картинки в абзаце */
+p:has(img) + blockquote {
+    margin-top: 1.5em; /* Немного увеличиваем верхний зазор, чтобы компенсировать отсутствие отступа у фото */
+}
+
+/* 2. КОНТЕНТНЫЕ СТРАНИЦЫ (СТАТЬИ И КНИГИ) */
+.content-wrapper {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 800px;
+    width: 100%;       
+    margin: 15px auto; 
+    padding: 10px 20px 20px 20px;
+}
+
+.page-description {
+    font-style: italic; /* например, для красоты */
+    color: #666;
+}
+
+/* --- ЕДИНЫЙ БЛОК КАРТИНОК В СТАТЬЯХ (MARKDOWN) --- */
+.main-content p:has(img) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+    margin: 1em 0 !important; /* Стандартный, предсказуемый отступ */
+    padding: 0 !important;
+}
+
+.main-content p img:not(.content-img) {
+    height: 250px;       /* Единая высота для ряда */
+    width: auto;         
+    max-width: 100%;     
+    object-fit: contain; 
+    border-radius: 8px;
+    margin: 0 !important;
+    cursor: zoom-in;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Зум при нажатии (без JS) */
+.main-content p img:not(.content-img):active {
+    transform: scale(2.0); 
+    z-index: 999;          
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    cursor: zoom-out;
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--card-tech);
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* 3. ТЕГИ, ИСТОЧНИКИ */
+.sources-inline, .tag-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #eee;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sources-content p, .sources-content ul, .sources-content li { display: inline !important; margin: 0; padding: 0; }
+.sources-content ul li:not(:last-child)::after { content: ", "; }
+
+.tag-item {
+    background-color: #3498db;
+    color: white !important;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px 6px 12px !important; 
+    line-height: 1;
+    transition: opacity 0.2s;
+}
+
+.tag-item:hover { opacity: 0.8; }
+.tag-item::before { content: "#"; margin-right: 1px; opacity: 0.7; }
+
+/* 4. ПОДВАЛ И КНОПКА TELEGRAM */
+.main-footer { 
+    margin-top: 30px; 
+    text-align: center; 
+    width: 100%; 
+}
+
+.license-footer { 
+    margin-top: 20px; 
+    text-align: center; 
+    width: 100%; 
+}
+
+.license-footer .footer-copyright {
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.license-footer .footer-license-text {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.license-footer .footer-license-text a {
+    color: #7f8c8d;
+    text-decoration: underline;
+}
+
+.tg-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #0088cc;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+.tg-button:hover {
+    background-color: #0077b5;
+}
+
+.tg-button span {
+    font-size: 1.2rem; /* Смайлик чуть крупнее текста */
+}
+
+/* 5. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 900px) {
+    h1 { font-size: 1.5rem; margin: 5px 0 10px 0 !important; }
+    header { margin: 10px 0 20px 0; }
+
+    .content-wrapper { 
+        width: 100% !important; 
+        max-width: 100% !important;
+        padding: 15px 12px !important; /* УНИФИКАЦИЯ ОТСТУПОВ: 12px */
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Вертикальный режим (Portrait) */
+    @media (orientation: portrait) {
+        .main-content p:has(img) {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.2em !important; 
+        }
+
+        .main-content p img:not(.content-img) {
+            height: auto !important;    
+            width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        .main-content p img:not(.content-img):active {
+            transform: scale(1.2);
+        }
+    }
+}
+
+/* Специально для горизонтального режима (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Твои старые стили для картинок в статьях */
+    .main-content p img:not(.content-img) {
+        height: 180px !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+    .main-content p:has(img) {
+        gap: 15px !important;
+    }
+
+    /* ГЛОБАЛЬНОЕ УПЛОТНЕНИЕ ВСЕХ СЕТОК (чтобы не было пустых дыр) */
+    .grid-container,
+    .diary-list, 
+    .faire-list, 
+    .project-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* Две колонки */
+        gap: 10px !important;
+    }
+
+    /* УНИФИКАЦИЯ ИКОНОК: устанавливаем 40px для всех разделов */
+    .faire-img-round, 
+    .item-image-round {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}

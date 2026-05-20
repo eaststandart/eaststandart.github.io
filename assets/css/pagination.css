@@ -38,19 +38,34 @@
     margin-bottom: 0px !important;  
 }
 
-/* Универсальный контейнер управляющих кнопок пагинации (ПЕРЕНЕСЕНО ИЗ INLINE) */
+/* Универсальный контейнер управляющих кнопок пагинации */
 .pagination-controls {
     margin-top: 25px !important;       /* Твой оригинальный верхний зазор 25px */
     display: flex !important;          /* Твое флекс-позиционирование */
     justify-content: center !important;/* Твое центрирование кнопок на странице */
 }
 
-/* Оболочка верхней навигационной шапки хлебных крошек в статьях */
+/* ==========================================================================
+   ВЕРХНЯЯ НАВИГАЦИОННАЯ ШАПКА (ВЫНЕСЕНО ИЗ INLINE NAVIGATION.LIQUID)
+   ========================================================================== */
+
+/* Родительский контейнер шапки крошек */
 .navigation-header {
-    margin-bottom: 15px !important;
-    font-size: 0.9rem !important;
-    border-bottom: 1px solid #f0f0f0 !important;
-    padding-bottom: 8px !important;
+    margin-bottom: 15px !important;            /* Твой маргин 15px */
+    font-size: 0.9rem !important;               /* Твой шрифт 0.9rem */
+    border-bottom: 1px solid #f0f0f0 !important;/* Твоя серая линия */
+    padding-bottom: 8px !important;             /* Твой падинг снизу 8px */
+}
+
+/* Общий сброс маргина для всех внутренних ссылок шапки */
+.navigation-header .nav-header-link {
+    margin-bottom: 0 !important;
+}
+
+/* Фирменный синий цвет для ссылок "Главная" и "Поиск" без жирности */
+.navigation-header .nav-blue-link {
+    color: #3498db !important;
+    font-weight: normal !important;
 }
 
 /* Вертикальные палочки-разделители внутри крошек */
@@ -59,16 +74,8 @@
     margin: 0 5px !important;
 }
 
-/* Текстовые ссылки "Главная" и "Поиск" в шапке крошек */
-.navigation-header .nav-header-link {
-    margin-bottom: 0 !important;
-    color: var(--card-tech) !important;
-    font-weight: normal !important;
-}
-
-/* Специфические длинные ссылки крошек с эффектом ellipsis (сжатие трех точек) */
+/* Специфические длинные ссылки крошек с эффектом сжатия текста (ellipsis) */
 .navigation-header .nav-ellipsis-link {
-    margin-bottom: 0 !important;
     max-width: 135px !important;
     white-space: nowrap !important;
     overflow: hidden !important;

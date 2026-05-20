@@ -1,10 +1,11 @@
 {% comment %} 
 =============================================================================
-ТЕСТОВЫЙ ИЗОЛИРОВАННЫЙ МОДУЛЬ С НОВЫМИ ИМЕНАМИ (_includes/project-loop-test.liquid)
-Назначение: Чистые, отражающие суть имена классов без слова "robot".
+МОДУЛЬ: ЛОКАЛЬНЫЕ ЛЕНТЫ ПОСТОВ НА СТРАНИЦАХ ПРОЕКТОВ (posts-page.liquid)
+Назначение: Вывод списков (Журнал, Медиа, Дневник) внутри карточек конкретных проектов.
 =============================================================================
 {% endcomment %}
 
+{% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
 {% assign project_slug = url_parts[2] %}
@@ -13,7 +14,7 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
-{% comment %} Счётчик-предохранитель наличия постов {% endcomment %}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
@@ -23,14 +24,19 @@
 {% endfor %}
 
 {% if has_posts %}
-{% comment %} Генерируем уникальный ID для каждого блока на странице {% endcomment %}
+{% comment %} Генерируем уникальные ID для контейнеров списка и кнопок под этот цикл {% endcomment %}
 {% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-{% comment %} Автоматически вычисляем адрес большого архива {% endcomment %}
+{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
 
-<!-- ИСПРАВЛЕНО: Твои новые двойные имена классов, отражающие суть -->
+
+<!-- ==========================================================================
+     1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ
+     ========================================================================== -->
+
+<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
@@ -51,8 +57,13 @@
   {% endfor %}
 </ul>
 
+<!-- Изолированный блок кнопок управления локальной пагинацией -->
 <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
+
+<!-- ==========================================================================
+     2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ
+     ========================================================================== -->
 <script>
   (function() {
     var containerId = "{{ loop_id }}";
@@ -62,6 +73,7 @@
     var ctrlDiv = document.getElementById(ctrlId);
     if (!ul || !ctrlDiv) return;
 
+    // Извлекаем элементы списка и настраиваем лимиты страниц
     var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
     var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
     var totalPages = Math.ceil(allItems.length / itemsPerPage);
@@ -69,6 +81,7 @@
 
     var targetArchiveUrl = "{{ archive_url }}";
 
+    // Функция переключения страниц контента
     function showPage(page) {
       if (page < 1 || page > totalPages) return;
       currentPage = page;
@@ -76,6 +89,7 @@
       var start = (page - 1) * itemsPerPage;
       var end = start + itemsPerPage;
 
+      // Переключаем видимость элементов через !important свойства display
       allItems.forEach(function(el, index) {
         if (index >= start && index < end) {
           el.style.setProperty('display', 'block', 'important');
@@ -84,24 +98,24 @@
         }
       });
 
-      renderButtons();
+      renderButtons(); // Перерисовываем навигационную ленту под страницу
     }
 
+    // Вспомогательная функция сборки кликабельной кнопки на чистом теге <button>
     function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // ИСПРАВЛЕНО: Теперь всегда создаётся полноценный тег button
       var btn = document.createElement('button');
       btn.className = 'posts-page-btn'; 
       btn.innerText = text;
 
       if (isArchiveLink) {
         btn.classList.add('posts-page-all-btn');
-        // Переход по клику вместо прямой ссылки
+        // Стандартное событие перенаправления по клику вместо прямой ссылки тега <a>
         btn.addEventListener('click', function() {
           window.location.href = targetArchiveUrl;
         });
       } else {
         if (isCurrent) {
-          btn.classList.add('active'); 
+          btn.classList.add('active'); // Статус текущей выбранной страницы
         } else if (isDisabled) {
           btn.style.opacity = '0.4'; 
           btn.style.cursor = 'default';
@@ -114,13 +128,15 @@
       return btn;
     }
 
+    // Функция динамического рендеринга навигационной ленты кнопок
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      // ИСПРАВЛЕНО: Заменили одиночную стрелку на двойные ёлочки »»
+      // Выводим нашу фирменную кнопку перехода в большой архив с двойными ёлочками »»
       ctrlDiv.appendChild(createBtn('»»', null, false, false, true));
 
+      // Если страниц больше одной — рендерим стандартный цифровой блок пагинации
       if (totalPages > 1) {
-        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));
+        controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1, false));
         for (var i = 1; i <= totalPages; i++) {
           ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, false));
         }
@@ -128,6 +144,7 @@
       }
     }
 
+    // Первичный запуск отрисовки первой страницы при загрузке карточки проекта
     showPage(1);
   })();
 </script>

@@ -46,7 +46,7 @@ title: Поиск по тегам
                         {% if p.tags contains tag %}
                             <li style="margin-bottom: 12px; padding: 10px; border-bottom: 1px solid #f0f0f0;">
                                 <a href="{{ p.url | relative_url }}" style="text-decoration: none; color: #3498db; font-weight: 500; font-size: 1.1rem; display: block;">{{ p.title | default: p.url }}</a>
-                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ p.parent_name | default: 'Прочее' }}</span>
+                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ p.categories | first | default: 'Прочее' }}</span>
                             </li>
                         {% endif %}
                     {% endfor %}

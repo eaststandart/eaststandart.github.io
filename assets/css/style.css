@@ -109,6 +109,11 @@ blockquote + h3 {
     margin-top: 0px !important;
 }
 
+/* ИСПРАВЛЕНО: Находим ПОСЛЕДНИЙ текстовый абзац внутри контента и намертво стираем его нижний маргин */
+.main-content p:last-of-type {
+    margin-bottom: 0px !important; /* Убирает внутренний толчок строки контента вниз */
+}
+
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + p {
     margin-top: -0.4em !important; 
@@ -219,7 +224,6 @@ p:has(img) + blockquote,
     width: 100%;       
     margin: 15px auto; 
     padding: 10px 20px 20px 20px;
-    height: auto !important;
 }
 
 /* Стилизация вводного или подзаголовочного описания страницы */

@@ -131,8 +131,21 @@
     // Функция динамического рендеринга навигационной ленты кнопок
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      // Выводим нашу фирменную кнопку перехода в большой архив с двойными ёлочками »»
+      
+      // Кнопка 1: Твои стандартные две ёлочки (уводят на постраничный архив)
       ctrlDiv.appendChild(createBtn('»»', null, false, false, true));
+
+      // Кнопка 2: Новая кнопка "0", уводящая на раскрытую ленту media-archive
+      // Используем переменную include.type, чтобы ссылка автоматом знала раздел (media или journal)
+      var fullArchiveType = "{{ include.type }}"; 
+      var projectBtn = createBtn('0', null, false, false, false);
+      
+      projectBtn.addEventListener('click', function() {
+        // Формируем адрес: например, /media-full/?project=simple-cardboard-walking-robot
+        window.location.href = '/' + fullArchiveType + '-full/?project=' + '{{ project_slug_last }}';
+      });
+      
+      ctrlDiv.appendChild(projectBtn);
 
       // Если страниц больше одной — рендерим стандартный цифровой блок пагинации
       if (totalPages > 1) {

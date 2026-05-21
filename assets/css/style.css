@@ -84,7 +84,7 @@ h1 {
 
 /* Теперь H3 — единственный центр управления зазором контента снизу */
 .main-content h3 {
-    margin: 1.2em 0 0.6em 0 !important; /* Отступы: Сверху(1.2em) Слева/Справа(0) Снизу(0.5em) */
+    margin: 1em 0 0.6em 0 !important; /* Отступы: Сверху(1em) Слева/Справа(0) Снизу(0.5em) */
     font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;

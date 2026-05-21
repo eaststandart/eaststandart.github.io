@@ -390,20 +390,21 @@
 }
 
 /* ==========================================================================
-   8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (КНОПКА 0)
+   8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (ДЛЯ КНОПКИ 0)
    ========================================================================== */
 
 /* Контейнер строки даты и заголовка */
 .media-entry-title-row {
-    display: flex;
+    display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    margin-bottom: 0px !important;     /* Сбрасываем маргин контейнера, зазор задан у H3 */
     margin-top: 0px !important;
+    margin-bottom: 0px !important;     /* Сбрасываем низ строки, зазор управляется H3 */
+    padding: 0 !important;
 }
 
-/* Превращаем дату в аккуратную, бледную серую плашку-квадрат */
-.media-entry-date {
+/* Наша аккуратная бледная серая плашка-квадрат для даты */
+.media-entry-title-row .media-entry-date {
     font-family: monospace !important;
     color: #555 !important;            
     font-size: 0.8rem !important;
@@ -411,45 +412,49 @@
     background-color: #f0f0f0 !important; 
     padding: 2px 6px !important;       
     border-radius: 4px !important;     
-    margin-bottom: 0.3em !important;   /* Крошечный зазор: дата жмётся к H3 сверху */
+    margin-top: 0px !important;
+    margin-bottom: 0.25em !important;  /* МИНИМАЛЬНЫЙ ЗАЗОР: Дата намертво жмётся к H3 сверху */
     display: inline-block !important;
+    line-height: 1.2 !important;
 }
 
-/* Сам заголовок H3: использует твои оригинальные параметры из Раздела 3 style.css */
-.media-entry-title {
+/* Полное управление шрифтом и отступами заголовка H3 контента */
+.media-entry h3.media-entry-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
     font-size: 1.2rem !important;
     color: var(--text-color) !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;
-    margin: 1em 0 0.6em 0 !important; /* ТВОИ ОРИГИНАЛЬНЫЕ ОТСТУПЫ: Сверху(1em) Снизу(0.6em) */
+    margin: 0px 0px 0.5em 0px !important; /* Отступы: Сверху(0) Снизу(0.5em для воздуха до текста) */
+    padding: 0 !important;
 }
 
-/* ПРЕДВАРИТЕЛЬНОЕ ОБНУЛЕНИЕ: Стираем верхний маргин у контента конвеером, как в Разделе 3 */
-.media-content.main-content > p,
-.media-content.main-content > ul,
-.media-content.main-content > ol,
-.media-content.main-content > .video-test-row,
-.media-content.main-content > .posts-page-list {
+/* ПРЕДВАРИТЕЛЬНОЕ ОБНУЛЕНИЕ: Стираем верхний маргин у любого контента внутри карточки .media-entry */
+.media-entry > p,
+.media-entry > ul,
+.media-entry > ol,
+.media-entry > .video-test-row,
+.media-entry > .posts-page-list {
     margin-top: 0px !important;
 }
 
-/* ЛИНЕЙКА ПРИЖАТИЯ ПО ВАШЕМУ СТАНДАРТУ: Твой ювелирный микро-сдвиг под воздух шрифта */
-.media-content.main-content > p,
-.media-content.main-content > ul,
-.media-content.main-content > ol,
-.media-content.main-content > .posts-page-list {
+/* ЛИНЕЙКА ПРИЖАТИЯ ПО ВАШЕМУ СТАНДАРТУ: Ювелирный микро-сдвиг под воздух шрифта первого элемента */
+.media-entry > p,
+.media-entry > ul,
+.media-entry > ol,
+.media-entry > .posts-page-list {
     margin-top: -0.4em !important; 
 }
 
-/* Для медиафайлов (картинок и видео) оставляем чистый ноль контента, как в Разделе 3 */
-.media-content.main-content > p:has(img),
-.media-content.main-content > .video-test-row {
+/* Для медиафайлов (картинок и видео) оставляем чистый ноль контента */
+.media-entry > p:has(img),
+.media-entry > .video-test-row {
     margin-top: 0px !important; 
 }
 
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {
-    width: 100%;
+    width: 100% !important;
     margin-bottom: 30px !important;    /* Компактный зазор между статьями в ленте */
 }
 
@@ -460,14 +465,14 @@
     margin: 25px 0 0 0 !important;     /* Отступ только сверху, чтобы не копить дыры */
 }
 
-/* У самого последнего видимого поста в ленте полностью обнуляем нижний зазор карточки */
-.media-container .media-entry:last-of-type,
-#media-container .media-entry:last-of-type {
-    margin-bottom: 0px !important;
+/* Специфический сброс для последнего поста в ленте */
+#media-container .media-entry:last-of-type .media-entry-hr,
+.media-archive-container .media-entry:last-of-type .media-entry-hr {
+    display: none !important;          /* Скрываем финальную линию у последнего поста */
 }
 
-/* У самого последнего поста намертво скрываем разделительную линию, чтобы она не висела внизу */
-.media-container .media-entry:last-of-type .media-entry-hr,
-#media-container .media-entry:last-of-type .media-entry-hr {
-    display: none !important;
+#media-container .media-entry:last-of-type,
+.media-archive-container .media-entry:last-of-type {
+    margin-bottom: 0px !important;     /* Обнуляем отступ карточки у самого низа страницы */
 }
+

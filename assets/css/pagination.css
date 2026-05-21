@@ -413,7 +413,7 @@
     padding: 2px 6px !important;       
     border-radius: 4px !important;     
     margin-top: 0px !important;
-    margin-bottom: 0.25em !important;  /* МИНИМАЛЬНЫЙ ЗАЗОР: Дата намертво жмётся к H3 сверху */
+    margin-bottom: 0.4em !important;   /* УВЕЛИЧЕНО: Чуть больше воздуха между датой и заголовком */
     display: inline-block !important;
     line-height: 1.2 !important;
 }
@@ -425,7 +425,8 @@
     color: var(--text-color) !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;
-    margin: 0px 0px 0.5em 0px !important; /* Отступы: Сверху(0) Снизу(0.5em для воздуха до текста) */
+    /* ИСПРАВЛЕНО: Увеличили нижний зазор в 2 раза (до 1em) для идеального воздуха до текста */
+    margin: 0px 0px 1em 0px !important; 
     padding: 0 !important;
 }
 

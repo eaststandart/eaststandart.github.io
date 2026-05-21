@@ -16,20 +16,6 @@ permalink: /faire/simple-cardboard-walking-robot/
 ![](simple-cardboard-walking-robot-3.webp)
 ![](simple-cardboard-walking-robot-4.webp)
 
-<figure>
-
-![](simple-cardboard-walking-robot-1.webp)
-
-<figcaption>вид сбоку </figcaption>
-</figure>
-
-
-<figure>
-  <img src="/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp" alt="вид сбоку">
-  <figcaption>вид сбоку</figcaption>
-</figure>
-
-
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
 ### Область применения

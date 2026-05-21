@@ -7,12 +7,13 @@
     </p> 
 </footer>
 
-<!-- АВТОМАТИЧЕСКАЯ ЛЕНИВАЯ ЗАГРУЗКА ДЛЯ КАРТИНОК ИЗ MARKDOWN -->
+<!-- АВТОМАТИЧЕСКАЯ ЛЕНИВАЯ ЗАГРУЗКА ДЛЯ ВСЕХ КАРТИНОК НА САЙТЕ -->
 <script>
-  // Скрипт находит все картинки внутри основного контента и прописывает им ленивую загрузку
-  document.querySelectorAll('.main-content img').forEach(function(img) {
+  // Находим абсолютно все картинки на странице и нативно включаем им ленивую загрузку
+  document.querySelectorAll('img').forEach(function(img) {
     if (!img.hasAttribute('loading')) {
       img.setAttribute('loading', 'lazy');
     }
   });
 </script>
+

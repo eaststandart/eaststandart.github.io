@@ -2,7 +2,6 @@
 layout: page
 title: "Робот странник: вариант №1"
 author: ["RadiotekhnikaClub"]
-sources: "[Игрушка, шагающий робот, из детства...](https://pikabu.ru/story/igrushka_shagayushchiy_robot_iz_detstva_naydennaya_na_cherdake_v_derevne_u_dedushki_6337680)"
 date: 2026-05-15
 categories: [media, robot-strannik]
 ---
@@ -19,13 +18,3 @@ categories: [media, robot-strannik]
 ![video](/faire/robot-strannik/robot-strannik-3.webm)
 
 > **Примечание:** второй вариант робота (основной) отличается от первого тем, что у него переработан узел редуктор-колено, для увеличения жесткости, и более широкая основа, для повышения устойчивости при ходьбе.
-
-Тип передвижения робота «странника» воплощен по мотивам советской механической игрушки [^1] с заводным механизмом «Робот», СССР, Самара, Завод «Прогресс», 1980 год. Вид ее был такой:
-
-![](/faire/robot-strannik/robot-strannik-09.webp)
-![](/faire/robot-strannik/robot-strannik-10.webp)
-![](/faire/robot-strannik/robot-strannik-11.webp)
-![](/faire/robot-strannik/robot-strannik-12.webp)
-![](/faire/robot-strannik/robot-strannik-13.webp)
-
-[^1]: Как двигалась игрушка смотри в [Робот игрушка СССР](https://youtu.be/l33fxFFlkJQ).

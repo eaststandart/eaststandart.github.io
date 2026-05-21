@@ -84,7 +84,7 @@ h1 {
 
 /* Теперь H3 — единственный центр управления зазором контента снизу */
 .main-content h3 {
-    margin: 1em 0 0.6em 0 !important; /* Отступы: Сверху(1.2em) Слева/Справа(0) Снизу(0.5em) */
+    margin: 1.2em 0 0.6em 0 !important; /* Отступы: Сверху(1.2em) Слева/Справа(0) Снизу(0.5em) */
     font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;
@@ -115,6 +115,11 @@ h1 {
 .video-test-row + h3,
 .main-content p:has(img) + h3 {
     margin-top: 1.2em !important;
+}
+
+/* Если H3 идет сразу после вводного описания страницы, обнуляем его верхний отступ, чтобы убрать двойной зазор */
+.page-description + h3 {
+    margin-top: 0px !important;
 }
 
 

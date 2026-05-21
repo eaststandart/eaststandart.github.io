@@ -254,6 +254,16 @@ p:has(img) + blockquote {
     cursor: zoom-out;
 }
 
+/* Единый стиль для подписей к медиафайлам */
+figcaption {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6a737d;
+    font-style: italic;
+    margin-top: 6px; /* Небольшой зазор от фото/видео до текста подписи */
+}
+
 
 /* ==========================================================================
    8. ТЕГИ, ИСТОЧНИКИ И ИНЛАЙН-МЕТАДАННЫЕ

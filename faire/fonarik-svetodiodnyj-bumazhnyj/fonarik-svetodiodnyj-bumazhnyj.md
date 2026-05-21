@@ -23,5 +23,5 @@ permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
 Переход от беспаячной схемы к пайке компонентов, замена бумажного корпуса на прочную пластиковую или деревянную конструкцию. Установка более мощного светодиода.
 
 ### Файлы проекта
-1. 📄[Описание проекта, PDF](fonarik-svetodiodnyj-bumazhnyj.pdf)
-2. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)
+1\. 📄[Описание проекта, PDF](fonarik-svetodiodnyj-bumazhnyj.pdf)\
+2\. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)

@@ -15,7 +15,8 @@
         
         <!-- ИСПРАВЛЕНО ПО ПУНКТУ 3: Дата и заголовок выстроены в единую линию, как в Журнале -->
         <div class="media-entry-title-row">
-          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <!-- Дата вынесена на отдельную верхнюю строку над H3 -->
+          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
           <h3 class="media-entry-title">{{ post.title }}</h3>
         </div>
         

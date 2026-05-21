@@ -393,28 +393,30 @@
    8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (КНОПКА 0)
    ========================================================================== */
 
-/* Контейнер строки: выстраиваем дату и H3 в одну аккуратную линию baseline */
+/* Контейнер строки: выстраиваем элементы вертикально (Дата строго НАД заголовком) */
 .media-entry-title-row {
     display: flex;
-    align-items: baseline !important;
-    margin-bottom: 15px !important; /* Небольшой зазор от заголовка до контента статьи */
+    flex-direction: column !important; /* Перевод в столбец: дата сверху, H3 снизу */
+    align-items: flex-start !important;
+    margin-bottom: 15px !important;    /* Зазор от заголовка H3 до текста статьи ниже */
 }
 
-/* Наш фирменный стиль шрифта дат, перенесённый из общего стандарта Журнала */
+/* Наш фирменный сжатый шрифт дат */
 .media-entry-date {
     font-family: monospace !important;
-    color: #6a737d !important;
-    font-size: 0.9rem !important;
-    flex-shrink: 0;
+    color: #888 !important;            /* Аккуратный приглушенный серый цвет для даты */
+    font-size: 0.85rem !important;
     font-variant-numeric: tabular-nums;
+    margin-bottom: 4px !important;     /* Крошечный зазор между датой и заголовком H3 */
 }
 
-/* Сброс блочных маргинов у заголовка h3 внутри строки */
+/* Настройки шрифта заголовка H3 контента */
 .media-entry-title {
     margin: 0 !important;
     font-size: 1.2rem !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;
+    color: var(--text-color) !important;
 }
 
 /* Базовые параметры карточки отдельного поста в ленте */

@@ -84,7 +84,7 @@ h1 {
 
 /* Теперь H3 — единственный центр управления зазором контента снизу */
 .main-content h3 {
-    margin: 1.2em 0 0.6em 0 !important; /* Отступы: Сверху(1.2em) Слева/Справа(0) Снизу(0.5em) */
+    margin: 1em 0 0.6em 0 !important; /* Отступы: Сверху(1.2em) Слева/Справа(0) Снизу(0.5em) */
     font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;
@@ -93,16 +93,22 @@ h1 {
 /* ПРЕДВАРИТЕЛЬНОЕ ОБНУЛЕНИЕ: Гарантируем, что у ВСЕХ типов списков и Журнала по умолчанию стёрт верхний маргин */
 .main-content ul,
 .main-content ol,
-.main-content .posts-page-list,
-.main-content h3 + p:has(img),
-.main-content h3 + .video-test-row {
+.main-content .posts-page-list {
     margin-top: 0px !important;
 }
 
-
 /* ЕДИНАЯ ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов, списков и Журнала делаем ювелирный микро-сдвиг под воздух шрифта */
-.main-content h3 + p {
+.main-content h3 + p,
+.main-content h3 + ul,
+.main-content h3 + ol,
+.main-content h3 + .posts-page-list {
     margin-top: -0.5em !important; 
+}
+
+/* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */
+.main-content h3 + p:has(img),
+.main-content h3 + .video-test-row {
+    margin-top: 0px !important; 
 }
 
 /* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ сверху для воздуха */

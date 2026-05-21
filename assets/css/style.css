@@ -422,6 +422,10 @@ figcaption {
         margin: 10px 0 20px 0; 
     }
 
+    body {
+        padding: 0px !important;
+    }
+
     /* Унификация отступов карточки: перевод в резиновый full-width режим */
     .content-wrapper { 
         width: 100% !important; 

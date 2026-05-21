@@ -44,7 +44,7 @@ custom_css: "/assets/css/video.css"
 <div class="author-inline">
     <strong>Источники:</strong> 
     <div class="sources-content">
-        {{ page.sources | markdownify }}
+        {{ page.sources }}
     </div>
 </div>
 {% endif %}

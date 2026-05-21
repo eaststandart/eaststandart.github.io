@@ -99,14 +99,14 @@ h1 {
 
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + p {
-    margin-top: -0.7em !important; 
+    margin-top: -0.6em !important; 
 }
 
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех списков и Журнала делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + ul,
 .main-content h3 + ol,
 .main-content h3 + .posts-page-list {
-    margin-top: -0.6em !important; 
+    margin-top: -0.5em !important; 
 }
 
 /* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */

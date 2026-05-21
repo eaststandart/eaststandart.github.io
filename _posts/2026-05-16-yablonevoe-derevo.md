@@ -1,7 +1,6 @@
 ---
 layout: page
 title: "Яблоневое дерево: фото"
-sources: ""
 date: 2026-05-16
 categories: [media, yablonevoe-derevo]
 ---

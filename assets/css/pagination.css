@@ -393,26 +393,31 @@
    8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (КНОПКА 0)
    ========================================================================== */
 
-/* Контейнер строки: выстраиваем элементы вертикально (Дата строго НАД заголовком) */
+/* Контейнер строки: вертикальный столбец с минимальными зазорами */
 .media-entry-title-row {
     display: flex;
-    flex-direction: column !important; /* Перевод в столбец: дата сверху, H3 снизу */
+    flex-direction: column !important;
     align-items: flex-start !important;
-    margin-bottom: 15px !important;    /* Зазор от заголовка H3 до текста статьи ниже */
+    margin-bottom: 0.6em !important;   /* УМЕНЬШЕНО: Компактный зазор от H3 до текста статьи ниже */
 }
 
-/* Наш фирменный сжатый шрифт дат */
+/* ИСПРАВЛЕНО: Превращаем дату в аккуратную, бледную серую плашку-квадрат */
 .media-entry-date {
     font-family: monospace !important;
-    color: #888 !important;            /* Аккуратный приглушенный серый цвет для даты */
-    font-size: 0.85rem !important;
+    color: #555 !important;            /* Читаемый серый цвет букв */
+    font-size: 0.8rem !important;
     font-variant-numeric: tabular-nums;
-    margin-bottom: 4px !important;     /* Крошечный зазор между датой и заголовком H3 */
+    background-color: #f0f0f0 !important; /* Серый фоновый квадрат плашки */
+    padding: 2px 6px !important;       /* Внутренние зазоры плашки */
+    border-radius: 4px !important;     /* Легкое скругление углов */
+    margin-bottom: 0.25em !important;  /* МИНИМАЛЬНЫЙ ЗАЗОР: Дата прижимается вплотную к H3 */
+    display: inline-block !important;
 }
 
-/* Настройки шрифта заголовка H3 контента */
+/* Настройки шрифта заголовка H3: полное обнуление лишнего воздуха */
 .media-entry-title {
-    margin: 0 !important;
+    margin: 0 !important;              /* Полностью стираем заводские маргины браузера */
+    padding: 0 !important;
     font-size: 1.2rem !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;

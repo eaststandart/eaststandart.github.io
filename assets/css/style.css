@@ -106,7 +106,7 @@ h1 {
 .main-content h3 + ul,
 .main-content h3 + ol,
 .main-content h3 + .posts-page-list {
-    margin-top: -0.5em !important; 
+    margin-top: -0.4em !important; 
 }
 
 /* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */

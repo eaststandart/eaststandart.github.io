@@ -18,13 +18,6 @@ permalink: /faire/simple-cardboard-walking-robot/
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
-### Область применения
-![video](simple-cardboard-walking-robot-1.webm)
-![video](simple-cardboard-walking-robot-2.webm)
-
-### Область применения
-  <img src="/inspiration/img/our-dream.webp" alt="вид сбоку">
-
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
 
 ![video](simple-cardboard-walking-robot-1.webm)

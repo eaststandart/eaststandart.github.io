@@ -426,7 +426,7 @@
 
 /* Настройки шрифта и отступов заголовка H3 контента */
 .media-entry h3.media-entry-title {
-    margin: 0px 0px 0.5em 0px !important; /* ИСПРАВЛЕНО: Уменьшили нижний зазор до 0.5em для плотности */
+    margin: 0px 0px 0em 0px !important; /* ИСПРАВЛЕНО: Уменьшили нижний зазор до 0.5em для плотности */
     padding: 0 !important;
     font-size: 1.2rem !important;      
     line-height: 1.2 !important;

@@ -1,66 +1,58 @@
-{% comment %} 
-==========================================================================
-МОДУЛЬ ARCHIVE: МЕДИА-АРХИВ С ФИЛЬТРАЦИЕЙ ПО КАТЕГОРИЯМ (media-archive.liquid)
-Назначение: Вывод публикаций конкретной категории с JS-фильтрацией по проектам.
-Унификация: Полный перевод на единую строку даты и заголовка (как в Журнале).
-========================================================================== 
-{% endcomment %}
-
-<div id="media-container" class="media-archive-container">
+{% comment %} ==========================================================================
+   1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
+   ========================================================================== {% endcomment %}
+<div id="media-container">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
     
       {% comment %} Каждая запись хранит список своих категорий в data-project для скрипта {% endcomment %}
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
+      <!-- ИСПРАВЛЕНО: Дали карточке класс main-content, чтобы h3 и все отступы текста/медиа заработали штатно -->
+      <div class="media-entry main-content" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
         
-        <!-- ИСПРАВЛЕНО ПО ПУНКТУ 3: Дата и заголовок выстроены в единую линию, как в Журнале -->
+        <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">
-          <!-- Дата вынесена на отдельную верхнюю строку над H3 -->
           <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
           <h3 class="media-entry-title">{{ post.title }}</h3>
         </div>
         
-        <!-- Тело поста с применением отступов медиафайлов -->
-        <div class="media-content main-content">
-          {{ post.content }}
-          
-          {% comment %} ==========================================
-             УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
-             ========================================== {% endcomment %}
-
-          <!-- А. БЛОК ВЫВОДА АВТОРА -->
-          {% if post.author and post.author != "" %}
-          <div class="author-inline">
-              <strong>Автор:</strong> 
-              <div class="sources-content">
-                  {{ post.author }}
-              </div>
-          </div>
-          {% endif %}
-
-          <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
-          {% if post.sources and post.sources != "" %}
-          <div class="sources-inline">
-              <strong>Источники:</strong>
-              <div class="sources-content">
-                  {{ post.sources | markdownify }}
-              </div>
-          </div>
-          {% endif %}
-
-          <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
-          {% if post.tags.size > 0 %}
-          <div class="tag-container">
-              {% for tag in post.tags %}
-                  {% assign tag_clean = tag | replace: '#', '' | strip %}
-                  <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-              {% endfor %}
-          </div>
-          {% endif %}
-
-        </div>
+        <!-- Тело поста (теперь отступы h3 + p и h3 + video сработают автоматически) -->
+        {{ post.content }}
         
-        <!-- Разделительная линия (отступы полностью вынесены в CSS) -->
+        {% comment %} ==========================================
+           УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
+           ========================================== {% endcomment %}
+
+        <!-- А. БЛОК ВЫВОДА АВТОРА -->
+        {% if post.author and post.author != "" %}
+        <div class="author-inline">
+            <strong>Автор:</strong> 
+            <div class="sources-content">
+                {{ post.author }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
+        {% if post.sources and post.sources != "" %}
+        <div class="sources-inline">
+            <strong>Источники:</strong>
+            <div class="sources-content">
+                {{ post.sources | markdownify }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
+        {% if post.tags.size > 0 %}
+        <div class="tag-container">
+            {% for tag in post.tags %}
+                {% assign tag_clean = tag | replace: '#', '' | strip %}
+                <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Разделительная линия между постами -->
         <hr class="media-entry-hr">
         
       </div>

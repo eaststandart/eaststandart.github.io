@@ -393,56 +393,58 @@
    8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (КНОПКА 0)
    ========================================================================== */
 
-/* Контейнер строки: вертикальный столбец с минимальными зазорами */
+/* Контейнер строки: вертикальный столбец над заголовком */
 .media-entry-title-row {
     display: flex;
     flex-direction: column !important;
     align-items: flex-start !important;
-    margin-bottom: 0.6em !important;   /* УМЕНЬШЕНО: Компактный зазор от H3 до текста статьи ниже */
+    margin-bottom: 0px !important;     /* Полностью обнуляем маргин строки, зазор до текста диктуется h3 */
+    margin-top: 0px !important;
 }
 
-/* ИСПРАВЛЕНО: Превращаем дату в аккуратную, бледную серую плашку-квадрат */
+/* Превращаем дату в аккуратную, бледную серую плашку-квадрат */
 .media-entry-date {
     font-family: monospace !important;
-    color: #555 !important;            /* Читаемый серый цвет букв */
+    color: #555 !important;            
     font-size: 0.8rem !important;
     font-variant-numeric: tabular-nums;
-    background-color: #f0f0f0 !important; /* Серый фоновый квадрат плашки */
-    padding: 2px 6px !important;       /* Внутренние зазоры плашки */
-    border-radius: 4px !important;     /* Легкое скругление углов */
-    margin-bottom: 0.25em !important;  /* МИНИМАЛЬНЫЙ ЗАЗОР: Дата прижимается вплотную к H3 */
+    background-color: #f0f0f0 !important; 
+    padding: 2px 6px !important;       
+    border-radius: 4px !important;     
+    margin-bottom: 0.3em !important;   /* Крошечный контролируемый зазор: дата жмётся к H3 сверху */
     display: inline-block !important;
 }
 
-/* Настройки шрифта заголовка H3: полное обнуление лишнего воздуха */
+/* Настройки шрифта заголовка H3: наследует параметры style.css, обнуляя маргин контента сверху */
 .media-entry-title {
-    margin: 0 !important;              /* Полностью стираем заводские маргины браузера */
-    padding: 0 !important;
+    margin-top: 0px !important;        
     font-size: 1.2rem !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;
-    color: var(--text-color) !important;
 }
 
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {
     width: 100%;
-    margin-bottom: 30px !important; /* Компактный зазор между статьями в ленте */
+    margin-bottom: 30px !important;    /* Компактный зазор между статьями в ленте */
 }
 
 /* Параметры разделительной линии между постами */
 .media-entry-hr {
     border: 0 !important;
     border-top: 1px solid #eee !important;
-    margin: 25px 0 0 0 !important; /* Отступ только сверху, чтобы не копить дыры */
+    margin: 25px 0 0 0 !important;     /* Отступ только сверху, чтобы не копить дыры */
 }
 
-/* ИСПРАВЛЕНО ПО ПУНКТАМ 1 И 2: У самого последнего видимого поста в контейнере полностью обнуляем зазор контента до низа */
-.media-archive-container .media-entry:last-of-type {
+/* У самого последнего видимого поста в ленте полностью обнуляем нижний зазор карточки */
+.media-container .media-entry:last-of-type,
+#media-container .media-entry:last-of-type {
     margin-bottom: 0px !important;
 }
 
-/* ИСПРАВЛЕНО ПО ПУНКТУ 1: У самого последнего поста намертво скрываем разделительную линию, чтобы она не висела внизу карточки */
-.media-archive-container .media-entry:last-of-type .media-entry-hr {
+/* У самого последнего поста намертво скрываем разделительную линию, чтобы она не висела внизу */
+.media-container .media-entry:last-of-type .media-entry-hr,
+#media-container .media-entry:last-of-type .media-entry-hr {
     display: none !important;
 }
+

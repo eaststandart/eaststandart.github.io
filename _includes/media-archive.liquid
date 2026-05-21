@@ -1,19 +1,25 @@
-{% comment %} ==========================================================================
-   1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
-   ========================================================================== {% endcomment %}
-<div id="media-container">
+{% comment %} 
+==========================================================================
+МОДУЛЬ ARCHIVE: МЕДИА-АРХИВ С ФИЛЬТРАЦИЕЙ ПО КАТЕГОРИЯМ (media-archive.liquid)
+Назначение: Вывод публикаций конкретной категории с JS-фильтрацией по проектам.
+Унификация: Полный перевод на единую строку даты и заголовка (как в Журнале).
+========================================================================== 
+{% endcomment %}
+
+<div id="media-container" class="media-archive-container">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
     
       {% comment %} Каждая запись хранит список своих категорий в data-project для скрипта {% endcomment %}
-      <!-- ИСПРАВЛЕНО: Уменьшили margin-bottom с 60px до 25px для плотности между постами -->
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 25px;">
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
         
-        <!-- Заголовок публикации и вывод даты в формате ДД.ММ.ГГГГ -->
-        <h3 style="margin-bottom: 3px !important;">{{ post.title }}</h3>
-        <small style="color: #888; display: block; margin-bottom: 15px;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        <!-- ИСПРАВЛЕНО ПО ПУНКТУ 3: Дата и заголовок выстроены в единую линию, как в Журнале -->
+        <div class="media-entry-title-row">
+          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <h3 class="media-entry-title">{{ post.title }}</h3>
+        </div>
         
-        <!-- Оболочка класса main-content для применения всех отступов фото/видео из style.css -->
+        <!-- Тело поста с применением отступов медиафайлов -->
         <div class="media-content main-content">
           {{ post.content }}
           
@@ -53,8 +59,8 @@
 
         </div>
         
-        <!-- ИСПРАВЛЕНО: Спрессовали отступы линии до 15px сверху и 0 снизу, чтобы не копить дыры контента -->
-        <hr class="media-entry-hr" style="border: 0; border-top: 1px solid #eee; margin: 15px 0 0 0;">
+        <!-- Разделительная линия (отступы полностью вынесены в CSS) -->
+        <hr class="media-entry-hr">
         
       </div>
       
@@ -62,24 +68,10 @@
   {% endfor %}
 </div>
 
-{% comment %} ==========================================================================
-   2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ СТРОК И УПРАВЛЕНИЯ РАЗДЕЛИТЕЛЯМИ
-   ========================================================================== {% endcomment %}
 <script>
+  // Изолированный скрипт фильтрации проекта (без лишних костылей очистки линий)
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
-
-  // Функция для зачистки финального разделителя hr у последнего видимого поста
-  function cleanLastSeparator() {
-    var visibleEntries = Array.from(document.querySelectorAll('.media-entry')).filter(function(item) {
-      return item.style.display === 'block';
-    });
-    if (visibleEntries.length > 0) {
-      var lastEntry = visibleEntries[visibleEntries.length - 1];
-      var hr = lastEntry.querySelector('.media-entry-hr');
-      if (hr) hr.style.display = 'none';
-    }
-  }
 
   if (project) {
     document.querySelectorAll('.media-entry').forEach(function(item) {
@@ -88,11 +80,9 @@
         item.style.display = 'block'; 
       }
     });
-    cleanLastSeparator(); // Убираем брошенную линию снизу
   } else {
     document.querySelectorAll('.media-entry').forEach(function(item) {
         item.style.display = 'block';
     });
-    cleanLastSeparator(); // Убираем брошенную линию снизу
   }
 </script>

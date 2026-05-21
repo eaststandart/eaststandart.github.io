@@ -388,3 +388,54 @@
     color: #fff !important;
     cursor: default !important;
 }
+
+/* ==========================================================================
+   8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (КНОПКА 0)
+   ========================================================================== */
+
+/* Контейнер строки: выстраиваем дату и H3 в одну аккуратную линию baseline */
+.media-entry-title-row {
+    display: flex;
+    align-items: baseline !important;
+    margin-bottom: 15px !important; /* Небольшой зазор от заголовка до контента статьи */
+}
+
+/* Наш фирменный стиль шрифта дат, перенесённый из общего стандарта Журнала */
+.media-entry-date {
+    font-family: monospace !important;
+    color: #6a737d !important;
+    font-size: 0.9rem !important;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Сброс блочных маргинов у заголовка h3 внутри строки */
+.media-entry-title {
+    margin: 0 !important;
+    font-size: 1.2rem !important;
+    line-height: 1.2 !important;
+    font-weight: 600 !important;
+}
+
+/* Базовые параметры карточки отдельного поста в ленте */
+.media-entry {
+    width: 100%;
+    margin-bottom: 30px !important; /* Компактный зазор между статьями в ленте */
+}
+
+/* Параметры разделительной линии между постами */
+.media-entry-hr {
+    border: 0 !important;
+    border-top: 1px solid #eee !important;
+    margin: 25px 0 0 0 !important; /* Отступ только сверху, чтобы не копить дыры */
+}
+
+/* ИСПРАВЛЕНО ПО ПУНКТАМ 1 И 2: У самого последнего видимого поста в контейнере полностью обнуляем зазор контента до низа */
+.media-archive-container .media-entry:last-of-type {
+    margin-bottom: 0px !important;
+}
+
+/* ИСПРАВЛЕНО ПО ПУНКТУ 1: У самого последнего поста намертво скрываем разделительную линию, чтобы она не висела внизу карточки */
+.media-archive-container .media-entry:last-of-type .media-entry-hr {
+    display: none !important;
+}

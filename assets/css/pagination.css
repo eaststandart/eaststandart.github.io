@@ -393,20 +393,20 @@
    8. СТИЛИЗАЦИЯ РАСКРЫТОЙ ЛЕНТЫ ПОЛНЫХ ПОСТОВ (ДЛЯ КНОПКИ 0)
    ========================================================================== */
 
+/* Главная оболочка списка: возвращает оригинальный зазор 15px от H1 до первой даты */
+.media-archive-list-wrapper {
+    margin-top: 15px !important;       /* Твой стандартный отступ под заголовком страницы */
+    width: 100%;
+}
+
 /* Контейнер строки даты и заголовка */
 .media-entry-title-row {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
     margin-top: 0px !important;
-    margin-bottom: 0px !important;     /* Сбрасываем низ строки, зазор задан у H3 */
+    margin-bottom: 0px !important;
     padding: 0 !important;
-}
-
-/* ИСПРАВЛЕНО: Для самой первой даты в ленте задаем верхний зазор, возвращая оригинальный отступ от H1 */
-#media-container .media-entry:first-of-type .media-entry-title-row,
-.media-archive-container .media-entry:first-of-type .media-entry-title-row {
-    margin-top: 15px !important;       /* Твой оригинальный стандартный зазор из style.css */
 }
 
 /* Наша аккуратная бледная серая плашка-квадрат для даты */
@@ -419,16 +419,16 @@
     padding: 2px 6px !important;       
     border-radius: 4px !important;     
     margin-top: 0px !important;
-    margin-bottom: 0.4em !important;   /* Аккуратный воздух между датой и заголовком */
+    margin-bottom: 0.4em !important;   
     display: inline-block !important;
     line-height: 1.2 !important;
 }
 
-/* Полное управление шрифтом и отступами заголовка H3 контента */
+/* Настройки шрифта и отступов заголовка H3 контента */
 .media-entry h3.media-entry-title {
-    margin: 0px 0px 1em 0px !important; /* Управляет зазором контента: Сверху(0) Снизу(1em — свободно до текста) */
+    margin: 0px 0px 1em 0px !important; /* Отступ 1em до первой строчки текста */
     padding: 0 !important;
-    font-size: 1.2rem !important;      /* Твой стандартный размер для H3 */
+    font-size: 1.2rem !important;      
     line-height: 1.2 !important;
 }
 
@@ -441,7 +441,7 @@
     margin-top: 0px !important;
 }
 
-/* ЛИНЕЙКА ПРИЖАТИЯ ПО ВАШЕМУ СТАНДАРТУ: Ювелирный микро-сдвиг под воздух шрифта первого элемента */
+/* ЛИНЕЙКА ПРИЖАТИЯ ПО ВАШЕМУ СТАНДАРТУ: Ювелирный микро-сдвиг под воздух шрифта */
 .media-entry > p,
 .media-entry > ul,
 .media-entry > ol,
@@ -465,18 +465,5 @@
 .media-entry-hr {
     border: 0 !important;
     border-top: 1px solid #eee !important;
-    margin: 25px 0 0 0 !important;     /* Отступ только сверху, чтобы не копить дыры */
+    margin: 25px 0 0 0 !important;     
 }
-
-/* Специфический сброс для последнего поста в ленте */
-#media-container .media-entry:last-of-type .media-entry-hr,
-.media-archive-container .media-entry:last-of-type .media-entry-hr {
-    display: none !important;          /* Скрываем финальную линию у последнего поста */
-}
-
-#media-container .media-entry:last-of-type,
-.media-archive-container .media-entry:last-of-type {
-    margin-bottom: 0px !important;     /* Обнуляем отступ карточки у самого низа страницы */
-}
-
-

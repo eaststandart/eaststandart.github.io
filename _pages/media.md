@@ -1,9 +1,15 @@
 ---
-layout: page
-description: Архив фото, видео и аудио по выполненным проектам
+layout: news
 title: Медиа-материалы
+description: Архив фото, видео и аудио по выполненным проектам
 permalink: /media/
-emoji: "🎬"
+per_page: 10
+folder: "media"
+pinned_url: ""
+emoji: "📷"
+emoji_display: "N"
 ---
-
-{% include media-archive.liquid category="media" %}
+{% comment %} 
+СТРАНИЦА: ГЛАВНЫЙ МЕДИА-АРХИВ САЙТА (\_pages/media.md)
+Назначение: Выводит хронологическую ленту всех записей папки media в формате Журнала.
+{% endcomment %}

@@ -34,7 +34,7 @@ custom_css: "/assets/css/video.css"
 <div class="author-inline">
     <strong>Автор:</strong> 
     <div class="sources-content">
-	    {{ page.author }}
+	    {{ page.author | markdownify }}
     </div>
 </div>
 {% endif %}

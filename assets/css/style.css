@@ -93,21 +93,15 @@ h1 {
 /* ПРЕДВАРИТЕЛЬНОЕ ОБНУЛЕНИЕ: Гарантируем, что у ВСЕХ типов списков и Журнала по умолчанию стёрт верхний маргин */
 .main-content ul,
 .main-content ol,
-.main-content .posts-page-list {
+.main-content .posts-page-list,
+.main-content h3 + p:has(img),
+.main-content h3 + .video-test-row {
     margin-top: 0px !important;
 }
 
-/* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */
-.main-content h3 + p:has(img),
-.main-content h3 + .video-test-row {
-    margin-top: 0px !important; 
-}
 
 /* ЕДИНАЯ ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов, списков и Журнала делаем ювелирный микро-сдвиг под воздух шрифта */
-.main-content h3 + p,
-.main-content h3 + ul,
-.main-content h3 + ol,
-.main-content h3 + .posts-page-list {
+.main-content h3 + p {
     margin-top: -0.5em !important; 
 }
 

@@ -39,7 +39,7 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endif %}
 
-<!-- БЛОК ВЫВОДА АВТОРА ПУБЛИКАЦИИ (ДОБАВЛЕНО) -->
+<!-- БЛОК ВЫВОДА АВТОРА ПУБЛИКАЦИИ -->
 {% if page.author and page.author != "" %}
 <div class="author-inline">
     <strong>Автор:</strong> 

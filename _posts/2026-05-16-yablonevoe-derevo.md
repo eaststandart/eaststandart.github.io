@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "Яблоневое дерево: фото"
-author: [Лиза Б.]
+title: "Яблоневое дерево: вид"
+author: ["Лиза Б."]
 date: 2026-05-16
 categories: [media, yablonevoe-derevo]
 ---

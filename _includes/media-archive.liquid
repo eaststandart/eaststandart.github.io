@@ -62,14 +62,24 @@
   {% endfor %}
 </div>
 
-
-
 {% comment %} ==========================================================================
-   2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ СТРОК ИЗ URL-ПАРАМЕТРОВ (?project=имя)
+   2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ СТРОК И УПРАВЛЕНИЯ РАЗДЕЛИТЕЛЯМИ
    ========================================================================== {% endcomment %}
 <script>
   var urlParams = new URLSearchParams(window.location.search);
   var project = urlParams.get('project');
+
+  // Функция для зачистки финального разделителя hr у последнего видимого поста
+  function cleanLastSeparator() {
+    var visibleEntries = Array.from(document.querySelectorAll('.media-entry')).filter(function(item) {
+      return item.style.display === 'block';
+    });
+    if (visibleEntries.length > 0) {
+      var lastEntry = visibleEntries[visibleEntries.length - 1];
+      var hr = lastEntry.querySelector('.media-entry-hr');
+      if (hr) hr.style.display = 'none';
+    }
+  }
 
   if (project) {
     document.querySelectorAll('.media-entry').forEach(function(item) {
@@ -78,9 +88,11 @@
         item.style.display = 'block'; 
       }
     });
+    cleanLastSeparator(); // Убираем брошенную линию снизу
   } else {
     document.querySelectorAll('.media-entry').forEach(function(item) {
         item.style.display = 'block';
     });
+    cleanLastSeparator(); // Убираем брошенную линию снизу
   }
 </script>

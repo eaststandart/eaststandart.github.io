@@ -129,6 +129,7 @@ h1 {
 /* Если H3 идет сразу после цитаты "Смотри также", гасим его верхний отступ, чтобы убрать двойную дыру воздуха */
 blockquote + h3 {
     margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 

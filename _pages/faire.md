@@ -4,7 +4,7 @@ description: Проекты дополнительные к учебной пр�
 title: Ярмарка поделок
 navtitle: "Поделки"
 permalink: /faire/
-emoji: "🔥"
+emoji: ""
 ---
 
 {% comment %} 

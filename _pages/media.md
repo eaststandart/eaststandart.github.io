@@ -13,3 +13,5 @@ emoji_display: "N"
 СТРАНИЦА: ГЛАВНЫЙ МЕДИА-АРХИВ САЙТА (\_pages/media.md)
 Назначение: Выводит хронологическую ленту всех записей папки media в формате Журнала.
 {% endcomment %}
+
+{% include media-archive.liquid category="media" %}

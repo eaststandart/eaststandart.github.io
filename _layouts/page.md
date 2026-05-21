@@ -29,22 +29,22 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endif %}
 
-<!-- БЛОК ВЫВОДА АВТОРА ПУБЛИКАЦИИ (ДОБАВЛЕНО) -->
-{% if page.author and page.author != "" %}
-<div class="author-inline">
-    <strong>Автор:</strong> 
-    <div class="sources-content">
-	    {{ page.author | markdownify }}
-    </div>
-</div>
-{% endif %}
-
 <!-- Универсальный блок онлайн-источников -->
 {% if page.sources %}
 <div class="author-inline">
     <strong>Источники:</strong> 
     <div class="sources-content">
-        {{ page.sources }}
+        {{ page.sources  | markdownify }}
+    </div>
+</div>
+{% endif %}
+
+<!-- БЛОК ВЫВОДА АВТОРА ПУБЛИКАЦИИ (ДОБАВЛЕНО) -->
+{% if page.author and page.author != "" %}
+<div class="author-inline">
+    <strong>Автор:</strong> 
+    <div class="sources-content">
+	    {{ page.author}}
     </div>
 </div>
 {% endif %}

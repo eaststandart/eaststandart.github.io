@@ -222,8 +222,13 @@ p:has(img) + blockquote {
    7. ЕДИНЫЙ БЛОК ГАЛЕРЕИ КАРТИНОК В СТАТЬЯХ (MARKDOWN)
    ========================================================================== */
 
-/* Абзац, содержащий изображения: флекс-ряд с автоматическим переносом */
-.main-content p:has(img) {
+/* ==========================================================================
+   7. ЕДИНЫЙ БЛОК ГАЛЕРЕИ КАРТИНОК В СТАТЬЯХ (MARKDOWN И FIGURE)
+   ========================================================================== */
+
+/* Абзац или figure-контейнер, содержащий изображения: флекс-ряд с переносом */
+.main-content p:has(img),
+.main-content figure {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -232,8 +237,16 @@ p:has(img) + blockquote {
     padding: 0 !important;
 }
 
+/* Специфическая настройка для figure, чтобы подпись всегда оставалась снизу картинки */
+.main-content figure {
+    flex-direction: column !important;
+    display: inline-flex !important; /* Позволяет нескольким figure вставать в один ряд */
+    margin: 1em 15px 1em 0 !important; /* Зазоры справа между карточками в ряду */
+}
+
 /* Параметры картинок в ряду (исключая специальные контентные изображения) */
-.main-content p img:not(.content-img) {
+.main-content p img:not(.content-img),
+.main-content figure img:not(.content-img) {
     height: 250px;       /* Единая фиксированная высота для выстраивания ряда */
     width: auto;         
     max-width: 100%;     
@@ -247,7 +260,8 @@ p:has(img) + blockquote {
 }
 
 /* Интерактивный зум изображения при удержании клика мышкой (работает без JS) */
-.main-content p img:not(.content-img):active {
+.main-content p img:not(.content-img):active,
+.main-content figure img:not(.content-img):active {
     transform: scale(2.0); 
     z-index: 999;          
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -258,10 +272,11 @@ p:has(img) + blockquote {
 figcaption {
     display: block;
     text-align: center;
+    width: 100%;       /* Растягиваем подпись строго по ширине картинки */
     font-size: 0.85rem;
     color: #6a737d;
     font-style: italic;
-    margin-top: 6px; /* Небольшой зазор от фото/видео до текста подписи */
+    margin-top: 6px;   /* Небольшой зазор от фото/видео до текста подписи */
 }
 
 

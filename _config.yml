@@ -20,3 +20,5 @@ collections:
 # Includes & excludes
 include: ["_pages"]
 
+# Markdown and syntax highlikramdown:
+  html_to_native: true

@@ -1,12 +1,3 @@
-{% comment %} 
-==========================================================================
-МОДУЛЬ ARCHIVE: МЕДИА-АРХИВ С ФИЛЬТРАЦИЕЙ ПО КАТЕГОРИЯМ (media-archive.liquid)
-Назначение: Вывод публикаций конкретной категории с JS-фильтрацией по проектам.
-Унификация: Вёрстка и метаданные (автор, источники, теги) полностью идентичны статьям.
-========================================================================== 
-{% endcomment %}
-
-
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
@@ -15,22 +6,22 @@
     {% if post.categories contains include.category %}
     
       {% comment %} Каждая запись хранит список своих категорий в data-project для скрипта {% endcomment %}
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 60px;">
+      <!-- ИСПРАВЛЕНО: Уменьшили margin-bottom с 60px до 25px для плотности между постами -->
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none; margin-bottom: 25px;">
         
         <!-- Заголовок публикации и вывод даты в формате ДД.ММ.ГГГГ -->
-        <h3 style="margin-bottom: 5px !important;">{{ post.title }}</h3>
-        <small style="color: #888; display: block; margin-bottom: 20px;">{{ post.date | date: "%d.%m.%Y" }}</small>
+        <h3 style="margin-bottom: 3px !important;">{{ post.title }}</h3>
+        <small style="color: #888; display: block; margin-bottom: 15px;">{{ post.date | date: "%d.%m.%Y" }}</small>
         
-        <!-- ИСПРАВЛЕНО: Обернули в класс main-content для применения всех отступов фото/видео из style.css -->
+        <!-- Оболочка класса main-content для применения всех отступов фото/видео из style.css -->
         <div class="media-content main-content">
           {{ post.content }}
-          
           
           {% comment %} ==========================================
              УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
              ========================================== {% endcomment %}
 
-          <!-- А. БЛОК ВЫВОДА АВТОРА (ИДЕНТИЧНО СТАТЬЯМ) -->
+          <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}
           <div class="author-inline">
               <strong>Автор:</strong> 
@@ -62,14 +53,15 @@
 
         </div>
         
-        <!-- Нижняя разделительная линия между записями архива -->
-        <hr style="border: 0; border-top: 1px solid #eee; margin-top: 40px;">
+        <!-- ИСПРАВЛЕНО: Спрессовали отступы линии до 15px сверху и 0 снизу, чтобы не копить дыры контента -->
+        <hr class="media-entry-hr" style="border: 0; border-top: 1px solid #eee; margin: 15px 0 0 0;">
         
       </div>
       
     {% endif %}
   {% endfor %}
 </div>
+
 
 
 {% comment %} ==========================================================================

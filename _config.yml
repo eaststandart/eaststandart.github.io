@@ -19,7 +19,3 @@ collections:
 
 # Includes & excludes
 include: ["_pages"]
-
-# Markdown and syntax highlight
-kramdown:
-  html_to_native: true

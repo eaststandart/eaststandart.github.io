@@ -100,7 +100,10 @@ h1 {
 
 /* Для медиафайлов (картинок и видео) оставляем чистый ноль, так как у них нет скрытого воздуха */
 .main-content h3 + p:has(img),
-.main-content h3 + .video-test-row {
+.main-content h3 + .video-test-row,
+.main-content h3 + ul,
+.main-content h3 + ol,
+.main-content h3 + .posts-page-list {
     margin-top: 0px !important; 
 }
 

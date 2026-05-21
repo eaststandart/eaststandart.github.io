@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Все медиа-материалы проекта
+title: Медиа-материалы проекта
 permalink: /media-posts-page/
 ---
 

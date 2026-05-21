@@ -84,7 +84,7 @@ h1 {
 
 /* Теперь H3 — единственный центр управления зазором контента снизу */
 .main-content h3 {
-    margin: 1em 0 0.6em 0 !important; /* Отступы: Сверху(1em) Слева/Справа(0) Снизу(0.5em) */
+    margin: 1em 0 0.7em 0 !important; /* Отступы: Сверху(1em) Слева/Справа(0) Снизу(0.6em) */
     font-size: 1.2rem; 
     color: var(--text-color);
     line-height: 1.2;
@@ -99,14 +99,14 @@ h1 {
 
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + p {
-    margin-top: -0.6em !important; 
+    margin-top: -0.7em !important; 
 }
 
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех списков и Журнала делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + ul,
 .main-content h3 + ol,
 .main-content h3 + .posts-page-list {
-    margin-top: -0.5em !important; 
+    margin-top: -0.6em !important; 
 }
 
 /* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */

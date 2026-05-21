@@ -6,3 +6,13 @@
         Материалы сайта доступны по лицензии <a href="https://creativecommons.org" target="_blank">CC BY 4.0</a> (с указанием авторства). 
     </p> 
 </footer>
+
+<!-- АВТОМАТИЧЕСКАЯ ЛЕНИВАЯ ЗАГРУЗКА ДЛЯ КАРТИНОК ИЗ MARKDOWN -->
+<script>
+  // Скрипт находит все картинки внутри основного контента и прописывает им ленивую загрузку
+  document.querySelectorAll('.main-content img').forEach(function(img) {
+    if (!img.hasAttribute('loading')) {
+      img.setAttribute('loading', 'lazy');
+    }
+  });
+</script>

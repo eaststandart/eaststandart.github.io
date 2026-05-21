@@ -91,7 +91,10 @@ h1 {
 }
 
 /* Уничтожаем верхние зазоры. Для обычного текста делаем микро-сдвиг вверх на величину его воздушной подушки */
-.main-content h3 + p {
+.main-content h3 + p
+.main-content h3 + ul,
+.main-content h3 + ol,
+.main-content h3 + .posts-page-list {
     margin-top: -0.5em !important; /* Ювелирно компенсирует встроенный воздух текстовой строки */
 }
 

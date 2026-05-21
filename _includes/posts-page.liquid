@@ -116,8 +116,11 @@
             window.location.href = targetArchiveUrl;
           } else if (btnType === 'full') {
             // Кнопка "0" уводит на раскрытую ленту твоего media-archive.liquid
-            var fullArchiveType = "{{ include.type }}"; 
-            window.location.href = '/' + fullArchiveType + '-posts-page/?project=' + '{{ project_slug_last }}';
+            var fullArchiveType = "{{ include.type }}";     
+            // ИСПРАВЛЕНО: Теперь Кнопка 0 передает полный набор навигационных данных (nav и title), как и две стрелки
+            window.location.href = '/' + fullArchiveType + '-posts-page/?project=' + '{{ project_slug_last }}' +
+                                   '&nav=' + '{{ section_slug }}' + 
+                                   '&title=' + '{{ section_page.navtitle | default: section_slug }}';
           }
         });
       } else {

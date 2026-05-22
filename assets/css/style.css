@@ -139,7 +139,7 @@ blockquote + h3 {
 
 /* Главная оболочка раскрытого списка Кнопки 0 */
 .media-archive-list-wrapper {
-    margin-top: 1.5em !important;       /* Оригинальный зазор под H1 страницы */
+    margin-top: 1.2em !important;       /* Оригинальный зазор под H1 страницы */
     width: 100%;
 }
 

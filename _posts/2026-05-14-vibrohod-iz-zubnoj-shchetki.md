@@ -1,6 +1,7 @@
 ---
 layout: page
-title: "Виброход из зубной щетки: фото и видео"
+title: "Виброход из зубной щетки"
+description: "Варианты конструкций роботов зубочистов."
 date: 2026-05-14
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---

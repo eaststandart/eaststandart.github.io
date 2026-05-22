@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Робот странник"
+title: "Робот странник: тип движения"
 description: "Истоки реализации типа передвижения."
 sources: "[Игрушка, шагающий робот, из детства...](https://pikabu.ru/story/igrushka_shagayushchiy_robot_iz_detstva_naydennaya_na_cherdake_v_derevne_u_dedushki_6337680)"
 date: 2026-05-16

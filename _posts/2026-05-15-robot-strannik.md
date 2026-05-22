@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Робот странник"
+title: "Робот странник: модель №1"
 description:  "Модель робота вариант №1"
 author: ["RadiotekhnikaClub"]
 date: 2026-05-15

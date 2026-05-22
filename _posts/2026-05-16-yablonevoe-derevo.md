@@ -5,6 +5,7 @@ description: "Вариант исполнения внешнего вида де
 author: ["Лиза Б."]
 date: 2026-05-16
 categories: [media, yablonevoe-derevo]
+tags: ["Лиза Б."]
 ---
 
 ![](/faire/yablonevoe-derevo/yablonevoe-derevo-3.webp)

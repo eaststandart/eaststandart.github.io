@@ -109,11 +109,6 @@ blockquote + h3 {
     margin-top: 0px !important;
 }
 
-/* Если главная лента постов идет в архиве сразу после описания страницы, возвращаем ей воздух */
-.page-description + .posts-page-list {
-    margin-top: 1.2em !important; 
-}
-
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + p {
     margin-top: -0.4em !important; 
@@ -144,7 +139,7 @@ blockquote + h3 {
 
 /* Главная оболочка раскрытого списка Кнопки 0 */
 .media-archive-list-wrapper {
-    margin-top: 15px !important;       /* Оригинальный зазор под H1 страницы */
+    margin-top: 1.5em !important;       /* Оригинальный зазор под H1 страницы */
     width: 100%;
 }
 

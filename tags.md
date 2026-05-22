@@ -3,10 +3,6 @@ layout: page
 title: Поиск по тегам
 ---
 
-{%- assign all_pages = site.pages | concat: site.documents -%}
-{%- assign raw_tags = "" -%}{%- for p in all_pages -%}{%- if p.tags -%}{%- for t in p.tags -%}{%- assign raw_tags = raw_tags | append: t | append: "|" -%}{%- endfor -%}{%- endif -%}{%- endfor -%}
-{%- assign unique_tags = raw_tags | split: "|" | uniq | sort -%}
-
 <div class="tags-page">
 
 <div style="margin-bottom: 15px;">
@@ -21,45 +17,9 @@ title: Поиск по тегам
         </button>
     </div>
 
-    <!-- 1. Облако тегов -->
-    <div id="tags-cloud" style="display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee;">
-        {% for tag in unique_tags %}
-            {% assign tag_clean = tag | replace: '#', '' | strip %}
-            <!-- Убрали style, добавили класс tag-item и выводим без решетки внутри, так как она добавится через CSS или останется только текстом -->
-            <a href="#{{ tag_clean | slugify }}" class="tag-item" onclick="filterTag('{{ tag_clean | slugify }}')">{{ tag_clean }}</a>
-        {% endfor %}
-    </div>
+    <!-- ПОДКЛЮЧАЕМ НАШ НОВЫЙ МОНОЛИТНЫЙ LIQUID-МОДУЛЬ ЯДРА ДАННЫХ -->
+    {% include tags-logic.liquid %}
 
-    <!-- Заголовок выбранного тега -->
-    <div id="active-tag-info" style="margin: 20px 0; padding: 15px; border-left: 5px solid #3498db; background: #eef7fd; display: none;">
-        <span style="font-size: 1.2rem; color: #2c3e50;">Статьи по тегу: <strong id="tag-label"></strong></span>
-        <a href="{{ '/tags.html' | relative_url }}" onclick="resetFilter();" style="margin-left: 20px; font-size: 0.9rem; color: #3498db; text-decoration: underline;">Сбросить</a>
-    </div>
-
-    <!-- 2. Списки страниц -->
-    <div class="tags-lists">
-        {% for tag in unique_tags %}
-            {% assign tag_clean = tag | replace: '#', '' | strip %}
-            <div class="tag-group" id="{{ tag_clean | slugify }}" style="display: none; margin-bottom: 40px;">
-                <ul style="list-style: none; padding: 0;">
-                    {% for p in all_pages %}
-                        {% if p.tags contains tag %}
-                            <li style="margin-bottom: 12px; padding: 10px; border-bottom: 1px solid #f0f0f0;">
-                                <a href="{{ p.url | relative_url }}" style="text-decoration: none; color: #3498db; font-weight: 500; font-size: 1.1rem; display: block;">{{ p.title | default: p.url }}</a>
-                                {% assign url_parts = p.url | split: "/" %}
-                                {% assign item_section = "/" | append: url_parts[1] | append: "/" %}
-                                {% assign parent_page = site.pages | where: "permalink", item_section | first %}
-                                {% assign sec_title = parent_page.title | default: parent_page.navtitle %}
-                                {% assign sec_emoji = parent_page.emoji | default: "" %}
-                                {% assign section_display = sec_title | append: " " | append: sec_emoji | strip | default: "Прочее" %}
-                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_display }}</span>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
-    </div>
 </div>
 
 <script>
@@ -109,8 +69,7 @@ function filterTag(tagSlug) {
         document.getElementById('tags-cloud').style.display = 'none';
         document.getElementById('toggle-cloud-btn').innerText = '#️⃣ Показать облако тегов';
         
-        // ИСПРАВЛЕНО: Поскольку на экране осталась всего одна группа — она гарантированно последняя.
-        // Намертво обнуляем её инлайновый маргин, чтобы убрать дыру до подвала карточки!
+        // Полноценное обнуление инлайнового маргина у единственной видимой группы
         target.style.setProperty('margin-bottom', '0px', 'important');
     }
 }
@@ -119,7 +78,6 @@ function resetFilter() {
     const groups = document.querySelectorAll('.tag-group');
     groups.forEach(g => {
         g.style.display = 'none';
-        // ИСПРАВЛЕНО: При сбросе фильтра возвращаем группам базовую геометрию в 40px
         g.style.setProperty('margin-bottom', '40px', 'important');
     });
     document.getElementById('active-tag-info').style.display = 'none';
@@ -140,4 +98,3 @@ window.addEventListener('load', () => {
     }
 });
 </script>
-

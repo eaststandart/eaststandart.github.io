@@ -7,13 +7,7 @@
     </p> 
 </footer>
 
-<!-- АВТОМАТИЧЕСКАЯ ЛЕНИВАЯ ЗАГРУЗКА ДЛЯ ВСЕХ КАРТИНОК НА САЙТЕ -->
-<script>
-  // Находим абсолютно все картинки на странице и нативно включаем им ленивую загрузку
-  document.querySelectorAll('img').forEach(function(img) {
-    if (!img.hasAttribute('loading')) {
-      img.setAttribute('loading', 'lazy');
-    }
-  });
-</script>
+<!-- ПОДКЛЮЧАЕМ ВНЕШНИЙ ИЗОЛИРОВАННЫЙ ФАЙЛ ЛЕНИВОЙ ЗАГРУЗКИ КАРТИНОК С КЭШИРОВАНИЕМ -->
+<script src="{{ '/assets/js/image-lazy-load.js' | relative_url }}"></script>
+
 

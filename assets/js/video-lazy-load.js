@@ -1,27 +1,21 @@
-{% comment %} 
-=============================================================================
-МОДУЛЬ ОПТИМИЗАЦИИ: ЛОГИКА ОПТИМАЛЬНОЙ ЗАГРУЗКИ ВИДЕО (video-logic.liquid)
-Назначение: Замена картинок-заглушек .mp4/.webm на теги <video> с отложенной ленивой загрузкой данных.
-=============================================================================
-{% endcomment %}
+/* ==========================================================================
+   ОРИГИНАЛЬНЫЙ МОДУЛЬ ОПТИМИЗАЦИИ И ЛЕЗИ-ЛОАДА ВИДЕО (video-lazy-load.js)
+   ========================================================================== */
 
-<script> 
-document.addEventListener("DOMContentLoaded", function() {
+function runVideoLazyLoad() {
     // Выбираем все текстовые абзацы внутри контента статьи
     const paragraphs = document.querySelectorAll('.main-content p');
-
 
     // ==========================================================================
     // 1. СОЗДАНИЕ НАБЛЮДАТЕЛЯ (INTERSECTION OBSERVER) ДЛЯ ЛЕНИВОЙ ЗАГРУЗКИ ВИДЕО
     // ==========================================================================
     const videoObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            // Когда видео приближается к экрану
+            // Когда видео-плеер пересекает невидимую границу и приближается к экрану
             if (entry.isIntersecting) {
                 const video = entry.target;
                 
-                // Проверяем, не скрыт ли родительский пост через display: none
-                // Если ближайший контейнер поста скрыт — блокируем загрузку и ждем реального показа
+                // ИСПРАВЛЕНО РАНЕЕ: Проверяем, не скрыт ли родительский пост через display: none
                 if (video.closest('.media-entry') && video.closest('.media-entry').style.display === 'none') {
                     return; 
                 }
@@ -34,9 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }, { 
+        // Настройка зазора: триггер загрузки сработает за 200px до появления видео в поле зрения
         rootMargin: "200px" 
     });
-
 
     // ==========================================================================
     // 2. АНАЛИЗ АБЗАЦЕВ И КОНВЕРТАЦИЯ ФЕЙКОВЫХ ИЗОБРАЖЕНИЙ В ТЕГИ VIDEO
@@ -52,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
             container.className = 'video-test-row';
 
             fakeVideos.forEach(img => {
-                // Собираем настоящий нативный тег плера <video>
+                // Собираем настоящий нативный тег плеера <video>
                 const video = document.createElement('video');
                 video.src = img.getAttribute('src');
                 video.controls = true;
@@ -79,5 +73,4 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
-});
-</script>
+}

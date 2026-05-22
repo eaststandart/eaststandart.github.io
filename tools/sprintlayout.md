@@ -3,7 +3,7 @@ layout: page
 title: Sprint Layout
 description: "Проектирование и ручная разводка печатных плат малой и средней сложности."
 sources: "[Sprint Layout](https://sprint-layout.ru/)"
-tags: [sprintlayout, программа, электроника]
+tags: [sprintlayout, программноеобеспечение, software, электроника]
 ---
 
 **Sprint Layout** – САПР (Система Автоматизированного Проектирования) для проектирования и ручной разводки печатных плат малой и средней сложности.

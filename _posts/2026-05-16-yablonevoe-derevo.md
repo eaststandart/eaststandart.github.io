@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "Яблоневое дерево: вид"
+description: "Вариант исполнения внешнего вида дерева"
 author: ["Лиза Б."]
 date: 2026-05-16
 categories: [media, yablonevoe-derevo]

@@ -42,23 +42,20 @@ title: Поиск по тегам
             {% assign tag_clean = tag | replace: '#', '' | strip %}
             <div class="tag-group" id="{{ tag_clean | slugify }}" style="display: none; margin-bottom: 40px;">
                 <ul style="list-style: none; padding: 0;">
-                     {% for p in all_pages %}
+                    {% for p in all_pages %}
                         {% if p.tags contains tag %}
-                            {% comment %} 1. Переносим всю техническую логику наверх, до генерации HTML {% endcomment %}
-                            {% assign url_parts = p.url | split: "/" %}
-                            {% assign item_section = "/" | append: url_parts | append: "/" %}
-                            {% assign parent_page = site.pages | where: "permalink", item_section | first %}
-                            {% assign sec_title = parent_page.title | default: parent_page.navtitle %}
-                            {% assign sec_emoji = parent_page.emoji | default: "" %}
-                            {% assign section_display = sec_title | append: " " | append: sec_emoji | strip | default: "Прочее" %}
-
-                            {% comment %} 2. HTML-разметку пишем монолитно, склеивая теги без единого лишнего Enter {% endcomment %}
                             <li style="margin-bottom: 12px; padding: 10px; border-bottom: 1px solid #f0f0f0;">
-                                <a href="{{ p.url | relative_url }}" style="text-decoration: none; color: #3498db; font-weight: 500; font-size: 1.1rem; display: block; margin-bottom: 4px;">{{ p.title | default: p.url }}</a><span style="color: #999; font-size: 0.85rem; display: block; margin: 0;">Раздел: {{ section_display }}</span>
+                                <a href="{{ p.url | relative_url }}" style="text-decoration: none; color: #3498db; font-weight: 500; font-size: 1.1rem; display: block;">{{ p.title | default: p.url }}</a>
+                                {% assign url_parts = p.url | split: "/" %}
+                                {% assign item_section = "/" | append: url_parts[1] | append: "/" %}
+                                {% assign parent_page = site.pages | where: "permalink", item_section | first %}
+                                {% assign sec_title = parent_page.title | default: parent_page.navtitle %}
+                                {% assign sec_emoji = parent_page.emoji | default: "" %}
+                                {% assign section_display = sec_title | append: " " | append: sec_emoji | strip | default: "Прочее" %}
+                                <span style="color: #999; font-size: 0.85rem;">Раздел: {{ section_display }}</span>
                             </li>
                         {% endif %}
                     {% endfor %}
-
                 </ul>
             </div>
         {% endfor %}

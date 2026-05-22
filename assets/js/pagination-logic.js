@@ -137,6 +137,7 @@
         function renderControls() {
           controls.innerHTML = '';
           
+          // ИСПРАВЛЕНО: Сначала всегда выводим кнопку «»»» для Главной страницы, до любых проверок!
           if (controlsId === "home-news-pagination") {
             var archiveBtn = document.createElement('button');
             archiveBtn.innerText = '»»';
@@ -147,11 +148,13 @@
             controls.appendChild(archiveBtn);
           }
 
+          // Если вся лента уместилась на 1 страницу — цифровые кнопки « 1 » скрываем, завершая работу
           if (totalPages <= 1) return;
 
           controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
 
           var maxVisible = 5;
+
           if (totalPages <= maxVisible) {
             for (var i = 1; i <= totalPages; i++) {
               controls.appendChild(createButton(i, i, i === currentPage, false));

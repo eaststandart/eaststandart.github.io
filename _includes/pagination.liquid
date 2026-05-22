@@ -6,7 +6,13 @@
 {% endcomment %}
 
 <!-- Контейнер управления пагинацией с нативной передачей параметров через data-атрибуты -->
-<div id="{{ include.controls_id }}" class="pagination-controls"></div>
+<div id="{{ include.controls_id }}" 
+     class="pagination-controls"
+     data-list-id="{{ include.list_id }}"
+     data-per-page="{{ include.per_page | default: 10 }}"
+     data-pinned-url="{{ include.pinned_url | default: '' }}"
+     data-show-emoji="{{ include.emoji | default: 'Y' }}">
+</div>
 
 <!-- ПОДКЛЮЧАЕМ ВНЕШНИЙ ИЗОЛИРОВАННЫЙ ФАЙЛ СКРИПТА С КЭШИРОВАНИЕМ -->
 <script src="{{ '/assets/js/pagination-logic.js' | relative_url }}"></script>

@@ -37,17 +37,19 @@
     <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>
 
+<!-- ПОДКЛЮЧАЕМ ВНЕШНИЙ ИЗОЛИРОВАННЫЙ ФАЙЛ СКРИПТА НАВИГАЦИИ С КЭШИРОВАНИЕМ -->
+<script src="{{ '/assets/js/navigation-crumbs.js' | relative_url }}"></script>
+
 <script>
   (function() {
     var params = new URLSearchParams(window.location.search);
-    var prj = params.get('project'), navDir = params.get('nav');
-    if (prj && navDir) {
-      var bb = document.getElementById('dynamic-nav-back');
-      if (bb) {
-        // Добавляем пробел перед span и внутри span вокруг палочки, как это делает Jekyll
-        bb.innerHTML = ' <span class="nav-separator">|</span> ' +
-                       '<a href="/' + navDir + '/' + prj + '/" class="back-link nav-header-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>';
-      }
-    }
+    var prj = params.get('project');
+    var navDir = params.get('nav');
+    
+    // Безопасно экранируем текстовое название проекта через Liquid, защищая сборщик от сбоев кавычек
+    var projectTitleClean = decodeURIComponent("{{ project_page.navtitle | default: project_page.title | default: 'Назад' | cgi_escape }}");
+
+    // Запускаем движок хлебных крошек
+    runNavigationCrumbs(navDir, prj, projectTitleClean);
   })();
 </script>

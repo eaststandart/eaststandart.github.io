@@ -23,12 +23,29 @@
         var showEmoji = controls.getAttribute('data-show-emoji') || "Y";
         var controlsId = controls.getAttribute('id');
 
+        // ==========================================================================
+        // ИСПРАВЛЕНО: Железная подстраховка кнопок Главной страницы!
+        // Сначала всегда выводим кнопку «»»» на Главной, до любых проверок наличия списков!
+        // ==========================================================================
+        if (controlsId === "home-news-pagination" && !controls.querySelector('.home-news-all-btn')) {
+          controls.innerHTML = '';
+          var archiveBtn = document.createElement('button');
+          archiveBtn.innerText = '»»';
+          archiveBtn.className = 'page-btn home-news-all-btn';
+          archiveBtn.addEventListener('click', function() {
+            window.location.href = '/news/';
+          });
+          controls.appendChild(archiveBtn);
+        }
+
+        // Аварийные прерыватели теперь стоят ниже и не могут заблокировать кнопку архива
         var list = document.getElementById(listId);
         if (!list) return;
 
         var items = Array.from(list.children);
         var currentPage = 1;
         var pinnedItem = null;
+
 
         // 1. ХРОНОЛОГИЧЕСКАЯ СОРТИРОВКА СПИСКА
         items.sort(function(a, b) {
@@ -134,25 +151,7 @@
         }
 
         // 5. ГЕНЕРАЦИЯ БЛОКА КНОПОК ПО СХЕМЕ "СКОЛЬЗЯЩЕГО ОКНА"
-        function renderControls() {
-          controls.innerHTML = '';
-          
-          // ИСПРАВЛЕНО: Сначала всегда выводим кнопку «»»» для Главной страницы, до любых проверок!
-          if (controlsId === "home-news-pagination") {
-            var archiveBtn = document.createElement('button');
-            archiveBtn.innerText = '»»';
-            archiveBtn.className = 'page-btn home-news-all-btn';
-            archiveBtn.addEventListener('click', function() {
-              window.location.href = '/news/';
-            });
-            controls.appendChild(archiveBtn);
-          }
-
-          // Если вся лента уместилась на 1 страницу — цифровые кнопки « 1 » скрываем, завершая работу
-          if (totalPages <= 1) return;
-
-          controls.appendChild(createButton('«', currentPage - 1, false, currentPage === 1));
-
+        
           var maxVisible = 5;
 
           if (totalPages <= maxVisible) {

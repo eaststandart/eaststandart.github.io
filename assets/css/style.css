@@ -133,12 +133,6 @@ blockquote + h3 {
     margin-top: 1em !important;
 }
 
-/* Обнуляем нижний маргин у блока .main-content, если он идет последним в карточке, убирая дыру контента */
-.content-wrapper .main-content:last-child,
-.content-wrapper .main-content:last-of-type {
-    margin-bottom: 0px !important; /* Намертво гасит выталкивающий зазор в самом низу страницы */
-}
-
 /* Находим ПОСЛЕДНИЙ текстовый абзац внутри контента и намертво стираем его нижний маргин */
 .main-content p:last-of-type {
     margin-bottom: 0px !important; /* Убирает внутренний толчок строки контента вниз */

@@ -182,7 +182,7 @@ blockquote + h3 {
 }
 
 /* Предварительное обнуление и прижатие элементов внутри раскрытой карточки .media-entry */
-.media-entry > p,
+.media-entry p,
 .media-entry > ul,
 .media-entry > ol,
 .media-entry > .video-test-row,
@@ -190,7 +190,7 @@ blockquote + h3 {
     margin-top: 0px !important;
 }
 
-.media-entry > p,
+.media-entry p,
 .media-entry > ul,
 .media-entry > ol,
 .media-entry > .posts-page-list {

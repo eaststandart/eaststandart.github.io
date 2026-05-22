@@ -108,12 +108,20 @@ function filterTag(tagSlug) {
         // Скрываем облако после выбора, чтобы не мешало
         document.getElementById('tags-cloud').style.display = 'none';
         document.getElementById('toggle-cloud-btn').innerText = '#️⃣ Показать облако тегов';
+        
+        // ИСПРАВЛЕНО: Поскольку на экране осталась всего одна группа — она гарантированно последняя.
+        // Намертво обнуляем её инлайновый маргин, чтобы убрать дыру до подвала карточки!
+        target.style.setProperty('margin-bottom', '0px', 'important');
     }
 }
 
 function resetFilter() {
     const groups = document.querySelectorAll('.tag-group');
-    groups.forEach(g => g.style.display = 'none');
+    groups.forEach(g => {
+        g.style.display = 'none';
+        // ИСПРАВЛЕНО: При сбросе фильтра возвращаем группам базовую геометрию в 40px
+        g.style.setProperty('margin-bottom', '40px', 'important');
+    });
     document.getElementById('active-tag-info').style.display = 'none';
     document.getElementById('tags-cloud').style.display = 'flex';
 }
@@ -132,3 +140,4 @@ window.addEventListener('load', () => {
     }
 });
 </script>
+

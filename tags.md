@@ -5,10 +5,10 @@ title: Поиск по тегам
 
 <div class="tags-page">
 
-<div style="margin-bottom: 15px;">
-    <input type="text" id="tag-search" onkeyup="searchTags()" placeholder="🔍 Поиск тега по названию..." 
-    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem;">
-</div>
+	<div style="margin-bottom: 15px;">
+	    <input type="text" id="tag-search" onkeyup="searchTags()" placeholder="🔍 Поиск тега по названию..." 
+	    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem;">
+	</div>
     
     <!-- Кнопка управления облаком -->
     <div style="margin-bottom: 20px;">

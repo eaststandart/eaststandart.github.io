@@ -101,19 +101,30 @@
     }
 
     // Вспомогательная функция сборки кликабельной кнопки на чистом теге <button>
-    function createBtn(text, targetPage, isCurrent, isDisabled, isArchiveLink) {
-      // ИСПРАВЛЕНО: Теперь всегда создаётся полноценный тег button
+    function createBtn(text, targetPage, isCurrent, isDisabled, btnType) {
       var btn = document.createElement('button');
       btn.className = 'posts-page-btn'; 
       btn.innerText = text;
 
-      if (isArchiveLink) {
+      // Если это кнопка специального архива (ёлочки или ноль) — красим её в синий
+      if (btnType === 'archive' || btnType === 'full') {
         btn.classList.add('posts-page-all-btn');
-        // Переход по клику вместо прямой ссылки
+        
         btn.addEventListener('click', function() {
-          window.location.href = targetArchiveUrl;
+          if (btnType === 'archive') {
+            // Две ёлочки уводят на стандартный постраничный архив
+            window.location.href = targetArchiveUrl;
+          } else if (btnType === 'full') {
+            // Кнопка "0" уводит на раскрытую ленту твоего media-archive.liquid
+            var fullArchiveType = "{{ include.type }}";     
+            // ИСПРАВЛЕНО: Теперь Кнопка 0 передает полный набор навигационных данных (nav и title), как и две стрелки
+            window.location.href = '/' + fullArchiveType + '-posts-page/?project=' + '{{ project_slug_last }}' +
+                                   '&nav=' + '{{ section_slug }}' + 
+                                   '&title=' + '{{ section_page.navtitle | default: section_slug }}';
+          }
         });
       } else {
+        // Логика работы обычных цифровых кнопок пагинации проекта
         if (isCurrent) {
           btn.classList.add('active'); 
         } else if (isDisabled) {
@@ -128,32 +139,23 @@
       return btn;
     }
 
-    // Функция динамического рендеринга навигационной ленты кнопок
+    // Динамический рендеринг навигационной ленты кнопок
     function renderButtons() {
       ctrlDiv.innerHTML = '';
       
-      // Кнопка 1: Твои стандартные две ёлочки (уводят на постраничный архив)
-      ctrlDiv.appendChild(createBtn('»»', null, false, false, true));
+      // Кнопка 1: Твои две ёлочки (передаем маркер 'archive', чтобы кнопка стала синей)
+      ctrlDiv.appendChild(createBtn('»»', null, false, false, 'archive'));
 
-      // Кнопка 2: Новая кнопка "0", уводящая на раскрытую ленту media-archive
-      // Используем переменную include.type, чтобы ссылка автоматом знала раздел (media или journal)
-      var fullArchiveType = "{{ include.type }}"; 
-      var projectBtn = createBtn('0', null, false, false, false);
-      
-      projectBtn.addEventListener('click', function() {
-        // Формируем адрес: например, /media-full/?project=simple-cardboard-walking-robot
-        window.location.href = '/' + fullArchiveType + '-full/?project=' + '{{ project_slug_last }}';
-      });
-      
-      ctrlDiv.appendChild(projectBtn);
+      // Кнопка 2: Синяя кнопка "0" (передаем маркер 'full', чтобы она тоже нативно стала синей)
+      ctrlDiv.appendChild(createBtn('0', null, false, false, 'full'));
 
       // Если страниц больше одной — рендерим стандартный цифровой блок пагинации
       if (totalPages > 1) {
-        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, false));
+        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, null));
         for (var i = 1; i <= totalPages; i++) {
-          ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, false));
+          ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, null));
         }
-        ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages, false));
+        ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages, null));
       }
     }
 

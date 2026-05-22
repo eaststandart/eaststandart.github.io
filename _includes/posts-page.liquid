@@ -1,167 +1,22 @@
-{% comment %} 
-=============================================================================
-МОДУЛЬ: ЛОКАЛЬНЫЕ ЛЕНТЫ ПОСТОВ НА СТРАНИЦАХ ПРОЕКТОВ (posts-page.liquid)
-Назначение: Вывод списков (Журнал, Медиа, Дневник) внутри карточек конкретных проектов.
-=============================================================================
-{% endcomment %}
-
-{% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
-{% assign url_parts = page.url | split: "/" %}
-{% assign section_slug = url_parts[1] %}
-{% assign project_slug = url_parts[2] %}
-{% assign section_url = section_slug | prepend: "/" | append: "/" %}
-{% assign section_page = site.pages | where: "url", section_url | first %}
-
-{% assign project_slug_last = page.url | split: "/" | last %}
-
-{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
-{% assign has_posts = false %}
-{% for post in site.categories[project_slug_last] %}
-  {% if post.categories contains include.type %}
-    {% assign has_posts = true %}
-    {% break %}
-  {% endif %}
-{% endfor %}
-
-{% if has_posts %}
-{% comment %} Генерируем уникальные ID для контейнеров списка и кнопок под этот цикл {% endcomment %}
-{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
-{% assign ctrl_id = "ctrl-" | append: loop_id %}
-
-{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
-{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
-
-
 <!-- ==========================================================================
-     1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ
+     2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
      ========================================================================== -->
+<!-- Подключаем наш внешний изолированный файл скрипта локальной пагинации -->
+<script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
 
-<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
-<ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {% for post in site.categories[project_slug_last] %}
-    {% if post.categories contains include.type %}
-      {% assign is_post = true %}
-      {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
-
-      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
-        <div>
-          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-          <span>
-            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
-              {{ post.title }}
-            </a>
-          </span>
-        </div>
-      </li>
-    {% endif %}
-  {% endfor %}
-</ul>
-
-<!-- Изолированный блок кнопок управления локальной пагинацией -->
-<div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
-
-
-<!-- ==========================================================================
-     2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ
-     ========================================================================== -->
 <script>
   (function() {
-    var containerId = "{{ loop_id }}";
-    var ctrlId = "{{ ctrl_id }}";
-    
-    var ul = document.getElementById(containerId);
-    var ctrlDiv = document.getElementById(ctrlId);
-    if (!ul || !ctrlDiv) return;
-
-    // Извлекаем элементы списка и настраиваем лимиты страниц
-    var allItems = Array.from(ul.querySelectorAll('.local-post-item'));
-    var itemsPerPage = parseInt("{{ include.per_page }}") || 5; 
-    var totalPages = Math.ceil(allItems.length / itemsPerPage);
-    var currentPage = 1;
-
-    var targetArchiveUrl = "{{ archive_url }}";
-
-    // Функция переключения страниц контента
-    function showPage(page) {
-      if (page < 1 || page > totalPages) return;
-      currentPage = page;
-      
-      var start = (page - 1) * itemsPerPage;
-      var end = start + itemsPerPage;
-
-      allItems.forEach(function(el, index) {
-        if (index >= start && index < end) {
-          el.style.setProperty('display', 'block', 'important');
-        } else {
-          el.style.setProperty('display', 'none', 'important');
-        }
-      });
-
-      renderButtons();
-    }
-
-    // Вспомогательная функция сборки кликабельной кнопки на чистом теге <button>
-    function createBtn(text, targetPage, isCurrent, isDisabled, btnType) {
-      var btn = document.createElement('button');
-      btn.className = 'posts-page-btn'; 
-      btn.innerText = text;
-
-      // Если это кнопка специального архива (ёлочки или ноль) — красим её в синий
-      if (btnType === 'archive' || btnType === 'full') {
-        btn.classList.add('posts-page-all-btn');
-        
-        btn.addEventListener('click', function() {
-          if (btnType === 'archive') {
-            // Две ёлочки уводят на стандартный постраничный архив
-            window.location.href = targetArchiveUrl;
-          } else if (btnType === 'full') {
-            // Кнопка "0" уводит на раскрытую ленту твоего media-archive.liquid
-            var fullArchiveType = "{{ include.type }}";     
-            // ИСПРАВЛЕНО: Теперь Кнопка 0 передает полный набор навигационных данных (nav и title), как и две стрелки
-            window.location.href = '/' + fullArchiveType + '-posts-page/?project=' + '{{ project_slug_last }}' +
-                                   '&nav=' + '{{ section_slug }}' + 
-                                   '&title=' + '{{ section_page.navtitle | default: section_slug }}';
-          }
-        });
-      } else {
-        // Логика работы обычных цифровых кнопок пагинации проекта
-        if (isCurrent) {
-          btn.classList.add('active'); 
-        } else if (isDisabled) {
-          btn.style.opacity = '0.4'; 
-          btn.style.cursor = 'default';
-        } else {
-          btn.addEventListener('click', function() {
-            showPage(targetPage);
-          });
-        }
-      }
-      return btn;
-    }
-
-    // Динамический рендеринг навигационной ленты кнопок
-    function renderButtons() {
-      ctrlDiv.innerHTML = '';
-      
-      // Кнопка 1: Твои две ёлочки (передаем маркер 'archive', чтобы кнопка стала синей)
-      ctrlDiv.appendChild(createBtn('»»', null, false, false, 'archive'));
-
-      // Кнопка 2: Синяя кнопка "0" (передаем маркер 'full', чтобы она тоже нативно стала синей)
-      ctrlDiv.appendChild(createBtn('0', null, false, false, 'full'));
-
-      // Если страниц больше одной — рендерим стандартный цифровой блок пагинации
-      if (totalPages > 1) {
-        ctrlDiv.appendChild(createBtn('«', currentPage - 1, false, currentPage === 1, null));
-        for (var i = 1; i <= totalPages; i++) {
-          ctrlDiv.appendChild(createBtn(i, i, i === currentPage, false, null));
-        }
-        ctrlDiv.appendChild(createBtn('»', currentPage + 1, false, currentPage === totalPages, null));
-      }
-    }
-
-    // Первичный запуск отрисовки первой страницы при загрузке карточки проекта
-    showPage(1);
+    // Безопасно запускаем пагинатор на месте с его родными изолированными параметрами Liquid
+    runPostsPageNav(
+      "{{ loop_id }}", 
+      "{{ ctrl_id }}", 
+      "{{ include.per_page }}", 
+      "{{ archive_url }}", 
+      "{{ include.type }}", 
+      "{{ project_slug_last }}", 
+      "{{ section_slug }}", 
+      "{{ section_page.navtitle | default: section_slug }}"
+    );
   })();
 </script>
 {% endif %}
-

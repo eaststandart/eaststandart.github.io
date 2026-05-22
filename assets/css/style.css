@@ -109,6 +109,11 @@ blockquote + h3 {
     margin-top: 0px !important;
 }
 
+/* Если главная лента постов идет в архиве сразу после описания страницы, возвращаем ей воздух */
+.page-description + .posts-page-list {
+    margin-top: 1em !important; 
+}
+
 /* ЛИНЕЙКА ПРИЖАТИЯ: Для всех текстовых элементов делаем ювелирный микро-сдвиг под воздух шрифта */
 .main-content h3 + p {
     margin-top: -0.4em !important; 
@@ -131,6 +136,85 @@ blockquote + h3 {
 .main-content p:last-of-type {
     margin-bottom: 0px !important; /* Убирает внутренний толчок строки контента вниз */
 }
+
+
+/* ==========================================================================
+   СПЕЦИАЛЬНАЯ СТИЛИЗАЦИЯ ЛЕНТЫ ПОЛНЫХ ПОСТОВ
+   ========================================================================== */
+
+/* Главная оболочка раскрытого списка Кнопки 0 */
+.media-archive-list-wrapper {
+    margin-top: 15px !important;       /* Оригинальный зазор под H1 страницы */
+    width: 100%;
+}
+
+/* Контейнер строки даты и заголовка */
+.media-entry-title-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    padding: 0 !important;
+}
+
+/* Наша аккуратная бледная серая плашка-квадрат для даты */
+.media-entry-title-row .media-entry-date {
+    font-family: monospace !important;
+    color: #555 !important;            
+    font-size: 0.8rem !important;
+    font-variant-numeric: tabular-nums;
+    background-color: #f0f0f0 !important; 
+    padding: 2px 6px !important;       
+    border-radius: 4px !important;     
+    margin-top: 0px !important;
+    margin-bottom: 0.4em !important;   
+    display: inline-block !important;
+    line-height: 1.2 !important;
+}
+
+/* Настройки шрифта и отступов заголовка H3 контента в раскрытой ленте */
+.media-entry h3.media-entry-title {
+    margin: 0px 0px 1em 0px !important; /* Отступ 1em до первой строчки текста */
+    padding: 0 !important;
+    font-size: 1.2rem !important;      
+    line-height: 1.2 !important;
+}
+
+/* Предварительное обнуление и прижатие элементов внутри раскрытой карточки .media-entry */
+.media-entry > p,
+.media-entry > ul,
+.media-entry > ol,
+.media-entry > .video-test-row,
+.media-entry > .posts-page-list {
+    margin-top: 0px !important;
+}
+
+.media-entry > p,
+.media-entry > ul,
+.media-entry > ol,
+.media-entry > .posts-page-list {
+    margin-top: -0.4em !important; 
+}
+
+.media-entry > p:has(img),
+.media-entry > .video-test-row {
+    margin-top: 0px !important; 
+}
+
+/* Базовые параметры карточки отдельного поста в ленте */
+.media-entry {
+    width: 100% !important;
+    margin-bottom: 30px !important;    
+}
+
+/* Параметры разделительной линии между постами */
+.media-entry-hr {
+    border: 0 !important;
+    border-top: 1px solid #eee !important;
+    margin: 25px 0 0 0 !important;     
+}
+
 
 /* ==========================================================================
    4. БЛОК БИБЛИОГРАФИИ И ПОДВАЛ СТАТЬИ

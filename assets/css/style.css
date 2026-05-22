@@ -151,7 +151,8 @@ blockquote + h3 {
 /* Находим самый последний элемент списка в группе (например, Яблоневое дерево) */
 .tag-group ul li:last-child,
 .tag-group ul li:last-of-type {
-    margin-bottom: 0px !important;    /* Стираем инлайновые 12px, чтобы не давили на дно */
+    /*margin-bottom: 0px !important; */   /* Стираем инлайновые 12px, чтобы не давили на дно */
+    border-bottom: none !important;    /* Намертво убираем финальную серую черту на стыке */
     padding-bottom: 0px !important;   /* Схлопываем внутренний падинг строки */
 }
 

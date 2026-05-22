@@ -1,6 +1,7 @@
 ---
 layout: page
-title: "Виброход из зубной щетки: соревнования"
+title: "Виброход из зубной щетки"
+description: "Соревнования роботов зубочистов"
 date: 2026-05-15
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---

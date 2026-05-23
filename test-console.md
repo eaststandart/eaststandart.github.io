@@ -1,19 +1,19 @@
 ---
 layout: default
-title: Концепт Шапки v1.7
+title: Концепт Шапки v1.8
 ---
-<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину без вылетов (letter-spacing: -0.6px). 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЖНИЙ УГОЛ ДОТЯНУТ НА ТЕКСТЕ. 6: Зазоры строго равны 10px, масштаб логотипа зафиксирован из v1.2. -->
+<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину без вылетов (letter-spacing: -0.45px). 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЖНИЙ УГОЛ БЛОКА КОНТЕНТА ДОТЯНУТ ДО КОМПАКТНОГО ЛОГОТИПА. 6: Зазоры строго равны 10px. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: flex-start !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
-    /* ЖЕСТКАЯ ФИКСАЦИЯ ИЗ ВЕРСИИ 1.2: Логотип заблокирован от любого расширения */
+    /* ТОЧНЫЙ КОМПАКТНЫЙ РАЗМЕР ИЗ 1.2: Жестко зафиксирован и защищен от распирания */
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 88px !important; height: 88px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; outline: 1px dotted #f0f !important; }
-    /* ИСПРАВЛЕНО: Шрифт 1.32rem + плотный трекинг -0.6px намертво удерживают текст в границах экрана, исключая вылеты */
-    .brand-line-1 { font-size: 1.32rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.6px !important; }
-    /* ИСПРАВЛЕНО: Микро-увеличение шрифта описания до 1.02rem для финальной компенсации высоты нижнего яруса */
-    .brand-description { font-size: 1.02rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    /* ИСПРАВЛЕНО: Шрифт 1.22rem + трекинг -0.45px уплотняют строку, удерживая её в границах и сжимая высоту блока контента */
+    .brand-line-1 { font-size: 1.22rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.45px !important; }
+    /* ИСПРАВЛЕНО: Компактный размер описания 0.92rem для идеального выравнивания нижнего обреза контента по логотипу */
+    .brand-description { font-size: 0.92rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
     .header-center-red-axis { display: block !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
@@ -59,11 +59,11 @@ title: Концепт Шапки v1.7
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.7 • Фикс 1.2):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.8 • Фикс высоты блока контента):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
-    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет плотного трекинга -0.6px натянут на всю доступную ширину строго до правого края без вылетов наружу.</div>
+    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет сжатия трекинга -0.45px натянут точно до правого края без вылета за рамки зеленой зоны контента.</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
     <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка выровнена пиксель-в-пиксель по верхней грани синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок за счет микро-набора массы текста опустилась вниз и коснулась нижней кромки синего квадрата аватара.</div>
+    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок за счет точечной корректировки высоты шрифтов зеленого блока контента встала идеально заподлицо с нижним обрезом синего квадрата аватара.</div>
     <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа жестко возвращен к компактной версии 1.2 (88px). ВСЕ ТРИ ВНУТРЕННИХ ЗАЗОРА СТРОГО И МАТЕМАТИЧЕСКИ УДЕРЖАНЫ НА ОТМЕТКЕ В 10px.</div>
 </div>

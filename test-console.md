@@ -228,7 +228,7 @@ title: Тест двухъярусного пульта управления
             
             <!-- Инструмент 1: Поиск -->
             <a href="/tags.html" class="panel-action-btn btn-search">
-                <span>#️⃣</span> Поиск по тегам
+                <span>#️⃣</span> Поиск
             </a>
             
             <!-- Инструмент 2: Telegram -->

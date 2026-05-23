@@ -2,14 +2,14 @@
 layout: default
 title: Концепт Шапки v1.0
 ---
-<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 кнопки + консоль. 4: Верх по логотипу. 5: Низ по логотипу. 6: Тонкий серо-серебристый разделитель по центру аватара. -->
+<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 кнопки + консоль. 4: Upper по логотипу. 5: Нижний ряд по логотипу. 6: Масштаб темы + ультра-тонкая прозрачная красная ось. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; }
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; }
-    /* ИСПРАВЛЕНО: Превращаем красную ось в изящный, еле заметный серо-серебристый разделитель контента */
-    .header-center-red-axis { position: absolute !important; left: 0 !important; right: 0 !important; top: 50% !important; transform: translateY(-50%) !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; z-index: 10 !important; pointer-events: none !important; }
+    /* ИСПРАВЛЕНО: Линия становится ультра-тонкой (0.5px) и получает легкий полупрозрачный красный цвет rgba */
+    .header-center-red-axis { position: absolute !important; left: 0 !important; right: 0 !important; top: 50% !important; transform: translateY(-50%) !important; height: 0.5px !important; background-color: rgba(255, 0, 0, 0.25) !important; border: none !important; margin: 0 !important; padding: 0 !important; z-index: 10 !important; pointer-events: none !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding-bottom: 6px !important; }
     .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
     .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.1 !important; color: #666 !important; margin: 6px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
@@ -69,5 +69,5 @@ title: Концепт Шапки v1.0
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
     <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка выровнена пиксель-в-пиксель по верхней грани оригинального логотипа.</div>
     <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли идут строго в один уровень по нижней грани оригинального логотипа.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа не затрагивается. Добавлена тонкая благородная серо-серебристая линия, изящно отделяющая контент по центру аватара.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа не затрагивается. Добавлена ультра-тонкая, легкая прозрачно-красная линия, деликатно отделяющая текст от кнопок по центру аватара.</div>
 </div>

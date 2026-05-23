@@ -63,7 +63,7 @@ title: Тест пульта управления и кнопок навигац
     }
 
     .brand-description {
-        font-size: 0.95rem !important;
+        font-size: 0.5rem !important;
         font-weight: normal !important;
         color: #24292e !important;
         margin: 12px 0 0 0 !important;
@@ -204,7 +204,7 @@ title: Тест пульта управления и кнопок навигац
         <div class="test-brand-text-block">
             <h1 class="brand-line-1">Творческая лаборатория</h1>
             <h1 class="brand-line-2">познавательного развития</h1>
-            <p class="brand-description">Для тех, кто хочет знать как все устроено и создавать технологии своими руками.</p>
+            <p class="brand-description">Для тех, кто хочет знать как все устроено<br> и создавать технологии своими руками.</p>
         </div>
     </div>
 

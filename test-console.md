@@ -42,6 +42,7 @@ title: Тест консоли управления (Оригинальный м
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
+        align-items: flex-start !important;
     }
 
     /* ЖЕСТКИЙ ВОЗВРАТ: Строка 1 наследует оригинальный масштаб шрифта заголовка H1 твоей темы */
@@ -53,6 +54,7 @@ title: Тест консоли управления (Оригинальный м
         margin: 0 !important;
         padding: 0 !important;
         letter-spacing: normal !important;
+        text-align: left !important;
     }
 
     /* Строка 2: Вторая половина оригинального шрифта */
@@ -64,6 +66,7 @@ title: Тест консоли управления (Оригинальный м
         margin-top: 4px !important;
         padding: 0 !important;
         letter-spacing: normal !important;
+        text-align: left !important;
     }
 
     /* Правый блок: Минималистичная консоль терминала */

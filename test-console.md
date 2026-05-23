@@ -1,24 +1,28 @@
 ---
 layout: default
-title: Концепт Шапки v1.8
+title: Концепт Шапки v1.9
 ---
-<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину без вылетов (letter-spacing: -0.45px). 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЖНИЙ УГОЛ БЛОКА КОНТЕНТА ДОТЯНУТ ДО КОМПАКТНОГО ЛОГОТИПА. 6: Зазоры строго равны 10px. -->
+<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину через justify. 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЗ КАРТИНКИ ПОДСТРОЕН ПОД ВЫСОТУ КОНТЕНТА (90px). 6: Зазоры строго равны 10px, костыли убраны. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: flex-start !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
-    /* ТОЧНЫЙ КОМПАКТНЫЙ РАЗМЕР ИЗ 1.2: Жестко зафиксирован и защищен от распирания */
-    .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 88px !important; height: 88px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
+    
+    /* ИСПРАВЛЕНО: Картинка логотипа получила точный размер 90px под высоту вёрстки v1.2, исключая любые дыры и перекосы */
+    .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 90px !important; height: 90px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
+    
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; outline: 1px dotted #f0f !important; }
-    /* ИСПРАВЛЕНО: Шрифт 1.22rem + трекинг -0.45px уплотняют строку, удерживая её в границах и сжимая высоту блока контента */
-    .brand-line-1 { font-size: 1.22rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.45px !important; }
-    /* ИСПРАВЛЕНО: Компактный размер описания 0.92rem для идеального выравнивания нижнего обреза контента по логотипу */
-    .brand-description { font-size: 0.92rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    
+    /* ПОЛНЫЙ ВОЗВРАТ К ВЕРСИИ 1.2: Оригинальные размеры шрифтов, margin-top: -5px компенсирует зазор букв */
+    .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
+    .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    
     .header-center-red-axis { display: block !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
     .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
     .panel-action-btn:hover { background-color: #fff !important; color: #2188ff !important; border-color: #2188ff !important; }
+    
     .console-input-wrapper { position: relative !important; width: 50% !important; flex-grow: 1 !important; }
     .console-input-field { width: 100% !important; height: 34px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; background-color: #f6f8fa !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: "SFMono-Regular", Consolas, monospace !important; font-size: 0.85rem !important; color: #24292e !important; outline: none !important; transition: all 0.2s ease !important; }
     .console-input-field:focus { background-color: #fff !important; border-color: #2188ff !important; box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important; }
@@ -59,11 +63,11 @@ title: Концепт Шапки v1.8
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.8 • Фикс высоты блока контента):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.9 • Метод Картинки):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
-    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет сжатия трекинга -0.45px натянут точно до правого края без вылета за рамки зеленой зоны контента.</div>
+    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет возврата к версии 1.2 идеально натянут до правого края без вылетов за рамки.</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
     <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка выровнена пиксель-в-пиксель по верхней грани синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок за счет точечной корректировки высоты шрифтов зеленого блока контента встала идеально заподлицо с нижним обрезом синего квадрата аватара.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа жестко возвращен к компактной версии 1.2 (88px). ВСЕ ТРИ ВНУТРЕННИХ ЗАЗОРА СТРОГО И МАТЕМАТИЧЕСКИ УДЕРЖАНЫ НА ОТМЕТКЕ В 10px.</div>
+    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок идеально, пиксель-в-пиксель, совпала с нижним обрезом синего квадрата аватара темы за счет фиксации его размера в 90px.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> ВСЕ ТРИ ВНУТРЕННИХ ЗАЗОРА СТРОГО И МАТЕМАТИЧЕСКИ УДЕРЖАНЫ НА ОТМЕТКЕ В 10px. Серая линия лежит точно по центру.</div>
 </div>

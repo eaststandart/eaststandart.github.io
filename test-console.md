@@ -50,7 +50,7 @@ title: Тест двухъярусного пульта управления
 
     /* Строка 1: Выровнена по верхней грани логотипа */
     .brand-line-1 {
-        font-size: 1.5rem !important; /* Твой оригинальный масштаб H1 */
+        font-size: 1.3rem !important; /* Твой оригинальный масштаб H1 */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;

@@ -15,7 +15,7 @@ title: Тест консоли управления (Оригинальный м
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important; /* Центрируем двухстрочный текст и пульт по горизонтальной оси значка */
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         width: 100% !important;
         padding: 15px 0 !important;
         margin-bottom: 25px !important;

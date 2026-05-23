@@ -185,7 +185,7 @@ title: Тест пульта управления и кнопок навигац
         }
 
         .brand-line-1, .brand-line-2 {
-            font-size: 0.8rem !important;
+            font-size: 0.7rem !important;
         }
 
         .test-header-right-panel {

@@ -49,7 +49,7 @@ title: Тест пульта управления и кнопок навигац
         color: var(--text-color, #24292e) !important;
         margin: 0 !important;
         padding: 0 !important;
-        text-align: left !important;
+
     }
 
     .brand-line-2 {
@@ -59,11 +59,11 @@ title: Тест пульта управления и кнопок навигац
         color: var(--text-color, #24292e) !important;
         margin: 4px 0 0 0 !important;
         padding: 0 !important;
-        text-align: left !important;
+
     }
 
     .brand-description {
-        font-size: 0.8rem !important;
+        font-size: 0.9rem !important;
         font-weight: normal !important;
         color: #24292e !important;
         margin: 12px 0 0 0 !important;
@@ -202,8 +202,8 @@ title: Тест пульта управления и кнопок навигац
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
         <div class="test-brand-text-block">
-            <h1 class="brand-line-1">ТВОРЧЕСКАЯ<br>ЛАБОРАТОРИЯ</h1>
-            <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО<br>РАЗВИТИЯ</h1>
+            <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
+            <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
             <p class="brand-description">Для тех, кто хочет знать как все устроено<br> и создавать технологии своими руками</p>
         </div>
     </div>

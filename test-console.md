@@ -43,7 +43,7 @@ title: Тест пульта управления и кнопок навигац
     }
 
     .brand-line-1 {
-        font-size: 1rem !important; 
+        font-size: 1.2rem !important; 
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;

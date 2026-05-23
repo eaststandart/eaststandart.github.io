@@ -1,55 +1,78 @@
 ---
 layout: default
-title: Тест консоли управления
+title: Тест консоли управления (Вариант 2)
 ---
 
 <!-- 
 =============================================================================
-ТЕСТОВЫЙ МАКЕТ: КОМПАКТНАЯ ШАПКА С ИНЖЕНЕРНЫМ ПУЛЬТОМ (test-console.html)
+ТЕСТОВЫЙ МАКЕТ ВАРИАНТ 2: ОРИГИНАЛЬНЫЙ ЛОГОТИП И ДВУХСТРОЧНЫЙ ЗАГЛОВОК
 ============================================================================= 
 -->
 
 <style>
-    /* 1. СТИЛИЗАЦИЯ ОБНОВЛЕННОЙ КОМПАКТНОЙ ШАПКИ */
+    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ */
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important; /* Разносим логотип влево, а пульт вправо */
+        align-items: center !important; /* Намертво центрирует текст и консоль по горизонтальной оси значка */
+        justify-content: space-between !important;
         width: 100% !important;
-        padding: 10px 0 !important;
+        padding: 15px 0 !important;
         margin-bottom: 25px !important;
-        border-bottom: 1px solid #eee !important; /* Легкая разделительная черта под шапкой */
+        border-bottom: 1px solid #eee !important;
+        gap: 20px !important;
     }
 
-    /* Левая зона: Логотип и мини-маркер лаборатории */
+    /* Левый блок: Сохраняем логотип и прижимаем к нему двухстрочный текст */
     .test-header-left {
         display: flex !important;
-        align-items: center !important;
-        gap: 12px !important;
+        align-items: center !important; /* Центрирует двухстрочный блок по высоте логотипа */
+        gap: 15px !important;
     }
 
+    /* Размер логотипа остается оригинальным, как на вашей Главной */
     .test-header-left .main-avatar {
-        width: 100px !important;  /* Компактный размер для экономии высоты экрана */
-        height: 100px !important;
+        width: 80px !important; /* Твой оригинальный брендовый размер */
+        height: 80px !important;
         margin: 0 !important;
+        flex-shrink: 0 !important;
     }
 
-    .test-brand-name {
+    /* Контейнер для двух строк текста */
+    .test-brand-text-block {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Строка 1 */
+    .brand-line-1 {
         font-family: monospace !important;
         font-size: 0.95rem !important;
         font-weight: bold !important;
-        color: #555 !important;
+        color: #222 !important;
         text-transform: uppercase !important;
-        letter-spacing: 1px !important;
+        letter-spacing: 0.5px !important;
     }
 
-    /* Правая зона: Наша минималистичная инженерная консоль ввода */
+    /* Строка 2 */
+    .brand-line-2 {
+        font-family: monospace !important;
+        font-size: 0.85rem !important;
+        font-weight: normal !important;
+        color: #666 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin-top: 2px !important;
+    }
+
+    /* Правый блок: Минималистичная консоль терминала */
     .test-header-right {
         display: flex !important;
         align-items: center !important;
         flex-grow: 1 !important;
-        max-width: 280px !important; /* Ограничиваем длину строки на ПК, чтобы не растягивалась */
+        max-width: 250px !important; /* Компактный размер для правого угла */
     }
 
     .console-input-wrapper {
@@ -57,29 +80,26 @@ title: Тест консоли управления
         width: 100% !important;
     }
 
-    /* Оформление строки в стиле терминала Linux */
     .console-input-field {
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 8px 10px 8px 24px !important; /* Отступ слева под символ приглашения > */
-        background-color: #f6f8fa !important;  /* Бледный благородный серый бэкграунд */
+        padding: 8px 10px 8px 24px !important;
+        background-color: #f6f8fa !important;
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important; /* Чистый код-шрифт */
+        font-family: "SFMono-Regular", Consolas, monospace !important;
         font-size: 0.85rem !important;
         color: #24292e !important;
         outline: none !important;
         transition: all 0.2s ease !important;
     }
 
-    /* Эффект фокуса: строка подсвечивается синим при клике, как в средах разработки */
     .console-input-field:focus {
         background-color: #fff !important;
         border-color: #2188ff !important;
         box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important;
     }
 
-    /* Символ-приглашение командной строки > */
     .console-prompt-symbol {
         position: absolute !important;
         left: 10px !important;
@@ -88,35 +108,48 @@ title: Тест консоли управления
         font-family: monospace !important;
         font-size: 0.85rem !important;
         font-weight: bold !important;
-        color: #2188ff !important; /* Яркий инженерный синий цвет */
+        color: #2188ff !important;
         user-select: none !important;
     }
 
-    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ ТЕСТОВОЙ ШАПКИ */
-    @media (max-width: 600px) {
+    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (УМНОЕ СЖАТИЕ) */
+    @media (max-width: 768px) {
         .test-header {
-            gap: 10px !important;
-            padding: 5px 0 !important;
+            flex-direction: column !important; /* На смартфонах выстраиваем элементы друг под другом */
+            align-items: flex-start !important;
+            gap: 15px !important;
+            padding: 10px 0 !important;
         }
-        .test-brand-name {
-            display: none !important; /* На смартфонах полностью прячем текст названия, оставляя только иконку */
+
+        /* Логотип на мобильных чуть-чуть уменьшаем, чтобы он не съедал пол-экрана */
+        .test-header-left .main-avatar {
+            width: 55px !important;
+            height: 55px !important;
         }
+
+        .brand-line-1 { font-size: 0.85rem !important; }
+        .brand-line-2 { font-size: 0.75rem !important; }
+
         .test-header-right {
-            max-width: 100% !important; /* Консоль занимает всё оставшееся свободное пространство справа */
+            max-width: 100% !important; /* Строка ввода растягивается во всю ширину экрана телефона */
+            width: 100% !important;
         }
     }
 </style>
 
-<!-- СБОРКА ОБНОВЛЕННОЙ ШАПКИ ДЛЯ ТЕСТИРОВАНИЯ ВНЕШНЕГО ВИДА -->
+<!-- СБОРКА ОБНОВЛЕННОЙ ШАПКИ (ВАРИАНТ 2) -->
 <header class="test-header">
     
-    <!-- Левая сторона: Логотип сайта + Текст-маркер вместо H1 -->
+    <!-- Левая сторона: Оригинальный логотип + Двухстрочный текст с центрированием -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
-        <span class="test-brand-name">Творческая лаборатория познавательного развития</span>
+        <div class="test-brand-text-block">
+            <span class="brand-line-1">Творческая лаборатория</span>
+            <span class="brand-line-2">познавательного развития</span>
+        </div>
     </div>
 
-    <!-- Правая сторона: Консоль ввода системных команд -->
+    <!-- Правая сторона: Минималистичный пульт консоли -->
     <div class="test-header-right">
         <div class="console-input-wrapper">
             <span class="console-prompt-symbol">&gt;</span>
@@ -126,9 +159,14 @@ title: Тест консоли управления
 
 </header>
 
-<!-- ДЕКОРАТИВНЫЙ ТЕКСТ ДЛЯ ПРОВЕРКИ ВИЗУАЛЬНОГО БАЛАНСА СЕТКИ СТАТЬИ -->
-<div class="test-page-content" style="padding: 20px 0; color: #666; font-size: 0.95rem;">
-    <p>💡 <strong>Это тестовый макет обновленного интерфейса.</strong></p>
-    <p>Посмотрите, как изменились пропорции шапки: длинный заголовок полностью убран [0.1]. Логотип аккуратно сдвинут в левый угол [0.1], а правая пустующая часть на ПК теперь занята стильной строкой ввода команд в стиле терминала Linux [0.1].</p>
-    <p>На смартфонах слово «Лаборатория» автоматически скрывается, а строка ввода растягивается рядом с мини-иконкой, благодаря чему весь этот блок занимает всего 50 пикселей высоты [0.1], и основные рабочие разделы сайта сразу поднимутся на первый экран устройства [0.1].</p>
+<!-- СЕТКА ДЛЯ ПРОВЕРКИ ВИЗУАЛЬНОГО БАЛАНСА -->
+<div class="test-page-content" style="padding: 10px 0; color: #444; font-size: 0.95rem; line-height: 1.5;">
+    <p>📐 <strong>Оцените геометрию Варианта №2:</strong></p>
+    <ul>
+        <li>Значок остался крупным, как вы и просили [0.1].</li>
+        <li>Текст разбился на две строчки («Творческая лаборатория» и «познавательного развития») [0.1].</li>
+        <li>Обе строки идеально сцентрированы по горизонтальной оси (посередине) круглого логотипа [0.1].</li>
+        <li>Справа аккуратно встала строка пульта управления, завершая баланс [0.1].</li>
+    </ul>
+    <p>На смартфонах элементы перестраиваются вертикально, но за счёт компактных шрифтов и плотных падингов вся шапка занимает в два раза меньше места, освобождая первый экран под рабочие разделы [0.1].</p>
 </div>

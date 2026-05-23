@@ -25,8 +25,8 @@ title: Тест мобильной шапки v1.0
     .mob-header-left .main-avatar {
         display: block !important;
         margin: 0 !important;
-        width: 85px !important; /* Компактный мобильный размер значка */
-        height: 85px !important;
+        width: 90px !important; /* Компактный мобильный размер значка */
+        height: 90px !important;
         box-shadow: 0 0 0 2px #00f !important;
     }
 
@@ -53,7 +53,7 @@ title: Тест мобильной шапки v1.0
 
     /* Строка 2: Описание (начинается под первой строкой) */
     .mob-description {
-        font-size: 0.75rem !important; /* Уменьшенный шрифт для смартфонов */
+        font-size: 0.7rem !important; /* Уменьшенный шрифт для смартфонов */
         font-weight: normal !important;
         line-height: 1.2 !important;
         color: #666 !important;
@@ -84,7 +84,7 @@ title: Тест мобильной шапки v1.0
     <!-- Правая сторона: Двухуровневый текст -->
     <div class="mob-header-content">
         <h1 class="mob-line-1">Творческая лаборатория познавательного развития</h1>
-        <p class="mob-description">[ для тех, кто хочет знать как все устроено и создавать технологии своими руками ]</p>
+        <p class="mob-description">[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]</p>
     </div>
 
 </header>

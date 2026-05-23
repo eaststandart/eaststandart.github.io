@@ -39,7 +39,7 @@ title:
     <div class="test-header-content-zone">
         <div class="header-text-tier">
             <h1 class="brand-line-1">Творческая лаборатория познавательного развития</h1>
-            <p class="brand-description">[ для тех, кто хочет знать как все устроено и создавать технологии своими руками ]</p>
+            <p class="brand-description">[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]</p>
         </div>
         <hr class="header-center-red-axis">
         <div class="header-tools-tier">

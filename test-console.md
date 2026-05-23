@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Тест выравнивания и вытягивания строк
+title: Исправление вёрстки шапки и консоли
 ---
 
 <!-- 
 =============================================================================
-ЭТАЛОННЫЙ МАКЕТ ШАПКИ: МАТЕМАТИЧЕСКАЯ СЕТКА ПО ВЕРХНЕМУ И НИЖНЕМУ КРАЮ
+ЭТАЛОННЫЙ ТЕСТОВЫЙ МАКЕТ: ИСПРАВЛЕНИЕ ПЕРЕНOСОВ И СЖАТИЯ КОНСОЛИ
 ============================================================================= 
 -->
 
@@ -14,107 +14,83 @@ title: Тест выравнивания и вытягивания строк
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: flex-start !important; /* Строгая привязка к верхнему краю логотипа */
+        align-items: flex-start !important; /* Строгая привязка элементов к верхнему краю логотипа */
         width: 100% !important;
         max-width: 1000px !important;
         box-sizing: border-box !important;
-        
-        /* ПУНКТ 1: Равные падинги по краям страницы */
         padding: 20px 25px !important; 
         margin-bottom: 30px !important;
         border-bottom: 1px solid #eee !important;
-        
-        /* ПУНКТ 1: Расстояние между логотипом и началом текста равно 25px */
-        gap: 25px !important; 
+        gap: 25px !important; /* Расстояние от логотипа до контента */
     }
 
-    /* Левый блок: Наш оригинальный логотип */
+    /* Левый блок: Твой оригинальный логотип (Размеры строго зафиксированы) */
     .test-header-left {
         flex-shrink: 0 !important;
     }
-    
     .test-header-left .main-avatar {
-        /* ЗАФИКСИРОВАНО ПО ВЕРТИКАЛЬНОЙ СЕТКЕ (42px текст + 14px воздух + 34px кнопки = 90px) */
-        width: 90px !important; 
+        width: 90px !important; /* Твой оригинальный размер, не трогаем */
         height: 90px !important;
         margin: 0 !important;
         display: block !important;
     }
 
-    /* Правый блок: Контентная зона до правого края страницы */
+    /* Правый блок: Вся контентная зона шапки */
     .test-header-content-zone {
         display: flex !important;
         flex-direction: column !important;
         flex-grow: 1 !important;
-        
-        /* ЮВЕЛИРНЫЙ ВОЗДУХ: Расстояние между текстовым ярусом и кнопками */
-        gap: 14px !important; 
+        gap: 16px !important; /* Фиксированный зазор между текстом и кнопками */
+        min-width: 0 !important; /* Защита от распирания сетки */
     }
 
     /* ==========================================================================
-       ЯРУС 1 (ВЕРХНИЙ): ВЫТЯГИВАНИЕ ТЕКСТА НА ВСЮ ШИРИНУ (ПУНКТ 2, 4)
+       ЯРУС 1 (ВЕРХНИЙ): ТЕКСТОВЫЙ БЛОК (СТРОГО В ОДНУ СТРОКУ)
        ========================================================================== */
     .header-text-tier {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
-        height: 42px !important; /* Фиксированная высота верхнего текстового этажа */
-        justify-content: space-between !important;
+        align-items: flex-start !important;
     }
 
-    /* ПУНКТ 4: Название идет строго по верхней грани логотипа */
+    /* Название: Железно в одну строку без переносов */
     .brand-line-1 {
-        font-size: 1.3rem !important; 
+        font-size: 1.15rem !important; /* Скорректированный размер для идеального вхождения */
         font-weight: bold !important;
-        line-height: 1.0 !important;
+        line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
         margin: 0 !important;
         padding: 0 !important;
-        
-        /* ПУНКТ 2: Растягиваем заглавные буквы первой строки от края до края */
-        text-align: justify !important;
-        text-align-last: justify !important;
-        width: 100% !important;
+        text-align: left !important;
+        white-space: nowrap !important; /* НАМЕРТВО ЗАПРЕЩАЕТ ПЕРЕНОС СЛОВ НА ВТОРУЮ СТРОКУ */
+        letter-spacing: -0.3px !important; /* Плотное аккуратное сжатие букв */
     }
 
     /* Описание под заголовком */
     .brand-description {
-        font-size: 1rem !important; 
+        font-size: 0.95rem !important; 
         font-weight: normal !important;
-        line-height: 1.0 !important;
+        line-height: 1.2 !important;
         color: #666 !important;
-        margin: 0 !important;
+        margin: 6px 0 0 0 !important;
         padding: 0 !important;
-        
-        /* ПУНКТ 2: Растягиваем строчные буквы второй строки ровно на ту же ширину */
-        text-align: justify !important;
-        text-align-last: justify !important;
-        width: 100% !important;
+        text-align: left !important;
     }
 
     /* ==========================================================================
-       ЯРУС 2 (НИЖНИЙ): ЕДИНАЯ СТРОКА ИНСТРУМЕНТОВ (ПУНКТ 3, 5)
+       ЯРУС 2 (НИЖНИЙ): СТРОКА ИНСТРУМЕНТОВ И ШИРОКАЯ КОНСОЛЬ
        ========================================================================== */
-    /* ПУНКТ 5: Кнопки привязаны к нижней грани логотипа */
     .header-tools-tier {
         display: flex !important;
         flex-direction: row !important; 
         align-items: center !important;
-        gap: 10px !important; 
+        gap: 10px !important; /* Зазор между элементами в строке */
         width: 100% !important;
-        height: 34px !important; /* Фиксированная высота нижнего этажа */
+        height: 34px !important;
     }
 
-    /* Контейнер для трех кнопок одинаковой ширины (ПУНКТ 3) */
-    .tools-buttons-group {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 10px !important;
-        width: 50% !important; /* Занимает ровно половину от общей ширины строки */
-        flex-shrink: 0 !important;
-    }
-
-    /* Общие стили для трех кнопок */
+    /* Компактные фиксированные кнопки (больше не сжимаются и не ломают вёрстку) */
     .panel-action-btn {
         display: flex !important;
         align-items: center !important;
@@ -122,7 +98,7 @@ title: Тест выравнивания и вытягивания строк
         gap: 6px !important;
         height: 34px !important; 
         box-sizing: border-box !important;
-        padding: 0 !important; /* Падинги убраны, кнопки делят пространство математически */
+        padding: 0 12px !important; /* Аккуратные падинги */
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
         font-family: monospace !important;
@@ -132,7 +108,7 @@ title: Тест выравнивания и вытягивания строк
         transition: all 0.2s ease !important;
         cursor: pointer !important;
         white-space: nowrap !important;
-        flex: 1 !important; /* ПУНКТ 3: Все три кнопки имеют абсолютно одинаковую ширину */
+        flex-shrink: 0 !important; /* Запрещает кнопкам сжиматься в микро-размеры */
     }
 
     .btn-search { background-color: #f6f8fa !important; color: #555 !important; }
@@ -141,15 +117,14 @@ title: Тест выравнивания и вытягивания строк
     .btn-tg { background-color: #eef7fd !important; color: #0088cc !important; border-color: #b3e0f2 !important; }
     .btn-tg:hover { background-color: #0088cc !important; color: #fff !important; border-color: #0088cc !important; }
 
-    /* Новая кнопка Почты (ПУНКТ 3) */
     .btn-email { background-color: #fcf8e3 !important; color: #a67507 !important; border-color: #fbeed5 !important; }
     .btn-email:hover { background-color: #a67507 !important; color: #fff !important; border-color: #a67507 !important; }
 
-    /* ПУНКТ 3: Строка ввода команд занимает всю оставшуюся вторую половину строки */
+    /* Консоль ввода команд занимает ВСЁ свободное место до правого края страницы */
     .console-input-wrapper {
         position: relative !important;
-        width: 50% !important; 
-        flex-grow: 1 !important;
+        flex-grow: 1 !important; /* Растягивает консоль до упора вправо */
+        min-width: 150px !important; /* Минимальный защитный размер строки */
     }
 
     .console-input-field {
@@ -185,7 +160,7 @@ title: Тест выравнивания и вытягивания строк
         user-select: none !important;
     }
 
-    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (СТРОГИЙ СБРОС ВЫТЯГИВАНИЯ СТРОК) */
+    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ */
     @media (max-width: 900px) {
         .test-header {
             flex-direction: column !important;
@@ -193,71 +168,61 @@ title: Тест выравнивания и вытягивания строк
             gap: 15px !important;
             padding: 15px !important;
         }
-
-        .header-text-tier {
-            height: auto !important;
-            gap: 6px !important;
-        }
-
-        /* На мобильных отключаем вытягивание строк, чтобы не разрывать короткие слова на весь экран телефона */
-        .brand-line-1, .brand-description {
-            text-align: left !important;
-            text-align-last: left !important;
+        .brand-line-1 {
+            white-space: normal !important; /* На смартфонах разрешаем перенос заголовка */
             font-size: 1.2rem !important;
         }
-        .brand-description { font-size: 0.95rem !important; }
-
         .header-tools-tier {
             flex-direction: column !important;
             align-items: stretch !important;
             height: auto !important;
             gap: 8px !important;
         }
-
-        .tools-buttons-group {
-            width: 100% !important;
-            gap: 8px !important;
-        }
-
         .panel-action-btn, .console-input-wrapper {
             width: 100% !important;
         }
     }
 </style>
 
-<!-- СБОРКА ШАПКИ НА ОСНОВЕ МАТЕМАТИЧЕСКИХ ПУНКТОВ 1-6 -->
+<!-- СБОРКА ИСПРАВЛЕННОЙ ШАПКИ -->
 <header class="test-header">
     
-    <!-- Левая сторона: Наш главный оригинальный логотип (Высота ровно 90px) -->
+    <!-- Левая сторона: Оригинальный логотип -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
     </div>
 
-    <!-- Правая сторона: Контентная зона до самого правого края страницы -->
+    <!-- Правая сторона: Стабильная контентная зона -->
     <div class="test-header-content-zone">
         
-        <!-- ЯРУС 1 (ВЕРХНИЙ): ТЕКСТОВЫЙ БЛОК (Выровнен по верхней грани логотипа) -->
+        <!-- ЯРУС 1: ТЕКСТ (Выровнен по верхней грани логотипа) -->
         <div class="header-text-tier">
             <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
             <p class="brand-description">для тех, кто хочет знать как все устроено и создавать технологии своими руками</p>
         </div>
 
-        <!-- ЯРУС 2 (НИЖНИЙ): ЛИНЕЙКА ИНСТРУМЕНТОВ (Выровнена по нижней грани логотипа) -->
+        <!-- ЯРУС 2: ИНСТРУМЕНТЫ (Выровнены по нижней грани логотипа) -->
         <div class="header-tools-tier">
             
-            <!-- Группа из трех кнопок одинаковой ширины (50% строки) -->
-            <div class="tools-buttons-group">
-                <a href="/tags.html" class="panel-action-btn btn-search">
-                    <span>#️⃣</span> Поиск
-                </a>
-                <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
-                    <span>✈️</span> Телеграм
-                </a>
-                <a href="mailto:info@example.com" class="panel-action-btn btn-email">
-                    <span>✉️</span> Почта
-                </a>
-            </div>
+            <!-- Три фиксированные компактные кнопки -->
+            <a href="/tags.html" class="panel-action-btn btn-search">
+                <span>#️⃣</span> Поиск
+            </a>
+            <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
+                <span>✈️</span> Телеграм
+            </a>
+            <a href="mailto:info@example.com" class="panel-action-btn btn-email">
+                <span>✉️</span> Почта
+            </a>
 
-            <!-- Строка ввода команд терминала (Вторые 50% строки до правого края) -->
+            <!-- Полноценная широкая строка ввода (занимает всё свободное место справа) -->
             <div class="console-input-wrapper">
                 <span class="console-prompt-symbol">&gt;</span>
+                <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
+            </div>
+
+        </div>
+
+    </div>
+
+</header>

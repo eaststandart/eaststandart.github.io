@@ -2,11 +2,7 @@
 layout: default
 title: Тест мобильной шапки v1.0
 ---
-<!-- 
-=============================================================================
-МОБИЛЬНЫЙ ТЕСТОВЫЙ МАКЕТ v1.0 (ЛОГО СЛЕВА, СТРОКА 1 СПРАВА, СТРОКА 2 СНИЗУ)
-============================================================================= 
--->
+
 <style>
     /* Базовый контейнер мобильной шапки */
     .mob-header {
@@ -15,7 +11,7 @@ title: Тест мобильной шапки v1.0
         align-items: flex-start !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 10px 15px !important; /* Уплотненные мобильные отступы от краев экрана */
+        padding: 0px 15px !important; /* Уплотненные мобильные отступы от краев экрана */
         gap: 15px !important; /* Зазор между иконкой и текстом */
         background: rgba(0,0,0,0.02) !important;
         outline: 2px dashed #999 !important; /* ДЕБАГ-СЕТКА ДЛЯ КОНТРОЛЯ ГЕОМЕТРИИ */
@@ -29,8 +25,8 @@ title: Тест мобильной шапки v1.0
     .mob-header-left .main-avatar {
         display: block !important;
         margin: 0 !important;
-        width: 60px !important; /* Компактный мобильный размер значка */
-        height: 60px !important;
+        width: 80px !important; /* Компактный мобильный размер значка */
+        height: 80px !important;
         box-shadow: 0 0 0 2px #00f !important;
     }
 

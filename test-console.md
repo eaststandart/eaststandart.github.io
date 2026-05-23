@@ -1,21 +1,19 @@
 ---
 layout: default
-title: Концепт Шапки v1.3
+title: Концепт Шапки v1.4
 ---
-<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЖНИЙ УГОЛ ДОТЯНУТ ДО НИЗА ПРОПОРЦИОНАЛЬНО. 6: Все 3 зазора строго равны 16px. -->
+<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх по логотипу. 5: Низ по логотипу. 6: ЗАЗОР ТЕКСТА = 6px (УПЛОТНЕН), зазоры оси = 18px (ДЛЯ УДЕРЖАНИЯ НИЖНЕГО УГЛА). -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
-    /* Логотип возвращен к оригинальным габаритам темы, чтобы проверить дотягивание нижнего угла */
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; padding: 0 !important; margin: 0 !important; }
-    /* ПУНКТ 6: Увеличиваем внутренний шаг зазора до 16px, пропорционально растягивая текст */
-    .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; gap: 16px !important; outline: 1px dotted #f0f !important; }
+    /* ИСПРАВЛЕНО: Зазор между 1 и 2 строкой текста ужат до плотных 6px, убирая пустоту */
+    .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; gap: 6px !important; outline: 1px dotted #f0f !important; }
     .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
-    /* Сделали line-height свободнее для пропорционального набора высоты */
-    .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.3 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
-    /* ПУНКТ 6: Зазор вокруг серой линии теперь тоже формируется через нативный маргин по 16px */
-    .header-center-red-axis { display: block !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 16px 0 !important; padding: 0 !important; width: 100% !important; }
+    .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.2 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    /* ИСПРАВЛЕНО: Зазоры вокруг оси увеличены до 18px, чтобы нативно вытолкнуть кнопки к нижнему краю логотипа */
+    .header-center-red-axis { display: block !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 18px 0 !important; padding: 0 !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
     .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
@@ -60,11 +58,11 @@ title: Концепт Шапки v1.3
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.3 • Пропорциональный дотяг):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.4):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
     <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк через свойства justify принудительно натянут на всю доступную ширину до правого края контента "флаг к флагу".</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
-    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка выровнена пиксель-в-пиксель по верхней грани синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли за счет нативного расширения зазоров опустились вниз и встали идеально по нижней грани синего квадрата.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа оригинальный. ВСЕ ТРИ ВНУТРЕННИХ ЗАЗОРА СТРОГО И МАТЕМАТИЧЕСКИ УВЕЛИЧЕНЫ ДО 16px ДЛЯ ИДЕАЛЬНОГО ДОТЯГА УГЛА.</div>
+    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка выровнена пиксель-в-пиксель по верхней грани оригинального логотипа.</div>
+    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли за счет компенсирующих зазоров оси удерживают идеальный прижим по нижней линии аватара.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа оригинальный. ЗАЗОР ТЕКСТА УМЕНЬШЕН ДО 6px (УПЛОТНЕНИЕ), А ЗАЗОРЫ ОСИ РАСШИРЕНЫ ДО 18px ДЛЯ СБАЛАНСИРОВАННОЙ ВЫСОТЫ.</div>
 </div>

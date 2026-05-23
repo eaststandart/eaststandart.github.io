@@ -1,70 +1,69 @@
 ---
 layout: default
-title: Тест консоли управления (Вариант 2)
+title: Тест консоли управления (Оригинальный масштаб)
 ---
 
 <!-- 
 =============================================================================
-ТЕСТОВЫЙ МАКЕТ ВАРИАНТ 2: ОРИГИНАЛЬНЫЙ ЛОГОТИП И ДВУХСТРОЧНЫЙ ЗАГЛОВОК
+ТЕСТОВЫЙ МАКЕТ: ВОЗВРАТ К ОРИГИНАЛЬНЫМ МАСШТАБАМ КАРТИНКИ И ШРИФТА ТЕМЫ
 ============================================================================= 
 -->
 
 <style>
-    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ */
+    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ С ОРИГИНАЛЬНЫМИ МАСШТАБАМИ */
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: center !important; /* Намертво центрирует текст и консоль по горизонтальной оси значка */
+        align-items: center !important; /* Центрируем двухстрочный текст и пульт по горизонтальной оси значка */
         justify-content: space-between !important;
         width: 100% !important;
         padding: 15px 0 !important;
         margin-bottom: 25px !important;
         border-bottom: 1px solid #eee !important;
+        gap: 25px !important;
+    }
+
+    /* Левый блок: Прижимаем двухстрочный текст к оригинальному логотипу */
+    .test-header-left {
+        display: flex !important;
+        align-items: center !important; /* Центрирует текст строго по высоте логотипа */
         gap: 20px !important;
     }
 
-    /* Левый блок: Сохраняем логотип и прижимаем к нему двухстрочный текст */
-    .test-header-left {
-        display: flex !important;
-        align-items: center !important; /* Центрирует двухстрочный блок по высоте логотипа */
-        gap: 15px !important;
-    }
-
-    /* Размер логотипа остается оригинальным, как на вашей Главной */
+    /* ЖЕСТКИЙ ВОЗВРАТ: Логотип получает оригинальный CSS-класс main-avatar без урезания размеров */
     .test-header-left .main-avatar {
-        width: 80px !important; /* Твой оригинальный брендовый размер */
-        height: 80px !important;
-        margin: 0 !important;
+        /* Размеры и скругления полностью диктуются оригинальным файлом style.css твоей темы */
         flex-shrink: 0 !important;
+        margin: 0 !important;
     }
 
-    /* Контейнер для двух строк текста */
+    /* Контейнер для двух строк оригинального шрифта */
     .test-brand-text-block {
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        line-height: 1.2 !important;
     }
 
-    /* Строка 1 */
+    /* ЖЕСТКИЙ ВОЗВРАТ: Строка 1 наследует оригинальный масштаб шрифта заголовка H1 твоей темы */
     .brand-line-1 {
-        font-family: monospace !important;
-        font-size: 0.95rem !important;
+        font-size: 2rem !important; /* Твой оригинальный размер H1 из style.css */
         font-weight: bold !important;
-        color: #222 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        line-height: 1.1 !important;
+        color: var(--text-color, #24292e) !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        letter-spacing: normal !important;
     }
 
-    /* Строка 2 */
+    /* Строка 2: Вторая половина оригинального шрифта */
     .brand-line-2 {
-        font-family: monospace !important;
-        font-size: 0.85rem !important;
-        font-weight: normal !important;
-        color: #666 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        margin-top: 2px !important;
+        font-size: 2rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
+        font-weight: bold !important;
+        line-height: 1.1 !important;
+        color: var(--text-color, #24292e) !important;
+        margin-top: 4px !important;
+        padding: 0 !important;
+        letter-spacing: normal !important;
     }
 
     /* Правый блок: Минималистичная консоль терминала */
@@ -72,7 +71,7 @@ title: Тест консоли управления (Вариант 2)
         display: flex !important;
         align-items: center !important;
         flex-grow: 1 !important;
-        max-width: 250px !important; /* Компактный размер для правого угла */
+        max-width: 250px !important; /* Компактный пульт в правом углу */
     }
 
     .console-input-wrapper {
@@ -112,40 +111,42 @@ title: Тест консоли управления (Вариант 2)
         user-select: none !important;
     }
 
-    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (УМНОЕ СЖАТИЕ) */
-    @media (max-width: 768px) {
+    /* 2. ЧИСТАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (БЕЗ УРЕЗАНИЯ КАРТИНКИ) */
+    @media (max-width: 900px) {
         .test-header {
-            flex-direction: column !important; /* На смартфонах выстраиваем элементы друг под другом */
+            flex-direction: column !important; /* На смартфонах перестраиваемся вертикально */
             align-items: flex-start !important;
             gap: 15px !important;
             padding: 10px 0 !important;
         }
 
-        /* Логотип на мобильных чуть-чуть уменьшаем, чтобы он не съедал пол-экрана */
+        /* На мобильных сохраняем оригинальный размер картинки темы */
         .test-header-left .main-avatar {
-            width: 55px !important;
-            height: 55px !important;
+            margin: 0 auto 10px auto !important; /* Центрируем значок, если он не влезает */
         }
 
-        .brand-line-1 { font-size: 0.85rem !important; }
-        .brand-line-2 { font-size: 0.75rem !important; }
+        /* Текст на мобильных просто аккуратно переносится по строкам, сохраняя масштаб */
+        .brand-line-1, .brand-line-2 {
+            font-size: 1.8rem !important; /* Легкое пропорциональное сжатие для мобильного экрана, чтобы текст не вылезал */
+            text-align: left !important;
+        }
 
         .test-header-right {
-            max-width: 100% !important; /* Строка ввода растягивается во всю ширину экрана телефона */
+            max-width: 100% !important;
             width: 100% !important;
         }
     }
 </style>
 
-<!-- СБОРКА ОБНОВЛЕННОЙ ШАПКИ (ВАРИАНТ 2) -->
+<!-- СБОРКА ШАПКИ НА ОСНОВЕ ТВОИХ ОРИГИНАЛЬНЫХ ПРОПОРЦИЙ -->
 <header class="test-header">
     
-    <!-- Левая сторона: Оригинальный логотип + Двухстрочный текст с центрированием -->
+    <!-- Левая сторона: Твой оригинальный логотип + Шрифт 2rem, разбитый на 2 строки -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
         <div class="test-brand-text-block">
-            <span class="brand-line-1">Творческая лаборатория</span>
-            <span class="brand-line-2">познавательного развития</span>
+            <h1 class="brand-line-1">Творческая лаборатория</h1>
+            <h1 class="brand-line-2">познавательного развития</h1>
         </div>
     </div>
 
@@ -159,14 +160,13 @@ title: Тест консоли управления (Вариант 2)
 
 </header>
 
-<!-- СЕТКА ДЛЯ ПРОВЕРКИ ВИЗУАЛЬНОГО БАЛАНСА -->
+<!-- КОНТЕНТ ДЛЯ ОЦЕНКИ БАЛАНСА -->
 <div class="test-page-content" style="padding: 10px 0; color: #444; font-size: 0.95rem; line-height: 1.5;">
-    <p>📐 <strong>Оцените геометрию Варианта №2:</strong></p>
+    <p>📐 <strong>Текущий статус прототипа:</strong></p>
     <ul>
-        <li>Значок остался крупным, как вы и просили [0.1].</li>
-        <li>Текст разбился на две строчки («Творческая лаборатория» и «познавательного развития») [0.1].</li>
-        <li>Обе строки идеально сцентрированы по горизонтальной оси (посередине) круглого логотипа [0.1].</li>
-        <li>Справа аккуратно встала строка пульта управления, завершая баланс [0.1].</li>
+        <li>Размер картинки-логотипа полностью возвращён к оригинальному масштабу темы [0.1].</li>
+        <li>Размер шрифта обеих строк жёстко зафиксирован на исходных <strong>`2rem`</strong> (оригинальный масштаб вашего H1) [0.1].</li>
+        <li>Двухстрочный блок текста идеально выровнен по центру горизонтальной оси значка [0.1].</li>
+        <li>Справа аккуратно выведена строка пульта управления [0.1].</li>
     </ul>
-    <p>На смартфонах элементы перестраиваются вертикально, но за счёт компактных шрифтов и плотных падингов вся шапка занимает в два раза меньше места, освобождая первый экран под рабочие разделы [0.1].</p>
 </div>

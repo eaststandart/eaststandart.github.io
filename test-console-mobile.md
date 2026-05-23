@@ -53,7 +53,7 @@ title: Тест мобильной шапки v1.0
 
     /* Строка 2: Описание (начинается под первой строкой) */
     .mob-description {
-        font-size: 0.8rem !important; /* Уменьшенный шрифт для смартфонов */
+        font-size: 0.75rem !important; /* Уменьшенный шрифт для смартфонов */
         font-weight: normal !important;
         line-height: 1.2 !important;
         color: #666 !important;

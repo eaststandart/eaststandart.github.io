@@ -1,42 +1,35 @@
 ---
 layout: default
-title: Тест оригинального логотипа и выравнивания ярусов
+title: Тест двухъярусного пульта управления
 ---
-
-<!-- 
-=============================================================================
-ЭТАЛОННЫЙ ТЕСТОВЫЙ МАКЕТ С ВЫВОДОМ КОНТРОЛЬНОГО ЛИСТА ВНИЗУ СТРАНИЦЫ
-============================================================================= 
--->
 
 <style>
     /* 1. ГЕНЕРАЛЬНАЯ ГЕОМЕТРИЯ КОНТЕЙНЕРА ШАПКИ */
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: stretch !important; /* Натягивает контент на физическую высоту оригинального логотипа */
+        align-items: stretch !important; /* [Пункт 6] Натягивает контент на высоту оригинального логотипа */
         width: 100% !important;
         box-sizing: border-box !important;
         
-        /* ПУНКТ 1: Полный возврат к оригинальным левым и правым отступам темы, убираем огромные дыры */
+        /* [Пункт 1] Полный возврат к оригинальным отступам темы, убираем огромные дыры */
         padding: 0 !important; 
         margin-top: 0 !important;
-        margin-bottom: 30px !important;
-        border-bottom: 1px solid #eee !important;
+        margin-bottom: 0 !important;
         
-        /* Расстояние от правой стороны логотипа до начала текста */
-        gap: 15px !important; 
+        /* [Пункт 1] Зазор от правой стороны логотипа до начала текста равен точно 25px */
+        gap: 25px !important; 
         min-width: 0 !important;
     }
 
-    /* Левый блок: Твой оригинальный логотип */
+    /* Левый блок: Наш главный оригинальный логотип */
     .test-header-left {
         flex-shrink: 0 !important;
         display: flex !important;
-        align-items: flex-start !important; /* Прижимает верх логотипа строго к базовой линии вёрстки */
+        align-items: flex-start !important; /* [Пункт 4] Привязка верха логотипа строго к базовой линии текста */
     }
     
-    /* МАСШТАБ ЛОГОТИПА: Полностью оригинальный из темы, убраны любые пиксельные рамки */
+    /* [Пункт 6] МАСШТАБ ЛОГОТИПА: Полностью оригинальный из темы, размеры картинки не затрагиваются */
     .test-header-left .main-avatar {
         display: block !important;
         margin: 0 !important;
@@ -46,14 +39,13 @@ title: Тест оригинального логотипа и выравнив�
     .test-header-content-zone {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important; /* Распределяет текст по верху, а кнопки по низу */
+        justify-content: space-between !important; /* [Пункт 6] Распределяет текст по верху, а кнопки по низу */
         flex-grow: 1 !important;
         min-width: 0 !important;
-        padding-top: 2px !important; /* Тончайшее выравнивание букв точно по верхней грани логотипа */
     }
 
     /* ==========================================================================
-       ЯРУС 1 (ВЕРХНИЙ): ТЕКСТОВЫЙ БЛОК (ПУНКТ 4)
+       [Пункт 4] ЯРУС 1 (ВЕРХНИЙ): ТЕКСТОВЫЙ БЛОК (ПРИВЯЗКА К ВЕРХУ ЛОГОТИПА)
        ========================================================================== */
     .header-text-tier {
         display: flex !important;
@@ -62,47 +54,61 @@ title: Тест оригинального логотипа и выравнив�
         align-items: flex-start !important;
     }
 
-    /* Название: Заглавные буквы, строго в одну строку, БЕЗ вылезаний за край страницы */
+    /* Название: Заглавные буквы, строго в одну строку без переносов */
     .brand-line-1 {
-        /* Умный адаптивный шрифт: плавно сжимается, если экран монитора становится уже */
-        font-size: clamp(1.1rem, 2vw, 1.3rem) !important; 
+        font-size: 1.28rem !important; /* Ювелирный размер для идеального укладывания строки в один ряд */
         font-weight: bold !important;
         line-height: 1.0 !important;
         color: var(--text-color, #24292e) !important;
         margin: 0 !important;
         padding: 0 !important;
-        text-align: left !important;
-        white-space: nowrap !important; /* Запрещает перенос слов заголовка */
-        letter-spacing: -0.4px !important; /* Уплотненный чертежный трекинг букв */
-    }
-
-    /* Описание под заголовком: Строго в одну строку, вровень с верхней */
-    .brand-description {
-        font-size: clamp(0.85rem, 1.5vw, 0.95rem) !important; 
-        font-weight: normal !important;
-        line-height: 1.0 !important;
-        color: #666 !important;
-        margin: 6px 0 0 0 !important;
-        padding: 0 !important;
-        text-align: left !important;
-        white-space: nowrap !important; /* Запрещает перенос слов описания на вторую строчку */
+        white-space: nowrap !important;
+        
+        /* [Пункт 2] Вытягиваем заглавные буквы первой строки ровно до правого края страницы */
+        text-align: justify !important;
+        text-align-last: justify !important;
+        width: 100% !important;
         letter-spacing: -0.2px !important;
     }
 
+    /* Описание под заголовком */
+    .brand-description {
+        font-size: 0.98rem !important; 
+        font-weight: normal !important;
+        line-height: 1.1 !important;
+        color: #666 !important;
+        margin: 6px 0 0 0 !important;
+        padding: 0 !important;
+        
+        /* [Пункт 2] Текст второй строки вытянут по ширине до конца страницы вровень с первой */
+        text-align: justify !important;
+        text-align-last: justify !important;
+        width: 100% !important;
+    }
+
     /* ==========================================================================
-       ЯРУС 2 (НИЖНИЙ): СТРОКА ИНСТРУМЕНТОВ (ПУНКТ 5)
+       [Пункт 5] ЯРУС 2 (НИЖНИЙ): СТРОКА ИНСТРУМЕНТОВ (ПРИВЯЗКА К НИЗУ ЛОГОТИПА)
        ========================================================================== */
     .header-tools-tier {
         display: flex !important;
         flex-direction: row !important; 
         align-items: center !important;
-        gap: 10px !important; 
+        gap: 15px !important; 
         width: 100% !important;
-        height: 34px !important; /* Компактная фиксированная высота */
-        margin-bottom: 4px !important; /* Выравнивание строго по нижней кромке аватара темы */
+        height: 34px !important; /* Компактная фиксированная высота элементов */
+        margin-bottom: 2px !important; /* [Пункт 5] Выравнивание кнопок точно по нижнему краю аватара темы */
     }
 
-    /* Финксированные компактные кнопки */
+    /* Контейнер для трех кнопок одинаковой ширины (Занимает ровно 50% строки) */
+    .tools-buttons-group {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        width: 50% !important; 
+        flex-shrink: 0 !important;
+    }
+
+    /* [Пункт 3] Общие стили для трех кнопок одинаковой ширины */
     .panel-action-btn {
         display: flex !important;
         align-items: center !important;
@@ -110,7 +116,7 @@ title: Тест оригинального логотипа и выравнив�
         gap: 6px !important;
         height: 34px !important; 
         box-sizing: border-box !important;
-        padding: 0 12px !important; 
+        padding: 0 !important; 
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
         font-family: monospace !important;
@@ -120,7 +126,7 @@ title: Тест оригинального логотипа и выравнив�
         transition: all 0.2s ease !important;
         cursor: pointer !important;
         white-space: nowrap !important;
-        flex-shrink: 0 !important;
+        flex: 1 !important; /* Все 3 кнопки делят свои 50% пространства математически поровну */
     }
 
     .btn-search { background-color: #f6f8fa !important; color: #555 !important; }
@@ -129,15 +135,15 @@ title: Тест оригинального логотипа и выравнив�
     .btn-tg { background-color: #eef7fd !important; color: #0088cc !important; border-color: #b3e0f2 !important; }
     .btn-tg:hover { background-color: #0088cc !important; color: #fff !important; border-color: #0088cc !important; }
 
-    /* Третья кнопка Почты одинаковой ширины с остальными */
+    /* Третья кнопка Почты [Пункт 3] */
     .btn-email { background-color: #fcf8e3 !important; color: #a67507 !important; border-color: #fbeed5 !important; }
-    .btn-email:hover { background-color: #fcf8e3 !important; color: #2188ff !important; border-color: #2188ff !important; }
+    .btn-email:hover { background-color: #a67507 !important; color: #fff !important; border-color: #a67507 !important; }
 
-    /* Строка ввода команд терминала растягивается до правого края страницы */
+    /* [Пункт 3] Строка ввода команд занимает всю оставшуюся вторую половину (50%) строки контента */
     .console-input-wrapper {
         position: relative !important;
-        flex-grow: 1 !important; 
-        min-width: 150px !important;
+        width: 50% !important; 
+        flex-grow: 1 !important;
     }
 
     .console-input-field {
@@ -173,9 +179,17 @@ title: Тест оригинального логотипа и выравнив�
         user-select: none !important;
     }
 
-    /* БЛОК ОТОБРАЖЕНИЯ КОНТРОЛЬНОГО ЛИСТА ВНИЗУ СТРАНИЦЫ */
+    /* ЛИНИЯ ОТЧЕРКИВАНИЯ ШАПКИ: Настройка зазора, чтобы не прижималась к логотипу */
+    .test-header-hr {
+        border: 0 !important;
+        border-top: 1px solid #eee !important;
+        margin-top: 25px !important; /* Создает необходимый чистый воздух под аватаром */
+        margin-bottom: 30px !important;
+        width: 100% !important;
+    }
+
+    /* СТИЛИ ОТОБРАЖЕНИЯ КОНТРОЛЬНОГО ЛИСТА В САМОМ НИЗУ СТРАНИЦЫ */
     .visual-control-panel {
-        margin-top: 50px !important;
         padding: 20px !important;
         background-color: #f9f9f9 !important;
         border: 1px dashed #ccc !important;
@@ -187,7 +201,7 @@ title: Тест оригинального логотипа и выравнив�
     .control-title {
         font-weight: bold !important;
         color: #d9534f !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 12px !important;
         text-transform: uppercase !important;
     }
     .control-item {
@@ -195,22 +209,31 @@ title: Тест оригинального логотипа и выравнив�
         line-height: 1.4 !important;
     }
 
-    /* МОБИЛЬНАЯ АДАПТАЦИЯ (СПАСЕНИЕ ПЕРВОГО ЭКРАНА СМАРТФОНОВ) */
+    /* МОБИЛЬНАЯ АДАПТАЦИЯ */
     @media (max-width: 900px) {
         .test-header {
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 15px !important;
         }
-        .brand-line-1, .brand-description {
+        .brand-line-1 {
             white-space: normal !important;
+            font-size: 1.2rem !important;
             text-align: left !important;
+            text-align-last: left !important;
+        }
+        .brand-description {
+            text-align: left !important;
+            text-align-last: left !important;
         }
         .header-tools-tier {
             flex-direction: column !important;
             align-items: stretch !important;
             height: auto !important;
             gap: 8px !important;
+        }
+        .tools-buttons-group {
+            width: 100% !important;
         }
         .panel-action-btn, .console-input-wrapper {
             width: 100% !important;
@@ -237,18 +260,3 @@ title: Тест оригинального логотипа и выравнив�
 
         <!-- ЯРУС 2: ИНСТРУМЕНТЫ (Выровнены точно по нижней грани оригинального логотипа) -->
         <div class="header-tools-tier">
-            
-            <!-- Три фиксированные компактные кнопки -->
-            <a href="/tags.html" class="panel-action-btn btn-search">
-                <span>#️⃣</span> Поиск
-            </a>
-            <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
-                <span>✈️</span> Телеграм
-            </a>
-            <a href="mailto:info@example.com" class="panel-action-btn btn-email">
-                <span>✉️</span> Почта
-            </a>
-
-            <!-- Широкая строка ввода консоли до самого правого края страницы -->
-            <div class="console-input-wrapper">
-                <span class="console-prompt-symbol">&gt;</span>

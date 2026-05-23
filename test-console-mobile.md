@@ -42,8 +42,6 @@ title: Тест мобильной шапки v1.0
     /* Строка 1: Главное название (идет справа от логотипа вровень с его верхом) */
     .mob-line-1 {
         font-size: 1.05rem !important; /* Аккуратный мобильный кегль */
-        text-align: justify !important;
-        text-align-last: justify !important;
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
@@ -85,7 +83,7 @@ title: Тест мобильной шапки v1.0
 
     <!-- Правая сторона: Двухуровневый текст -->
     <div class="mob-header-content">
-        <h1 class="mob-line-1">Творческая лаборатория<br> познавательного развития</h1>
+        <h1 class="mob-line-1">Творческая лаборатория познавательного развития</h1>
         <p class="mob-description">[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]</p>
     </div>
 

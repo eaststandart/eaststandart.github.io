@@ -46,7 +46,7 @@ title: Тест консоли управления (Оригинальный м
 
     /* ЖЕСТКИЙ ВОЗВРАТ: Строка 1 наследует оригинальный масштаб шрифта заголовка H1 твоей темы */
     .brand-line-1 {
-        font-size: 2rem !important; /* Твой оригинальный размер H1 из style.css */
+        font-size: 1.5rem !important; /* Твой оригинальный размер H1 из style.css */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;

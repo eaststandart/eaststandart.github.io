@@ -73,7 +73,7 @@ title: Тест двухъярусного пульта управления
 
     /* Серое описание мелким шрифтом под заголовком */
     .brand-description {
-        font-size: 1rem !important; /* Уменьшенный аккуратный размер */
+        font-size: 0.95rem !important; /* Уменьшенный аккуратный размер */
         font-weight: normal !important;
         color: #666 !important; /* Серый благородный цвет */
         margin: 8px 0 0 0 !important;

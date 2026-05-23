@@ -12,7 +12,7 @@ title: Тест мобильной шапки v1.0
         width: 100% !important;
         box-sizing: border-box !important;
         padding: 0px 0px !important; /* Уплотненные мобильные отступы от краев экрана */
-        gap: 15px !important; /* Зазор между иконкой и текстом */
+        gap: 10px !important; /* Зазор между иконкой и текстом */
         background: rgba(0,0,0,0.02) !important;
         outline: 2px dashed #999 !important; /* ДЕБАГ-СЕТКА ДЛЯ КОНТРОЛЯ ГЕОМЕТРИИ */
     }
@@ -25,8 +25,8 @@ title: Тест мобильной шапки v1.0
     .mob-header-left .main-avatar {
         display: block !important;
         margin: 0 !important;
-        width: 80px !important; /* Компактный мобильный размер значка */
-        height: 80px !important;
+        width: 85px !important; /* Компактный мобильный размер значка */
+        height: 85px !important;
         box-shadow: 0 0 0 2px #00f !important;
     }
 

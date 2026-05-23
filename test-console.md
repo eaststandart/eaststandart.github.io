@@ -51,7 +51,7 @@ title: Тест двухъярусного пульта управления
     /* Строка 1: Выровнена по верхней грани логотипа */
     .brand-line-1 {
         font-size: 1.3rem !important; /* Твой оригинальный масштаб H1 */
-        letter-spacing: -1px !important;
+        letter-spacing: -0.9px !important;
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
@@ -220,7 +220,7 @@ title: Тест двухъярусного пульта управления
         <!-- ЯРУС 1: ТЕКСТОВЫЙ БЛОК (Выровнен по верхней грани логотипа) -->
         <div class="header-text-tier">
             <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
-            <p class="brand-description">Для тех, кто хочет знать как все устроено и создавать технологии своими руками.</p>
+            <p class="brand-description">для тех, кто хочет знать как все устроено и создавать технологии своими руками</p>
         </div>
 
         <!-- ЯРУС 2: ЛИНЕЙКА ИНСТРУМЕНТОВ (Выровнена по нижней половине логотипа) -->

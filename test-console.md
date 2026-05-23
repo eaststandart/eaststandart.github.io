@@ -30,8 +30,8 @@ title: Тест консоли управления
     }
 
     .test-header-left .main-avatar {
-        width: 60px !important;  /* Компактный размер для экономии высоты экрана */
-        height: 60px !important;
+        width: 100px !important;  /* Компактный размер для экономии высоты экрана */
+        height: 100px !important;
         margin: 0 !important;
     }
 

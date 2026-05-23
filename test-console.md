@@ -1,18 +1,19 @@
 ---
 layout: default
-title: Дебаг Концепта Шапки v1.0
+title: Нативное выравнивание Концепта v1.0
 ---
-<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: ЮВЕЛИРНЫЙ ВЕРХ по логотипу (-2px). 5: Низ ПЛОТНО по логотипу. 6: Масштаб темы + серая ось. -->
+<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Нативный верх по логотипу. 5: Нативный низ по логотипу. 6: Полное удаление искусственных смещений. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; }
     .header-center-red-axis { position: absolute !important; left: 0 !important; right: 0 !important; top: 50% !important; transform: translateY(-50%) !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; z-index: 10 !important; pointer-events: none !important; }
+    /* ИСПРАВЛЕНО: Текстовый ярус больше не сжимается, отступы строго обнулены */
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
-    /* ИСПРАВЛЕНО: transform: translateY(-2px) идеально приподнимает буквы на верхнюю кромку логотипа */
-    .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; transform: translateY(-2px) !important; }
-    .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 5px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    /* ИСПРАВЛЕНО: УБРАНЫ ВСЕ СМЕЩЕНИЯ ДЛЯ BRAND-LINE. Включен line-height: 1.0 для идеальной нативной посадки */
+    .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
+    .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.1 !important; color: #666 !important; margin: 6px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
     .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
@@ -27,7 +28,7 @@ title: Дебаг Концепта Шапки v1.0
     .control-item { margin-bottom: 6px !important; line-height: 1.4 !important; }
     @media (max-width: 900px) {
         .test-header { flex-direction: column !important; align-items: flex-start !important; gap: 15px !important; padding: 15px !important; }
-        .brand-line-1 { white-space: normal !important; font-size: 1.2rem !important; text-align: left !important; text-align-last: left !important; transform: none !important; }
+        .brand-line-1 { white-space: normal !important; font-size: 1.2rem !important; text-align: left !important; text-align-last: left !important; }
         .brand-description { text-align: left !important; text-align-last: left !important; }
         .header-tools-tier { flex-direction: column !important; align-items: stretch !important; height: auto !important; gap: 8px !important; }
         .tools-buttons-group { width: 100% !important; }
@@ -57,11 +58,11 @@ title: Дебаг Концепта Шапки v1.0
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.0 • Сдвиг -2px):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.0 • Чистое выравнивание):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
     <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк через свойства justify принудительно натянут на всю доступную ширину до правого края контента "флаг к флагу".</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
-    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка смещена ровно на 2px вверх (`translateY`) и встала идеально вровень с верхней линией синего квадрата логотипа.</div>
+    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка нативно, без искусственных сдвигов, прижата к верхней линии зеленой зоны контента.</div>
     <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли прижаты строго к нижней грани оригинального логотипа темы.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа не затрагивается. Тонкая серая ось делит контент ровно посередине аватара.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа не затрагивается. Тонкая серая ось делит контент ровно посередине аватара. Любые костыли translateY полностью удалены.</div>
 </div>

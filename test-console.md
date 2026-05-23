@@ -1,104 +1,105 @@
 ---
 layout: default
-title: Тест пульта управления и кнопок навигации (Вариант 3)
+title: Тест двухъярусного пульта управления
 ---
 
 <!-- 
 =============================================================================
-ТЕСТОВЫЙ МАКЕТ ВАРИАНТ 3: ГОРИЗОНТАЛЬНЫЕ КНОПКИ СВЕРХУ + СТРОКА ВВОДА СНИЗУ
+ТЕСТОВЫЙ МАКЕТ: ДВУХЪЯРУСНАЯ СЕТКА ШАПКИ (ТЕКСТ СВЕРХУ, КНОПКИ СНИЗУ)
 ============================================================================= 
 -->
 
 <style>
-    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ */
+    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ВСЕЙ ШАПКИ */
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: flex-start !important; /* Выравниваем левый и правый блоки по верхней линии */
-        justify-content: space-between !important;
+        align-items: flex-start !important; /* Прижимаем блоки к верхнему краю для точного контроля высоты */
         width: 100% !important;
         padding: 15px 0 !important;
         margin-bottom: 25px !important;
         border-bottom: 1px solid #eee !important;
-        gap: 30px !important;
+        gap: 25px !important; /* Фиксированный зазор между логотипом и контентной зоной */
     }
 
-    /* Левый блок: Оригинальный логотип + Выравнивание текста по левому краю */
+    /* Левый блок: Наш главный оригинальный логотип */
     .test-header-left {
-        display: flex !important;
-        align-items: center !important; /* Внутри левого блока текст центрирован по высоте значка */
-        gap: 20px !important;
-    }
-
-    .test-header-left .main-avatar {
         flex-shrink: 0 !important;
+    }
+    .test-header-left .main-avatar {
         margin: 0 !important;
+        display: block !important;
     }
 
-    .test-brand-text-block {
+    /* Правый блок: Контентная зона, которая занимает всё оставшееся пространство до правого края */
+    .test-header-content-zone {
+        display: flex !important;
+        flex-direction: column !important; /* Делим зону по высоте на два яруса */
+        flex-grow: 1 !important;
+        gap: 15px !important; /* Дистанция между верхним текстовым ярусом и нижним ярусом кнопок */
+    }
+
+    /* ==========================================
+       ЯРУС 1 (ВЕРХНИЙ): ТЕКСТОВЫЙ БЛОК
+       ========================================== */
+    .header-text-tier {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
+        align-items: flex-start !important; /* Строго выравниваем все буквы по левому краю */
     }
 
+    /* Строка 1: Выровнена по верхней грани логотипа */
     .brand-line-1 {
-        font-size: 1.1rem !important; 
+        font-size: 2rem !important; /* Твой оригинальный масштаб H1 */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
         margin: 0 !important;
         padding: 0 !important;
-
+        text-align: left !important;
     }
 
+    /* Строка 2 */
     .brand-line-2 {
-        font-size: 0.95rem !important; 
+        font-size: 2rem !important; 
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
         margin: 4px 0 0 0 !important;
         padding: 0 !important;
-
+        text-align: left !important;
     }
 
+    /* Серое описание мелким шрифтом под заголовком */
     .brand-description {
-        font-size: 0.8rem !important;
+        font-size: 0.85rem !important; /* Уменьшенный аккуратный размер */
         font-weight: normal !important;
-        color: #24292e !important;
-        margin: 12px 0 0 0 !important;
-        line-height: 1.4 !important;
-        max-width: 500px !important;
+        color: #666 !important; /* Серый благородный цвет */
+        margin: 8px 0 0 0 !important;
+        line-height: 1.3 !important;
+        text-align: left !important;
     }
 
-    /* Правый блок: Двухуровневая горизонтальная панель инструментов */
-    .test-header-right-panel {
+    /* ==========================================
+       ЯРУС 2 (НИЖНИЙ): ЕДИНАЯ СТРОКА ИНСТРУМЕНТОВ
+       ========================================== */
+    .header-tools-tier {
         display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important; /* Плотный зазор между верхним рядом кнопок и строкой ввода */
-        width: 100% !important;
-        max-width: 340px !important; /* Немного расширили блок, чтобы две кнопки комфортно встали в ряд */
-        flex-shrink: 0 !important;
-        margin-top: 5px !important; /* Микро-сдвиг для идеального выравнивания по верху логотипа */
-    }
-
-    /* Уровень 1: Горизонтальный ряд для двух кнопок */
-    .panel-buttons-row {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 8px !important; /* Расстояние между кнопками */
+        flex-direction: row !important; /* Все инструменты выстраиваются в одну линию под текстом */
+        align-items: center !important;
+        gap: 10px !important; /* Расстояние между элементами строки */
         width: 100% !important;
     }
 
-    /* Общие стили для компактных кнопок навигации */
+    /* Общие стили для компактных кнопок */
     .panel-action-btn {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 6px !important;
-        flex: 1 !important; /* Кнопки делят ширину строки строго поровну */
+        height: 34px !important; /* Единая фиксированная высота для всей строки инструментов */
         box-sizing: border-box !important;
-        padding: 6px 10px !important; /* Более компактные отступы */
+        padding: 0 14px !important;
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
         font-family: monospace !important;
@@ -131,16 +132,18 @@ title: Тест пульта управления и кнопок навигац
         border-color: #0088cc !important;
     }
 
-    /* Уровень 2: Консоль ввода терминала */
+    /* Консоль ввода терминала встраивается прямо в общую линию инструментов */
     .console-input-wrapper {
         position: relative !important;
-        width: 100% !important;
+        flex-grow: 1 !important; /* Строка ввода занимает всё оставшееся свободное пространство до правого края страницы */
+        max-width: 300px !important; /* Ограничиваем длину консоли, чтобы она не растягивалась избыточно */
     }
 
     .console-input-field {
         width: 100% !important;
+        height: 34px !important; /* Высота идеально совпадает с кнопками */
         box-sizing: border-box !important;
-        padding: 6px 10px 6px 24px !important; /* Сжатые по высоте инпуты */
+        padding: 0 10px 0 24px !important;
         background-color: #f6f8fa !important;
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
@@ -169,62 +172,76 @@ title: Тест пульта управления и кнопок навигац
         user-select: none !important;
     }
 
-    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ ШАПКИ */
+    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (СПАСЕНИЕ ПЕРВОГО ЭКРАНА) */
     @media (max-width: 900px) {
         .test-header {
-            flex-direction: column !important; /* На телефонах выстраиваемся вертикально */
+            flex-direction: column !important; /* Складываемся вертикально на смартфонах */
             align-items: flex-start !important;
-            gap: 20px !important;
+            gap: 15px !important;
             padding: 10px 0 !important;
         }
 
-        .test-header-left {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 15px !important;
-        }
-
         .brand-line-1, .brand-line-2 {
-            font-size: 0.7rem !important;
+            font-size: 1.5rem !important; /* Адаптивное уплотнение крупных букв */
         }
 
-        .test-header-right-panel {
+        .header-tools-tier {
+            flex-direction: column !important; /* Инструменты на телефонах встают аккуратной стопкой во всю ширину */
+            align-items: stretch !important;
+            gap: 8px !important;
+        }
+
+        .panel-action-btn {
+            height: 36px !important;
+        }
+
+        .console-input-wrapper {
             max-width: 100% !important;
             width: 100% !important;
+        }
+        .console-input-field {
+            height: 36px !important;
         }
     }
 </style>
 
-<!-- СБОРКА ОБНОВЛЕННОЙ ШАПКИ (ВАРИАНТ 3) -->
+<!-- СБОРКА ШАПКИ НА ОСНОВЕ ДВУХЪЯРУСНОЙ КОНЦЕПЦИИ -->
 <header class="test-header">
     
-    <!-- Левая сторона: Твой оригинальный логотип + Выравнивание текста по левому краю -->
+    <!-- Левая сторона: Твой главный оригинальный логотип -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
-        <div class="test-brand-text-block">
-            <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
-            <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
-            <p class="brand-description">Для тех, кто хочет знать как все устроено<br> и создавать технологии своими руками</p>
-        </div>
     </div>
 
-    <!-- Правая сторона: Двухуровневая компактная панель управления -->
-    <div class="test-header-right-panel">
+    <!-- Правая сторона: Контентная зона (Текст сверху, Пульт снизу) -->
+    <div class="test-header-content-zone">
         
-        <!-- Уровень 1: Поиск и Telegram в один горизонтальный ряд -->
-        <div class="panel-buttons-row">
+        <!-- ЯРУС 1: ТЕКСТОВЫЙ БЛОК (Выровнен по верхней грани логотипа) -->
+        <div class="header-text-tier">
+            <h1 class="brand-line-1">Творческая лаборатория</h1>
+            <h1 class="brand-line-2">познавательного развития</h1>
+            <p class="brand-description">Для тех, кто хочет знать как все устроено и создавать технологии своими руками.</p>
+        </div>
+
+        <!-- ЯРУС 2: ЛИНЕЙКА ИНСТРУМЕНТОВ (Выровнена по нижней половине логотипа) -->
+        <div class="header-tools-tier">
+            
+            <!-- Инструмент 1: Поиск -->
             <a href="/tags.html" class="panel-action-btn btn-search">
                 <span>#️⃣</span> Поиск по тегам
             </a>
+            
+            <!-- Инструмент 2: Telegram -->
             <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
-                <span>✈️</span> Написать в телег
+                <span>✈️</span> Написать в телеграм
             </a>
-        </div>
 
-        <!-- Уровень 2: Строка ввода консоли управления -->
-        <div class="console-input-wrapper">
-            <span class="console-prompt-symbol">&gt;</span>
-            <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
+            <!-- Инструмент 3: Консоль ввода команд (Растягивается до правого края) -->
+            <div class="console-input-wrapper">
+                <span class="console-prompt-symbol">&gt;</span>
+                <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
+            </div>
+
         </div>
 
     </div>
@@ -232,10 +249,10 @@ title: Тест пульта управления и кнопок навигац
 </header>
 
 <div class="test-page-content" style="padding: 10px 0; color: #555; font-size: 0.95rem;">
-    <p>📐 <strong>Панель перестроена точно по вашему описанию:</strong></p>
+    <p>⚙️ <strong>Новая двухъярусная архитектура полностью собрана:</strong></p>
     <ul>
-        <li>Блок управления выровнен по верхней кромке логотипа [0.1].</li>
-        <li>Кнопка поиска и кнопка Telegram стоят в одну горизонтальную линию [0.1].</li>
-        <li>Нижним этажом под ними аккуратно расположилась строка терминала [0.1].</li>
+        <li>Текст начинается ровно по верхней грани логотипа, сохраняя оригинальный масштаб `2rem` [0.1].</li>
+        <li>Нижняя строка описания сделана более мелкой и серой (`0.85rem`), уплотняя вёрстку [0.1].</li>
+        <li>Под текстом сформирован единый горизонтальный ряд инструментов: кнопки и консоль идут плечом к плечу до самого правого края страницы [0.1].</li>
     </ul>
 </div>

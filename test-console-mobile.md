@@ -42,6 +42,7 @@ title: Тест мобильной шапки v1.0
     /* Строка 1: Главное название (идет справа от логотипа вровень с его верхом) */
     .mob-line-1 {
         font-size: 1.05rem !important; /* Аккуратный мобильный кегль */
+        text-align: justify !important;
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;

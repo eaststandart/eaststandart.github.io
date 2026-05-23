@@ -57,7 +57,7 @@ title: Тест консоли управления (Оригинальный м
 
     /* Строка 2: Вторая половина оригинального шрифта */
     .brand-line-2 {
-        font-size: 2rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
+        font-size: 1.5rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;

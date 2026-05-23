@@ -2,15 +2,17 @@
 layout: default
 title: Концепт Шапки v1.23 (Чистый дизайн)
 ---
-<!-- [КЛ] 1: Отступы темы + зазор 20px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: Низ плотно по логотипу (100px). 6: ДЕБАГ-СЕТКА ОТКЛЮЧЕНА. -->
+<!-- [КЛ] 1: Отступы темы + зазор 20px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: Низ плотно по логотипу (100px). 6: Тонкая еле заметная линия. -->
 <style>
-    .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 20px !important; min-width: 0 !important; }
+    .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 20px !important; min-width: 0 !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; }
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; }
     .brand-line-1 { font-size: 1.35rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.5px !important; }
     .brand-description { font-size: 1rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 6px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+    /* ИСПРАВЛЕНО: Возвращена изящная, еле заметная разделительная линия контента */
+    .header-center-red-axis { display: block !important; height: 1px !important; background-color: #f0f0f0 !important; border: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
     .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
@@ -39,6 +41,7 @@ title: Концепт Шапки v1.23 (Чистый дизайн)
             <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
             <p class="brand-description">[для тех, кто хочет знать как все устроено и создавать технологии своими руками]</p>
         </div>
+        <hr class="header-center-red-axis">
         <div class="header-tools-tier">
             <div class="tools-buttons-group">
                 <a href="/tags.html" class="panel-action-btn btn-search"><span>#️⃣</span> Поиск</a>
@@ -54,11 +57,11 @@ title: Концепт Шапки v1.23 (Чистый дизайн)
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.23 • Чистый вид):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.23 • С линией):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 20px.</div>
     <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет плотного трекинга -0.5px идеально уложен по ширине контента без вылетов наружу.</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
     <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка идет строго по верхней линии синего квадрата логотипа.</div>
     <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли идут строго в один уровень по нижней линии синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Картинка зафиксирована на 100px. ЗЕЛЕНЫЙ БЛОК КОНТЕНТА АВТОМАТИЧЕСКИ ИДЕАЛЬНО РАСШИРИЛСЯ СЛЕДОМ ПО ВЫСОТЕ ДО 100px, убрав все дыры.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> Картинка зафиксирована на 100px. Добавлена изящная, еле заметная горизонтальная линия, разделяющая текст и кнопки точно по центру аватара.</div>
 </div>

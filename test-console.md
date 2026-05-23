@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Исправление Концепта v1.0
+title: Дебаг Концепта Шапки v1.0
 ---
-<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Плотный верх по логотипу. 5: Плотный низ по логотипу. 6: Компенсация заводского зазора шрифта -6px. -->
+<!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: ЗОЛОТАЯ СЕРЕДИНА ВЕРХА (-3px). 5: Низ ПЛОТНО по логотипу. 6: Масштаб темы + серая ось. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
@@ -10,8 +10,8 @@ title: Исправление Концепта v1.0
     .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; }
     .header-center-red-axis { position: absolute !important; left: 0 !important; right: 0 !important; top: 50% !important; transform: translateY(-50%) !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; z-index: 10 !important; pointer-events: none !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
-    /* ИСПРАВЛЕНО: margin-top: -6px нативно компенсирует пустой внутренний зазор букв и поднимает их ровно на верхнюю грань */
-    .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -6px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
+    /* ИСПРАВЛЕНО: Золотая середина маргина задана в -3px для безупречного совмещения линий */
+    .brand-line-1 { font-size: 1.28rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -3px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.2px !important; }
     .brand-description { font-size: 0.98rem !important; font-weight: normal !important; line-height: 1.1 !important; color: #666 !important; margin: 6px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
     .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
@@ -57,11 +57,11 @@ title: Исправление Концепта v1.0
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.0 • Компенсация зазора):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.0 • Смещение -3px):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
     <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк через свойства justify принудительно натянут на всю доступную ширину до правого края контента "флаг к флагу".</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
-    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка за счет margin-top: -6px компенсировала зазор глифов и встала ровно по верхней синей кромке.</div>
+    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка за счет margin-top: -3px идеально скоординирована по верхней синей кромке зеленого блока.</div>
     <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли прижаты строго к нижней грани оригинального логотипа темы.</div>
     <div class="control-item"><strong>[Пункт 6]</strong> Масштаб логотипа не затрагивается. Тонкая серая ось делит контент ровно посередине аватара.</div>
 </div>

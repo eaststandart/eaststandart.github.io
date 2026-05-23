@@ -145,8 +145,8 @@ title: Тест консоли управления (Оригинальный м
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
         <div class="test-brand-text-block">
-            <h1 class="brand-line-1">Творческая лаборатория</h1>
-            <h1 class="brand-line-2">познавательного развития</h1>
+            <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
+            <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
         </div>
     </div>
 

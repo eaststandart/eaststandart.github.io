@@ -11,7 +11,7 @@ title: Тест мобильной шапки v1.0
         align-items: flex-start !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 0px 15px !important; /* Уплотненные мобильные отступы от краев экрана */
+        padding: 0px 0px !important; /* Уплотненные мобильные отступы от краев экрана */
         gap: 15px !important; /* Зазор между иконкой и текстом */
         background: rgba(0,0,0,0.02) !important;
         outline: 2px dashed #999 !important; /* ДЕБАГ-СЕТКА ДЛЯ КОНТРОЛЯ ГЕОМЕТРИИ */

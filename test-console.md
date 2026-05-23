@@ -1,43 +1,40 @@
 ---
 layout: default
-title: Тест консоли управления (Оригинальный масштаб)
+title: Тест пульта управления и кнопок навигации (Вариант 3)
 ---
 
 <!-- 
 =============================================================================
-ТЕСТОВЫЙ МАКЕТ: ВОЗВРАТ К ОРИГИНАЛЬНЫМ МАСШТАБАМ КАРТИНКИ И ШРИФТА ТЕМЫ
+ТЕСТОВЫЙ МАКЕТ ВАРИАНТ 3: ГОРИЗОНТАЛЬНЫЕ КНОПКИ СВЕРХУ + СТРОКА ВВОДА СНИЗУ
 ============================================================================= 
 -->
 
 <style>
-    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ С ОРИГИНАЛЬНЫМИ МАСШТАБАМИ */
+    /* 1. ГЕОМЕТРИЯ И ВЫРАВНИВАНИЕ ШАПКИ */
     .test-header {
         display: flex !important;
         flex-direction: row !important;
-        align-items: center !important; /* Центрируем двухстрочный текст и пульт по горизонтальной оси значка */
-        justify-content: flex-start !important;
+        align-items: flex-start !important; /* Выравниваем левый и правый блоки по верхней линии */
+        justify-content: space-between !important;
         width: 100% !important;
         padding: 15px 0 !important;
         margin-bottom: 25px !important;
         border-bottom: 1px solid #eee !important;
-        gap: 25px !important;
+        gap: 30px !important;
     }
 
-    /* Левый блок: Прижимаем двухстрочный текст к оригинальному логотипу */
+    /* Левый блок: Оригинальный логотип + Выравнивание текста по левому краю */
     .test-header-left {
         display: flex !important;
-        align-items: center !important; /* Центрирует текст строго по высоте логотипа */
+        align-items: center !important; /* Внутри левого блока текст центрирован по высоте значка */
         gap: 20px !important;
     }
 
-    /* ЖЕСТКИЙ ВОЗВРАТ: Логотип получает оригинальный CSS-класс main-avatar без урезания размеров */
     .test-header-left .main-avatar {
-        /* Размеры и скругления полностью диктуются оригинальным файлом style.css твоей темы */
         flex-shrink: 0 !important;
         margin: 0 !important;
     }
 
-    /* Контейнер для двух строк оригинального шрифта */
     .test-brand-text-block {
         display: flex !important;
         flex-direction: column !important;
@@ -45,38 +42,96 @@ title: Тест консоли управления (Оригинальный м
         align-items: flex-start !important;
     }
 
-    /* ЖЕСТКИЙ ВОЗВРАТ: Строка 1 наследует оригинальный масштаб шрифта заголовка H1 твоей темы */
     .brand-line-1 {
-        font-size: 1.3rem !important; /* Твой оригинальный размер H1 из style.css */
+        font-size: 2rem !important; 
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
         margin: 0 !important;
         padding: 0 !important;
-        letter-spacing: normal !important;
         text-align: left !important;
     }
 
-    /* Строка 2: Вторая половина оригинального шрифта */
     .brand-line-2 {
-        font-size: 1.3rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
+        font-size: 2rem !important; 
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
-        margin-top: 4px !important;
+        margin: 4px 0 0 0 !important;
         padding: 0 !important;
-        letter-spacing: normal !important;
         text-align: left !important;
     }
 
-    /* Правый блок: Минималистичная консоль терминала */
-    .test-header-right {
-        display: flex !important;
-        align-items: center !important;
-        flex-grow: 1 !important;
-        max-width: 250px !important; /* Компактный пульт в правом углу */
+    .brand-description {
+        font-size: 0.95rem !important;
+        font-weight: normal !important;
+        color: #24292e !important;
+        margin: 12px 0 0 0 !important;
+        line-height: 1.4 !important;
+        max-width: 500px !important;
     }
 
+    /* Правый блок: Двухуровневая горизонтальная панель инструментов */
+    .test-header-right-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important; /* Плотный зазор между верхним рядом кнопок и строкой ввода */
+        width: 100% !important;
+        max-width: 340px !important; /* Немного расширили блок, чтобы две кнопки комфортно встали в ряд */
+        flex-shrink: 0 !important;
+        margin-top: 5px !important; /* Микро-сдвиг для идеального выравнивания по верху логотипа */
+    }
+
+    /* Уровень 1: Горизонтальный ряд для двух кнопок */
+    .panel-buttons-row {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important; /* Расстояние между кнопками */
+        width: 100% !important;
+    }
+
+    /* Общие стили для компактных кнопок навигации */
+    .panel-action-btn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        flex: 1 !important; /* Кнопки делят ширину строки строго поровну */
+        box-sizing: border-box !important;
+        padding: 6px 10px !important; /* Более компактные отступы */
+        border: 1px solid #e1e4e8 !important;
+        border-radius: 6px !important;
+        font-family: monospace !important;
+        font-size: 0.8rem !important;
+        font-weight: bold !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+    }
+
+    .btn-search {
+        background-color: #f6f8fa !important;
+        color: #555 !important;
+    }
+    .btn-search:hover {
+        background-color: #fff !important;
+        color: #2188ff !important;
+        border-color: #2188ff !important;
+    }
+
+    .btn-tg {
+        background-color: #eef7fd !important;
+        color: #0088cc !important;
+        border-color: #b3e0f2 !important;
+    }
+    .btn-tg:hover {
+        background-color: #0088cc !important;
+        color: #fff !important;
+        border-color: #0088cc !important;
+    }
+
+    /* Уровень 2: Консоль ввода терминала */
     .console-input-wrapper {
         position: relative !important;
         width: 100% !important;
@@ -85,7 +140,7 @@ title: Тест консоли управления (Оригинальный м
     .console-input-field {
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 8px 10px 8px 24px !important;
+        padding: 6px 10px 6px 24px !important; /* Сжатые по высоте инпуты */
         background-color: #f6f8fa !important;
         border: 1px solid #e1e4e8 !important;
         border-radius: 6px !important;
@@ -114,63 +169,73 @@ title: Тест консоли управления (Оригинальный м
         user-select: none !important;
     }
 
-    /* 2. ЧИСТАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (БЕЗ УРЕЗАНИЯ КАРТИНКИ) */
+    /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ ШАПКИ */
     @media (max-width: 900px) {
         .test-header {
-            flex-direction: column !important; /* На смартфонах перестраиваемся вертикально */
+            flex-direction: column !important; /* На телефонах выстраиваемся вертикально */
             align-items: flex-start !important;
-            gap: 15px !important;
+            gap: 20px !important;
             padding: 10px 0 !important;
         }
 
-        /* На мобильных сохраняем оригинальный размер картинки темы */
-        .test-header-left .main-avatar {
-            margin: 0 auto 10px auto !important; /* Центрируем значок, если он не влезает */
+        .test-header-left {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 15px !important;
         }
 
-        /* Текст на мобильных просто аккуратно переносится по строкам, сохраняя масштаб */
         .brand-line-1, .brand-line-2 {
-            font-size: 1.8rem !important; /* Легкое пропорциональное сжатие для мобильного экрана, чтобы текст не вылезал */
-            text-align: left !important;
+            font-size: 1.6rem !important;
         }
 
-        .test-header-right {
+        .test-header-right-panel {
             max-width: 100% !important;
             width: 100% !important;
         }
     }
 </style>
 
-<!-- СБОРКА ШАПКИ НА ОСНОВЕ ТВОИХ ОРИГИНАЛЬНЫХ ПРОПОРЦИЙ -->
+<!-- СБОРКА ОБНОВЛЕННОЙ ШАПКИ (ВАРИАНТ 3) -->
 <header class="test-header">
     
-    <!-- Левая сторона: Твой оригинальный логотип + Шрифт 2rem, разбитый на 2 строки -->
+    <!-- Левая сторона: Твой оригинальный логотип + Выравнивание текста по левому краю -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
         <div class="test-brand-text-block">
-            <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
-            <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
-            <p> <strong>Для тех, кто хочет знать как все устроено<br>и создавать технологии своими руками.</strong></p>
+            <h1 class="brand-line-1">Творческая лаборатория</h1>
+            <h1 class="brand-line-2">познавательного развития</h1>
+            <p class="brand-description">Для тех, кто хочет знать как все устроено и создавать технологии своими руками.</p>
         </div>
     </div>
 
-    <!-- Правая сторона: Минималистичный пульт консоли -->
-    <div class="test-header-right">
+    <!-- Правая сторона: Двухуровневая компактная панель управления -->
+    <div class="test-header-right-panel">
+        
+        <!-- Уровень 1: Поиск и Telegram в один горизонтальный ряд -->
+        <div class="panel-buttons-row">
+            <a href="/tags.html" class="panel-action-btn btn-search">
+                <span>#️⃣</span> Поиск по тегам
+            </a>
+            <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
+                <span>✈️</span> Написать в телег
+            </a>
+        </div>
+
+        <!-- Уровень 2: Строка ввода консоли управления -->
         <div class="console-input-wrapper">
             <span class="console-prompt-symbol">&gt;</span>
             <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
         </div>
+
     </div>
 
 </header>
 
-<!-- КОНТЕНТ ДЛЯ ОЦЕНКИ БАЛАНСА -->
-<div class="test-page-content" style="padding: 10px 0; color: #444; font-size: 0.95rem; line-height: 1.5;">
-    <p>📐 <strong>Текущий статус прототипа:</strong></p>
+<div class="test-page-content" style="padding: 10px 0; color: #555; font-size: 0.95rem;">
+    <p>📐 <strong>Панель перестроена точно по вашему описанию:</strong></p>
     <ul>
-        <li>Размер картинки-логотипа полностью возвращён к оригинальному масштабу темы [0.1].</li>
-        <li>Размер шрифта обеих строк жёстко зафиксирован на исходных <strong>`2rem`</strong> (оригинальный масштаб вашего H1) [0.1].</li>
-        <li>Двухстрочный блок текста идеально выровнен по центру горизонтальной оси значка [0.1].</li>
-        <li>Справа аккуратно выведена строка пульта управления [0.1].</li>
+        <li>Блок управления выровнен по верхней кромке логотипа [0.1].</li>
+        <li>Кнопка поиска и кнопка Telegram стоят в одну горизонтальную линию [0.1].</li>
+        <li>Нижним этажом под ними аккуратно расположилась строка терминала [0.1].</li>
     </ul>
 </div>

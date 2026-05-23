@@ -30,8 +30,8 @@ title: Тест консоли управления
     }
 
     .test-header-left .main-avatar {
-        width: 42px !important;  /* Компактный размер для экономии высоты экрана */
-        height: 42px !important;
+        width: 60px !important;  /* Компактный размер для экономии высоты экрана */
+        height: 60px !important;
         margin: 0 !important;
     }
 
@@ -113,7 +113,7 @@ title: Тест консоли управления
     <!-- Левая сторона: Логотип сайта + Текст-маркер вместо H1 -->
     <div class="test-header-left">
         <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
-        <span class="test-brand-name">Лаборатория</span>
+        <span class="test-brand-name">Творческая лаборатория познавательного развития</span>
     </div>
 
     <!-- Правая сторона: Консоль ввода системных команд -->

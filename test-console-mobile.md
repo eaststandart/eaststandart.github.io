@@ -25,8 +25,8 @@ title: Тест мобильной шапки v1.0
     .mob-header-left .main-avatar {
         display: block !important;
         margin: 0 !important;
-        width: 95px !important; /* Компактный мобильный размер значка */
-        height:  95px !important;
+        width: 90px !important; /* Компактный мобильный размер значка */
+        height:  90px !important;
         box-shadow: 0 0 0 2px #00f !important;
     }
 

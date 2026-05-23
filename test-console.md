@@ -37,7 +37,7 @@ title: Концепт Шапки v1.23 (Чистый дизайн)
     <div class="test-header-content-zone">
         <div class="header-text-tier">
             <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
-            <p class="brand-description">[для тех, кто хочет знать как все устроено и создавать технологии своими руками</p>
+            <p class="brand-description">[для тех, кто хочет знать как все устроено и создавать технологии своими руками]</p>
         </div>
         <div class="header-tools-tier">
             <div class="tools-buttons-group">

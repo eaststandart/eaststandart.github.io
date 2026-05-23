@@ -47,7 +47,7 @@ title: Тест консоли управления (Оригинальный м
 
     /* ЖЕСТКИЙ ВОЗВРАТ: Строка 1 наследует оригинальный масштаб шрифта заголовка H1 твоей темы */
     .brand-line-1 {
-        font-size: 1.2rem !important; /* Твой оригинальный размер H1 из style.css */
+        font-size: 1.3rem !important; /* Твой оригинальный размер H1 из style.css */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
@@ -59,7 +59,7 @@ title: Тест консоли управления (Оригинальный м
 
     /* Строка 2: Вторая половина оригинального шрифта */
     .brand-line-2 {
-        font-size: 1.2rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
+        font-size: 1.3rem !important; /* Масштаб сохраняется, чтобы строки были равноправны */
         font-weight: bold !important;
         line-height: 1.1 !important;
         color: var(--text-color, #24292e) !important;
@@ -150,7 +150,7 @@ title: Тест консоли управления (Оригинальный м
         <div class="test-brand-text-block">
             <h1 class="brand-line-1">ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
             <h1 class="brand-line-2">ПОЗНАВАТЕЛЬНОГО РАЗВИТИЯ</h1>
-            Для тех кто хочет создавать<br> технологии своими руками
+            Для тех, кто хочет знать как все устроено и создавать технологии своими руками.
         </div>
     </div>
 

@@ -1,18 +1,18 @@
 ---
 layout: default
-title: Концепт Шапки v1.21
+title: Концепт Шапки v1.22
 ---
-<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину без вылетов (letter-spacing: -0.5px). 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЗ БЛОКА КОНТЕНТА И СИНЕГО КВАДРАТА НАМЕРТВО СШИТЫ НА 82px. 6: Зазоры ровно 10px. -->
+<!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: СИНЕ-ЗЕЛЕНЫЙ АВТО-ПРИЖИМ ВРОВЕНЬ (100% height + aspect-ratio). 6: Зазоры ровно 10px. -->
 <style>
-    .test-header { display: flex !important; flex-direction: row !important; align-items: flex-start !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
-    .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
-    /* ИСПРАВЛЕНО: Логотип жестко зафиксирован в компактном масштабе 82px на 82px и больше не зависит от длины текста */
-    .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 82px !important; height: 82px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
-    /* ИСПРАВЛЕНО: Высота зеленого блока контента намертво заперта на отметке 82px вровень с синим квадратом */
-    .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; height: 82px !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; padding: 0 !important; margin: 0 !important; }
+    .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
+    /* ИСПРАВЛЕНО: Левый блок натягивается ровно на нативную высоту правого зеленого блока контента */
+    .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: stretch !important; outline: 2px solid #00f !important; }
+    /* ИСПРАВЛЕНО: Синий квадрат принимает 100% высоты зеленого блока, а aspect-ratio удерживает форму круга, запрещая логотипу раздуваться */
+    .test-header-left .main-avatar { display: block !important; margin: 0 !important; height: 100% !important; width: auto !important; aspect-ratio: 1 / 1 !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
+    /* ИСПРАВЛЕНО: Зеленый блок имеет авто-высоту и сам диктует вертикальный масштаб всей шапки */
+    .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; }
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; gap: 10px !important; outline: 1px dotted #f0f !important; }
-    /* ИСПРАВЛЕНО: Межбуквенный интервал -0.5px и размер 1.25rem гарантируют, что заголовок останется внутри экрана */
-    .brand-line-1 { font-size: 1.25rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.5px !important; }
+    .brand-line-1 { font-size: 1.25rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: -0.45px !important; }
     .brand-description { font-size: 0.95rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
     .header-center-red-axis { display: block !important; height: 1px !important; background-color: #e1e4e8 !important; border: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
     .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
@@ -59,11 +59,11 @@ title: Концепт Шапки v1.21
 </header>
 <hr class="test-header-hr">
 <div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.21):</div>
+    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.22):</div>
     <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 25px.</div>
-    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет плотного трекинга -0.5px идеально уложен по ширине контента без вылетов наружу.</div>
+    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет сжатия трекинга идеально удерживается по всей ширине контента без вылетов наружу.</div>
     <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
-    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка нативно идет строго по верхней линии синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли прижаты строго к нижней линии синего квадрата логотипа за счет фиксации высоты контента на 82px.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Масштаб синего квадрата картинки и зеленой зоны контента принудительно зафиксирован вровень на отметке 82px. Все зазоры строго равны 10px.</div>
+    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка идет строго по верхней линии синего квадрата логотипа.</div>
+    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли идут строго в один уровень по нижней линии синего квадрата логотипа.</div>
+    <div class="control-item"><strong>[Пункт 6]</strong> Высота зеленого блока определяется нативно текстом и кнопками. СИНИЙ КВАДРАТ КАРТИНКИ АВТОМАТИЧЕСКИ ПРИНЯЛ ВЫСОТУ ЗЕЛЕНОГО КОНТЕНТА БЕЗ ДЕФОРМАЦИИ КРУГА.</div>
 </div>

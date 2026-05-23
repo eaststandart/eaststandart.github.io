@@ -2,6 +2,7 @@
 layout: default
 title: Дебаг Концепта Шапки v1.0
 ---
+
 <!-- [КЛ] 1: Отступы 25px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх ВРОВЕНЬ по логотипу. 5: Низ ПЛОТНО по логотипу. 6: Масштаб темы + серая ось. -->
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }

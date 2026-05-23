@@ -4,7 +4,7 @@ title: Концепт Шапки v1.21
 ---
 <!-- [КЛ] 1: Отступы темы. 2: Текст во всю ширину без вылетов (letter-spacing: -0.5px). 3: 3 серые кнопки + консоль. 4: Верх четко по логотипу. 5: НИЗ БЛОКА КОНТЕНТА И СИНЕГО КВАДРАТА НАМЕРТВО СШИТЫ НА 82px. 6: Зазоры ровно 10px. -->
 <style>
-    .test-header { display: flex !important; flex-direction: row !important; align-items: flex-start !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 25px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
+    .test-header { display: flex !important; flex-direction: row !important; align-items: flex-start !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 20px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
     /* ИСПРАВЛЕНО: Логотип жестко зафиксирован в компактном масштабе 82px на 82px и больше не зависит от длины текста */
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }

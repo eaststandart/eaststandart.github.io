@@ -1,7 +1,7 @@
 /* ==========================================================================
    СТИЛИ ДЛЯ КОМПЬЮТЕРОВ (header-desktop.css) • Концепция v1.23
    ========================================================================== */
-@media (min-width: 680px) {
+@media (min-width: 800px) {
 .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 20px !important; margin-bottom: 25px !important; gap: 20px !important; min-width: 0 !important; }
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
 .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; }

@@ -176,13 +176,16 @@
 </head>
 <body>
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
+<!-- КУСОК 1: Изолированный блок шапки в аккуратных 1000px, линия горит чётко -->
+<header class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important; display: block !important;">
     {% include header-desktop.liquid %}
-</div>
+</header>
 
-    <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
+<!-- КУСОК 2: Изолированный блок нижнего контента в таких же 1000px, чтобы не давить на шапку -->
+<main style="max-width: 1000px !important; margin: 0 auto !important; display: block !important; clear: both !important;">
     {{ content }}
+</main>
+
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

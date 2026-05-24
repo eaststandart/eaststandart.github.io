@@ -1,8 +1,5 @@
 ---
 layout: home-test
-title: 
-description: 
-
 ---
 
 {% include header-desktop.liquid %}

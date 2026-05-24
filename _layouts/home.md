@@ -21,8 +21,6 @@
     
     <style>
     
-		body { padding-top: 25px !important; }
-
         /* ==========================================================================
            1. СЕТКА ГЛАВНОГО КОНТЕЙНЕРА КАРТОЧЕК
            ========================================================================== */
@@ -179,7 +177,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-{% include header-desktop.liquid %}
+<div class="header-desktop-only" style="margin-top: 25px !important;"> {% include header-desktop.liquid %} </div>
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

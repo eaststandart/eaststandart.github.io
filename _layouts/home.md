@@ -32,7 +32,7 @@
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 0;
+            margin-top: 25px;
         }
 
         /* Базовая стилизация отдельной карточки-раздела */

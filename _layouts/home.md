@@ -176,7 +176,9 @@
 <body>
 
     <!-- Подключение изолированного модуля десктопной шапки -->
+    <div class="main-content">
         {% include header-desktop.liquid %}
+    </div>
 
     <!-- Изолируем Jekyll-контент в отдельный блок, защищая шапку от скрытых переносов строк -->
     <div class="main-page-content">

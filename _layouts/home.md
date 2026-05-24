@@ -7,17 +7,18 @@
 \========================================================================== 
 {% endcomment %}
 
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+    
     <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <style>
     

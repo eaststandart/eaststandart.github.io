@@ -11,9 +11,9 @@ title: Тест мобильной шапки v1.6
     .mob-header-left { flex-shrink: 0 !important; outline: 2px solid #00f !important; }
     .mob-header-left .main-avatar { display: block !important; margin: 0 !important; width: 90px !important; height: 90px !important; box-shadow: 0 0 0 2px #00f !important; }
     .mob-header-content-top { display: flex !important; flex-direction: column !important; flex-grow: 1 !important; min-width: 0 !important; padding-top: 2px !important; outline: 2px solid #0b0 !important; }
-    .mob-line-1 { font-size: 1.05rem !important; font-weight: bold !important; line-height: 1.1 !important; color: var(--text-color, #24292e) !important; margin: 0 !important; padding: 0 !important; text-align: left !important; outline: 1px dotted #f0f !important; }
+    .mob-line-1 { font-size: 1.05rem !important; font-weight: bold !important; line-height: 1 !important; color: var(--text-color, #24292e) !important; margin: -3px 0 0 0 !important; padding: 0 !important; text-align: left !important; outline: 1px dotted #f0f !important; }
     /* ИСПРАВЛЕНО: Линия 2 намертво прижата к самому нижнему обрезу серого прямоугольника шапки, margin-bottom: 0 */
-    .mob-description-bottom { display: block !important; width: 100% !important; font-size: 0.82rem !important; font-weight: normal !important; line-height: 1.3 !important; color: #555 !important; margin: 0 !important; padding: 4px 10px !important; text-align: left !important; outline: 1px dotted #0af !important; box-sizing: border-box !important; }
+    .mob-description-bottom { display: block !important; width: 100% !important; font-size: 0.82rem !important; font-weight: normal !important; line-height: 1.3 !important; color: #555 !important; margin: 0 !important; padding: 4px 0px !important; text-align: left !important; outline: 1px dotted #0af !important; box-sizing: border-box !important; }
     .mob-header-hr { border: 0 !important; border-top: 1px solid #eee !important; margin-top: 15px !important; margin-bottom: 20px !important; width: 100% !important; }
 </style>
 <div class="mob-main-gray-box">

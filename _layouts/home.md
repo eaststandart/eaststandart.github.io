@@ -175,11 +175,15 @@
 </head>
 <body>
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-    {% include header-desktop.liquid %}
+    <!-- Подключение изолированного модуля десктопной шапки -->
+    <div class="header-desktop-only">
+        {% include header-desktop.liquid %}
+    </div>
 
-	<!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
-    {{ content }}
+    <!-- Изолируем Jekyll-контент в отдельный блок, защищая шапку от скрытых переносов строк -->
+    <div class="main-page-content">
+        {{ content }}
+    </div>
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

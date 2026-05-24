@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 
-description: ""
+description: 
 custom_css: "/assets/css/header-desktop.css"
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: default
-title: 
-description: 
+title: Творческая лаборатория познавательного развития
+description: "[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]"
 custom_css: "/assets/css/header-desktop.css"
 ---
 

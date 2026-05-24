@@ -177,11 +177,9 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<!-- Подключение изолированного модуля десктопной шапки, запертого в аккуратные 1000px -->
 <div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important;">
     {% include header-desktop.liquid %}
 </div>
-
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

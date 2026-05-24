@@ -2,7 +2,7 @@
 layout: home-test
 title: 
 description: 
-custom_css: "/assets/css/header-desktop.css"
+
 ---
 
 {% include header-desktop.liquid %}

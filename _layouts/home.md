@@ -175,14 +175,12 @@
 </head>
 <body>
 
-    <!-- Подключение изолированного модуля десктопной шапки -->
-    <div class="content-wrapper">
-        
-    
+<body>
+
+  {% include header-desktop.liquid %}
 
     <!-- Изолируем Jekyll-контент в отдельный блок, защищая шапку от скрытых переносов строк -->
-    <div class="main-content">
-    {% include header-desktop.liquid %}
+    <div class="main-page-content">
         {{ content }}
     </div>
 
@@ -194,6 +192,6 @@
     </footer>
 
     {% include footer.liquid %}
-</div>
+
 </body>
 </html>

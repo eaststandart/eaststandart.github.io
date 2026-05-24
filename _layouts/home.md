@@ -175,11 +175,11 @@
 </head>
 <body>
 
-<main style="display: block !important; width: 100% !important; clear: both !important;">
+ <!-- Главная верхняя шапка с круглым логотипом -->
     {% include header-desktop.liquid %}
-    {{ content }}
-</main>
 
+	<!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
+    {{ content }}
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

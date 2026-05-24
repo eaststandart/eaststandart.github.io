@@ -24,9 +24,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
-    {% include header-desktop.liquid %}
-</div>
+{% include header-desktop.liquid %}
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

@@ -174,7 +174,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="main-content" style="max-width: 1000px !important; margin: 0 !important;">
+<div style="max-width: 1000px !important; margin: 0 !important;">
     {% include header-desktop.liquid %}
 </div>
 

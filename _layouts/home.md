@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <!-- Подключение центральных модулей стилей сайта -->
-    <link rel="stylesheet" href="/assets/css/style_.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination_.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
@@ -175,7 +175,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important;">
+<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important;">
     {% include header-desktop.liquid %}
 </div>
 

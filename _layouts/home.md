@@ -31,7 +31,7 @@
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 0;
+            margin-top: 25px !important;
         }
 
         /* Базовая стилизация отдельной карточки-раздела */
@@ -177,7 +177,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="margin-top: 25px !important;"> {% include header-desktop.liquid %} </div>
+{% include header-desktop.liquid %}
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

@@ -1,14 +1,14 @@
 /* ==========================================================================
    СТИЛИ ДЛЯ КОМПЬЮТЕРОВ (header-desktop.css)
    ========================================================================== */
-    /* 1. ИСПРАВЛЕНО: Добавлен flex-wrap и min-content, удерживающие блок от расползания вширь */
-    .test-header { display: inline-flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: min-content !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 20px !important; margin-bottom: 25px !important; gap: 20px !important; min-width: 0 !important; }
+    /* 1. ИСПРАВЛЕНО: Заменено width: max-content на 100% и добавлен flex-wrap для аккуратного переноса элементов */
+    .test-header { display: inline-flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 20px !important; margin-bottom: 25px !important; gap: 20px !important; min-width: 0 !important; }
     
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
     .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; }
     
-    /* 2. ИСПРАВЛЕНО: Задан безопасный порог ширины текста для защиты от сминания букв */
-    .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 280px !important; padding: 0 !important; margin: 0 !important; }
+    /* 2. ИСПРАВЛЕНО: Задан минимальный порог сжатия текстовой зоны (min-width: 320px), чтобы при сужении окна текст плавно уходил под логотип целиком, а не сминался по одной букве */
+    .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 320px !important; padding: 0 !important; margin: 0 !important; }
     
     .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; }
 

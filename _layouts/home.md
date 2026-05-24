@@ -15,20 +15,9 @@
     <title>{{ page.title }}</title>
     <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-
-    <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->
-    {% if page.custom_css %}
-      {% for style in page.custom_css %}
-        <link rel="stylesheet" href="{{ style | relative_url }}">
-      {% endfor %}
-    {% endif %}
-    {% if layout.custom_css %}
-      {% for style in layout.custom_css %}
-        <link rel="stylesheet" href="{{ style | relative_url }}">
-      {% endfor %}
-    {% endif %}
 
     <style>
     
@@ -164,7 +153,7 @@
         /* ==========================================================================
            3. МОБИЛЬНАЯ АДАПТАЦИЯ ШАБЛОНА ГЛАВНОЙ СТРАНИЦЫ
            ========================================================================== */
-        @media (max-width: 680px) {
+        @media (max-width: 900px) {
             /* Перевод контейнера в резиновый мобильный full-width режим */
             .grid-container {
                 max-width: 100% !important;

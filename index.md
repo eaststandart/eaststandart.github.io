@@ -1,6 +1,5 @@
 ---
 layout: home
-custom_css: "/assets/css/header-desktop.css"
 ---
 
 <div class="grid-container">

@@ -18,4 +18,11 @@
 .console-input-field { width: 100% !important; height: 34px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; background-color: #f6f8fa !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: "SFMono-Regular", Consolas, monospace !important; font-size: 0.85rem !important; color: #24292e !important; outline: none !important; transition: all 0.2s ease !important; }
 .console-input-field:focus { background-color: #fff !important; border-color: #2188ff !important; box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important; }
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
+@media (max-width: 900px) {
+        .test-header { flex-direction: column !important; align-items: flex-start !important; gap: 15px !important; padding: 15px !important; }
+        .brand-line-1 { white-space: normal !important; font-size: 1.2rem !important; text-align: left !important; text-align-last: left !important; margin: 0 !important; }
+        .brand-description { text-align: left !important; text-align-last: left !important; }
+        .header-tools-tier { flex-direction: column !important; align-items: stretch !important; height: auto !important; gap: 8px !important; }
+        .tools-buttons-group { width: 100% !important; }
+        .panel-action-btn, .console-input-wrapper { width: 100% !important; }
 }

@@ -1,7 +1,6 @@
 ---
 layout: home
-title: 
-description: 
+title: text
 ---
 
 <div class="grid-container">

@@ -7,7 +7,7 @@ title: Тест мобильной шапки v1.6
     /* ИСПРАВЛЕНО: Полное обнуление полей по периметру. Высота коробки автоматически подстраивается под высоту логотипа и Линии 2 */
     .mob-main-gray-box { display: flex !important; flex-direction: column !important; justify-content: space-between !important; width: 100% !important; box-sizing: border-box !important; background-color: #f6f8fa !important; border: 1px solid #e1e4e8 !important; border-radius: 0px !important; padding: 0 !important; margin: 0 !important; gap: 0px !important; outline: 2px dashed #999 !important; }
     /* Верхний ряд: Логотип и Название прижаты строго к верхнему краю */
-    .mob-header-top-row { display: flex !important; flex-direction: row !important; align-items: center !important; width: 100% !important; gap: 0px !important; margin: 0 !important; padding: 0 !important; }
+    .mob-header-top-row { display: flex !important; flex-direction: row !important; align-items: center !important; width: 100% !important; gap: 10px !important; margin: 0 !important; padding: 0 !important; }
     .mob-header-left { flex-shrink: 0 !important; outline: 2px solid #00f !important; }
     .mob-header-left .main-avatar { display: block !important; margin: 0 !important; width: 110px !important; height: 110px !important; box-shadow: 0 0 0 2px #00f !important; }
     .mob-header-content-top { display: flex !important; flex-direction: column !important; flex-grow: 1 !important; min-width: 0 !important; padding-top: 2px !important; outline: 2px solid #0b0 !important; }

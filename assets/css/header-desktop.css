@@ -22,3 +22,4 @@
     .visual-control-panel { padding: 20px !important; background-color: #f9f9f9 !important; border: 1px dashed #ccc !important; border-radius: 8px !important; font-family: monospace !important; font-size: 0.9rem !important; color: #333 !important; }
     .control-title { font-weight: bold !important; color: #d9534f !important; margin-bottom: 12px !important; text-transform: uppercase !important; }
     .control-item { margin-bottom: 6px !important; line-height: 1.4 !important; }
+    .test-header-hr { border: 0 !important; border-top: 1px solid #eee !important; margin-top: 25px !important; margin-bottom: 30px !important; width: 100% !important; }

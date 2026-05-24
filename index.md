@@ -1,19 +1,55 @@
 ---
-layout: default
+layout: home
 title: 
 description: 
-custom_css: "/assets/css/header-desktop.css"
 ---
 
-{% include header-desktop.liquid %}
+<div class="grid-container">
+    <!-- БЛОК 1 -->
+    <section class="category-card my-projects">
+        <div class="card-header">
+            <img src="/assets/icons/ugolok-mladshego-konstruktora.svg" alt="✈️" class="section-icon">
+            <h2>Уголок младшего конструктора</h2>
+        </div>
+        <ul class="project-list">
+            <li><a href="/biblio/">📚 Список литературы</a></li>
+            <li><a href="/diary/">📝 Дневник инженера</a></li>
+            <li><a href="/projects/">🗂️ Учебные проекты</a></li>
+            <li><a href="/faire/">🔥 Ярмарка поделок</a></li>
+            <li><a href="/inspiration/">🚀 Техническое вдохновение</a></li>
+            <li><a href="/tools/">🛠 Полезные инструменты</a></li>
+        </ul>
+    </section>
 
-<hr class="test-header-hr">
-<div class="visual-control-panel">
-    <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.23 • С линией):</div>
-    <div class="control-item"><strong>[Пункт 1]</strong> Отступ логотипа от левого края возвращён к стандарту оригинальной темы. Зазор до текста равен точно 20px.</div>
-    <div class="control-item"><strong>[Пункт 2]</strong> Текст 1 и 2 строк за счет плотного трекинга -0.5px идеально уложен по ширине контента без вылетов наружу.</div>
-    <div class="control-item"><strong>[Пункт 3]</strong> В ряд инструментов встали 3 серые кнопки одинаковой ширины (50% яруса) + строка ввода консоли до правого края страницы (вторые 50%).</div>
-    <div class="control-item"><strong>[Пункт 4]</strong> Первая строка заголовка идет строго по верхней линии синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 5]</strong> Линейка кнопок и инпут консоли идут строго в один уровень по нижней линии синего квадрата логотипа.</div>
-    <div class="control-item"><strong>[Пункт 6]</strong> Картинка зафиксирована на 100px. Добавлена изящная, еле заметная горизонтальная линия, разделяющая текст и кнопки точно по центру аватара.</div>
+    <!-- БЛОК 2: ЧТО НОВОГО -->
+    <section class="category-card site-news">
+        <div class="card-header">
+            <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
+            <h2>Что нового?</h2>
+        </div>
+        <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->
+        <div class="home-news-feed">
+            <ul id="posts-list" style="list-style: none; padding: 0; margin: 0;">
+                {% include news-loop.liquid type="home" %}
+            </ul>
+        </div>
+        <div id="home-news-pagination"></div>
+    </section>
+
+    <!-- БЛОК 3: РЕЗЕРВ -->
+    <section class="category-card tech-creative">
+        <div class="card-header">
+            <img src="/assets/icons/detskij-inzhenernyj-klub.svg" alt="✈️" class="section-icon">
+            <h2>Информация юным техникам</h2>
+        </div>
+        <ul class="project-list">
+            <li><a href="#">✨ Деятельность клуба</a></li>
+            <li><a href="#">🎓 Регулярные занятия</a></li>
+            <li><a href="#">🪁 Детско-юношеский лагерь</a></li>
+            <li><a href="#">🎨 Творческий процесс</a></li>
+            <li><a href="#">💥 Работы юных инженеров</a></li>
+        </ul>
+    </section>
 </div>
+
+{% include pagination.liquid list_id="posts-list" controls_id="home-news-pagination" per_page=10 pinned_url="/people/fran-blanche/" %}

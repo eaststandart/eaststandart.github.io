@@ -12,10 +12,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<title>{{ page.title }}</title>-->
+    <title>{{ page.title }}</title>
     <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     
@@ -175,11 +174,9 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<!-- ИСПРАВЛЕНО: Выводим шапку на верхний графический слой, защищая линию от теней нижнего контента -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important; position: relative !important; z-index: 999 !important;">
+<div class="main-content">
     {% include header-desktop.liquid %}
 </div>
-
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

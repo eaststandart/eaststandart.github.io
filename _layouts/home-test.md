@@ -14,9 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-    
-    <!-- Подключение центральных модулей стилей сайта -->
-    <link rel="stylesheet" href="/assets/css/header-desktop.css">
 
 </head>
 <body>

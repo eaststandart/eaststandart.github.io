@@ -185,7 +185,7 @@
     {% include header-desktop.liquid %}
         {{ content }}
     </div>
-</div>
+
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">
         <a href="https://t.me" target="_blank" class="tg-button">
@@ -194,6 +194,6 @@
     </footer>
 
     {% include footer.liquid %}
-
+</div>
 </body>
 </html>

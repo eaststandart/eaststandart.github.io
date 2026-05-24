@@ -175,9 +175,11 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important;">
+<!-- ИСПРАВЛЕНО: Выводим шапку на верхний графический слой, защищая линию от теней нижнего контента -->
+<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important; position: relative !important; z-index: 999 !important;">
     {% include header-desktop.liquid %}
 </div>
+
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

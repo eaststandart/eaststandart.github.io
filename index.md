@@ -3,11 +3,6 @@ layout: home
 title: Творческая лаборатория познавательного развития
 ---
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 901px !important; margin: 0 auto !important;">
-    {% include header-desktop.liquid %}
-</div>
-
 <div class="grid-container">
     <!-- БЛОК 1 -->
     <section class="category-card my-projects">

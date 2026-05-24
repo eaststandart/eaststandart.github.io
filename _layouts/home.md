@@ -31,7 +31,7 @@
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 0;
+            margin-top: 0 !important;
         }
 
         /* Базовая стилизация отдельной карточки-раздела */
@@ -122,9 +122,7 @@
         }
         
         /* Параметры шрифтов и заголовков */
-        h1 { margin-bottom: 20px !important; }
         h2 { margin: 0; font-size: 1.3rem; color: #333; }
-        header { margin-bottom: 30px !important; }
         
         /* Стилизация списков внутренних ссылок в карточках */
         .project-list { list-style: none; padding: 0; margin: 0; }

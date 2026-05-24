@@ -17,7 +17,19 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-    
+
+    <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->
+    {% if page.custom_css %}
+      {% for style in page.custom_css %}
+        <link rel="stylesheet" href="{{ style | relative_url }}">
+      {% endfor %}
+    {% endif %}
+    {% if layout.custom_css %}
+      {% for style in layout.custom_css %}
+        <link rel="stylesheet" href="{{ style | relative_url }}">
+      {% endfor %}
+    {% endif %}
+
     <style>
     
         /* ==========================================================================
@@ -174,7 +186,7 @@
 <body>
 
  <!-- Главная верхняя шапка с круглым логотипом -->
-<div style="max-width: 1000px !important; margin: 0 !important;">
+<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
     {% include header-desktop.liquid %}
 </div>
 

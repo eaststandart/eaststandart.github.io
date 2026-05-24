@@ -36,12 +36,12 @@
 <div class="content-wrapper">
         
     <!-- Блок навигации -->
-    {% include navigation.liquid %}
+    {% include navigation_.liquid %}
 
-    <h1 style="margin-top: 0;">{{ page.title }}</h1> 
+    <h1 style="margin-top: 0;">{{ page_.title }}</h1> 
 
     <div class="main-content">
-        <p class="page-description">{{ page.description }}</p>
+        <p class="page-description">{{ page_.description }}</p>
         
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
         {{ content }}

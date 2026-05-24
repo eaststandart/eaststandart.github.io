@@ -22,3 +22,11 @@
     .visual-control-panel { padding: 20px !important; background-color: #f9f9f9 !important; border: 1px dashed #ccc !important; border-radius: 8px !important; font-family: monospace !important; font-size: 0.9rem !important; color: #333 !important; }
     .control-title { font-weight: bold !important; color: #d9534f !important; margin-bottom: 12px !important; text-transform: uppercase !important; }
     .control-item { margin-bottom: 6px !important; line-height: 1.4 !important; }
+    @media (max-width: 900px) {
+        .test-header { flex-direction: column !important; align-items: flex-start !important; gap: 15px !important; padding: 15px !important; }
+        .brand-line-1 { white-space: normal !important; font-size: 1.2rem !important; text-align: left !important; text-align-last: left !important; margin: 0 !important; }
+        .brand-description { text-align: left !important; text-align-last: left !important; }
+        .header-tools-tier { flex-direction: column !important; align-items: stretch !important; height: auto !important; gap: 8px !important; }
+        .tools-buttons-group { width: 100% !important; }
+        .panel-action-btn, .console-input-wrapper { width: 100% !important; }
+    }

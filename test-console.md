@@ -1,39 +1,9 @@
 ---
 layout: default
-title: 
+page.custom_css: "/assets/css/header-desktop.css"
 ---
 <!-- [КЛ] 1: Отступы темы + зазор 20px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: Низ плотно по логотипу (100px). 6: Тонкая еле заметная линия. -->
-<style>
-    .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 20px !important; min-width: 0 !important; }
-    .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
-    .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; }
-    .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
-    .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; }
-    .brand-line-1 { font-size: 1.55rem !important; font-weight: bold !important; line-height: 1.0 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: nowrap !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: 0px !important; }
-    .brand-description { font-size: 1rem !important; font-weight: normal !important; line-height: 1.0 !important; color: #666 !important; margin: 6px 0 0 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
-    /* ИСПРАВЛЕНО: Возвращена изящная, еле заметная разделительная линия контента */
-    .header-center-red-axis { display: block !important; height: 1px !important; background-color: #f0f0f0 !important; border: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
-    .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; }
-    .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
-    .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
-    .panel-action-btn:hover { background-color: #fff !important; color: #2188ff !important; border-color: #2188ff !important; }
-    .console-input-wrapper { position: relative !important; width: 50% !important; flex-grow: 1 !important; }
-    .console-input-field { width: 100% !important; height: 34px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; background-color: #f6f8fa !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: "SFMono-Regular", Consolas, monospace !important; font-size: 0.85rem !important; color: #24292e !important; outline: none !important; transition: all 0.2s ease !important; }
-    .console-input-field:focus { background-color: #fff !important; border-color: #2188ff !important; box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important; }
-    .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
-    .test-header-hr { border: 0 !important; border-top: 1px solid #eee !important; margin-top: 25px !important; margin-bottom: 30px !important; width: 100% !important; }
-    .visual-control-panel { padding: 20px !important; background-color: #f9f9f9 !important; border: 1px dashed #ccc !important; border-radius: 8px !important; font-family: monospace !important; font-size: 0.9rem !important; color: #333 !important; }
-    .control-title { font-weight: bold !important; color: #d9534f !important; margin-bottom: 12px !important; text-transform: uppercase !important; }
-    .control-item { margin-bottom: 6px !important; line-height: 1.4 !important; }
-    @media (max-width: 900px) {
-        .test-header { flex-direction: column !important; align-items: flex-start !important; gap: 15px !important; padding: 15px !important; }
-        .brand-line-1 { white-space: normal !important; font-size: 1.2rem !important; text-align: left !important; text-align-last: left !important; margin: 0 !important; }
-        .brand-description { text-align: left !important; text-align-last: left !important; }
-        .header-tools-tier { flex-direction: column !important; align-items: stretch !important; height: auto !important; gap: 8px !important; }
-        .tools-buttons-group { width: 100% !important; }
-        .panel-action-btn, .console-input-wrapper { width: 100% !important; }
-    }
-</style>
+
 <header class="test-header">
     <div class="test-header-left"><img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar"></div>
     <div class="test-header-content-zone">

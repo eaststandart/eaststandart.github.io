@@ -6,6 +6,7 @@ custom_css: "/assets/css/header-desktop.css"
 ---
 
 {% include header-desktop.liquid %}
+
 <hr class="test-header-hr">
 <div class="visual-control-panel">
     <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.23 • С линией):</div>

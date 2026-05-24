@@ -180,8 +180,7 @@
     {% include header-desktop.liquid %}
 </div>
 
-    <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
-    {{ content }}
+<main style="display: block !important; width: 100% !important; clear: both !important;"> {{ content }} </main>
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

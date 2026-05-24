@@ -175,12 +175,8 @@
 </head>
 <body>
 
-  {% include header-desktop.liquid %}
-
-    <!-- Изолируем Jekyll-контент в отдельный блок, защищая шапку от скрытых переносов строк -->
-    <div class="main-page-content">
-        {{ content }}
-    </div>
+	  {% include header-desktop.liquid %}
+	{{ content }}
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

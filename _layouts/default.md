@@ -14,7 +14,7 @@
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- ... БАЗОВЫЕ СТИЛИ ДЛЯ ВСЕГО САЙТА ... -->
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style_.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 

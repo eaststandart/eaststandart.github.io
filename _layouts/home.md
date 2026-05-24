@@ -176,15 +176,15 @@
 <body>
 
     <!-- Подключение изолированного модуля десктопной шапки -->
-    <div class="main-content">
+    <div class="content-wrapper">
         {% include header-desktop.liquid %}
-    </div>
+    
 
     <!-- Изолируем Jekyll-контент в отдельный блок, защищая шапку от скрытых переносов строк -->
-    <div class="main-page-content">
+    <div class="main-content">
         {{ content }}
     </div>
-
+</div>
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">
         <a href="https://t.me" target="_blank" class="tg-button">

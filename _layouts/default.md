@@ -15,7 +15,6 @@
 
     <!-- ... БАЗОВЫЕ СТИЛИ ДЛЯ ВСЕГО САЙТА ... -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header-desktop.css">    
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 

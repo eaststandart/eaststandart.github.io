@@ -1,8 +1,8 @@
 ---
 layout: default
-title: 
+page.custom_css: "/assets/css/header-desktop.css"
 ---
-<!-- [КЛ] 1: Отступы темы + зазор 20px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: Низ плотно по логотипу (100px). 6: Тонкая еле заметная линия. -->
+<!-- [КЛ] 1: Отступы темы + зазор 20px. 2: Текст во всю ширину. 3: 3 серые кнопки + консоль. 4: Верх плотно. 5: Низ плотно по логотипу (100px). 6: Тонкая еле заметная линия. 
 <style>
     .test-header { display: flex !important; flex-direction: row !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; gap: 20px !important; min-width: 0 !important; }
     .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; }
@@ -26,7 +26,7 @@ title:
     .control-title { font-weight: bold !important; color: #d9534f !important; margin-bottom: 12px !important; text-transform: uppercase !important; }
     .control-item { margin-bottom: 6px !important; line-height: 1.4 !important; }
 
-</style>
+</style> -->
 <header class="test-header">
     <div class="test-header-left"><img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar"></div>
     <div class="test-header-content-zone">

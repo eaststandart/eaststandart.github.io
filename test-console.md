@@ -5,27 +5,7 @@ description: ""
 custom_css: "/assets/css/header-desktop.css"
 ---
 
-<header class="test-header">
-    <div class="test-header-left"><img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar"></div>
-    <div class="test-header-content-zone">
-        <div class="header-text-tier">
-            <h1 class="brand-line-1">Творческая лаборатория познавательного развития</h1>
-            <p class="brand-description">[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]</p>
-        </div>
-        <hr class="header-center-red-axis">
-        <div class="header-tools-tier">
-            <div class="tools-buttons-group">
-                <a href="/tags.html" class="panel-action-btn btn-search"><span>#️⃣</span> Поиск</a>
-                <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg"><span>✈️</span> Телеграм</a>
-                <a href="mailto:info@example.com" class="panel-action-btn btn-email"><span>✉️</span> Почта</a>
-            </div>
-            <div class="console-input-wrapper">
-                <span class="console-prompt-symbol">&gt;</span>
-                <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
-            </div>
-        </div>
-    </div>
-</header>
+{% include header-desktop.liquid %}
 <hr class="test-header-hr">
 <div class="visual-control-panel">
     <div class="control-title">📋 КОНТРОЛЬНЫЙ ЛИСТ ВЫПОЛНЕНИЯ ИНЖЕНЕРНЫХ ПРАВИЛ (Концепт Шапки v1.23 • С линией):</div>

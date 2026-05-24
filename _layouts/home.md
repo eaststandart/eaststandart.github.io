@@ -176,10 +176,7 @@
 
 {% include header-desktop.liquid %}
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 auto !important;">
-    {% include header-desktop.liquid %}
-</div>
+
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

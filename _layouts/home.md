@@ -124,6 +124,7 @@
         
         /* Параметры шрифтов и заголовков */
         h2 { margin: 0; font-size: 1.3rem; color: #333; }
+        header { margin-bottom: 10px !important; }
         
         /* Стилизация списков внутренних ссылок в карточках */
         .project-list { list-style: none; padding: 0; margin: 0; }
@@ -175,11 +176,13 @@
 </head>
 <body>
 
-<main style="display: block !important; max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important; clear: both !important;">
+ <!-- Главная верхняя шапка с круглым логотипом -->
+<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
     {% include header-desktop.liquid %}
-    {{ content }}
-</main>
+</div>
 
+    <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
+    {{ content }}
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

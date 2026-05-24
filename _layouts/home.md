@@ -175,14 +175,11 @@
 </head>
 <body>
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
+<main style="display: block !important; max-width: 1000px !important; margin: 0 auto !important; font-size: 16px !important; clear: both !important;">
     {% include header-desktop.liquid %}
-</div>
+    {{ content }}
+</main>
 
-<main style="display: block !important; width: 100% !important; clear: both !important;">
-{% include header-desktop.liquid %}
-{{ content }} </main>
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

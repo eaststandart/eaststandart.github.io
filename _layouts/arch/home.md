@@ -15,7 +15,6 @@
     <title>{{ page.title }}</title>
     <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     
@@ -175,8 +174,11 @@
 </head>
 <body>
 
- <!-- Главная верхняя шапка с круглым логотипом -->
-{% include header-desktop.liquid %}
+    <!-- Главная верхняя шапка с круглым логотипом -->
+    <header>
+        <img src="/assets/icons/logo.svg" alt="Логотип" class="main-avatar">
+        <h1>{{ page.title }}</h1>
+    </header>
 
     <!-- Основной внедряемый Jekyll-контент Главной страницы (из index.md) -->
     {{ content }}

@@ -34,7 +34,7 @@
 
 <div class="content-wrapper">
         
-    <!-- Блок навигации 
+    <!-- Блок навигации -->
     {% include navigation.liquid %}
 
     <h1 style="margin-top: 0;">{{ page.title }}</h1>

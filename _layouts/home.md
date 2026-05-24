@@ -31,7 +31,7 @@
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 0 !important;
+            margin-top: 0;
         }
 
         /* Базовая стилизация отдельной карточки-раздела */

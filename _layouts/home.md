@@ -124,7 +124,7 @@
         /* Параметры шрифтов и заголовков */
         h1 { margin-bottom: 20px !important; }
         h2 { margin: 0; font-size: 1.3rem; color: #333; }
-        header { margin-bottom: 10px !important; }
+        header { margin-bottom: 30px !important; }
         
         /* Стилизация списков внутренних ссылок в карточках */
         .project-list { list-style: none; padding: 0; margin: 0; }

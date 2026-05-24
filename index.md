@@ -3,9 +3,7 @@ layout: home
 title: 
 description: 
 ---
-<div class="header-desktop-only" style="max-width: 1000px !important; margin: 0 !important;">
-    {% include header-desktop.liquid %}
-</div>
+
 <div class="grid-container">
     <!-- БЛОК 1 -->
     <section class="category-card my-projects">

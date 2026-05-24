@@ -180,7 +180,9 @@
     {% include header-desktop.liquid %}
 </div>
 
-<main style="display: block !important; width: 100% !important; clear: both !important;"> {{ content }} </main>
+<main style="display: block !important; width: 100% !important; clear: both !important;">
+{% include header-desktop.liquid %}
+{{ content }} </main>
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">

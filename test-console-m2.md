@@ -9,7 +9,7 @@ title: Тест мобильной шапки v1.6
     /* Верхний ряд: Логотип и Название прижаты строго к верхнему краю */
     .mob-header-top-row { display: flex !important; flex-direction: row !important; align-items: center !important; width: 100% !important; gap: 10px !important; margin: 0 !important; padding: 0 !important; }
     .mob-header-left { flex-shrink: 0 !important; outline: 2px solid #00f !important; }
-    .mob-header-left .main-avatar { display: block !important; margin: 0 !important; width: 110px !important; height: 110px !important; box-shadow: 0 0 0 2px #00f !important; }
+    .mob-header-left .main-avatar { display: block !important; margin: 0 !important; width: 105px !important; height: 105px !important; box-shadow: 0 0 0 0 #00f !important; }
     .mob-header-content-top { display: flex !important; flex-direction: column !important; flex-grow: 1 !important; min-width: 0 !important; padding-top: 2px !important; outline: 2px solid #0b0 !important; }
     .mob-line-1 { font-size: 1.6rem !important; letter-spacing: -1px; font-weight: bold !important; line-height: 1 !important; color: var(--text-color, #24292e) !important; margin: -7px 0 0 0 !important; padding: 0 !important; text-align: left !important; outline: 1px dotted #f0f !important; }
     /* ИСПРАВЛЕНО: Линия 2 намертво прижата к самому нижнему обрезу серого прямоугольника шапки, margin-bottom: 0 */

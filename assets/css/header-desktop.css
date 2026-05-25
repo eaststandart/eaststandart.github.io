@@ -32,7 +32,7 @@
     .test-header-left { margin: 0 !important; }
     .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: center !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Сильнее ужимаем шрифт Текста 2 после 800px, чтобы Текст 1 нативно расширился от края до края */
+    .brand-line-1 { font-size: clamp(1.2rem, 3.3vw, 1.55rem) !important; width: 100% !important; }
     .brand-description { font-size: clamp(0.58rem, 1.8vw, 0.85rem) !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
@@ -45,8 +45,6 @@
         .brand-line-1 { line-height: 1.0 !important; }
     }
 }
-
-
 
 
 /* ==========================================================================

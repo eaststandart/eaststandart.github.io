@@ -24,16 +24,20 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   АДАПТИВНЫЙ ПЕРЕНОС ДЛЯ УЗКИХ ЭКРАНОВ (Версия 2.1 • Центрирование логотипа)
+   АДАПТИВНЫЙ ПЕРЕНОС ДЛЯ УЗКИХ ЭКРАНОВ (Версия 2.1 • Скрытие линии и зазоры)
    ========================================================================== */
 @media (max-width: 850px) {
-    /* 🟢 ИСПРАВЛЕНО: justify-content: center центрирует синий логотип по центру страницы при сжатии */
     .test-header { width: 100% !important; justify-content: center !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Выравниваем аватар внутри левого блока по центру */
     .test-header-left { margin: 0 auto !important; }
+    
+    /* 🟢 ИСПРАВЛЕНО: Добавляем тексту нижний зазор в 10px, равный зазору между кнопками и консолью */
+    .header-text-tier { margin-bottom: 10px !important; }
+    
+    /* 🟢 ИСПРАВЛЕНО: Намертво скрываем красную линию разделителя при сужении экрана */
+    .header-center-red-axis { display: none !important; }
     
     .header-tools-tier { height: auto !important; flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
     .tools-buttons-group { width: 100% !important; }
     .console-input-wrapper { width: 100% !important; }
 }
+

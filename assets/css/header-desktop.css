@@ -29,9 +29,9 @@
    ВЕРСИЯ 3.2 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
    ========================================================================== */
 @media (max-width: 800px) {
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 15px !important; }
+    .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 12px !important; }
     .test-header-left { margin: 0 !important; }
-    .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
+    .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; row-gap: 4px !important;}
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }

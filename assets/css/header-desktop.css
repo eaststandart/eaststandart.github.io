@@ -42,7 +42,7 @@
     .brand-line-1 { font-size: clamp(1.15rem, 3.1vw, 1.55rem) !important; white-space: normal !important; }
 
     /* БЛОК 2: Текст 2 (Описание) — непрерывное авто-ужимание без переносов строк */
-    .brand-description { font-size: clamp(0.62rem, 2.4vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
+    .brand-description { font-size: clamp(0.62rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
     
     /* БЛОК 3: Нижний инструментальный ряд кнопок и консоли */
     .header-tools-tier { height: 34px !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }

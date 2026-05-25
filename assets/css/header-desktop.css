@@ -37,7 +37,7 @@
     /* 🟢 ИСПРАВЛЕНО: Эти свойства намертво растягивают буквы Линии 1 по ширине от края до края зеленой рамки 
     .brand-line-1 { text-align: justify !important; text-align-last: justify !important; width: 100% !important; }*/
 
-    .brand-line-1 { text-align: center !important; text-align-last: center !important; }
+    .brand-line-1 { text-align: center !important; text-align-last: center !important; width: 100% !important;}
     /*.brand-description { text-align: center !important; text-align-last: center !important; width: 100% !important;*/ }
 
 

@@ -1,21 +1,21 @@
 /* ==========================================================================
-   ИСПРАВЛЕННЫЙ РЕЖИМ С ТРАНСФОРМАЦИЕЙ ЯРУСОВ (assets/css/header-desktop.css)
+   ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
    ========================================================================== */
 .test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: auto !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 20px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
 .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
-
 .test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 280px !important; padding: 0 !important; margin: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; }
 
-/*.header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }*/
-/* 🔴 СТАРЫЙ КЛАСС .header-text-tier { ... } ИЗ НАЧАЛА ФАЙЛА ПОЛНОСТЬЮ ЗАМЕНИТЕ НА ЭТИ ДВЕ СТРОКИ: */
-.brand-line-1 { font-size: 1.55rem !important; font-weight: bold !important; line-height: 1.1 !important; color: var(--text-color, #24292e) !important; margin: -5px 0 0 0 !important; padding: 0 !important; white-space: normal !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; letter-spacing: 0px !important; outline: 1px dotted #f0f !important; }
-.brand-description { font-size: 1rem !important; font-weight: normal !important; line-height: 1.2 !important; color: #666 !important; margin: 0 !important; padding: 0 !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; outline: 1px dotted #ffaa00 !important; }
+/* БЛОК 1: Первая линия текста (Заголовок названия) — усиленное бесшовное авто-ужимание */
+.brand-line-1 { font-size: clamp(1.15rem, 3.1vw, 1.55rem) !important; white-space: normal !important; }
 
-/* Наша цельная красная линия дебага во всю ширину */
-.header-center-red-axis { display: block !important; height: 1px !important; background-color: #ff0000 !important; border: none !important; margin: 4px 0 !important; padding: 0 !important; width: 100% !important; }
+/* БЛОК 2: Текст 2 (Описание) — непрерывное бесшовное авто-ужимание без переносов строк */
+.brand-description { font-size: clamp(0.4rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
 
-/* ИСПРАВЛЕНО: Задана жесткая высота 40px на ПК, удерживающая кнопки и инпут строго в один ряд */
+/* НАША ЗАКОММЕНТИРОВАННАЯ ОСЬ: Полностью скрыта из графического потока во всех режимах */
+.header-center-red-axis { display: none !important; }
+
+/* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
 .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
 .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
 .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
@@ -26,45 +26,27 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   ВЕРСИЯ 3.0 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
+   ВЕРСИЯ 3.2 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
    ========================================================================== */
 @media (max-width: 800px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 15px !important; }
     .test-header-left { margin: 0 !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Превращаем зону в чистый вертикальный стек трех блоков с авто-выравниванием по центру */
     .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Закомментированная ось полностью скрыта из потока, больше не давит на элементы */
     .header-center-red-axis { display: none !important; }
-    
-    /* БЛОК 1: Первая линия текста (Заголовок названия) — усиленное авто-ужимание */
-    .brand-line-1 { font-size: clamp(1.15rem, 3.1vw, 1.55rem) !important; white-space: normal !important; }
-
-    /* БЛОК 2: Текст 2 (Описание) — непрерывное авто-ужимание без переносов строк */
-    .brand-description { font-size: clamp(0.62rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
-    
-    /* БЛОК 3: Нижний инструментальный ряд кнопок и консоли */
     .header-tools-tier { height: 34px !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }
     .console-input-wrapper { width: 50% !important; }
-
-    /* Порог 768px: точечно уплотняем межблочный воздух при дальнейшем сужении */
-    @media (max-width: 768px) {
-        .test-header-content-zone { row-gap: 2px !important; }
-    }
+    @media (max-width: 768px) { .test-header-content-zone { row-gap: 2px !important; } }
 }
 
 /* ==========================================================================
-   ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Ниже 576px на смартфонах)
+   ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Включается строго ниже 576px на смартфонах)
    ========================================================================== */
 @media (max-width: 576px) {
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; width: 34px !important; }
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
     .console-input-wrapper { width: 100% !important; }
+    /* 🟢 ИСПРАВЛЕНО: Уплотняем общий зазор между блоком кнопок-квадратов и консолью ввода до 3px */
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 3px !important; }
 }
-
-
-
-

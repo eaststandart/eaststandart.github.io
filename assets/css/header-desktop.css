@@ -31,7 +31,7 @@
     /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
     .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 12px !important; }
     .test-header-left { margin: 0 !important; }
-    .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: center !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
+    
     
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

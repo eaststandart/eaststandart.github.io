@@ -11,7 +11,7 @@
 
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
-.brand-line-1 { font-size: clamp(0.75rem, 3vw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important;}
+.brand-line-1 { font-size: clamp(0.75rem, 3.1vw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important;}
 .brand-description { font-size: clamp(0.3rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
 
 /* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
@@ -23,6 +23,23 @@
 .console-input-field { width: 100% !important; height: 34px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; background-color: #f6f8fa !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: "SFMono-Regular", Consolas, monospace !important; font-size: 0.85rem !important; color: #24292e !important; outline: none !important; transition: all 0.2s ease !important; }
 .console-input-field:focus { background-color: #fff !important; border-color: #2188ff !important; box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important; }
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
+
+/* ==========================================================================
+   ВЕРСИЯ 4.1 • АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Без падений)
+   ========================================================================== */
+@media (max-width: 800px) {
+    /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
+    .test-header { flex-wrap: nowrap !important; }
+    .test-header-left { margin: 0 !important; }
+    
+    .brand-line-1 { font-size: clamp(0.75rem, 3.2vw, 1.55rem) !important; }
+    
+    .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
+    .console-input-wrapper { width: 50% !important; }
+
+}
+
 
 /* ==========================================================================
    ВЕРСИЯ 4.1 • АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Без падений)
@@ -43,6 +60,7 @@
         .test-header-content-zone { row-gap: 0px !important; }
     }
 }
+
 
 /* ==========================================================================
    ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Включается строго ниже 576px на смартфонах)

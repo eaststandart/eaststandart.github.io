@@ -2,7 +2,7 @@
    ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
    ========================================================================== */
 /* ВОЗВРАЩЕНО: align-items: stretch нативно растягивает синий и зеленый блоки, идеально склеивая их верх и низ */
-.test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: auto !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 20px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
+.test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: auto !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
 .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
@@ -29,10 +29,10 @@
    ========================================================================== */
 @media (max-width: 700px) {
     /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 12px !important; }
+    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    .brand-line-1 { font-size: clamp(0.75rem, 3.129vw, 1.55rem) !important; }
+    /*.brand-line-1 { font-size: clamp(0.75rem, 3.129vw, 1.55rem) !important; }*/
     
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

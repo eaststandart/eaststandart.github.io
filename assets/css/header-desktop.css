@@ -12,7 +12,7 @@
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
 .brand-line-1 { font-size: clamp(1.15rem, 3.1vw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important;}
-.brand-description { font-size: clamp(0.25rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
+.brand-description { font-size: clamp(0.62rem, 2vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
 
 /* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
 .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
@@ -25,16 +25,16 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   ВЕРСИЯ 3.6 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
+   ВЕРСИЯ 3.8 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
    ========================================================================== */
 @media (max-width: 800px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 12px !important; }
     .test-header-left { margin: 0 !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Интегрировано justify-content: center для удержания идеального вертикального баланса */
     .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: center !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
     
-    /* 🟢 СОХРАНЕНО: Ваши эталонные ручные отступы зазоров кнопок и консоли в 6px */
+    /* 🟢 ИСПРАВЛЕНО: Сильнее ужимаем шрифт Текста 2 после 800px, чтобы Текст 1 нативно расширился от края до края */
+    .brand-description { font-size: clamp(0.58rem, 1.8vw, 0.85rem) !important; }
+
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
@@ -45,6 +45,7 @@
         .brand-line-1 { line-height: 1.0 !important; }
     }
 }
+
 
 
 

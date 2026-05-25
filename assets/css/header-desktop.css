@@ -32,14 +32,8 @@
     /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
     .test-header { flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
-    
-    /*.brand-line-1 { font-size: clamp(0.75rem, 3.19vw, 1.55rem) !important; }*/
-    /* 🟢 ИСПРАВЛЕНО: Эти свойства намертво растягивают буквы Линии 1 по ширине от края до края зеленой рамки 
-    .brand-line-1 { text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
-    .brand-line-1 { text-align: center !important; text-align-last: center !important; width: 100% !important;}*/
-    /*.brand-description { text-align: center !important; text-align-last: center !important; width: 100% !important;*/ }
 
-.brand-line-1 { white-space: nowrap !important; }
+    .brand-line-1 { white-space: nowrap !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

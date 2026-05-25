@@ -37,7 +37,7 @@
     .console-input-wrapper { width: 50% !important; }
     /* Порог 768px: уплотняем межблочный воздух и принудительно стягиваем Текст 1 и Текст 2 вместе */
     @media (max-width: 768px) {
-      .test-header-content-zone { row-gap: 0px !important; } .brand-line-1 { line-height: 1.0 !important; margin-bottom: -4px !important; }
+      .test-header-content-zone { row-gap: 0px !important; } .brand-line-1 { line-height: 1.0 !important; margin-bottom: 0px !important; }
     }
 
 

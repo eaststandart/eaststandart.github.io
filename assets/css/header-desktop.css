@@ -53,6 +53,12 @@
     @media (max-width: 680px) {
         .test-header-content-zone { row-gap: 0px !important; gap: 0px !important; }
         .header-text-tier { margin-bottom: 0px !important; }
+
+    .brand-line-1 { 
+        font-size: clamp(1.2rem, 2.8vw, 1.55rem) !important; 
+        white-space: normal !important; 
+    }
+
     }
 }
 

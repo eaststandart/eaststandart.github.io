@@ -59,6 +59,10 @@
         white-space: normal !important; 
     }
 
+    .brand-description { 
+        font-size: clamp(0.7rem, 1.8vw, 1rem) !important; 
+    }
+
     }
 }
 

@@ -27,7 +27,7 @@
 /* ==========================================================================
    ВЕРСИЯ 3.8 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
    ========================================================================== */
-@media (max-width: 800px) {
+@media (max-width: 750px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 12px !important; }
     .test-header-left { margin: 0 !important; }
     .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: center !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }

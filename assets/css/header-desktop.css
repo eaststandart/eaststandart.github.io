@@ -29,7 +29,7 @@
    ========================================================================== */
 @media (max-width: 700px) {
     /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
+    .test-header { flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
     /*.brand-line-1 { font-size: clamp(0.75rem, 3.129vw, 1.55rem) !important; }*/

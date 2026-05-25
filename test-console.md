@@ -2,10 +2,10 @@
 layout: default
 title: Творческая лаборатория познавательного развития
 description: "[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]"
-custom_css: "/assets/css/header-desktop.css"
+custom_css: "/assets/css/arch/header-desktop-.css"
 ---
 
-{% include header-desktop.liquid %}
+{% include arch/header-desktop-.liquid %}
 
 <hr class="test-header-hr">
 <div class="visual-control-panel">

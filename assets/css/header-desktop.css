@@ -83,6 +83,13 @@
     /* Порог 768px: точечно уплотняем межблочный воздух при дальнейшем сужении */
     @media (max-width: 768px) {
         .test-header-content-zone { row-gap: 2px !important; }
+
+    .brand-line-1 { font-size: clamp(1.3rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
+    
+    /* БЛОК 2: Вторая линия текста (Слоган описания) — нативно встает посередине шапки вместо линии */
+    .brand-description { font-size: clamp(0.75rem, 1.8vw, 1rem) !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
+ 
+
     }
 }
 

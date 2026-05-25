@@ -88,7 +88,7 @@
 
     /* 🟢 ИСПРАВЛЕНО: Сужаем расстояние между кнопками и консолью ввода в нижнем ряду с 10px до 6px */
     .header-tools-tier {
-        gap: 6px !important;
+        gap: 3px !important;
     }
 }
 

@@ -39,11 +39,17 @@
 }
 
 /* ==========================================================================
-   АДАПТИВНЫЙ ПЕРЕНОС: ПОРОГ 2 (Включается строго ниже 600px • Консоль падает вниз)
+   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 2 (Включается строго ниже 600px • Только значки)
    ========================================================================== */
 @media (max-width: 600px) {
-    /* 🟢 ИСПРАВЛЕНО ДЛЯ ТЕСТА: Только на экранах уже 600px включаем падение ввода под кнопки */
-    .header-tools-tier { height: auto !important; flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
-    .tools-buttons-group { width: 100% !important; }
+    /* 🟢 ИСПРАВЛЕНО: Намертво скрываем текст внутри кнопок, оставляя только значки */
+    .panel-action-btn .btn-text { display: none !important; }
+    
+    /* 🟢 ИСПРАВЛЕНО: Сжимаем блок кнопок-значков до минимума (~130px), отдавая 100% оставшегося места консоли */
+    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; }
     .console-input-wrapper { width: 100% !important; }
+    
+    /* 🟢 ИСПРАВЛЕНО: Жестко удерживаем кнопки и консоль в одной строке без переносов */
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; }
 }
+

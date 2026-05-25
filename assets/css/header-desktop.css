@@ -39,11 +39,9 @@
     .header-center-red-axis { display: none !important; }
     
     /* БЛОК 1: Первая линия текста (Заголовок названия) */
-    .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; }
     .brand-line-1 { font-size: clamp(1.5rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
-    
-    /* БЛОК 2: Вторая линия текста (Слоган описания) — нативно встает посередине шапки вместо линии */
-    .brand-description { font-size: clamp(0.9rem, 1.8vw, 1rem) !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
+    /* БЛОК 2: Текст 2 (Описание) — непрерывное авто-ужимание без переносов строк */
+    .brand-description { font-size: clamp(0.62rem, 1.4vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
     
     /* БЛОК 3: Нижний инструментальный ряд кнопок и консоли */
     .header-tools-tier { height: 34px !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -55,44 +53,6 @@
         .test-header-content-zone { row-gap: 2px !important; }
     }
 }
-/* ==========================================================================
-   ВЕРСИЯ 3.0 • ТРЕХБЛОЧНЫЙ СТЕК БЕЗ ЛИНИИ (Включается строго ниже 800px)
-   ========================================================================== */
-@media (max-width: 800px) {
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 15px !important; }
-    .test-header-left { margin: 0 !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Превращаем зону в чистый вертикальный стек трех блоков с авто-выравниванием по центру */
-    .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: Закомментированная ось полностью скрыта из потока, больше не давит на элементы */
-    .header-center-red-axis { display: none !important; }
-    
-    /* БЛОК 1: Первая линия текста (Заголовок названия) */
-    .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; align-items: flex-start !important; padding: 0 !important; margin: 0 !important; }
-    .brand-line-1 { font-size: clamp(1.5rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
-    
-    /* БЛОК 2: Вторая линия текста (Слоган описания) — нативно встает посередине шапки вместо линии */
-    .brand-description { font-size: clamp(0.9rem, 1.8vw, 1rem) !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
-    
-    /* БЛОК 3: Нижний инструментальный ряд кнопок и консоли */
-    .header-tools-tier { height: 34px !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
-    .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }
-    .console-input-wrapper { width: 50% !important; }
-
-    /* Порог 768px: точечно уплотняем межблочный воздух при дальнейшем сужении */
-    @media (max-width: 768px) {
-        .test-header-content-zone { row-gap: 2px !important; }
-
-    .brand-line-1 { font-size: clamp(1.3rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
-    
-    /* БЛОК 2: Вторая линия текста (Слоган описания) — нативно встает посередине шапки вместо линии */
-    .brand-description { font-size: clamp(0.75rem, 1.8vw, 1rem) !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }
- 
-
-    }
-}
-
 
 /* ==========================================================================
    ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Ниже 576px на смартфонах)

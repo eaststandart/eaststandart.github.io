@@ -27,15 +27,14 @@
    АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 1 (Включается ниже 800px • Жесткая фиксация ряда)
    ========================================================================== */
 @media (max-width: 800px) {
-    /* 🟢 ИСПРАВЛЕНО: flex-wrap: nowrap намертво запрещает зеленому блоку падать под логотип */
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
+    .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 15px !important; }
     .test-header-left { margin: 0 !important; }
     
     .header-text-tier { margin-bottom: 10px !important; }
     .header-center-red-axis { display: none !important; }
     
     .brand-line-1 { 
-        font-size: clamp(1.2rem, 2.8vw, 1.55rem) !important; 
+        font-size: clamp(1.3rem, 2.8vw, 1.55rem) !important; 
         white-space: normal !important; 
     }
 

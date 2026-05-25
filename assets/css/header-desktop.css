@@ -35,7 +35,7 @@
     .test-header { flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    .brand-line-1 { font-size: clamp(0.75rem, 3.18vw, 1.55rem) !important; }
+    .brand-line-1 { font-size: clamp(0.75rem, 3.19vw, 1.55rem) !important; }
     
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

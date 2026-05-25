@@ -16,7 +16,7 @@
 .header-center-red-axis { display: none !important; }
 
 /* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
-.header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
+.header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
 .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
 .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
 .panel-action-btn:hover { background-color: #fff !important; color: #2188ff !important; border-color: #2188ff !important; }
@@ -45,11 +45,11 @@
    ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Включается строго ниже 576px на смартфонах)
    ========================================================================== */
 @media (max-width: 576px) {
+    .test-header { gap: 10px !important; }
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; width: 34px !important; }
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
-    .console-input-wrapper { width: 100% !important; }
-    /* 🟢 ИСПРАВЛЕНО: Уплотняем общий зазор между блоком кнопок-квадратов и консолью ввода до 3px */
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 3px !important; }
+    .console-input-wrapper { width: 100% !important; }
     .brand-description { display: none !important; }
 }

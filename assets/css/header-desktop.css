@@ -32,7 +32,7 @@
     .header-text-tier { margin-bottom: 0px !important; }
 
     .brand-line-1 { font-size: clamp(1.45rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
-    .brand-description { font-size: clamp(0.85rem, 1.8vw, 1rem) !important; }
+    .brand-description { font-size: clamp(0.80rem, 1.8vw, 1rem) !important; }
     .test-header-content-zone { min-width: 0 !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }

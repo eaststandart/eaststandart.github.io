@@ -35,6 +35,8 @@
 
     /*.brand-line-1 { white-space: nowrap !important; }*/
 
+.brand-line-1 { font-size: clamp(1.3rem, 3.14vw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important;}
+
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }

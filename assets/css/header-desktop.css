@@ -26,7 +26,7 @@
 /* ==========================================================================
    АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 1 (Включается ниже 850px • Кнопки остаются в ряд)
    ========================================================================== */
-@media (max-width: 800px) {
+@media (max-width: 790px) {
     .test-header { width: 100% !important; justify-content: center !important; }
     .test-header-left { margin: 0 auto !important; }
     .header-text-tier { margin-bottom: 10px !important; }

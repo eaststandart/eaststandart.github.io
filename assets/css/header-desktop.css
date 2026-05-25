@@ -24,7 +24,7 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 1 (Включается ниже 800px • Кнопки остаются в ряд)
+   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 1 (Включается ниже 800px • Резиновый шрифт)
    ========================================================================== */
 @media (max-width: 800px) {
     .test-header { width: 100% !important; justify-content: center !important; }
@@ -32,11 +32,20 @@
     .header-text-tier { margin-bottom: 10px !important; }
     .header-center-red-axis { display: none !important; }
     
-    /* 🟢 ИСПРАВЛЕНО ДЛЯ ТЕСТА: Удерживаем высоту 34px. Кнопки и консоль стоят в одну линию 50 на 50 */
+    /* 🟢 ИСПРАВЛЕНО: Шрифты плавно уменьшаются от исходных ПК-размеров до компактного минимума */
+    .brand-line-1 { 
+        font-size: clamp(1.1rem, 3.2vw, 1.55rem) !important; 
+        white-space: nowrap !important; /* Намертво держим текст в одну строку, запрещая перенос */
+    }
+    .brand-description { 
+        font-size: clamp(0.75rem, 2.1vw, 1rem) !important; 
+    }
+    
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }
     .console-input-wrapper { width: 50% !important; }
 }
+
 
 /* ==========================================================================
    АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 2 (Включается строго ниже 600px • Квадратные значки)

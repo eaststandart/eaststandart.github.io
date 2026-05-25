@@ -8,24 +8,22 @@
         <img src="{{ '/assets/icons/logo.svg' | relative_url }}" alt="Логотип" class="main-avatar">
     </div>
     <div class="test-header-content-zone">
-        <div class="header-text-tier">
-            <h1 class="brand-line-1">{{ page.title }}</h1>
-            <p class="brand-description">{{ page.description }}</p>
-        </div>
-        <!-- <hr class="header-center-red-axis">-->
+        <!-- БЛОК 1: Теперь заголовок — это самостоятельный независимый этаж -->
+        <h1 class="brand-line-1">{{ page.title }}</h1>
+
+        <!-- ЗАКОММЕНТИРОВАНО (Временно не используется) -->
+        <hr class="header-center-red-axis">
+
+        <!-- БЛОК 2: Теперь описание — это тоже самостоятельный этаж строго по центру -->
+        <p class="brand-description">{{ page.description }}</p>
+
+        <!-- БЛОК 3: Инструменты (Нижний ряд) -->
         <div class="header-tools-tier">
             <div class="tools-buttons-group">
-                <a href="{{ '/tags.html' | relative_url }}" class="panel-action-btn btn-search">
-                    <span>#️⃣</span><span class="btn-text"> Поиск</span>
-                </a>
-                <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg">
-                    <span>✈️</span><span class="btn-text"> Телеграм</span>
-                </a>
-                <a href="mailto:info@example.com" class="panel-action-btn btn-email">
-                    <span>✉️</span><span class="btn-text"> Почта</span>
-                </a>
+                <a href="{{ '/tags.html' | relative_url }}" class="panel-action-btn btn-search"><span>#️⃣</span><span class="btn-text"> Поиск</span></a>
+                <a href="https://t.me" target="_blank" class="panel-action-btn btn-tg"><span>✈️</span><span class="btn-text"> Телеграм</span></a>
+                <a href="mailto:info@example.com" class="panel-action-btn btn-email"><span>✉️</span><span class="btn-text"> Почта</span></a>
             </div>
-
             <div class="console-input-wrapper">
                 <span class="console-prompt-symbol">&gt;</span>
                 <input type="text" class="console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">

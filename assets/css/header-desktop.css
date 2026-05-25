@@ -34,6 +34,7 @@
     .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }
     .console-input-wrapper { width: 50% !important; }
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 3px !important; }
     /* Порог 768px: уплотняем межблочный воздух и принудительно стягиваем Текст 1 и Текст 2 вместе */
     @media (max-width: 768px) { .test-header-content-zone { row-gap: 0px !important; } .brand-line-1 { line-height: 1.0 !important; margin-bottom: -4px !important; } }
 
@@ -47,5 +48,6 @@
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
     .console-input-wrapper { width: 100% !important; }
     /* 🟢 ИСПРАВЛЕНО: Уплотняем общий зазор между блоком кнопок-квадратов и консолью ввода до 3px */
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 3px !important; }
     .brand-description { display: none !important; }
 }

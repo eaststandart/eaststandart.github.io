@@ -39,11 +39,11 @@
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
 
-    /* Порог 768px: удерживаем плотный воздух при дальнейшем сужении */
+    /* Порог 768px: удерживаем плотный воздух при дальнейшем сужении 
     @media (max-width: 768px) {
         .test-header-content-zone { row-gap: 0px !important; }
         .brand-line-1 { line-height: 1.0 !important; }
-    }
+    }*/
 }
 
 

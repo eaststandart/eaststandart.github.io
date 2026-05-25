@@ -24,85 +24,38 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 1 (Включается ниже 800px • Жесткая фиксация ряда)
+   ВАР 2: МОБИЛЬНЫЙ ГОРИЗОНТАЛЬНЫЙ / ПЛАНШЕТНЫЙ РЕЖИМ (Ниже 1024px)
    ========================================================================== */
-@media (max-width: 800px) {
+@media (max-width: 1024px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; gap: 15px !important; }
     .test-header-left { margin: 0 !important; }
-    
     .header-text-tier { margin-bottom: 10px !important; }
     .header-center-red-axis { display: none !important; }
-    
-    .brand-line-1 { 
-        font-size: clamp(1.3rem, 2.8vw, 1.55rem) !important; 
-        white-space: normal !important; 
-    }
-
-    .brand-description { 
-        font-size: clamp(0.75rem, 1.8vw, 1rem) !important; 
-    }
-    
-    /* Уменьшаем порог до предела, чтобы блок сжимался в ширину до упора, но держал строй */
+    .brand-line-1 { font-size: clamp(1.2rem, 2.8vw, 1.55rem) !important; white-space: normal !important; }
+    .brand-description { font-size: clamp(0.7rem, 1.8vw, 1rem) !important; }
     .test-header-content-zone { min-width: 0 !important; }
-    
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; }
     .console-input-wrapper { width: 50% !important; }
 
-    /* Строго ниже 680px убираем вертикальный отступ от пурпурного до голубого блока */
-    @media (max-width: 680px) {
+    /* Порог 768px: убираем вертикальный отступ между текстом и кнопками */
+    @media (max-width: 768px) {
         .test-header-content-zone { row-gap: 0px !important; gap: 0px !important; }
         .header-text-tier { margin-bottom: 0px !important; }
-
-    .brand-line-1 { 
-        font-size: clamp(1.2rem, 2.8vw, 1.55rem) !important; 
-        white-space: normal !important; 
-    }
-
-    .brand-description { 
-        font-size: clamp(0.7rem, 1.8vw, 1rem) !important; 
-    }
-
     }
 }
 
-
 /* ==========================================================================
-   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 2 (Включается строго ниже 600px • Квадратные значки)
+   ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Ниже 576px на смартфонах)
    ========================================================================== */
-@media (max-width: 600px) {
+@media (max-width: 576px) {
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; width: 34px !important; }
-    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; }
+    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
     .console-input-wrapper { width: 100% !important; }
-    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; }
-
-    /* 🟢 ИСПРАВЛЕНО: Строго ниже 600px сильнее уменьшаем шрифт описания под заголовком */
-    .brand-description { 
-        font-size: clamp(0.7rem, 2vw, 0.9rem) !important; 
-    }
-}
-
-/* ==========================================================================
-   АДАПТИВНЫЙ РЕЖИМ: ПОРОГ 3 (Включается строго ниже 400px • Сужение ВСЕХ зазоров)
-   ========================================================================== */
-@media (max-width: 400px) {
-    .brand-description { 
-        display: none !important; 
-    }
-    .brand-line-1 {
-        font-size: 1.15rem !important;
-    }
-
-    /* 🟢 ИСПРАВЛЕНО: Сужаем зазор между блоком кнопок и строкой консоли ввода до 6px */
-    .header-tools-tier {
-        gap: 3px !important;
-    }
-
-    /* 🟢 ИСПРАВЛЕНО: Сужаем зазоры внутри самой группы между всеми тремя кнопками-значками до 6px */
-    .tools-buttons-group {
-        gap: 3px !important;
-    }
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 3px !important; }
+    .brand-description { display: none !important; }
+    .brand-line-1 { font-size: 1.15rem !important; }
 }
 
 

@@ -5,7 +5,7 @@ description: "[ для тех, кто хочет знать как всё уст
 custom_css: "/assets/css/arch/header-desktop-.css"
 ---
 
-{% include "arch/header-desktop-.liquid" %}
+{% include arch/header-desktop-.liquid %}
 
 <hr class="test-header-hr">
 <div class="visual-control-panel">

@@ -38,10 +38,10 @@
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
 
-    /* Порог 680px: точечно уплотняем межблочный воздух
+     Порог 680px: точечно уплотняем межблочный воздух
     @media (max-width: 680px) {
         .test-header-content-zone { row-gap: 0px !important; }
-    }*/
+    }
 }
 
 /* ==========================================================================

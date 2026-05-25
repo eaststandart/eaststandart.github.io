@@ -39,7 +39,7 @@
     .header-center-red-axis { display: none !important; }
     
     /* БЛОК 1: Первая линия текста (Заголовок названия) — усиленное авто-ужимание */
-    .brand-line-1 { font-size: clamp(1.15rem, 2.5vw, 1.55rem) !important; white-space: normal !important; }
+    .brand-line-1 { font-size: clamp(1.15rem, 1.4vw, 1.55rem) !important; white-space: normal !important; }
 
     /* БЛОК 2: Текст 2 (Описание) — непрерывное авто-ужимание без переносов строк */
     .brand-description { font-size: clamp(0.62rem, 1.4vw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; }

@@ -6,7 +6,7 @@
 .test-header-logo .avatar { width: 100px !important; height: 100px !important; }
 
 /* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
+.test-header-content-zone { display: flex !important; flex-direction: column !important; align-self: stretch !important; width: max-content !important; max-height: 100% !important; overflow: hidden !important; outline: 2px solid #0b0 !important; }
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; outline: 1px dotted #f0f !important; }

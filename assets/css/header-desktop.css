@@ -1,12 +1,12 @@
 /* 1. СЕРЫЙ КВАДРАТ (Родитель всей шапки, аккуратно по центру ПК) */
-.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: stretch !important; width: 100% !important; max-width: 1000px !important; margin: 20px auto 25px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
+.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 20px auto 25px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
 
 /* 2. СИНИЙ КВАДРАТ (Контейнер аватар-иконки) */
 .test-header-logo { display: flex !important; outline: 2px solid #00f !important; }
 .test-header-logo .avatar { width: 100px !important; height: 100px !important; }
 
 /* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
+.test-header-content-zone { display: flex !important; flex-direction: column !important;  width: max-content !important; outline: 2px solid #0b0 !important; }
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; height: 65px !important; outline: 1px dotted #f0f !important; }

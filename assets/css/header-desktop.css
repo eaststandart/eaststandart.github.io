@@ -6,16 +6,16 @@
 .test-header-left .main-avatar { width: 100px !important; height: 100px !important; }
 
 /* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 280px !important; outline: 2px solid #0b0 !important; }
+.test-header-content-zone { display: flex !important; flex-direction: column !important; flex-grow: 1 !important; min-width: 280px !important; outline: 2px solid #0b0 !important; }
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
-.header-text-tier { display: flex !important; width: 100% !important; justify-content: center !important; outline: 1px dotted #f0f !important; }
+.header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; outline: 1px dotted #f0f !important; }
 .brand-line-1 { font-size: 1.55rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 34px и консоль) */
-.header-tools-tier { display: flex !important; align-items: center !important; gap: 10px !important; width: 100% !important; height: 34px !important; outline: 1px dotted #0af !important; }
+.header-tools-tier { display: flex !important; gap: 10px !important; width: 100% !important; height: 34px !important; outline: 1px dotted #0af !important; }
 .tools-buttons-group { display: flex !important; gap: 10px !important; width: 50% !important; }
-.panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; height: 34px !important; flex: 1 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-size: 0.8rem !important; text-decoration: none !important; }
+.panel-action-btn { display: flex !important; height: 34px !important; flex: 1 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-size: 0.8rem !important; text-decoration: none !important; }
 .console-input-wrapper { position: relative !important; width: 50% !important; flex-grow: 1 !important; }
 .console-input-field { width: 100% !important; height: 34px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; }
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; }

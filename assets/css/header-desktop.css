@@ -27,18 +27,21 @@
 
 
 /* ==========================================================================
-   ВЕРСИЯ 5.4 • ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px)
+   ВЕРСИЯ 5.8 • ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Контейнерный фикс)
    ========================================================================== */
 @media (max-width: 700px) {
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
+    /* Включаем container-type строго после 700px, привязывая шапку к сетке grid-container */
+    .test-header { width: 100% !important; flex-wrap: nowrap !important; container-type: inline-size !important; }
     .test-header-left { margin: 0 !important; }
     
-    .brand-line-1 { font-size: clamp(0.5rem, 3.33vw, 1.55rem) !important; }
-    
+    /* 🟢 ИСПРАВЛЕНО: Единицы cqw привязывают буквы к физической ширине коробки, заставляя текст идеально расширяться от края до края */
+    .brand-line-1 { font-size: clamp(0.5rem, 3.14cqw, 1.55rem) !important; }
+
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
 }
+
 
 
 /* ==========================================================================

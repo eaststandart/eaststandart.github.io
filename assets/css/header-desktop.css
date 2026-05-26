@@ -6,7 +6,7 @@
 .test-header-logo .avatar { width: 100px !important; height: 100px !important; }
 
 /* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.test-header-content-zone { display: flex !important; flex-direction: column !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
+.test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; outline: 1px dotted #f0f !important; }
@@ -34,7 +34,7 @@
    ФАЗА МОБИЛЬНЫЙ ПЕРЕЛОМ СТРОКИ И ЗНАЧКОВ (Включается строго ниже 445px)
    ========================================================================== */
 @media (max-width: 445px) {
-	.brand-line-1 { font-size: 1.1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+	.brand-line-1 { font-size: 1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; width: 34px !important; }
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }

@@ -31,7 +31,7 @@
    ВЕРСИЯ ДЕБАГ 2 • СВЕРХПОДСВЕТКА И ОБНУЛЕНИЕ ОТСТУПОВ (Ниже 700px)
    ========================================================================== */
 @media (max-width: 700px) {
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
+    .test-header { width: 100% !important; height: auto !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     .test-header-content-zone { container-type: inline-size !important; max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; outline: 3px solid #0f0 !important; box-sizing: border-box !important; }
     .header-text-tier { width: 100% !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #f0f !important; }    

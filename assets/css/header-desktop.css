@@ -23,20 +23,19 @@
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
 /* ==========================================================================
-   ФАЗА 2: АДАПТИВНЫЙ РЕЖИМ С ЧИСТЫМ ДЕБАГОМ (Ниже 700px)
+   ФАЗА 2: АДАПТИВНЫЙ РЕЖИМ С ЧИСТЫМ ДЕБАГОМ (Включается строго ниже 700px • Фикс авто-сжатия)
    ========================================================================== */
 @media (max-width: 700px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    /* 🔬 ПОДСВЕТКА КОНТЕЙНЕРА: Кислотно-зеленая рамка вокруг правой зоны */
     .test-header-content-zone { outline: 3px solid #0f0 !important; }
     
-    /* 🔬 ПОДСВЕТКА ЯРУСА: Фиолетовый пунктир вокруг текстового блока */
+    /* 🟢 ИСПРАВЛЕНО: Растягиваем пурпурный ярус на 100% ширины зеленого контейнера */
     .header-text-tier { width: 100% !important; outline: 1px dotted #f0f !important; }
     
-    /* 🔬 ПОДСВЕТКА ТЕКСТА 1: Розовый пунктир + прозрачный красный фон самого текста */
-    .brand-line-1 { background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+    /* 🟢 ИСПРАВЛЕНО: white-space: nowrap намертво блокирует перенос слов, заставляя буквы непрерывно и плавно худеть вслед за контейнером */
+    .brand-line-1 { white-space: nowrap !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

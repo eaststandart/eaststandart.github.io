@@ -35,7 +35,7 @@
     .test-header-content-zone { container-type: inline-size !important; max-width: 100% !important; width: 100% !important; outline: 3px solid #0f0 !important; box-sizing: border-box !important; }
     
     /* 🔬 ИСПРАВЛЕНО: margin и padding принудительно в 0, а background окрасит всю текстовую коробку в полупрозрачный красный цвет для проверки границ */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.27rem) !important; width: 100% !important; display: block !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.27rem) !important; width: 100% !important; white-space: nowrap !important; display: block !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; outline: 1px dotted #0af !important; }

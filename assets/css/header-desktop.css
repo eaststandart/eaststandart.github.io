@@ -12,7 +12,7 @@
 
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
-.brand-line-1 { font-size: clamp(1.37rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
+.brand-line-1 { font-size: clamp(1.35rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
 .brand-description { font-size: clamp(0.3rem, 1.9cqw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
 
 /* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */

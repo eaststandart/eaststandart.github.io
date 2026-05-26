@@ -29,10 +29,10 @@
 @media (max-width: 640px) {
 .brand-line-1 { font-size: 1.27rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
-
-    .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
-    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
-    .console-input-wrapper { width: 50% !important; }
+    .panel-action-btn .btn-text { display: none !important; }
+    .panel-action-btn { flex: none !important; width: 34px !important; }
+    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
+}
 
 
 }

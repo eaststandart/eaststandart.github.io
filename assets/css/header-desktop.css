@@ -39,7 +39,7 @@
     .header-text-tier { width: 100% !important; outline: 1px dotted #f0f !important; }
     
     /* 🟢 ИСПРАВЛЕНО: white-space: nowrap запрещает переносы, а cqw заставляет буквы автоматически ужиматься по ширине зеленого контейнера */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.24cqw, 1.27rem) !important; white-space: nowrap !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+    .brand-line-1 { font-size: clamp(0.5rem, 3.24cqw, 1.55rem) !important; white-space: nowrap !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

@@ -32,7 +32,7 @@
 /* ==========================================================================
    ФАЗА МОВИЛЬНЫЙ ПЕРЕЛОМ СТРОКИ (Включается строго ниже 415px)
    ========================================================================== */
-@media (max-width: 480px) {
+@media (max-width: 580px) {
     /* 🟢 ИСПРАВЛЕНО: Отключаем max-content и запираем зеленый контейнер в границы серого каркаса, позволяя тексту нативно разбиться на 2 строки */
     .test-header-content-zone { width: 100% !important; max-width: 100% !important; }
     .brand-line-1 { font-size: 0.8rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }

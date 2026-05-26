@@ -2,13 +2,12 @@
    ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
    ========================================================================== */
 
-
 .test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: max-content !important; max-width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
 .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }
 
-.test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 280px !important; padding: 0 !important; margin: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; }
+.test-header-content-zone { position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; flex-grow: 1 !important; min-width: 280px !important; container-type: inline-size !important; padding: 0 !important; margin: 0 !important; outline: 2px solid #0b0 !important; background: rgba(0,255,0,0.02) !important; }
 
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
@@ -27,21 +26,17 @@
 
 
 /* ==========================================================================
-   ВЕРСИЯ 5.8 • ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Контейнерный фикс)
+   ВЕРСИЯ 6.0 • ВЫЧИЩЕННЫЙ ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Ниже 700px)
    ========================================================================== */
 @media (max-width: 700px) {
-    /* Включаем container-type строго после 700px, привязывая шапку к сетке grid-container */
-    .test-header { width: 100% !important; flex-wrap: nowrap !important; container-type: inline-size !important; }
+    /* На пороге 700px серый блок просто переключается на ширину grid-container, а cqw внутри зеленой зоны делает всю магию сам */
+    .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Единицы cqw привязывают буквы к физической ширине коробки, заставляя текст идеально расширяться от края до края */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.27rem) !important; }
-
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
 }
-
 
 
 /* ==========================================================================

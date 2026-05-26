@@ -33,7 +33,7 @@
     .test-header-content-zone { outline: 3px solid #0f0 !important; }
     
     /* 🔬 ПОДСВЕТКА ЯРУСА: Фиолетовый пунктир вокруг текстового блока */
-    .header-text-tier { outline: 1px dotted #f0f !important; }
+    .header-text-tier { width: 100% !important; outline: 1px dotted #f0f !important; }
     
     /* 🔬 ПОДСВЕТКА ТЕКСТА 1: Розовый пунктир + прозрачный красный фон самого текста */
     .brand-line-1 { background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }

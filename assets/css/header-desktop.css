@@ -35,7 +35,7 @@
     .test-header-left { margin: 0 !important; }
     
     /* 🟢 ИСПРАВЛЕНО: Единицы cqw привязывают буквы к физической ширине коробки, заставляя текст идеально расширяться от края до края */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.33rem) !important; }
+    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.34rem) !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

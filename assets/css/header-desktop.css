@@ -1,5 +1,5 @@
 /* 1. СЕРЫЙ КВАДРАТ (Родитель всей шапки, аккуратно по центру ПК) */
-.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; width: 100% !important; max-width: 1000px !important; margin: 20px auto 20px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
+.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 20px auto 25px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
 
 
 /* 2. СИНИЙ КВАДРАТ (Контейнер аватар-иконки) */

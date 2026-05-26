@@ -2,6 +2,7 @@
    ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
    ========================================================================== */
 
+
 .test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: max-content !important; max-width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
@@ -26,24 +27,15 @@
 
 
 /* ==========================================================================
-   ВЕРСИЯ 4.1 • АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Без падений)
+   ВЕРСИЯ 5.4 • ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px)
    ========================================================================== */
 @media (max-width: 700px) {
-    /* Порог выставлен ровно на 700px, чтобы nowrap подхватывал зеленый блок до начала падения */
     .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
-
-    /* скорость сжимания маленькая не пропорц сжимается шапка*/
-    .brand-line-1 { white-space: nowrap !important; }
-
+    
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
-
-    Порог 680px: точечно уплотняем межблочный воздух
-    @media (max-width: 680px) {
-        .test-header-content-zone { row-gap: 0px !important; }
-    }
 }
 
 

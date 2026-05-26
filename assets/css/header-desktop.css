@@ -27,21 +27,20 @@
 
 
 /* ==========================================================================
-   ВЕРСИЯ 5.8 • ДВУХФАЗНЫЙ АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px • Контейнерный фикс)
+   ВЕРСИЯ ДЕБАГ • ПОИСК ПРИЧИНЫ НЕВИДИМОЙ ГРАНИЦЫ (Ниже 700px)
    ========================================================================== */
 @media (max-width: 700px) {
-    /* Серый блок переключается на 100% ширины grid-container, убран конфликтующий container-type */
     .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Включаем container-type строго на ЗЕЛЕНОМ контейнере контента на пороге 700px */
-    .test-header-content-zone { container-type: inline-size !important; }
+    /* 🔬 ДЕБАГ ЗОНЫ: Окрашиваем границы зеленого контейнера ярким кислотным цветом и принудительно убираем любые скрытые ограничения */
+    .test-header-content-zone { container-type: inline-size !important; max-width: 100% !important; width: 100% !important; outline: 3px solid #0f0 !important; box-sizing: border-box !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Теперь cqw считает проценты строго от зеленой коробки. Значение 3.8cqw намертво прижмет текст от линии до линии зеленого блока */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8vw, 1.32rem) !important; }
+    /* 🔬 ДЕБАГ ТЕКСТА 1: Подсвечиваем физические рамки Первой линии неоновым розовым пунктиром и заставляем занять 100% ширины */
+    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.27rem) !important; width: 100% !important; display: block !important; outline: 2px dashed #f0f !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
-    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
+    .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; outline: 1px dotted #0af !important; }
     .console-input-wrapper { width: 50% !important; }
 }
 

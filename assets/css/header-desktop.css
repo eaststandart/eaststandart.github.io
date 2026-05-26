@@ -38,7 +38,7 @@
     /* 🟢 ИСПРАВЛЕНО: flex-grow: 1 и height: 100% заставляют пурпурный ярус нативно растянуться по высоте до самого верха зеленой линии */
     .header-text-tier { width: 100% !important; height: 100% !important; flex-grow: 1 !important; align-items: stretch !important; justify-content: center !important; outline: 1px dotted #f0f !important; }
     
-.brand-line-1 { font-size: clamp(1rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
+.brand-line-1 { font-size: clamp(1rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important;}
 
     /* 🟢 ИСПРАВЛЕНО: white-space: nowrap запрещает переносы, а cqw заставляет буквы автоматически ужиматься по ширине зеленого контейнера 
     .brand-line-1 { align-self: stretch !important; width: 100% !important; font-size: clamp(0.5rem, 3.24cqw, 1.55rem) !important; white-space: nowrap !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }*/

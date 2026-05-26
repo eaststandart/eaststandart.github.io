@@ -11,7 +11,7 @@
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; outline: 1px dotted #f0f !important; }
-.brand-line-1 { font-size: 1.5rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+.brand-line-1 { font-size: 1.3rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 34px и консоль) */
 .header-tools-tier { display: flex !important; gap: 10px !important; width: 100% !important; height: 34px !important; outline: 1px dotted #0af !important; }

@@ -37,5 +37,4 @@
 @media (max-width: 445px) {
     /* 🟢 ИСПРАВЛЕНО: Теперь, когда глобальный header отключен, это свойство нативно запрет зеленый блок в границы серой рамки */
     .test-header-content-zone { width: 100% !important; max-width: 100% !important; }
-	.brand-line-1 { font-size: 1rem !important;}
 }

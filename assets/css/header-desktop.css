@@ -39,7 +39,7 @@
     /* 🟢 ИСПРАВЛЕНО: white-space: nowrap намертво блокирует перенос слов, заставляя буквы непрерывно и плавно худеть вслед за контейнером */
     .brand-line-1 { background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }*/
 
-.brand-line-1 { font-size: clamp(0.7rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important;}
+.brand-line-1 { font-size: clamp(0.7rem, 3.8cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important;}
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

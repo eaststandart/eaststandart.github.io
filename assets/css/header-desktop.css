@@ -2,8 +2,7 @@
    ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
    ========================================================================== */
 
-/* ИСПРАВЛЕНО: Функция min() удерживает компактность шапки на ПК, но намертво привязывает ее к grid-container при сжатии, исключая вылезание за правый край */
-.test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: 100% !important; max-width: min(800px, 80%) !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
+.test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: auto !important; max-width: 1000px !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
 .test-header-left .main-avatar { display: block !important; margin: 0 !important; width: 100px !important; height: 100px !important; flex-shrink: 0 !important; box-shadow: 0 0 0 2px #00f !important; background: rgba(0,0,255,0.05) !important; }

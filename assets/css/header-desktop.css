@@ -28,3 +28,8 @@
 .brand-line-1 { font-size: 1.3rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
 }
+
+@media (max-width: 480px) {
+.brand-line-1 { font-size: 1.2rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+
+}

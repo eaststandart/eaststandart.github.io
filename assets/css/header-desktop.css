@@ -1,8 +1,6 @@
 /* ==========================================================================
-   ВАР 1: ДЕСКТОПНЫЙ / ПК-РЕЖИМ (Базовый, Версия 3.2 • Бесшовный умный clamp)
+   ФАЗА 1: ДЕСКТОПНЫЙ ПК-РЕЖИМ (Базовый код — аккуратно по центру страниц)
    ========================================================================== */
-
-
 .test-header { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: stretch !important; width: max-content !important; max-width: 100% !important; box-sizing: border-box !important; padding: 0 !important; margin: 20px auto 25px auto !important; gap: 12px !important; min-width: 0 !important; outline: 2px dashed #999 !important; background: rgba(0,0,0,0.02) !important; }
 
 .test-header-left { flex-shrink: 0 !important; display: flex !important; align-items: flex-start !important; outline: 2px solid #00f !important; }
@@ -12,11 +10,9 @@
 
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
-/* 🔬 ДЕБАГ ПК: Подсвечиваем рамки Первой линии на больших экранах яркой полупрозрачной заливкой и розовым пунктиром */
-.brand-line-1 { font-size: clamp(1.33rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+.brand-line-1 { font-size: clamp(1.33rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
 .brand-description { font-size: clamp(0.3rem, 1.9cqw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
 
-/* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
 .header-tools-tier { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; width: 100% !important; height: 34px !important; margin: 0 !important; padding: 0 !important; outline: 1px dotted #0af !important; }
 .tools-buttons-group { display: flex !important; flex-direction: row !important; gap: 10px !important; width: 50% !important; flex-shrink: 0 !important; }
 .panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 34px !important; box-sizing: border-box !important; padding: 0 !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
@@ -26,28 +22,19 @@
 .console-input-field:focus { background-color: #fff !important; border-color: #2188ff !important; box-shadow: 0 0 0 3px rgba(3,102,214,0.3) !important; }
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; font-family: monospace !important; font-size: 0.85rem !important; font-weight: bold !important; color: #2188ff !important; user-select: none !important; }
 
-
 /* ==========================================================================
-   ВЕРСИЯ ДЕБАГ 7 • СБИТИЕ ГЛОБАЛЬНЫХ ЗАЖИМОВ ТЕМЫ (Ниже 700px)
+   ФАЗА 2: АДАПТИВНЫЙ РЕЖИМ (Включается строго ниже 700px)
    ========================================================================== */
 @media (max-width: 700px) {
     .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
-    .test-header-content-zone { container-type: inline-size !important; max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; justify-content: center !important; outline: 3px solid #0f0 !important; box-sizing: border-box !important; }
-    .header-text-tier { width: 100% !important; margin: 0 !important; padding: 0 !important; row-gap: 0px !important; outline: 1px dotted #f0f !important; }
-    
-    /* 🟢 ИСПРАВЛЕНО: line-height: 1.0 !important намертво уничтожает глобальный зажим темы 1.2, заставляя буквы расти в высоту */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.55rem) !important; line-height: 1.0 !important; width: 100% !important; white-space: normal !important; display: block !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
-
-    .brand-description { display: none !important; }
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }
     .console-input-wrapper { width: 50% !important; }
 }
 
-
 /* ==========================================================================
-   ВАР 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Включается строго ниже 576px на смартфонах)
+   ФАЗА 3: МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Включается строго ниже 576px)
    ========================================================================== */
 @media (max-width: 576px) {
     .test-header { gap: 10px !important; }

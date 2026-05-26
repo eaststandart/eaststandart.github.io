@@ -29,9 +29,6 @@
 @media (max-width: 640px) {
 .brand-line-1 { font-size: 1.27rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
 
-    .panel-action-btn .btn-text { display: none !important; }
-    .panel-action-btn { flex: none !important; width: 34px !important; }
-    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
 }
 
 
@@ -41,5 +38,9 @@
    ФАЗА МОБИЛЬНЫЙ ПЕРЕЛОМ СТРОКИ (Включается строго ниже 415px • Без зажимов темы)
    ========================================================================== */
 @media (max-width: 445px) {
+.brand-line-1 { font-size: 1.1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+    .panel-action-btn .btn-text { display: none !important; }
+    .panel-action-btn { flex: none !important; width: 34px !important; }
+    .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
     
 }

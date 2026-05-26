@@ -12,7 +12,7 @@
 
 .header-text-tier { display: flex !important; flex-direction: column !important; width: auto !important; flex-grow: 1 !important; align-items: flex-start !important; justify-content: center !important; row-gap: 0.8vw !important; padding: 0 !important; margin: 0 !important; outline: 1px dotted #f0f !important; }
 
-.brand-line-1 { font-size: clamp(1.34rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
+.brand-line-1 { font-size: clamp(1.33rem, 3.1cqw, 1.55rem) !important; white-space: normal !important; padding: 0 !important; margin: -4px 0 0 0 !important; }
 .brand-description { font-size: clamp(0.3rem, 1.9cqw, 1rem) !important; white-space: nowrap !important; margin: 0 !important; padding: 0 !important; align-self: flex-start !important; text-align: justify !important; text-align-last: justify !important; width: 100% !important; }
 
 /* ИСПРАВЛЕНО: Задана жесткая высота 34px на ПК, удерживающая кнопки и инпут строго в один ряд */
@@ -35,7 +35,7 @@
     .test-header-left { margin: 0 !important; }
     
     /* 🟢 ИСПРАВЛЕНО: Единицы cqw привязывают буквы к физической ширине коробки, заставляя текст идеально расширяться от края до края */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.37rem) !important; }
+    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.33rem) !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

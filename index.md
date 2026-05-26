@@ -4,7 +4,7 @@ title: Творческая лаборатория познавательног�
 description: "[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]"
 ---
 
-<div class="grid-container">
+<div class="grid-container"> 
     <!-- БЛОК 1 -->
     <section class="category-card my-projects">
         <div class="card-header">

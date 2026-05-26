@@ -32,11 +32,11 @@
     .test-header { width: 100% !important; flex-wrap: nowrap !important; }
     .test-header-left { margin: 0 !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Объявляем зеленую контент-зону измерительным контейнером строго после 700px */
-    .test-header-content-zone { container-type: inline-size !important; outline: 3px solid #0f0 !important; }
+    /* 🟢 ИСПРАВЛЕНО: justify-content: flex-start убирает разнос по краям, отдавая управление высоте текстового яруса */
+    .test-header-content-zone { container-type: inline-size !important; justify-content: flex-start !important; outline: 3px solid #0f0 !important; }
     
-    /* 🟢 ИСПРАВЛЕНО: Пурпурный ярус натягивается на 100% ширины зеленого бокса */
-    .header-text-tier { width: 100% !important; outline: 1px dotted #f0f !important; }
+    /* 🟢 ИСПРАВЛЕНО: flex-grow: 1 и height: 100% заставляют пурпурный ярус нативно растянуться по высоте до самого верха зеленой линии */
+    .header-text-tier { width: 100% !important; height: 100% !important; flex-grow: 1 !important; align-items: stretch !important; justify-content: center !important; outline: 1px dotted #f0f !important; }
     
     /* 🟢 ИСПРАВЛЕНО: white-space: nowrap запрещает переносы, а cqw заставляет буквы автоматически ужиматься по ширине зеленого контейнера */
     .brand-line-1 { align-self: stretch !important; width: 100% !important; font-size: clamp(0.5rem, 3.24cqw, 1.55rem) !important; white-space: nowrap !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }

@@ -38,7 +38,7 @@
     .test-header-content-zone { container-type: inline-size !important; }
     
     /* 🟢 ИСПРАВЛЕНО: Теперь cqw считает проценты строго от зеленой коробки. Значение 3.8cqw намертво прижмет текст от линии до линии зеленого блока */
-    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.3rem) !important; }
+    .brand-line-1 { font-size: clamp(0.5rem, 3.8cqw, 1.33rem) !important; }
 
     .tools-buttons-group { width: 50% !important; flex-shrink: 0 !important; gap: 6px !important; }
     .header-tools-tier { height: 34px !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; }

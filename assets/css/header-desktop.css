@@ -3,7 +3,7 @@
 
 /* 2. СИНИЙ КВАДРАТ (Контейнер аватар-иконки) */
 .test-header-logo { display: flex !important; outline: 2px solid #00f !important; }
-.test-header-logo .avatar { width: 100px !important; height: 100px !important; }
+.test-header-logo .avatar { width: 100px !important; height: 100px !important; border-radius: 50% !important; overflow: hidden !important; }
 
 /* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
 .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }

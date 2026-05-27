@@ -41,4 +41,9 @@
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 27px !important; height: 27px !important; }   
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
+	
+	.console-input-field { height: 27px !important; font-size: 0.75rem !important; padding: 0 8px 0 20px !important; }
+    .console-input-field::placeholder { font-size: 0.75rem !important; }
+    .console-prompt-symbol { left: 8px !important; font-size: 0.75rem !important; }
+	
 }

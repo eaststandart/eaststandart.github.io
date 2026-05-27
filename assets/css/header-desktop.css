@@ -11,7 +11,7 @@
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 73px !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
 
-.brand-line-1 { font-size: clamp(0.8rem, 3.1cqw, 1.55rem) !important; margin: 0 0 5px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+.brand-line-1 { font-size: clamp(0.8rem, 3.1cqw, 1.55rem) !important; text-align: center !important; margin: 0 0 5px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 .brand-description { font-size: clamp(0.8rem, 2cqw, 1rem) !important; color: #6e7781 !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 27px и консоль) */
@@ -34,7 +34,7 @@
 	.header-tools-tier { gap: 4px !important; }
 	.tools-buttons-group { gap: 4px !important; }
 	
-    .brand-line-1 { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important;  margin: 0 0 12px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+    .brand-line-1 { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important;  text-align: center !important; margin: 0 0 12px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 	.brand-description { font-size: clamp(0.5rem, 2.1cqw, 0.8rem) !important; color: #6e7781 !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 }
 
@@ -44,7 +44,7 @@
 @media (max-width: 445px) {
 	.header-tools-tier { gap: 3px !important; }
 	.brand-description { display: none !important; }
-	.brand-line-1 { font-size: 1.1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+	.brand-line-1 { font-size: 1.1rem !important; text-align: center !important;text-align: center !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 27px !important; height: 27px !important; }   
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }

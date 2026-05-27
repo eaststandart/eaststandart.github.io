@@ -11,8 +11,8 @@
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
 .header-text-tier { display: flex !important; flex-direction: column !important; justify-content: space-between !important; width: 100% !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
 
-.brand-line-1 { font-size: clamp(1rem, 3.1vw, 1.55rem) !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
-.brand-description { font-size: clamp(0.3rem, 1.9vw, 1rem) !important;}
+.brand-line-1 { font-size: clamp(1rem, 3.1cqw, 1.55rem) !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+.brand-description { font-size: clamp(0.3rem, 1.9cqw, 1rem) !important;}
 
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 27px и консоль) */
@@ -48,5 +48,4 @@
 	.console-input-field { height: 27px !important; font-size: 0.75rem !important; padding: 0 8px 0 20px !important; }
     .console-input-field::placeholder { font-size: 0.75rem !important; }
     .console-prompt-symbol { left: 8px !important; font-size: 0.75rem !important; }
-	
 }

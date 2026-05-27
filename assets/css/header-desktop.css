@@ -29,7 +29,7 @@
    АДАПТИВНЫЙ РЕЖИМ 640px (Только ужимание шрифта, без скрытия текста кнопок)
    ========================================================================== */
 @media (max-width: 640px) {
-	.test-header {margin: 15px auto 15px auto !important;}
+	.test-header {margin: 10px auto 15px auto !important;}
 		
 	.header-tools-tier { gap: 4px !important; }
 	.tools-buttons-group { gap: 4px !important; }

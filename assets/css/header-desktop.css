@@ -34,7 +34,7 @@
 	.header-tools-tier { gap: 4px !important; }
 	.tools-buttons-group { gap: 4px !important; }
 	
-    .brand-line-1 { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important;  text-align: center !important; margin: 0 0 12px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+    .brand-line-1 { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important;  text-align: center !important;width: 100% !important; text-align: justify !important; text-align-last: justify !important; margin: 0 0 12px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 	.brand-description { font-size: clamp(0.5rem, 2.1cqw, 0.8rem) !important; color: #959da5 !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 }
 

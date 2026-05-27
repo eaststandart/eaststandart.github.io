@@ -35,9 +35,10 @@
    ФАЗА МОБИЛЬНЫЙ ПЕРЕЛОМ СТРОКИ И ЗНАЧКОВ (Включается строго ниже 445px)
    ========================================================================== */
 @media (max-width: 445px) {
+	.header-tools-tier { gap: 3px !important; }
 	.brand-description { display: none !important; }
 	.brand-line-1 { font-size: 1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
     .panel-action-btn .btn-text { display: none !important; }
-    .panel-action-btn { flex: none !important; width: 30px !important; height: 30px !important; }
+    .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 30px !important; height: 30px !important; }   
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
 }

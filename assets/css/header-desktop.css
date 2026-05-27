@@ -1,5 +1,5 @@
 /* 1. СЕРЫЙ КВАДРАТ (Родитель всей шапки, аккуратно по центру ПК) */
-.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 20px auto 25px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
+.test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 15px auto 15px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
 
 /* 2. СИНИЙ КВАДРАТ (Контейнер аватар-иконки) */
 .test-header-logo { display: flex !important; outline: 2px solid #00f !important; }
@@ -13,7 +13,6 @@
 
 .brand-line-1 { font-size: clamp(0.8rem, 3.1cqw, 1.55rem) !important; margin: 0 0 5px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 .brand-description { font-size: clamp(0.8rem, 2cqw, 1rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
-
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 27px и консоль) */
 .header-tools-tier { display: flex !important; gap: 10px !important; width: auto !important; height: 27px !important; outline: 1px dotted #0af !important; }
@@ -30,6 +29,8 @@
    АДАПТИВНЫЙ РЕЖИМ 640px (Только ужимание шрифта, без скрытия текста кнопок)
    ========================================================================== */
 @media (max-width: 640px) {
+	.test-header {margin: 15px auto 15px auto !important;}
+		
 	.header-tools-tier { gap: 4px !important; }
 	.tools-buttons-group { gap: 4px !important; }
 	

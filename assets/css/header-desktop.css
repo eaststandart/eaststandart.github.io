@@ -31,7 +31,7 @@
    ========================================================================== */
 @media (max-width: 640px) {
     .brand-line-1 { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
-	.brand-description { font-size: clamp(0.5rem, 1.9cqw, 1rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
+	.brand-description { font-size: clamp(0.5rem, 2.1cqw, 1rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 }
 
 /* ==========================================================================

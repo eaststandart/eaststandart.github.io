@@ -9,19 +9,19 @@
 .test-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для Титла) */
-.header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; max-height: 70px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
+.header-text-tier { display: flex !important; flex-direction: column !important; width: 100% !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
 
 .brand-line-1 { font-size: clamp(0.5rem, 3.1vw, 1.55rem) !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 
-/* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 34px и консоль) */
-.header-tools-tier { display: flex !important; gap: 10px !important; width: auto !important; height: 30px !important; outline: 1px dotted #0af !important; }
+/* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — кнопки 27px и консоль) */
+.header-tools-tier { display: flex !important; gap: 10px !important; width: auto !important; height: 27px !important; outline: 1px dotted #0af !important; }
 .tools-buttons-group { display: flex !important; gap: 10px !important; width: 50% !important; }
 
-.panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 30px !important; box-sizing: border-box !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
+.panel-action-btn { display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; height: 27px !important; box-sizing: border-box !important; border: 1px solid #e1e4e8 !important; border-radius: 6px !important; font-family: monospace !important; font-size: 0.8rem !important; font-weight: bold !important; text-decoration: none !important; transition: all 0.2s ease !important; cursor: pointer !important; white-space: nowrap !important; flex: 1 !important; background-color: #f6f8fa !important; color: #555 !important; }
 .panel-action-btn:hover { background-color: #fff !important; color: #2188ff !important; border-color: #2188ff !important; }
 
 .console-input-wrapper { position: relative !important; width: 50% !important; flex-grow: 1 !important; }
-.console-input-field { width: 100% !important; height: 30px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; }
+.console-input-field { width: 100% !important; height: 27px !important; box-sizing: border-box !important; padding: 0 10px 0 24px !important; }
 .console-prompt-symbol { position: absolute !important; left: 10px !important; top: 50% !important; transform: translateY(-50%) !important; }
 
 /* ==========================================================================
@@ -39,6 +39,6 @@
 	.brand-description { display: none !important; }
 	.brand-line-1 { font-size: 1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
     .panel-action-btn .btn-text { display: none !important; }
-    .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 30px !important; height: 30px !important; }   
+    .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 27px !important; height: 27px !important; }   
     .tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }
 }

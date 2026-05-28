@@ -42,6 +42,7 @@
    ФАЗА МОБИЛЬНЫЙ ПЕРЕЛОМ СТРОКИ И ЗНАЧКОВ (Ниже 445px)
    ========================================================================== */
 @media (max-width: 445px) {
+	.panel-header { gap: 0px !important; }
 	.panel-brand-description { display: none !important; }
 	.panel-header-tools-tier { gap: 3px !important; }
 	.panel-title { font-size: 1.2rem !important; margin: 0 !important; padding: 0 !important; }

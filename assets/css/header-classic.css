@@ -36,7 +36,7 @@
 	/* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
     .classic-title { 
         font-size: 1.5rem !important;
-		line-height: 1.2 !important;
+		line-height: 1.1 !important;
         margin: 10px 0 0 0 !important; 
     }
 	

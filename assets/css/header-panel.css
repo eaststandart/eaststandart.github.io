@@ -43,7 +43,7 @@
    ========================================================================== */
 @media (max-width: 445px) {
 	.panel-header { gap: 5px !important; }
-	.panel-brand-description { display: none !important; }
+	.panel-description { display: none !important; }
 	.panel-header-tools-tier { gap: 3px !important; }
 	.panel-title { font-size: 1.1rem !important; margin: 0 !important; padding: 0 !important; }
     .panel-action-btn .btn-text { display: none !important; }

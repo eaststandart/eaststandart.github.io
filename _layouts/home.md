@@ -24,7 +24,7 @@
 	{% if page.header_theme == "panel" %}
 	    <link rel="stylesheet" href="{{ '/assets/css/header-panel.css' | relative_url }}">
 	{% else %}
-	    <link rel="stylesheet" href="{{ '/assets/css/header-main.css' | relative_url }}">
+	    <link rel="stylesheet" href="{{ '/assets/css/header-classic.css' | relative_url }}">
 	{% endif %}
 
     <style>

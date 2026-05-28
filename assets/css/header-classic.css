@@ -30,13 +30,13 @@
    
     /* Сужение воздуха в шапке на смартфонах */
     .classic-header { 
-        margin: 5px 0 15px 0 !important;
+        margin: 8px 0 15px 0 !important;
     }
 	
 	/* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
     .classic-title { 
         font-size: 1.5rem !important;
-		line-height: 1.1 !important;
+		line-height: 1.2 !important;
         margin: 10px 0 0 0 !important; 
     }
 	

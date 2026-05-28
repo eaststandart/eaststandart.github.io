@@ -14,7 +14,7 @@
 .panel-header-text-tier { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 73px !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
 
    /* 🟢 ИСПРАВЛЕНО: Размер шрифта удалён, оставлено только адаптивное выравнивание по центру */
-.panel-title { font-size: calc(14px + 1.6cqw) !important; width: 100% !important; text-align: justify !important; text-align-last: justify !important; margin: 0 0 5px 0 !important; padding: 0 !important; }
+.panel-title { font-size: calc(20.4px + 1cqw) !important; width: 100% !important; text-align: justify !important; text-align-last: justify !important; margin: 0 0 5px 0 !important; padding: 0 !important; }
 
 .panel-description { font-size: clamp(0.8rem, 2cqw, 1rem) !important; width: 100% !important; text-align: justify !important; text-align-last: justify !important; color: #959da5 !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 

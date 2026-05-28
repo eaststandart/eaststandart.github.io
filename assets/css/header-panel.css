@@ -5,8 +5,9 @@
 .panel-header-logo { display: flex !important; outline: 2px solid #00f !important; }
 .panel-header-logo .panel-avatar { width: 100px !important; height: 100px !important; border-radius: 50% !important; overflow: hidden !important; }
 
-/* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.panel-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
+/* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР — 🟢 ИСПРАВЛЕНО: Заменено width: max-content на 100% и flex-grow: 1 для абсолютной однотипности на всех телефонах и ПК */
+.panel-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-self: stretch !important; width: 100% !important; flex-grow: 1 !important; outline: 2px solid #0b0 !important; }
+
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для текста) */
 .panel-header-text-tier { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 73px !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }

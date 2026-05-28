@@ -21,7 +21,7 @@
 /* Главный заголовок верхнего уровня страницы */
 .classic-title {
     font-size: 2rem !important;
-    line-height: 1.2 !important;
+    line-height: 1.5 !important;
     margin: 15px 0 0 0 !important;
 }
 
@@ -35,7 +35,7 @@
 	
 	/* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
     .classic-title { 
-        font-size: 1.5rem; 
+        font-size: 1.2rem; 
         margin: 10px 0 0 0 !important; 
     }
 	

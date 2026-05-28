@@ -1,17 +1,18 @@
 /* 1. РОДИТЕЛЬСКИЙ КОНТЕЙНЕР ШАПКИ (Серый квадрат) */
-.panel-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
+.panel-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; container-type: inline-size !important; }
 
 /* 2. КОНТЕЙНЕР АВАТАР-ИКОНКИ (Синий квадрат) */
 .panel-header-logo { display: flex !important; outline: 2px solid #00f !important; }
 .panel-header-logo .panel-avatar { width: 100px !important; height: 100px !important; border-radius: 50% !important; overflow: hidden !important; }
 
-/* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР (Правая зона контента) */
-.panel-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-self: stretch !important; width: max-content !important; outline: 2px solid #0b0 !important; }
+/* 3. ЗЕЛЕНЫЙ КОНТЕЙНЕР — 🟢 ИСПРАВЛЕНО: Заменено width: max-content на 100% и flex-grow: 1 для абсолютной однотипности на всех телефонах и ПК */
+.panel-header-content-zone { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-self: stretch !important; width: 100% !important; flex-grow: 1 !important; outline: 2px solid #0b0 !important; }
+
 
 /* 4. ПУРПУРНЫЙ КОНТЕЙНЕР (Внутри зеленого — только для текста) */
 .panel-header-text-tier { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 73px !important; max-height: 73px !important; overflow: hidden !important; outline: 1px dotted #f0f !important; }
 
-.panel-title { font-size: clamp(0.8rem, 3.1cqw, 1.55rem) !important; width: 100% !important; text-align: justify !important; text-align-last: justify !important; margin: 0 0 5px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+.panel-title { font-size: clamp(1.27rem, 3.25cqw, 1.55rem) !important; width: 100% !important; text-align: center !important; text-align-last: center !important; margin: 0 0 5px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 .panel-description { font-size: clamp(0.8rem, 2cqw, 1rem) !important; width: 100% !important; text-align: justify !important; text-align-last: justify !important; color: #959da5 !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 
 /* 5. ГОЛУБОЙ КОНТЕЙНЕР (Внутри зеленого — инструменты 27px) */
@@ -34,7 +35,7 @@
 	.panel-header-tools-tier { gap: 4px !important; }
 	.panel-tools-buttons-group { gap: 4px !important; }
 	
-    .panel-title { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important; width: 100% !important; text-align: center !important; text-align-last: center !important; margin: 0 0 12px 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
+    .panel-title { font-size: 20.4px !important; background: rgba(255, 0, 0, 0.2) !important; outline: 1px dashed #f0f !important; }
 	.panel-description { font-size: clamp(0.5rem, 2.1cqw, 0.8rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 }
 
@@ -44,7 +45,7 @@
 @media (max-width: 445px) {
 	.panel-description { display: none !important; }
 	.panel-header-tools-tier { gap: 3px !important; }
-	.panel-title { font-size: 1.1rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
+	.panel-title { font-size: 1.2rem !important; margin: 0 !important; padding: 0 !important; background: rgba(255, 0, 0, 0.2) !important; outline: 2px dashed #f0f !important; }
     .panel-action-btn .btn-text { display: none !important; }
     .panel-action-btn { flex: none !important; flex-shrink: 0 !important; width: 27px !important; height: 27px !important; }   
     .panel-tools-buttons-group { width: auto !important; flex-shrink: 0 !important; gap: 3px !important; }

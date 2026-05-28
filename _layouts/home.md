@@ -14,11 +14,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-    
-    <!-- Подключение центральных модулей стилей сайта -->
+       
+    <!-- Глобальные базовые стили сайта (остаются всегда) -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/pagination.css">
-    <link rel="stylesheet" href="/assets/css/header-panel.css">
+
+	<!-- Автоматическое подключение стилей шапки в зависимости от выбранной темы -->
+	{% if page.header_theme == "panel" %}
+	    <link rel="stylesheet" href="{{ '/assets/css/header-panel.css' | relative_url }}">
+	{% else %}
+	    <link rel="stylesheet" href="{{ '/assets/css/header-main.css' | relative_url }}">
+	{% endif %}
 
     <style>
     

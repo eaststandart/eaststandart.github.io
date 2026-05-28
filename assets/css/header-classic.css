@@ -1,15 +1,12 @@
 /* Контейнер главной шапки */
 .classic-header {
-    text-align: center;
-    width: 100%;
-    margin: 20px 0 40px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    margin: 20px 0 40px 0 !important;
 }
-
-.classic-header { margin-bottom: 10px !important; }
-.classic-title { margin-bottom: 20px !important; }
 
 /* Круглый аватар автора на Главной */
 .classic-avatar {
@@ -23,22 +20,24 @@
 }
 
 /* Главный заголовок верхнего уровня страницы */
-.classic-title { 
-    margin: 5px 0 15px 0;
-    font-size: 2rem; 
-    line-height: 1.2;
+.classic-title {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    margin: 5px 0 15px 0 !important;
 }
 
 /* --- А. ОБЩЕЕ СЖАТИЕ ЭКРАНОВ ДО 900px --- */
 @media (max-width: 900px) {
-    /* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
+   
+    /* Сужение воздуха в шапке на смартфонах */
+    .classic-header { 
+        margin: 10px 0 20px 0 !important;
+    }
+	
+	/* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
     .classic-title { 
         font-size: 1.5rem; 
         margin: 5px 0 10px 0 !important; 
     }
-    
-    /* Сужение воздуха в шапке на смартфонах */
-    .classic-header { 
-        margin: 10px 0 20px 0;
-    }
+	
 }

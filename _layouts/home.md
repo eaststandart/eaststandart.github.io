@@ -17,8 +17,8 @@
     
     <!-- Подключение центральных модулей стилей сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header-desktop.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
+    <link rel="stylesheet" href="/assets/css/header-panel.css">
 
     <style>
     

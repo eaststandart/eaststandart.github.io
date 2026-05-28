@@ -1,0 +1,37 @@
+{% if page.header_theme == "panel" %}
+    <!-- =========================================================================
+         👑 ТЕМА №2: СЛОЖНЫЙ ГОРИЗОНТАЛЬНЫЙ ПУЛЬТ (Новые изолированные panel-классы)
+         ========================================================================= -->
+    <header class="panel-header">
+        <div class="panel-header-logo">
+            <img src="{{ '/assets/icons/logo.svg' | relative_url }}" alt="Логотип" class="panel-avatar">
+        </div>
+
+        <div class="panel-header-content-zone">
+            <div class="panel-header-text-tier">
+                <h1 class="panel-title">{{ page.title }}</h1>
+                <--<p class="panel-description">{{ page.description }}</p>-->
+            </div>
+
+            <div class="panel-header-tools-tier">
+                <div class="panel-tools-buttons-group">
+                    <a href="{{ '/tags.html' | relative_url }}" class="panel-action-btn"><span>#️⃣</span><span class="btn-text"> Поиск</span></a>
+                    <a href="https://t.me" target="_blank" class="panel-action-btn"><span>✈️</span><span class="btn-text"> ТГ</span></a>
+                </div>
+                <div class="panel-console-input-wrapper">
+                    <span class="panel-console-prompt-symbol">&gt;</span>
+                    <input type="text" class="panel-console-input-field" placeholder="введите команду..." autocomplete="off" spellcheck="false">
+                </div> 
+            </div>
+        </div>
+    </header>
+
+{% else %}
+    <!-- =========================================================================
+         👑 ТЕМА №1: ВАША ИСХОДНАЯ КЛАССИЧЕСКАЯ ШАПКА (Включается по умолчанию)
+         ========================================================================= -->
+    <header>
+        <img src="{{ '/assets/icons/logo.svg' | relative_url }}" alt="Логотип" class="main-avatar">
+        <h1>{{ page.title }}</h1>
+    </header>
+{% endif %}

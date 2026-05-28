@@ -175,7 +175,7 @@
 </head>
 <body>
 
-	 {% include header-desktop.liquid %}
+	{% include header-theme.liquid %}
 	{{ content }}
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->

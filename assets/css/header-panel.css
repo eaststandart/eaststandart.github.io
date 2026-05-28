@@ -34,8 +34,8 @@
 	.panel-header-tools-tier { gap: 4px !important; }
 	.panel-tools-buttons-group { gap: 4px !important; }
 	
-    .panel-title { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important; width: 100% !important; text-align: center !important; text-align-last: center !important; margin: 0 0 12px 0 !important; padding: 0 !important; }
-	.panel-brand-description { font-size: clamp(0.5rem, 2.1cqw, 0.8rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
+    .panel-title { font-size: clamp(0.8rem, 3.3cqw, 1.27rem) !important;  margin: 0 0 12px 0 !important; padding: 0 !important; }
+	.panel-description { font-size: clamp(0.5rem, 2.1cqw, 0.8rem) !important; margin: 0 !important; padding: 0 !important; line-height: 1.1 !important; }
 }
 
 /* ==========================================================================

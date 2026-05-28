@@ -1,5 +1,5 @@
 /* 1. РОДИТЕЛЬСКИЙ КОНТЕЙНЕР ШАПКИ (Серый квадрат) */
-.panel-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 0px !important; }
+.panel-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 12px !important; }
 
 /* 2. КОНТЕЙНЕР АВАТАР-ИКОНКИ (Синий квадрат) */
 .panel-header-logo { display: flex !important; }

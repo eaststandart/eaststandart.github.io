@@ -12,6 +12,22 @@ custom_css: "/assets/css/video.css"
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
 {{ content }}
 
+<script src="https://giscus.app/client.js"
+        data-repo="eaststandart/eaststandart.github.io"
+        data-repo-id="R_kgDOSJvIIw"
+        data-category="General"
+        data-category-id="DIC_kwDOSJvII84C-Bg5"
+        data-mapping="title"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="ru"
+        crossorigin="anonymous"
+        async>
+</script>
+
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}
 <div class="bibliography-footer">

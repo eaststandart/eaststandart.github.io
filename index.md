@@ -2,7 +2,7 @@
 layout: home
 title: Творческая лаборатория познавательного развития
 description: "[ для тех, кто хочет знать как всё устроено и создавать технологии своими руками ]"
-header_theme: panel-classic
+header_theme: panel
 ---
 
 <div class="grid-container"> 

@@ -495,7 +495,7 @@ figcaption {
 .license-footer .footer-license-text {
     font-size: 0.8rem;
     color: #7f8c8d;
-    margin: 0 0 0 5px;
+    margin: 0 0 5px 0;
 }
 
 /* Ссылки внутри блока лицензии */

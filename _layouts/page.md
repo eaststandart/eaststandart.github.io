@@ -59,12 +59,13 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endif %}
 
-<!-- Блок вывода Giscus 
-{% if page.discus != "" %}
+<!-- Блок вывода Giscus  -->
+{% unless page.discus == blank %}
 <div class="discus-inline">
     {% include discus.liquid %}
 </div>
-{% endif %}  -->
+{% endunless %}
+
 
 <!-- Подключение логики интерактивных видео-плееров -->
 {% include video-logic.liquid %}

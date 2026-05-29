@@ -496,6 +496,7 @@ figcaption {
     font-size: 0.8rem;
     color: #7f8c8d;
     margin: 0;
+	margin-bottom: 10px;
 }
 
 /* Ссылки внутри блока лицензии */

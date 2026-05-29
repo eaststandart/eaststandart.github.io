@@ -4,7 +4,7 @@ description: Развитие навыков конструирования дв
 title: Робот странник
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, роботстранник]
 sources: "[How To Make An Adorable Walking Robot with Big Shoes](https://youtu.be/0SofESg-mLc)"
-date: 2026-05-15
+date: 2025-11-22
 permalink: /faire/robot-strannik/
 ---
 

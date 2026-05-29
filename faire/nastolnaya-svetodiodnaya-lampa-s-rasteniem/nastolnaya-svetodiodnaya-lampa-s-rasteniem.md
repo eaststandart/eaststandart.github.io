@@ -4,7 +4,7 @@ description: "Развитие навыков конструирования: р
 title: Настольная светодиодная лампа с растением
 tags: [столярноедело, проектучебный, 3класс, проект, настольнаясветодиоднаялампасрастением]
 sources: "[Glass bottle crafts](https://ru.pinterest.com/pin/6122149488116170/)"
-date: 2026-05-10
+date: 2025-10-27
 permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ---
 

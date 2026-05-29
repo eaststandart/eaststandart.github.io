@@ -4,7 +4,7 @@ description: Развитие навыков пайки меди, работы �
 title: Спутник-1
 tags: [конструированиеимоделирование, ссср, первыйспутник, спутник1, sputnik1]
 sources: "[Sputnik-1](https://only-paper.ru/load/kosmos_iz_bumagi/sputnik_iz_bumagi/sputnik_1_sputnik_1/155-1-0-19242)"
-date: 2026-05-12
+date: 2025-11-02
 permalink: /faire/sputnik-1/
 ---
 

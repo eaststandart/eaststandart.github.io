@@ -3,7 +3,7 @@ layout: page
 title: "Робот странник: модель №1"
 description:  "Модель робота вариант №1"
 author: ["RadiotekhnikaClub"]
-date: 2026-05-15
+date: 2025-11-23
 categories: [media, robot-strannik]
 ---
 

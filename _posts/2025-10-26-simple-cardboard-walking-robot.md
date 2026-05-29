@@ -2,7 +2,7 @@
 layout: page
 title: "Робот двуногий шагающий из картона: раскачивание корпуса"
 description: "Устранение раскачивания корпуса робота двуногого шагающего из картона при ходьбе."
-date: 2026-05-09
+date: 2025-10-26
 categories: [journal, simple-cardboard-walking-robot]
 discus: "projects"
 ---

@@ -3,7 +3,7 @@ layout: page
 title: "Яблоневое дерево: Лиза Б."
 description: "Вариант исполнения внешнего вида дерева."
 author: ["Лиза Б."]
-date: 2026-05-16
+date: 2025-12-22
 categories: [media, yablonevoe-derevo]
 tags: ["liza-b"]
 ---

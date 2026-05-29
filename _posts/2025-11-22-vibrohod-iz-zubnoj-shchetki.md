@@ -2,7 +2,7 @@
 layout: page
 title: "Робот зубочист: вариант конструкции"
 description: "Варианты конструкций роботов зубочистов."
-date: 2026-05-14
+date: 2025-11-22
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---
 

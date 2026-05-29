@@ -464,9 +464,24 @@ figcaption {
 
 /* Строка копирайта */
 .license-footer .footer-copyright {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
     margin-top: 0px;
     margin-bottom: 5px;
 }
+
+/* Специфичное правило для иконки — прижимает её вплотную к © и выравнивает центр */
+.license-footer .footer-copyright img {
+    display: block !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 4px 0 0 !important; /* Дает мягкий микро-отступ до символа @ */
+    pointer-events: none;
+    user-select: none;
+}
+
 
 /* Текст описания лицензии Creative Commons */
 .license-footer .footer-license-text {

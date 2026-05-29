@@ -60,8 +60,8 @@ custom_css: "/assets/css/video.css"
 {% endif %}
 
 <!-- Блок вывода Giscus -->
-{% if page.giscus != "" %}
-<div class="giscus-inline">
+{% if page.discus != "" %}
+<div class="discus-inline">
     {% include discus.liquid %}
 </div>
 {% endif %}

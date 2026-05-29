@@ -40,53 +40,30 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     }
   }
 
-  // МАТЕМАТИЧЕСКАЯ КОРРЕКЦИЯ: Если есть закреп, на 1 странице доступно на 1 место меньше
-  var totalPages = 1;
-  if (pinnedItem) {
-    var remainingItems = items.length - (itemsPerPage - 1);
-    if (remainingItems > 0) {
-      totalPages += Math.ceil(remainingItems / itemsPerPage);
-    }
-  } else {
-    totalPages = Math.ceil(items.length / itemsPerPage);
-  }
-
+  // ТОЧНОЕ ИСПРАВЛЕНИЕ: считаем страницы исходя из реального уменьшенного лимита (9 вместо 10)
   var dynamicLimit = pinnedItem ? (itemsPerPage - 1) : itemsPerPage;
-  var totalPages = Math.ceil(items.length / itemsPerPage);
+  var totalPages = Math.ceil(items.length / dynamicLimit);
 
   // 3. ОТРИСОВКА СТРАНИЦЫ
   function renderPage(page) {
     list.innerHTML = '';
     var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
-    
-    var start, end;
+    var currentLimit = itemsPerPage;
 
-    // Логика вывода, если ЕСТЬ закрепленный пост
     if (pinnedItem) {
-      if (page === 1) {
-        // На 1-й странице выводим закреп и первые (itemsPerPage - 1) элементов
-        pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
-        var pinnedLink = pinnedItem.querySelector('.item-link');
-        var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
-        if (showEmoji === 'Y' && pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
-          pinnedLink.innerHTML += ' ' + pinnedEmoji;
-        }
-        list.appendChild(pinnedItem);
-
-        start = 0;
-        end = itemsPerPage - 1;
-      } else {
-        // На остальных страницах закрепа НЕТ, выводим строго по itemsPerPage штук со сдвигом
-        start = (itemsPerPage - 1) + (page - 2) * itemsPerPage;
-        end = start + itemsPerPage;
+      pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
+      var pinnedLink = pinnedItem.querySelector('.item-link');
+      var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
+      if (showEmoji === 'Y' && pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
+        pinnedLink.innerHTML += ' ' + pinnedEmoji;
       }
-    } else {
-      // Стандартная логика, если закрепа НЕТ
-      start = (page - 1) * itemsPerPage;
-      end = start + itemsPerPage;
+      list.appendChild(pinnedItem);
+      currentLimit = itemsPerPage - 1;
     }
+
+    var start = (page - 1) * currentLimit;
+    var end = start + currentLimit;
     
-    // Отрисовка обычных элементов
     items.slice(start, end).forEach(function(el) {
       var emoji = el.getAttribute('data-emoji');
       var link = el.querySelector('.item-link');

@@ -51,6 +51,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     totalPages = Math.ceil(items.length / itemsPerPage);
   }
 
+  var dynamicLimit = pinnedItem ? (itemsPerPage - 1) : itemsPerPage;
   var totalPages = Math.ceil(items.length / itemsPerPage);
 
   // 3. ОТРИСОВКА СТРАНИЦЫ

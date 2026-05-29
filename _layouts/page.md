@@ -66,6 +66,5 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endunless %}
 
-
 <!-- Подключение логики интерактивных видео-плееров -->
 {% include video-logic.liquid %}

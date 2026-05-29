@@ -41,7 +41,6 @@
 
     <div class="main-content">
         <p class="page-description">{{ page.description }}</p>
-        
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
         {{ content }}
     </div>

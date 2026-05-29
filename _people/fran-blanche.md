@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 description: "Инженер, известная своими видеороликами об электронике и научных экспериментах."
 title: "Фрэн Бланш (Fran Blanche)"
 tags: [people, люди, фрэнбланш, franblanche]

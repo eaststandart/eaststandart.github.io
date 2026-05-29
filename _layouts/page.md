@@ -31,7 +31,7 @@ custom_css: "/assets/css/video.css"
 
 <!-- Универсальный блок онлайн-источников -->
 {% if page.sources %}
-<div class="author-inline">
+<div class="sources-inline">
     <strong>Источники:</strong> 
     <div class="sources-content">
         {{ page.sources  | markdownify }}
@@ -59,8 +59,16 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endif %}
 
-<!-- Подключение виджета Giscus -->
+<!-- Блок вывода Giscus -->
+{% if page.author and page.author != "" %}
+<div class="giscus-inline">
 {% include discus.liquid %}
+</div>
+{% endif %}
+
+
+<!-- Подключение виджета Giscus -->
+
 
 <!-- Подключение логики интерактивных видео-плееров -->
 {% include video-logic.liquid %}

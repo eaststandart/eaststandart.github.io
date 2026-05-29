@@ -391,7 +391,8 @@ figcaption {
 
 /* Базовые контейнеры для вывода списка источников и облака тегов публикации */
 .author-inline,
-.sources-inline, 
+.sources-inline,
+.giscus-inline, 
 .tag-container {
     margin-top: 20px;
     padding-top: 15px;

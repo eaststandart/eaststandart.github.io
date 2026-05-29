@@ -467,7 +467,7 @@ figcaption {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 5px !important;
+    gap: 8px !important;
     margin-top: 0px;
     margin-bottom: 5px;
 }
@@ -478,8 +478,16 @@ figcaption {
     width: 24px !important;
     height: 24px !important;
     margin: 0 !important;
-    pointer-events: none;
+    pointer-events: auto !important; /* Разрешаем иконке ловить курсор мыши */
     user-select: none;
+    opacity: 0.65 !important; /* В покое она мягкая, сероватая и не бросается в глаза */
+    transition: opacity 0.2s ease-in-out !important; /* Эффект анимации смены прозрачности */
+}
+
+/* Эффект при наведении курсора как на GitHub */
+.license-footer .footer-copyright img:hover {
+    opacity: 1.0 !important; /* При наведении плавно становится чёткой и насыщенной */
+    cursor: pointer !important; /* Появляется палец клика */
 }
 
 

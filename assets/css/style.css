@@ -467,7 +467,7 @@ figcaption {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
+    gap: 5px !important;
     margin-top: 0px;
     margin-bottom: 5px;
 }
@@ -477,7 +477,7 @@ figcaption {
     display: block !important;
     width: 24px !important;
     height: 24px !important;
-    margin: 0 4px 0 0 !important; /* Дает мягкий микро-отступ до символа @ */
+    margin: 0 !important;
     pointer-events: none;
     user-select: none;
 }

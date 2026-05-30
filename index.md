@@ -29,17 +29,17 @@ header_theme: classic
             <h2>Что нового?</h2>
             <!-- КНОПКИ СВЯЗИ -->
 <div class="social-badge-wrapper">
-    <a href="https://github.com" title="GitHub" class="social-badge-click">
-        <img
-            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-            alt="GitHub"
-            class="social-img-brand"
-        >
-    </a>
+<a href="https://github.com" title="GitHub" class="social-badge-click">
+    <img
+        src="https://github.githubassets.com/images/modules/site/icons/footer/github-mark.svg"
+        alt="GitHub"
+        class="social-img-brand"
+    >
+</a>
 
     <a href="https://t.me" title="Telegram" class="social-badge-click">
         <img
-            src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
+            src="https://telegram.org/img/t_logo.svg"
             alt="Telegram"
             class="social-img-brand"
         >

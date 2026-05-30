@@ -218,8 +218,7 @@ border-radius: 50%;
 }  
   
 .social-github .social-img-brand {  
-width: 70%;  
-height: 70%;  
+
 filter: brightness(0) invert(1);  
 }
 

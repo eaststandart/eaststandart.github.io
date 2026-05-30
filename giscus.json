@@ -2,5 +2,6 @@
   "origins": [
     "https://eaststandart.github.io"
   ],
-  "defaultCommentOrder": "newest"
+  "defaultCommentOrder": "newest",
+  "strict": 1
 }

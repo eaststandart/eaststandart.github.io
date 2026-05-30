@@ -179,23 +179,78 @@
             }
         }
 
-         /* ========================================== 
-          4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ 
-          ========================================== */
-        .social-badge-wrapper { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-        .social-badge-click { display: block; line-height: 0; transition: transform 0.2s; }
-        
-        /* Задаем заводской значок: делаем его строго круглым и аккуратным */
-        .social-img-brand { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        
-        .social-badge-click:hover { transform: translateY(-2px) scale(1.05); }
-        .social-badge-click:active { transform: scale(0.95); }
-        
-        @media (max-width: 900px) {
-            .social-img-brand { width: 26px; height: 26px; }
-            .social-badge-wrapper { gap: 8px; }
-        }
+/* ==========================================
+   4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ
+   ========================================== */
 
+.social-badge-wrapper {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-badge-click {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    line-height: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.social-img-brand {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* GitHub: темный круг + белый логотип */
+.social-github {
+    background: #24292f;
+}
+
+.social-github .social-img-brand {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+/* Telegram: фирменный синий круг */
+.social-telegram {
+    background: #27a7e7;
+}
+
+.social-telegram .social-img-brand {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.social-badge-click:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.social-badge-click:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 900px) {
+    .social-badge-click {
+        width: 26px;
+        height: 26px;
+    }
+
+    .social-badge-wrapper {
+        gap: 8px;
+    }
+}
 
     </style>
 </head>

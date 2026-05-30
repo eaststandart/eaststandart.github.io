@@ -27,24 +27,19 @@ header_theme: classic
         <div class="card-header">
             <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
             <h2>Что нового?</h2>
+            
             <!-- КНОПКИ СВЯЗИ -->
 <div class="social-badge-wrapper">
-<a href="https://github.com" title="GitHub" class="social-badge-click">
-    <img
-        src="https://github.githubassets.com/images/modules/site/icons/footer/github-mark.svg"
-        alt="GitHub"
-        class="social-img-brand"
-    >
-</a>
+    <a href="https://github.com" title="GitHub" class="social-badge-click social-github">
+        <img src="github-mark.svg" alt="GitHub" class="social-img-brand">
+    </a>
 
-    <a href="https://t.me" title="Telegram" class="social-badge-click">
-        <img
-            src="https://telegram.org/img/t_logo.svg"
-            alt="Telegram"
-            class="social-img-brand"
-        >
+    <a href="https://t.me" title="Telegram" class="social-badge-click social-telegram">
+        <img src="telegram.svg" alt="Telegram" class="social-img-brand">
     </a>
 </div>
+
+
         </div>
         <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->
         <div class="home-news-feed">

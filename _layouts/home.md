@@ -181,17 +181,26 @@
 
 /* ========================================== 4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ ========================================== */
 .social-badge-wrapper { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-.social-badge-click { display: block; width: 32px; height: 32px; border-radius: 50%; background-size: 55% !important; background-position: center !important; background-repeat: no-repeat !important; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; filter: brightness(0) invert(1); }
+.social-badge-click { display: block; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
 
-/* Официальный GitHub (теперь белый силуэт на черном круге) */
-.social-badge-click.github-brand { background-color: #24292e; background-image: url("https://jsdelivr.net"); }
+/* Используем картинку как маску: фон красим в белый, а сама кнопка заливается черным */
+.social-badge-click.github-brand { 
+    background-color: #24292e; 
+    -webkit-mask: url("https://jsdelivr.net") no-repeat center / 55%;
+    mask: url("https://jsdelivr.net") no-repeat center / 55%;
+}
 
-/* Официальный Telegram (теперь белый самолетик на синем круге) */
-.social-badge-click.telegram-brand { background-color: #24A1DE; background-image: url("https://jsdelivr.net"); }
+/* Точно так же для Telegram: фон синий, а самолетик прорезается белым цветом */
+.social-badge-click.telegram-brand { 
+    background-color: #24A1DE; 
+    -webkit-mask: url("https://jsdelivr.net") no-repeat center / 55%;
+    mask: url("https://jsdelivr.net") no-repeat center / 55%;
+}
 
 .social-badge-click:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.18); }
 .social-badge-click:active { transform: scale(0.95); }
 @media (max-width:900px) { .social-badge-click { width: 28px; height: 28px; } .social-badge-wrapper { gap: 8px; } }
+
 
 
     </style>

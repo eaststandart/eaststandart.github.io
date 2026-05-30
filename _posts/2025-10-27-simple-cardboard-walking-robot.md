@@ -19,7 +19,7 @@ discus: "journal"
 
 **Рекомендация:** использование более жестких материалов и уменьшение габаритов конструкции.
 
-<!-- Кнопка-баннер для перехода на форум (в стиле Telegram) -->
+<!-- Кнопка-баннер для мгновенного перехода прямо в Дискуссии -->
 <div class="forum-banner-container">
   <a href="https://github.com/eaststandart/eaststandart.github.io/discussions" class="forum-telegram-btn">
     <span class="forum-btn-icon">💬</span>

@@ -27,10 +27,16 @@ header_theme: classic
         <div class="card-header">
             <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
             <h2>Что нового?</h2>
-            <!-- КНОПКИ СВЯЗИ -->
+            <!-- КНОПКИ СВЯЗИ: Готовые цветные иконки без мусора в коде -->
             <div class="social-badge-wrapper">
-                <a href="https://github.com" title="Форум проекта" class="social-badge-click github-brand"></a>
-                <a href="https://t.me" title="Телеграм-канал" class="social-badge-click telegram-brand"></a>
+                <!-- Готовая круглая иконка GitHub (черный круг + белый кот) -->
+                <a href="https://github.com" title="Форум проекта" class="social-badge-click">
+                    <img src="https://shields.io" alt="GitHub" class="social-img-brand">
+                </a>
+                <!-- Готовая круглая иконка Telegram (синий круг + белый самолетик) -->
+                <a href="https://t.me" title="Телеграм-канал" class="social-badge-click">
+                    <img src="https://shields.io" alt="Telegram" class="social-img-brand">
+                </a>
             </div>
         </div>
         <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->

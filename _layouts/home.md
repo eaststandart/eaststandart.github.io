@@ -227,11 +227,8 @@
 }
 
 .social-github .social-img-brand {
-    width: 72%;
-    height: 72%;
-
-    object-fit: contain;
-
+    width: 80%;
+    height: 80%;
     filter: invert(1);
 }
   

@@ -21,7 +21,7 @@ discus: "journal"
 
 <!-- Кнопка автоматического перехода в мобильное приложение GitHub -->
 <div class="github-app-link-box">
-  <a href="https://github.com{{ page.title | url_encode }}" 
+  <a href="https://eaststandart.github.io{{ page.title | url_encode }}" 
      class="github-app-button">
      📱 Открыть обсуждение в приложении GitHub (Добавить фото/видео)
   </a>

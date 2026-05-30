@@ -21,7 +21,7 @@ discus: "journal"
 
 <!-- Кнопка-баннер для перехода на форум (в стиле Telegram) -->
 <div class="forum-banner-container">
-  <a href="https://github.com" class="forum-telegram-btn">
+  <a href="https://github.com/eaststandart/eaststandart.github.io/discussions" class="forum-telegram-btn">
     <span class="forum-btn-icon">💬</span>
     <div class="forum-btn-text">
       <strong>Наш форум на GitHub</strong>

@@ -220,7 +220,6 @@
     align-items: center;
     justify-content: center;
 
-    background: #000000; /* черный круг */
     border-radius: 50%;
 }
 

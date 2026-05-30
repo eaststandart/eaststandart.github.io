@@ -191,19 +191,8 @@
 }
 
 .social-badge-click {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 32px;
-    height: 32px;
-
-    border-radius: 50%;
-    overflow: hidden;
-
+    display: block;
     line-height: 0;
-
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: transform 0.2s;
 }
 
@@ -215,36 +204,55 @@
     transform: scale(0.95);
 }
 
+.social-img-brand {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 /* GitHub */
 
 .social-github {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background: #24292f;
+    border-radius: 50%;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .social-github .social-img-brand {
-    width: 82%;
-    height: 82%;
-    object-fit: contain;
+    width: 24px;
+    height: 24px;
     filter: brightness(0) invert(1);
 }
 
 /* Telegram */
 
-.social-telegram {
-    background: #27a7e7;
-}
-
-.social-telegram .social-img-brand {
-    width: 72%;
-    height: 72%;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
+.social-badge-click:not(.social-github) .social-img-brand {
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 @media (max-width: 900px) {
-    .social-badge-click {
+    .social-img-brand {
         width: 26px;
         height: 26px;
+    }
+
+    .social-github {
+        width: 26px;
+        height: 26px;
+    }
+
+    .social-github .social-img-brand {
+        width: 19px;
+        height: 19px;
     }
 
     .social-badge-wrapper {

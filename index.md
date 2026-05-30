@@ -31,8 +31,8 @@ header_theme: classic
             <!-- КНОПКИ СВЯЗИ -->
 <div class="social-badge-wrapper">
 <a href="https://github.com" title="GitHub" class="social-badge-click social-github">  
-<svg class="social-img-brand" viewBox="0 0 16 16" fill="currentColor">  
-<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59..."/>  
+<svg viewBox="0 0 24 24" class="social-img-brand" fill="white">  
+<path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92..."/>  
 </svg>  
 </a>
 

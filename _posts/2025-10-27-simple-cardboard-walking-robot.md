@@ -19,12 +19,11 @@ discus: "journal"
 
 **Рекомендация:** использование более жестких материалов и уменьшение габаритов конструкции.
 
-<!-- Кнопка перехода в мобильное приложение GitHub -->
-<div class="github-app-link-container">
+<!-- Кнопка автоматического перехода в мобильное приложение GitHub -->
+<div class="github-app-link-box">
   <a href="https://github.com{{ page.title | url_encode }}" 
      target="_blank" 
-     class="github-app-btn">
-     💬 Открыть обсуждение в приложении GitHub
-      (Загрузить фото/видео)
+     class="github-app-button">
+     📱 Открыть обсуждение в приложении GitHub (Добавить фото/видео)
   </a>
 </div>

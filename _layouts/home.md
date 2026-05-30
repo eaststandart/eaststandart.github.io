@@ -217,10 +217,7 @@ background: #24292f;
 border-radius: 50%;  
 }  
   
-.social-github .social-img-brand {  
 
-filter: brightness(0) invert(1);  
-}
 
 /* Telegram */
 

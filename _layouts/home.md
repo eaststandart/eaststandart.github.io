@@ -221,7 +221,7 @@
     width: 80% !important;
     height: 80% !important;
     object-fit: contain !important;
-
+    filter: brightness(0) invert(1) !important; /* Выворачивает черный цвет картинки в белый */
 }
 
 /* Telegram и другие сторонние значки в обертке .social-badge-click */

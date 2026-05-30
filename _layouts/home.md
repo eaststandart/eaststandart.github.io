@@ -184,15 +184,15 @@
    ========================================== */
 
 .social-badge-wrapper {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
-    align-items: center;
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
 }
 
 .social-badge-click {
-    display: block;
-    line-height: 0;
+    display: block !important;
+    line-height: 0 !important;
     transition: transform 0.2s;
 }
 
@@ -204,58 +204,54 @@
     transform: scale(0.95);
 }
 
-.social-img-brand {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-}
-
-/* GitHub: Черно-серый кружок с принудительным отбеливанием картинки кота внутри */
+/* GitHub — Принудительный жесткий черно-серый круг */
 .social-github {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #24292e; /* Фирменный черно-серый антрацит */
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    background-color: #24292e !important; /* Наш черно-серый фон */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
 }
 
+/* Изолированное отбеливание только черного кота внутри .social-github */
 .social-github .social-img-brand {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
+    width: 80% !important;
+    height: 80% !important;
+    object-fit: contain !important;
+    filter: brightness(0) invert(1) !important; /* Выворачивает черный цвет картинки в белый */
 }
 
-
-/* Telegram */
+/* Telegram и другие сторонние значки в обертке .social-badge-click */
 .social-badge-click:not(.social-github) .social-img-brand {
-    border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+    object-fit: contain !important;
 }
 
+/* Мобильная адаптация под экраны до 900px */
 @media (max-width: 900px) {
-    .social-img-brand {
-        width: 26px;
-        height: 26px;
-    }
-
     .social-github {
-        width: 26px;
-        height: 26px;
+        width: 26px !important;
+        height: 26px !important;
     }
-
     .social-github .social-img-brand {
-        width: 19px;
-        height: 19px;
+        width: 19px !important;
+        height: 19px !important;
     }
-
+    .social-badge-click:not(.social-github) .social-img-brand {
+        width: 26px !important;
+        height: 26px !important;
+    }
     .social-badge-wrapper {
-        gap: 8px;
+        gap: 8px !important;
     }
 }
+
 
 
     </style>

@@ -1,15 +1,54 @@
-{% if page.discus == "projects" %}
-  <!-- Блок комментариев Giscus -->
+{% if page.discus == "journal" %}
+  <!-- 1. Страницы Журнала: Обсуждение мыслей и этапов сборки (Формат Чат) -->
   <div class="giscus"></div>
-
   <script src="https://giscus.app/client.js"
         data-repo="eaststandart/eaststandart.github.io"
         data-repo-id="R_kgDOSJvIIw"
-        data-category="Проекты"
+        data-category="Журнал"
         data-category-id="DIC_kwDOSJvII84C-DTQ"
         data-mapping="title"
         data-strict="0"
-        data-reactions-enabled="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="ru"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+  </script>
+
+{% elsif page.discus == "questions" %}
+  <!-- 2. Страницы Журнала: Вопросы (Формат Q&A) -->
+  <div class="giscus"></div>
+  <script src="https://giscus.app/client.js"
+        data-repo="eaststandart/eaststandart.github.io"
+        data-repo-id="R_kgDOSJvIIw"
+        data-category="Вопросы"
+        data-category-id="DIC_kwDOSJvII84C-IlX"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="ru"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+  </script>
+
+{% elsif page.discus == "gallery" %}
+  <!-- 3. Страницы Галереи: Фотографии клонов и лайки (Формат Чат) -->
+  <div class="giscus"></div>
+  <script src="https://giscus.app/client.js"
+        data-repo="eaststandart/eaststandart.github.io"
+        data-repo-id="R_kgDOSJvIIw"
+        data-category="Галерея"
+        data-category-id="DIC_kwDOSJvII84C-Il8"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="top"
         data-theme="light"
@@ -20,17 +59,16 @@
   </script>
 
 {% elsif page.discus == "general" %}
-  <!-- Блок комментариев Giscus -->
+  <!-- 4. General -->
   <div class="giscus"></div>
-
   <script src="https://giscus.app/client.js"
         data-repo="eaststandart/eaststandart.github.io"
         data-repo-id="R_kgDOSJvIIw"
-        data-category="General"
+        data-category="Общие"
         data-category-id="DIC_kwDOSJvII84C-Bg5"
         data-mapping="title"
         data-strict="0"
-        data-reactions-enabled="0"
+        data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="top"
         data-theme="light"
@@ -39,4 +77,5 @@
         crossorigin="anonymous"
         async>
   </script>
+
 {% endif %}

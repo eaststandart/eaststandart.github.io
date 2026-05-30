@@ -59,7 +59,7 @@ custom_css: "/assets/css/video.css"
 </div>
 {% endif %}
 
-<!-- Блок вывода Giscus -->
+<!-- Блок комментариев Giscus -->
 {% if page.discus and page.discus != "" and page.discus != nil and page.discus != false %}
 <div class="discus-inline">
     {% include discus.liquid %}

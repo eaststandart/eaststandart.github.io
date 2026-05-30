@@ -18,14 +18,3 @@ discus: "journal"
 **Решение:** замена мотора и ШИМ-регулятора на небольшой мотор-редуктор.
 
 **Рекомендация:** использование более жестких материалов и уменьшение габаритов конструкции.
-
-<!-- Кнопка-баннер для мгновенного перехода прямо в Дискуссии -->
-<div class="forum-banner-container">
-  <a href="https://github.com/eaststandart/eaststandart.github.io/discussions" class="forum-telegram-btn">
-    <span class="forum-btn-icon">💬</span>
-    <div class="forum-btn-text">
-      <strong>Наш форум на GitHub</strong>
-      <span>Задать вопрос, предложить идею, прикрепить фото/видео</span>
-    </div>
-  </a>
-</div>

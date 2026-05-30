@@ -27,6 +27,17 @@ header_theme: classic
         <div class="card-header">
             <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
             <h2>Что нового?</h2>
+            <!-- КНОПКИ СВЯЗИ: Встраиваются прямо внутрь вашего родного .card-header -->
+            <div class="social-badge-wrapper">
+                <!-- Круглый GitHub (Форум) -->
+                <a href="https://github.com" title="Форум проекта" class="social-badge-click">
+                    <svg viewBox="0 0 24 24" width="30" height="30"><circle cx="12" cy="12" r="12" fill="#24292e"/><path d="M12 2.5a9.5 9.5 0 0 0-3 18.5c.5.1.6-.2.6-.5v-1.7c-2.6.6-3.2-1.3-3.2-1.3-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .8 1.5 2.3 1 2.9.8.1-.6.3-1 .6-1.2-2.1-.2-4.3-1-4.3-4.7 0-1 .4-1.9 1-2.6 0-.3-.4-1.2.1-2.5 0 0 .8-.3 2.7 1a9.5 9.5 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.2.1 2.5.6.7 1 1.6 1 2.6 0 3.7-2.2 4.5-4.3 4.7.3.3.6.9.6 1.9v2.8c0 .3.1.6.6.5A9.5 9.5 0 0 0 12 2.5z" fill="#ffffff"/></svg>
+                </a>
+                <!-- Круглый Telegram (Канал) -->
+                <a href="https://t.me" title="Телеграм-канал" class="social-badge-click">
+                    <svg viewBox="0 0 24 24" width="30" height="30"><circle cx="12" cy="12" r="12" fill="#0088cc"/><path d="M17.5 7.7l-1.6 7.7c-.1.5-.4.6-.8.4l-2.5-1.8-1.2 1.2c-.1.1-.3.2-.5.2l.2-2.6 4.8-4.3c.2-.2 0-.3-.3-.1L10 11.3l-2.5-.8c-.5-.2-.6-.5.1-.8l9.9-3.8c.4-.2.8.1.7.8z" fill="#ffffff"/></svg>
+                </a>
+            </div>
         </div>
         <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->
         <div class="home-news-feed">

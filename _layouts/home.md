@@ -178,6 +178,49 @@
                 margin-bottom: 10px !important;
             }
         }
+
+
+        /* ==========================================================================
+           4. ИНТЕГРАЦИЯ КРУГЛЫХ ИКОНОК СВЯЗИ В ШАПКУ НОВОСТЕЙ
+           ========================================================================== */
+        
+        /* Автоматически выталкиваем контейнер иконок к правому краю карточки */
+        .social-badge-wrapper {
+            margin-left: auto; 
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Базовое поведение круглого кликабельного логотипа */
+        .social-badge-click {
+            display: block;
+            line-height: 0;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        /* Интерактивный микро-подъём иконки при наведении */
+        .social-badge-click:hover {
+            transform: scale(1.1);
+        }
+
+        /* Эффект продавливания при клике пальцем на смартфоне */
+        .social-badge-click:active {
+            transform: scale(0.92);
+        }
+
+        /* Мобильная адаптация: делаем иконки чуть компактнее на экранах до 900px */
+        @media (max-width: 900px) {
+            .social-badge-wrapper svg {
+                width: 26px !important;
+                height: 26px !important;
+            }
+            .social-badge-wrapper {
+                gap: 8px;
+            }
+        }
+
+
     </style>
 </head>
 <body>

@@ -211,24 +211,7 @@
 }
 
 /* GitHub */
-
-.social-github {
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-}
-
-.social-github .social-img-brand {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-}
-  
+.social-github { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #24292e; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } .social-github .social-img-brand { width: 80%; height: 80%; object-fit: contain; }
 
 
 /* Telegram */

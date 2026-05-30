@@ -183,19 +183,60 @@
    4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ
    ========================================== */
 
+.social-badge-wrapper {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-badge-click {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    line-height: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+/* Общие настройки SVG */
+.social-img-brand {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+/* GitHub */
 .social-github {
     background: #24292f;
 }
 
+/* Telegram */
 .social-telegram {
     background: #27a7e7;
 }
 
-.social-github .social-img-brand,
-.social-telegram .social-img-brand {
-    width: 70%;
-    height: 70%;
-    object-fit: contain;
+.social-badge-click:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.social-badge-click:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 900px) {
+    .social-badge-click {
+        width: 26px;
+        height: 26px;
+    }
+
+    .social-badge-wrapper {
+        gap: 8px;
+    }
 }
 
     </style>

@@ -30,15 +30,13 @@ header_theme: classic
             
             <!-- КНОПКИ СВЯЗИ -->
 <div class="social-badge-wrapper">
-<a href="https://github.com" title="GitHub" class="social-badge-click social-github">  
-<svg viewBox="0 0 24 24" class="social-img-brand" fill="white">  
-<path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92..."/>  
-</svg>  
+<a href="https://github.com" title="GitHub" class="social-badge-click social-github">
+    <img  src="/assets/icons/logo-github.svg"  alt="GitHub" class="social-img-brand">
 </a>
 
-    <a href="https://t.me" title="Telegram" class="social-badge-click social-telegram">
-        <img src="telegram.svg" alt="Telegram" class="social-img-brand">
-    </a>
+<a href="https://t.me" title="Telegram" class="social-badge-click social-telegram">  
+<img  src="/assets/icons/logo-telegram.svg"  alt="Telegram"  class="social-img-brand"  >  
+</a>
 </div>
 
 

@@ -181,12 +181,12 @@
 
 /* ========================================== 4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ ========================================== */
 .social-badge-wrapper { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-.social-badge-click { display: block; width: 32px; height: 32px; border-radius: 50%; background-size: 55% !important; background-position: center !important; background-repeat: no-repeat !important; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+.social-badge-click { display: block; width: 32px; height: 32px; border-radius: 50%; background-size: 55% !important; background-position: center !important; background-repeat: no-repeat !important; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; filter: brightness(0) invert(1); }
 
-/* Официальный круглый логотип GitHub напрямую по чистой ссылке */
+/* Официальный GitHub (теперь белый силуэт на черном круге) */
 .social-badge-click.github-brand { background-color: #24292e; background-image: url("https://jsdelivr.net"); }
 
-/* Официальный круглый логотип Telegram напрямую по чистой ссылке */
+/* Официальный Telegram (теперь белый самолетик на синем круге) */
 .social-badge-click.telegram-brand { background-color: #24A1DE; background-image: url("https://jsdelivr.net"); }
 
 .social-badge-click:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.18); }

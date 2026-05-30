@@ -212,24 +212,15 @@
 
 /* GitHub */
 
-.social-github {
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #24292f;
-    border-radius: 50%;
-
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.social-github .social-img-brand {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1);
+.social-github {  
+background: #24292f;  
+border-radius: 50%;  
+}  
+  
+.social-github .social-img-brand {  
+width: 70%;  
+height: 70%;  
+filter: brightness(0) invert(1);  
 }
 
 /* Telegram */

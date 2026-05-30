@@ -194,30 +194,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 32px;
     height: 32px;
+
     border-radius: 50%;
     overflow: hidden;
+
     line-height: 0;
+
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: transform 0.2s;
-}
-
-/* Общие настройки SVG */
-.social-img-brand {
-    width: 70%;
-    height: 70%;
-    object-fit: contain;
-}
-
-/* GitHub */
-.social-github {
-    background: #24292f;
-}
-
-/* Telegram */
-.social-telegram {
-    background: #27a7e7;
 }
 
 .social-badge-click:hover {
@@ -226,6 +213,32 @@
 
 .social-badge-click:active {
     transform: scale(0.95);
+}
+
+/* GitHub */
+
+.social-github {
+    background: #24292f;
+}
+
+.social-github .social-img-brand {
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+/* Telegram */
+
+.social-telegram {
+    background: #27a7e7;
+}
+
+.social-telegram .social-img-brand {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 @media (max-width: 900px) {

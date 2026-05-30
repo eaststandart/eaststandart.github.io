@@ -220,16 +220,14 @@
     align-items: center;
     justify-content: center;
 
-    background: #24292f;
+    background: #000000; /* черный круг */
     border-radius: 50%;
-
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
 }
 
 .social-github .social-img-brand {
     width: 80%;
     height: 80%;
-    filter: invert(1);
+    object-fit: contain;
 }
   
 

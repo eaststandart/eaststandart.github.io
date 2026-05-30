@@ -227,8 +227,8 @@
     width: 80%;
     height: 80%;
     object-fit: contain;
-    filter: brightness(0) invert(1); /* Делает вашего оригинального черного кота чисто-белым */
 }
+
 
 /* Telegram */
 .social-badge-click:not(.social-github) .social-img-brand {

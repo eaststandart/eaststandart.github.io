@@ -208,20 +208,21 @@
 .social-github {
     width: 32px !important;
     height: 32px !important;
+
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+
+    background: #24292e !important; /* черный/темно-серый круг */
     border-radius: 50% !important;
-    background-color: #24292e !important; /* Наш черно-серый фон */
+
     box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
 }
 
-/* Изолированное отбеливание только черного кота внутри .social-github */
 .social-github .social-img-brand {
     width: 80% !important;
     height: 80% !important;
     object-fit: contain !important;
-    filter: brightness(0) invert(1) !important; /* Выворачивает черный цвет картинки в белый */
 }
 
 /* Telegram и другие сторонние значки в обертке .social-badge-click */

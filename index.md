@@ -31,9 +31,9 @@ header_theme: classic
             <!-- КНОПКИ СВЯЗИ -->
 
 <div class="social-badge-wrapper">
-    <a href="https://github.com" title="GitHub" class="social-badge-click social-github">
-        <img src="/assets/icons/logo-github.svg" alt="GitHub" class="social-img-brand">
-    </a>
+<a href="#" class="social-github">  
+TEST  
+</a>
 
     <a href="https://t.me" title="Telegram" class="social-badge-click social-telegram">
         <img src="/assets/icons/logo-telegram.svg" alt="Telegram" class="social-img-brand">

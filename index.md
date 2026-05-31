@@ -40,8 +40,6 @@ header_theme: classic
     </a>
 </div>
 
-
-
         </div>
         <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->
         <div class="home-news-feed">

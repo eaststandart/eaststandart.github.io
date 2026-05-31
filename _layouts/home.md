@@ -233,7 +233,7 @@
     border-radius: 50% !important;
     object-fit: contain !important;
 
-filter: invert(66%) sepia(85%) saturate(362%) hue-rotate(95deg) brightness(91%) contrast(89%) !important;
+filter: invert(48%) sepia(34%) saturate(951%) hue-rotate(92deg) brightness(93%) contrast(82%) !important;
 
 }
 

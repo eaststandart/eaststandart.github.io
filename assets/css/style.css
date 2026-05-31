@@ -473,7 +473,7 @@ figcaption {
 
 .license-footer .footer-copyright a {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: -0.2em;
     margin-right: 2px;
 }
 

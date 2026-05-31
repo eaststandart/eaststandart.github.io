@@ -195,26 +195,23 @@
     align-items: center !important;
     justify-content: center !important;
     line-height: 0 !important;
+    cursor: pointer !important;
     
-    /* Добавляем прозрачность по умолчанию (значок слегка тусклый) */
-    opacity: 0.6 !important; 
+    /* Значок изначально на 100% яркий и статичный */
+    opacity: 1 !important; 
     
-    /* Добавляем opacity в список плавных переходов */
-    transition: transform 0.2s, opacity 0.2s !important;
-    transform-origin: center center !important; 
-    cursor: pointer !important; /* Курсор-палец будет всегда при наведении на ссылку */
+    /* Плавное изменение только для прозрачности */
+    transition: opacity 0.2s ease !important; 
 }
 
-/* Эффект при наведении курсора */
+/* Эффект при наведении курсора: значок просто плавно тускнеет */
 .social-badge-click:hover {
-    opacity: 1 !important; /* Плавно становится на 100% чётким и насыщенным */
-    transform: translateY(-2px) scale(1.05) !important; /* Оставляем или убираем сдвиг по желанию */
+    opacity: 0.6 !important; 
 }
 
 /* Эффект при клике (нажатии) */
 .social-badge-click:active {
-    transform: scale(0.95) !important;
-    opacity: 0.8 !important; /* Чуть приглушаем яркость в момент клика */
+    opacity: 0.4 !important; 
 }
 
 

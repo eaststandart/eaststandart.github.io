@@ -205,23 +205,6 @@
 }
 
 /* GitHub */
-.social-github {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0,0,0,.1);
-}
-
-.social-github .social-img-brand {
-    width: 32px;
-    height: 32px;
-    object-fit: сontain !important;
-}
-
-/* GitHub */
 
 .social-github {
     width: 32px !important;

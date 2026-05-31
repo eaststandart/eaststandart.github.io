@@ -205,25 +205,16 @@
 }
 
 /* GitHub — Принудительный жесткий черно-серый круг */
-.social-github {
-    width: 32px !important;
-    height: 32px !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    background: #24292e !important; /* черный/темно-серый круг */
-    border-radius: 50% !important;
-
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+.social-github img {  
+border: 2px solid red;  
 }
 
 .social-github .social-img-brand {
-    width: 80% !important;
-    height: 80% !important;
+    width: 32px  !important;
+    height: 32p !important;
     object-fit: contain !important;
 }
+
 
 /* Telegram и другие сторонние значки в обертке .social-badge-click */
 .social-badge-click:not(.social-github) .social-img-brand {

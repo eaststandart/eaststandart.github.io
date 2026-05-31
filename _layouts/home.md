@@ -209,12 +209,6 @@
 border: 2px solid red;  
 }
 
-.social-github .social-img-brand {
-    width: 32px  !important;
-    height: 32px !important;
-    object-fit: contain !important;
-}
-
 
 /* Telegram и другие сторонние значки в обертке .social-badge-click */
 .social-badge-click:not(.social-github) .social-img-brand {

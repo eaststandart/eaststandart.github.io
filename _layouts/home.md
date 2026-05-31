@@ -207,8 +207,8 @@
 /* GitHub */
 
 .social-github {
-    width: 32px !important;
-    height: 32px !important;
+    width: 30px !important;
+    height: 30px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -226,8 +226,8 @@
 
 /* Telegram */
 .social-badge-click:not(.social-github) .social-img-brand {
-    width: 32px !important;
-    height: 32px !important;
+    width: 30px !important;
+    height: 30px !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
     object-fit: сontain !important;
@@ -251,7 +251,6 @@
         gap: 8px !important;
     }
 }
-
 
     </style>
 </head>

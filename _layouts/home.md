@@ -191,25 +191,30 @@
 }
 
 .social-badge-click {
-    /* Меняем block на inline-flex, чтобы элемент сжимался ровно под размер иконки */
     display: inline-flex !important; 
     align-items: center !important;
     justify-content: center !important;
-    
     line-height: 0 !important;
-    transition: transform 0.2s;
     
-    /* Жестко задаем центр как точку, от которой идет увеличение */
+    /* Добавляем прозрачность по умолчанию (значок слегка тусклый) */
+    opacity: 0.6 !important; 
+    
+    /* Добавляем opacity в список плавных переходов */
+    transition: transform 0.2s, opacity 0.2s !important;
     transform-origin: center center !important; 
+    cursor: pointer !important; /* Курсор-палец будет всегда при наведении на ссылку */
 }
 
+/* Эффект при наведении курсора */
 .social-badge-click:hover {
-    /* Теперь сдвиг и масштаб будут вычисляться идеально от центра значка */
-    transform: translateY(-2px) scale(1.05) !important;
+    opacity: 1 !important; /* Плавно становится на 100% чётким и насыщенным */
+    transform: translateY(-2px) scale(1.05) !important; /* Оставляем или убираем сдвиг по желанию */
 }
 
+/* Эффект при клике (нажатии) */
 .social-badge-click:active {
     transform: scale(0.95) !important;
+    opacity: 0.8 !important; /* Чуть приглушаем яркость в момент клика */
 }
 
 

@@ -204,7 +204,7 @@
     transform: scale(0.95);
 }
 
-/* GitHub — Принудительный жесткий черно-серый круг */
+/* GitHub */
 .social-github {
     width: 32px;
     height: 32px;
@@ -221,8 +221,27 @@
     object-fit: сontain !important;
 }
 
+/* GitHub */
 
-/* Telegram и другие сторонние значки в обертке .social-badge-click */
+.social-github {
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+    overflow: hidden !important;
+}
+
+.social-github .social-img-brand {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: contain !important;
+}
+
+/* Telegram */
 .social-badge-click:not(.social-github) .social-img-brand {
     width: 32px !important;
     height: 32px !important;

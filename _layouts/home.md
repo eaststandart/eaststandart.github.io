@@ -218,7 +218,7 @@
 .social-github .social-img-brand {
     width: 32px;
     height: 32px;
-    object-fit: contain;
+    object-fit: сontain !important;
 }
 
 
@@ -228,7 +228,7 @@
     height: 32px !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
-    object-fit: contain !important;
+    object-fit: сontain !important;
 }
 
 /* Мобильная адаптация под экраны до 900px */

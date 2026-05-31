@@ -224,32 +224,6 @@
     filter: brightness(0) invert(1) !important; /* Выворачивает черный цвет картинки в белый */
 }
 
-
-.github-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;          /* Размер круга */
-  height: 40px;
-  background-color: #000000; /* Черный круг */
-  border-radius: 50%;   /* Делает блок круглым */
-  transition: transform 0.2s ease;
-}
-
-.github-badge svg {
-  width: 65%;           /* Размер кота внутри круга */
-  height: 65%;
-  fill: #ffffff;        /* Белый цвет кота */
-}
-
-/* Эффект при наведении (опционально) */
-.github-badge:hover {
-  transform: scale(1.05);
-}
-
-
-
-
 /* Telegram и другие сторонние значки в обертке .social-badge-click */
 .social-badge-click:not(.social-github) .social-img-brand {
     width: 32px !important;

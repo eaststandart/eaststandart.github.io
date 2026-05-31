@@ -29,7 +29,7 @@ header_theme: classic
             <h2>Что нового?</h2>
             <!-- КНОПКИ СВЯЗИ -->
 			<div class="social-badge-wrapper">
-			    <a href="https://github.com/eaststandart/eaststandart.github.io/discussions/" title="GitHub" class="social-badge-click social-github">
+			    <a href="https://github.com/eaststandart/eaststandart.github.io/discussions/" title="GitHub Discussions" class="social-badge-click social-github">
 			        <img src="/assets/icons/logo-github.svg" alt="GitHub" class="social-img-brand">
 			    </a>
 			    <a href="https://t.me/RadiotekhnikaClub" title="Telegram" class="social-badge-click social-telegram">

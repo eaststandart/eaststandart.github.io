@@ -214,7 +214,6 @@
     opacity: 0.4 !important; 
 }
 
-
 /* GitHub */
 
 .social-github {
@@ -233,6 +232,9 @@
     height: 100% !important;
     border-radius: 50% !important;
     object-fit: contain !important;
+
+filter: invert(48%) sepia(34%) saturate(951%) hue-rotate(92deg) brightness(93%) contrast(82%) !important;
+
 }
 
 /* Telegram */

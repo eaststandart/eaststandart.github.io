@@ -32,7 +32,7 @@ header_theme: classic
 
 <div class="social-badge-wrapper">
 <a href="#" class="social-github">  
-TEST  
+<img src="/assets/icons/logo-github.svg">  
 </a>
 
     <a href="https://t.me" title="Telegram" class="social-badge-click social-telegram">

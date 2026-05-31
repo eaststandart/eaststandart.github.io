@@ -222,8 +222,6 @@
     width: 80%;
     height: 80%;
     object-fit: contain;
-
-    filter: invert(1);
 }
 
 

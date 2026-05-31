@@ -179,9 +179,9 @@
             }
         }
 
-/* ==========================================
-   4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ
-   ========================================== */
+		/* ==========================================
+		   4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ
+		   ========================================== */
 
 .social-badge-wrapper {
     margin-left: auto !important;
@@ -213,6 +213,7 @@
     align-items: center !important;
     justify-content: center !important;
     border-radius: 50% !important;
+    border: 1px solid #eee;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
     overflow: hidden !important;
 }

@@ -191,18 +191,27 @@
 }
 
 .social-badge-click {
-    display: block !important;
+    /* Меняем block на inline-flex, чтобы элемент сжимался ровно под размер иконки */
+    display: inline-flex !important; 
+    align-items: center !important;
+    justify-content: center !important;
+    
     line-height: 0 !important;
     transition: transform 0.2s;
+    
+    /* Жестко задаем центр как точку, от которой идет увеличение */
+    transform-origin: center center !important; 
 }
 
 .social-badge-click:hover {
-    transform: translateY(-2px) scale(1.05);
+    /* Теперь сдвиг и масштаб будут вычисляться идеально от центра значка */
+    transform: translateY(-2px) scale(1.05) !important;
 }
 
 .social-badge-click:active {
-    transform: scale(0.95);
+    transform: scale(0.95) !important;
 }
+
 
 /* GitHub */
 

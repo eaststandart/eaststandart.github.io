@@ -211,7 +211,7 @@ border: 2px solid red;
 
 .social-github .social-img-brand {
     width: 32px  !important;
-    height: 32p !important;
+    height: 32px !important;
     object-fit: contain !important;
 }
 

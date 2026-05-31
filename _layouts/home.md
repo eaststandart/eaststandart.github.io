@@ -257,8 +257,8 @@
         height: 26px !important;
     }
     .social-github .social-img-brand {
-        width: 19px !important;
-        height: 19px !important;
+        width: 100% !important;
+        height: 100% !important;
     }
     .social-badge-click:not(.social-github) .social-img-brand {
         width: 26px !important;

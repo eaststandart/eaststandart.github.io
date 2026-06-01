@@ -183,87 +183,85 @@
 		   4. ЗНАЧКИ СВЯЗИ В НОВОСТЯХ
 		   ========================================== */
 
-.social-badge-wrapper {
-    margin-left: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-.social-badge-click {
-    display: inline-flex !important; 
-    align-items: center !important;
-    justify-content: center !important;
-    line-height: 0 !important;
-    cursor: pointer !important;
-    
-    /* Значок изначально на 100% яркий и статичный */
-    opacity: 1 !important; 
-    
-    /* Плавное изменение только для прозрачности */
-    transition: opacity 0.2s ease !important; 
-}
-
-/* Эффект при наведении курсора: значок просто плавно тускнеет */
-.social-badge-click:hover {
-    opacity: 0.6 !important; 
-}
-
-/* Эффект при клике (нажатии) */
-.social-badge-click:active {
-    opacity: 0.4 !important; 
-}
-
-/* GitHub */
-
-.social-github {
-    width: 30px !important;
-    height: 30px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 50% !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
-    overflow: hidden !important;
-}
-
-.social-github .social-img-brand {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 50% !important;
-    object-fit: contain !important;
-
-filter: invert(48%) sepia(34%) saturate(951%) hue-rotate(92deg) brightness(93%) contrast(82%) !important;
-
-}
-
-/* Telegram */
-.social-badge-click:not(.social-github) .social-img-brand {
-    width: 30px !important;
-    height: 30px !important;
-    border-radius: 50% !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
-    object-fit: сontain !important;
-}
-
-/* Мобильная адаптация под экраны до 900px */
-@media (max-width: 900px) {
-    .social-github {
-        width: 26px !important;
-        height: 26px !important;
-    }
-    .social-github .social-img-brand {
-        width: 100% !important;
-        height: 100% !important;
-    }
-    .social-badge-click:not(.social-github) .social-img-brand {
-        width: 26px !important;
-        height: 26px !important;
-    }
-    .social-badge-wrapper {
-        gap: 8px !important;
-    }
-}
+		.social-badge-wrapper {
+		    margin-left: auto !important;
+		    display: flex !important;
+		    align-items: center !important;
+		    gap: 10px !important;
+		}
+		
+		.social-badge-click {
+		    display: inline-flex !important; 
+		    align-items: center !important;
+		    justify-content: center !important;
+		    line-height: 0 !important;
+		    cursor: pointer !important;
+		    
+		    /* Значок изначально на 100% яркий и статичный */
+		    opacity: 1 !important; 
+		    
+		    /* Плавное изменение только для прозрачности */
+		    transition: opacity 0.2s ease !important; 
+		}
+		
+		/* Эффект при наведении курсора: значок просто плавно тускнеет */
+		.social-badge-click:hover {
+		    opacity: 0.6 !important; 
+		}
+		
+		/* Эффект при клике (нажатии) */
+		.social-badge-click:active {
+		    opacity: 0.4 !important; 
+		}
+		
+		/* GitHub */
+		
+		.social-github {
+		    width: 30px !important;
+		    height: 30px !important;
+		    display: flex !important;
+		    align-items: center !important;
+		    justify-content: center !important;
+		    border-radius: 50% !important;
+		    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+		    overflow: hidden !important;
+		}
+		
+		.social-github .social-img-brand {
+		    width: 100% !important;
+		    height: 100% !important;
+		    border-radius: 50% !important;
+		    object-fit: contain !important;
+			filter: invert(48%) sepia(34%) saturate(951%) hue-rotate(92deg) brightness(93%) contrast(82%) !important;
+		}
+		
+		/* Telegram */
+		.social-badge-click:not(.social-github) .social-img-brand {
+		    width: 30px !important;
+		    height: 30px !important;
+		    border-radius: 50% !important;
+		    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+		    object-fit: сontain !important;
+		}
+		
+		/* Мобильная адаптация под экраны до 900px */
+		@media (max-width: 900px) {
+		    .social-github {
+		        width: 26px !important;
+		        height: 26px !important;
+		    }
+		    .social-github .social-img-brand {
+		        width: 100% !important;
+		        height: 100% !important;
+		    }
+		    .social-badge-click:not(.social-github) .social-img-brand {
+		        width: 26px !important;
+		        height: 26px !important;
+		    }
+		    .social-badge-wrapper {
+		        gap: 8px !important;
+		    }
+		}
 
     </style>
 </head>

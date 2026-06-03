@@ -1,9 +1,10 @@
 ---
 layout: page
 description: Развитие навыков конструирования комбинированных корпусов из дерева и пластика, создание встроенных электрических схем. Изучение принципов работы несимметричного мультивибратора и подбора частотозадающих компонентов для управления звуком.
+author: ["RadiotekhnikaClub"]
 title: Бластер электроакустический
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, бластерэлектроакустический, electroacousticblaster]
-sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
+sources: 
 date: 2026-01-24
 permalink: /faire/blaster-elektroakusticheskij/
 ---

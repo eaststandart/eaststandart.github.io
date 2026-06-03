@@ -18,7 +18,7 @@ permalink: /faire/blaster-elektroakusticheskij/
 ![](blaster-elektroakusticheskij-1.webp)
 ![](blaster-elektroakusticheskij-2.webp)
 ![](blaster-elektroakusticheskij-3.webp)
-![[blaster-elektroakusticheskij.webp]]
+
 > **Смотри также:**\
 > 1\. [Несимметричный мультивибратор на транзисторах](https://www.chipdip.ru/video/id000553663).\
 > 2\. [Несимметричный генератор. Как это работает и несколько самоделок из него](https://vkvideo.ru/video-32587581_456241062).\

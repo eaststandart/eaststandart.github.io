@@ -2,7 +2,7 @@
 layout: page
 title: "Беспроводной телеграф: вопросы"
 description: "Здесь можно задать любые вопросы по проекту."
-date: 2025-11-04
+date: 2025-11-02
 categories: [journal, besprovodnoj-telegraf]
 discus: "questions"
 ---

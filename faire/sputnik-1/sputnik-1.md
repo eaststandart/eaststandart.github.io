@@ -1,6 +1,7 @@
 ---
 layout: page
 description: Развитие навыков пайки меди, работы с металлом, обработки деревянных деталей и сборки объемной конструкции.
+author: ["RadiotekhnikaClub"]
 title: Спутник-1
 tags: [конструированиеимоделирование, ссср, первыйспутник, спутник1, sputnik1]
 sources: "[Sputnik-1](https://only-paper.ru/load/kosmos_iz_bumagi/sputnik_iz_bumagi/sputnik_1_sputnik_1/155-1-0-19242)"
@@ -30,3 +31,11 @@ permalink: /faire/sputnik-1/
 > 
 > 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck), [Updates, More 45's, DSKY Project, Sputnik, Viewer Mail, And Missy! - YouTube](https://youtu.be/hiqibWP2WNA), [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY), [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk) от [Fran Blanche](/people/fran-blanche/).\
 > 2\. [Схема электрическая модуля звукового](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от [Fran Blanche](/people/fran-blanche/).
+
+### Журнал проекта
+<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
+{% include posts-page.liquid type="journal" per_page="" %}
+
+### Галерея работ
+<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
+{% include posts-page.liquid type="media" %}

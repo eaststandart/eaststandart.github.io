@@ -25,3 +25,11 @@ permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
 ### Файлы проекта
 1\. 📄[Описание проекта, PDF](fonarik-svetodiodnyj-bumazhnyj.pdf)\
 2\. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)
+
+### Журнал проекта
+<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
+{% include posts-page.liquid type="journal" per_page="" %}
+
+### Галерея работ
+<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
+{% include posts-page.liquid type="media" %}

@@ -25,10 +25,12 @@ function runMediaArchiveFilter() {
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
-      lastItem.style.setProperty('margin-bottom', '0px', 'important');
       
-      // ИСПРАВЛЕНО: ищем линию ТОЛЬКО как прямой дочерний элемент карточки, не трогая Giscus
-      var hr = lastItem.querySelector(':scope > .media-entry-hr');
-      if (hr) hr.style.setProperty('display', 'none', 'important');
+      // ПРОВЕРКА: Если внутри этой карточки есть блок Giscus, полностью ЗАПРЕЩАЕМ зачистку линий, чтобы не урезать его
+      if (!lastItem.querySelector('.discus-inline') && !lastItem.querySelector('.giscus')) {
+        lastItem.style.setProperty('margin-bottom', '0px', 'important');
+        var hr = lastItem.querySelector('.media-entry-hr');
+        if (hr) hr.style.setProperty('display', 'none', 'important');
+      }
     }
 }

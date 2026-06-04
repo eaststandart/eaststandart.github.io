@@ -16,7 +16,7 @@
         <!-- Оболочка основного контента статьи -->
         <div class="media-content main-content">
           
-          <!-- Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
+          <!-- ДОБАВЛЕНО: Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
           {% if post.description and post.description != "" %}
             <p class="page-description">{{ post.description }}</p>
           {% endif %}
@@ -56,21 +56,11 @@
               {% endfor %}
           </div>
           {% endif %}
-
-          {% comment %} ==================================================================
-             ГЛУБОКАЯ ИНТЕГРАЦИЯ: Встраиваем вызов дискуссий для конкретного поста!
-             ================================================================== {% endcomment %}
-          {% if post.discus and post.discus != "" and post.discus != nil and post.discus != false %}
-            <div class="discus-inline" style="margin-top: 25px;">
-              {% include discus.liquid from_post=post.discus post_title=post.title %}
-            </div>
-          {% endif %}
-
-        </div><!-- / .media-content -->
+        </div>
         
         <hr class="media-entry-hr">
         
-      </div><!-- / .media-entry -->
+      </div>
       
     {% endif %}
   {% endfor %}

@@ -16,7 +16,7 @@
         <!-- Оболочка основного контента статьи -->
         <div class="media-content main-content">
           
-          <!-- ДОБАВЛЕНО: Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
+          <!-- Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
           {% if post.description and post.description != "" %}
             <p class="page-description">{{ post.description }}</p>
           {% endif %}
@@ -56,24 +56,13 @@
               {% endfor %}
           </div>
           {% endif %}
-          
-          {% comment %} 
-          ==================================================================
-          ИСПРАВЛЕНО: Встраиваем вызов дискуссий прямо под контент конкретного поста в ленте!
-          ==================================================================
-          {% endcomment %}
+
+          {% comment %} ==================================================================
+             ГЛУБОКАЯ ИНТЕГРАЦИЯ: Встраиваем вызов дискуссий для конкретного поста!
+             ================================================================== {% endcomment %}
           {% if post.discus and post.discus != "" and post.discus != nil and post.discus != false %}
-            <div class="discus-inline" style="margin-top: 20px;">
-              {% comment %} 
-              Чтобы discus.liquid понял, что мы работаем внутри цикла постов, 
-              мы временно передаем ему локальный контекст через переменную jekyll
-              {% endcomment %}
-              {% assign page_discus_backup = page.discus %}
-              {% assign page.discus = post.discus %}
-              
-              {% include discus.liquid %}
-              
-              {% assign page.discus = page_discus_backup %}
+            <div class="discus-inline" style="margin-top: 25px;">
+              {% include discus.liquid from_post=post.discus post_title=post.title %}
             </div>
           {% endif %}
 
@@ -81,7 +70,7 @@
         
         <hr class="media-entry-hr">
         
-      </div>
+      </div><!-- / .media-entry -->
       
     {% endif %}
   {% endfor %}

@@ -56,28 +56,7 @@
               {% endfor %}
           </div>
           {% endif %}
-          
-          {% comment %} 
-          ==================================================================
-          ИСПРАВЛЕНО: Встраиваем вызов дискуссий прямо под контент конкретного поста в ленте!
-          ==================================================================
-          {% endcomment %}
-          {% if post.discus and post.discus != "" and post.discus != nil and post.discus != false %}
-            <div class="discus-inline" style="margin-top: 20px;">
-              {% comment %} 
-              Чтобы discus.liquid понял, что мы работаем внутри цикла постов, 
-              мы временно передаем ему локальный контекст через переменную jekyll
-              {% endcomment %}
-              {% assign page_discus_backup = page.discus %}
-              {% assign page.discus = post.discus %}
-              
-              {% include discus.liquid %}
-              
-              {% assign page.discus = page_discus_backup %}
-            </div>
-          {% endif %}
-
-        </div><!-- / .media-content -->
+        </div>
         
         <hr class="media-entry-hr">
         

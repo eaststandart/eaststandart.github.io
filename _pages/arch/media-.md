@@ -1,9 +1,0 @@
----
-layout: page
-description: Архив фото, видео и аудио по выполненным проектам
-title: Медиа-материалы
-permalink: /media/
-emoji: "🎬+"
----
-
-{% include media-archive.liquid category="media" %}

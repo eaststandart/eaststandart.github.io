@@ -52,12 +52,6 @@ body {
     margin-right: 0 !important;
 }
 
-/* Принудительно запрещаем виджету Giscus уменьшать высоту на страницах ленты и архивов */
-.media-archive-list-wrapper .giscus-frame {
-    height: 100% !important;
-    min-height: 600px !important;
-}
-
 /* На мобильных экранах убираем лишние ограничения */
 @media (max-width: 768px) {
     .giscus-frame {

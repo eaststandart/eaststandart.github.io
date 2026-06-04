@@ -2,6 +2,7 @@
 layout: page
 title: Медиа-материалы проекта
 permalink: /media-posts-page/
+discus: "gallery"
 ---
 
 {% comment %} 

@@ -25,12 +25,9 @@ function runMediaArchiveFilter() {
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
-      
-      // ПРОВЕРКА: Если внутри этой карточки есть блок Giscus, полностью ЗАПРЕЩАЕМ зачистку линий, чтобы не урезать его
-      if (!lastItem.querySelector('.discus-inline') && !lastItem.querySelector('.giscus')) {
-        lastItem.style.setProperty('margin-bottom', '0px', 'important');
-        var hr = lastItem.querySelector('.media-entry-hr');
-        if (hr) hr.style.setProperty('display', 'none', 'important');
-      }
+      // Полностью обнуляем маргин и прячем разделительную линию у финишного поста
+      lastItem.style.setProperty('margin-bottom', '0px', 'important');
+      var hr = lastItem.querySelector('.media-entry-hr');
+      if (hr) hr.style.setProperty('display', 'none', 'important');
     }
 }

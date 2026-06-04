@@ -25,10 +25,9 @@ function runMediaArchiveFilter() {
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
+      // Полностью обнуляем маргин и прячем разделительную линию у финишного поста
       lastItem.style.setProperty('margin-bottom', '0px', 'important');
-      
-      // ИСПРАВЛЕНО: ищем линию ТОЛЬКО как прямой дочерний элемент карточки, не трогая Giscus
-      var hr = lastItem.querySelector(':scope > .media-entry-hr');
+      var hr = lastItem.querySelector('.media-entry-hr');
       if (hr) hr.style.setProperty('display', 'none', 'important');
     }
 }

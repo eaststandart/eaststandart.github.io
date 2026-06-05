@@ -12,12 +12,18 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
-{% comment %} Счётчик-предохранитель с учетом флага фильтрации media-post-page {% endcomment %}
+{% comment %} Счётчик-предохранитель {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
-    {% comment %} Если это тип медиа и стоит флаг N — пропускаем пост {% endcomment %}
-    {% if include.type == "media" and post.media-post-page == "N" %}{% continue %}{% endif %}
+    
+    {% comment %} БРОНЕБОЙНАЯ ПРОВЕРКА ФЛАГА "N" {% endcomment %}
+    {% if include.type == "media" %}
+      {% assign m_flag = post["media-post-page"] | downcase %}
+      {% if m_flag == "n" or m_flag == "false" or post["media-post-page"] == false %}
+        {% continue %}
+      {% endif %}
+    {% endif %}
     
     {% assign has_posts = true %}
     {% break %}
@@ -36,8 +42,14 @@
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
-      {% comment %} Главная проверка фильтрации: если это медиа и флаг равен N, пост не рендерится {% endcomment %}
-      {% if include.type == "media" and post.media_post_page == "N" %}{% continue %}{% endif %}
+      
+      {% comment %} БРОНЕБОЙНАЯ ПРОВЕРКА ФЛАГА "N" ДЛЯ РЕНДЕРА {% endcomment %}
+      {% if include.type == "media" %}
+        {% assign m_flag = post["media-post-page"] | downcase %}
+        {% if m_flag == "n" or m_flag == "false" or post["media-post-page"] == false %}
+          {% continue %}
+        {% endif %}
+      {% endif %}
 
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}

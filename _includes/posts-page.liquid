@@ -18,12 +18,6 @@
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
-    {% comment %} ПРОВЕРКА ФЛАГА ДЛЯ СЧЕТЧИКА {% endcomment %}
-    {% assign media_flag = post.media-post-page | default: post["media-post-page"] %}
-    {% if include.type == "media" and media_flag == "N" %}
-      {% continue %}
-    {% endif %}
-
     {% assign has_posts = true %}
     {% break %}
   {% endif %}
@@ -46,12 +40,6 @@
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
-      {% comment %} ПРОВЕРКА ФЛАГА ДЛЯ ВЫВОДА ПОСТА {% endcomment %}
-      {% assign media_flag = post.media-post-page | default: post["media-post-page"] %}
-      {% if include.type == "media" and media_flag == "N" %}
-        {% continue %}
-      {% endif %}
-
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
 

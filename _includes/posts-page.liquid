@@ -1,9 +1,11 @@
 {% comment %} 
 =============================================================================
 МОДУЛЬ: ЛОКАЛЬНЫЕ ЛЕНТЫ ПОСТОВ НА СТРАНИЦАХ ПРОЕКТОВ (posts-page.liquid)
+Назначение: Вывод списков (Журнал, Медиа, Дневник) внутри карточек конкретных проектов.
 =============================================================================
 {% endcomment %}
 
+{% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
 {% assign project_slug = url_parts[2] %}
@@ -12,31 +14,41 @@
 
 {% assign project_slug_last = page.url | split: "/" | last %}
 
-{% comment %} Счётчик-предохранитель {% endcomment %}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
-    {% if include.type == "media" and post["media-post-page"] == "N" %}
+    {% comment %} ПРОВЕРКА ФЛАГА ДЛЯ СЧЕТЧИКА {% endcomment %}
+    {% assign media_flag = post.media-post-page | default: post["media-post-page"] %}
+    {% if include.type == "media" and media_flag == "N" %}
       {% continue %}
     {% endif %}
+
     {% assign has_posts = true %}
     {% break %}
   {% endif %}
 {% endfor %}
 
 {% if has_posts %}
+{% comment %} Генерируем уникальные ID для контейнеров списка и кнопок под этот цикл {% endcomment %}
 {% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
+
+{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+
 
 <!-- ==========================================================================
      1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ
      ========================================================================== -->
 
+<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
-      {% if include.type == "media" and post["media-post-page"] == "N" %}
+      {% comment %} ПРОВЕРКА ФЛАГА ДЛЯ ВЫВОДА ПОСТА {% endcomment %}
+      {% assign media_flag = post.media-post-page | default: post["media-post-page"] %}
+      {% if include.type == "media" and media_flag == "N" %}
         {% continue %}
       {% endif %}
 
@@ -60,15 +72,19 @@
 <!-- Изолированный блок кнопок управления локальной пагинацией -->
 <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
+
 <!-- ==========================================================================
      2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ)
      ========================================================================== -->
+<!-- Подключаем наш внешний изолированный файл скрипта локальной пагинации -->
 <script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
 
 <script>
   (function() {
+    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
     var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
 
+    // Запускаем пагинатор на месте с его родными изолированными параметрами
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 

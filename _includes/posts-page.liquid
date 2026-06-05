@@ -16,15 +16,9 @@
 {% assign has_posts = false %}
 {% for post in site.categories[project_slug_last] %}
   {% if post.categories contains include.type %}
-    
-    {% comment %} БРОНЕБОЙНАЯ ПРОВЕРКА ФЛАГА "N" {% endcomment %}
-    {% if include.type == "media" %}
-      {% assign m_flag = post["media-post-page"] | downcase %}
-      {% if m_flag == "n" or m_flag == "false" or post["media-post-page"] == false %}
-        {% continue %}
-      {% endif %}
+    {% if include.type == "media" and post["media-post-page"] == "N" %}
+      {% continue %}
     {% endif %}
-    
     {% assign has_posts = true %}
     {% break %}
   {% endif %}
@@ -42,13 +36,8 @@
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
-      
-      {% comment %} БРОНЕБОЙНАЯ ПРОВЕРКА ФЛАГА "N" ДЛЯ РЕНДЕРА {% endcomment %}
-      {% if include.type == "media" %}
-        {% assign m_flag = post["media-post-page"] | downcase %}
-        {% if m_flag == "n" or m_flag == "false" or post["media-post-page"] == false %}
-          {% continue %}
-        {% endif %}
+      {% if include.type == "media" and post["media-post-page"] == "N" %}
+        {% continue %}
       {% endif %}
 
       {% assign is_post = true %}

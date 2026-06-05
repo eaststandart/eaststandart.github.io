@@ -4,8 +4,8 @@
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
-    
-      {% comment %} ИСПРАВЛЕНИЕ: Пропускаем пост, если задан флаг N {% endcomment %}
+
+      {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" %}{% continue %}{% endif %}
     
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">

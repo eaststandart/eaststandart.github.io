@@ -4,6 +4,7 @@ title: "Робот двуногий шагающий из картона: гал
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-10-26
 categories: [media, simple-cardboard-walking-robot]
+media-post-page: "N"
 discus: "gallery"
 ---
 

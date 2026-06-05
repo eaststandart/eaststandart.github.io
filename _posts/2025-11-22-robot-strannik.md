@@ -4,6 +4,7 @@ title: "Робот странник: галерея"
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-11-22
 categories: [media, robot-strannik]
+media-post-page: "N"
 discus: "gallery"
 ---
 

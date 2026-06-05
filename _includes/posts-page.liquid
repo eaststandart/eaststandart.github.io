@@ -37,7 +37,7 @@
   {% for post in site.categories[project_slug_last] %}
     {% if post.categories contains include.type %}
       {% comment %} Главная проверка фильтрации: если это медиа и флаг равен N, пост не рендерится {% endcomment %}
-      {% if include.type == "media" and post.media-post-page == "N" %}{% continue %}{% endif %}
+      {% if include.type == "media" and post.media_post_page == "N" %}{% continue %}{% endif %}
 
       {% assign is_post = true %}
       {% if include.type == "media" %}{% assign is_post = false %}{% endif %}

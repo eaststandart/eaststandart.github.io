@@ -10,7 +10,7 @@ tags: ["eastemitting"]
 
 Завершенная конструкция:
 
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webp)
+![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webp)\
 ![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webm)
 
 Этап создания:
@@ -19,5 +19,5 @@ tags: ["eastemitting"]
 
 В затемненном помещении:
 
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webp)
+![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webp)\
 ![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webm)

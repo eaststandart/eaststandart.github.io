@@ -4,7 +4,7 @@ title: "Робот странник: тип движения"
 description: "Истоки реализации типа передвижения."
 sources: "[Игрушка, шагающий робот, из детства...](https://pikabu.ru/story/igrushka_shagayushchiy_robot_iz_detstva_naydennaya_na_cherdake_v_derevne_u_dedushki_6337680)"
 date: 2025-11-24
-categories: [media, robot-strannik]
+categories: [journal, robot-strannik]
 ---
 
 Тип передвижения робота «странника» воплощен по мотивам советской механической игрушки [^1] с заводным механизмом «Робот», СССР, Самара, Завод «Прогресс», 1980 год. Вид ее был такой:

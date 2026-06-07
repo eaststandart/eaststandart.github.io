@@ -4,17 +4,17 @@ title: "Робот странник: модель №1"
 description:  "Модель робота вариант №1"
 author: ["RadiotekhnikaClub"]
 date: 2025-11-23
-categories: [media, robot-strannik]
+categories: [journal, robot-strannik]
 ---
 
-Фото первого робота «странника»:
+📷 Фото первого робота «странника»:
 
 ![](/faire/robot-strannik/robot-strannik-05.webp)
 ![](/faire/robot-strannik/robot-strannik-06.webp)
 ![](/faire/robot-strannik/robot-strannik-07.webp)
 ![](/faire/robot-strannik/robot-strannik-08.webp)
 
-Видео первого робота «странника»:
+🎬 Видео первого робота «странника»:
 
 ![video](/faire/robot-strannik/robot-strannik-3.webm)
 

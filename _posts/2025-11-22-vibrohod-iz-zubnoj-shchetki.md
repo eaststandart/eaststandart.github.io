@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Робот зубочист: соревнования"
-description: "Соревнования роботов зубочистов."
+description: "Соревнования роботов зубочистов по прохождению препятствий."
 date: 2025-11-22
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---

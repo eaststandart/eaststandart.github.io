@@ -6,9 +6,12 @@ date: 2025-11-22
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---
 
-**Прохождение тоннеля:**
+**Свободное движение:**
 
 ![video](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webm)
+
+**Прохождение тоннеля:**
+
 ![video](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-6.webm)
 
 **Прохождение лабиринта:**

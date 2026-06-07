@@ -8,17 +8,17 @@ categories: [media, prazdnichnyj-domik]
 tags: ["eastemitting"]
 ---
 
-Завершенная конструкция:
+**Завершенная конструкция:**
 
 ![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webp)
 
 ![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webm)
 
-Этап создания:
+**Этап создания:**
 
 ![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webm)
 
-В затемненном помещении:
+**В затемненном помещении:**
 
 ![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webp)
 

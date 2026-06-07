@@ -4,7 +4,7 @@ description: Развитие навыков работы с материала�
 author: ["Кирилл К."]
 title: Праздничный домик
 tags: [электроникаисхемотехника, проектучебный, 3класс, проект, праздничныйдомик, геркон, kirill-k]
-sources: RadiotekhnikaClub
+sources: [RadiotekhnikaClub]
 date: 2026-02-01
 permalink: /faire/prazdnichnyj-domik/
 ---

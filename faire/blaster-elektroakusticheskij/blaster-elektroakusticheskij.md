@@ -30,6 +30,9 @@ permalink: /faire/blaster-elektroakusticheskij/
 
 ![video](blaster-elektroakusticheskij-1.webm)
 
+### Файлы проекта
+
+
 ### Развитие проекта
 1\. Добавление в схему лазерного модуля для подсветки цели или генерации ярких вспышек в такт частоте выстрелов бластера.\
 2\. Модификация до состояния когда бластер можно использовать как пистолет в игре «Тир» из книг Свореня Р.А. и подобных. 🤔
@@ -37,6 +40,8 @@ permalink: /faire/blaster-elektroakusticheskij/
 ### Файлы проекта
 1\. 📄[Сборочный чертеж, PDF](blaster-elektroakusticheskij.pdf)\
 2\. 📐[Сборочный чертеж, LibreCAD](blaster-elektroakusticheskij.dxf)
+3\. 📄[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
+4\. 🔌[Схема электрическая принципиальная, sPlan](blaster-elektroakusticheskij-esd.spl8)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

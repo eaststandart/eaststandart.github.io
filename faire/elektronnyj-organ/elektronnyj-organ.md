@@ -1,10 +1,9 @@
 ---
 layout: page
 description: Развитие навыков конструирования комбинированных корпусов из дерева и пластика, создание встроенных электрических схем. Изучение принципов работы несимметричного мультивибратора и подбора частотозадающих компонентов для управления звуком.
-author: ["RadiotekhnikaClub"]
 title: Электронный орган
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, электронныйорган, таймер555]
-sources: "Mims F. Engineer's Mini-Notebook: 555 Timer IC Circuits, 1996, p. 19., RadiotekhnikaClub"
+sources: "Mims F. Engineer's Mini-Notebook: 555 Timer IC Circuits, 1996, p. 19."
 date: 2026-02-09
 permalink: /faire/elektronnyj-organ/
 ---

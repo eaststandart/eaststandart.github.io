@@ -4,7 +4,7 @@ description: Развитие навыков конструирования ко
 author: ["RadiotekhnikaClub"]
 title: Электронный орган
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, электронныйорган, таймер555]
-sources: 
+sources: "Mims F. Engineers Mini-Notebook. 555 Timer IC Circuits. (1996), p. 19."
 date: 2026-02-09
 permalink: /faire/elektronnyj-organ/
 ---

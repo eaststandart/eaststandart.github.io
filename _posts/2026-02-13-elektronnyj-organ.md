@@ -19,5 +19,5 @@ discus: "questions"
 
 Этап 6: окончательная сборка конструкции
 
-![video](elektronnyj-organ-03.webm)
-![video](elektronnyj-organ-04.webm)
+![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
+![video](/faire/elektronnyj-organ/elektronnyj-organ-04.webm)

@@ -11,4 +11,4 @@ tags: ["eastemitting"]
 ![](/faire/yablonevoe-derevo/yablonevoe-derevo-3.webp)
 
 
-![video](elektronnyj-organ-02.webm)
+![video](/faire/elektronnyj-organ/elektronnyj-organ-02.webm)

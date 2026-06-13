@@ -7,4 +7,4 @@ categories: [journal, blaster-elektroakusticheskij]
 discus: "journal"
 ---
 
-![](blaster-elektroakusticheskij-3.webp)
+![](/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-3.webp)

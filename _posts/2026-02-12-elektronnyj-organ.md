@@ -8,7 +8,7 @@ categories: [media, elektronnyj-organ]
 tags: ["eastemitting"]
 ---
 
-Общий вид конструкции 📷
+📷 Общий вид конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-04.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-05.webp)
@@ -21,6 +21,6 @@ tags: ["eastemitting"]
 ![](/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
 
-Видео демонстрация работы 🎬
+🎬 Видео демонстрация работы
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-02.webm)

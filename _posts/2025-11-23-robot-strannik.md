@@ -7,14 +7,14 @@ date: 2025-11-23
 categories: [journal, robot-strannik]
 ---
 
-📷 **Фото:** вид конструкции
+📷 Общий вид конструкции
 
 ![](/faire/robot-strannik/robot-strannik-05.webp)
 ![](/faire/robot-strannik/robot-strannik-06.webp)
 ![](/faire/robot-strannik/robot-strannik-07.webp)
 ![](/faire/robot-strannik/robot-strannik-08.webp)
 
-🎬 **Видео:** процесс движения
+🎬 Демонстрация процесса движения
 
 ![video](/faire/robot-strannik/robot-strannik-3.webm)
 

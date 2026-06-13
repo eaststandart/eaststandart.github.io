@@ -6,13 +6,13 @@ date: 2025-11-21
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---
 
-📷 **Фото:**
+📷 Общий вид конструкции робота
 
 ![](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webp)
 ![](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webp)
 ![](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webp)
 
-🎬 **Видео:** свободное движение
+🎬 Демонстрация свободного движения
 
 ![video](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webm)
 ![video](/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webm)

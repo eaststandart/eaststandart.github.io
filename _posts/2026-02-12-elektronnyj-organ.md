@@ -21,6 +21,6 @@ tags: ["eastemitting"]
 ![](/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
 
-🎬 Видео демонстрация работы
+🎬 Демонстрация работы устройства
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-02.webm)

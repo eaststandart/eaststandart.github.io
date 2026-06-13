@@ -8,7 +8,19 @@ categories: [media, elektronnyj-organ]
 tags: ["eastemitting"]
 ---
 
-![](/faire/yablonevoe-derevo/yablonevoe-derevo-3.webp)
+📷 **Фото:** вид конструкции
 
+![](/faire/elektronnyj-organ/elektronnyj-organ-04.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-05.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-06.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-07.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-08.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-09.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-10.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-11.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
+
+🎬 **Видео:** демонстрация работы
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-02.webm)

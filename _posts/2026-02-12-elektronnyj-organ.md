@@ -8,7 +8,7 @@ categories: [media, elektronnyj-organ]
 tags: ["eastemitting"]
 ---
 
-📷 **Общий вид конструкции**
+📷 **Общий вид конструкции устройства**
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-04.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-05.webp)

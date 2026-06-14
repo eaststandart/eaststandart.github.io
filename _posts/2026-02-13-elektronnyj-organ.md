@@ -7,11 +7,11 @@ categories: [journal, elektronnyj-organ]
 discus: "questions"
 ---
 
-📍**Этап 1:** создание чертежа конструкции
+📍 **Этап 1:** создание чертежа конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-14.webp)
 
-📍 **Этап 2:** изготовление деталей конструкции
+📍 **Этап 2:** изготовление деталей конструкции и покраска
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-15.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-16.webp)

@@ -7,7 +7,7 @@ categories: [journal, elektronnyj-organ]
 discus: "questions"
 ---
 
-#### Содержание
+### Содержание
 {:.no_toc}
 * Оглавление
 {:toc}

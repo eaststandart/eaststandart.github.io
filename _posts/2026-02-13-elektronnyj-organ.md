@@ -56,5 +56,11 @@ discus: "questions"
 
 <a id="etap-6"></a>**Этап 6.** Тестирование и окончательная сборка конструкции
 
+![](/faire/elektronnyj-organ/elektronnyj-organ-36.webp)
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
+
+![](/faire/elektronnyj-organ/elektronnyj-organ-37.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-38.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-39.webp)
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-04.webm)
+

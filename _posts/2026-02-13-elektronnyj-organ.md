@@ -7,8 +7,7 @@ categories: [journal, elektronnyj-organ]
 discus: "questions"
 ---
 
-### Содержание
-{:.no_toc}
+#### Содержание
 * Оглавление
 {:toc}
 
@@ -21,7 +20,7 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-15.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-16.webp)
 
-**Этап 3:** изготовление печатной платы, травление
+#### Этап 3. Изготовление печатной платы, травление
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-17.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-18.webp)
@@ -36,15 +35,15 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-27.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-28.webp)
 
-**Этап 4:** сверловка отверстий в печатной плате
+#### Этап 4. Сверловка отверстий в печатной плате
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-29.webp)
 
-**Этап 5:** пайка электронных компонентов
+#### Этап 5. Пайка электронных компонентов
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-30.webp)
 
-**Этап 6:** тестирование и окончательная сборка конструкции
+#### Этап 6. Тестирование и окончательная сборка конструкции
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-04.webm)

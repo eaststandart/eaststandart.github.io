@@ -31,7 +31,7 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-27.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-28.webp)
 
-📍 Этап 4: сверловка отверстий в печатной плате
+🔸 Этап 4: сверловка отверстий в печатной плате
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-29.webp)
 

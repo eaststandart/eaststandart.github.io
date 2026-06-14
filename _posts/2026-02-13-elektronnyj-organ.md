@@ -8,20 +8,18 @@ discus: "questions"
 ---
 
 #### Содержание
-{:.no_toc}
-* Оглавление
-{:toc}
+<!-- {:.no_toc} * Оглавление {:toc} -->
 
-#### Этап 1. Создание чертежа конструкции
+<a id="etap-1"></a> **Этап 1.** Создание чертежа конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-14.webp)
 
-#### Этап 2. Изготовление деталей конструкции и покраска
+<a id="etap-2"></a>**Этап 2.** Изготовление деталей конструкции и покраска
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-15.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-16.webp)
 
-#### Этап 3. Изготовление печатной платы, травление
+<a id="etap-3"></a>**Этап 3.** Изготовление печатной платы, травление
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-17.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-18.webp)
@@ -36,15 +34,15 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-27.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-28.webp)
 
-#### Этап 4. Сверловка отверстий в печатной плате
+<a id="etap-4"></a>**Этап 4.** Сверловка отверстий в печатной плате
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-29.webp)
 
-#### Этап 5. Пайка электронных компонентов
+<a id="etap-5"></a>**Этап 5.** Пайка электронных компонентов
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-30.webp)
 
-#### Этап 6. Тестирование и окончательная сборка конструкции
+<a id="etap-6"></a>**Этап 6.** Тестирование и окончательная сборка конструкции
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-04.webm)

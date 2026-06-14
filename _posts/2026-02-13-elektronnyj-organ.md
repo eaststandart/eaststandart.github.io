@@ -8,7 +8,6 @@ discus: "questions"
 ---
 
 #### Содержание
-{:.no_toc}
 * Оглавление
 {:toc}
 

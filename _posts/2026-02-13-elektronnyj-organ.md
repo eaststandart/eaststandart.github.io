@@ -11,12 +11,12 @@ discus: "questions"
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-14.webp)
 
-📍 **Этап 2:** изготовление деталей конструкции и покраска
+✔️ **Этап 2:** изготовление деталей конструкции и покраска
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-15.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-16.webp)
 
-📍 **Этап 3:** изготовление печатной платы, травление
+▪️ **Этап 3:** изготовление печатной платы, травление
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-17.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-18.webp)

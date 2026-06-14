@@ -7,7 +7,7 @@ categories: [journal, elektronnyj-organ]
 discus: "questions"
 ---
 
-📍 **Этап 1:** создание чертежа конструкции
+📍**Этап 1:** создание чертежа конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-14.webp)
 

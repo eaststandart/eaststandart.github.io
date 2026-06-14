@@ -3,7 +3,7 @@ layout: page
 description: Развитие навыков изготовления, точной подгонки и покраски сложных деталей и создания механической клавиатуры, а также изучение основ технической эстетики. Освоение построения генераторов звуковой частоты на базе классического таймера 555.
 title: Электронный орган
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, электронныйорган, таймер555]
-sources: "[How to make an animal walking robot](https://youtu.be/IpwZKaRav4c)"
+sources: "Mims F. Engineer's Mini-Notebook: 555 Timer IC Circuits, 1996, p. 19."
 date: 2026-02-09
 permalink: /faire/elektronnyj-organ/
 ---

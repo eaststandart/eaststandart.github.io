@@ -78,10 +78,26 @@ custom_css: ["/assets/css/tools.css"]
             <p></p>
         </div>
     </a> 
-        <a href="#" class="tool-card">
+    <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">
             <h3>SDRSharp</h3>
+            <p></p>
+        </div>
+    </a> 
+    </a> 
+    <a href="#" class="tool-card">
+        <img src="#" class="tool-image-round">
+        <div class="tool-info">
+            <h3>phyphox</h3>
+            <p></p>
+        </div>
+    </a> 
+    </a> 
+        <a href="#" class="tool-card">
+        <img src="#" class="tool-image-round">
+        <div class="tool-info">
+            <h3>audacity</h3>
             <p></p>
         </div>
     </a> 

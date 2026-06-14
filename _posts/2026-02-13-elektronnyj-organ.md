@@ -9,13 +9,14 @@ discus: "questions"
 
 ### Содержание
 {:.no_toc}
+* Оглавление
 {:toc}
 
-#### **Этап 1.** Создание чертежа конструкции
+#### Этап 1. Создание чертежа конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-14.webp)
 
-#### **Этап 2.** Изготовление деталей конструкции и покраска
+#### Этап 2. Изготовление деталей конструкции и покраска
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-15.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-16.webp)

@@ -14,7 +14,8 @@ discus: "questions"
 [Этап 3. Изготовление печатной платы, травление](#etap-3)\
 [Этап 4. Сверловка отверстий в печатной плате](#etap-4)\
 [Этап 5. Пайка электронных компонентов](#etap-5)\
-[Этап 6. Тестирование и окончательная сборка конструкции](#etap-6)
+[Этап 6. Тестирование устройства](#etap-6)
+[Этап 7. Окончательная сборка конструкции](#etap-7)\
 
 <a id="etap-1"></a> **Этап 1.** Создание чертежа конструкции
 
@@ -54,11 +55,13 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-35.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-36.webp)
 
-<a id="etap-6"></a>**Этап 6.** Тестирование и окончательная сборка конструкции
+<a id="etap-6"></a>**Этап 6.** Тестирование устройства
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-40.webp)
 
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
+
+<a id="etap-7"></a>**Этап 7.** Окончательная сборка конструкции
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-37.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-38.webp)

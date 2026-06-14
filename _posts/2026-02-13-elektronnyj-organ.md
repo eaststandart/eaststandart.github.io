@@ -47,6 +47,12 @@ discus: "questions"
 <a id="etap-5"></a>**Этап 5.** Пайка электронных компонентов
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-30.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-31.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-32.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-33.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-34.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-35.webp)
+![](/faire/elektronnyj-organ/elektronnyj-organ-36.webp)
 
 <a id="etap-6"></a>**Этап 6.** Тестирование и окончательная сборка конструкции
 

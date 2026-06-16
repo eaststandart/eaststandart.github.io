@@ -1,33 +1,40 @@
 ---
 layout: page
-title: Медиа-материалы проекта
-render_with_liquid: true
+title: "Медиа-материалы проекта"
+autopages:
+  permalink: /media-posts-page/:cat/
 ---
 
 {% comment %} 
-БЕЗОПАСНЫЙ АВТОГЕНЕРАТОР ПО ТВОЕЙ ЛОГИКЕ РАЗБОРА ПУТИ:
-Бежим по страницам сайта, находим проекты и создаем для каждого легкую страницу.
+АВТОМАТИЧЕСКИЙ ВЫВОД: Джекилл сам найдет этот файл при сборке,
+прочитает категории твоих постов из _posts и автоматически создаст 
+изолированную страницу для каждого проекта!
 {% endcomment %}
-{% for project_page in site.pages %}
-  {% if project_page.url contains "/faire/" and project_page.url != "/faire/" and project_page.url != "/faire/index.html" %}
-    
-    {% comment %} Твой код разбора URL на части {% endcomment %}
-    {% assign url_parts = project_page.url | split: "/" %}
-    {% assign project_slug_last = url_parts[2] | default: url_parts.last %}
+<div id="media-container" class="media-archive-list-wrapper">
+  {% for post in site.posts %}
+    {% comment %} 
+    Проверяем, относится ли пост к текущей авто-генерируемой категории проекта
+    {% endcomment %}
+    {% if post.categories contains page.autopages.category %}
+      {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
+      
+      <div class="media-entry" style="display: block; margin-bottom: 30px;">
+        
+        <div class="media-entry-title-row">
+          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
+          <h3 class="media-entry-title">{{ post.title }}</h3>
+        </div>
+        
+        <div class="media-content main-content">
+          {% if post.description and post.description != "" %}
+            <p class="page-description">{{ post.description }}</p>
+          {% endif %}
 
-    {% if project_slug_last and project_slug_last != "" %}
-      {% comment %} 
-      Джекилл видит эти команды и физически создает на диске изолированные 
-      легкие HTML-файлы! Чужой трафик сюда не попадет.
-      {% endcomment %}
-      <!-- permalink: /media-posts-page/{{ project_slug_last }}/ -->
-      <!-- project_slug: {{ project_slug_last }} -->
-      <!-- project_title: {{ project_page.title }} -->
+          {{ post.content }}
+        </div>
+        
+        <hr class="media-entry-hr" style="border: 0; border-top: 1px solid #eee; margin-top: 25px;">
+      </div>
     {% endif %}
-  {% endif %}
-{% endfor %}
-
-{% comment %} 
-Подключаем твой оригинальный модуль вывода публикаций
-{% endcomment %}
-{% include media-archive.liquid category="media" %}
+  {% endfor %}
+</div>

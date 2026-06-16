@@ -220,9 +220,9 @@ blockquote + h3 {
     margin-top: 1em !important;
 }
 
-/* Находим ПОСЛЕДНИЙ текстовый абзац внутри контента и намертво стираем его нижний маргин */
-.main-content p:last-of-type {
-    margin-bottom: 0px !important; 
+/* Возвращаем отступ тексту снизу, если после него сразу идет видео */
+.media-entry p:has(+ .video-test-row) { 
+    margin-bottom: 1em !important; 
 }
 
 /* Базовые параметры карточки отдельного поста в ленте */

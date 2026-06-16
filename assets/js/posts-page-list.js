@@ -18,6 +18,13 @@ function runMediaArchiveFilter() {
       }
     });
 
+    // ВСТАВЛЕНО ДО ЗАЧИСТКИ ЛИНИЙ: Находим и физически удаляем все скрытые блоки
+    document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
+      if (item.style.display === 'none') {
+        item.remove();
+      }
+    });
+
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ: Находим последний ВИДИМЫЙ пост на экране
     var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry')).filter(function(el) {
       return el.style.display === 'block';

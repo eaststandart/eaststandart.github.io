@@ -1,37 +1,13 @@
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
-
-{% comment %} 
-Автоматически извлекаем имя текущего проекта из параметров ссылки страницы.
-Если в URL есть ?project=robot-korova-iz-kartona, переменная project_slug_filter получит это имя.
-{% endcomment %}
-{% assign url_parts = page.url | split: "project=" %}
-{% if url_parts.size > 1 %}
-  {% assign project_slug_filter = url_parts | last | split: "&" | first %}
-{% else %}
-  {% assign project_slug_filter = include.project_slug %}
-{% endif %}
-
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
-    
-      {% comment %} 
-      ОБЩЕЕ ПРАВИЛО ПО КАТЕГОРИИ: Если мы определили текущий проект,
-      то все посты, которые НЕ содержат его имя в своих категориях,
-      Jekyll ПОЛНОСТЬЮ исключает из сборки. Сетевой трафик свободен!
-      {% endcomment %}
-      {% if project_slug_filter and project_slug_filter != "" and project_slug_filter != page.url %}
-        {% unless post.categories contains project_slug_filter %}
-          {% continue %}
-        {% endunless %}
-      {% endif %}
 
-      {% comment %} Пропускаем post, если задан флаг N {% endcomment %}
+      {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
-      {% comment %} Возвращаем display: none; как в твоем оригинальном рабочем движке {% endcomment %}
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
         
         <!-- Контейнер строки даты и заголовка -->

@@ -5,12 +5,7 @@ permalink: /media-posts-page/
 ---
 
 {% comment %} 
-УМНЫЙ СКРИПТ: Вытаскиваем имя проекта из адреса ссылки (параметра ?project=)
-прямо на этапе генерации страницы, чтобы Liquid знал, что фильтровать.
+ПОДКЛЮЧАЕМ ГОТОВЫЙ МОНОЛИТНЫЙ МОДУЛЬ ARCHIVE С ФИЛЬТРАЦИЕЙ
+Параметр category указывает скрипту собирать записи строго из папки media.
 {% endcomment %}
-{% assign current_project = page.url | split: "project=" | last | split: "&" | first %}
-
-{% comment %} 
-Передаем имя проекта внутрь нашего архивного модуля
-{% endcomment %}
-{% include media-archive.liquid category="media" project_slug=current_project %}
+{% include media-archive.liquid category="media" %}

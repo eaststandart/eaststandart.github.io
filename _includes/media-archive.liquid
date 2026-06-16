@@ -2,21 +2,20 @@
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
 
-{% comment %} Извлекаем из параметров ссылки (URL) имя текущего проекта {% endcomment %}
-{% assign url_filters = page.url | split: "project=" %}
-{% if url_filters.size > 1 %}
-  {% assign current_project = url_filters | last | split: "&" | first %}
-{% else %}
-  {% assign current_project = page.url | split: "/" | last %}
-{% endif %}
+{% comment %} 
+Автоматически вычисляем имя текущего проекта из адреса самой страницы.
+Например, если страница /faire/robot-korova-iz-kartona/, слаг будет "robot-korova-iz-kartona"
+{% endcomment %}
+{% assign url_parts = page.url | split: "/" %}
+{% assign current_project = url_parts[2] | default: url_parts[1] %}
 
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
       {% comment %} 
-      КРИТИЧЕСКИЙ ФИЛЬТР: Если пост не принадлежит открытому проекту, 
-      Jekyll полностью пропускает его и НЕ создает для него тяжелый HTML-код.
+      ЖЕЛЕЗОБЕТОННЫЙ ФИЛЬТР СБОРКИ: Если медиа-пост не принадлежит текущему проекту, 
+      Jekyll полностью пропускает его и НЕ пишет его тяжелый HTML в этот файл.
       {% endcomment %}
       {% unless post.categories contains current_project %}
         {% continue %}
@@ -25,6 +24,7 @@
       {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
+      {% comment %} Показываем блок сразу (display: block), так как чужого мусора тут больше нет {% endcomment %}
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: block;">
         
         <!-- Контейнер строки даты и заголовка -->

@@ -10,13 +10,8 @@ function runMediaArchiveFilter() {
     document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
       if (project) {
         var cats = item.getAttribute('data-project') || "";
-        
         if (cats.split(' ').indexOf(project) !== -1) { 
-          // 1. Это НАШ проект — мы его ПРЕДОСТАВЛЯЕМ на экране
           item.style.display = 'block'; 
-        } else {
-          // 2. Это ЧУЖОЙ проект — мы его ФИЗИЧЕСКИ СТИРАЕМ из кода страницы
-          item.remove(); 
         }
       } else {
         item.style.display = 'block';

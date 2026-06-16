@@ -1,9 +1,31 @@
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
+
+{% comment %} 
+УМНОЕ ОПРЕДЕЛЕНИЕ ПРОЕКТА: Извлекаем слаг проекта из параметров страницы.
+Если в адресе есть ?project=robot-korova-iz-kartona, мы находим этот проект.
+{% endcomment %}
+{% assign target_project = "" %}
+{% assign url_parts = page.url | split: "project=" %}
+{% if url_parts.size > 1 %}
+  {% assign target_project = url_parts | last | split: "&" | first %}
+{% endif %}
+
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
+    
+      {% comment %} 
+      ОБЩЕЕ ПРАВИЛО ПО КАТЕГОРИИ: Если мы определили текущий проект,
+      то все посты, которые НЕ содержат его имя в своих категориях,
+      Jekyll ПОЛНОСТЬСТЬЮ исключает из сборки. Страница будет легкой!
+      {% endcomment %}
+      {% if target_project != "" %}
+        {% unless post.categories contains target_project %}
+          {% continue %}
+        {% endunless %}
+      {% endif %}
 
       {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}

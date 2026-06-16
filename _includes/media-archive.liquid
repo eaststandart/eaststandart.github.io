@@ -75,19 +75,6 @@
 <!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
 
-<!-- ОТДЕЛЬНЫЙ СКРИПТ: Тотальное удаление из кода всех чужих скрытых блоков -->
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Находим все блоки медиа-постов на странице
-    document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
-      // Если твой оригинальный скрипт скрыл этот пост — физически удаляем его из DOM
-      if (item.style.display === 'none') {
-        item.remove();
-      }
-    });
-  });
-</script>
-
 <script>
   // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
   document.addEventListener("DOMContentLoaded", function() {

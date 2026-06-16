@@ -3,8 +3,25 @@
    ========================================================================== */
 
 function runMediaArchiveFilter() {
-    // Находим последний видимый пост на экране (он тут и так один, вашей категории)
-    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
+    var urlParams = new URLSearchParams(window.location.search);
+    var project = urlParams.get('project');
+
+    // 1. Цикл фильтрации постов по проекту
+    document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
+      if (project) {
+        var cats = item.getAttribute('data-project') || "";
+        if (cats.split(' ').indexOf(project) !== -1) { 
+          item.style.display = 'block'; 
+        }
+      } else {
+        item.style.display = 'block';
+      }
+    });
+
+    // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ: Находим последний ВИДИМЫЙ пост на экране
+    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry')).filter(function(el) {
+      return el.style.display === 'block';
+    });
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];

@@ -2,28 +2,25 @@
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
 
-{% comment %} РАЗБОР ПУТИ ПО ТВОЕЙ ЛОГИКЕ {% endcomment %}
-{% assign url_parts = page.url | split: "/" %}
-{% assign project_slug_last = page.url | split: "/" | last %}
-
-<!-- ==========================================================================
-     ВИЗУАЛЬНЫЙ ДЕБАГ JEKYLL (ПАНЕЛЬ ОТОБРАЗИТСЯ ВВЕРХУ СТРАНИЦЫ АРХИВА)
-     ========================================================================== -->
-<div class="jekyll-debug-panel" style="background: #fff3cd; border: 2px solid #ffeba2; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-family: monospace; color: #856404; display: block !important;">
-  <strong>[ЖИВОЙ ДЕБАГ СЕРВЕРА JEKYLL]:</strong><br>
-  • page.url (Адрес, на котором идет сборка): <span style="color:#cb2431;">{{ page.url }}</span><br>
-  • project_slug_last (Выделенный слаг проекта): <span style="color:#cb2431;">{{ project_slug_last }}</span><br>
-  • Число всех постов в системе site.posts: <strong>{{ site.posts.size }}</strong>
-</div>
-
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
+      {% comment %} 
+      ОБЩЕЕ ПРАВИЛО: Истребуем только посты текущего проекта.
+      Чужие проекты полностью пропускаются и не раздувают сетевой трафик!
+      {% endcomment %}
+      {% if page.project_slug and page.project_slug != "" %}
+        {% unless post.categories contains page.project_slug %}
+          {% continue %}
+        {% endunless %}
+      {% endif %}
+
       {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
+      {% comment %} Показываем сразу (block), так как чужого мусора в HTML больше нет {% endcomment %}
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: block;">
         
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">
@@ -33,25 +30,17 @@
         
         <!-- Оболочка основного контента статьи -->
         <div class="media-content main-content">
-          
-          <!-- ДОБАВЛЕНО: Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
           {% if post.description and post.description != "" %}
             <p class="page-description">{{ post.description }}</p>
           {% endif %}
 
           {{ post.content }}
           
-          {% comment %} ==========================================
-             УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
-             ========================================== {% endcomment %}
-
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}
           <div class="author-inline">
               <strong>Автор:</strong> 
-              <div class="sources-content">
-                  {{ post.author }}
-              </div>
+              <div class="sources-content">{{ post.author }}</div>
           </div>
           {% endif %}
 
@@ -59,9 +48,7 @@
           {% if post.sources and post.sources != "" %}
           <div class="sources-inline">
               <strong>Источники:</strong>
-              <div class="sources-content">
-                  {{ post.sources | markdownify }}
-              </div>
+              <div class="sources-content">{{ post.sources | markdownify }}</div>
           </div>
           {% endif %}
 
@@ -77,7 +64,6 @@
         </div>
         
         <hr class="media-entry-hr">
-        
       </div>
       
     {% endif %}
@@ -87,11 +73,8 @@
 <!-- ==========================================================================
      2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
      ========================================================================== -->
-<!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
-
 <script>
-  // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
   document.addEventListener("DOMContentLoaded", function() {
     runMediaArchiveFilter();
   });

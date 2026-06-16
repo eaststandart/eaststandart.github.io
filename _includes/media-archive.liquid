@@ -18,25 +18,22 @@
         
         <!-- Оболочка основного контента статьи -->
         <div class="media-content main-content">
-          
-          <!-- ДОБАВЛЕНО: Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
           {% if post.description and post.description != "" %}
             <p class="page-description">{{ post.description }}</p>
           {% endif %}
 
-          {{ post.content }}
+          {% comment %} 
+          ЗАЩИТА ТРАФИКА: Подменяем src на data-src у всех картинок и видео в тексте поста, 
+          чтобы браузер не скачивал чужие медиафайлы до клика на кнопку 0!
+          {% endcomment %}
+          {% assign safe_content = post.content | replace: 'src="/faire/', 'data-src="/faire/' %}
+          {{ safe_content }}
           
-          {% comment %} ==========================================
-             УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
-             ========================================== {% endcomment %}
-
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}
           <div class="author-inline">
               <strong>Автор:</strong> 
-              <div class="sources-content">
-                  {{ post.author }}
-              </div>
+              <div class="sources-content">{{ post.author }}</div>
           </div>
           {% endif %}
 
@@ -44,9 +41,7 @@
           {% if post.sources and post.sources != "" %}
           <div class="sources-inline">
               <strong>Источники:</strong>
-              <div class="sources-content">
-                  {{ post.sources | markdownify }}
-              </div>
+              <div class="sources-content">{{ post.sources | markdownify }}</div>
           </div>
           {% endif %}
 
@@ -62,7 +57,6 @@
         </div>
         
         <hr class="media-entry-hr">
-        
       </div>
       
     {% endif %}
@@ -72,11 +66,8 @@
 <!-- ==========================================================================
      2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
      ========================================================================== -->
-<!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
-
 <script>
-  // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
   document.addEventListener("DOMContentLoaded", function() {
     runMediaArchiveFilter();
   });

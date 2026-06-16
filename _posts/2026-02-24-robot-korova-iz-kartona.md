@@ -9,8 +9,7 @@ categories: [media, robot-korova-iz-kartona]
 
 **Содержание**\
 [Общий вид конструкции](#etap-1)\
-[Демонстрация общего вида](#etap-2)\
-[Демонстрация процесса движения](#etap-3)
+[Демонстрация процесса движения](#etap-2)
 
 <a id="etap-1"></a>📷 Общий вид конструкции
 
@@ -25,7 +24,7 @@ categories: [media, robot-korova-iz-kartona]
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
 
-<a id="etap-3"></a>🎬 Демонстрация процесса движения
+<a id="etap-2"></a>🎬 Демонстрация процесса движения
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webm)
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webm)

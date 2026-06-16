@@ -1,11 +1,16 @@
 ---
 layout: page
 title: Медиа-материалы проекта
-permalink: /media-posts-page/
+permalink: /media-post-page/
 ---
 
 {% comment %} 
-ПОДКЛЮЧАЕМ ГОТОВЫЙ МОНОЛИТНЫЙ МОДУЛЬ ARCHIVE С ФИЛЬТРАЦИЕЙ
-Параметр category указывает скрипту собирать записи строго из папки media.
+УМНЫЙ СКРИПТ: Вытаскиваем имя проекта из адреса ссылки (параметра ?project=)
+прямо на этапе генерации страницы, чтобы Liquid знал, что фильтровать.
 {% endcomment %}
-{% include media-archive.liquid category="media" %}
+{% assign current_project = page.url | split: "project=" | last | split: "&" | first %}
+
+{% comment %} 
+Передаем имя проекта внутрь нашего архивного модуля
+{% endcomment %}
+{% include media-archive.liquid category="media" project_slug=current_project %}

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Медиа-материалы проекта
-permalink: /media-post-page/
+permalink: /media-posts-page/
 ---
 
 {% comment %} 

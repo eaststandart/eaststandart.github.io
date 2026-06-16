@@ -1,83 +1,107 @@
 {% comment %} ==========================================================================
-   1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
+   ОПТИМИЗИРОВАННЫЙ МОДУЛЬ ВЫВОДА СТРОГО ПО КАТЕГОРИИ ПРОЕКТА (media-archive.liquid)
    ========================================================================== {% endcomment %}
+
 <div id="media-container" class="media-archive-list-wrapper">
+  {% comment %} 
+  Этот контейнер изначально пуст. Сюда НЕ загружается трафик чужих проектов.
+  {% endcomment %}
+</div>
+
+{% comment %} 
+СТРАХОВОЧНАЯ БАЗА ДАННЫХ ДЛЯ JEKYLL:
+Мы упаковываем контент постов в скрытые шаблоны <template>, сгруппированные по категориям.
+Браузер НЕ рендерит их, НЕ загружает картинки и видео чужих проектов, пока мы их не вызовем.
+Трафик и память полностью свободны!
+{% endcomment %}
+<div id="media-templates-storage" style="display: none;">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
-
-      {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
-    
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
-        
-        <!-- Контейнер строки даты и заголовка -->
-        <div class="media-entry-title-row">
-          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
-          <h3 class="media-entry-title">{{ post.title }}</h3>
-        </div>
-        
-        <!-- Оболочка основного контента статьи -->
-        <div class="media-content main-content">
-          
-          <!-- ДОБАВЛЕНО: Вывод курсивного описания конкретного поста в ленте, если оно заполнено -->
-          {% if post.description and post.description != "" %}
-            <p class="page-description">{{ post.description }}</p>
-          {% endif %}
-
-          {{ post.content }}
-          
-          {% comment %} ==========================================
-             УНИФИКАЦИЯ МЕТАДАННЫХ ПОД ТЕКСТОМ ПОСТА
-             ========================================== {% endcomment %}
-
-          <!-- А. БЛОК ВЫВОДА АВТОРА -->
-          {% if post.author and post.author != "" %}
-          <div class="author-inline">
-              <strong>Автор:</strong> 
-              <div class="sources-content">
-                  {{ post.author }}
-              </div>
-          </div>
-          {% endif %}
-
-          <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
-          {% if post.sources and post.sources != "" %}
-          <div class="sources-inline">
-              <strong>Источники:</strong>
-              <div class="sources-content">
-                  {{ post.sources | markdownify }}
-              </div>
-          </div>
-          {% endif %}
-
-          <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
-          {% if post.tags.size > 0 %}
-          <div class="tag-container">
-              {% for tag in post.tags %}
-                  {% assign tag_clean = tag | replace: '#', '' | strip %}
-                  <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-              {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-        
-        <hr class="media-entry-hr">
-        
-      </div>
       
+      {% comment %} Вычисляем чистый слаг проекта, убирая системную категорию "media" {% endcomment %}
+      {% assign project_slug = "" %}
+      {% for cat in post.categories %}
+        {% if cat != include.category %}
+          {% assign project_slug = cat %}
+        {% endif %}
+      {% endfor %}
+
+      <template data-project-cat="{{ project_slug }}">
+        <div class="media-entry" style="display: block;">
+          
+          <div class="media-entry-title-row">
+            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
+            <h3 class="media-entry-title">{{ post.title }}</h3>
+          </div>
+          
+          <div class="media-content main-content">
+            {% if post.description and post.description != "" %}
+              <p class="page-description">{{ post.description }}</p>
+            {% endif %}
+
+            {{ post.content }}
+            
+            <!-- А. БЛОК ВЫВОДА АВТОРА -->
+            {% if post.author and post.author != "" %}
+            <div class="author-inline">
+                <strong>Автор:</strong> 
+                <div class="sources-content">{{ post.author }}</div>
+            </div>
+            {% endif %}
+
+            <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
+            {% if post.sources and post.sources != "" %}
+            <div class="sources-inline">
+                <strong>Источники:</strong>
+                <div class="sources-content">{{ post.sources | markdownify }}</div>
+            </div>
+            {% endif %}
+
+            <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
+            {% if post.tags.size > 0 %}
+            <div class="tag-container">
+                {% for tag in post.tags %}
+                    {% assign tag_clean = tag | replace: '#', '' | strip %}
+                    <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          
+          <hr class="media-entry-hr">
+        </div>
+      </template>
+
     {% endif %}
   {% endfor %}
 </div>
 
-<!-- ==========================================================================
-     2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
-     ========================================================================== -->
-<!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
+<!-- ПОДКЛЮЧЕНИЕ СТИЛЕЙ И СКАЧАННЫХ СКРИПТОВ -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/video-lazy-load.js' | relative_url }}"></script>
 
 <script>
-  // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
-  document.addEventListener("DOMContentLoaded", function() {
+  // Запускаем мгновенную сборку страницы СТРОГО по нужной категории до того, как проснутся плееры
+  (function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var project = urlParams.get('project'); // Получаем "robot-korova-iz-kartona"
+    
+    var container = document.getElementById('media-container');
+    
+    if (project && container) {
+      // Находим в хранилище шаблоны, которые принадлежат ТОЛЬКО этой категории проекта
+      var templates = document.querySelectorAll('#media-templates-storage template[data-project-cat="' + project + '"]');
+      
+      templates.forEach(function(tmpl) {
+        // Клонируем чистый HTML-код поста и вставляем его в живую страницу
+        var clone = document.importNode(tmpl.content, true);
+        container.appendChild(clone);
+      });
+    }
+    
+    // После того как вставили ТОЛЬКО НУЖНУЮ категорию — безопасно запускаем обработку линий и видео
     runMediaArchiveFilter();
-  });
+    runVideoLazyLoad();
+  })();
 </script>

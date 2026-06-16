@@ -2,7 +2,6 @@
 layout: page
 title: "Робот корова из картона: вид и движение"
 description:  "Вид конструкции робота и демонстрация движения модели."
-author: ["RadiotekhnikaClub"]
 date: 2026-02-24
 categories: [media, robot-korova-iz-kartona]
 ---

@@ -20,17 +20,3 @@ collections:
 # Includes & excludes
 include: ["_pages"]
 
-
-plugins:
-  - jekyll-paginate-v2
-
-pagination:
-  enabled: false # Обычную пагинацию страниц отключаем, она нам не нужна
-
-# Включаем автоматическую генерацию страниц на основе категорий твоей коллекции _posts
-autopages:
-  enabled: true
-  categories:
-    layouts:
-      - page
-    permalink: /media-posts-page/:cat/

@@ -76,7 +76,8 @@
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
 
 <script>
-  // Запускаем жесткую зачистку по data-project прямо на месте!
-  runMediaArchiveFilter();
+  // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
+  document.addEventListener("DOMContentLoaded", function() {
+    runMediaArchiveFilter();
+  });
 </script>
-

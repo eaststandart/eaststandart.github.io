@@ -1,25 +1,34 @@
 /* ==========================================================================
-   ОПТИМИЗИРОВАННЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ОЧИСТКИ ЛЕНТЫ МЕДИА (posts-page-list.js)
+   ОРИГИНАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ЖЕСТКОЙ ЗАЧИСТКИ ЛЕНТЫ МЕДИА (posts-page-list.js)
    ========================================================================== */
 
 function runMediaArchiveFilter() {
     var urlParams = new URLSearchParams(window.location.search);
-    var project = urlParams.get('project'); // Получаем например "robot-korova-iz-kartona"
+    var project = urlParams.get('project'); // Например, "robot-korova-iz-kartona"
 
-    // 1. Цикл фильтрации и ФИЗИЧЕСКОГО УДАЛЕНИЯ чужих постов
+    // Создаем массив, куда будем складывать элементы для полного удаления
+    var nodesToRemove = [];
+
+    // 1. Цикл фильтрации постов по текущему проекту
     document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
       if (project) {
         var cats = item.getAttribute('data-project') || "";
-        // Если этот пост принадлежит текущему проекту — показываем его
+        
+        // Если пост принадлежит нашему проекту — открываем его
         if (cats.split(' ').indexOf(project) !== -1) { 
           item.style.display = 'block'; 
         } else {
-          // Если пост ЧУЖОЙ — полностью удаляем его из HTML-кода страницы!
-          item.remove();
+          // Если пост чужой — отправляем его в список на жесткое удаление
+          nodesToRemove.push(item);
         }
       } else {
         item.style.display = 'block';
       }
+    });
+
+    // ВЫПОЛНЯЕМ ЗАЧИСТКУ: Физически стираем все чужие блоки из HTML-кода страницы
+    nodesToRemove.forEach(function(node) {
+        node.parentNode.removeChild(node);
     });
 
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ: Находим последний ВИДИМЫЙ пост на экране

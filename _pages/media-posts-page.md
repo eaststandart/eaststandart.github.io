@@ -5,7 +5,11 @@ permalink: /media-posts-page/
 ---
 
 {% comment %} 
-ПОДКЛЮЧАЕМ ГОТОВЫЙ МОНОЛИТНЫЙ МОДУЛЬ ARCHIVE С ФИЛЬТРАЦИЕЙ
-Параметр category указывает скрипту собирать записи строго из папки media.
+Вычисляем, какой проект запрошен, проверяя URL-параметры сборщика
 {% endcomment %}
-{% include media-archive.liquid category="media" %}
+{% assign current_project = page.url | split: "project=" | last | split: "&" | first %}
+
+{% comment %} 
+Вызываем твой медиа-лист и жестко передаем ему имя требуемого проекта
+{% endcomment %}
+{% include media-archive.liquid category="media" project_slug=current_project %}

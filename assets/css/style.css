@@ -215,15 +215,18 @@ blockquote + h3 {
     margin-top: 0px !important; 
 }
 
+/* Для страниц галерей при нажатии кнопки 0. НАЧАЛО */
 .media-entry .video-test-row + p,
 .media-entry p:has(img) + p {
     margin-top: 1em !important;
 }
 
-/* Возвращаем отступ тексту снизу, если после него сразу идет видео */
+/* Возвращаем отступ тексту снизу, если после него сразу идет видео. */
 .media-entry p:has(+ .video-test-row) { 
     margin-bottom: 1em !important; 
 }
+/* Для страниц галерей при нажатии кнопки 0. КОНЕЦ */
+
 
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {

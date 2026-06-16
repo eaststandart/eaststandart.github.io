@@ -220,6 +220,11 @@ blockquote + h3 {
     margin-top: 1em !important;
 }
 
+/* ОБНУЛЕНИЕ СДВИГА: Убираем прижатие у видео, если оно идет сразу после текста */
+.media-entry p + .video-test-row {
+    margin-top: 0px !important;
+}
+
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {
     width: 100% !important;

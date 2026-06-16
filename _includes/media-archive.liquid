@@ -1,14 +1,31 @@
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
+
+{% comment %} Извлекаем из параметров ссылки (URL) имя текущего проекта {% endcomment %}
+{% assign url_filters = page.url | split: "project=" %}
+{% if url_filters.size > 1 %}
+  {% assign current_project = url_filters | last | split: "&" | first %}
+{% else %}
+  {% assign current_project = page.url | split: "/" | last %}
+{% endif %}
+
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
+      {% comment %} 
+      КРИТИЧЕСКИЙ ФИЛЬТР: Если пост не принадлежит открытому проекту, 
+      Jekyll полностью пропускает его и НЕ создает для него тяжелый HTML-код.
+      {% endcomment %}
+      {% unless post.categories contains current_project %}
+        {% continue %}
+      {% endunless %}
+
       {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: block;">
         
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">

@@ -25,7 +25,7 @@ categories: [media, robot-korova-iz-kartona]
 
 <a id="etap-2"></a>🎬 Демонстрация общего вида
 
-![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)\
+![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
 
 <a id="etap-3"></a>🎬 Демонстрация процесса движения
 

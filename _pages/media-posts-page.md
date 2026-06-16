@@ -1,15 +1,11 @@
 ---
 layout: page
 title: Медиа-материалы проекта
-permalink: /media-posts-page/
+permalink: /media-posts-page-/
 ---
 
 {% comment %} 
-Вычисляем, какой проект запрошен, проверяя URL-параметры сборщика
+ПОДКЛЮЧАЕМ ГОТОВЫЙ МОНОЛИТНЫЙ МОДУЛЬ ARCHIVE С ФИЛЬТРАЦИЕЙ
+Параметр category указывает скрипту собирать записи строго из папки media.
 {% endcomment %}
-{% assign current_project = page.url | split: "project=" | last | split: "&" | first %}
-
-{% comment %} 
-Вызываем твой медиа-лист и жестко передаем ему имя требуемого проекта
-{% endcomment %}
-{% include media-archive.liquid category="media" project_slug=current_project %}
+{% include media-archive.liquid category="media" %}

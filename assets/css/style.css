@@ -215,6 +215,11 @@ blockquote + h3 {
     margin-top: 0px !important; 
 }
 
+.media-entry .video-test-row + p,
+.media-entry p:has(img) + p {
+    margin-top: 1.2em !important; /* Твой фирменный стандартный отступ темы */
+}
+
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {
     width: 100% !important;

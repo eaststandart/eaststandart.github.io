@@ -1,6 +1,21 @@
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
+
+{% comment %} РАЗБОР ПУТИ ПО ТВОЕЙ ЛОГИКЕ {% endcomment %}
+{% assign url_parts = page.url | split: "/" %}
+{% assign project_slug_last = page.url | split: "/" | last %}
+
+<!-- ==========================================================================
+     ВИЗУАЛЬНЫЙ ДЕБАГ JEKYLL (ПАНЕЛЬ ОТОБРАЗИТСЯ ВВЕРХУ СТРАНИЦЫ АРХИВА)
+     ========================================================================== -->
+<div class="jekyll-debug-panel" style="background: #fff3cd; border: 2px solid #ffeba2; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-family: monospace; color: #856404; display: block !important;">
+  <strong>[ЖИВОЙ ДЕБАГ СЕРВЕРА JEKYLL]:</strong><br>
+  • page.url (Адрес, на котором идет сборка): <span style="color:#cb2431;">{{ page.url }}</span><br>
+  • project_slug_last (Выделенный слаг проекта): <span style="color:#cb2431;">{{ project_slug_last }}</span><br>
+  • Число всех постов в системе site.posts: <strong>{{ site.posts.size }}</strong>
+</div>
+
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}

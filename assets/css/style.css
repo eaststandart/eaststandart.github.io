@@ -217,7 +217,7 @@ blockquote + h3 {
 
 .media-entry .video-test-row + p,
 .media-entry p:has(img) + p {
-    margin-top: 1.2em !important; /* Твой фирменный стандартный отступ темы */
+    margin-top: 1em !important; /* Твой фирменный стандартный отступ темы */
 }
 
 /* Базовые параметры карточки отдельного поста в ленте */

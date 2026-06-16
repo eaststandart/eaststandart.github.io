@@ -10,18 +10,16 @@ function runMediaArchiveFilter() {
     document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
       if (project) {
         var cats = item.getAttribute('data-project') || "";
+        
         if (cats.split(' ').indexOf(project) !== -1) { 
+          // Это НАШ проект — делаем его видимым
           item.style.display = 'block'; 
+        } else {
+          // Это ЧУЖОЙ проект — полностью удаляем его до зачистки линий!
+          item.remove();
         }
       } else {
         item.style.display = 'block';
-      }
-    });
-
-    // ВСТАВЛЕНО ДО ЗАЧИСТКИ ЛИНИЙ: Находим и физически удаляем все скрытые блоки
-    document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
-      if (item.style.display === 'none') {
-        item.remove();
       }
     });
 

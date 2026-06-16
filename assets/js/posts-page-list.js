@@ -23,17 +23,16 @@ function runMediaArchiveFilter() {
         }
     });
 
-
-    // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ: Находим последний ВИДИМЫЙ пост на экране
-    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry')).filter(function(el) {
-      return el.style.display === 'block';
-    });
-
+    // 2. ЗАЧИСТКА ХВОСТОВ: Корректируем стили для последнего оставшегося поста
+    var visibleEntries = document.querySelectorAll('.media-archive-list-wrapper .media-entry');
+    
     if (visibleEntries.length > 0) {
-      var lastItem = visibleEntries[visibleEntries.length - 1];
-      // Полностью обнуляем маргин и прячем разделительную линию у финишного поста
-      lastItem.style.setProperty('margin-bottom', '0px', 'important');
-      var hr = lastItem.querySelector('.media-entry-hr');
-      if (hr) hr.style.setProperty('display', 'none', 'important');
+        var lastItem = visibleEntries[visibleEntries.length - 1];
+        lastItem.style.setProperty('margin-bottom', '0px', 'important');
+        
+        var hr = lastItem.querySelector('.media-entry-hr');
+        if (hr) {
+            hr.style.setProperty('display', 'none', 'important');
+        }
     }
 }

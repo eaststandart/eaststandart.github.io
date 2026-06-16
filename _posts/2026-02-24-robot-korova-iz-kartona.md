@@ -7,11 +7,7 @@ date: 2026-02-24
 categories: [media, robot-korova-iz-kartona]
 ---
 
-**Содержание**\
-[Общий вид конструкции](#etap-1)\
-[Демонстрация процесса движения](#etap-2)
-
-<a id="etap-1"></a>📷 Общий вид конструкции
+📷 Общий вид конструкции
 
 ![](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webp)
 ![](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webp)
@@ -24,7 +20,7 @@ categories: [media, robot-korova-iz-kartona]
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
 
-<a id="etap-2"></a>🎬 Демонстрация процесса движения
+🎬 Демонстрация процесса движения
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webm)
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webm)

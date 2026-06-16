@@ -1,31 +1,14 @@
 {% comment %} ==========================================================================
    1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
    ========================================================================== {% endcomment %}
-
-{% comment %} 
-Автоматически вычисляем имя текущего проекта из адреса самой страницы.
-Например, если страница /faire/robot-korova-iz-kartona/, слаг будет "robot-korova-iz-kartona"
-{% endcomment %}
-{% assign url_parts = page.url | split: "/" %}
-{% assign current_project = url_parts[2] | default: url_parts[1] %}
-
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
-      {% comment %} 
-      ЖЕЛЕЗОБЕТОННЫЙ ФИЛЬТР СБОРКИ: Если медиа-пост не принадлежит текущему проекту, 
-      Jekyll полностью пропускает его и НЕ пишет его тяжелый HTML в этот файл.
-      {% endcomment %}
-      {% unless post.categories contains current_project %}
-        {% continue %}
-      {% endunless %}
-
       {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
-      {% comment %} Показываем блок сразу (display: block), так как чужого мусора тут больше нет {% endcomment %}
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: block;">
+      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
         
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">

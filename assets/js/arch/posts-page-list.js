@@ -1,21 +1,17 @@
 /* ==========================================================================
-   ОПТИМИЗИРОВАННЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ОЧИСТКИ ЛЕНТЫ МЕДИА (posts-page-list.js)
+   ОРИГИНАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ЗАЧИСТКИ ЛЕНТЫ МЕДИА (posts-page-list.js)
    ========================================================================== */
 
 function runMediaArchiveFilter() {
     var urlParams = new URLSearchParams(window.location.search);
-    var project = urlParams.get('project'); // Получаем например "robot-korova-iz-kartona"
+    var project = urlParams.get('project');
 
-    // 1. Цикл фильтрации и ФИЗИЧЕСКОГО УДАЛЕНИЯ чужих постов
+    // 1. Цикл фильтрации постов по проекту
     document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
       if (project) {
         var cats = item.getAttribute('data-project') || "";
-        // Если этот пост принадлежит текущему проекту — показываем его
         if (cats.split(' ').indexOf(project) !== -1) { 
           item.style.display = 'block'; 
-        } else {
-          // Если пост ЧУЖОЙ — полностью удаляем его из HTML-кода страницы!
-          item.remove();
         }
       } else {
         item.style.display = 'block';

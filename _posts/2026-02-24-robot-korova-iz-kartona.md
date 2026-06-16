@@ -19,8 +19,8 @@ categories: [media, robot-korova-iz-kartona]
 ![](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-10.webp)
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
-
-Демонстрация процесса движения
+<!-- -->
+🎬 Демонстрация процесса движения
 
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webm)
 ![video](/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webm)

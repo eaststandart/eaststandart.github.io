@@ -16,15 +16,36 @@ function runMediaArchiveFilter() {
         if (cats.includes(project)) { 
           item.style.setProperty('display', 'block', 'important'); // Наш проект — открываем
           
-          // МГНОВЕННАЯ АКТИВАЦИЯ: Возвращаем src картинкам и видео ТОЛЬКО для открытого проекта
+          // ЭТАП 1: Мгновенно возвращаем src СТРОГО КАРТИНКАМ текущего проекта
           item.querySelectorAll('[data-src]').forEach(function(media) {
-              media.setAttribute('src', media.getAttribute('data-src'));
-              media.removeAttribute('data-src');
+              var srcVal = media.getAttribute('data-src') || "";
+              if (!srcVal.endsWith('.mp4') && !srcVal.endsWith('.webm')) {
+                  media.setAttribute('src', srcVal);
+                  media.removeAttribute('data-src');
+              }
           });
+
+          // ЭТАП 2: С микро-задержкой включаем видео файлы, когда картинки уже заняли места
+          setTimeout(function() {
+              item.querySelectorAll('[data-src]').forEach(function(media) {
+                  var srcVal = media.getAttribute('data-src') || "";
+                  if (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm')) {
+                      media.setAttribute('src', srcVal);
+                      media.removeAttribute('data-src');
+                  }
+              });
+              
+              // После того, как видео получили src, принудительно запускаем твой оригинальный плеер
+              if (typeof runVideoLazyLoad === 'function') {
+                  runVideoLazyLoad();
+                }
+          }, 100);
+
         } else {
           item.remove(); // Чужой проект — полностью стираем из кода страницы
         }
       } else {
+        // Режим общей страницы: включаем всё сразу
         item.style.setProperty('display', 'block', 'important');
         item.querySelectorAll('[data-src]').forEach(function(media) {
             media.setAttribute('src', media.getAttribute('data-src'));

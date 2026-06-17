@@ -7,6 +7,7 @@ date: 2026-02-24
 categories: [media, robot-korova-iz-kartona]
 ---
 
+
 📷 Общий вид конструкции
 
 ![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webp]]

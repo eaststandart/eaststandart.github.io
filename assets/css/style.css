@@ -228,6 +228,13 @@ blockquote + h3 {
 /* Для страниц галерей при нажатии кнопки 0. КОНЕЦ */
 
 
+/* Железно скрываем разделительную линию у самого последнего поста на странице */
+.media-archive-list-wrapper .media-entry:last-child .media-entry-hr,
+.media-archive-list-wrapper .media-entry:last-of-type .media-entry-hr {
+    display: none !important;
+}
+
+
 /* Базовые параметры карточки отдельного поста в ленте */
 .media-entry {
     width: 100% !important;

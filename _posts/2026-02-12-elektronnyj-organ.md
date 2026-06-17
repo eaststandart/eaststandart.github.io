@@ -10,16 +10,16 @@ tags: ["eastemitting"]
 
 📷 Общий вид конструкции устройства
 
-![](/faire/elektronnyj-organ/elektronnyj-organ-04.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-05.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-06.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-07.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-08.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-09.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-10.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-11.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
-![](/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-04.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-05.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-06.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-07.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-08.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-09.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-10.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-11.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-12.webp]]
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-13.webp]]
 
 🎬 Демонстрация работы устройства
 

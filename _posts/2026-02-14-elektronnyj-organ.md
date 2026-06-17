@@ -9,6 +9,6 @@ discus: "questions"
 
 Паразитная генерация:
 
-![](/faire/elektronnyj-organ/elektronnyj-organ-41.webp)
+![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-41.webp)
 
 > Примечание: динамик заменен на 100 Ом.

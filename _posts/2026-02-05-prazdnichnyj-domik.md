@@ -10,13 +10,13 @@ tags: ["kirill-k"]
 
 📷 Общий вид конструкции
 
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webp)
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-06.webp)
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-07.webp)
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-08.webp)
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-09.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-06.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-07.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-08.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-09.webp)
 
 🎬 Демонстрация работы устройства
 
-![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-06.webm)
-![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-07.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-06.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-07.webm)

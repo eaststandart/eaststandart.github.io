@@ -10,16 +10,16 @@ tags: ["eastemitting"]
 
 **Завершенная конструкция:**
 
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webp)
 
-![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webm)
 
 **Этап создания:**
 
-![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webm)
 
 **В затемненном помещении:**
 
-![](/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webp)
+![](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webp)
 
-![video](/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webm)

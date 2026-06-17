@@ -11,8 +11,8 @@ permalink: /projects/novyj-robot-shagohod/
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
-![](/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
-![](/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 

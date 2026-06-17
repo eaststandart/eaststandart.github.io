@@ -7,4 +7,4 @@ categories: [journal, blaster-elektroakusticheskij]
 discus: "journal"
 ---
 
-![](/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-3.webp)
+![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-3.webp)

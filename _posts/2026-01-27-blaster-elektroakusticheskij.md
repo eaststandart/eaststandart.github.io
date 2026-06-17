@@ -8,4 +8,4 @@ categories: [media, blaster-elektroakusticheskij]
 tags: ["eastemitting"]
 ---
 
-![](/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-4.webp)
+![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-4.webp)

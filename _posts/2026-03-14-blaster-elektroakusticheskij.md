@@ -8,4 +8,4 @@ categories: [media, blaster-elektroakusticheskij]
 tags: ["ilya-b"]
 ---
 
-![](/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-5.webp)
+![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-5.webp)

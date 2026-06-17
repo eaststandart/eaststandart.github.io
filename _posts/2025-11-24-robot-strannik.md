@@ -9,10 +9,10 @@ categories: [journal, robot-strannik]
 
 Тип передвижения робота «странника» воплощен по мотивам советской механической игрушки [^1] с заводным механизмом «Робот», СССР, Самара, Завод «Прогресс», 1980 год. Вид ее был такой:
 
-![](/faire/robot-strannik/robot-strannik-09.webp)
-![](/faire/robot-strannik/robot-strannik-10.webp)
-![](/faire/robot-strannik/robot-strannik-11.webp)
-![](/faire/robot-strannik/robot-strannik-12.webp)
-![](/faire/robot-strannik/robot-strannik-13.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-09.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-10.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-11.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-12.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-13.webp)
 
 [^1]: Как двигалась игрушка смотри в [Робот игрушка СССР](https://youtu.be/l33fxFFlkJQ).

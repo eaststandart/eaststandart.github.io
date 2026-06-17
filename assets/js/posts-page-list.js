@@ -63,7 +63,8 @@ function runMediaArchiveFilter() {
             }
         });
     }, {
-        rootMargin: "200px"
+        rootMargin: "0px 0px 0px 0px", // Отслеживаем только чистую рамку экрана
+        threshold: 0.1                 // Срабатывает строго при появлении элемента в поле зрения
     });
 
     // Смотрим, сколько элементов с data-src скрипт вообще нашел в HTML

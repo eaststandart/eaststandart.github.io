@@ -10,16 +10,7 @@ custom_css: "/assets/css/video.css"
 {% endcomment %}
 
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{% comment %} 
-ИСТИННАЯ СЕРВЕРНАЯ ПОДМЕНА: Ищет webm и mp4 и меняет src на data-src.
-Обычные картинки .webp не содержат этих расширений, поэтому сервер их не тронет!
-{% endcomment %}
-{% assign video_safe_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
-{% assign video_safe_content = video_safe_content | replace: 'src="/faire/', 'data-src="/faire/' %}
-{% comment. Восстанавливаем src для обычных картинок, у которых НЕТ маркера видео, убирая data-data-src {% endcomment %}
-{% assign video_safe_content = video_safe_content | replace: 'data-data-src="/faire/', 'data-src="/faire/' %}
-{{ video_safe_content }}
-
+{{ content }}
 
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}

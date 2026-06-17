@@ -13,26 +13,44 @@ function runMediaArchiveFilter() {
       var cats = item.getAttribute('data-project') || "";
       
       if (project) {
-        // Режим кнопки 0: Оставляем только текущий проект, чужие — полностью стираем
         if (cats.includes(project)) { 
           item.style.setProperty('display', 'block', 'important'); // Наш проект — открываем
+          
+          // МГНОВЕННАЯ АКТИВАЦИЯ КАРТИНОК: Возвращаем src картинкам ТОЛЬКО нашего проекта
+          item.querySelectorAll('img[data-src]').forEach(function(img) {
+              var srcVal = img.getAttribute('data-src') || "";
+              // Если файл НЕ является видеороликом — включаем картинку в штатный режим!
+              if (!srcVal.endsWith('.mp4') && !srcVal.endsWith('.webm')) {
+                  img.setAttribute('src', srcVal);
+                  img.removeAttribute('data-src');
+                  img.setAttribute('loading', 'lazy'); // Нативный ленивый атрибут для картинок
+              }
+          });
+
         } else {
-          item.remove(); // Чужой проект — полностью вырезаем из кода страницы
+          item.remove(); // Чужой проект — полностью стираем из кода страницы
         }
       } else {
-        // Режим общей страницы: показываем все посты сайта
+        // Режим общей страницы (без 0): показываем все посты и активируем только картинки
         item.style.setProperty('display', 'block', 'important');
+        item.querySelectorAll('img[data-src]').forEach(function(img) {
+            var srcVal = img.getAttribute('data-src') || "";
+            if (!srcVal.endsWith('.mp4') && !srcVal.endsWith('.webm')) {
+                img.setAttribute('src', srcVal);
+                img.removeAttribute('data-src');
+                img.setAttribute('loading', 'lazy');
+            }
+        });
       }
     });
 
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
-    // Находим финишный видимый элемент списка (на любой странице это самый нижний пост)
     var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
       
-      // Намертво обнуляем нижний маргин и падинг (пустые отступы) у финишного поста страницы
+      // Намертво обнуляем нижний маргин и падинг у финишного поста страницы
       lastItem.style.setProperty('margin-bottom', '0px', 'important');
       lastItem.style.setProperty('padding-bottom', '0px', 'important');
       
@@ -42,13 +60,12 @@ function runMediaArchiveFilter() {
         hr.style.setProperty('display', 'none', 'important');
       }
       
-      // Если линия hr идет как соседний элемент сразу ПОСЛЕ последнего поста, убираем и её
       if (lastItem.nextElementSibling && lastItem.nextElementSibling.tagName === 'HR') {
         lastItem.nextElementSibling.style.setProperty('display', 'none', 'important');
       }
     }
 
-    // ШАГ 3: Принудительно запускаем видео-скрипт для оставшегося на экране открытого поста
+    // ШАГ 3: Принудительно запускаем оригинальный видео-скрипт для оставшегося на экране поста
     if (typeof runVideoLazyLoad === 'function') {
         runVideoLazyLoad();
     }

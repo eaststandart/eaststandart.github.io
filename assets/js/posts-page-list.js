@@ -1,5 +1,5 @@
 /* ==========================================================================
-   УНИВЕРСАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ТОТАЛЬНОЙ ЗАЧИСТКИ ХВОСТОВ (posts-page-list.js)
+   УНИВЕРСАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ИСТИННОГО ЛЕЗИ-ЛОАДА МЕДИА (posts-page-list.js)
    ========================================================================== */
 
 function runMediaArchiveFilter() {
@@ -13,46 +13,62 @@ function runMediaArchiveFilter() {
       var cats = item.getAttribute('data-project') || "";
       
       if (project) {
-        // РЕЖИМ КНОПКИ 0: Активируем только наш проект, чужие — полностью стираем
+        // РЕЖИМ КНОПКИ 0: Оставляем только наш проект, чужие — полностью стираем
         if (cats.includes(project)) { 
           item.style.setProperty('display', 'block', 'important'); 
-          
-          // Активируем медиафайлы текущего проекта (data-src -> src)
-          item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
-              mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
-              mediaElement.removeAttribute('data-src');
-          });
         } else {
           item.remove(); // Намертво вырезаем чужие проекты из кода страницы
         }
       } else {
-        // РЕЖИМ ГЛАВНОЙ СТРАНИЦЫ (БЕЗ ПАРАМЕТРОВ): Показываем всё и активируем медиа
+        // РЕЖИМ ГЛАВНОЙ СТРАНИЦЫ (БЕЗ ПАРАМЕТРОВ): Показываем всё
         item.style.setProperty('display', 'block', 'important');
-        item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
-            mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
-            mediaElement.removeAttribute('data-src');
-        });
       }
     });
 
+    // ==========================================================================
+    // НАСТОЯЩИЙ ЛЕЗИ-ЛОАД: Картинки и видео грузятся строго при прокрутке до них!
+    // ==========================================================================
+    var lazyMediaObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+            // Когда элемент приближается к экрану
+            if (entry.isIntersecting) {
+                var media = entry.target;
+                var srcVal = media.getAttribute('data-src');
+                
+                if (srcVal) {
+                    media.setAttribute('src', srcVal);
+                    media.removeAttribute('data-src'); // Зачищаем временный атрибут
+                }
+                // Снимаем слежку, так как файл уже начал скачиваться
+                observer.unobserve(media);
+            }
+        });
+    }, {
+        rootMargin: "200px" // Включаем загрузку за 200px до появления элемента на экране
+    });
+
+    // Находим все заблокированные элементы data-src на странице и отдаем их под контроль наблюдателю
+    document.querySelectorAll('.media-archive-list-wrapper [data-src]').forEach(function(media) {
+        lazyMediaObserver.observe(media);
+    });
+
+
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
-    // Находим финишный видимый элемент списка (на любой странице это самый нижний пост)
     var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
       
-      // Намертво обнуляем нижний маргин и падинг (пустые отступы) у финишного поста страницы
+      // Намертво обнуляем нижний маргин и падинг у финишного поста страницы
       lastItem.style.setProperty('margin-bottom', '0px', 'important');
       lastItem.style.setProperty('padding-bottom', '0px', 'important');
       
-      // Находим и полностью скрываем разделительную линию под ним (если она есть)
+      // Находим и полностью скрываем разделительную линию под ним
       var hr = lastItem.querySelector('.media-entry-hr, hr');
       if (hr) {
         hr.style.setProperty('display', 'none', 'important');
       }
       
-      // Если линия hr идет как соседний элемент сразу ПОСЛЕ последнего поста, убираем и её
       if (lastItem.nextElementSibling && lastItem.nextElementSibling.tagName === 'HR') {
         lastItem.nextElementSibling.style.setProperty('display', 'none', 'important');
       }

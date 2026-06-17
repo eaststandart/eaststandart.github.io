@@ -8,5 +8,5 @@ categories: [media, yablonevoe-derevo]
 tags: ["eastemitting"]
 ---
 
-![](/faire/yablonevoe-derevo/yablonevoe-derevo-3.webp)
-![](/faire/yablonevoe-derevo/yablonevoe-derevo-4.webp)
+![](github/eaststandart.github.io/faire/yablonevoe-derevo/yablonevoe-derevo-3.webp)
+![](github/eaststandart.github.io/faire/yablonevoe-derevo/yablonevoe-derevo-4.webp)

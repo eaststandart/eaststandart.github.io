@@ -9,7 +9,11 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} ЧИСТЫЙ СЕРВЕРНЫЙ РАЗДЕЛИТЕЛЬ МЕДИА ДЛЯ ЛЮБЫХ ПАПОК (ЧЕРЕЗ SPLIT){% endcomment %}
+{% comment %} 
+=============================================================================
+УНИВЕРСАЛЬНЫЙ СЕРВЕРНЫЙ РАЗДЕЛИТЕЛЬ МЕДИА (МАСКИРОВКА ПО ТИПУ СТРАНИЦЫ)
+============================================================================= 
+{% endcomment %}
 
 {% assign content_chunks = content | split: 'src="github/eaststandart.github.io/' %}
 {% assign final_html = "" %}
@@ -19,14 +23,23 @@ custom_css: "/assets/css/video.css"
     {% assign final_html = chunk %}
   {% else %}
     {% if chunk contains '.webm' or chunk contains '.mp4' %}
+      {% comment %} А. ВИДЕО: маскируем в data-src всегда и на любой странице сайта {% endcomment %}
       {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
     {% else %}
-      {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
+      {% comment %} Б. КАРТИНКИ (.webp): проверяем, где мы находимся {% endcomment %}
+      {% if page.url == '/media-posts-page/' %}
+        {% comment %} Режим Архива (кнопка 0): уводим картинки ВСЕХ проектов в data-src, полностью блокируя Бластер! {% endcomment %}
+        {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
+      {% else %}
+        {% comment %} Режим Одиночного поста: сразу даем картинкам рабочий src и нативный lazy-loading {% endcomment %}
+        {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
+      {% endif %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
 {{ final_html }}
+
 
 
 <!-- Универсальный блок библиографии -->

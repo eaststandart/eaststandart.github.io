@@ -11,17 +11,24 @@ custom_css: "/assets/css/video.css"
 
 {% comment %} 
 =============================================================================
-БЛОК БЕЗОПАСНОЙ СЕРВЕРНОЙ ОПТИМИЗАЦИИ: РАЗДЕЛЬНАЯ ОБРАБОТКА ПО РАСШИРЕНИЯМ
+БЛОК ИДЕАЛЬНОЙ СЕРВЕРНОЙ ОПТИМИЗАЦИИ: СТРОГАЯ СБОРКА ПО РАСШИРЕНИЯМ ФАЙЛОВ
 ============================================================================= {% endcomment %}
 
-{% comment %} Шаг 1. Сначала изолируем ВИДЕОФАЙЛЫ, переименовав их src в data-src, чтобы они не качались на старте {% endcomment %}
-{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
-{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/faire/', 'data-src="/faire/' | replace: 'src="http://github/eaststandart.github.io/faire/', 'data-src="/faire/' %}
+{% comment %} 1. Сначала для ВСЕХ медиафайлов срезаем технический корень GitHub {% endcomment %}
+{% assign safe_page_content = content | replace: 'src="github/eaststandart.github.io/', 'src="/' | replace: 'src="http://github/eaststandart.github.io/', 'src="/' %}
 
-{% comment %} Шаг 2. Теперь обрабатываем только КАРТИНКИ: даем им чистый src и нативный ленивый атрибут {% endcomment %}
-{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'loading="lazy" src="/' | replace: 'src="http://github/eaststandart.github.io/', 'loading="lazy" src="/' %}
+{% comment %} 2. ТОЛЬКО ДЛЯ ВИДЕО (.webm и .mp4): маскируем src под data-src, чтобы защитить трафик чужих проектов {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
+{% assign safe_page_content = safe_page_content | replace: 'src="/faire/', 'data-src="/faire/' %}
 
-{% comment %} Выводим безупречно очищенный HTML контента {% endcomment %}
+{% comment %} 3. ТОЛЬКО ДЛЯ КАРТИНОК (.webp): возвращаем им ЧИСТЫЙ РОДНОЙ src и сразу дописываем loading="lazy" {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'src="/faire/', 'TEMP_MARKER' %}
+{% assign safe_page_content = safe_page_content | replace: 'data-src="/faire/', 'loading="lazy" src="/faire/' %}
+{% assign safe_page_content = safe_page_content | replace: 'TEMP_MARKER', 'loading="lazy" src="/faire/' %}
+
+{% comment %} 4. Фикс-защита: возвращаем data-src обратно исключительно видеофайлам {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'loading="lazy" src="/faire/" data-video-file="Y"', 'data-src="/faire/" data-video-file="Y"' %}
+
 {{ safe_page_content }}
 
 

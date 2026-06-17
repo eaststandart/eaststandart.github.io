@@ -26,28 +26,59 @@ function runMediaArchiveFilter() {
     });
 
     // ==========================================================================
-    // НАСТОЯЩИЙ ЛЕЗИ-ЛОАД: Картинки и видео грузятся строго при прокрутке до них!
+    // ИСТИННЫЙ ЛЕЗИ-ЛОАД: Картинки и Видео трансформируются строго при прокрутке!
     // ==========================================================================
     var lazyMediaObserver = new IntersectionObserver(function(entries, observer) {
         entries.forEach(function(entry) {
-            // Когда элемент приближается к экрану
+            // Когда элемент приближается к экрану на 200px
             if (entry.isIntersecting) {
-                var media = entry.target;
-                var srcVal = media.getAttribute('data-src');
+                var img = entry.target;
+                var srcVal = img.getAttribute('data-src') || "";
                 
                 if (srcVal) {
-                    media.setAttribute('src', srcVal);
-                    media.removeAttribute('data-src'); // Зачищаем временный атрибут
+                    // ПРОВЕРКА: Если файл является ВИДЕОРОЛИКОМ (.mp4 или .webm)
+                    if (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm')) {
+                        
+                        // Создаем контейнер-строку для видео ряда, как в твоем оригинальном скрипте
+                        var container = document.createElement('div');
+                        container.className = 'video-test-row';
+
+                        // Собираем настоящий нативный тег плеера <video>
+                        var video = document.createElement('video');
+                        video.src = srcVal;
+                        video.controls = true;
+                        video.muted = true;
+                        video.setAttribute('playsinline', '');
+                        video.preload = "metadata"; // Сразу подгружаем первый кадр и длину видео
+
+                        container.appendChild(video);
+                        
+                        // Находим родительский абзац <p> и выносим видео-блок перед ним наружу
+                        var parentP = img.closest('p');
+                        if (parentP) {
+                            parentP.insertAdjacentElement('beforebegin', container);
+                            img.remove(); // Удаляем старый тег-заглушку картинки
+                            
+                            // Если абзац остался совсем пустым — стираем его из DOM
+                            if (parentP.textContent.trim() === "" && parentP.querySelectorAll('*').length === 0) {
+                                parentP.remove();
+                            }
+                        }
+                    } else {
+                        // Если это ОБЫЧНАЯ КАРТИНКА (.webp, .jpg, .png) — просто активируем её
+                        img.setAttribute('src', srcVal);
+                        img.removeAttribute('data-src');
+                    }
                 }
-                // Снимаем слежку, так как файл уже начал скачиваться
-                observer.unobserve(media);
+                // Снимаем слежку с этого элемента
+                observer.unobserve(img);
             }
         });
     }, {
         rootMargin: "200px" // Включаем загрузку за 200px до появления элемента на экране
     });
 
-    // Находим все заблокированные элементы data-src на странице и отдаем их под контроль наблюдателю
+    // Отдаем под контроль наблюдателю вообще все медиа-элементы с data-src на странице
     document.querySelectorAll('.media-archive-list-wrapper [data-src]').forEach(function(media) {
         lazyMediaObserver.observe(media);
     });

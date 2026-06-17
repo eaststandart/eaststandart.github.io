@@ -1,64 +1,60 @@
 /* ==========================================================================
-   ДВИЖОК ФИЛЬТРАЦИИ, АКТИВАЦИИ МЕДИА И ТОТАЛЬНОЙ ЗАЧИСТКИ (posts-page-list.js)
+   УНИВЕРСАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ТОТАЛЬНОЙ ЗАЧИСТКИ ХВОСТОВ (posts-page-list.js)
    ========================================================================== */
 
 function runMediaArchiveFilter() {
     var urlParams = new URLSearchParams(window.location.search);
-    var project = urlParams.get('project'); // Например, "robot-korova-iz-kartona"
+    var project = urlParams.get('project'); // Получаем, например, "robot-korova-iz-kartona"
 
-    console.log("=== ЗАПУСК: Фильтрация и активация медиа для проекта:", project);
-
-    if (!project) {
-        // Если параметра нет в URL, просто делаем все посты видимыми и активируем в них медиа
-        document.querySelectorAll('.media-archive-list-wrapper .media-entry').forEach(function(item) {
-            item.style.display = 'block';
-            item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
-                mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
-                mediaElement.removeAttribute('data-src');
-            });
-        });
-        return;
-    }
-
-    // 1. Делаем изолированный снимок всех блоков, чтобы удаление чужих не ломало цикл
+    // 1. Делаем изолированный снимок всех блоков, чтобы изменения DOM не ломали индексы
     var allEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
-    
-    var removedCount = 0;
-    var keptCount = 0;
 
-    // 2. Пробегаемся по снимку: наш проект активируем, чужие — стираем под корень
     allEntries.forEach(function(item) {
-        var cats = item.getAttribute('data-project') || "";
-        
-        // Проверяем принадлежность поста к текущему проекту через includes
+      var cats = item.getAttribute('data-project') || "";
+      
+      if (project) {
+        // РЕЖИМ КНОПКИ 0: Активируем только наш проект, чужие — полностью стираем
         if (cats.includes(project)) { 
-            item.style.setProperty('display', 'block', 'important'); // Открываем наш проект
-            
-            // АКТИВАЦИЯ МЕДИА: Подгружаем картинки и видео ТОЛЬКО для нашего проекта
-            item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
-                mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
-                mediaElement.removeAttribute('data-src'); // Удаляем временный атрибут
-            });
-            
-            keptCount++;
+          item.style.setProperty('display', 'block', 'important'); 
+          
+          // Активируем медиафайлы текущего проекта (data-src -> src)
+          item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
+              mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
+              mediaElement.removeAttribute('data-src');
+          });
         } else {
-            // Чужой проект — полностью вырезаем текстовый мусор из HTML-кода страницы
-            item.remove(); 
-            removedCount++;
+          item.remove(); // Намертво вырезаем чужие проекты из кода страницы
         }
+      } else {
+        // РЕЖИМ ГЛАВНОЙ СТРАНИЦЫ (БЕЗ ПАРАМЕТРОВ): Показываем всё и активируем медиа
+        item.style.setProperty('display', 'block', 'important');
+        item.querySelectorAll('[data-src]').forEach(function(mediaElement) {
+            mediaElement.setAttribute('src', mediaElement.getAttribute('data-src'));
+            mediaElement.removeAttribute('data-src');
+        });
+      }
     });
 
-    console.log("=== ОЧИСТКА ЗАВЕРШЕНА. Оставлено проектов:", keptCount, "| Удалено лишних текстовых блоков:", removedCount);
-
-    // 3. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ: Корректируем линию у последнего оставшегося поста
-    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
+    // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
+    // Находим финишный видимый элемент списка (на любой странице это самый нижний пост)
+    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));
 
     if (visibleEntries.length > 0) {
-        var lastItem = visibleEntries[visibleEntries.length - 1];
-        lastItem.style.setProperty('margin-bottom', '0px', 'important');
-        var hr = lastItem.querySelector('.media-entry-hr');
-        if (hr) {
-            hr.style.setProperty('display', 'none', 'important');
-        }
+      var lastItem = visibleEntries[visibleEntries.length - 1];
+      
+      // Намертво обнуляем нижний маргин и падинг (пустые отступы) у финишного поста страницы
+      lastItem.style.setProperty('margin-bottom', '0px', 'important');
+      lastItem.style.setProperty('padding-bottom', '0px', 'important');
+      
+      // Находим и полностью скрываем разделительную линию под ним (если она есть)
+      var hr = lastItem.querySelector('.media-entry-hr, hr');
+      if (hr) {
+        hr.style.setProperty('display', 'none', 'important');
+      }
+      
+      // Если линия hr идет как соседний элемент сразу ПОСЛЕ последнего поста, убираем и её
+      if (lastItem.nextElementSibling && lastItem.nextElementSibling.tagName === 'HR') {
+        lastItem.nextElementSibling.style.setProperty('display', 'none', 'important');
+      }
     }
 }

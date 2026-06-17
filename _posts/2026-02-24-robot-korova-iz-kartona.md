@@ -9,18 +9,18 @@ categories: [media, robot-korova-iz-kartona]
 
 📷 Общий вид конструкции
 
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-05.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-06.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-07.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-08.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-09.webp]]
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-10.webp]]
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-05.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-06.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-07.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-08.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-09.webp)
+![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-10.webp)
 
 🎬 Демонстрация общего вида
 
-![[github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm]]
+![video](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
 
 🎬 Демонстрация процесса движения
 

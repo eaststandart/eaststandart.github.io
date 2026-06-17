@@ -9,22 +9,8 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} 
-=============================================================================
-УНИВЕРСАЛЬНАЯ СЕРВЕРНАЯ ОПТИМИЗАЦИЯ: РАБОТАЕТ ДЛЯ ЛЮБЫХ ПАПОК НА САЙТЕ
-============================================================================= {% endcomment %}
-
-{% comment %} Шаг 1. Очищаем пути: намертво срезаем технический корень GitHub для всех медиафайлов {% endcomment %}
-{% assign clean_content = content | replace: 'src="github/eaststandart.github.io/', 'src="/' | replace: 'src="http://github/eaststandart.github.io/', 'src="/' %}
-
-{% comment %} Шаг 2. Защищаем трафик ВИДЕО: находим расширения видеофайлов и вешаем на них маркер {% endcomment %}
-{% assign safe_page_content = clean_content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
-
-{% comment %} Шаг 3. УНИВЕРСАЛЬНАЯ ПОДМЕНА: для видео делаем data-src, а для КАРТИНОК делаем чистый src и нативный loading="lazy" {% endcomment %}
-{% assign safe_page_content = safe_page_content | replace: 'src="/', 'loading="lazy" src="/' %}
-{% assign safe_page_content = safe_page_content | replace: 'loading="lazy" src="/" data-video-file="Y"', 'data-src="/" data-video-file="Y"' %}
-
-{{ safe_page_content }}
+{% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
+{{ content }}
 
 
 <!-- Универсальный блок библиографии -->

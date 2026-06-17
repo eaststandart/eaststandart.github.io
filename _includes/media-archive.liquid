@@ -26,7 +26,27 @@
           ЧИСТЫЙ ОРИГИНАЛЬНЫЙ ВЫВОД: Текст Obsidian ![[github/...]] выводится напрямую.
           Браузер не видит тегов src, поэтому трафик чужих проектов равен НУЛЮ!
           {% endcomment %}
-          {{ post.content }}
+
+          {% comment %} 
+          ЗАЩИТА КАРТИНОК: Находим только .webp и превращаем их src в data-src
+          {% endcomment %}
+          {% assign img_chunks = post.content | split: 'src="' %}
+          {% assign safe_archive_images = "" %}
+
+          {% for chunk in img_chunks %}
+            {% if forloop.first %}
+              {% assign safe_archive_images = chunk %}
+            {% else %}
+              {% if chunk contains '.webp' %}
+                {% assign safe_archive_images = safe_archive_images | append: 'data-src="' | append: chunk %}
+              {% else %}
+                {% assign safe_archive_images = safe_archive_images | append: 'src="' | append: chunk %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {{ safe_archive_images }}
+
           
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}

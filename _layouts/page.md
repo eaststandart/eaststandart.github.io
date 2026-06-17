@@ -9,6 +9,8 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
+{% comment %} ЧИСТЫЙ СЕРВЕРНЫЙ РАЗДЕЛИТЕЛЬ МЕДИА ДЛЯ ЛЮБЫХ ПАПОК (ЧЕРЕЗ SPLIT){% endcomment %}
+
 {% assign content_chunks = content | split: 'src="github/eaststandart.github.io/' %}
 {% assign final_html = "" %}
 
@@ -17,25 +19,14 @@ custom_css: "/assets/css/video.css"
     {% assign final_html = chunk %}
   {% else %}
     {% if chunk contains '.webm' or chunk contains '.mp4' %}
-      {% comment %} ВИДЕО блокируем ВСЕГДА и везде в data-src для защиты трафика {% endcomment %}
       {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
     {% else %}
-      
-      {% comment %} УМНОЕ РАЗДЕЛЕНИЕ ДЛЯ КАРТИНОК (.webp) {% endcomment %}
-      {% if page.url == '/media-posts-page/' %}
-        <!-- Режим Архива Ленты (кнопка 0): маскируем в data-src, чтобы Бластер не качался! -->
-        {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
-      {% else %}
-        <!-- Режим Одиночного Поста/Проекта: сразу отдаем чистый src и нативный lazy-loading! -->
-        {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
-      {% endif %}
-
+      {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
 {{ final_html }}
-
 
 
 <!-- Универсальный блок библиографии -->

@@ -67,4 +67,4 @@ custom_css: "/assets/css/video.css"
 {% endif %}
 
 <!-- Подключение логики интерактивных видео-плееров -->
-{% comment %} {% include video-logic.liquid %}  {% endcomment %}
+ {% include video-logic.liquid %}

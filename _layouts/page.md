@@ -14,7 +14,7 @@ custom_css: "/assets/css/video.css"
 УНИВЕРСАЛЬНАЯ ЗАЩИТА ТРАФИКА: Блокируем загрузку видеофайлов по их расширениям.
 Обычные картинки (.webp) этот фильтр вообще не тронет, что полностью исключает баг data-data-src!
 {% endcomment %}
-{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-src="Y"' | replace: '.mp4"', '.mp4" data-video-src="Y"' | replace: 'src="/faire/', 'data-src="/faire/' %}
+{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-src="Y"' | replace: '.mp4"', '.mp4" data-video-src="Y"'  %}
 {{ safe_page_content }}
 
 

@@ -15,11 +15,21 @@ function runMediaArchiveFilter() {
       if (project) {
         if (cats.includes(project)) { 
           item.style.setProperty('display', 'block', 'important'); // Наш проект — открываем
+          
+          // МГНОВЕННАЯ АКТИВАЦИЯ: Возвращаем src картинкам и видео ТОЛЬКО для открытого проекта
+          item.querySelectorAll('[data-src]').forEach(function(media) {
+              media.setAttribute('src', media.getAttribute('data-src'));
+              media.removeAttribute('data-src');
+          });
         } else {
           item.remove(); // Чужой проект — полностью стираем из кода страницы
         }
       } else {
         item.style.setProperty('display', 'block', 'important');
+        item.querySelectorAll('[data-src]').forEach(function(media) {
+            media.setAttribute('src', media.getAttribute('data-src'));
+            media.removeAttribute('data-src');
+        });
       }
     });
 
@@ -29,11 +39,9 @@ function runMediaArchiveFilter() {
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
       
-      // Намертво обнуляем нижний маргин и падинг у финишного поста страницы
       lastItem.style.setProperty('margin-bottom', '0px', 'important');
       lastItem.style.setProperty('padding-bottom', '0px', 'important');
       
-      // Находим и полностью скрываем разделительную линию под ним
       var hr = lastItem.querySelector('.media-entry-hr, hr');
       if (hr) {
         hr.style.setProperty('display', 'none', 'important');

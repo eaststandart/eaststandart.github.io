@@ -9,8 +9,26 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{{ content }}
+{% comment %}
+
+=============================================================================
+БЛОК СЕРВЕРНОЙ ОПТИМИЗАЦИИ: ОЧИСТКА ПУТЕЙ И НАТИВНЫЙ LAZY-LOADING
+============================================================================= {% endcomment %}
+
+{% comment %} 1. Очищаем пути: намертво срезаем технический корень GitHub для всех медиафайлов {% endcomment %}
+{% assign clean_content = content | replace: 'src="github/eaststandart.github.io/', 'src="/' | replace: 'src="http://github/eaststandart.github.io/', 'src="/' %}
+
+{% comment %} 2. Нативная ленивая загрузка для КАРТИНОК: сервер сразу дописывает loading="lazy" {% endcomment %}
+{% assign clean_content = clean_content | replace: '<img src="/', '<img loading="lazy" src="/' %}
+
+{% comment %} 3. Защищаем трафик ВИДЕО: маскируем src под data-src и вешаем маркер видео {% endcomment %}
+{% assign safe_page_content = clean_content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
+{% assign safe_page_content = safe_page_content | replace: 'loading="lazy" src="/faire/', 'data-src="/faire/' %}
+{% assign safe_page_content = safe_page_content | replace: 'src="/faire/', 'data-src="/faire/' %}
+
+{% comment %} Выводим очищенный и оптимизированный текст статьи {% endcomment %}
+{{ safe_page_content }}
+
 
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}

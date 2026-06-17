@@ -23,4 +23,4 @@ tags: ["eastemitting"]
 
 🎬 Демонстрация работы устройства
 
-![video](/faire/elektronnyj-organ/elektronnyj-organ-02.webm)
+![[github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-02.webm]]

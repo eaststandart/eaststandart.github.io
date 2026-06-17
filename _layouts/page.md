@@ -65,6 +65,3 @@ custom_css: "/assets/css/video.css"
     {% include discus.liquid %}
 </div>
 {% endif %}
-
-<!-- Подключение логики интерактивных видео-плееров -->
- {% include video-logic.liquid %}

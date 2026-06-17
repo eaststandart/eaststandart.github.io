@@ -48,6 +48,8 @@
 </div>
 
 {% include footer.liquid %}
+<!-- Подключение логики интерактивных видео-плееров -->
+ {% include video-logic.liquid %}
 
 </body>
 </html>

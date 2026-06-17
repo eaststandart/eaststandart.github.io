@@ -11,10 +11,10 @@ custom_css: "/assets/css/video.css"
 
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
 {% comment %} 
-УНИВЕРСАЛЬНАЯ ЗАЩИТА ТРАФИКА: Блокируем загрузку видеофайлов по их расширениям.
-Обычные картинки (.webp) этот фильтр вообще не тронет, что полностью исключает баг data-data-src!
+ИСТИННАЯ ЗАЩИТА ТРАФИКА: Находим .webm и .mp4 и превращаем их в data-src.
+Обычные картинки (.webp) этот фильтр вообще не видит, они не ломаются!
 {% endcomment %}
-{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-src="Y"' | replace: '.mp4"', '.mp4" data-video-src="Y"'  %}
+{% assign safe_page_content = content | replace: '.webm', '.webm" data-video-file' | replace: 'src="/faire/', 'data-src="/faire/' | replace: 'data-data-src="/faire/', 'data-src="/faire/' %}
 {{ safe_page_content }}
 
 

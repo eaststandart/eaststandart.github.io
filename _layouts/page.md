@@ -10,12 +10,8 @@ custom_css: "/assets/css/video.css"
 {% endcomment %}
 
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{% comment %} 
-ГЛОБАЛЬНАЯ ЗАЩИТА ТРАФИКА СТАТЬИ: Переименовываем src в data-src для медиафайлов, 
-чтобы браузер не качал их до запуска ленивого плеера
-{% endcomment %}
-{% assign safe_page_content = content | replace: 'src="/faire/', 'data-src="/faire/' %}
-{{ safe_page_content }}
+{% comment %} Заменяем только видеофайлы, картинки .webp этот фильтр вообще не увидит и не тронет {% endcomment %}
+{% assign safe_content = content | replace: '.webm', '.webm" data-video-src' | replace: '.mp4', '.mp4" data-video-src' | replace: 'src="/faire/', 'data-src="/faire/' %}
 
 
 <!-- Универсальный блок библиографии -->

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   УНИВЕРСАЛЬНЫЙ МОДУЛЬ КОНВЕРТАЦИИ ОБСИДИАН-ВИДЕО (video-lazy-load.js)
+   УНИВЕРСАЛЬНЫЙ МОДУЛЬ КОНВЕРТАЦИИ ОБСИДИАН-ВИДЕО И СЕТОК (video-lazy-load.js)
    ========================================================================== */
 
 function runVideoLazyLoad() {
@@ -13,7 +13,7 @@ function runVideoLazyLoad() {
                     return; 
                 }
 
-                // Видео подошло к экрану — разрешаем скачать первый кадр и длину роликов
+                // Видео подошло к экрану — разрешаем скачать превью и первый кадр
                 video.preload = "metadata"; 
                 observer.unobserve(video);
             }
@@ -22,45 +22,63 @@ function runVideoLazyLoad() {
         rootMargin: "200px" // Включаем плеер за 200px до появления
     });
 
-    // 2. Находим ВСЕ абзацы на странице. Если Kramdown встретил ![[...]], он выведет это как текст внутри <p>
+    // 2. Находим ВСЕ абзацы на странице
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        const text = p.textContent.trim();
+        const htmlContent = p.innerHTML.trim();
 
-        // Регулярное выражение ищет формат Obsidian: ![[ любой_путь.webm ]] или .mp4
-        if (text.startsWith('![[') && (text.endsWith('.webm]]') || text.endsWith('.mp4]]'))) {
+        // Проверяем, есть ли вообще внутри этого абзаца хотя бы одна метка Obsidian видео
+        if (htmlContent.includes('![[') && (htmlContent.includes('.webm') || htmlContent.includes('.mp4'))) {
             
-            // Вытаскиваем чистый путь к файлу из скобок (убираем ![[ , ]], а также точки слэши ../)
-            let cleanPath = text.replace('![[', '').replace(']]', '').trim();
-            cleanPath = cleanPath.replace('../', '').replace('../', ''); // Чистим относительные пути Obsidian
+            // Разделяем содержимое абзаца по переносам строк или тегам <br>, чтобы обработать каждое видео отдельно
+            const lines = htmlContent.split(/<br>\n|<br>|\n/);
             
-            // Если путь начинается не со слэша, добавляем его для корня сайта
-            if (!cleanPath.startsWith('/')) {
-                cleanPath = '/' + cleanPath;
-            }
-
-            // Создаем красивую строку-контейнер плеера, как в твоем оригинале
+            // Создаем новый блочный контейнер-строку для сетки видеоряда (как в твоем оригинале)
             const container = document.createElement('div');
             container.className = 'video-test-row';
-
-            const video = document.createElement('video');
-            video.src = cleanPath; // Получаем идеальный адрес: /faire/robot-korova-iz-kartona/...
-            video.controls = true;
-            video.muted = true;
-            video.setAttribute('playsinline', '');
             
-            // ЖЕСТКИЙ ЗАПРЕТ ТРАФИКА: изначально видео весит 0 байт и ничего не качает
-            video.preload = "none"; 
+            let videosFound = false;
 
-            // Отдаем плеер под контроль ленивому наблюдателю прокрутки
-            videoObserver.observe(video);
+            lines.forEach(line => {
+                let cleanLine = line.trim();
+                
+                // Проверяем, является ли эта конкретная строка ссылкой Obsidian на видео
+                if (cleanLine.startsWith('![[') && (cleanLine.endsWith('.webm]]') || cleanLine.endsWith('.mp4]]'))) {
+                    
+                    // Вытаскиваем чистый путь к файлу из скобок
+                    let cleanPath = cleanLine.replace('![[', '').replace(']]', '').trim();
+                    cleanPath = cleanPath.replace('../', '').replace('../', ''); // Чистим относительные пути Obsidian
+                    
+                    if (!cleanPath.startsWith('/')) {
+                        cleanPath = '/' + cleanPath;
+                    }
 
-            container.appendChild(video);
-            
-            // Вставляем готовый плеер вместо текстовой строки Obsidian
-            p.parentNode.insertBefore(container, p);
-            p.remove(); // Удаляем старый текстовый абзац
+                    // Собираем настоящий нативный тег плеера <video>
+                    const video = document.createElement('video');
+                    video.src = cleanPath;
+                    video.controls = true;
+                    video.muted = true;
+                    video.setAttribute('playsinline', '');
+                    
+                    // ЖЕСТКИЙ ЗАПРЕТ ТРАФИКА: видео ничего не качает на старте
+                    video.preload = "none"; 
+
+                    // Отдаем плеер под контроль ленивому наблюдателю прокрутки
+                    videoObserver.observe(video);
+
+                    // Складываем видео в наш контейнер-ряд
+                    container.appendChild(video);
+                    videosFound = true;
+                }
+            });
+
+            // Если видеоролики были успешно найдены и собраны в сетку
+            if (videosFound) {
+                // Вставляем готовый контейнер со всей сеткой видео ПЕРЕД текущим абзацем
+                p.parentNode.insertBefore(container, p);
+                p.remove(); // Полностью удаляем старый текстовый абзац с сырыми скобками Obsidian
+            }
         }
     });
 }

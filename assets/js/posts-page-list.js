@@ -47,4 +47,9 @@ function runMediaArchiveFilter() {
         lastItem.nextElementSibling.style.setProperty('display', 'none', 'important');
       }
     }
+
+    // ШАГ 3: Принудительно запускаем видео-скрипт для оставшегося на экране открытого поста
+    if (typeof runVideoLazyLoad === 'function') {
+        runVideoLazyLoad();
+    }
 }

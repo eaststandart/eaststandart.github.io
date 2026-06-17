@@ -3,17 +3,19 @@
    ========================================================================== */
 
 function parseObsidianMedia() {
-    // Находим все текстовые абзацы, в которых есть метки Obsidian
+    // Находим все текстовые абзацы контента
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        const text = p.textContent.trim();
+        // Читаем чистый HTML-код внутри абзаца, включая все теги <br>
+        const htmlContent = p.innerHTML.trim();
 
         // Если внутри абзаца есть хотя бы одна скобка Obsidian
-        if (text.includes('![[')) {
+        if (htmlContent.includes('![[')) {
             
-            // Регулярное выражение находит все вхождения ![[...]] внутри абзаца
-            const regex = /!\[\[([^\]]+)\]\]/g;
+            // Железобетонное регулярное выражение: ищет текст внутри ![[ ... ]] 
+            // Игнорирует любые внутренние переносы строк и теги <br>
+            const regex = /!\[\[([^\]\n\r<]+)\]\]/g;
             let match;
             
             // Контейнеры для красивого вывода сеток в строку
@@ -21,8 +23,9 @@ function parseObsidianMedia() {
             let videoContainer = null;
             let hasMedia = false;
 
-            // Ищем все ссылки в текущем абзаце по очереди
-            while ((match = regex.exec(text)) !== null) {
+            // Ищем все ссылки в текущем HTML-тексте абзаца
+            while ((match = regex.exec(htmlContent)) !== null) {
+                // Извлекаем чистый путь из первой пойманной группы (match[1])
                 let rawPath = match[1].trim();
                 
                 // ВЫРЕЗАЕМ ТЕХНИЧЕСКИЙ КОРЕНЬ GITHUB
@@ -58,7 +61,6 @@ function parseObsidianMedia() {
                         imgContainer.style.display = 'flex';
                         imgContainer.style.flexWrap = 'wrap';
                         imgContainer.style.gap = '15px';
-                        imgContainer.style.marginBottom = '20px'; // Чтобы абзацы не липли друг к другу
                     }
                     const img = document.createElement('img');
                     // Даем прямой src — твой image-lazy-load.js сам добавит loading="lazy"!
@@ -77,7 +79,7 @@ function parseObsidianMedia() {
             if (hasMedia) {
                 if (imgContainer) p.parentNode.insertBefore(imgContainer, p);
                 if (videoContainer) p.parentNode.insertBefore(videoContainer, p);
-                p.remove(); // Стираем сырые скобки Obsidian с экрана
+                p.remove(); // Намертво стираем сырые скобки Obsidian с экрана
             }
         }
     });

@@ -58,6 +58,8 @@ discus: "questions"
 
 ![](/faire/elektronnyj-organ/elektronnyj-organ-40.webp)
 
+🎬 Демонстрация тестирования устройства
+
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
 
 <a id="etap-7"></a>**Этап 7.** Окончательная сборка конструкции

@@ -9,8 +9,36 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{{ content }}
+{% comment %} 
+=============================================================================
+ЧИСТЫЙ СЕРВЕРНЫЙ РАЗДЕЛИТЕЛЬ МЕДИА ДЛЯ ЛЮБЫХ ПАПОК (ЧЕРЕЗ SPLIT)
+============================================================================= 
+{% endcomment %}
+
+{% comment. Шаг 1: Разрезаем текст статьи по тегу гитхаб-ссылки %}
+{% assign content_chunks = content | split: 'src="github/eaststandart.github.io/' %}
+{% assign final_html = "" %}
+
+{% comment. Шаг 2: Пробегаемся по всем кусочкам и склеиваем их обратно с правильными атрибутами %}
+{% for chunk in content_chunks %}
+  {% if forloop.first %}
+    {% comment %} Первый кусок — это текст до самой первой картинки, просто сохраняем его {% endcomment %}
+    {% assign final_html = chunk %}
+  {% else %}
+    {% comment %} Проверяем, какое расширение идет внутри этого кусочка контента {% endcomment %}
+    {% if chunk contains '.webm' or chunk contains '.mp4' %}
+      {% comment %} Это ВИДЕО: намертво блокируем трафик, приклеивая data-src {% endcomment %}
+      {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
+    {% else %}
+      {% comment %} Это КАРТИНКА: приклеиваем чистый src и нативный lazy-loading {% endcomment %}
+      {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Выводим идеально собранную сервером страницу {% endcomment %}
+{{ final_html }}
+
 
 
 <!-- Универсальный блок библиографии -->

@@ -10,7 +10,13 @@ custom_css: "/assets/css/video.css"
 {% endcomment %}
 
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{{ content }}
+{% comment %} 
+ГЛОБАЛЬНАЯ ЗАЩИТА ТРАФИКА СТАТЬИ: Переименовываем src в data-src для медиафайлов, 
+чтобы браузер не качал их до запуска ленивого плеера
+{% endcomment %}
+{% assign safe_page_content = content | replace: 'src="/faire/', 'data-src="/faire/' %}
+{{ safe_page_content }}
+
 
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}

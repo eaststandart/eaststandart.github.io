@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ОРИГИНАЛЬНЫЙ МОДУЛЬ ОПТИМИЗАЦИИ И ЛЕЗИ-ЛОАДА ВИДЕО (video-lazy-load.js)
+   ОРИГИНАЛЬНЫЙ МОДУЛЬ ОПТИМИЗАЦИИ И ИСТИННОГО ЛЕЗИ-ЛОАДА ВИДЕО (video-lazy-load.js)
    ========================================================================== */
 
 function runVideoLazyLoad() {
@@ -15,7 +15,6 @@ function runVideoLazyLoad() {
             if (entry.isIntersecting) {
                 const video = entry.target;
                 
-                // ИСПРАВЛЕНО РАНЕЕ: Проверяем, не скрыт ли родительский пост через display: none
                 if (video.closest('.media-entry') && video.closest('.media-entry').style.display === 'none') {
                     return; 
                 }
@@ -28,32 +27,32 @@ function runVideoLazyLoad() {
             }
         });
     }, { 
-        // Настройка зазора: триггер загрузки сработает за 200px до появления видео в поле зрения
-        rootMargin: "200px" 
+        rootMargin: "200px" // Триггер сработает за 200px до появления видео в поле зрения
     });
 
     // ==========================================================================
     // 2. АНАЛИЗ АБЗАЦЕВ И КОНВЕРТАЦИЯ ФЕЙКОВЫХ ИЗОБРАЖЕНИЙ В ТЕГИ VIDEO
     // ==========================================================================
     paragraphs.forEach(p => {
-        // Ищем внутри абзаца картинки, которые на самом деле ведут на видеофайлы
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
+        // ИСПРАВЛЕНО: Теперь ищем картинки-заглушки как с src, так и с безопасным data-src
+        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"], img[data-src$=".mp4"], img[data-src$=".webm"]');
         
-        // Если фейковые видео-заглушки обнаружены, запускаем процесс трансформации
         if (fakeVideos.length > 0) {
-            // Создаем новый блочный контейнер-строку для видеоряда
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
             fakeVideos.forEach(img => {
+                // Забираем ссылку из любого доступного атрибута (data-src или src)
+                const realSrc = img.getAttribute('data-src') || img.getAttribute('src');
+
                 // Собираем настоящий нативный тег плеера <video>
                 const video = document.createElement('video');
-                video.src = img.getAttribute('src');
+                video.src = realSrc;
                 video.controls = true;
                 video.muted = true;
-                video.setAttribute('playsinline', ''); // Фикс для корректного воспроизведения внутри Safari на iOS
+                video.setAttribute('playsinline', ''); 
                 
-                // КРИТИЧЕСКИ ВАЖНО: Изначально полностью блокируем загрузку данных для экономии трафика
+                // КРИТИЧЕСКИ ВАЖНО: Полностью блокируем загрузку данных для экономии трафика
                 video.preload = "none"; 
 
                 // Передаем созданный плеер под контроль нашему ленивому наблюдателю
@@ -64,10 +63,8 @@ function runVideoLazyLoad() {
                 img.remove();
             });
 
-            // Выносим готовый контейнер с видео из абзаца наружу, вставив его ПЕРЕД текущим абзацем
             p.insertAdjacentElement('beforebegin', container);
 
-            // Если после удаления картинок абзац остался пустым — полностью стираем его из HTML-дерева
             if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
                 p.remove();
             }

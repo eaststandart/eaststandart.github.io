@@ -10,9 +10,7 @@ custom_css: "/assets/css/video.css"
 {% endcomment %}
 
 {% comment %} Выводим основной текст статьи, написанный в Markdown {% endcomment %}
-{% comment %} Заменяем только видеофайлы, картинки .webp этот фильтр вообще не увидит и не тронет {% endcomment %}
-{% assign safe_content = content | replace: '.webm', '.webm" data-video-src' | replace: '.mp4', '.mp4" data-video-src' | replace: 'src="/faire/', 'data-src="/faire/' %}
-
+{{ content }}
 
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}

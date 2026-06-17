@@ -3,13 +3,6 @@
    ========================================================================== */
 
 function runVideoLazyLoad() {
-    // ВСТАВКА ДЛЯ ПОДДЕРЖКИ КНОПКИ 0: Безопасно восстанавливаем src для видео-картинок текущего проекта
-    document.querySelectorAll('.main-content p img[data-src$=".mp4"], .main-content p img[data-src$=".webm"]').forEach(img => {
-        img.setAttribute('src', img.getAttribute('data-src'));
-        img.removeAttribute('data-src');
-    });
-
-    // ТВОЙ ОРИГИНАЛЬНЫЙ КОД БЕЗ ИЗМЕНЕНИЙ НАЧИНАЕТСЯ ЗДЕСЬ:
     // Выбираем все текстовые абзацы внутри контента статьи
     const paragraphs = document.querySelectorAll('.main-content p');
 

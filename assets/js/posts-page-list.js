@@ -1,105 +1,39 @@
 /* ==========================================================================
-   УНИВЕРСАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ИСТИННОГО ЛЕЗИ-ЛОАДА МЕДИА (posts-page-list.js)
+   ОРИГИНАЛЬНЫЙ ДВИЖОК ФИЛЬТРАЦИИ И ЗАЧИСТКИ ЛЕНТЫ МЕДИА (posts-page-list.js)
    ========================================================================== */
 
 function runMediaArchiveFilter() {
     var urlParams = new URLSearchParams(window.location.search);
-    var project = urlParams.get('project'); // Например, "robot-korova-iz-kartona"
+    var project = urlParams.get('project'); // Получаем, например, "robot-korova-iz-kartona"
 
-    console.log("[ДЕБАГ] Проект из URL:", project);
-
-    // 1. Делаем изолированный снимок всех блоков и чистим чужие проекты
+    // 1. Делаем изолированный снимок всех блоков и вырезаем чужие проекты
     var allEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
 
     allEntries.forEach(function(item) {
       var cats = item.getAttribute('data-project') || "";
+      
       if (project) {
         if (cats.includes(project)) { 
-          item.style.setProperty('display', 'block', 'important'); 
+          item.style.setProperty('display', 'block', 'important'); // Наш проект — открываем
         } else {
-          item.remove(); 
+          item.remove(); // Чужой проект — полностью стираем из кода страницы
         }
       } else {
         item.style.setProperty('display', 'block', 'important');
       }
     });
 
-    // ==========================================================================
-    // ПОСЛЕДОВАТЕЛЬНЫЙ ВЫВОД: Сначала мгновенно активируем КАРТИНКИ, 
-    // чтобы они выстроились в ряды и оттолкнули видеоролики вниз
-    // ==========================================================================
-    var imgTargets = document.querySelectorAll('.media-archive-list-wrapper img[data-src]');
-    imgTargets.forEach(function(img) {
-        var srcVal = img.getAttribute('data-src') || "";
-        // Активируем строго картинки (исключаем видео-заглушки)
-        if (!srcVal.endsWith('.mp4') && !srcVal.endsWith('.webm')) {
-            img.setAttribute('src', srcVal);
-            img.removeAttribute('data-src');
-        }
-    });
-
-    // ==========================================================================
-    // ИСТИННЫЙ ЛЕЗИ-ЛОАД ДЛЯ ВИДЕО: Включаем слежку только после стабилизации верстки
-    // ==========================================================================
-    setTimeout(function() {
-        var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-                // Видео активируется СТРОГО при физическом подходе к экрану
-                if (entry.isIntersecting) {
-                    var img = entry.target;
-                    var srcVal = img.getAttribute('data-src') || "";
-                    
-                    if (srcVal && (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm'))) {
-                        console.log("[ДЕБАГ НАБЛЮДАТЕЛЯ] Видео подошло к экрану! Трансформация:", srcVal);
-                        
-                        var container = document.createElement('div');
-                        container.className = 'video-test-row';
-
-                        var video = document.createElement('video');
-                        video.src = srcVal;
-                        video.controls = true;
-                        video.muted = true;
-                        video.setAttribute('playsinline', '');
-                        video.preload = "metadata"; // Загружаем первый кадр только на экране
-
-                        container.appendChild(video);
-                        
-                        var parentP = img.closest('p');
-                        if (parentP) {
-                            parentP.insertAdjacentElement('beforebegin', container);
-                            img.remove();
-                            if (parentP.textContent.trim() === "" && parentP.querySelectorAll('*').length === 0) {
-                                parentP.remove();
-                            }
-                        }
-                    }
-                    observer.unobserve(img);
-                }
-            });
-        }, {
-            rootMargin: "100px", // Небольшой упреждающий зазор для плавного включения
-            threshold: 0.01
-        });
-
-        // Отдаем под контроль наблюдателю только видеоролики, оставшиеся с data-src
-        var videoTargets = document.querySelectorAll('.media-archive-list-wrapper [data-src]');
-        console.log("[ДЕБАГ] Включен ленивый наблюдатель для видеофайлов. Защищено роликов:", videoTargets.length);
-
-        videoTargets.forEach(function(videoImg) {
-            lazyVideoObserver.observe(videoImg);
-        });
-
-    }, 150); // Микро-пауза 150мс дает картинкам время развернуть сетку и убрать склеивание
-
-
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
     var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));
 
     if (visibleEntries.length > 0) {
       var lastItem = visibleEntries[visibleEntries.length - 1];
+      
+      // Намертво обнуляем нижний маргин и падинг у финишного поста страницы
       lastItem.style.setProperty('margin-bottom', '0px', 'important');
       lastItem.style.setProperty('padding-bottom', '0px', 'important');
       
+      // Находим и полностью скрываем разделительную линию под ним
       var hr = lastItem.querySelector('.media-entry-hr, hr');
       if (hr) {
         hr.style.setProperty('display', 'none', 'important');

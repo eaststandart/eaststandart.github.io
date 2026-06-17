@@ -1,76 +1,66 @@
 /* ==========================================================================
-   ОРИГИНАЛЬНЫЙ МОДУЛЬ ОПТИМИЗАЦИИ И ЛЕЗИ-ЛОАДА ВИДЕО (video-lazy-load.js)
+   УНИВЕРСАЛЬНЫЙ МОДУЛЬ КОНВЕРТАЦИИ ОБСИДИАН-ВИДЕО (video-lazy-load.js)
    ========================================================================== */
 
 function runVideoLazyLoad() {
-    // Выбираем все текстовые абзацы внутри контента статьи
-    const paragraphs = document.querySelectorAll('.main-content p');
-
-    // ==========================================================================
-    // 1. СОЗДАНИЕ НАБЛЮДАТЕЛЯ (INTERSECTION OBSERVER) ДЛЯ ЛЕНИВОЙ ЗАГРУЗКИ ВИДЕО
-    // ==========================================================================
+    // 1. Создаем стандартного наблюдателя для ленивой подгрузки метаданных на экране
     const videoObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            // Когда видео-плеер пересекает невидимую границу и приближается к экрану
             if (entry.isIntersecting) {
                 const video = entry.target;
                 
-                // ИСПРАВЛЕНО РАНЕЕ: Проверяем, не скрыт ли родительский пост через display: none
                 if (video.closest('.media-entry') && video.closest('.media-entry').style.display === 'none') {
                     return; 
                 }
 
-                // Разрешаем видео-плееру подгрузить метаданные (размер, длительность, первый кадр)
+                // Видео подошло к экрану — разрешаем скачать первый кадр и длину роликов
                 video.preload = "metadata"; 
-                
-                // Снимаем слежку с этого плеера, так как запуск загрузки уже выполнен
                 observer.unobserve(video);
             }
         });
     }, { 
-        // Настройка зазора: триггер загрузки сработает за 200px до появления видео в поле зрения
-        rootMargin: "200px" 
+        rootMargin: "200px" // Включаем плеер за 200px до появления
     });
 
-    // ==========================================================================
-    // 2. АНАЛИЗ АБЗАЦЕВ И КОНВЕРТАЦИЯ ФЕЙКОВЫХ ИЗОБРАЖЕНИЙ В ТЕГИ VIDEO
-    // ==========================================================================
+    // 2. Находим ВСЕ абзацы на странице. Если Kramdown встретил ![[...]], он выведет это как текст внутри <p>
+    const paragraphs = document.querySelectorAll('.main-content p');
+
     paragraphs.forEach(p => {
-        // Ищем внутри абзаца картинки, которые на самом деле ведут на видеофайлы
-        const fakeVideos = p.querySelectorAll('img[src$=".mp4"], img[src$=".webm"]');
-        
-        // Если фейковые видео-заглушки обнаружены, запускаем процесс трансформации
-        if (fakeVideos.length > 0) {
-            // Создаем новый блочный контейнер-строку для видеоряда
+        const text = p.textContent.trim();
+
+        // Регулярное выражение ищет формат Obsidian: ![[ любой_путь.webm ]] или .mp4
+        if (text.startsWith('![[') && (text.endsWith('.webm]]') || text.endsWith('.mp4]]'))) {
+            
+            // Вытаскиваем чистый путь к файлу из скобок (убираем ![[ , ]], а также точки слэши ../)
+            let cleanPath = text.replace('![[', '').replace(']]', '').trim();
+            cleanPath = cleanPath.replace('../', '').replace('../', ''); // Чистим относительные пути Obsidian
+            
+            // Если путь начинается не со слэша, добавляем его для корня сайта
+            if (!cleanPath.startsWith('/')) {
+                cleanPath = '/' + cleanPath;
+            }
+
+            // Создаем красивую строку-контейнер плеера, как в твоем оригинале
             const container = document.createElement('div');
             container.className = 'video-test-row';
 
-            fakeVideos.forEach(img => {
-                // Собираем настоящий нативный тег плеера <video>
-                const video = document.createElement('video');
-                video.src = img.getAttribute('src');
-                video.controls = true;
-                video.muted = true;
-                video.setAttribute('playsinline', ''); // Фикс для корректного воспроизведения внутри Safari на iOS
-                
-                // КРИТИЧЕСКИ ВАЖНО: Изначально полностью блокируем загрузку данных для экономии трафика
-                video.preload = "none"; 
+            const video = document.createElement('video');
+            video.src = cleanPath; // Получаем идеальный адрес: /faire/robot-korova-iz-kartona/...
+            video.controls = true;
+            video.muted = true;
+            video.setAttribute('playsinline', '');
+            
+            // ЖЕСТКИЙ ЗАПРЕТ ТРАФИКА: изначально видео весит 0 байт и ничего не качает
+            video.preload = "none"; 
 
-                // Передаем созданный плеер под контроль нашему ленивому наблюдателю
-                videoObserver.observe(video);
+            // Отдаем плеер под контроль ленивому наблюдателю прокрутки
+            videoObserver.observe(video);
 
-                // Добавляем плеер в строку-контейнер, а старую картинку-заглушку удаляем
-                container.appendChild(video);
-                img.remove();
-            });
-
-            // Выносим готовый контейнер с видео из абзаца наружу, вставив его ПЕРЕД текущим абзацем
-            p.insertAdjacentElement('beforebegin', container);
-
-            // Если после удаления картинок абзац остался пустым — полностью стираем его из HTML-дерева
-            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
-                p.remove();
-            }
+            container.appendChild(video);
+            
+            // Вставляем готовый плеер вместо текстовой строки Obsidian
+            p.parentNode.insertBefore(container, p);
+            p.remove(); // Удаляем старый текстовый абзац
         }
     });
 }

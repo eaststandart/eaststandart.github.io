@@ -8,17 +8,16 @@ function runMediaArchiveFilter() {
 
     console.log("[ДЕБАГ] Проект из URL:", project);
 
-    // 1. Делаем изолированный снимок всех блоков, чтобы изменения DOM не ломали индексы
+    // 1. Делаем изолированный снимок всех блоков и чистим чужие проекты
     var allEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
 
     allEntries.forEach(function(item) {
       var cats = item.getAttribute('data-project') || "";
-      
       if (project) {
         if (cats.includes(project)) { 
           item.style.setProperty('display', 'block', 'important'); 
         } else {
-          item.remove(); // Намертво вырезаем чужие проекты из кода страницы
+          item.remove(); 
         }
       } else {
         item.style.setProperty('display', 'block', 'important');
@@ -26,33 +25,33 @@ function runMediaArchiveFilter() {
     });
 
     // ==========================================================================
-    // КРИТИЧЕСКИЙ ФИКС СКЛЕИВАНИЯ: Фиксируем высоту картинок до загрузки, 
-    // чтобы видеоролики снизу не подлетали наверх экрана на старте
+    // ПОСЛЕДОВАТЕЛЬНЫЙ ВЫВОД: Сначала мгновенно активируем КАРТИНКИ, 
+    // чтобы они выстроились в ряды и оттолкнули видеоролики вниз
     // ==========================================================================
-    document.querySelectorAll('.media-archive-list-wrapper [data-src]').forEach(function(media) {
-        var srcVal = media.getAttribute('data-src') || "";
-        // Если это картинка, жестко задаем ей высоту твоего стандарта темы
+    var imgTargets = document.querySelectorAll('.media-archive-list-wrapper img[data-src]');
+    imgTargets.forEach(function(img) {
+        var srcVal = img.getAttribute('data-src') || "";
+        // Активируем строго картинки (исключаем видео-заглушки)
         if (!srcVal.endsWith('.mp4') && !srcVal.endsWith('.webm')) {
-            media.style.height = "250px";
-            media.style.width = "auto";
+            img.setAttribute('src', srcVal);
+            img.removeAttribute('data-src');
         }
     });
 
     // ==========================================================================
-    // ИСТИННЫЙ ЛЕЗИ-ЛОАД: Картинки и Видео трансформируются строго при прокрутке!
+    // ИСТИННЫЙ ЛЕЗИ-ЛОАД ДЛЯ ВИДЕО: Включаем слежку только после стабилизации верстки
     // ==========================================================================
-    var lazyMediaObserver = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(function(entry) {
-            // Когда элемент РЕАЛЬНО пересекает видимую границу экрана
-            if (entry.isIntersecting) {
-                var img = entry.target;
-                var srcVal = img.getAttribute('data-src') || "";
-                
-                console.log("[ДЕБАГ НАБЛЮДАТЕЛЯ] Элемент подошел к экрану! data-src =", srcVal);
-                
-                if (srcVal) {
-                    if (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm')) {
-                        console.log("[ДЕБАГ] Трансформация в ТЕГ VIDEO:", srcVal);
+    setTimeout(function() {
+        var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                // Видео активируется СТРОГО при физическом подходе к экрану
+                if (entry.isIntersecting) {
+                    var img = entry.target;
+                    var srcVal = img.getAttribute('data-src') || "";
+                    
+                    if (srcVal && (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm'))) {
+                        console.log("[ДЕБАГ НАБЛЮДАТЕЛЯ] Видео подошло к экрану! Трансформация:", srcVal);
+                        
                         var container = document.createElement('div');
                         container.className = 'video-test-row';
 
@@ -61,7 +60,7 @@ function runMediaArchiveFilter() {
                         video.controls = true;
                         video.muted = true;
                         video.setAttribute('playsinline', '');
-                        video.preload = "metadata";
+                        video.preload = "metadata"; // Загружаем первый кадр только на экране
 
                         container.appendChild(video);
                         
@@ -73,27 +72,25 @@ function runMediaArchiveFilter() {
                                 parentP.remove();
                             }
                         }
-                    } else {
-                        console.log("[ДЕБАГ] Активация КАРТИНКИ:", srcVal);
-                        img.setAttribute('src', srcVal);
-                        img.removeAttribute('data-src');
                     }
+                    observer.unobserve(img);
                 }
-                observer.unobserve(img);
-            }
+            });
+        }, {
+            rootMargin: "100px", // Небольшой упреждающий зазор для плавного включения
+            threshold: 0.01
         });
-    }, {
-        rootMargin: "100px", // Умеренный зазор 100px, чтобы элементы подгружались плавно чуть заранее
-        threshold: 0.01
-    });
 
-    // Отдаем под контроль наблюдателю все медиа-элементы с data-src на странице
-    var targets = document.querySelectorAll('.media-archive-list-wrapper [data-src]');
-    console.log("[ДЕБАГ] Найдено элементов под контроль ленивой загрузки:", targets.length);
+        // Отдаем под контроль наблюдателю только видеоролики, оставшиеся с data-src
+        var videoTargets = document.querySelectorAll('.media-archive-list-wrapper [data-src]');
+        console.log("[ДЕБАГ] Включен ленивый наблюдатель для видеофайлов. Защищено роликов:", videoTargets.length);
 
-    targets.forEach(function(media) {
-        lazyMediaObserver.observe(media);
-    });
+        videoTargets.forEach(function(videoImg) {
+            lazyVideoObserver.observe(videoImg);
+        });
+
+    }, 150); // Микро-пауза 150мс дает картинкам время развернуть сетку и убрать склеивание
+
 
     // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
     var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));

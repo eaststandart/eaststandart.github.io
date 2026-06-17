@@ -66,4 +66,6 @@ discus: "questions"
 ![](/faire/elektronnyj-organ/elektronnyj-organ-38.webp)
 ![](/faire/elektronnyj-organ/elektronnyj-organ-39.webp)
 
+🎬 Демонстрация общего вида
+
 ![video](/faire/elektronnyj-organ/elektronnyj-organ-04.webm)

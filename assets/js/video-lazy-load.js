@@ -3,26 +3,33 @@
    ========================================================================== */
 
 function runVideoLazyLoad() {
-    // 1. Создаем стандартного наблюдателя для ленивой подгрузки метаданных на экране
+    // 1. СОЗДАНИЕ НАБЛЮДАТЕЛЯ (INTERSECTION OBSERVER) ДЛЯ ЛЕНИВОЙ ЗАГРУЗКИ ВИДЕО
     const videoObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
+            // Когда видео-плеер пересекает невидимую границу и приближается к экрану
             if (entry.isIntersecting) {
                 const video = entry.target;
                 
+                // Проверяем, не скрыт ли родительский пост через display: none
                 if (video.closest('.media-entry') && video.closest('.media-entry').style.display === 'none') {
                     return; 
                 }
 
-                // Видео подошло к экрану — разрешаем скачать превью и первый кадр
+                // Разрешаем видео-плееру подгрузить метаданные (размер, длительность, первый кадр)
                 video.preload = "metadata"; 
+                
+                // Снимаем слежку с этого плеера, так как запуск загрузки уже выполнен
                 observer.unobserve(video);
             }
         });
     }, { 
-        rootMargin: "200px" // Включаем плеер за 200px до появления
+        // Настройка зазора: триггер загрузки сработает за 200px до появления видео в поле зрения
+        rootMargin: "200px" 
     });
 
-    // 2. Находим ВСЕ абзацы на странице
+    // ==========================================================================
+    // 2. АНАЛИЗ АБЗАЦЕВ И КОНВЕРТАЦИЯ ССЫЛОК ОБСИДИАНА В ТЕГИ VIDEO С СЕТКАМИ
+    // ==========================================================================
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
@@ -34,7 +41,7 @@ function runVideoLazyLoad() {
             // Разделяем содержимое абзаца по переносам строк или тегам <br>, чтобы обработать каждое видео отдельно
             const lines = htmlContent.split(/<br>\n|<br>|\n/);
             
-            // Создаем новый блочный контейнер-строку для сетки видеоряда (как в твоем оригинале)
+            // Создаем новый блочный контейнер-строку для видеоряда (твоя оригинальная сетка)
             const container = document.createElement('div');
             container.className = 'video-test-row';
             
@@ -47,27 +54,30 @@ function runVideoLazyLoad() {
                 if (cleanLine.startsWith('![[') && (cleanLine.endsWith('.webm]]') || cleanLine.endsWith('.mp4]]'))) {
                     
                     // Вытаскиваем чистый путь к файлу из скобок
-                    let cleanPath = cleanLine.replace('![[', '').replace(']]', '').trim();
-                    cleanPath = cleanPath.replace('../', '').replace('../', ''); // Чистим относительные пути Obsidian
+                    let rawPath = cleanLine.replace('![[', '').replace(']]', '').trim();
                     
+                    // ВЫРЕЗАЕМ ТЕХНИЧЕСКИЙ КОРЕНЬ ОБСИДИАНА ПО ТВОЕМУ ТРЕБОВАНИЮ
+                    let cleanPath = rawPath.replace('github/eaststandart.github.io', '').trim();
+                    
+                    // Если после вырезания путь начинается не со слэша, добавляем его для корня сайта
                     if (!cleanPath.startsWith('/')) {
                         cleanPath = '/' + cleanPath;
                     }
 
                     // Собираем настоящий нативный тег плеера <video>
                     const video = document.createElement('video');
-                    video.src = cleanPath;
+                    video.src = cleanPath; // Сюда прилетает идеальный веб-путь: /faire/проект/файл.webm
                     video.controls = true;
                     video.muted = true;
-                    video.setAttribute('playsinline', '');
+                    video.setAttribute('playsinline', ''); // Фикс для Safari на iOS
                     
-                    // ЖЕСТКИЙ ЗАПРЕТ ТРАФИКА: видео ничего не качает на старте
+                    // КРИТИЧЕСКИ ВАЖНО: Полностью блокируем загрузку данных для экономии трафика
                     video.preload = "none"; 
 
-                    // Отдаем плеер под контроль ленивому наблюдателю прокрутки
+                    // Передаем созданный плеер под контроль нашему ленивому наблюдателю
                     videoObserver.observe(video);
 
-                    // Складываем видео в наш контейнер-ряд
+                    // Добавляем плеер в строку-контейнер
                     container.appendChild(video);
                     videosFound = true;
                 }
@@ -75,7 +85,7 @@ function runVideoLazyLoad() {
 
             // Если видеоролики были успешно найдены и собраны в сетку
             if (videosFound) {
-                // Вставляем готовый контейнер со всей сеткой видео ПЕРЕД текущим абзацем
+                // Выносим готовый контейнер с видео из абзаца наружу, вставив его ПЕРЕД текущим абзацем
                 p.parentNode.insertBefore(container, p);
                 p.remove(); // Полностью удаляем старый текстовый абзац с сырыми скобками Obsidian
             }

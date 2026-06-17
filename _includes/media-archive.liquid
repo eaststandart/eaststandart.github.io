@@ -5,7 +5,7 @@
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
-      {% comment %} Пропускаем пост, если задан флаг N {% endcomment %}
+      {% comment %} Пропускаем post, если задан флаг N {% endcomment %}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
@@ -23,11 +23,10 @@
           {% endif %}
 
           {% comment %} 
-          ЗАЩИТА ТРАФИКА: Подменяем src на data-src у всех картинок и видео в тексте поста, 
-          чтобы браузер не скачивал чужие медиафайлы до клика на кнопку 0!
+          ЧИСТЫЙ ОРИГИНАЛЬНЫЙ ВЫВОД: Текст Obsidian ![[github/...]] выводится напрямую.
+          Браузер не видит тегов src, поэтому трафик чужих проектов равен НУЛЮ!
           {% endcomment %}
-          {% assign safe_content = post.content | replace: 'src="/faire/', 'data-src="/faire/' %}
-          {{ safe_content }}
+          {{ post.content }}
           
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}
@@ -65,7 +64,7 @@
 
 <!-- ==========================================================================
      2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
-     ========================================================================== -->
+     ========================================================================= -->
 <!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
 

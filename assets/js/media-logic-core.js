@@ -3,84 +3,33 @@
    ========================================================================== */
 
 function parseObsidianMedia() {
-    // Находим все текстовые абзацы контента
+    // Выбираем все текстовые абзацы внутри контента статьи
     const paragraphs = document.querySelectorAll('.main-content p');
 
     paragraphs.forEach(p => {
-        // Читаем чистый HTML-код внутри абзаца, включая все теги <br>
-        const htmlContent = p.innerHTML.trim();
+        let html = p.innerHTML;
 
         // Если внутри абзаца есть хотя бы одна скобка Obsidian
-        if (htmlContent.includes('![[')) {
+        if (html.includes('![[')) {
             
-            // Железобетонное регулярное выражение: ищет текст внутри ![[ ... ]] 
-            // Игнорирует любые внутренние переносы строк и теги <br>
+            // Регулярное выражение находит все вхождения ![[ ... ]] внутри абзаца
             const regex = /!\[\[([^\]\n\r<]+)\]\]/g;
-            let match;
             
-            // Контейнеры для красивого вывода сеток в строку
-            let imgContainer = null;
-            let videoContainer = null;
-            let hasMedia = false;
-
-            // Ищем все ссылки в текущем HTML-тексте абзаца
-            while ((match = regex.exec(htmlContent)) !== null) {
-                // Извлекаем чистый путь из первой пойманной группы (match[1])
-                let rawPath = match[1].trim();
-                
-                // ВЫРЕЗАЕМ ТЕХНИЧЕСКИЙ КОРЕНЬ GITHUB
+            // Заменяем каждую ссылку Obsidian на чистый HTML-тег <img> без инлайновых стилей
+            html = html.replace(regex, function(match, rawPath) {
+                // 1. Вырезаем технический корень GitHub по твоему требованию
                 let cleanPath = rawPath.replace('github/eaststandart.github.io', '').trim();
                 
                 if (!cleanPath.startsWith('/')) {
                     cleanPath = '/' + cleanPath;
                 }
 
-                const lowerPath = cleanPath.toLowerCase();
+                // 2. Возвращаем чистый оригинальный тег img, какой и был на сайте изначально
+                return '<img src="' + cleanPath + '" alt="" />';
+            });
 
-                // А. ЕСЛИ ЭТО ВИДЕО (.mp4, .webm)
-                if (lowerPath.endsWith('.mp4') || lowerPath.endsWith('.webm')) {
-                    if (!videoContainer) {
-                        videoContainer = document.createElement('div');
-                        videoContainer.className = 'video-test-row';
-                    }
-                    const video = document.createElement('video');
-                    video.src = cleanPath;
-                    video.controls = true;
-                    video.muted = true;
-                    video.setAttribute('playsinline', '');
-                    video.preload = "none"; // Жесткий запрет трафика видео на старте
-                    
-                    videoContainer.appendChild(video);
-                    hasMedia = true;
-                } 
-                // Б. ЕСЛИ ЭТО КАРТИНКА (.webp, .jpg, .png, .svg)
-                else if (lowerPath.endsWith('.webp') || lowerPath.endsWith('.jpg') || lowerPath.endsWith('.png') || lowerPath.endsWith('.svg')) {
-                    if (!imgContainer) {
-                        imgContainer = document.createElement('div');
-                        imgContainer.className = 'image-test-row-obsidian';
-                        imgContainer.style.display = 'flex';
-                        imgContainer.style.flexWrap = 'wrap';
-                        imgContainer.style.gap = '15px';
-                    }
-                    const img = document.createElement('img');
-                    // Даем прямой src — твой image-lazy-load.js сам добавит loading="lazy"!
-                    img.setAttribute('src', cleanPath); 
-                    img.style.height = "250px";
-                    img.style.width = "auto";
-                    img.style.objectFit = "cover";
-                    img.alt = "Obsidian Image";
-                    
-                    imgContainer.appendChild(img);
-                    hasMedia = true;
-                }
-            }
-
-            // Если медиафайлы были найдены — заменяем старый текстовый абзац p на наши новые сетки
-            if (hasMedia) {
-                if (imgContainer) p.parentNode.insertBefore(imgContainer, p);
-                if (videoContainer) p.parentNode.insertBefore(videoContainer, p);
-                p.remove(); // Намертво стираем сырые скобки Obsidian с экрана
-            }
+            // Обновляем HTML внутри абзаца — теперь там лежат чистые теги <img>
+            p.innerHTML = html;
         }
     });
 }

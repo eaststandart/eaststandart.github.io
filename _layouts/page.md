@@ -9,24 +9,19 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} 
+{%- comment %} 
 =============================================================================
-ИДЕАЛЬНАЯ СЕРВЕРНАЯ ЗАМЕНА С ТОЧЕЧНЫМ ВНЕДРЕНИЕМ LOADING="LAZY"
+КОМПАКТНАЯ СЕРВЕРНАЯ ОПТИМИЗАЦИЯ С ПОЛНОЙ ЗАЧИСТКОЙ МАРКЕРОВ И ПРОБЕЛОВ
 ============================================================================= 
-{% endcomment %}
-
-{% comment %} 1. Помечаем видео и картинки по их расширениям {% endcomment %}
-{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
-{% assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' %}
-
-{% comment %} 2. Переводим все медиафайлы с приставкой GitHub в безопасный data-src {% endcomment %}
-{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' | replace: 'src="http://github/eaststandart.github.io/', 'data-src="/' %}
-
-{% comment %} 3. ТВОЕ РЕШЕНИЕ: Просто превращаем маркер в нативный loading="lazy" перед выводом! {% endcomment %}
-{% assign safe_page_content = safe_page_content | replace: 'data-image-file="Y"', 'loading="lazy"' %}
-
-{{ safe_page_content }}
-
+{% endcomment -%}
+{%- assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' -%}
+{%- assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' -%}
+{%- assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' | replace: 'src="http://github/eaststandart.github.io/', 'data-src="/' -%}
+{%- comment %} Точечно превращаем маркер картинок в нативный loading="lazy" {% endcomment -%}
+{%- assign safe_page_content = safe_page_content | replace: 'data-image-file="Y"', 'loading="lazy"' -%}
+{%- comment %} ПО ТВОЕМУ ТРЕБОВАНИЮ: Намертво стираем маркер видео, делая код чистым {% endcomment -%}
+{%- assign safe_page_content = safe_page_content | replace: ' data-video-file="Y"', '' -%}
+{{- safe_page_content -}}
 
 
 <!-- Универсальный блок библиографии -->

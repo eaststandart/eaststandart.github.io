@@ -589,7 +589,7 @@ figcaption {
 @media (max-height: 500px) and (orientation: landscape) {
     /* Компактная фиксированная высота изображений для экономии высоты экрана */
     .main-content p img:not(.content-img) {
-        height: 165px !important;
+        height: 163px !important;
         width: auto !important;
         flex: 0 0 auto !important;
     }

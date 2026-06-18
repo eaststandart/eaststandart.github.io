@@ -1,4 +1,5 @@
-{% capture minified_html %}
+{%- capture _html -%}
+
 {% comment %} 
 ГЛОБАЛЬНЫЙ ШАБЛОН САЙТА: КАРКАС (\_layouts/default.html)
 Назначение: Базовый скелет для всего сайта (шапка, меню, подвал).
@@ -52,6 +53,36 @@
 
 </body>
 </html>
-{% endcapture %}{% assign newline = '
-' %}{% assign space_newline = ' ' | append: newline %}{% assign output = minified_html | replace: space_newline, newline | replace: space_newline, newline | replace: space_newline, newline | replace: '    ', ' ' | replace: '   ', ' ' | replace: '  ', ' ' %}{% assign double_newline = newline | append: newline %}{% assign clean_html = output | replace: double_newline, newline | replace: double_newline, newline | replace: double_newline, newline | replace: double_newline, newline | replace: double_newline, newline %}{{ clean_html }}
 
+{%- endcapture -%}
+{%- assign _html = _html | strip_newlines -%}
+{%- assign _chunks = _html | split: '<!--' -%}
+{%- assign _html = '' -%}
+{%- for _chunk in _chunks -%}
+  {%- if forloop.first -%}
+    {%- assign _html = _chunk -%}
+  {%- else -%}
+    {%- assign _subchunks = _chunk | split: '-->' -%}
+    {%- if _subchunks.size == 2 -%}
+      {%- assign _html = _html | append: _subchunks[1] -%}
+    {%- else -%}
+      {%- assign _html = _html | append: '<!--' | append: _chunk -%}
+    {%- endif -%}{%- endif -%}{%- endfor -%}
+{%- assign _chunks = _html | split: '<pre' -%}
+{%- assign _html = '' -%}
+{%- for _chunk in _chunks -%}
+  {%- if forloop.first -%}
+    {%- assign _html = _chunk -%}
+  {%- else -%}
+    {%- assign _subchunks = _chunk | split: '</pre>' -%}{%- assign _html = _html | append: '<pre' | append: _subchunks[0] | append: '</pre>' | append: _subchunks[1] -%}{%- endif -%}{%- endfor -%}
+{%- assign _chunks = _html | split: '<script' -%}
+{%- assign _html = '' -%}
+{%- for _chunk in _chunks -%}
+  {%- if forloop.first -%}
+    {%- assign _html = _chunk -%}
+  {%- else -%}
+    {%- assign _subchunks = _chunk | split: '</script>' -%}{%- assign _html = _html | append: '<script' | append: _subchunks[0] | append: '</script>' | append: _subchunks[1] -%}{%- endif -%}{%- endfor -%}
+{%- assign _chunks = _html | split: ' ' -%}
+{%- assign _html = '' -%}
+{%- for _chunk in _chunks -%}{%- if _chunk != '' -%}{%- assign _html = _html | append: ' ' | append: _chunk -%}{%- endif -%}{%- endfor -%}
+{{- _html | strip -}}

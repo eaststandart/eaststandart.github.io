@@ -11,11 +11,14 @@ custom_css: "/assets/css/video.css"
 
 {% comment %} 
 =============================================================================
-УНИВЕРСАЛЬНЫЙ СЕРВЕРНЫЙ РАЗДЕЛИТЕЛЬ МЕДИА (МАСКИРОВКА ПО ТИПУ СТРАНИЦЫ)
-============================================================================= 
-{% endcomment %}
+ТОТАЛЬНАЯ МАСКИРОВКА МЕДИА С СОХРАНЕНИЕМ LOADING="LAZY" ДЛЯ КАРТИНОК
+============================================================================= {% endcomment %}
 
-{% assign content_chunks = content | split: 'src="github/eaststandart.github.io/' %}
+{% comment %} 1. Сначала просто срезаем технический корень GitHub для всех медиафайлов {% endcomment %}
+{% assign clean_html = content | replace: 'src="github/eaststandart.github.io/', 'src="/' | replace: 'src="http://github/eaststandart.github.io/', 'src="/' %}
+
+{% comment %} 2. Разрезаем текст статьи по разделителю src="/ для поштучной обработки {% endcomment %}
+{% assign content_chunks = clean_html | split: 'src="/' %}
 {% assign final_html = "" %}
 
 {% for chunk in content_chunks %}
@@ -23,23 +26,16 @@ custom_css: "/assets/css/video.css"
     {% assign final_html = chunk %}
   {% else %}
     {% if chunk contains '.webm' or chunk contains '.mp4' %}
-      {% comment %} А. ВИДЕО: маскируем в data-src всегда и на любой странице сайта {% endcomment %}
+      {% comment %} Это ВИДЕО: переименовываем в data-src без атрибута lazy {% endcomment %}
       {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
     {% else %}
-      {% comment %} Б. КАРТИНКИ (.webp): проверяем, где мы находимся {% endcomment %}
-      {% if page.url == '/media-posts-page/' %}
-        {% comment %} Режим Архива (кнопка 0): уводим картинки ВСЕХ проектов в data-src, полностью блокируя Бластер! {% endcomment %}
-        {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
-      {% else %}
-        {% comment %} Режим Одиночного поста: сразу даем картинкам рабочий src и нативный lazy-loading {% endcomment %}
-        {% assign final_html = final_html | append: 'loading="lazy" src="/' | append: chunk %}
-      {% endif %}
+      {% comment %} ЭТО КАРТИНКА: переименовываем в data-src и ОДНОВРЕМЕННО добавляем loading="lazy"! {% endcomment %}
+      {% assign final_html = final_html | append: 'loading="lazy" data-src="/' | append: chunk %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
 {{ final_html }}
-
 
 
 <!-- Универсальный блок библиографии -->

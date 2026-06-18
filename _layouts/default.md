@@ -52,5 +52,6 @@
 
 </body>
 </html>
-{% endcapture %}{{ minified_html | replace: '    ', ' ' | replace: '   ', ' ' | replace: '  ', ' ' }}
+{% endcapture %}{% assign output = minified_html | replace: '    ', ' ' | replace: '   ', ' ' | replace: '  ', ' ' %}{% assign newline = '
+' %}{% assign double_newline = newline | append: newline %}{% assign clean_html = output | replace: double_newline, newline | replace: double_newline, newline | replace: double_newline, newline %}{{ clean_html }}
 

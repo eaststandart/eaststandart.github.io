@@ -11,16 +11,16 @@ permalink: /faire/robot-strannik/
 ### Описание проекта
 Создание конструкции простого двуногого шагающего робота, приводимого в движение унифицированным мотор-редуктором.
 
-![](robot-strannik-01.webp)
-![](robot-strannik-02.webp)
-![](robot-strannik-03.webp)
-![](robot-strannik-04.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-01.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-02.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-03.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-04.webp)
 
 ### Область применения
 Демонстрация принципов двухшарнирной ходовой механики. Моделирование систем перемещения для исследовательских аппаратов («странников»), способных передвигаться по сложному каменистому рельефу других планет, где колесные вездеходы могут застрять в грунте.
 
-![video](robot-strannik-1.webm)
-![video](robot-strannik-2.webm)
+![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-1.webm)
+![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-2.webm)
 
 ### Развитие проекта
 1\. Замена элементов питания на аккумулятор для повышения длительности автономного путешествия.\

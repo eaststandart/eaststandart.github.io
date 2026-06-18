@@ -45,7 +45,7 @@
 </div>
 
 <!-- БЛОК ЛИЦЕНЗИИ -->
-{%- include footer.liquid -%}
+{% include footer.liquid %}
 
 </body>
 </html>

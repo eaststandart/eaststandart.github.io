@@ -13,6 +13,7 @@ custom_css: "/assets/css/video.css"
 {% include media-data-src.liquid %}
 
 {%- if page.bibliography -%}
+{% comment %} {% endcomment %}
 <!-- Универсальный блок библиографии -->
 <div class="bibliography-footer">
     <strong>Библиографическое описание:</strong>  
@@ -29,6 +30,7 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.sources -%}
+{% comment %} {% endcomment %}
 <!-- Универсальный блок онлайн-источников -->
 <div class="sources-inline">
     <strong>Источники:</strong> 

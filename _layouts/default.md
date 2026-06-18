@@ -33,7 +33,6 @@
 <body>
 
 <div class="content-wrapper">
-        
     <!-- Блок навигации -->
     {% include navigation.liquid %}
 

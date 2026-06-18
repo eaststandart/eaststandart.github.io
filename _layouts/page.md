@@ -11,14 +11,13 @@ custom_css: "/assets/css/video.css"
 
 {% comment %} 
 =============================================================================
-ТОТАЛЬНАЯ МАСКИРОВКА МЕДИА С СОХРАНЕНИЕМ LOADING="LAZY" ДЛЯ КАРТИНОК
-============================================================================= {% endcomment %}
+ТОТАЛЬНАЯ СЕРВЕРНАЯ МАСКИРОВКА МЕДИА СТРОГО ДЛЯ ТЕКСТА СТАТЕЙ (ЧЕРЕЗ SPLIT)
+Пагинация, авторы и источники выводятся отдельно и физически не могут сломаться!
+============================================================================= 
+{% endcomment %}
 
-{% comment %} 1. Сначала просто срезаем технический корень GitHub для всех медиафайлов {% endcomment %}
-{% assign clean_html = content | replace: 'src="github/eaststandart.github.io/', 'src="/' | replace: 'src="http://github/eaststandart.github.io/', 'src="/' %}
-
-{% comment %} 2. Разрезаем текст статьи по разделителю src="/ для поштучной обработки {% endcomment %}
-{% assign content_chunks = clean_html | split: 'src="/' %}
+{% comment %} 1. Берем чистый текст статьи из Markdown и разрезаем его по ссылке гитхаба {% endcomment %}
+{% assign content_chunks = page.content | split: 'src="github/eaststandart.github.io/' %}
 {% assign final_html = "" %}
 
 {% for chunk in content_chunks %}
@@ -26,16 +25,17 @@ custom_css: "/assets/css/video.css"
     {% assign final_html = chunk %}
   {% else %}
     {% if chunk contains '.webm' or chunk contains '.mp4' %}
-      {% comment %} Это ВИДЕО: переименовываем в data-src без атрибута lazy {% endcomment %}
+      {% comment %} Это ВИДЕО: на сервере превращаем в data-src {% endcomment %}
       {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
     {% else %}
-      {% comment %} ЭТО КАРТИНКА: переименовываем в data-src и ОДНОВРЕМЕННО добавляем loading="lazy"! {% endcomment %}
+      {% comment %} Это КАРТИНКА: на сервере превращаем в data-src и добавляем loading="lazy" {% endcomment %}
       {% assign final_html = final_html | append: 'loading="lazy" data-src="/' | append: chunk %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
-{{ final_html }}
+{% comment %} Выводим обработанный текст статьи, превратив Markdown в HTML {% endcomment %}
+{{ final_html | markdownify }}
 
 
 <!-- Универсальный блок библиографии -->

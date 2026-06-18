@@ -37,4 +37,3 @@ permalink: /faire/robot-korova-iz-kartona/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
- 

@@ -38,11 +38,10 @@
 
 <!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {% for post in site.categories[project_slug_last] %}
-    {% if post.categories contains include.type %}
-      {% assign is_post = true %}
-      {% if include.type == "media" %}{% assign is_post = false %}{% endif %}
-
+  {%- for post in site.categories[project_slug_last] -%}
+    {%- if post.categories contains include.type -%}
+      {%- assign is_post = true -%}
+      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
       <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
         <div>
           <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
@@ -53,9 +52,10 @@
           </span>
         </div>
       </li>
-    {% endif %}
-  {% endfor %}
+    {%- endif -%}
+  {%- endfor -%}
 </ul>
+
 
 <!-- Изолированный блок кнопок управления локальной пагинацией -->
 <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>

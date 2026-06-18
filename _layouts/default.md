@@ -44,7 +44,7 @@
     </div>
 </div>
 
-{%- include footer.liquid -%}
+{% include footer.liquid %}
 
 </body>
 </html>

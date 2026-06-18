@@ -13,7 +13,6 @@ custom_css: "/assets/css/video.css"
 {% include media-data-src.liquid %}
 
 {%- if page.bibliography -%}
-
 <!-- Универсальный блок библиографии -->
 <div class="bibliography-footer">
     <strong>Библиографическое описание:</strong>  
@@ -30,7 +29,6 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.sources -%}
-
 <!-- Универсальный блок онлайн-источников -->
 <div class="sources-inline">
     <strong>Источники:</strong> 
@@ -41,7 +39,6 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.author and page.author != "" -%}
-
 <!-- Блок вывода автора публикации -->
 <div class="author-inline">
     <strong>Автор:</strong> 
@@ -52,7 +49,7 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.tags and page.tags.size > 0 -%}
-
+{% comment %} {% endcomment %}
 <!-- Блок кликабельных тегов -->
 <div class="tag-container">
     {%- for tag in page.tags -%}
@@ -63,7 +60,6 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.discus and page.discus != "" and page.discus != nil and page.discus != false -%}
-
 <!-- Блок комментариев Giscus -->
 <div class="discus-inline">
     {%- include discus.liquid -%}

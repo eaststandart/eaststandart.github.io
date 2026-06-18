@@ -1,10 +1,9 @@
-{% comment %} 
+{%- comment -%} 
 ГЛОБАЛЬНЫЙ ШАБЛОН САЙТА: КАРКАС (\_layouts/default.html)
 Назначение: Базовый скелет для всего сайта (шапка, меню, подвал).
 ВНИМАНИЕ: Очищен от специфики статей (тегов, библиографии, видео-логики).
 Наследование: Является родительским для шаблонов page, faire, news и т.д.
-{% endcomment %}
-
+{%- endcomment -%}
 <!DOCTYPE html> 
 <html lang="ru">
 <head>
@@ -45,7 +44,7 @@
     </div>
 </div>
 
-{% include footer.liquid %}
+{%- include footer.liquid -%}
 
 </body>
 </html>

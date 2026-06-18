@@ -30,6 +30,7 @@
         <link rel="stylesheet" href="{{ style | relative_url }}">
       {%- endfor -%}
     {%- endif -%}
+    
 </head>
 <body>
 

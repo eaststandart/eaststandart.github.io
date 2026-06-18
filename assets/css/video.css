@@ -13,7 +13,7 @@
 
 .video-test-row video {
     /* Ограничиваем высоту (как у фото) */
-    height: 190px !important;
+    height: 195px !important;
     max-height: 250px !important;
     width: auto !important;
     

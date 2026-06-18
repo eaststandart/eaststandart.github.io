@@ -9,17 +9,24 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} 1. Находим в коде расширения видеофайлов и точечно переименовываем их приставку гитхаба в data-src {% endcomment %}
-{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
+{% comment %} 
+=============================================================================
+ИДЕАЛЬНАЯ СЕРВЕРНАЯ ЗАМЕНА С ТОЧЕЧНЫМ ВНЕДРЕНИЕМ LOADING="LAZY"
+============================================================================= 
+{% endcomment %}
 
-{% comment %} 2. Находим в коде расширения картинок и точечно переименовываем их приставку в loading="lazy" data-src {% endcomment %}
+{% comment %} 1. Помечаем видео и картинки по их расширениям {% endcomment %}
+{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
 {% assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' %}
 
-{% comment %} Выполняем точечную рокировку src -> data-src строго внутри помеченных тегов медиа {% endcomment %}
-{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' %}
-{% assign safe_page_content = safe_page_content | replace: 'data-src="/" data-image-file="Y"', 'loading="lazy" data-src="/" data-image-file="Y"' %}
+{% comment %} 2. Переводим все медиафайлы с приставкой GitHub в безопасный data-src {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' | replace: 'src="http://github/eaststandart.github.io/', 'data-src="/' %}
+
+{% comment %} 3. ТВОЕ РЕШЕНИЕ: Просто превращаем маркер в нативный loading="lazy" перед выводом! {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'data-image-file="Y"', 'loading="lazy"' %}
 
 {{ safe_page_content }}
+
 
 
 <!-- Универсальный блок библиографии -->

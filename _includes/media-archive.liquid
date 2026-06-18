@@ -1,11 +1,15 @@
-{% comment %} ==========================================================================
-   1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL
-   ========================================================================== {% endcomment %}
+{%- comment -%}
+==========================================================================
+   ГЕНЕРАЦИЯ И ФИЛЬТРАЦИЯ ОБЩЕЙ ЛЕНТЫ ПУБЛИКАЦИй
+========================================================================== {%- endcomment -%}
+
+<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL -->
+
 <div id="media-container" class="media-archive-list-wrapper">
   {% for post in site.posts %}
     {% if post.categories contains include.category %}
 
-      {% comment %} Пропускаем post, если задан флаг N {% endcomment %}
+      {%- comment %} Пропускаем post, если задан флаг N {% endcomment -%}
       {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
     
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
@@ -18,42 +22,45 @@
         
         <!-- Оболочка основного контента статьи -->
         <div class="media-content main-content">
-          {% if post.description and post.description != "" %}
+          {%- if post.description and post.description != "" -%}
             <p class="page-description">{{ post.description }}</p>
-          {% endif %}
+          {%- endif -%}
 
-          {% comment %} 
+          {%- comment -%} 
           ЧИСТЫЙ ОРИГИНАЛЬНЫЙ ВЫВОД: Текст Obsidian ![[github/...]] выводится напрямую.
           Браузер не видит тегов src, поэтому трафик чужих проектов равен НУЛЮ!
-          {% endcomment %}
+          {%- endcomment -%}
 
           {{ post.content }}
          
+          {%- if post.author and post.author != "" -%}
+          {% comment %} {% endcomment %}
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
-          {% if post.author and post.author != "" %}
           <div class="author-inline">
               <strong>Автор:</strong> 
               <div class="sources-content">{{ post.author }}</div>
           </div>
-          {% endif %}
+          {%- endif -%}
 
+          {%- if post.sources and post.sources != "" -%}
+          {% comment %} {% endcomment %}
           <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
-          {% if post.sources and post.sources != "" %}
           <div class="sources-inline">
               <strong>Источники:</strong>
               <div class="sources-content">{{ post.sources | markdownify }}</div>
           </div>
-          {% endif %}
+          {%- endif -%}
 
+          {%- if post.tags.size > 0 -%}
+          {% comment %} {% endcomment %}
           <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
-          {% if post.tags.size > 0 %}
           <div class="tag-container">
-              {% for tag in post.tags %}
-                  {% assign tag_clean = tag | replace: '#', '' | strip %}
+              {%- for tag in post.tags -%}
+                  {%- assign tag_clean = tag | replace: '#', '' | strip -%}
                   <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-              {% endfor %}
+              {%- endfor -%}
           </div>
-          {% endif %}
+          {%- endif -%}
         </div>
         
         <hr class="media-entry-hr">
@@ -63,9 +70,8 @@
   {% endfor %}
 </div>
 
-<!-- ==========================================================================
-     2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS)
-     ========================================================================= -->
+<!-- 2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS) -->
+
 <!-- Подключаем наш внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
 

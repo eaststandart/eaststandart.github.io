@@ -39,6 +39,7 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.author and page.author != "" -%}
+{% comment %} {% endcomment %}
 <!-- Блок вывода автора публикации -->
 <div class="author-inline">
     <strong>Автор:</strong> 
@@ -60,6 +61,7 @@ custom_css: "/assets/css/video.css"
 {%- endif -%}
 
 {%- if page.discus and page.discus != "" and page.discus != nil and page.discus != false -%}
+{% comment %} {% endcomment %}
 <!-- Блок комментариев Giscus -->
 <div class="discus-inline">
     {%- include discus.liquid -%}

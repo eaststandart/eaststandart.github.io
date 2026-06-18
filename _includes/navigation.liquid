@@ -25,7 +25,8 @@
         {%- if parts.size > 2 -%}
             {%- assign parent_url = parts[1] | prepend: '/' | append: '/' -%}
             {%- assign parent_page = site.pages | where: "url", parent_url | first -%}
-            <span class="nav-separator">|</span><a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
+            <span class="nav-separator">|</span>
+            <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
         {%- endif -%}
     {%- endif -%}
     <span class="nav-separator">|</span>

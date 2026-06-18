@@ -6,11 +6,11 @@
 <!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ИЗ ЦИКЛА JEKYLL -->
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {% for post in site.posts %}
-    {% if post.categories contains include.category %}
+  {%- for post in site.posts -%}
+    {%- if post.categories contains include.category -%}
 
       {%- comment %} Пропускаем post, если задан флаг N {% endcomment -%}
-      {% if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" %}{% continue %}{% endif %}
+      {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
     
       <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
         
@@ -66,8 +66,8 @@
         <hr class="media-entry-hr">
       </div>
       
-    {% endif %}
-  {% endfor %}
+    {%- endif -%}
+  {%- endfor -%}
 </div>
 
 <!-- 2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS) -->

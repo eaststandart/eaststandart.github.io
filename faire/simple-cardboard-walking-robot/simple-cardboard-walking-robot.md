@@ -11,18 +11,18 @@ permalink: /faire/simple-cardboard-walking-robot/
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 
-![](simple-cardboard-walking-robot-1.webp)
-![](simple-cardboard-walking-robot-2.webp)
-![](simple-cardboard-walking-robot-3.webp)
-![](simple-cardboard-walking-robot-4.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-3.webp)
+![](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-4.webp)
 
 > **Смотри также:** [Принцип работы гофрированного картона](https://www.antech.ru/wiki/stati/gofrokarton/).
 
 ### Область применения
 Принцип движения этого робота можно применить в настоящих космических роботах-помощниках, которые будут переносить инструменты и запчасти между базами на других планетах. Такие машины смогут автоматически доставлять грузы, переступая через небольшие препятствия на своем пути.
 
-![video](simple-cardboard-walking-robot-1.webm)
-![video](simple-cardboard-walking-robot-2.webm)
+![video](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-1.webm)
+![video](github/eaststandart.github.io/faire/simple-cardboard-walking-robot/simple-cardboard-walking-robot-2.webm)
 
 > **Смотри также:** [Шагающие машины ВНИИ Трансмаш, 1980 год](https://youtu.be/hQSO-6LvINQ).
 

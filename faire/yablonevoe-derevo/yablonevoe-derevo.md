@@ -12,13 +12,13 @@ permalink: /faire/yablonevoe-derevo/
 ### Описание проекта
 Создание конструкции яблоневого дерева из фанеры на подставке из цельной древесины и электрической схемы с параллельно-последовательным включением [светодиодов](https://t.me/RadiotekhnikaClub/618/711) и токоограничивающими [резисторами](https://t.me/RadiotekhnikaClub/618/736). 
 
-![](yablonevoe-derevo-1.webp)
-![](yablonevoe-derevo-2.webp)
+![](github/eaststandart.github.io/faire/yablonevoe-derevo/yablonevoe-derevo-1.webp)
+![](github/eaststandart.github.io/faire/yablonevoe-derevo/yablonevoe-derevo-2.webp)
 
 ### Область применения
 Украшение интерьера, создание оригинального ночника и демонстрация работы параллельно-последовательных электрических цепей. Модель служит макетом космического сада. В темноте светящиеся яблоки напоминают сигнальные огни на приборной панели корабля, который везет земные растения к новой планете.
 
-![video](yablonevoe-derevo-1.webm)
+![video](github/eaststandart.github.io/faire/yablonevoe-derevo/yablonevoe-derevo-1.webm)
 
 ### Развитие проекта
 1\. Добавление в схему детектора освещенности для автоматического включения устройства в ночное время.\

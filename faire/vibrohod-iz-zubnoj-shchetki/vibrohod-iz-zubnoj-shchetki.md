@@ -11,16 +11,16 @@ permalink: /faire/vibrohod-iz-zubnoj-shchetki/
 ### Описание проекта
 Создание конструкции простого виброхода с использованием зубной щетки и миниатюрного вибромотора.
 
-![](vibrohod-iz-zubnoj-shchetki-1.webp)
-![](vibrohod-iz-zubnoj-shchetki-2.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-1.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-2.webp)
 
 > **Примечание:** Виброход — это устройство для движения по твёрдым поверхностям за счет вибрационного движителя. Когда мотор начинает вибрировать, устройство словно подпрыгивает и медленно ползёт по полу или по столу. Если такой мотор поставить на зубную щётку, то щетинки будут отталкиваться от поверхности, и щётка побежит, как будто у неё появились маленькие ножки. 
 
 ### Область применения
 Демонстрация принципа работы вибрационного движителя на твердых поверхностях. Моделирование прототипов будущих космических микророботов, способных перемещаться по обшивке орбитальных станций, проникать в труднодоступные узлы кораблей для диагностики, где не справляются обычные колёса.
 
-![video](vibrohod-iz-zubnoj-shchetki-1.webm)
-![video](vibrohod-iz-zubnoj-shchetki-2.webm)
+![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-1.webm)
+![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-2.webm)
 
 > **Примечание:** Принцип действия виброхода основан на возникновении продольных сил при вибрации гибких щетинок, расположенных наклонно к опорной поверхности (смотри также: [виброходы](https://r9al.ru/2024/vibrohod/index.htm) и [Pop-Pop Boats Are Weirder Than You Think](https://youtu.be/3AXupc7oE-g?t=467)).
 

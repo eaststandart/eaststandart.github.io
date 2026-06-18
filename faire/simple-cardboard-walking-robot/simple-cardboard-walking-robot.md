@@ -1,6 +1,7 @@
 ---
 layout: page
 description: Развитие навыков конструирования ременного редуктора, создание механизма движения и настройка шагающей конструкции.
+author: ["RadiotekhnikaClub"]
 title: Робот двуногий шагающий из картона
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"

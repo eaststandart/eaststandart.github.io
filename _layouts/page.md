@@ -12,56 +12,55 @@ custom_css: "/assets/css/video.css"
 <!-- Замена по в медиа src на data-src -->
 {%- include media-data-src.liquid -%}
 
+{%- if page.bibliography -%}
 <!-- Универсальный блок библиографии -->
-{% if page.bibliography %}
 <div class="bibliography-footer">
-    <strong>Библиографическое описание:</strong>
-    
-    {% if page.bibliography.first %}
+    <strong>Библиографическое описание:</strong>  
+    {%- if page.bibliography.first -%}
         <ol style="margin: 0; padding-left: 25px;">
-            {% for item in page.bibliography %}
+            {%- for item in page.bibliography -%}
             <li style="margin-bottom: 8px;">{{ item | markdownify | remove: '<p>' | remove: '</p>' }}</li>
-            {% endfor %}
+            {%- endfor -%}
         </ol>
-    {% else %}
+    {%- else -%}
         {{ page.bibliography | markdownify }}
-    {% endif %}
+    {%- endif -%}
 </div>
-{% endif %}
+{%- endif -%}
 
+{%- if page.sources -%}
 <!-- Универсальный блок онлайн-источников -->
-{% if page.sources %}
 <div class="sources-inline">
     <strong>Источники:</strong> 
     <div class="sources-content">
         {{ page.sources  | markdownify }}
     </div>
 </div>
-{% endif %}
+{%- endif -%}
 
-<!-- БЛОК ВЫВОДА АВТОРА ПУБЛИКАЦИИ -->
-{% if page.author and page.author != "" %}
+{%- if page.author and page.author != "" -%}
+<!-- Блок вывода автора публикации -->
 <div class="author-inline">
     <strong>Автор:</strong> 
     <div class="sources-content">
 	    {{ page.author}}
     </div>
 </div>
-{% endif %}
+{%- endif -%}
 
+{%- if page.tags and page.tags.size > 0 -%}
 <!-- Блок кликабельных тегов -->
-{% if page.tags and page.tags.size > 0 %}
 <div class="tag-container">
-    {% for tag in page.tags %}
-    {% assign tag_clean = tag | replace: '#', '' | strip %}
+    {%- for tag in page.tags -%}
+    {%- assign tag_clean = tag | replace: '#', '' | strip -%}
     <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-    {% endfor %}
+    {%- endfor -%}
 </div>
-{% endif %}
+{%- endif -%}
 
+{%- if page.discus and page.discus != "" and page.discus != nil and page.discus != false -%}
 <!-- Блок комментариев Giscus -->
-{% if page.discus and page.discus != "" and page.discus != nil and page.discus != false %}
 <div class="discus-inline">
-    {% include discus.liquid %}
+    {%- include discus.liquid -%}
 </div>
-{% endif %}
+{%- endif -%}

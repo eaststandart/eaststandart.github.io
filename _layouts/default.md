@@ -44,7 +44,6 @@
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
         {{ content }}
     </div>
-
 </div>
 
 {% include footer.liquid %}

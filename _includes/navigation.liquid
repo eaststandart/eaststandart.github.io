@@ -4,35 +4,33 @@
 Назначение: Вывод хлебных крошек, умных ссылок «Назад» и кнопки тегов на статьях.
 ========================================================================== 
 {% endcomment %}
-
 <div class="navigation-header">
     <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
 
     {% comment %} Место для вставки "Назад" на страницах архивов {% endcomment %}
     <span id="dynamic-nav-back"></span>
 
-    {% if page.categories.size > 0 %}
-        {% assign project_slug = "" %}
-        {% for cat in page.categories %}
-            {% if cat != "journal" and cat != "media" and cat != "diary"%}
-                {% assign project_slug = cat %}
-            {% endif %}
-        {% endfor %}
-        {% assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first %}
+    {%- if page.categories.size > 0 -%}
+        {%- assign project_slug = "" -%}
+        {%- for cat in page.categories -%}
+            {%- if cat != "journal" and cat != "media" and cat != "diary" -%}
+                {%- assign project_slug = cat -%}
+            {%- endif -%}
+        {%- endfor -%}
+        {%- assign project_page = site.pages | where_exp: "item", "item.url contains project_slug" | first -%}
         <span class="nav-separator">|</span>
         <a href="{{ project_page.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ project_page.navtitle | default: project_page.title | default: "Назад" }}</a>
-    {% else %}
-        {% assign parts = page.url | split: '/' %}
-        {% if parts.size > 2 %}
-            {% assign parent_url = parts[1] | prepend: '/' | append: '/' %}
-            {% assign parent_page = site.pages | where: "url", parent_url | first %}
+    {%- else -%}
+        {%- assign parts = page.url | split: '/' -%}
+        {%- if parts.size > 2 -%}
+            {%- assign parent_url = parts[1] | prepend: '/' | append: '/' -%}
+            {%- assign parent_page = site.pages | where: "url", parent_url | first -%}
             <span class="nav-separator">|</span>
             <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">
                 {{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}
             </a>
-        {% endif %}
-    {% endif %}
-
+        {%- endif -%}
+    {%- endif -%}
     <span class="nav-separator">|</span>
     <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>

@@ -1,4 +1,4 @@
-{% capture minified_html %}
+
 {% comment %} 
 ГЛОБАЛЬНЫЙ ШАБЛОН САЙТА: КАРКАС (\_layouts/default.html)
 Назначение: Базовый скелет для всего сайта (шапка, меню, подвал).
@@ -52,4 +52,4 @@
 
 </body>
 </html>
-{% endcapture %}{{ minified_html | strip_newlines | replace: '    ', ' ' | replace: '   ', ' ' | replace: '  ', ' ' }}
+

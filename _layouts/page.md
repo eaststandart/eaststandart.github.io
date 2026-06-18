@@ -9,20 +9,19 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{%- comment %} 
-=============================================================================
-КОМПАКТНАЯ СЕРВЕРНАЯ ОПТИМИЗАЦИЯ С ПОЛНОЙ ЗАЧИСТКОЙ МАРКЕРОВ И ПРОБЕЛОВ
-============================================================================= 
-{% endcomment -%}
-{%- assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' -%}
-{%- assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' -%}
-{%- assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' | replace: 'src="http://github/eaststandart.github.io/', 'data-src="/' -%}
-{%- comment %} Точечно превращаем маркер картинок в нативный loading="lazy" {% endcomment -%}
-{%- assign safe_page_content = safe_page_content | replace: 'data-image-file="Y"', 'loading="lazy"' -%}
-{%- comment %} ПО ТВОЕМУ ТРЕБОВАНИЮ: Намертво стираем маркер видео, делая код чистым {% endcomment -%}
-{%- assign safe_page_content = safe_page_content | replace: ' data-video-file="Y"', '' -%}
-{{- safe_page_content -}}
+{% comment %} 
+ТОЧЕЧНАЯ СЕРВЕРНАЯ ЗАМЕНА ПО РАСШИРЕНИЯМ МЕДИАФАЙЛОВ
+{% endcomment %}
 
+{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
+{% assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' %}
+{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' | replace: 'src="http://github/eaststandart.github.io/', 'data-src="/' %}
+
+{% comment %} Окончательная зачистка технических маркеров перед выводом контента {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'data-image-file="Y"', 'loading="lazy"' %}
+{% assign safe_page_content = safe_page_content | replace: ' data-video-file="Y"', '' %}
+
+{{ safe_page_content }}
 
 <!-- Универсальный блок библиографии -->
 {% if page.bibliography %}

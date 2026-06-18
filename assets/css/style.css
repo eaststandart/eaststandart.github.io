@@ -367,7 +367,7 @@ p:has(img) + blockquote,
 
 /* Параметры картинок в ряду (исключая специальные контентные изображения) */
 .main-content p img:not(.content-img) {
-    height: 250px;       /* Единая фиксированная высота для выстраивания ряда */
+    height: 210px;       /* Единая фиксированная высота для выстраивания ряда */
     width: auto;         
     max-width: calc(50% - 10px) !important; /* max-width: 100%; */    
     object-fit: contain; 

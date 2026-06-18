@@ -59,7 +59,7 @@
          ========================================================================== {%- endcomment -%}
          
       {%- if include.type == "home" -%}
-      
+      {% comment %}{% endcomment %}
         <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
         <li class="news-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">
           <div>

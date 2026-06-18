@@ -1,10 +1,10 @@
 ---
 layout: default
 ---
-{% comment %} 
+{%- comment -%} 
 ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ (\_layouts/news.html)
 Назначение: Автоматически строит каркас ленты и выводит кнопки пагинации.
-{% endcomment %}
+{%- endcomment -%}
 
 {{ content }}
 

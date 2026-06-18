@@ -1,12 +1,11 @@
-{% comment %} 
+{%- comment -%} 
 \==========================================================================
 СПЕЦИАЛЬНЫЙ АВТОНОМНЫЙ ШАБЛОН: ГЛАВНАЯ СТРАНИЦА (\_layouts/home.html)
 Назначение: Отображение уникального интерфейса главной страницы с широкой сеткой карточек.
 Изоляция: Работает полностью независимо от default.html, сохраняя собственную геометрию в 1000px.
 Стили: Внутренний тег <\style> содержит правила, которые нужны ТОЛЬКО для главной страницы.
 \========================================================================== 
-{% endcomment %}
-
+{%- endcomment -%}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -21,11 +20,11 @@
     <link rel="stylesheet" href="/assets/css/pagination.css">
 
 	<!-- Автоматическое подключение стилей шапки в зависимости от выбранной темы -->
-	{% if page.header_theme == "panel" %}
+	{%- if page.header_theme == "panel" -%}
 	    <link rel="stylesheet" href="{{ '/assets/css/header-panel.css' | relative_url }}">
-	{% else %}
+	{%- else -%}
 	    <link rel="stylesheet" href="{{ '/assets/css/header-classic.css' | relative_url }}">
-	{% endif %}
+	{%- endif -%}
 
     <style>
     

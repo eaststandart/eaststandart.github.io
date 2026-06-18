@@ -19,8 +19,7 @@
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 
     <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->
-    
-    {%- if page.custom_css -%}
+    {% if page.custom_css %}
       {%- for style in page.custom_css -%}
         <link rel="stylesheet" href="{{ style | relative_url }}">
       {%- endfor -%}
@@ -29,8 +28,7 @@
       {%- for style in layout.custom_css -%}
         <link rel="stylesheet" href="{{ style | relative_url }}">
       {%- endfor -%}
-    {%- endif -%}
-    
+    {% endif %}
 </head>
 <body>
 

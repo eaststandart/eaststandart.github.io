@@ -9,33 +9,17 @@ custom_css: "/assets/css/video.css"
 Компоненты: Возвращает на место блоки тегов, библиографии, источников и логику видео-плееров.
 {% endcomment %}
 
-{% comment %} 
-=============================================================================
-ТОТАЛЬНАЯ СЕРВЕРНАЯ МАСКИРОВКА МЕДИА СТРОГО ДЛЯ ТЕКСТА СТАТЕЙ (ЧЕРЕЗ SPLIT)
-Пагинация, авторы и источники выводятся отдельно и физически не могут сломаться!
-============================================================================= 
-{% endcomment %}
+{% comment %} 1. Находим в коде расширения видеофайлов и точечно переименовываем их приставку гитхаба в data-src {% endcomment %}
+{% assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' %}
 
-{% comment %} 1. Берем чистый текст статьи из Markdown и разрезаем его по ссылке гитхаба {% endcomment %}
-{% assign content_chunks = page.content | split: 'src="github/eaststandart.github.io/' %}
-{% assign final_html = "" %}
+{% comment %} 2. Находим в коде расширения картинок и точечно переименовываем их приставку в loading="lazy" data-src {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' %}
 
-{% for chunk in content_chunks %}
-  {% if forloop.first %}
-    {% assign final_html = chunk %}
-  {% else %}
-    {% if chunk contains '.webm' or chunk contains '.mp4' %}
-      {% comment %} Это ВИДЕО: на сервере превращаем в data-src {% endcomment %}
-      {% assign final_html = final_html | append: 'data-src="/' | append: chunk %}
-    {% else %}
-      {% comment %} Это КАРТИНКА: на сервере превращаем в data-src и добавляем loading="lazy" {% endcomment %}
-      {% assign final_html = final_html | append: 'loading="lazy" data-src="/' | append: chunk %}
-    {% endif %}
-  {% endif %}
-{% endfor %}
+{% comment %} Выполняем точечную рокировку src -> data-src строго внутри помеченных тегов медиа {% endcomment %}
+{% assign safe_page_content = safe_page_content | replace: 'src="github/eaststandart.github.io/', 'data-src="/' %}
+{% assign safe_page_content = safe_page_content | replace: 'data-src="/" data-image-file="Y"', 'loading="lazy" data-src="/" data-image-file="Y"' %}
 
-{% comment %} Выводим обработанный текст статьи, превратив Markdown в HTML {% endcomment %}
-{{ final_html | markdownify }}
+{{ safe_page_content }}
 
 
 <!-- Универсальный блок библиографии -->

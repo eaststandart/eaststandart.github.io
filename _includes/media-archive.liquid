@@ -27,22 +27,7 @@
           Браузер не видит тегов src, поэтому трафик чужих проектов равен НУЛЮ!
           {% endcomment %}
 
-                    {% comment %} Тотальная маскировка медиа на сервере для ленты архива {% endcomment %}
-          {% assign archive_chunks = post.content | split: 'src="github/eaststandart.github.io/' %}
-          {% assign safe_archive_html = "" %}
-          {% for chunk in archive_chunks %}
-            {% if forloop.first %}
-              {% assign safe_archive_html = chunk %}
-            {% else %}
-              {% if chunk contains '.webm' or chunk contains '.mp4' %}
-                {% assign safe_archive_html = safe_archive_html | append: 'data-src="/' | append: chunk %}
-              {% else %}
-                {% assign safe_archive_html = safe_archive_html | append: 'loading="lazy" data-src="/' | append: chunk %}
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-          {{ safe_archive_html }}
-
+          {{ post.content }}
          
           <!-- А. БЛОК ВЫВОДА АВТОРА -->
           {% if post.author and post.author != "" %}

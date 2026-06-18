@@ -12,12 +12,12 @@
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
-    <!-- ... БАЗОВЫЕ СТИЛИ ДЛЯ ВСЕГО САЙТА ... -->
+    <!-- Базовые стили для всего сайта -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
 
-    <!-- УНИВЕРСАЛЬНЫЙ БЛОК: СТИЛИ СТРАНИЦЫ ИЛИ ЕЁ РОДИТЕЛЬСКИХ ШАБЛОНОВ -->
+    <!-- Стили страницы или ее родительских шаблонов -->
     {% if page.custom_css %}
       {%- for style in page.custom_css -%}
         <link rel="stylesheet" href="{{ style | relative_url }}">

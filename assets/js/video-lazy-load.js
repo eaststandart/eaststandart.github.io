@@ -3,60 +3,76 @@
    ========================================================================== */
 
 function runVideoLazyLoad() {
-    // 1. СОЗДАНИЕ НАБЛЮДАТЕЛЯ СТРОГО ДЛЯ ВИДЕОРОЛИКОВ
+    // Выбираем все текстовые абзацы внутри контента статьи
+    const paragraphs = document.querySelectorAll('.main-content p');
+
+    // ==========================================================================
+    // 1. СОЗДАНИЕ НАБЛЮДАТЕЛЯ (INTERSECTION OBSERVER) ДЛЯ ЛЕНИВОЙ ЗАГРУЗКИ ВИДЕО
+    // ==========================================================================
     const videoObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            // Когда видео-заглушка приближается к экрану на 200 пикселей
+            // Когда видео-плеер пересекает невидимую границу и приближается к экрану
             if (entry.isIntersecting) {
-                const img = entry.target;
-                const srcVal = img.getAttribute('data-src') || "";
+                const video = entry.target;
                 
-                // Защита: если элемент находится внутри скрытого поста архива, игнорируем его
-                if (img.closest('.media-entry') && img.closest('.media-entry').style.display === 'none') {
+                // ИСПРАВЛЕНО РАНЕЕ: Проверяем, не скрыт ли родительский пост через display: none
+                if (video.closest('.media-entry') && video.closest('.media-entry').style.display === 'none') {
                     return; 
                 }
 
-                if (srcVal && (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm'))) {
-                    // Создаем оригинальный контейнер-строку для твоей флекс-сетки
-                    const container = document.createElement('div');
-                    container.className = 'video-test-row';
-
-                    // Собираем настоящий нативный тег плеера <video>
-                    const video = document.createElement('video');
-                    video.src = srcVal;
-                    video.controls = true;
-                    video.muted = true;
-                    video.setAttribute('playsinline', ''); // Фикс для Safari на iOS
-                    video.preload = "metadata"; // Загружаем превью и длину ролика строго на экране
-
-                    container.appendChild(video);
-                    
-                    // Находим родительский абзац p и аккуратно выносим плеер наружу
-                    const parentP = img.closest('p');
-                    if (parentP) {
-                        parentP.insertAdjacentElement('beforebegin', container);
-                        img.remove(); // Стираем старую картинку-заглушку
-                        if (parentP.textContent.trim() === "" && parentP.querySelectorAll('*').length === 0) {
-                            parentP.remove(); // Зачищаем пустой абзац
-                        }
-                    }
-                }
+                // Разрешаем видео-плееру подгрузить метаданные (размер, длительность, первый кадр)
+                video.preload = "metadata"; 
                 
-                // Снимаем слежку с этого элемента
-                observer.unobserve(img);
+                // Снимаем слежку с этого плеера, так как запуск загрузки уже выполнен
+                observer.unobserve(video);
             }
         });
     }, { 
-        rootMargin: "200px", // Зазор из статьи на Хабре: включаем за 200px до появления
-        threshold: 0.01
+        // Настройка зазора: триггер загрузки сработает за 200px до появления видео в поле зрения
+        rootMargin: "200px" 
     });
 
-    // 2. НАХОДИМ ТОЛЬКО ВИДЕО-ЗАГЛУШКИ И СТАВИМ ИХ НА УЧЕТ
-    // Ищем все img с data-src, которые ведут на видеофайлы
-    document.querySelectorAll('.main-content img[data-src]').forEach(img => {
-        const srcVal = img.getAttribute('data-src') || "";
-        if (srcVal.endsWith('.mp4') || srcVal.endsWith('.webm')) {
-            videoObserver.observe(img);
+    // ==========================================================================
+    // 2. АНАЛИЗ АБЗАЦЕВ И КОНВЕРТАЦИЯ ФЕЙКОВЫХ ИЗОБРАЖЕНИЙ В ТЕГИ VIDEO
+    // ==========================================================================
+    paragraphs.forEach(p => {
+        // ИЗМЕНЕНО: Ищем внутри абзаца картинки по защищенному атрибуту data-src
+        const fakeVideos = p.querySelectorAll('img[data-src$=".mp4"], img[data-src$=".webm"]');
+        
+        // Если фейковые видео-заглушки обнаружены, запускаем твою оригинальную трансформацию
+        if (fakeVideos.length > 0) {
+            // Создаем новый блочный контейнер-строку для видеоряда
+            const container = document.createElement('div');
+            container.className = 'video-test-row';
+
+            fakeVideos.forEach(img => {
+                // Собираем настоящий нативный тег плеера <video>
+                const video = document.createElement('video');
+                // ИЗМЕНЕНО: Забираем настоящий путь из атрибута data-src
+                video.src = img.getAttribute('data-src');
+                video.controls = true;
+                video.muted = true;
+                video.setAttribute('playsinline', ''); // Фикс для корректного воспроизведения внутри Safari на iOS
+                
+                // КРИТИЧЕСКИ ВАЖНО: Изначально полностью блокируем загрузку данных для экономии трафика
+                video.preload = "none"; 
+
+                // Передаем созданный плеер под контроль нашему ленивому наблюдателю
+                videoObserver.observe(video);
+
+                // Добавляем плеер в строку-контейнер, а старую картинку-заглушку удаляем
+                container.appendChild(video);
+                img.remove();
+            });
+
+            // Выносим готовый контейнер с видео из абзаца наружу, вставив его ПЕРЕД текущим абзацем
+            p.insertAdjacentElement('beforebegin', container);
+
+            // Если после удаления картинок абзац остался пустым — полностью стираем его из HTML-дерева
+            if (p.textContent.trim() === "" && p.querySelectorAll('*').length === 0) {
+                p.remove();
+            }
         }
     });
 }
+

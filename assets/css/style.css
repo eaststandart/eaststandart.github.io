@@ -369,7 +369,7 @@ p:has(img) + blockquote,
 .main-content p img:not(.content-img) {
     height: 209px;       /* Единая фиксированная высота для выстраивания ряда */
     width: auto;         
-    max-width: calc(50% - 10px) !important; /* max-width: 100%; */    
+    max-width: 100%;
     object-fit: contain; 
     border-radius: 8px;
     margin: 0 !important;

@@ -6,10 +6,8 @@
 {% endcomment %}
 <div class="navigation-header">
     <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
-
     {% comment %} Место для вставки "Назад" на страницах архивов {% endcomment %}
     <span id="dynamic-nav-back"></span>
-
     {%- if page.categories.size > 0 -%}
         {%- assign project_slug = "" -%}
         {%- for cat in page.categories -%}
@@ -26,7 +24,9 @@
             {%- assign parent_url = parts[1] | prepend: '/' | append: '/' -%}
             {%- assign parent_page = site.pages | where: "url", parent_url | first -%}
             <span class="nav-separator">|</span>
-            <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">{{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}</a>
+            <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">
+                {{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}
+            </a>
         {%- endif -%}
     {%- endif -%}
     <span class="nav-separator">|</span>

@@ -27,9 +27,8 @@
             <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">
                 {{ parent_page.navtitle | default: parent_page.title | default: parts[1] }}
             </a>
-        {%- endif -%}
+        {% endif %}
     {%- endif -%}
-
     <span class="nav-separator">|</span>
     <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>

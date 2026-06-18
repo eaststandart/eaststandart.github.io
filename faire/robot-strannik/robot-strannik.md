@@ -1,6 +1,7 @@
 ---
 layout: page
 description: Развитие навыков конструирования двухшарнирных механизмов, работы с готовыми мотор-редукторами и точной балансировки центра тяжести для удержания равновесия при ходьбе.
+author: ["RadiotekhnikaClub"]
 title: Робот странник
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, роботстранник]
 sources: "[How To Make An Adorable Walking Robot with Big Shoes](https://youtu.be/0SofESg-mLc)"

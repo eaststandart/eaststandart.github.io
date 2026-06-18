@@ -4,7 +4,7 @@ title: "Робот странник: модель №1"
 description:  "Модель робота вариант №1"
 author: ["RadiotekhnikaClub"]
 date: 2025-11-23
-categories: [journal, robot-strannik]
+categories: [media, robot-strannik]
 ---
 
 📷 Общий вид конструкции

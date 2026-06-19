@@ -2,8 +2,9 @@
    ИЗОЛИРОВАННЫЙ БЛОК ЗАГЛУШЕК И АНТИ-ПРЫЖКА КАРТИНОК (img.css)
    ========================================================================== */
 
-/* 1. ПК-ВЕРСИЯ: По умолчанию для всех горизонтальных картинок (16:9) */
-.main-content p img:not(.content-img) {
+/* 1. ПК-ВЕРСИЯ: Только для СТРОГО ПУСТЫХ картинок (горизонтальные 16:9) */
+.main-content p img[alt=""]:not(.content-img),
+.main-content p img:not([alt]):not(.content-img) {
     background-color: #f0f0f0 !important;
     aspect-ratio: 16 / 9 !important;
     height: 209px !important;       
@@ -12,27 +13,31 @@
     object-fit: contain !important;
 }
 
-/* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК 9:16 (405х720) НА ПК */
-.main-content p img[alt*="v"]:not(.content-img),
-.main-content p img[src*="-v"]:not(.content-img),
-.main-content p img[data-src*="-v"]:not(.content-img) {
+/* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК (СТРОГО МАРКЕР "v") НА ПК */
+.main-content p img[alt="v"]:not(.content-img) {
+    background-color: #f0f0f0 !important;
     aspect-ratio: 9 / 16 !important;
+    height: 405px !important; /* Настроил высоту под пропорции, чтобы на ПК не сжималась */
+    width: auto !important;
+    border-radius: 8px !important;
+    object-fit: contain !important;
 }
 
 /* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
-        /* ТВОЙ ВАРИАНТ: Вообще все картинки сайта жестко растягиваются на 100% */
-        .main-content p img:not(.content-img) {
+        /* Растягиваем на 100% только пустые горизонтальные картинки */
+        .main-content p img[alt=""]:not(.content-img),
+        .main-content p img:not([alt]):not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
         
-        /* Фиксируем правильные пропорции 9:16 для вертикальных заглушек на весь экран */
-        .main-content p img[alt*="v"]:not(.content-img),
-        .main-content p img[src*="-v"]:not(.content-img),
-        .main-content p img[data-src*="-v"]:not(.content-img) {
+        /* Растягиваем на 100% вертикальные картинки с правильными пропорциями */
+        .main-content p img[alt="v"]:not(.content-img) {
+            height: auto !important;
+            width: 100% !important;
             aspect-ratio: 9 / 16 !important;
         }
     }
@@ -40,14 +45,18 @@
 
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
-    .main-content p img:not(.content-img) {
+    /* Для пустых горизонтальных */
+    .main-content p img[alt=""]:not(.content-img),
+    .main-content p img:not([alt]):not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
-    .main-content p img[alt*="v"]:not(.content-img),
-    .main-content p img[src*="-v"]:not(.content-img),
-    .main-content p img[data-src*="-v"]:not(.content-img) {
+    
+    /* Для вертикальных с маркером "v" */
+    .main-content p img[alt="v"]:not(.content-img) {
+        height: 163px !important; /* Ограничиваем по высоте экрана */
+        width: auto !important;
         aspect-ratio: 9 / 16 !important;
     }
 }

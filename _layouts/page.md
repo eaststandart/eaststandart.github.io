@@ -1,6 +1,6 @@
 ---
 layout: default
-custom_css: "/assets/css/video.css"
+custom_css: ["/assets/css/video.css", "/assets/css/img.css"]
 ---
 {%- comment -%} 
 СПЕЦИАЛЬНЫЙ ШАБЛОН: СТАТЬИ И КНИГИ (\_layouts/page.html)

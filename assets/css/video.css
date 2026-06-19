@@ -1,7 +1,6 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-.main-content img[data-src],
-.video-test-row {
+.main-content img[data-src] {
     aspect-ratio: 16 / 9; /* Жестко держим формат 1280х720 */
     background: #f0f0f0;  /* Красивая легкая серая заглушка, пока файл качается */
 }

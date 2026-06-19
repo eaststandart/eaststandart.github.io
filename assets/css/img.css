@@ -2,7 +2,7 @@
    ИЗОЛИРОВАННЫЙ БЛОК ЗАГЛУШЕК И АНТИ-ПРЫЖКА КАРТИНОК (img.css)
    ========================================================================== */
 
-/* 1. ПК-ВЕРСИЯ: Только для СТРОГО ПУСТЫХ картинок (горизонтальные 16:9) */
+/* 1. ПК-ВЕРСИЯ: По умолчанию для всех пустых (горизонтальных) картинок */
 .main-content p img[alt=""]:not(.content-img),
 .main-content p img:not([alt]):not(.content-img) {
     background-color: #f0f0f0 !important;
@@ -13,14 +13,10 @@
     object-fit: contain !important;
 }
 
-/* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК (СТРОГО МАРКЕР "v") НА ПК */
+/* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК 9:16 НА ПК (ВОЗВРАЩАЕМ ТВОЙ ВАРИАНТ) */
+/* Наследует высоту 209px из первого блока, но меняет пропорции на узкие */
 .main-content p img[alt="v"]:not(.content-img) {
-    background-color: #f0f0f0 !important;
     aspect-ratio: 9 / 16 !important;
-    height: 405px !important; /* Настроил высоту под пропорции, чтобы на ПК не сжималась */
-    width: auto !important;
-    border-radius: 8px !important;
-    object-fit: contain !important;
 }
 
 /* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */

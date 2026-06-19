@@ -2,11 +2,13 @@
    ИЗОЛИРОВАННЫЙ БЛОК ЗАГЛУШЕК И АНТИ-ПРЫЖКА КАРТИНОК (img.css)
    ========================================================================== */
 
-/* 1. ПК-ВЕРСИЯ: Серый фон ТОЛЬКО для пустых и вертикальных заглушек */
+/* 1. ПК-ВЕРСИЯ: ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждала style.css) */
 .main-content p img[alt=""]:not(.content-img),
 .main-content p img:not([alt]):not(.content-img),
 .main-content p img[alt="v"]:not(.content-img) {
     background-color: #f0f0f0 !important;
+    height: 209px !important;       /* Защита от прыжка: блокируем высоту немедленно */
+    width: auto !important;         /* Браузер сам высчитает ширину на основе aspect-ratio */
 }
 
 /* 1.1 ПК-ВЕРСИЯ: Пропорции 16:9 для горизонтальных картинок по умолчанию */
@@ -16,7 +18,7 @@
 }
 
 /* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК (МАРКЕР "v") НА ПК */
-/* Высота 209px прилетает из твоего style.css, тут мы только сужаем пропорции */
+/* При высоте 209px и пропорциях 9:16 картинка мгновенно станет шириной ~117px */
 .main-content p img[alt="v"]:not(.content-img) {
     aspect-ratio: 9 / 16 !important;
 }
@@ -24,14 +26,17 @@
 /* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
-        /* Высота auto и ширина 100% уже заданы в твоем style.css, 
-           здесь мы просто страхуем пропорции заглушек, чтобы они не прыгали при загрузке */
+        /* На смартфонах сбрасываем ПК-высоту 209px в auto, так как в style.css заложено width: 100% */
         .main-content p img[alt=""]:not(.content-img),
         .main-content p img:not([alt]):not(.content-img) {
+            height: auto !important;    
+            width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
         
         .main-content p img[alt="v"]:not(.content-img) {
+            height: auto !important;
+            width: 100% !important;
             aspect-ratio: 9 / 16 !important;
         }
     }
@@ -39,14 +44,17 @@
 
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Размеры 163px и width: auto уже заданы в твоем style.css, 
-       докидываем только правильные пропорции сторон */
+    /* Перебиваем ПК-высоту на мобильную ландшафтную (163px из твоего style.css) */
     .main-content p img[alt=""]:not(.content-img),
     .main-content p img:not([alt]):not(.content-img) {
+        height: 163px !important;
+        width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
     
     .main-content p img[alt="v"]:not(.content-img) {
+        height: 163px !important;
+        width: auto !important;
         aspect-ratio: 9 / 16 !important;
     }
 }

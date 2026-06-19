@@ -10,9 +10,9 @@ categories: [media, robot-strannik]
 📷 Общий вид конструкции
 
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-05.webp)
-![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-06.webp)
+![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-06.webp)
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-07.webp)
-![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-08.webp)
+![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-08.webp)
 
 🎬 Демонстрация процесса движения
 

@@ -2,39 +2,55 @@
    ИЗОЛИРОВАННЫЙ БЛОК ЗАГЛУШЕК И АНТИ-ПРЫЖКА КАРТИНОК (img.css)
    ========================================================================== */
 
-/* 1. ПК-ВЕРСИЯ: Идеально подстраивается и под 16:9, и под вертикальные 9:16 */
+/* 1. ПК-ВЕРСИЯ: По умолчанию для всех горизонтальных картинок */
 .main-content p img:not(.content-img) {
-    /* Серый фон-заглушка строго под размер будущей картинки */
     background-color: #f0f0f0 !important;
     
-    /* ИСПРАВЛЕНО: Убрали aspect-ratio! Теперь при фиксированной высоте 209px */
-    /* браузер сам сделает заглушку узкой для 9:16 и широкой для 16:9 */
+    /* Браузер жестко держит 16:9, пока идет загрузка горизонтальных фото */
+    aspect-ratio: 16 / 9 !important;
+    
     height: 209px !important;       
     width: auto !important;         
     
-    /* Твоя оригинальная эстетика */
     border-radius: 8px !important;
     object-fit: contain !important;
 }
 
-/* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
+/* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК 9:16 (405х720) НА ПК */
+/* Мы находим их по имени файла или по специальному атрибуту alt="vertical" в твоем Obsidian */
+/* Но самый надежный способ — если ты пометишь вертикальную картинку в alt словом "v" или "9:16" */
+.main-content p img[alt*="v"]:not(.content-img),
+.main-content p img[src*="-v"]:not(.content-img),
+.main-content p img[data-src*="-v"]:not(.content-img) {
+    /* Перебиваем пропорции на вертикальные 9:16, чтобы убрать серые поля по бокам! */
+    aspect-ratio: 9 / 16 !important;
+}
+
+/* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
         .main-content p img:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
-            /* На смартфонах в столбце удерживаем 16:9 для горизонтальных */
             aspect-ratio: 16 / 9 !important;
+        }
+        /* Вертикальные фото на смартфонах в столбце */
+        .main-content p img[alt*="v"]:not(.content-img) {
+            aspect-ratio: 9 / 16 !important;
+            width: 70% !important; /* Чтобы вертикальное фото не было слишком гигантским на весь экран */
+            margin: 0 auto !important;
         }
     }
 }
 
-/* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
+/* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img) {
         height: 163px !important;
         width: auto !important;
-        /* В альбомном режиме на телефонах держим пропорции */
         aspect-ratio: 16 / 9 !important;
+    }
+    .main-content p img[alt*="v"]:not(.content-img) {
+        aspect-ratio: 9 / 16 !important;
     }
 }

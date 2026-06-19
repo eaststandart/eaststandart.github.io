@@ -13,9 +13,9 @@ permalink: /faire/robot-strannik/
 Создание конструкции простого двуногого шагающего робота, приводимого в движение унифицированным мотор-редуктором.
 
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-01.webp)
-![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-02.webp)
+![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-02.webp)
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-03.webp)
-![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-04.webp)
+![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-04.webp)
 
 ### Область применения
 Демонстрация принципов двухшарнирной ходовой механики. Моделирование систем перемещения для исследовательских аппаратов («странников»), способных передвигаться по сложному каменистому рельефу других планет, где колесные вездеходы могут застрять в грунте.

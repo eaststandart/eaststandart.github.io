@@ -2,43 +2,38 @@
    ИЗОЛИРОВАННЫЙ БЛОК ЗАГЛУШЕК И АНТИ-ПРЫЖКА КАРТИНОК (img.css)
    ========================================================================== */
 
-/* 1. ПК-ВЕРСИЯ: По умолчанию для всех горизонтальных картинок */
+/* 1. ПК-ВЕРСИЯ: По умолчанию для всех горизонтальных картинок (16:9) */
 .main-content p img:not(.content-img) {
     background-color: #f0f0f0 !important;
-    
-    /* Браузер жестко держит 16:9, пока идет загрузка горизонтальных фото */
     aspect-ratio: 16 / 9 !important;
-    
     height: 209px !important;       
     width: auto !important;         
-    
     border-radius: 8px !important;
     object-fit: contain !important;
 }
 
 /* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК 9:16 (405х720) НА ПК */
-/* Мы находим их по имени файла или по специальному атрибуту alt="vertical" в твоем Obsidian */
-/* Но самый надежный способ — если ты пометишь вертикальную картинку в alt словом "v" или "9:16" */
 .main-content p img[alt*="v"]:not(.content-img),
 .main-content p img[src*="-v"]:not(.content-img),
 .main-content p img[data-src*="-v"]:not(.content-img) {
-    /* Перебиваем пропорции на вертикальные 9:16, чтобы убрать серые поля по бокам! */
     aspect-ratio: 9 / 16 !important;
 }
 
 /* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
+        /* ТВОЙ ВАРИАНТ: Вообще все картинки сайта жестко растягиваются на 100% */
         .main-content p img:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
-        /* Вертикальные фото на смартфонах в столбце */
-        .main-content p img[alt*="v"]:not(.content-img) {
+        
+        /* Фиксируем правильные пропорции 9:16 для вертикальных заглушек на весь экран */
+        .main-content p img[alt*="v"]:not(.content-img),
+        .main-content p img[src*="-v"]:not(.content-img),
+        .main-content p img[data-src*="-v"]:not(.content-img) {
             aspect-ratio: 9 / 16 !important;
-            width: 70% !important; /* Чтобы вертикальное фото не было слишком гигантским на весь экран */
-            margin: 0 auto !important;
         }
     }
 }
@@ -50,7 +45,9 @@
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
-    .main-content p img[alt*="v"]:not(.content-img) {
+    .main-content p img[alt*="v"]:not(.content-img),
+    .main-content p img[src*="-v"]:not(.content-img),
+    .main-content p img[data-src*="-v"]:not(.content-img) {
         aspect-ratio: 9 / 16 !important;
     }
 }

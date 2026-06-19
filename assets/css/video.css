@@ -1,10 +1,5 @@
 /* --- СТИЛИ ДЛЯ ВИДЕО (video.css) --- */
 
-.main-content img[data-src] {
-    aspect-ratio: 16 / 9; /* Жестко держим формат 1280х720 */
-    background: #f0f0f0;  /* Красивая легкая серая заглушка, пока файл качается */
-}
-
 /* 1. ПК ВЕРСИЯ (Основана на логике фото) */
 .video-test-row {
     display: flex !important;
@@ -62,5 +57,35 @@
         max-height: 180px !important; 
         flex: 0 0 auto !important;
         object-fit: contain;
+    }
+}
+
+
+/* ==========================================================================
+   РЕЗЕРВИРОВАНИЕ МЕСТА И СЕРЫЕ ЗАГЛУШКИ (АНТИ-ПРЫЖОК СТРАНИЦЫ)
+   ========================================================================== */
+
+/* 1. Для картинок контента, пока они находятся в режиме data-src */
+.main-content img[data-src] {
+    aspect-ratio: 16 / 9 !important;
+    background-color: #f0f0f0 !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+}
+
+/* 2. Для видеоплееров внутри флекс-ряда в процессе их загрузки */
+.video-test-row video {
+    /* Родной черный фон меняем на серую заглушку для эффекта загрузки */
+    background: #f0f0f0 !important; 
+    
+    /* Заставляем браузер сразу рассчитать сетку 16:9, но не превышая твои оригинальные 209px высоты */
+    aspect-ratio: 16 / 9 !important; 
+}
+
+/* 3. Корректируем мобильную адаптацию (вертикаль): чтобы на смартфонах плеер держал 16:9 */
+@media (max-width: 600px) and (orientation: portrait) {
+    .video-test-row video {
+        aspect-ratio: 16 / 9 !important;
     }
 }

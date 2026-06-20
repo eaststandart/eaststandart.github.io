@@ -20,7 +20,7 @@ permalink: /faire/detektor-pereliva/
 > • Сворень Р.А. Электроника шаг за шагом, 2001, с. 109.\
 >  \
 > **Подробнее о конденсаторе смотри в:** \
-> • Платт Ч. Электроника для начинающих. 2024, с. 108.\
+> • Платт Ч. Электроника для начинающих. 2024, с. 108.
 
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-01.webp)
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-02.webp)

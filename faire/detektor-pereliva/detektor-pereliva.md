@@ -11,7 +11,7 @@ permalink: /faire/detektor-pereliva/
   
  [[Описание работы cхемы](https://t.me/RadiotekhnikaClub/44/1614)], [[Сборочный чертеж](https://t.me/RadiotekhnikaClub/44/1615)].  
 
-![[detektor-pereliva.webp]] 
+![[detektor-pereliva.webp]]
 
 > **Подробнее о трансформаторе смотри в:**  
 > • Платт Ч. Энциклопедия электронных компонентов. Том 1, 2017, с. 155.  

@@ -11,7 +11,6 @@ permalink: /faire/detektor-pereliva/
   
  [[Описание работы cхемы](https://t.me/RadiotekhnikaClub/44/1614)], [[Сборочный чертеж](https://t.me/RadiotekhnikaClub/44/1615)].  
 
-![[detektor-pereliva.webp]]
 
 > **Подробнее о трансформаторе смотри в:**  
 > • Платт Ч. Энциклопедия электронных компонентов. Том 1, 2017, с. 155.  
@@ -29,13 +28,19 @@ permalink: /faire/detektor-pereliva/
 
 > **Примечание:** [Механизм Чебышёва](https://ru.wikipedia.org/wiki/Механизм_Чебышёва) — это простой четырехзвенный шарнирный механизм, преобразующий равномерное вращательное движение в возвратно-поступательное со сложной траекторией ведомого звена. Он был разработан выдающимся русским математиком Пафнутием Чебышёвым в 1860-х годах и стал основой знаменитой стопоходящей машины Чебышёва, имитирующей ходьбу лошади. Сегодня его часто используют в робототехнике (для создания шагающих роботов), механических игрушках и сортировочных устройствах. Подробнее смотри в: [стопоходящая машина](https://etudes.ru/etudes/tchebyshev-plantigrade-machine/).
 
-![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-01.webp)
-![](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-01.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-02.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-03.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-04.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-05.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-06.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-07.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-08.webp)
 
 ### Область применения
 Демонстрация перспективных способов перемещения по сложной пересечённой местности на других планетах. Благодаря поочерёдной опоре на две точки, робот сохраняет устойчивость при ходьбе, что делает его прототипом тяжёлых транспортных машин. Такие шагающие платформы могут управляться удалённо и использоваться в космических экспедициях для безопасной перевозки людей, транспортировки грузов и доставки полезных ископаемых из труднодоступных районов к обитаемым базам.
 
-![video](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-01.webm)
+![video](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-01.webm)
 
 ### Развитие проекта
 1\. \

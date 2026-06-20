@@ -12,10 +12,10 @@ permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ### Описание проекта
 Создание конструкции простой настольной светодиодной лампы с плафоном и горшочком из стеклянной бутылки для комнатного растения.
 
-![](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-1.webp)
-![](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-2.webp)
-![](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-3.webp)
-![](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-4.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-1.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-2.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-3.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-4.webp)
 
 ### Область применения
 Украшение комнаты или рабочего стола: удобный светильник и уютный уголок для живого растения. Создание атмосферы «рабочей каюты» юного космонавта для напоминания о Земле во время долгого полета к другим планетам.

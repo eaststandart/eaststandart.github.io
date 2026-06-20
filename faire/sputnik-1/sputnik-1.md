@@ -13,9 +13,9 @@ permalink: /faire/sputnik-1/
 **4 октября 1957 года** на орбиту был запущен (во время Международного геофизического года) советский космический аппарат «Спутник-1» – первый в мире искусственный спутник Земли, который открыл, как принято считать, новую космическую эру в истории человечества. Проект направлен на создание скульптуры модели спутника из меди и дерева в произвольном масштабе.
 
 ![](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-1.webp)
-![](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-2.webp)
+![v](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-2.webp)
 ![](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-3.webp)
-![](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-4.webp)
+![v](github/eaststandart.github.io/faire/sputnik-1/sputnik-1-4.webp)
 
 > **Смотри также:** [Sputnik’s Transmitter Beeps Again \| Hackaday](https://hackaday.com/2016/02/23/sputniks-transmitter-beeps-again/).
 

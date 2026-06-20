@@ -13,7 +13,7 @@ permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
 Создание конструкции простого фонарика в бумажном корпусе с одним светодиодом и самодельной кнопкой, не требующая пайки. Получение знаний о построении простейшей электрической цепи, принципов ее работы и назначении электронных компонентов.
 
 ![](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-1.webp)
-![v](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-2.webp)
+![v](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-2.webp) 
 
 ### Область применения
 Освещение замочной скважины на слабоосвещенной лестничной площадке для точного попадания ключом в замок. Создание компактного аварийного источника света на случай внезапного отключения электричества в доме или каюте космического модуля.

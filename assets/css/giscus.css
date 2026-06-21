@@ -1,13 +1,17 @@
-/* Шаг 1: Настраиваем обёртку-ссылку, чтобы она не растягивалась */
-.gsc-comment-content p a[target="_top"] {
+/* 1. Импортируем официальную базовую светлую тему Giscus, чтобы не ломалась разметка */
+@import url('https://giscus.app');
+
+/* 2. Наш простой код для ПК: уменьшаем картинки до 209px и выстраиваем в ряд */
+.markdown img {
+    height: 209px !important;
+    width: auto !important;
+    max-width: none !important;
+    display: inline-block !important;
+}
+
+/* 3. Убираем растяжение обёртки-ссылки GitHub */
+.markdown a[target="_top"] {
     display: inline-block !important;
     height: 209px !important;
     width: auto !important;
-}
-
-/* Шаг 2: Фиксируем высоту самой картинки на 209px */
-.gsc-comment-content p a[target="_top"] img {
-    height: 100% !important;
-    width: auto !important;
-    max-width: none !important;
 }

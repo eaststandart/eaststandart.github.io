@@ -2,28 +2,33 @@
    ИЗОЛИРОВАННЫЕ СТИЛИ ДЛЯ ВИДЖЕТА ОБСУЖДЕНИЙ (DISCUS.CSS)
    ========================================================================== */
 
-/* --- 1. ГЕОМЕТРИЯ ГАЛЕРЕИ КАРТИНОК (ДЕСКТОП) --- */
+/* --- 1. ГЕОМЕТРИЯ ГАЛЕРЕИ КАРТИНОК (ПК / ДЕСКТОП) --- */
+
+/* Абзац с изображениями: флекс-ряд с вашим шагом 15px */
 p[dir="auto"]:has(a[target="_top"]) {
     display: flex !important;
     flex-wrap: wrap !important;
-    flex-direction: row !important;     
-    gap: 15px !important;              
+    flex-direction: row !important;     /* На ПК строго в ряд вбок */
+    gap: 15px !important;              /* Фирменный gap из вашей Части 2 */
     align-items: flex-start !important;
     margin: 1em 0 !important;          
     padding: 0 !important;
 }
 
+/* Обёртки-ссылки GitHub: сжимаем по ширине контента, фиксируя высоту */
 p[dir="auto"] a[target="_top"] {
     display: inline-block !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: 150px !important;          
-    width: auto !important;
+    height: 209px !important;          /* Ваша фиксированная высота из Части 2 */
+    width: max-content !important;     /* ФИКС НА ПК: Ссылка не растягивается вширь */
+    flex: 0 0 auto !important;         /* Запрещает флексу деформировать обертку */
 }
 
+/* Сами изображения внутри ссылок */
 p[dir="auto"] a[target="_top"] img {
-    height: 100% !important;           
-    width: auto !important;            
+    height: 100% !important;           /* Занимает ровно 209px высоты родителя */
+    width: auto !important;            /* Ширина подстраивается автоматически по высоте */
     max-width: none !important;        
     max-height: none !important; 
     object-fit: contain !important;    
@@ -31,6 +36,7 @@ p[dir="auto"] a[target="_top"] img {
     margin: 0 !important;
     aspect-ratio: auto !important;     
 }
+
 
 /* --- 2. ЛИНЕЙКА ПРИЖАТИЯ КОНТЕНТА --- */
 h3[dir="auto"] + p[dir="auto"]:has(a[target="_top"]) {
@@ -45,18 +51,23 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
     margin-top: 1em !important;        
 }
 
-/* --- 3. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (ЭКРАНЫ ДО 900px) --- */
+
+/* --- 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ЭКРАНЫ ДО 900px) --- */
+
+/* А. Вертикальный режим отображения (Portrait) */
 @media (max-width: 900px) and (orientation: portrait) {
-    /* Вертикальный режим: Картинки строго друг под другом на всю ширину экрана */
+    /* Перестраиваем галерею из строки в вертикальный столбец */
     p[dir="auto"]:has(a[target="_top"]) {
         display: flex !important;
-        flex-direction: column !important; 
-        gap: 1.2em !important;            
+        flex-direction: column !important; /* Картинки строго друг под другом */
+        gap: 1.2em !important;            /* Ваша мобильная дистанция */
     }
 
+    /* На смартфонах вертикально — растягиваем обертку и фото на 100% ширины */
     p[dir="auto"] a[target="_top"] {
         width: 100% !important;
         height: auto !important;
+        flex: 1 1 auto !important;
     }
 
     p[dir="auto"] a[target="_top"] img {
@@ -66,9 +77,9 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
     }
 }
 
-/* --- 4. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
+/* Б. Специально для горизонтального режима smartphones (Landscape) */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Горизонтальный режим: Картинки возвращаются обратно в ровный ряд (вбок) */
+    /* Возвращаем компактный строчный флекс-ряд вбок */
     p[dir="auto"]:has(a[target="_top"]) {
         display: flex !important;
         flex-direction: row !important;        
@@ -76,10 +87,12 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
         gap: 15px !important;
     }
 
+    /* Компактная фиксированная высота по вашему ландшафтному стандарту */
     p[dir="auto"] a[target="_top"] {
         height: 163px !important;             
-        width: auto !important;
+        width: max-content !important; /* Сжимаем обертку вбок */
         display: inline-block !important;
+        flex: 0 0 auto !important;
     }
 
     p[dir="auto"] a[target="_top"] img {

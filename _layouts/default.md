@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
     <link rel="stylesheet" href="/assets/css/footnotes.css">
-    <link rel="stylesheet" href="/assets/css/giscus.css">
+    <link rel="stylesheet" href="/assets/css/giscus.css"> 
 
     <!-- Стили страницы или ее родительских шаблонов -->
     {% if page.custom_css %}

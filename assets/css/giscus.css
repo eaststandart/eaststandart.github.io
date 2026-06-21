@@ -9,6 +9,7 @@
 p[dir="auto"]:has(a[target="_top"]) {
     display: flex !important;
     flex-wrap: wrap !important;
+    flex-direction: row !important;     /* Строго в ряд на больших экранах */
     gap: 15px !important;              /* Фирменный gap из вашей Части 2 */
     align-items: flex-start !important;
     margin: 1em 0 !important;          /* Стандартный отступ вашей темы */
@@ -27,15 +28,13 @@ p[dir="auto"] a[target="_top"] {
 /* Сами изображения внутри ссылок: полное наследование вашей логики */
 p[dir="auto"] a[target="_top"] img {
     height: 100% !important;           /* Занимает всю высоту родителя (209px) */
-    width: auto !important;
-    max-width: 100% !important;
+    width: auto !important;            /* ЖЕСТКИЙ СБРОС: Стирает height:auto от GitHub */
+    max-width: none !important;        /* Убирает ограничение GitHub на растяжение */
+    max-height: none !important; 
     object-fit: contain !important;    /* Защита от деформации пропорций */
     border-radius: 8px !important;     /* Ваше скругление углов */
     margin: 0 !important;
-    
-    /* Сброс принудительных инлайновых ограничений GitHub */
-    max-height: none !important; 
-    aspect-ratio: auto !important;
+    aspect-ratio: auto !important;     /* Сбрасываем инлайн-пропорции GitHub */
 }
 
 
@@ -67,11 +66,11 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
         /* Перестраиваем галерею обсуждений из строки в вертикальный столбец */
         p[dir="auto"]:has(a[target="_top"]) {
             display: flex !important;
-            flex-direction: column !important;
+            flex-direction: column !important; /* Картинки строго друг под другом */
             gap: 1.2em !important;            /* Ваша мобильная дистанция */
         }
 
-        /* Обёртки сбрасывают десктопную высоту */
+        /* Обёртки сбрасывают десктопную высоту и занимают всю ширину */
         p[dir="auto"] a[target="_top"] {
             width: 100% !important;
             height: auto !important;
@@ -80,8 +79,8 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
         /* Картинки растягиваются на всю ширину дисплея телефона */
         p[dir="auto"] a[target="_top"] img {
             height: auto !important;    
-            width: 100% !important;
-            margin: 0 !important;
+            width: 100% !important;            /* Растягиваем на ширину экрана */
+            max-width: 100% !important;
         }
     }
 }
@@ -91,7 +90,7 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
     /* Возвращаем компактный строчный флекс-ряд */
     p[dir="auto"]:has(a[target="_top"]) {
         display: flex !important;
-        flex-direction: row !important;
+        flex-direction: row !important;        /* Картинки строго в ряд (вбок) */
         flex-wrap: wrap !important;
         gap: 15px !important;
     }
@@ -104,6 +103,7 @@ p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
 
     p[dir="auto"] a[target="_top"] img {
         height: 100% !important;
-        width: auto !important;
+        width: auto !important;                /* Возвращаем сжатие в ряд по высоте */
+        max-width: none !important;
     }
 }

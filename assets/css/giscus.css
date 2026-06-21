@@ -1,83 +1,48 @@
 /* ==========================================================================
-   ИЗОЛИРОВАННЫЕ СТИЛИ ДЛЯ ВИДЖЕТА ОБСУЖДЕНИЙ (DISCUS.CSS)
-   Синхронизация: Полный перенос логики галереи, линеек прижатия и мобильной сетки.
+   ИЗОЛИРОВАННЫЙ БЛОК ДЛЯ СЕТКИ И АДАПТАЦИИ ОБСУЖДЕНИЙ
    ========================================================================== */
 
-/* --- 1. ГЕОМЕТРИЯ ГАЛЕРЕИ КАРТИНОК (СТРОГО ПО ВАШЕЙ ЧАСТИ 2) --- */
-
-/* Абзац с изображениями: флекс-ряд с автоматическим переносом и вашим шагом 15px */
+/* 1. ФЛЕКС-РЯД И ВЫСОТА ДЛЯ КАРТИНОК В ОБСУЖДЕНИЯХ */
 .gsc-comment-content p[dir="auto"]:has(a[target="_top"]) {
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 15px !important;              /* Фирменный gap из вашей Части 2 */
+    gap: 15px !important;              
     align-items: flex-start !important;
-    margin: 1em 0 !important;          /* Стандартный отступ вашей темы */
+    margin: 1em 0 !important;          
     padding: 0 !important;
 }
 
-/* Обёртки-ссылки GitHub сжимаются точно под геометрию ряда */
 .gsc-comment-content p[dir="auto"] a[target="_top"] {
     display: inline-block !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: 209px !important;          /* Ваша фиксированная высота из Части 2 */
+    height: 209px !important;          
     width: auto !important;
 }
 
-/* Сами изображения внутри ссылок: полное наследование вашей логики */
 .gsc-comment-content p[dir="auto"] a[target="_top"] img {
-    height: 100% !important;           /* Занимает всю высоту родителя (209px) */
+    height: 100% !important;           
     width: auto !important;
     max-width: 100% !important;
-    object-fit: contain !important;    /* Защита от деформации пропорций */
-    border-radius: 8px !important;     /* Ваше скругление углов */
+    object-fit: contain !important;    
+    border-radius: 8px !important;     
     margin: 0 !important;
-    
-    /* Сброс принудительных инлайновых ограничений GitHub */
     max-height: none !important; 
     aspect-ratio: auto !important;
 }
 
-
-/* --- 2. ЛИНЕЙКА ПРИЖАТИЯ КОНТЕНТА (СТРОГО ПО ВАШЕЙ ЧАСТИ 1) --- */
-
-/* Нулевой маргин над флекс-галереей картинок, если она идет сразу после H3 */
-.gsc-comment-content h3[dir="auto"] + p[dir="auto"]:has(a[target="_top"]) {
-    margin-top: 0px !important;
-}
-
-/* Ювелирный микро-сдвиг (-0.4em) под воздух шрифта для обычного текста после H3 */
-.gsc-comment-content h3[dir="auto"] + p[dir="auto"]:not(:has(a[target="_top"])) {
-    margin-top: -0.4em !important;
-}
-
-/* Система возврата воздуха: 1em свободного пространства для текста ПОСЛЕ галереи */
-.gsc-comment-content p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
-    margin-top: 1em !important;        /* Ваша фирменная линейка воздуха */
-}
-
-
-/* --- 3. МОБИЛЬНАЯ АДАПТАЦИЯ (СТРОГО ПО ВАШЕЙ ЧАСТИ 3) --- */
-
-/* А. Сжатие экранов смартфонов до 900px */
+/* 2. АДАПТАЦИЯ ОБСУЖДЕНИЙ ДЛЯ СМАРТФОНОВ (ЭКРАНЫ ДО 900px) */
 @media (max-width: 900px) {
-    
-    /* Вертикальный режим отображения (Portrait) */
     @media (orientation: portrait) {
-        /* Перестраиваем галерею обсуждений из строки в вертикальный столбец */
         .gsc-comment-content p[dir="auto"]:has(a[target="_top"]) {
             display: flex !important;
             flex-direction: column !important;
-            gap: 1.2em !important;            /* Ваша мобильная дистанция */
+            gap: 1.2em !important;            
         }
-
-        /* Обёртки сбрасывают десктопную высоту */
         .gsc-comment-content p[dir="auto"] a[target="_top"] {
             width: 100% !important;
             height: auto !important;
         }
-
-        /* Картинки растягиваются на всю ширину дисплея телефона */
         .gsc-comment-content p[dir="auto"] a[target="_top"] img {
             height: auto !important;    
             width: 100% !important;
@@ -86,22 +51,18 @@
     }
 }
 
-/* Б. Специально для горизонтального режима смартфонов (Landscape) */
+/* --- 3. ГОРИЗОНТАЛЬНЫЙ РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Возвращаем компактный строчный флекс-ряд */
     .gsc-comment-content p[dir="auto"]:has(a[target="_top"]) {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        gap: 15px !important;
+        gap: 15px !important;                 
     }
-
-    /* Компактная фиксированная высота по вашему стандарту */
     .gsc-comment-content p[dir="auto"] a[target="_top"] {
-        height: 163px !important;             /* Ваша ландшафтная высота */
+        height: 163px !important;             
         width: auto !important;
     }
-
     .gsc-comment-content p[dir="auto"] a[target="_top"] img {
         height: 100% !important;
         width: auto !important;

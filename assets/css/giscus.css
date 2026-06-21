@@ -2,7 +2,7 @@
 @import url('https://giscus.app');
 
 /* 2. Наш простой код для ПК: уменьшаем картинки до 209px и выстраиваем в ряд */
-.markdown img {
+.markdown.gsc-comment-content img {
     height: 209px !important;
     width: auto !important;
     max-width: none !important;
@@ -10,7 +10,7 @@
 }
 
 /* 3. Убираем растяжение обёртки-ссылки GitHub */
-.markdown a[target="_top"] {
+.markdown.gsc-comment-content a[target="_top"] {
     display: inline-block !important;
     height: 209px !important;
     width: auto !important;

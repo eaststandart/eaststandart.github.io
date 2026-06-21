@@ -1,17 +1,34 @@
-/* 1. ОБЯЗАТЕЛЬНО: Импортируем официальную светлую тему Giscus */
-@import url('https://giscus.app');
+/* ==========================================================================
+   УПРАВЛЕНИЕ ВИДЖЕТОМ GISCUS СНАРУЖИ (ЧЕРЕЗ ВАШ СТИЛЬ САЙТА)
+   ========================================================================== */
 
-/* 2. Наш простой код для ПК: уменьшаем картинки до 209px и выстраиваем в ряд */
-.markdown.gsc-comment-content img {
-    height: 209px !important;
-    width: auto !important;
-    max-width: none !important;
-    display: inline-block !important;
+/* Ваша рабочая оболочка, которую нельзя трогать */
+.giscus {
+    width: 100% !important;       
+    max-width: 100% !important;   
+    box-sizing: border-box;       
+    margin-left: 0 !important;    
+    margin-right: 0 !important;
 }
 
-/* 3. Убираем растяжение обёртки-ссылки GitHub */
-.markdown.gsc-comment-content a[target="_top"] {
-    display: inline-block !important;
-    height: 209px !important;
-    width: auto !important;
+/* На мобильных экранах убираем лишние ограничения */
+@media (max-width: 768px) {
+    .giscus-frame {
+        width: 100% !important;
+    }
+}
+
+/* --- ДОБАВЛЯЕМ КОД ДЛЯ УМЕНЬШЕНИЯ КАРТИНОК НА ПК ДО 209px --- */
+
+/* На компьютерах заставляем фрейм пересчитать внутренние медиа-контейнеры */
+@media (min-width: 901px) {
+    .giscus-frame {
+        /* Передаем базовую высоту контента наружу, чтобы заглушить height:auto от GitHub */
+        contain: content;
+    }
+    
+    /* Стандартный хак: заставляем картинки внутри фрейма принять высоту 209px */
+    iframe.giscus-frame {
+        --giscus-img-height: 209px !important;
+    }
 }

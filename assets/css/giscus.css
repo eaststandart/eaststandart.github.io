@@ -1,109 +1,90 @@
 /* ==========================================================================
    ИЗОЛИРОВАННЫЕ СТИЛИ ДЛЯ ВИДЖЕТА ОБСУЖДЕНИЙ (DISCUS.CSS)
-   Синхронизация: Полный перенос логики галереи, линеек прижатия и мобильной сетки.
    ========================================================================== */
 
-/* --- 1. ГЕОМЕТРИЯ ГАЛЕРЕИ КАРТИНОК (СТРОГО ПО ВАШЕЙ ЧАСТИ 2) --- */
-
-/* Абзац с изображениями: флекс-ряд с автоматическим переносом и вашим шагом 15px */
+/* --- 1. ГЕОМЕТРИЯ ГАЛЕРЕИ КАРТИНОК (ДЕСКТОП) --- */
 p[dir="auto"]:has(a[target="_top"]) {
     display: flex !important;
     flex-wrap: wrap !important;
-    flex-direction: row !important;     /* Строго в ряд на больших экранах */
-    gap: 15px !important;              /* Фирменный gap из вашей Части 2 */
+    flex-direction: row !important;     
+    gap: 15px !important;              
     align-items: flex-start !important;
-    margin: 1em 0 !important;          /* Стандартный отступ вашей темы */
+    margin: 1em 0 !important;          
     padding: 0 !important;
 }
 
-/* Обёртки-ссылки GitHub сжимаются точно под геометрию ряда */
 p[dir="auto"] a[target="_top"] {
     display: inline-block !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: 209px !important;          /* Ваша фиксированная высота из Части 2 */
+    height: 209px !important;          
     width: auto !important;
 }
 
-/* Сами изображения внутри ссылок: полное наследование вашей логики */
 p[dir="auto"] a[target="_top"] img {
-    height: 100% !important;           /* Занимает всю высоту родителя (209px) */
-    width: auto !important;            /* ЖЕСТКИЙ СБРОС: Стирает height:auto от GitHub */
-    max-width: none !important;        /* Убирает ограничение GitHub на растяжение */
+    height: 100% !important;           
+    width: auto !important;            
+    max-width: none !important;        
     max-height: none !important; 
-    object-fit: contain !important;    /* Защита от деформации пропорций */
-    border-radius: 8px !important;     /* Ваше скругление углов */
+    object-fit: contain !important;    
+    border-radius: 8px !important;     
     margin: 0 !important;
-    aspect-ratio: auto !important;     /* Сбрасываем инлайн-пропорции GitHub */
+    aspect-ratio: auto !important;     
 }
 
-
-/* --- 2. ЛИНЕЙКА ПРИЖАТИЯ КОНТЕНТА (СТРОГО ПО ВАШЕЙ ЧАСТИ 1) --- */
-
-/* Нулевой маргин над флекс-галереей картинок, если она идет сразу после H3 */
+/* --- 2. ЛИНЕЙКА ПРИЖАТИЯ КОНТЕНТА --- */
 h3[dir="auto"] + p[dir="auto"]:has(a[target="_top"]) {
     margin-top: 0px !important;
 }
 
-/* Ювелирный микро-сдвиг (-0.4em) под воздух шрифта для обычного текста после H3 */
 h3[dir="auto"] + p[dir="auto"]:not(:has(a[target="_top"])) {
     margin-top: -0.4em !important;
 }
 
-/* Система возврата воздуха: 1em свободного пространства для текста ПОСЛЕ галереи */
 p[dir="auto"]:has(a[target="_top"]) + p[dir="auto"] {
-    margin-top: 1em !important;        /* Ваша фирменная линейка воздуха */
+    margin-top: 1em !important;        
 }
 
+/* --- 3. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ (ЭКРАНЫ ДО 900px) --- */
+@media (max-width: 900px) and (orientation: portrait) {
+    /* Вертикальный режим: Картинки строго друг под другом на всю ширину экрана */
+    p[dir="auto"]:has(a[target="_top"]) {
+        display: flex !important;
+        flex-direction: column !important; 
+        gap: 1.2em !important;            
+    }
 
-/* --- 3. МОБИЛЬНАЯ АДАПТАЦИЯ (СТРОГО ПО ВАШЕЙ ЧАСТИ 3) --- */
+    p[dir="auto"] a[target="_top"] {
+        width: 100% !important;
+        height: auto !important;
+    }
 
-/* А. Сжатие экранов смартфонов до 900px */
-@media (max-width: 900px) {
-    
-    /* Вертикальный режим отображения (Portrait) */
-    @media (orientation: portrait) {
-        /* Перестраиваем галерею обсуждений из строки в вертикальный столбец */
-        p[dir="auto"]:has(a[target="_top"]) {
-            display: flex !important;
-            flex-direction: column !important; /* Картинки строго друг под другом */
-            gap: 1.2em !important;            /* Ваша мобильная дистанция */
-        }
-
-        /* Обёртки сбрасывают десктопную высоту и занимают всю ширину */
-        p[dir="auto"] a[target="_top"] {
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        /* Картинки растягиваются на всю ширину дисплея телефона */
-        p[dir="auto"] a[target="_top"] img {
-            height: auto !important;    
-            width: 100% !important;            /* Растягиваем на ширину экрана */
-            max-width: 100% !important;
-        }
+    p[dir="auto"] a[target="_top"] img {
+        height: auto !important;    
+        width: 100% !important;            
+        max-width: 100% !important;
     }
 }
 
-/* Б. Специально для горизонтального режима смартфонов (Landscape) */
+/* --- 4. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Возвращаем компактный строчный флекс-ряд */
+    /* Горизонтальный режим: Картинки возвращаются обратно в ровный ряд (вбок) */
     p[dir="auto"]:has(a[target="_top"]) {
         display: flex !important;
-        flex-direction: row !important;        /* Картинки строго в ряд (вбок) */
+        flex-direction: row !important;        
         flex-wrap: wrap !important;
         gap: 15px !important;
     }
 
-    /* Компактная фиксированная высота по вашему стандарту */
     p[dir="auto"] a[target="_top"] {
-        height: 163px !important;             /* Ваша ландшафтная высота */
+        height: 163px !important;             
         width: auto !important;
+        display: inline-block !important;
     }
 
     p[dir="auto"] a[target="_top"] img {
         height: 100% !important;
-        width: auto !important;                /* Возвращаем сжатие в ряд по высоте */
+        width: auto !important;                
         max-width: none !important;
     }
 }

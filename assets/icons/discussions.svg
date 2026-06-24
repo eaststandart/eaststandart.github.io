@@ -1,0 +1,47 @@
+<svg width="1280" height="320" viewBox="0 0 1280 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="320">
+        <stop offset="0%" stop-color="#0969DA"/>
+        <stop offset="50%" stop-color="#6E40C9"/>
+        <stop offset="100%" stop-color="#BF3989"/>
+    </linearGradient>
+
+    <radialGradient id="glow1">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="glow2">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+</defs>
+
+<rect width="1280" height="320" rx="16" fill="url(#bg)"/>
+
+<circle cx="250" cy="120" r="220" fill="url(#glow1)"/>
+<circle cx="1050" cy="260" r="280" fill="url(#glow2)"/>
+
+<g transform="translate(100 60)">
+    <circle cx="100" cy="100" r="70" fill="white" fill-opacity="0.15"/>
+    <image href="https://eaststandart.github.io/assets/icons/favicon.svg" x="35" y="35" width="130" height="130"/>
+</g>
+
+<text x="280" y="130"
+      fill="white"
+      font-size="52"
+      font-family="Segoe UI, Arial, sans-serif"
+      font-weight="700">
+    EastStandart Community
+</text>
+
+<text x="280" y="190"
+      fill="white"
+      fill-opacity="0.9"
+      font-size="24"
+      font-family="Segoe UI, Arial, sans-serif">
+    Проекты • Галерея • Статьи • Обсуждения
+</text>
+
+</svg>

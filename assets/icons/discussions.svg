@@ -1,47 +1,74 @@
-<svg width="1280" height="320" viewBox="0 0 1280 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1280" height="320" viewBox="0 0 1280 320" xmlns="http://www.w3.org/2000/svg">
 
 <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="320">
-        <stop offset="0%" stop-color="#0969DA"/>
-        <stop offset="50%" stop-color="#6E40C9"/>
-        <stop offset="100%" stop-color="#BF3989"/>
-    </linearGradient>
 
-    <radialGradient id="glow1">
-        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45"/>
-        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="1280" y2="320">
+    <stop offset="0%" stop-color="#0969DA"/>
+    <stop offset="50%" stop-color="#6E40C9"/>
+    <stop offset="100%" stop-color="#BF3989"/>
+</linearGradient>
 
-    <radialGradient id="glow2">
-        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
+<radialGradient id="glow1">
+    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+</radialGradient>
+
+<radialGradient id="glow2">
+    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+</radialGradient>
+
+<filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+    <feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity="0.25"/>
+</filter>
+
 </defs>
 
-<rect width="1280" height="320" rx="16" fill="url(#bg)"/>
+<rect width="1280" height="320" rx="20" fill="url(#bg)"/>
 
-<circle cx="250" cy="120" r="220" fill="url(#glow1)"/>
-<circle cx="1050" cy="260" r="280" fill="url(#glow2)"/>
+<circle cx="220" cy="100" r="180" fill="url(#glow1)"/>
+<circle cx="1150" cy="280" r="260" fill="url(#glow2)"/>
 
-<g transform="translate(100 60)">
-    <circle cx="100" cy="100" r="70" fill="white" fill-opacity="0.15"/>
-    <image href="https://eaststandart.github.io/assets/icons/favicon.svg" x="35" y="35" width="130" height="130"/>
+<g filter="url(#shadow)">
+    <circle cx="160" cy="160" r="82" fill="white" fill-opacity="0.18"/>
 </g>
 
-<text x="280" y="130"
-      fill="white"
-      font-size="52"
-      font-family="Segoe UI, Arial, sans-serif"
-      font-weight="700">
+<g transform="translate(95 95) scale(0.325)">
+    <path
+        fill="#00C22D"
+        stroke="#00C22D"
+        stroke-width="1.84493"
+        d="M 199.99812,0.9250081 C 89.709169,0.9250081 0.9250081,89.709169 0.9250081,199.99812 c 0,110.28895 88.7841609,199.07828 199.0731119,199.07828 110.28895,0 199.07828,-88.78933 199.07828,-199.07828 0,-110.288951 -88.78933,-199.0731119 -199.07828,-199.0731119 z m -43.3772,34.2149649 h 84.24809 a 46.328021,45.741958 0 0 1 46.32792,45.743976 v 68.021681 h 36.3647 a 5.6168988,6.1578385 0 0 1 5.61206,6.15467 v 36.94348 a 5.6168988,6.1578385 0 0 1 -5.61206,6.15983 H 284.055 v 151.11738 a 17.398092,15.718327 0 0 1 -17.39945,15.71997 17.398092,15.718327 0 0 1 -17.39946,-15.71997 V 198.16361 h -32.81453 v 151.11738 a 17.398092,15.718327 0 0 1 -17.39429,15.71997 17.398092,15.718327 0 0 1 -17.40462,-15.71997 V 198.16361 h -32.77836 v 151.11738 a 17.398092,15.718327 0 0 1 -17.40462,15.71997 17.398092,15.718327 0 0 1 -17.39945,-15.71997 V 198.16361 H 76.439776 a 5.6168988,6.1578385 0 0 1 -5.617228,-6.15983 V 155.0603 a 5.6168988,6.1578385 0 0 1 5.617228,-6.15467 H 110.2775 V 80.894284 a 46.338914,45.752713 0 0 1 46.34342,-45.754311 z"/>
+</g>
+
+<text
+    x="300"
+    y="135"
+    fill="white"
+    font-size="54"
+    font-weight="700"
+    font-family="Segoe UI, Arial, sans-serif">
     EastStandart Community
 </text>
 
-<text x="280" y="190"
-      fill="white"
-      fill-opacity="0.9"
-      font-size="24"
-      font-family="Segoe UI, Arial, sans-serif">
+<text
+    x="300"
+    y="190"
+    fill="white"
+    fill-opacity="0.95"
+    font-size="24"
+    font-family="Segoe UI, Arial, sans-serif">
     Проекты • Галерея • Статьи • Обсуждения
+</text>
+
+<text
+    x="300"
+    y="235"
+    fill="white"
+    fill-opacity="0.80"
+    font-size="18"
+    font-family="Segoe UI, Arial, sans-serif">
+    Сообщество участников и авторов проекта EastStandart
 </text>
 
 </svg>

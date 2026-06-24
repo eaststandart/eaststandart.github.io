@@ -1,112 +1,77 @@
-<svg width="1280" height="320" viewBox="0 0 1280 320" xmlns="http://www.w3.org/2000/svg">
+<svg width="1280" height="320" viewBox="0 0 1280 320" xmlns="http://w3.org">
 
 <defs>
 
-<!-- Основной фон: переход от глубокого лесного зеленого к темно-бордовому -->
+<!-- Основной фон: очень мягкий, чистый светло-серый/белый как на GitHub -->
 <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="320">
-    <stop offset="0%" stop-color="#0a2f1d"/>
-    <stop offset="40%" stop-color="#114228"/>
-    <stop offset="75%" stop-color="#4a121a"/>
-    <stop offset="100%" stop-color="#2b070c"/>
+    <stop offset="0%" stop-color="#f6f8fa"/>
+    <stop offset="100%" stop-color="#ffffff"/>
 </linearGradient>
 
-<!-- Свечение слева: Ярко-зеленый (Электроника) -->
-<radialGradient id="glowGreen">
-    <stop offset="0%" stop-color="#39ff14" stop-opacity="0.35"/>
-    <stop offset="100%" stop-color="#39ff14" stop-opacity="0"/>
+<!-- Легкое пастельное зеленое облако слева (Мята) -->
+<radialGradient id="lightGreen">
+    <stop offset="0%" stop-color="#dafbe1" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#dafbe1" stop-opacity="0"/>
 </radialGradient>
 
-<!-- Свечение справа: Импульсный Красный (Робототехника/Лазеры) -->
-<radialGradient id="glowRed">
-    <stop offset="0%" stop-color="#ff3333" stop-opacity="0.30"/>
-    <stop offset="100%" stop-color="#ff3333" stop-opacity="0"/>
+<!-- Легкое пастельное красное облако справа (Коралл) -->
+<radialGradient id="lightRed">
+    <stop offset="0%" stop-color="#ffebe9" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#ffebe9" stop-opacity="0"/>
 </radialGradient>
 
 <filter id="blur80">
-    <feGaussianBlur stdDeviation="80"/>
-</filter>
-
-<filter id="blur50">
-    <feGaussianBlur stdDeviation="50"/>
+    <feGaussianBlur stdDeviation="70"/>
 </filter>
 
 </defs>
 
-<!-- Задний фон баннера -->
-<rect width="1280" height="320" rx="16" fill="url(#bg)"/>
+<!-- Основа баннера с легкой серой рамкой, как у карточек GitHub -->
+<rect width="1280" height="320" rx="12" fill="url(#bg)" stroke="#d0d7de" stroke-width="1"/>
 
-<!-- Световые неоновые пятна -->
+<!-- Нежные размытые цветовые пятна по углам (зеленый и красный) -->
 <g filter="url(#blur80)">
-    <circle cx="120" cy="60" r="220" fill="url(#glowGreen)"/>
+    <circle cx="150" cy="80" r="260" fill="url(#lightGreen)"/>
+    <circle cx="1130" cy="240" r="280" fill="url(#lightRed)"/>
 </g>
 
-<g filter="url(#blur80)">
-    <circle cx="1120" cy="260" r="240" fill="url(#glowRed)"/>
-</g>
-
-<!-- Подсветка центральных областей -->
-<g filter="url(#blur50)">
-    <ellipse cx="450" cy="100" rx="260" ry="70"
-             fill="#39ff14"
-             fill-opacity="0.08"/>
-</g>
-
-<g filter="url(#blur50)">
-    <ellipse cx="850" cy="220" rx="320" ry="80"
-             fill="#ff3333"
-             fill-opacity="0.06"/>
-</g>
-
-<!-- Нижние волны (сделаны полупрозрачными белыми, они мягко переливаются на зелено-красном фоне) -->
+<!-- Мягкие, едва заметные волны внизу для глубины -->
 <path
-d="M0 220
-C150 180 260 260 420 220
-C580 180 700 260 860 220
-C1020 180 1140 250 1280 210
+d="M0 230
+C200 200 300 270 500 230
+C700 190 850 270 1050 230
+C1150 210 1220 240 1280 220
 L1280 320
 L0 320
 Z"
 fill="#ffffff"
-fill-opacity="0.03"/>
+fill-opacity="0.6"/>
 
-<path
-d="M0 250
-C180 220 320 290 500 250
-C680 210 820 290 1000 250
-C1120 225 1200 260 1280 240
-L1280 320
-L0 320
-Z"
-fill="#ffffff"
-fill-opacity="0.02"/>
-
-<!-- Белое лого (Инженерный щит / Компонент) -->
+<!-- Иконка-логотип (сделана темно-серой для контраста на светлом) -->
 <g transform="translate(70 50) scale(0.55)">
 <path
-fill="#ffffff"
-fill-opacity="0.95"
+fill="#24292f"
 d="M 199.99812,0.9250081 C 89.709169,0.9250081 0.9250081,89.709169 0.9250081,199.99812 c 0,110.28895 88.7841609,199.07828 199.0731119,199.07828 110.28895,0 199.07828,-88.78933 199.07828,-199.07828 0,-110.288951 -88.78933,-199.0731119 -199.07828,-199.0731119 z m -43.3772,34.2149649 h 84.24809 a 46.328021,45.741958 0 0 1 46.32792,45.743976 v 68.021681 h 36.3647 a 5.6168988,6.1578385 0 0 1 5.61206,6.15467 v 36.94348 a 5.6168988,6.1578385 0 0 1 -5.61206,6.15983 H 284.055 v 151.11738 a 17.398092,15.718327 0 0 1 -17.39945,15.71997 17.398092,15.718327 0 0 1 -17.39946,-15.71997 V 198.16361 h -32.81453 v 151.11738 a 17.398092,15.718327 0 0 1 -17.39429,15.71997 17.398092,15.718327 0 0 1 -17.40462,-15.71997 V 198.16361 h -32.77836 v 151.11738 a 17.398092,15.718327 0 0 1 -17.40462,15.71997 17.398092,15.718327 0 0 1 -17.39945,-15.71997 V 198.16361 H 76.439776 a 5.6168988,6.1578385 0 0 1 -5.617228,-6.15983 V 155.0603 a 5.6168988,6.1578385 0 0 1 5.617228,-6.15467 H 110.2775 V 80.894284 a 46.338914,45.752713 0 0 1 46.34342,-45.754311 z"/>
 </g>
 
-<!-- Текстовый блок -->
+<!-- Текст: теперь он темно-серый, стильный и отлично читается (цвета текстов взяты из палитры GitHub) -->
 <text
 x="380"
 y="105"
-fill="#39ff14"
+fill="#1a7f37"
 font-size="18"
-font-family="Segoe UI, Arial, sans-serif"
+font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
 font-weight="600"
-letter-spacing="4"
-opacity="0.95">
+letter-spacing="3">
 ЛАБОРАТОРИЯ
 </text>
 
 <text
 x="380"
 y="185"
-fill="#ffffff"
-font-size="72"
-font-family="Segoe UI, Arial, sans-serif"
+fill="#24292f"
+font-size="68"
+font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
 font-weight="700">
 EastStandard
 </text>
@@ -114,20 +79,20 @@ EastStandard
 <text
 x="380"
 y="235"
-fill="#ffffff"
-font-size="28"
-font-family="Segoe UI, Arial, sans-serif"
-opacity="0.95">
+fill="#57606a"
+font-size="26"
+font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+font-weight="500">
 Проекты • Галерея • Статьи • Обсуждения
 </text>
 
 <text
 x="380"
 y="275"
-fill="#ffffff"
+fill="#57606a"
 font-size="18"
-font-family="Segoe UI, Arial, sans-serif"
-opacity="0.70">
+font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+opacity="0.8">
 Сообщество молодых авторов, инженеров и изобретателей
 </text>
 

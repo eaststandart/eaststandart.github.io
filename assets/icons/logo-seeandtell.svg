@@ -1,0 +1,12 @@
+<svg width="98" height="96" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Блок вывода эмодзи 🙌 с центрированием по осям -->
+  <text 
+    x="49" 
+    y="58" 
+    font-size="64" 
+    font-family="Segoe UI Emoji, Apple Color Emoji, Notation, sans-serif" 
+    text-anchor="middle" 
+    dominant-baseline="middle">
+    🙌
+  </text>
+</svg>

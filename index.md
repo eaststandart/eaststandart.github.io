@@ -17,7 +17,7 @@ header_theme: classic
             <li><a href="/diary/">📝 Дневник инженера</a></li>
             <li><a href="/projects/">🗂️ Учебные проекты</a></li>
             <li><a href="/faire/">🔥 Ярмарка поделок</a></li>
-            <li><a href="/inspiration/">🚀 Техническое вдохновение</a></li>
+            <li><a href="/inspiration/">🛫 Техническое вдохновение</a></li>
             <li><a href="/tools/">🛠 Полезные инструменты</a></li>
         </ul>
     </section>

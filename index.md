@@ -9,7 +9,7 @@ header_theme: classic
     <!-- БЛОК 1 -->
     <section class="category-card my-projects">
         <div class="card-header">
-            <img src="/assets/icons/ugolok-mladshego-konstruktora.svg" alt="✈️" class="section-icon">
+            <img src="/assets/icons/ugolok-mladshego-konstruktora.svg" alt="⚙️" class="section-icon">
             <h2>Уголок младшего конструктора</h2>
         </div>
         <ul class="project-list">
@@ -17,7 +17,7 @@ header_theme: classic
             <li><a href="/diary/">📝 Дневник инженера</a></li>
             <li><a href="/projects/">🗂️ Учебные проекты</a></li>
             <li><a href="/faire/">🔥 Ярмарка поделок</a></li>
-            <li><a href="/inspiration/">✈️ Техническое вдохновение 🛫</a></li>
+            <li><a href="/inspiration/">🛫 Техническое вдохновение</a></li>
             <li><a href="/tools/">🛠 Полезные инструменты</a></li>
         </ul>
     </section>
@@ -25,7 +25,7 @@ header_theme: classic
     <!-- БЛОК 2: ЧТО НОВОГО -->
     <section class="category-card site-news">
         <div class="card-header">
-            <img src="/assets/icons/chto-novogo.svg" alt="🔥" class="section-icon">
+            <img src="/assets/icons/chto-novogo.svg" alt="📰" class="section-icon">
             <h2>Что нового?</h2>
             <!-- КНОПКИ СВЯЗИ -->
 			<div class="social-badge-wrapper">
@@ -49,7 +49,7 @@ header_theme: classic
     <!-- БЛОК 3: РЕЗЕРВ -->
     <section class="category-card tech-creative">
         <div class="card-header">
-            <img src="/assets/icons/detskij-inzhenernyj-klub.svg" alt="✈️" class="section-icon">
+            <img src="/assets/icons/detskij-inzhenernyj-klub.svg" alt="✨" class="section-icon">
             <h2>Информация юным техникам</h2>
         </div>
         <ul class="project-list">

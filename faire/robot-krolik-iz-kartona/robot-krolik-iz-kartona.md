@@ -14,8 +14,6 @@ permalink: /faire/robot-krolik-iz-kartona/
 
 > **Примечание:** Подобный тип передвижения был применен в роботах, отправленных СССР на Марс. Первый в мире марсоход назывался Марс ([ПрОП-М](https://ru.wikipedia.org/wiki/Прибор_оценки_проходимости_—_Марс)) – прибор оценки проходимости. Одинаковые марсоходы ПрОП-М входили в состав автоматических марсианских станций, которые были доставлены на поверхность Марса в 1971 году спускаемыми аппаратами советских автоматических межпланетных станций «Марс-2» и «Марс-3», а также входившие в состав станций «Марс-6» и «Марс-7», достигших Марса в 1973 году.
 
-![[robot-krolik-iz-kartona.webp]]
-
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-01.webp)
 ![v](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-02.webp)
 

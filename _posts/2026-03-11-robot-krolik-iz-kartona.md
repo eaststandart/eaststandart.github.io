@@ -5,7 +5,7 @@ description:  "Вид конструкции робота, приводимог�
 author: ["RadiotekhnikaClub"]
 date: 2026-03-11
 categories: [media, robot-krolik-iz-kartona]
-media-post-page: "N"
+media-post-page: "Y"
 discus: "gallery"
 ---
 

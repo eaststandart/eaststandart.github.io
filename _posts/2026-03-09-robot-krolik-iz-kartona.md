@@ -25,4 +25,3 @@ categories: [media, robot-krolik-iz-kartona]
 🎬 Демонстрация процесса движения
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-03.webm)
-![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-korova-iz-kartona-04.webm)

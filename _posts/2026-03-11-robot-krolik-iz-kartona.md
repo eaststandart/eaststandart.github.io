@@ -18,7 +18,10 @@ categories: [media, robot-krolik-iz-kartona]
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-17.webp)
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-18.webp)
 
-🎬 Демонстрация процесса движения
+🎬 Демонстрация работоспособности
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-04.webm)
+
+🎬 Демонстрация процесса движения
+
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-05.webm)

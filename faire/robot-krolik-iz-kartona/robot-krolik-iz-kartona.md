@@ -22,6 +22,8 @@ permalink: /faire/robot-krolik-iz-kartona/
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-01.webm)
 
+> **Примечание:** Эксперименты по проходимости и преодолению препятствий различными типами шагоходов можно посмотреть в [5 Lego Walkers vs 7 Obstacles - YouTube](https://youtu.be/O7BrA6mvvPk).
+
 ### Развитие проекта
 1\. Добавление функции дистанционного управления.\
 2\. Дополнение робота датчиками для автоматического обхода препятствий движением назад.\

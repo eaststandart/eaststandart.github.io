@@ -1,11 +1,11 @@
 ---
 layout: page
-title: "Робот кролик из картона: вопросы"
-description: "Здесь можно задать любые вопросы по проекту."
-date: 2026-03-28
-categories: [journal, robot-krolik-iz-kartona]
-journal-post-page: "N"
-discus: "questions"
+title: "Робот кролик из картона: галерея"
+description: "Демонстрация (фото, видео) выполненного проекта от участников."
+date: 2026-03-08
+categories: [media, robot-krolik-iz-kartona]
+media-post-page: "N"
+discus: "gallery"
 ---
 
-Спроси – не стесняйся ...
+Покажи как выглядит созданный тобой проект ...

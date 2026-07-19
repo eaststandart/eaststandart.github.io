@@ -3,9 +3,11 @@ layout: page
 title: "Электронный орган: создала Лиза Б."
 description: "Вариант конструкции электронного органа."
 author: ["Лиза Б."]
+tags: ["eastemitting"]
 date: 2026-02-12
 categories: [media, elektronnyj-organ]
-tags: ["eastemitting"]
+media-post-page: "Y"
+discus: "gallery"
 ---
 
 📷 Общий вид конструкции устройства

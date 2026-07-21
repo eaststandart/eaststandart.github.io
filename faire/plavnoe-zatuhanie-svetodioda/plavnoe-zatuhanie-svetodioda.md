@@ -25,8 +25,6 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 ![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-03.webp)
 ![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-04.webp)
 
-![v](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-05.webp)
-
 ### Область применения
 В быту схема подходит для создания оригинального ночника или карманного фонарика, где крупный фиолетовый светодиод создаёт красивый визуальный эффект в темноте. Также решение применимо как готовый модуль плавного включения индикации для различных домашних приборов. В будущем принцип применим в индикаторах на таких планетах, как Марс, для оценки безопасности среды перед выходом из жилого модуля. Использование аналоговых дискретных элементов вместо микроконтроллеров критически важно в космических экспедициях: они устойчивы к жёсткой радиации, а устройства с такой схемотехникой легко ремонтируются в условиях далёкой планеты.
 
@@ -44,7 +42,7 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zatuhanie-svetodioda-esd.pdf)\
 2\. 🔌
 
-![v](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-05-.webp)
+![v](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-05.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

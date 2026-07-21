@@ -1,10 +1,10 @@
 ---
 layout: page
-title: "Робот кролик из картона: самодельный редуктор"
-description: "Вид конструкции робота, приводимого в движение с помощью электромотора и самодельного редуктора, и демонстрация движения модели."
+title: "Эффект плавного затухания светодиода: макет эксперимента"
+description: "Макет эксперимента к проекту для демонстрации включения транзистора в обычном и инверсном режиме."
 author: ["RadiotekhnikaClub"]
-date: 2026-03-11
-categories: [media, robot-krolik-iz-kartona]
+date: 2026-03-15
+categories: [media, plavnoe-zatuhanie-svetodioda]
 media-post-page: "Y"
 discus: "gallery"
 ---

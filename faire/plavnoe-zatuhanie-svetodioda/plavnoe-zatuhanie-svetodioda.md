@@ -27,8 +27,7 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 ![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-01.webm)
 ![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-02.webm)
 
-> **Подробнее об инверсном режиме:** \
-> • [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).
+> **Смотри подробнее:** об инверсном режиме в \[Бочаров, МРБ №887, 1975 г.\] [^1].
 
 ### Развитие проекта
 1\. Создание демонстрационного стенда для проведения экспериментов по наглядному сравнению работы транзистора в стандартном и инверсном режимах включения.\
@@ -55,3 +54,6 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 [[../../_posts/2026-03-15-plavnoe-zatuhanie-svetodioda|2026-03-15-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-13-plavnoe-zatuhanie-svetodioda|2026-03-13-plavnoe-zatuhanie-svetodioda]]
 {% endcomment %}
+
+### Литература
+[^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).

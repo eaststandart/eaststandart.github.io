@@ -48,3 +48,10 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %} 
+[[../../_posts/2026-03-17-plavnoe-zatuhanie-svetodioda|2026-03-17-plavnoe-zatuhanie-svetodioda]]
+[[../../_posts/2026-03-16-plavnoe-zatuhanie-svetodioda|2026-03-16-plavnoe-zatuhanie-svetodioda]]
+[[../../_posts/2026-03-15-plavnoe-zatuhanie-svetodioda|2026-03-15-plavnoe-zatuhanie-svetodioda]]
+[[../../_posts/2026-03-13-plavnoe-zatuhanie-svetodioda|2026-03-13-plavnoe-zatuhanie-svetodioda]]
+{% endcomment %}

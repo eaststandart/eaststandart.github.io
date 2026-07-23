@@ -16,4 +16,4 @@ discus: "questions"
 
 🎬 Демонстрация функционирования
 
-![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-03.webm)
+![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-02.webm)

@@ -11,7 +11,7 @@ discus: "questions"
 
 🎬 Демонстрация синхронизации
 
-Представлены видео без и с схемой синхронизации:
+Ниже представлены видео работы устройства без схемы синхронизации и с ней. Из первого ролика видно, что время зажигания светодиода больше времени его гашения. На втором ролике длительность зажигания и гашения светодиода абсолютно одинаковы.
 
 ![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-03.webm)
 ![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-04.webm)

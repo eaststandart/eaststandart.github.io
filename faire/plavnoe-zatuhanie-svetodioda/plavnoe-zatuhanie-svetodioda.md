@@ -47,7 +47,7 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 
 [^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).
 
-{% comment %} 
+{% comment %}  Ссылки на посты по этому проекту
 [[../../_posts/2026-03-17-plavnoe-zatuhanie-svetodioda|2026-03-17-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-16-plavnoe-zatuhanie-svetodioda|2026-03-16-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-15-plavnoe-zatuhanie-svetodioda|2026-03-15-plavnoe-zatuhanie-svetodioda]]

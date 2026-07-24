@@ -24,7 +24,7 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 
 ![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-01.webm)
 
-> **Примечание:** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
+> **Примечание.** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
 
 ### Развитие проекта
 1\. Создание демонстрационного стенда для проведения экспериментов по наглядному сравнению работы транзистора в стандартном и инверсном режимах включения.\
@@ -45,12 +45,11 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
+[^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).
+
 {% comment %} 
 [[../../_posts/2026-03-17-plavnoe-zatuhanie-svetodioda|2026-03-17-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-16-plavnoe-zatuhanie-svetodioda|2026-03-16-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-15-plavnoe-zatuhanie-svetodioda|2026-03-15-plavnoe-zatuhanie-svetodioda]]
 [[../../_posts/2026-03-13-plavnoe-zatuhanie-svetodioda|2026-03-13-plavnoe-zatuhanie-svetodioda]]
 {% endcomment %}
-
-### Литература
-[^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).

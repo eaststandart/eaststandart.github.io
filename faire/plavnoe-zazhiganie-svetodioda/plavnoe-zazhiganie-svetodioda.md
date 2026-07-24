@@ -1,28 +1,28 @@
 ---
 layout: page
-title: Эффект плавного затухания светодиода
+title: Эффект плавного зажигания светодиода
 description: "Развитие навыков чтения электронных схем и понимание принципов их работы. Изучение работы биполярных транзисторов в стандартном и инверсном режимах, процессов заряда и разряда конденсаторов, а также наглядное освоение физики электронных процессов без использования микроконтроллеров."
 author: ["RadiotekhnikaClub"]
-tags: [электроникаисхемотехника, проектучебный, 3класс, проект, эффектплавногозатуханиясветодиода, макетэксперимента, схемаэлектрическаяпринципиальная]
+tags: [электроникаисхемотехника, проектучебный, 3класс, проект, эффектплавногозажиганиясветодиода, макетэксперимента, схемаэлектрическаяпринципиальная]
 sources: "[Beginner Concepts: Analog Circuits](https://hackaday.com/2010/08/28/beginner-concepts-analog-circuits/)"
 date: 2026-03-12
-permalink: /faire/plavnoe-zatuhanie-svetodioda/
+permalink: /faire/plavnoe-zazhiganie-svetodioda/
 ---
 
 ### Описание проекта
 Создание небольшой аналоговой схемы, которая создаёт эффект плавного зажигания и гашения светодиода — аналогично пульсирующему индикатору на компьютерах «Macintosh». Всего два транзистора полностью заменяют собой сложный микроконтроллер с программным кодом. Особенность проекта заключается в использовании биполярного кремниевого транзистора в необычном, инверсном режиме, что позволяет изучить настоящую физику электронных процессов.
 
-![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-01.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-02.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-03.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-04.webp)
+![](plavnoe-zazhiganie-svetodioda-01.webp)
+![](plavnoe-zazhiganie-svetodioda-02.webp)
+![](plavnoe-zazhiganie-svetodioda-03.webp)
+![](plavnoe-zazhiganie-svetodioda-04.webp)
 
 > **Примечание.** В схеме применяется редкий сегодня германиевый советский транзистор. Работа с элементами из разных материалов, которые выполняют одну задачу, но имеют разные свойства, даёт глубокое погружение в физику полупроводников. Это закладывает базу для будущего проектирования электроники на новых физических принципах и материалах.
 
 ### Область применения
 В быту схема подходит для создания оригинального ночника или карманного фонарика, где крупный фиолетовый светодиод создаёт красивый визуальный эффект в темноте. Также решение применимо как готовый модуль плавного включения индикации для различных домашних приборов. В будущем принцип применим в индикаторах на таких планетах, как Марс, для оценки безопасности среды перед выходом из жилого модуля. Использование аналоговых дискретных элементов вместо микроконтроллеров критически важно в космических экспедициях: они устойчивы к жёсткой радиации, а устройства с такой схемотехникой легко ремонтируются в условиях далёкой планеты.
 
-![video](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-01.webm)
+![video](plavnoe-zazhiganie-svetodioda-01.webm)
 
 > **Примечание.** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
 
@@ -32,10 +32,10 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 3\. Разработка блока сопряжения схемы с физическими датчиками для автоматического изменения яркости, длительности или частоты вспышек при колебаниях температуры, давления или других параметров окружающей среды.
 
 ### Файлы проекта
-1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zatuhanie-svetodioda-esd.pdf)\
+1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
 2\. 🔌
 
-![v](github/eaststandart.github.io/faire/plavnoe-zatuhanie-svetodioda/plavnoe-zatuhanie-svetodioda-05.webp)
+![v](plavnoe-zazhiganie-svetodioda-05.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
@@ -48,8 +48,8 @@ permalink: /faire/plavnoe-zatuhanie-svetodioda/
 [^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).
 
 {% comment %}  Ссылки на посты по этому проекту
-[[../../_posts/2026-03-17-plavnoe-zatuhanie-svetodioda|2026-03-17-plavnoe-zatuhanie-svetodioda]]
-[[../../_posts/2026-03-16-plavnoe-zatuhanie-svetodioda|2026-03-16-plavnoe-zatuhanie-svetodioda]]
-[[../../_posts/2026-03-15-plavnoe-zatuhanie-svetodioda|2026-03-15-plavnoe-zatuhanie-svetodioda]]
-[[../../_posts/2026-03-13-plavnoe-zatuhanie-svetodioda|2026-03-13-plavnoe-zatuhanie-svetodioda]]
+[[../../_posts/2026-03-17-plavnoe-zazhiganie-svetodioda|2026-03-17-plavnoe-zazhiganie-svetodioda]]
+[[../../_posts/2026-03-16-plavnoe-zazhiganie-svetodioda|2026-03-16-plavnoe-zazhiganie-svetodioda]]
+[[../../_posts/2026-03-15-plavnoe-zazhiganie-svetodioda|2026-03-15-plavnoe-zazhiganie-svetodioda]]
+[[../../_posts/2026-03-13-plavnoe-zazhiganie-svetodioda|2026-03-13-plavnoe-zazhiganie-svetodioda]]
 {% endcomment %}

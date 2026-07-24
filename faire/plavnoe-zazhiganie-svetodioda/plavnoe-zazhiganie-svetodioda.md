@@ -12,17 +12,17 @@ permalink: /faire/plavnoe-zazhiganie-svetodioda/
 ### Описание проекта
 Создание небольшой аналоговой схемы, которая создаёт эффект плавного зажигания и гашения светодиода — аналогично пульсирующему индикатору на компьютерах «Macintosh». Всего два транзистора полностью заменяют собой сложный микроконтроллер с программным кодом. Особенность проекта заключается в использовании биполярного кремниевого транзистора в необычном, инверсном режиме, что позволяет изучить настоящую физику электронных процессов.
 
-![](plavnoe-zazhiganie-svetodioda-01.webp)
-![](plavnoe-zazhiganie-svetodioda-02.webp)
-![](plavnoe-zazhiganie-svetodioda-03.webp)
-![](plavnoe-zazhiganie-svetodioda-04.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-01.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-02.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-03.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-04.webp)
 
 > **Примечание.** В схеме применяется редкий сегодня германиевый советский транзистор. Работа с элементами из разных материалов, которые выполняют одну задачу, но имеют разные свойства, даёт глубокое погружение в физику полупроводников. Это закладывает базу для будущего проектирования электроники на новых физических принципах и материалах.
 
 ### Область применения
 В быту схема подходит для создания оригинального ночника или карманного фонарика, где крупный фиолетовый светодиод создаёт красивый визуальный эффект в темноте. Также решение применимо как готовый модуль плавного включения индикации для различных домашних приборов. В будущем принцип применим в индикаторах на таких планетах, как Марс, для оценки безопасности среды перед выходом из жилого модуля. Использование аналоговых дискретных элементов вместо микроконтроллеров критически важно в космических экспедициях: они устойчивы к жёсткой радиации, а устройства с такой схемотехникой легко ремонтируются в условиях далёкой планеты.
 
-![video](plavnoe-zazhiganie-svetodioda-01.webm) 
+![video](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-01.webm)
 
 > **Примечание.** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
 
@@ -35,7 +35,7 @@ permalink: /faire/plavnoe-zazhiganie-svetodioda/
 1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
 2\. 🔌
 
-![v](plavnoe-zazhiganie-svetodioda-05.webp)
+![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

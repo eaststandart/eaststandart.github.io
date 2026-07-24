@@ -11,13 +11,13 @@ discus: "questions"
 
 📷 Общий вид конструкции
 
-![](../faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-06.webp)
-![](../faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-07.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-06.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-07.webp)
 
 🎬 Демонстрация функционирования
 
 Эксперимент позволяет исследовать влияние взаимной замены коллектора и эмиттера на характеристики транзистора и сравнить свойства различных режимов его работы.
 
-![video](../faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-02.webm)
+![video](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-02.webm)
 
 Сравнение работы транзистора в обычном и инверсном включении показывает различие коэффициента передачи тока и эффективности управления нагрузкой. В инверсном режиме светодиод светится значительно слабее из-за уменьшенного коэффициента передачи тока.

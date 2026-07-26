@@ -7,7 +7,7 @@ date: 2025-11-22
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---
 
-**Свободное движение:**
+**Свободное движение:** 
 
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webm)
 

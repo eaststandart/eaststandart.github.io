@@ -6,8 +6,6 @@ author: ["Лиза Б."]
 tags: ["eastemitting"]
 date: 2026-02-12
 categories: [media, elektronnyj-organ]
-media-post-page: "Y"
-discus: "gallery"
 ---
 
 📷 Общий вид конструкции устройства
@@ -26,3 +24,5 @@ discus: "gallery"
 🎬 Демонстрация работы устройства
 
 ![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-02.webm)
+
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/64#discussioncomment-17785459) 👈

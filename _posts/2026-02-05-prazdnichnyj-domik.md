@@ -6,8 +6,6 @@ author: ["Кирилл К."]
 tags: ["kirill-k"]
 date: 2026-02-05
 categories: [media, prazdnichnyj-domik]
-media-post-page: "Y"
-discus: "gallery"
 ---
 
 📷 Общий вид конструкции

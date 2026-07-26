@@ -26,4 +26,4 @@ discus: "questions"
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-7.webm)
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-8.webm)
 
-> 💡 **Поделись своей идеей!** Предложи в комментариях свой собственный способ настройки максимальной скорости робота. Подумай и объясни, от каких именно физических факторов и деталей зависит разгон вибро-робота? 🚀
+> 💡 **Поделись идеей.** Предложи в комментариях свой собственный способ настройки максимальной скорости робота! 🚀

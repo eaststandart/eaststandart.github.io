@@ -16,13 +16,13 @@ permalink: /faire/blaster-elektroakusticheskij/
 
 Устройство собрано на эргономичной деревянной рукоятке с ручным регулятором частоты. Для усиления звука ствол выполнен из пластиковой трубы, в которую встроены динамик  и блок из четырех светодиодов, мигающих в такт акустическим импульсам. Использование советских ретро-деталей в открытом монтаже придает бластеру уникальный футуристический образ.
 
-![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-1.webp)
-![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-2.webp)
+![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-01.webp)
+![](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-02.webp)
 
 ### Область применения
 Использование в качестве уникального игрового реквизита и наглядного пособия по изучению аналоговой схемотехники. Для юного космонавта это индивидуальное защитное устройство, генерирующее направленные звуковые и световые импульсы для ориентации в темных пещерах и подачи сигналов на неизведанных планетах.
 
-![video](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-1.webm)
+![video](github/eaststandart.github.io/faire/blaster-elektroakusticheskij/blaster-elektroakusticheskij-01.webm)
 
 ### Развитие проекта
 1\. Добавление в схему лазерного модуля для подсветки цели или генерации ярких вспышек в такт частоте выстрелов бластера.\

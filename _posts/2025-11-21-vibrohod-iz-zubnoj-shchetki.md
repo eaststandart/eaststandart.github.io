@@ -7,7 +7,7 @@ date: 2025-11-21
 categories: [media, vibrohod-iz-zubnoj-shchetki]
 ---
 
-📷 Общий вид конструкции робота
+📷 Общий вид конструкции
 
 ![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webp)
 ![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webp)

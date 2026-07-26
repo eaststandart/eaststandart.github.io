@@ -20,10 +20,10 @@ discus: "gallery"
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-17.webp)
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-18.webp)
 
-🎬 Демонстрация функционирования
+🎬 Демонстрация работы
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-04.webm)
 
-🎬 Демонстрация процесса движения
+🎬 Демонстрация движения
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-05.webm)

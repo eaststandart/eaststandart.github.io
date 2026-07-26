@@ -8,7 +8,7 @@ date: 2026-02-12
 categories: [media, elektronnyj-organ]
 ---
 
-📷 Общий вид конструкции устройства
+📷 Общий вид конструкции
 
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-04.webp)
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-05.webp)
@@ -21,7 +21,7 @@ categories: [media, elektronnyj-organ]
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
 
-🎬 Демонстрация работы устройства
+🎬 Демонстрация работы
 
 ![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-02.webm)
 

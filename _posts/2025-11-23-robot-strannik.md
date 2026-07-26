@@ -14,7 +14,7 @@ categories: [media, robot-strannik]
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-07.webp)
 ![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-08.webp)
 
-🎬 Демонстрация процесса движения
+🎬 Демонстрация движения
 
 ![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-3.webm)
 

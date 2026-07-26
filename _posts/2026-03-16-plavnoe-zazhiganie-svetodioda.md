@@ -14,7 +14,7 @@ discus: "questions"
 ![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-06.webp)
 ![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-07.webp)
 
-🎬 Демонстрация функционирования
+🎬 Демонстрация работы
 
 Эксперимент позволяет исследовать влияние взаимной замены коллектора и эмиттера на характеристики транзистора и сравнить свойства различных режимов его работы.
 

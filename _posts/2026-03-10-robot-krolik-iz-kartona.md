@@ -22,6 +22,6 @@ categories: [media, robot-krolik-iz-kartona]
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-02.webm)
 
-🎬 Демонстрация процесса движения
+🎬 Демонстрация движения
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-03.webm)

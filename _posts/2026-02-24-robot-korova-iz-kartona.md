@@ -22,7 +22,7 @@ categories: [media, robot-korova-iz-kartona]
 
 ![video](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-02.webm)
 
-🎬 Демонстрация процесса движения
+🎬 Демонстрация движения
 
 ![video](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-03.webm)
 ![video](github/eaststandart.github.io/faire/robot-korova-iz-kartona/robot-korova-iz-kartona-04.webm)

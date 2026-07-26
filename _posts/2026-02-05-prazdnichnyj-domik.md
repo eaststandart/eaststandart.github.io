@@ -21,4 +21,4 @@ categories: [media, prazdnichnyj-domik]
 ![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-06.webm)
 ![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-07.webm)
 
-Обсуждение этой работы [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/14#discussioncomment-17784560)!
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/14#discussioncomment-17784560)!

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Робот кролик из картона: вид и движение"
-description:  "Вид конструкции робота и демонстрация движения модели."
+description: "Вид конструкции робота и демонстрация движения модели."
 author: ["RadiotekhnikaClub"]
 date: 2026-03-10
 categories: [media, robot-krolik-iz-kartona]

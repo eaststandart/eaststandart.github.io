@@ -5,7 +5,7 @@ author: ["RadiotekhnikaClub"]
 title: Детектор перелива
 tags: [электроникаисхемотехника, проектучебный, 3класс, проект, детекторперелива, электрическоеискусство, electronicsart, трансформатор]
 sources: "[Журнал «Радио» № 12 за 1967 год (3-я страница обложки)](https://archive.radio.ru/web/1967/12/070/)"
-date: 2026-01-27
+date: 2026-01-28
 permalink: /faire/detektor-pereliva/
 ---
 

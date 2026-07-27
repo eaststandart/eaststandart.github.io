@@ -9,6 +9,21 @@ categories: [media, avtomobil-s-polnym-privodom-iz-kartona]
 
 📷 Общий вид конструкции
 
-🎬 Демонстрация общего вида
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-03.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-04.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-05.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-06.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-07.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-08.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-09.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-10.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-11.webp)
+
+🎬 Демонстрация работы
+
+![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-02.webm)
+![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-03.webm)
 
 🎬 Демонстрация движения
+
+![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-04.webm)

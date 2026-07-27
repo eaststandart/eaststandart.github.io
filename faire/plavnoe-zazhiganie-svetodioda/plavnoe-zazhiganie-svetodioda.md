@@ -32,8 +32,8 @@ permalink: /faire/plavnoe-zazhiganie-svetodioda/
 3\. Разработка блока сопряжения схемы с физическими датчиками для автоматического изменения яркости, длительности или частоты вспышек при колебаниях температуры, давления или других параметров окружающей среды.
 
 ### Файлы проекта
-1\. 📄 [Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
-2\. 🔌
+1\. 📄\
+2\. 🔌[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)
 
 ![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
 

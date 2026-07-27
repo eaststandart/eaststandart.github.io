@@ -32,10 +32,9 @@ permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
 3\. .
 
 ### Файлы проекта
-1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
-2\. 🔌
-
-![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
+1\. 📄[Сборочный чертеж, PDF]()\
+2\. 📐[Сборочный чертеж, LibreCAD]()\
+3\. 🔌[Схема электрическая принципиальная, PDF]()
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

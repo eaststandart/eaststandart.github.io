@@ -1,11 +1,11 @@
 ---
 layout: page
-title: "Беспроводной телеграф: вопросы"
-description: "Здесь можно задать любые вопросы по проекту."
+title: "Беспроводной телеграф: галерея"
+description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-11-02
-categories: [journal, besprovodnoj-telegraf]
-journal-post-page: "N"
-discus: "questions"
+categories: [media, besprovodnoj-telegraf]
+media-post-page: "N"
+discus: "gallery"
 ---
 
-Спроси – не стесняйся ...
+Покажи как выглядит созданный тобой проект ...

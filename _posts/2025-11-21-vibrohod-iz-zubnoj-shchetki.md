@@ -1,19 +1,11 @@
 ---
 layout: page
-title: "Робот зубочист: вариант конструкции"
-description: "Варианты конструкций роботов зубочистов без и с балансирвочными усиками от опрокидывания."
-author: ["RadiotekhnikaClub"]
+title: "Виброход из зубной щетки: галерея"
+description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-11-21
 categories: [media, vibrohod-iz-zubnoj-shchetki]
+media-post-page: "N"
+discus: "gallery"
 ---
 
-📷 Общий вид конструкции
-
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webp)
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webp)
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webp)
-
-🎬 Демонстрация свободного движения
-
-![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webm)
-![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webm)
+Покажи как выглядит созданный тобой проект ...

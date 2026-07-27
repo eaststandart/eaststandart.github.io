@@ -1,11 +1,11 @@
 ---
 layout: page
-title: "Настольная светодиодная лампа с растением: вопросы"
-description: "Здесь можно задать любые вопросы по проекту."
+title: "Настольная светодиодная лампа с растением: галерея"
+description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-10-30
-categories: [journal, nastolnaya-svetodiodnaya-lampa-s-rasteniem]
-journal-post-page: "N"
-discus: "questions"
+categories: [media, nastolnaya-svetodiodnaya-lampa-s-rasteniem]
+media-post-page: "N"
+discus: "gallery"
 ---
 
-Спроси – не стесняйся ...
+Покажи как выглядит созданный тобой проект ...

@@ -5,7 +5,7 @@ description: "Развитие навыков конструирования: р
 author: ["RadiotekhnikaClub"]
 tags: [столярноедело, проектучебный, 3класс, проект, настольнаясветодиоднаялампасрастением]
 sources: "[Glass bottle crafts](https://ru.pinterest.com/pin/6122149488116170/)"
-date: 2025-10-27
+date: 2025-10-28
 permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ---
 

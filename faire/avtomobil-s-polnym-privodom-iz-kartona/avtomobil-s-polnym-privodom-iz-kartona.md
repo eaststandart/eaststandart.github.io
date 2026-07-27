@@ -22,7 +22,7 @@ permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
 
 ![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-01.webm)
 
-> **Смотри также:** [Испытания макета самоходного шасси робота. 1970-е.](https://youtu.be/xDCPdqjF0bE)
+> **Смотри также:** [Испытания макета самоходного шасси робота, 1970 год](https://youtu.be/xDCPdqjF0bE)
 
 ### Развитие проекта
 1\. Добавление модуля беспроводного дистанционного управления для свободного движения без проводов.\

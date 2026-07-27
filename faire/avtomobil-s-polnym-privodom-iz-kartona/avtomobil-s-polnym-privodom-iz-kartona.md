@@ -3,12 +3,11 @@ layout: page
 title: Автомобиль с полным приводом из картона
 description: ""
 author: ["RadiotekhnikaClub"]
-tags: [электроникаисхемотехника, проектучебный, 3класс, проект, эффектплавногозажиганиясветодиода, макетэксперимента, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
+tags: [конструированиеимоделирование, проектучебный, 3класс, проект, автомобильсполнымприводомизкартона]
 sources: "[Вездеход 4-WD из картона](https://youtu.be/5y7W3MgE9nk)"
 date: 2026-04-05
 permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
 ---
-
 
 Создание конструкции простого автомобиля, приводимого в движение с помощью мотора и самодельного редуктора. Приведены варианты его модификации путем добавления в конструкцию функции дистанционного управления.
 
@@ -16,6 +15,7 @@ permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
 
 
 ![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-01.webp)
+![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-02.webp)
 
 > **Примечание.** 
 

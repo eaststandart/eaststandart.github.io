@@ -60,7 +60,7 @@ discus: "journal"
 
 🎬 Демонстрация тестирования устройства
 
-![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
+![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-04.webm)
 
 <a id="etap-7"></a>**Этап 7.** Окончательная сборка конструкции
 
@@ -70,4 +70,4 @@ discus: "journal"
 
 🎬 Демонстрация общего вида
 
-![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-04.webm)
+![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-05.webm)

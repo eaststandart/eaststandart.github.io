@@ -21,8 +21,12 @@ categories: [media, elektronnyj-organ]
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-12.webp)
 ![](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-13.webp)
 
-🎬 Демонстрация работы
+🎬 Демонстрация общего вида
 
 ![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-02.webm)
+
+🎬 Демонстрация работы
+
+![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-03.webm)
 
 🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/64#discussioncomment-17785459) 👈

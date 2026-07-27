@@ -2,7 +2,7 @@
 layout: page
 title: "Настольная светодиодная лампа с растением: галерея"
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
-date: 2025-10-27
+date: 2025-10-29
 categories: [media, nastolnaya-svetodiodnaya-lampa-s-rasteniem]
 media-post-page: "N"
 discus: "gallery"

@@ -48,8 +48,8 @@ permalink: /faire/plavnoe-zazhiganie-svetodioda/
 [^1]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-03-17-plavnoe-zazhiganie-svetodioda|2026-03-17-plavnoe-zazhiganie-svetodioda]]
 [[../../_posts/2026-03-16-plavnoe-zazhiganie-svetodioda|2026-03-16-plavnoe-zazhiganie-svetodioda]]
 [[../../_posts/2026-03-15-plavnoe-zazhiganie-svetodioda|2026-03-15-plavnoe-zazhiganie-svetodioda]]
+[[../../_posts/2026-03-14-plavnoe-zazhiganie-svetodioda|2026-03-14-plavnoe-zazhiganie-svetodioda]]
 [[../../_posts/2026-03-13-plavnoe-zazhiganie-svetodioda|2026-03-13-plavnoe-zazhiganie-svetodioda]]
 {% endcomment %}

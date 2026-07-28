@@ -1,10 +1,10 @@
 ---
 layout: page
-title: "Детектор перелива: общий вид"
-description: "Дополнительные медиа файлы вида конструкции устройства."
+title: "Подставка для осциллографа: общий вид"
+description: "Дополнительные медиа файлы вида конструкции с разных ракурсов."
 author: ["RadiotekhnikaClub"]
-date: 2026-01-31
-categories: [media, detektor-pereliva]
+date: 2026-04-12
+categories: [media, podstavka-dlya-oscillografa]
 ---
 
 📷 Общий вид конструкции
@@ -17,6 +17,3 @@ categories: [media, detektor-pereliva]
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-14.webp)
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-15.webp)
 
-🎬 Демонстрация общего вида
-
-![video](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-02.webm)

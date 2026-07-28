@@ -9,11 +9,9 @@ categories: [media, podstavka-dlya-oscillografa]
 
 📷 Общий вид конструкции
 
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-09.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-10.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-11.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-12.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-13.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-14.webp)
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-15.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-05.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-06.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-07.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-08.webp)
 
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/64#discussioncomment-17785459) 👈

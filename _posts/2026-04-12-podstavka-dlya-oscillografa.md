@@ -13,5 +13,7 @@ categories: [media, podstavka-dlya-oscillografa]
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-06.webp)
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-07.webp)
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-08.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-09.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-10.webp)
 
-🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/64#discussioncomment-17785459) 👈
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/67#discussioncomment-17814003) 👈

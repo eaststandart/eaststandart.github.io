@@ -14,13 +14,12 @@ permalink: /faire/podstavka-dlya-oscillografa/
 
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-01.webp)
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-02.webp)
-![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-03.webp)
-![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-04.webp)
 
 ### Область применения
 В быту конструкция универсальна и может использоваться как удобная подставка для смартфона, планшета или книг. Проект открывает юным мастерам путь к созданию собственных приспособлений для научного оборудования. Такие навыки являются важной частью работы инженера-исследователя. В дальнейшем такое конструирование развивает понимание принципов удобства: от правильной организации личного стола до проектирования сложных приборных панелей, кабин самолётов и пультов управления космических кораблей.
 
-![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-09.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-03.webp)
+![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-04.webp)
 
 ### Развитие проекта
 1\. Добавление механизма регулировки угла наклона подставки для более удобного обзора экрана прибора.\

@@ -14,7 +14,7 @@ permalink: /faire/karandash-muzykalnyj/
 Устройство может быть использовано как простейший прибор для исследование электрической проводимости окружающих предметов и материалов (веществ) путем преобразования их сопротивлений в слышимый человеком звук.
   
 ### Описание проекта
-Создание устройства простого электронного звукового синтезатора, который использует проводящие свойства графита карандаша и человеческого тела, для воспроизведения музыкального тона с изменяющейся частотой. В результате получается создавать различные звуки. Это позволяет нарисовать музыкальные инструменты на любом листе бумаги и сыграть на них небольшую мелодию или превратить обычные предметы в музыкальные инструменты: кисти, стол, деревья, фрукты, кухонную раковину. 
+Создание устройства простого электронного звукового синтезатора, который использует проводящие свойства графита карандаша и человеческого тела, для воспроизведения музыкального тона с изменяющейся частотой. В результате получается создавать различные звуки. Это позволяет нарисовать музыкальные инструменты на любом листе бумаги и сыграть на них небольшую мелодию или превратить обычные предметы в музыкальные инструменты: кисти, стол, деревья, фрукты, кухонную раковину.
 
 ![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-01.webp)
 ![v](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-02.webp)
@@ -48,8 +48,8 @@ permalink: /faire/karandash-muzykalnyj/
 {% include posts-page.liquid type="media" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-03-16-plavnoe-zazhiganie-svetodioda|2026-03-16-plavnoe-zazhiganie-svetodioda]]
-[[../../_posts/2026-03-15-plavnoe-zazhiganie-svetodioda|2026-03-15-plavnoe-zazhiganie-svetodioda]]
-[[../../_posts/2026-03-14-plavnoe-zazhiganie-svetodioda|2026-03-14-plavnoe-zazhiganie-svetodioda]]
-[[../../_posts/2026-03-13-plavnoe-zazhiganie-svetodioda|2026-03-13-plavnoe-zazhiganie-svetodioda]]
+[[../../_posts/2026-04-14-karandash-muzykalnyj|2026-03-16-karandash-muzykalnyj]]
+[[../../_posts/2026-04-15-karandash-muzykalnyj|2026-03-15-karandash-muzykalnyj]]
+[[../../_posts/2026-04-16-karandash-muzykalnyj|2026-03-14-karandash-muzykalnyj]]
+[[../../_posts/2026-04-17-karandash-muzykalnyj|2026-03-13-karandash-muzykalnyj]]
 {% endcomment %}

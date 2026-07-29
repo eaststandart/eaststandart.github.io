@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Подставка для осциллографа: общий вид"
-description: "Дополнительные медиа файлы вида конструкции с разных ракурсов."
+description: "Дополнительные медиаматериалы вида конструкции."
 author: ["RadiotekhnikaClub"]
 date: 2026-04-12
 categories: [media, podstavka-dlya-oscillografa]

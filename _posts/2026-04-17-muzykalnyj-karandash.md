@@ -4,7 +4,8 @@ title: "Музыкальный карандаш: сборка"
 description: "Дополнительные медиаматериалы процесса окончательной сборки конструкции."
 author: ["RadiotekhnikaClub"]
 date: 2026-04-17
-categories: [media, muzykalnyj-karandash]
+categories: [journal, muzykalnyj-karandash]
+discus: "journal"
 ---
 
 📷 Конструкция в собранном виде

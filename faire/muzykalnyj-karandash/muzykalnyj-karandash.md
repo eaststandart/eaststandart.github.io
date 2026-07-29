@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Карандаш музыкальный
+title: Музыкальный карандаш
 description: "Развитие навыков чтения электронных схем и понимание принципов их работы. Изучение работы биполярных транзисторов в стандартном и инверсном режимах, процессов заряда и разряда конденсаторов, а также наглядное освоение физики электронных процессов без использования микроконтроллеров."
 author: ["RadiotekhnikaClub"]
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, карандашмузыкальный, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
 sources: "[“Drawdio” Musical Pencil](https://makezine.com/projects/drawdio-musical-pencil/)"
 date: 2026-04-13
-permalink: /faire/karandash-muzykalnyj/
+permalink: /faire/muzykalnyj-karandash/
 ---
 
 Развитие навыков конструирования, монтажа и настройки электронных устройств с применением микросхем и германиевого транзистора. 
@@ -16,15 +16,15 @@ permalink: /faire/karandash-muzykalnyj/
 ### Описание проекта
 Создание устройства простого электронного звукового синтезатора, который использует проводящие свойства графита карандаша и человеческого тела, для воспроизведения музыкального тона с изменяющейся частотой. В результате получается создавать различные звуки. Это позволяет нарисовать музыкальные инструменты на любом листе бумаги и сыграть на них небольшую мелодию или превратить обычные предметы в музыкальные инструменты: кисти, стол, деревья, фрукты, кухонную раковину.
 
-![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-01.webp)
-![v](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-02.webp)
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-01.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 > **Примечание.** 
 
 ### Область применения
 В быту схема подходит для создания оригинального ночника или карманного фонарика, где крупный фиолетовый светодиод создаёт красивый визуальный эффект в темноте. Также решение применимо как готовый модуль плавного включения индикации для различных домашних приборов. В будущем принцип применим в индикаторах на таких планетах, как Марс, для оценки безопасности среды перед выходом из жилого модуля. Использование аналоговых дискретных элементов вместо микроконтроллеров критически важно в космических экспедициях: они устойчивы к жёсткой радиации, а устройства с такой схемотехникой легко ремонтируются в условиях далёкой планеты.
 
-![video](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-01.webm)
+![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-01.webm)
 
 > **Примечание.** .
 
@@ -34,10 +34,10 @@ permalink: /faire/karandash-muzykalnyj/
 3\. Разработка блока сопряжения схемы с физическими датчиками для автоматического изменения яркости, длительности или частоты вспышек при колебаниях температуры, давления или других параметров окружающей среды.
 
 ### Файлы проекта
-1\. 📄[Схема электрическая принципиальная, PDF](karandash-muzykalnyj-esd.pdf)\
-2\. 🖼️[Схема электрическая принципиальная, JPG](karandash-muzykalnyj-esd.jpg)
+1\. 📄[Схема электрическая принципиальная, PDF](muzykalnyj-karandash-esd.pdf)\
+2\. 🖼️[Схема электрическая принципиальная, JPG](muzykalnyj-karandash-esd.jpg)
 
-![v](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-03.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
@@ -48,8 +48,8 @@ permalink: /faire/karandash-muzykalnyj/
 {% include posts-page.liquid type="media" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-04-14-karandash-muzykalnyj|2026-03-16-karandash-muzykalnyj]]
-[[../../_posts/2026-04-15-karandash-muzykalnyj|2026-03-15-karandash-muzykalnyj]]
-[[../../_posts/2026-04-16-karandash-muzykalnyj|2026-03-14-karandash-muzykalnyj]]
-[[../../_posts/2026-04-17-karandash-muzykalnyj|2026-03-13-karandash-muzykalnyj]]
+[[../../_posts/2026-04-14-muzykalnyj-karandash|2026-03-16-muzykalnyj-karandash]]
+[[../../_posts/2026-04-15-muzykalnyj-karandash|2026-03-15-muzykalnyj-karandash]]
+[[../../_posts/2026-04-16-muzykalnyj-karandash|2026-03-14-muzykalnyj-karandash]]
+[[../../_posts/2026-04-17-muzykalnyj-karandash|2026-03-13-muzykalnyj-karandash]]
 {% endcomment %}

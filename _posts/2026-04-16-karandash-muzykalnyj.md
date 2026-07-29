@@ -25,4 +25,4 @@ categories: [media, karandash-muzykalnyj]
 ![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-14.webp)
 ![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-15.webp)
 
-🗣️ Прокомментировать работу можно [здесь]() 👈
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/68#discussioncomment-17825619) 👈

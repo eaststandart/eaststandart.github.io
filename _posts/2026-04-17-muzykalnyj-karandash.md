@@ -20,5 +20,3 @@ discus: "journal"
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-20.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-21.webp)
-
-🗣️ Прокомментировать работу можно [здесь]() 👈

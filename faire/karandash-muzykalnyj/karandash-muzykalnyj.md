@@ -17,7 +17,7 @@ permalink: /faire/karandash-muzykalnyj/
 Создание устройства простого электронного звукового синтезатора, который использует проводящие свойства графита карандаша и человеческого тела, для воспроизведения музыкального тона с изменяющейся частотой. В результате получается создавать различные звуки. Это позволяет нарисовать музыкальные инструменты на любом листе бумаги и сыграть на них небольшую мелодию или превратить обычные предметы в музыкальные инструменты: кисти, стол, деревья, фрукты, кухонную раковину. 
 
 ![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-01.webp)
-![](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-02.webp)
+![v](github/eaststandart.github.io/faire/karandash-muzykalnyj/karandash-muzykalnyj-02.webp)
 
 > **Примечание.** 
 

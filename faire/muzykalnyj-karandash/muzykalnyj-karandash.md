@@ -24,7 +24,7 @@ permalink: /faire/muzykalnyj-karandash/
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
 <div style="text-align: center;">
-<img src="muzykalnyj-karandash-esd.jpg" width="50%" />
+<img src="muzykalnyj-karandash-esd.jpg" style="float: left; margin-right: 20px; margin-bottom: 10px;" width="300" />
 </div>
 
 ИС1 работает в автоколебательном режиме (генератор колебаний), выдавая непрерывный поток импульсов с вывода 3 ИС1. Частоту этих импульсов можно регулировать, изменяя значения R1, R3, С1, подключенных к выводам 2 и 7 ИС1. Контакты 1 и 2 расположены так, чтобы тело человека находилось в резистивной петле. Из-за этого частота выходного сигнала ИС1 изменяется в зависимости от того, к чему прикасается человек. VT1 усиливает эти импульсы, которые воспроизводит BA1 в виде слышимого звука.

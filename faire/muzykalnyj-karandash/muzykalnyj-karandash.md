@@ -24,7 +24,7 @@ permalink: /faire/muzykalnyj-karandash/
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-01.webm)
 
-> **Примечание.** .
+> **Примечание.**.
 
 ### Развитие проекта
 1\. .\

@@ -17,8 +17,6 @@ collections:
 # Jekyll settings
 # -----------------------------------------------------------------------------
 
-
-
 # Includes & excludes
 include: ["_pages"]
 exclude:

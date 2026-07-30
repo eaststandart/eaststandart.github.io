@@ -26,10 +26,6 @@ permalink: /faire/muzykalnyj-karandash/
 
 $$f = \frac{1.44}{C_1 \cdot (2 \cdot R_1 + R_3)}$$
 
-$f = \frac{1.44}{C_1 \cdot (2 \cdot R_1 + R_3)}$
-
-\(f = \frac{1.44}{C_1 \cdot (2 \cdot R_1 + R_3)}\)
-
 где:
 
 - $f$ — частота, [Гц];

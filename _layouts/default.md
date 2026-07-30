@@ -18,8 +18,6 @@
     <link rel="stylesheet" href="/assets/css/footnotes.css">
     <link rel="stylesheet" href="/assets/css/giscus.css">
 
-<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"> </script>
-
     <!-- Стили страницы или ее родительских шаблонов -->
     {% if page.custom_css %}
       {%- for style in page.custom_css -%}
@@ -32,6 +30,10 @@
       {%- endfor -%}
     {% endif %}
 </head>
+
+<!-- Mathjax Support --> 
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+
 <body>
 
 <div class="content-wrapper">

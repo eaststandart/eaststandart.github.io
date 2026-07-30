@@ -17,6 +17,13 @@ collections:
 # Jekyll settings
 # -----------------------------------------------------------------------------
 
+# Markdown and syntax highlight
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+
 # Includes & excludes
 include: ["_pages"]
-
+exclude:
+  - LICENSE
+  - README.md

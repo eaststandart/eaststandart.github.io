@@ -31,7 +31,7 @@
     {% endif %}
 
 <!-- Mathjax Support --> 
-<script type="text/javascript" id="MathJax-script" async src="https://jsdelivr.net"> </script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
 
 </head>
 

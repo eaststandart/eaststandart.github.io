@@ -21,8 +21,6 @@ permalink: /faire/muzykalnyj-karandash/
 
 Изучим электрическую принципиальную схему:
 
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
-
 <div style="text-align: center;">
 <img src="muzykalnyj-karandash-esd.jpg" style="float: left; margin-right: 20px; margin-bottom: 10px;" width="300" />
 </div>
@@ -58,6 +56,8 @@ $$f = \frac{1.44}{C_1 \cdot (2 \cdot R_1 + R_3)}$$
 ### Файлы проекта
 1\. 📄[Схема электрическая принципиальная, PDF](muzykalnyj-karandash-esd.pdf)\
 2\. 🖼️[Схема электрическая принципиальная, JPG](muzykalnyj-karandash-esd.jpg)
+
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

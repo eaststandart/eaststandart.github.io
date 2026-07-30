@@ -21,6 +21,9 @@ collections:
 markdown: kramdown
 kramdown:
   math_engine: mathjax
+  math_engine_opts: # more info: https://kramdown.gettalong.org/math_engine/mathjax.html
+    preview: false
+    preview_as_code: false
 
 # Includes & excludes
 include: ["_pages"]

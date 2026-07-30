@@ -31,7 +31,6 @@
     {% endif %}
 
 
-
 </head>
 
 <body>

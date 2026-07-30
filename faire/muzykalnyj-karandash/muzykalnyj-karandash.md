@@ -7,7 +7,6 @@ tags: [электроникаисхемотехника, проектучебн�
 sources: "[“Drawdio” Musical Pencil](https://makezine.com/projects/drawdio-musical-pencil/)"
 date: 2026-04-13
 permalink: /faire/muzykalnyj-karandash/
-mathjax: true
 ---
 
   

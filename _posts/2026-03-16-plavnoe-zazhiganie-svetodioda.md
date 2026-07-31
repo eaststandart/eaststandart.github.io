@@ -22,7 +22,8 @@ discus: "questions"
 
 Рассмотрим, как одновременно зажечь и погасить светодиод. Изучим электрическую принципиальную схему в части подключения цепочки установки длительности зажигания VD1:
 
-![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-06.webp)
 
 Начнём крутить подстроечный резистор до тех пор, пока светодиод почти готов зажечься, но ещё не горит. Чтобы увидеть невидимые процессы, воспользуемся осциллографом! Подключим прибор к точке «А» на электрической схеме и настроим его шкалу:\
 • **По вертикали (напряжение):** одна клетка (5 точек) равна **1 Вольту**.\

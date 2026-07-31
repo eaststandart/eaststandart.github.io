@@ -35,7 +35,7 @@ permalink: /faire/plavnoe-zazhiganie-svetodioda/
 1\. 📄[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
 2\. 🖼️[Схема электрическая принципиальная, JPG](plavnoe-zazhiganie-svetodioda-esd.jpg)
 
-![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)  
+![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

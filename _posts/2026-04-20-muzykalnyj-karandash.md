@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Музыкальный карандаш: применений"
+title: "Музыкальный карандаш: применение"
 description: "."
 author: ["RadiotekhnikaClub"]
 date: 2026-04-20

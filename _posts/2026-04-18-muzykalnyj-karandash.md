@@ -14,6 +14,9 @@ discus: "journal"
 
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-23.webp)
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-24.webp)
+
 <!---
 <div style="text-align: center;">
 <img src="/faire/muzykalnyj-karandash/muzykalnyj-karandash-esd.jpg" width="200" />

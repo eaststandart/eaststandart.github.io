@@ -11,8 +11,8 @@ discus: "questions"
 
 📷 Общий вид конструкции
 
-![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-07.webp)
 ![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-08.webp)
+![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-09.webp)
 
 🎬 Демонстрация работы
 

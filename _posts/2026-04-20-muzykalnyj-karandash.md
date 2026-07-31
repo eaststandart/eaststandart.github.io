@@ -7,3 +7,11 @@ date: 2026-04-20
 categories: [journal, muzykalnyj-karandash]
 discus: "journal"
 ---
+
+
+
+
+
+**Вариант применения:** нарисовать собственное пианино и сыграть на нем простую мелодию, но можно и сложную, или создать мультяшного героя и подарить ему голос.
+
+[Drawdio: Turn Almost Anything Into a Theremin](https://youtu.be/PV_w38ldZaE) // применение устройства

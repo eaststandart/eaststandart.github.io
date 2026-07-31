@@ -12,8 +12,6 @@ discus: "journal"
 
 Изучим электрическую принципиальную схему:
 
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
-
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-23.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-24.webp)
 

@@ -33,8 +33,8 @@ permalink: /faire/muzykalnyj-karandash/
 ### Файлы проекта
 1\. 🔌[Схема электрическая принципиальная, PDF](muzykalnyj-karandash-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, JPG](muzykalnyj-karandash-esd.jpg)\
-3\. 🔢[Музыкальный карандаш. Трафарет, PDF](muzykalnyj-karandash-trafaret.pdf)\
-4\. 🔢[Музыкальный карандаш. Трафарет, sPlan](muzykalnyj-karandash-trafaret.spl8)
+3\. 🔢[Музыкальный карандаш. Трафарет пианино, PDF](muzykalnyj-karandash-trafaret.pdf)\
+4\. 🔢[Музыкальный карандаш. Трафарет пианино, sPlan](muzykalnyj-karandash-trafaret.spl8)
 
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 

@@ -16,10 +16,10 @@ categories: [media, prazdnichnyj-domik]
 🎬 **Демонстрация работы**
 
 ![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-03.webm)
-![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webm)
 
 🧱 **Этап создания**
 
-![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-04.webm)
+![video](github/eaststandart.github.io/faire/prazdnichnyj-domik/prazdnichnyj-domik-05.webm)
 
 🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/14#discussioncomment-17202365) 👈

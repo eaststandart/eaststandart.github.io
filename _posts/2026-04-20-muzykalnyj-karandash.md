@@ -19,7 +19,7 @@ discus: "journal"
 
 <a id="etap-1"></a>〽️ **Звуки графитовой линии**
 
-Нарисуй карандашом дорожку произвольной формы или линию из графита и сыграй на ней свою мелодию!
+Нарисуй карандашом дорожку или линию произвольной формы и сыграй на ней свою мелодию!
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
@@ -36,7 +36,7 @@ discus: "journal"
 
 <a id="etap-3"></a>🔊 **Графитовый голос**
 
-Создай своего мультяшного героя и подари ему голос! Или нарисуй графитовый резистор и попробуй с его помощью пальцем регулировать яркость светодиода!
+Создай своего мультяшного героя и подари ему голос! Или нарисуй «графитовый резистор» и попробуй с его помощью пальцем регулировать яркость светодиода!
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-08.webm)
 

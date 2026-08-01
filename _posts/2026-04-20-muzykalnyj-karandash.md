@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Музыкальный карандаш: применение"
-description: "Представлены медиаматериалы некоторых вариантов использования музыкального карандаша."
+description: "Представлены медиаматериалы некоторых вариантов использования устройства."
 author: ["RadiotekhnikaClub"]
 date: 2026-04-20
 categories: [journal, muzykalnyj-karandash]

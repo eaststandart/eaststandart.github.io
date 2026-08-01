@@ -63,13 +63,13 @@ discus: "journal"
 
 Нарисуй клавишное или вензельное пианино и сыграй на нем простую или сложную мелодию! 
 
-Клавишное пианино:
+**Клавишное пианино:**
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-01.webm)
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-12.webm)
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-13.webm)
 
-Вензельное пианино:
+**Вензельное пианино:**
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-14.webm)
 
@@ -77,7 +77,7 @@ discus: "journal"
 
 <a id="etap-7"></a>🌊 **Водяные инструменты**
 
-Бумажный звук:
+**Бумажный звук:**
 
 Нарисуй водой на бумаге дорожку или пианино и сыграй на нем музыкальную мелодию карандашом или даже пальцем!
 
@@ -85,7 +85,7 @@ discus: "journal"
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webm)
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webm)
 
-Звук из всего:
+**Звук из всего:**
 
 Нарисуй водную дорожку или музыкальный инструмент на любом предмете или поверхности и извлеки из этого рисунка музыкальную мелодию! **Предложи свой вариант!**
 

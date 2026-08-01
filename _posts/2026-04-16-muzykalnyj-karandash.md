@@ -18,7 +18,7 @@ categories: [media, muzykalnyj-karandash]
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-10.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webp)
 
-**Круговой обзор конструкции**
+**Обзор конструкции 360°**
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-12.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-13.webp)

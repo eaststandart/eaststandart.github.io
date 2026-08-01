@@ -53,7 +53,7 @@ discus: "journal"
 
 <a id="etap-5"></a>🎼 **Подбор нот**
 
-Подбери ноты и напиши свою собственную музыкальную композицию!
+Подбери ноты и составь свою собственную музыкальную композицию!
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 

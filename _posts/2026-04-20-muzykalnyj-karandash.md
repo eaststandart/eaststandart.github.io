@@ -87,7 +87,7 @@ discus: "journal"
 
 Звук из всего:
 
-Нарисуй водную дорожку или музыкальный инструмент на любом предмете или поверхности и извлеки из этого рисунка музыкальную мелодию! **Предложи свой вариант!**
+Нарисуй водную дорожку или музыкальный инструмент на любом предмете или поверхности и извлеки из этого рисунка музыкальную мелодию! **Предложи свой вариант!** 
 
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webm)
 ![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webm)

@@ -29,9 +29,9 @@ permalink: /faire/blaster-elektroakusticheskij/
 2\. Модификация до состояния когда бластер можно использовать как пистолет в игре «Тир» из книг Свореня Р.А. и подобных. 🤔
 
 ### Файлы проекта
-1\. 📄[Сборочный чертеж, PDF](blaster-elektroakusticheskij.pdf)\
+1\. 📐[Сборочный чертеж, PDF](blaster-elektroakusticheskij.pdf)\
 2\. 📐[Сборочный чертеж, LibreCAD](blaster-elektroakusticheskij.dxf)\
-3\. 📄[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
+3\. 🔌[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
 4\. 🔌[Схема электрическая принципиальная, sPlan](blaster-elektroakusticheskij-esd.spl8)
 
 ### Журнал проекта

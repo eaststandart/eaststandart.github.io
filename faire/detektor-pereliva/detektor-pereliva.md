@@ -36,9 +36,9 @@ permalink: /faire/detektor-pereliva/
 2\. Создание автоматики для объединения нескольких датчиков в общую сеть с выдачей единого сигнала на закрытие защитных заслонок.
 
 ### Файлы проекта
-1\. 📄[Сборочный чертеж, PDF](detektor-pereliva.pdf)\
+1\. 📐[Сборочный чертеж, PDF](detektor-pereliva.pdf)\
 2\. 📐[Сборочный чертеж, LibreCAD](detektor-pereliva.dxf)\
-3\. 📄[Схема электрическая принципиальная, PDF](detektor-pereliva-esd.pdf)\
+3\. 🔌[Схема электрическая принципиальная, PDF](detektor-pereliva-esd.pdf)\
 4\. 🔌[Схема электрическая принципиальная, sPlan](detektor-pereliva-esd.spl8)
 
 ### Журнал проекта

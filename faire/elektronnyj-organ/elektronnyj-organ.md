@@ -27,7 +27,7 @@ permalink: /faire/elektronnyj-organ/
 3\. Создание на базе устройства музыкального синтезатора со встроенными самодельными звуковыми эффектами.
 
 ### Файлы проекта
-1\. 📄[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
+1\. 🔌[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, sPlan](blaster-elektroakusticheskij-esd.spl8)
 
 ### Журнал проекта

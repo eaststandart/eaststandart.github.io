@@ -9,19 +9,19 @@ journal-post-page: "N"
 discus: "questions"
 ---
 
-🎬 **Свободное движение:**
+🎬 **Свободное движение**
 
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webm)
 
 > 🔍 **Найди максимальную скорость.** Полностью отрежь ручку от зубной щётки и прикрепи вместо неё хвост из палочки для мороженого длиной 3-4 см. Закрепи вибромотор на самом конце хвоста и проверь скорость движения. Затем постепенно перемещай мотор от конца палочки к её началу (ближе к щётке), чтобы найти ту самую точку, где робот побежит быстрее всего! ⏱️🏃💨
 
-🎬 **Прохождение тоннеля:**
+🎬 **Прохождение тоннеля**
 
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-6.webm)
 
 > ❓🧠 **Вопрос для размышления.** Подумай и объясни, от каких именно физических факторов и деталей зависит разгон вибро-робота? **Напиши свою инженерную версию в комментариях!**
 
-🎬 **Прохождение лабиринта:**
+🎬 **Прохождение лабиринта**
 
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-7.webm)
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-8.webm)

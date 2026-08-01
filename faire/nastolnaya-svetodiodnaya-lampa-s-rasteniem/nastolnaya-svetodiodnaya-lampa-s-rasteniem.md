@@ -26,7 +26,7 @@ permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 Возможно изменение абажура, формы и цвета подставки, подбор новых видов растений и установка датчика освещенности или движения для автоматического включения лампы в темноте. Можно предусмотреть установку солнечных батарей и аккумулятора, чтобы лампа стала автономным прибором, как оборудование на настоящем космическом корабле.
 
 ### Файлы проекта
-1\. 📄[Сборочный чертеж, PDF](nastolnaya-svetodiodnaya-lampa-s-rasteniem.pdf)\
+1\. 📐[Сборочный чертеж, PDF](nastolnaya-svetodiodnaya-lampa-s-rasteniem.pdf)\
 2\. 📐[Сборочный чертеж, LibreCAD](nastolnaya-svetodiodnaya-lampa-s-rasteniem.dxf)
 
 ### Журнал проекта

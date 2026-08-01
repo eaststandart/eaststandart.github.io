@@ -5,7 +5,7 @@ description: "Развитие навыков чтения электронны�
 author: ["RadiotekhnikaClub"]
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, метрономсигнальный, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
 sources: ""
-date: 2026-03-12
+date: 2026-05-10
 permalink: /faire/metronom-signalnyj/
 ---
 
@@ -14,17 +14,17 @@ permalink: /faire/metronom-signalnyj/
 ### Описание проекта
 Создание небольшой аналоговой схемы, которая создаёт эффект плавного зажигания и гашения светодиода — аналогично пульсирующему индикатору на компьютерах «Macintosh». Всего два транзистора полностью заменяют собой сложный микроконтроллер с программным кодом. Особенность проекта заключается в использовании биполярного кремниевого транзистора в необычном, инверсном режиме, что позволяет изучить настоящую физику электронных процессов.
 
-![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-01.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-02.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-03.webp)
-![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-04.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-02.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webp)
 
 > **Примечание.** В схеме применяется редкий сегодня германиевый советский транзистор. Работа с элементами из разных материалов, которые выполняют одну задачу, но имеют разные свойства, даёт глубокое погружение в физику полупроводников. Это закладывает базу для будущего проектирования электроники на новых физических принципах и материалах.
 
 ### Область применения
-В быту схема подходит для создания оригинального ночника или карманного фонарика, где крупный фиолетовый светодиод создаёт красивый визуальный эффект в темноте. Также решение применимо как готовый модуль плавного включения индикации для различных домашних приборов. В будущем принцип применим в индикаторах на таких планетах, как Марс, для оценки безопасности среды перед выходом из жилого модуля. Использование аналоговых дискретных элементов вместо микроконтроллеров критически важно в космических экспедициях: они устойчивы к жёсткой радиации, а устройства с такой схемотехникой легко ремонтируются в условиях далёкой планеты.
 
-![video](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-01.webm)
+
+![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webm)
 
 > **Примечание.** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
 
@@ -34,10 +34,10 @@ permalink: /faire/metronom-signalnyj/
 3\. Разработка блока сопряжения схемы с физическими датчиками для автоматического изменения яркости, длительности или частоты вспышек при колебаниях температуры, давления или других параметров окружающей среды.
 
 ### Файлы проекта
-1\. 🔌[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
-2\. 🔌[Схема электрическая принципиальная, JPG](plavnoe-zazhiganie-svetodioda-esd.jpg)
+1\. 🔌[Схема электрическая принципиальная, PDF](metronom-signalnyj-esd.pdf)\
+2\. 🔌[Схема электрическая принципиальная, JPG](metronom-signalnyj-esd.jpg)
 
-![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
+![v](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

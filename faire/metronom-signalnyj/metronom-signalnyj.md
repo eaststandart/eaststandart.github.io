@@ -46,9 +46,6 @@ permalink: /faire/metronom-signalnyj/
 {% include posts-page.liquid type="media" %}
 
 
-
-
-
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 [[../../_posts/2026-03-16-metronom-signalnyj|2026-03-16-metronom-signalnyj]]
 [[../../_posts/2026-03-15-metronom-signalnyj|2026-03-15-metronom-signalnyj]]

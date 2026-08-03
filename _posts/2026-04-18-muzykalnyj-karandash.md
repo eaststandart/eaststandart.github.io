@@ -5,7 +5,7 @@ description: "Описание работы устройства, взаимод
 author: ["RadiotekhnikaClub"]
 date: 2026-04-18
 categories: [journal, muzykalnyj-karandash]
-discus: "journal"
+discus: "questions"
 ---
 
 ### Описание работы устройства

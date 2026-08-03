@@ -7,7 +7,7 @@ date: 2026-01-31
 categories: [media, detektor-pereliva]
 ---
 
-📷 Общий вид конструкции
+📷 **Общий вид конструкции**
 
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-09.webp)
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-10.webp)
@@ -17,6 +17,6 @@ categories: [media, detektor-pereliva]
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-14.webp)
 ![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-15.webp)
 
-🎬 Демонстрация общего вида
+🎬 **Демонстрация общего вида**
 
 ![video](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-02.webm)

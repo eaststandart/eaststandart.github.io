@@ -22,7 +22,7 @@ permalink: /faire/metronom-signalnyj/
 
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webm)
 
-> **Смотри также:** Световой зонд со звуковой индикацией в 📘 \[Audible Light Probe, Mims, 1994, p. 115\] [^2] и его реализацию в [Forrest Mims Audible Light Probe oscillating transistor circuit.](https://youtu.be/dYKeNTx7uRI).
+> **Смотри также:** Световой зонд со звуковой индикацией в 📘 \[Audible Light Probe, Mims, 1994, p. 115\] [^2] и его реализацию в [Forrest Mims Audible Light Probe oscillating transistor circuit](https://youtu.be/dYKeNTx7uRI).
 
 ### Развитие проекта
 1\. Добавление схемы управления для автоматического подсчета количества звуковых щелчков за определенное время, что позволит измерять периоды, зависящие от внешних, например, погодных факторов.\
@@ -41,7 +41,7 @@ permalink: /faire/metronom-signalnyj/
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
-[^1]:  [Петер Фогель](https://fr.wikipedia.org/wiki/Peter_Vogel_\(artiste\)) — немецкий физик и художник-кибернетик. Известен своей междисциплинарной художественной практикой, включающей скульптуру, электронику и акустику.
+[^1]:  [Петер Фогель](https://fr.wikipedia.org/wiki/Peter_Vogel_(artiste)) — немецкий физик и художник-кибернетик. Известен своей междисциплинарной художественной практикой, включающей скульптуру, электронику и акустику.
 [^2]: Forrest M. Mims III Getting Started in Electronics. — Radio Shack, 1994. — 128 p. — (Cat. No. 276-5003).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту

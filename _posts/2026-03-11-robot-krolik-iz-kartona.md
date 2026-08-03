@@ -5,7 +5,7 @@ description: "Вид конструкции робота, приводимого
 author: ["RadiotekhnikaClub"]
 date: 2026-03-11
 categories: [media, robot-krolik-iz-kartona]
-media-post-page: "Y"
+media-post-page: "N"
 discus: "gallery"
 ---
 

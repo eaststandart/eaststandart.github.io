@@ -5,6 +5,7 @@ description:  "Вид конструкции робота и демонстра�
 author: ["RadiotekhnikaClub"]
 date: 2026-02-24
 categories: [media, robot-korova-iz-kartona]
+media-post-page: "N"
 ---
 
 📷 Общий вид конструкции

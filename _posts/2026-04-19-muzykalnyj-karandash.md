@@ -5,6 +5,7 @@ description: "Тестирование работы устройства и ис
 author: ["RadiotekhnikaClub"]
 date: 2026-04-19
 categories: [journal, muzykalnyj-karandash]
+journal-post-page: "N"
 discus: "questions"
 ---
 

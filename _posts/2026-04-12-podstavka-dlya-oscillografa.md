@@ -5,9 +5,10 @@ description: "Дополнительные медиаматериалы вида
 author: ["RadiotekhnikaClub"]
 date: 2026-04-12
 categories: [media, podstavka-dlya-oscillografa]
+media-post-page: "N"
 ---
 
-📷 Общий вид конструкции
+📷 **Общий вид конструкции**
 
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-05.webp)
 ![](github/eaststandart.github.io/faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-06.webp)

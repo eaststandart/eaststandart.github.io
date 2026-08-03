@@ -5,6 +5,7 @@ description: "Дополнительные медиаматериалы проц
 author: ["RadiotekhnikaClub"]
 date: 2026-04-17
 categories: [journal, muzykalnyj-karandash]
+journal-post-page: "N"
 discus: "questions"
 ---
 

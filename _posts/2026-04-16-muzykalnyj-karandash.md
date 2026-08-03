@@ -5,6 +5,7 @@ description: "Дополнительные медиаматериалы вида
 author: ["RadiotekhnikaClub"]
 date: 2026-04-16
 categories: [media, muzykalnyj-karandash]
+media-post-page: "N"
 ---
 
 📷 **Общий вид конструкции**

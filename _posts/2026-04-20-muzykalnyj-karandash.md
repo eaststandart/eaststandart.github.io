@@ -5,6 +5,7 @@ description: "Представлены медиаматериалы некото
 author: ["RadiotekhnikaClub"]
 date: 2026-04-20
 categories: [journal, muzykalnyj-karandash]
+journal-post-page: "N"
 discus: "questions"
 ---
 

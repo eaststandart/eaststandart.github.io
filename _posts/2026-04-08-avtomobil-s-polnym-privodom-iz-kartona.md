@@ -5,9 +5,10 @@ description: "Вид конструкции автомобиля, демонст
 author: ["RadiotekhnikaClub"]
 date: 2026-04-08
 categories: [media, avtomobil-s-polnym-privodom-iz-kartona]
+media-post-page: "N"
 ---
 
-📷 Общий вид конструкции
+📷 **Общий вид конструкции**
 
 ![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-03.webp)
 ![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-04.webp)
@@ -19,11 +20,11 @@ categories: [media, avtomobil-s-polnym-privodom-iz-kartona]
 ![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-10.webp)
 ![](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-11.webp)
 
-🎬 Демонстрация работы
+🎬 **Демонстрация работы**
 
 ![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-02.webm)
 ![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-03.webm)
 
-🎬 Демонстрация движения
+🎬 **Демонстрация движения**
 
 ![video](github/eaststandart.github.io/faire/avtomobil-s-polnym-privodom-iz-kartona/avtomobil-s-polnym-privodom-iz-kartona-04.webm)

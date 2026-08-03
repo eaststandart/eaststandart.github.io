@@ -14,8 +14,6 @@ permalink: /faire/metronom-signalnyj/
 
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webp)
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-02.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webp)
 
 > **Примечание.** В конструкции прибора диффузор динамика помещен в трубу. Такое решение наглядно показывает, что усиливать звук можно не только электроникой, но и простыми физическими способами. При этом аналоговая электроника и понимание работы транзисторов из германия позволяют глубже понять физику электронных процессов. Это закладывает базу для будущего создания гибридных микросхем и устройств, сочетающих в себе полезные свойства компонентов из германия, кремния и других материалов.
 

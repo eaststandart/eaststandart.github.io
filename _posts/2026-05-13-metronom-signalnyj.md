@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "Детектор перелива: общий вид"
-description: "Дополнительные медиаматериалы вида конструкции."
+title: "Метроном сигнальный: изделие №1"
+description: "Модель первого созданного устройства."
 author: ["RadiotekhnikaClub"]
 date: 2026-05-13
 categories: [media, metronom-signalnyj]
@@ -13,15 +13,7 @@ categories: [media, metronom-signalnyj]
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webp)
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-13.webp)
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-06.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-15.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-07.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-14.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-08.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-09.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-10.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-11.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-12.webp)
+
 
 🎬 **Демонстрация общего вида**
 
@@ -32,5 +24,3 @@ categories: [media, metronom-signalnyj]
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webm)
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webm)
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webm)
-
-🗣️ Прокомментировать работу можно [здесь]() 👈

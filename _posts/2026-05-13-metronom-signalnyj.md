@@ -11,16 +11,11 @@ categories: [media, metronom-signalnyj]
 
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webp)
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webp)
-![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-13.webp)
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webp)
-
-
-🎬 **Демонстрация общего вида**
-
-![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-02.webm)
-
-🎬 **Демонстрация работы**
-
-![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webm)
-![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-04.webm)
-![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webm)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-06.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-07.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-08.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-09.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-10.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-11.webp)
+![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-12.webp)

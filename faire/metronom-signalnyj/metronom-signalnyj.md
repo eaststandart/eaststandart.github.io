@@ -22,7 +22,7 @@ permalink: /faire/metronom-signalnyj/
 
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webm)
 
-> **Смотри также:** Световой зонд со звуковой индикацией в 📘 \[Audible Light Probe, Mims, 1994, 115\] [^1] и его реализацию в [Forrest Mims Audible Light Probe oscillating transistor circuit.](https://youtu.be/dYKeNTx7uRI).
+> **Смотри также:** Световой зонд со звуковой индикацией в 📘 \[Audible Light Probe, Mims, 1994, p. 115\] [^1] и его реализацию в [Forrest Mims Audible Light Probe oscillating transistor circuit.](https://youtu.be/dYKeNTx7uRI).
 
 ### Развитие проекта
 1\. Добавление схемы управления для автоматического подсчета количества звуковых щелчков за определенное время, что позволит измерять периоды, зависящие от внешних, например, погодных факторов.\

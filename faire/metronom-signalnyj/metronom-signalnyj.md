@@ -33,8 +33,6 @@ permalink: /faire/metronom-signalnyj/
 1\. 🔌[Схема электрическая принципиальная, PDF](metronom-signalnyj-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, JPG](metronom-signalnyj-esd.jpg)
 
-![v](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-05.webp)
-
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
 {% include posts-page.liquid type="journal" per_page="" %}

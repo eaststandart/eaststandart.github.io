@@ -6,6 +6,7 @@ author: ["RadiotekhnikaClub"]
 date: 2026-05-14
 categories: [journal, metronom-signalnyj]
 discus: "questions"
+journal-post-page: "N"
 ---
 
 📷 **Процесс создания**

@@ -36,4 +36,4 @@ categories: [media, metronom-signalnyj]
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-06.webm)
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-07.webm)
 
-🗣️ Прокомментировать работу можно [здесь]() 👈
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/69#discussioncomment-17882786) 👈

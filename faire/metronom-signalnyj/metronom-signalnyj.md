@@ -22,7 +22,7 @@ permalink: /faire/metronom-signalnyj/
 
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-01.webm)
 
-> **Примечание.** Инверсное включение транзистора имеет специализированное применение. Его используют в исследовательских и измерительных схемах, генераторах шумовых сигналов и случайных чисел, а также в отдельных схемных решениях, где требуются специфические свойства этого режима. Смотри подробнее в 📘 \[Бочаров, 1975, МРБ №887\] [^1].
+> **Смотри также:** Световой зонд со звуковой индикацией в 📘 \[Audible Light Probe, Mims, 1994, 115\] [^1] и его реализацию в [Forrest Mims Audible Light Probe oscillating transistor circuit.](https://youtu.be/dYKeNTx7uRI).
 
 ### Развитие проекта
 1\. Добавление схемы управления для автоматического подсчета количества звуковых щелчков за определенное время, что позволит измерять периоды, зависящие от внешних, например, погодных факторов.\
@@ -42,6 +42,8 @@ permalink: /faire/metronom-signalnyj/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+[^1]: Forrest M. Mims III Getting Started in Electronics. — Radio Shack, 1994. — 128 p. — (Cat. No. 276-5003).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 [[../../_posts/2026-05-11-metronom-signalnyj|2026-05-11-metronom-signalnyj]]

@@ -31,7 +31,7 @@ permalink: /faire/metronom-signalnyj/
 
 ### Файлы проекта
 1\. 🔌[Схема электрическая принципиальная, PDF](metronom-signalnyj-esd.pdf)\
-2\. 🔌[Схема электрическая принципиальная, JPG](metronom-signalnyj-esd.jpg)
+2\. 🔌[Схема электрическая принципиальная, sPlan](metronom-signalnyj-esd.spl8)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

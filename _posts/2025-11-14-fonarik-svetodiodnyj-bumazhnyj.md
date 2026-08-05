@@ -2,7 +2,7 @@
 layout: page
 title: "Фонарик светодиодный бумажный: описание проекта"
 description: "На слабоосвещённой лестничной площадке для открытии замка двери квартиры требуется подсветка замочной скважины. Устройство помогает точно вставить ключ и открыть замок."
-sources: "[Мацкевич В.В.-Занимательная радиоэлектроника в пионерлагере, 1986, с. 31-34](http://publ.lib.ru/ARCHIVES/M/MACKEVICH_Vadim_Viktorovich/_Mackevich_V.V..html)"
+sources: "[Мацкевич В.В. Занимательная радиоэлектроника в пионерлагере, 1986, с. 31-34](http://publ.lib.ru/ARCHIVES/M/MACKEVICH_Vadim_Viktorovich/_Mackevich_V.V..html)"
 date: 2025-11-14
 categories: [journal, fonarik-svetodiodnyj-bumazhnyj]
 journal-post-page: "N"

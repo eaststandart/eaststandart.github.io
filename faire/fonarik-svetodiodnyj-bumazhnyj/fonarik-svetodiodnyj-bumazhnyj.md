@@ -25,7 +25,8 @@ permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
 
 ### Файлы проекта
 1\. 📄[Описание проекта, PDF](fonarik-svetodiodnyj-bumazhnyj.pdf)\
-2\. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)
+2\. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)\
+3\. 🔢[Фонарик светодиодный бумажный. Шаблон корпуса, PDF](fonarik-svetodiodnyj-bumazhnyj-trafaret.pdf)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

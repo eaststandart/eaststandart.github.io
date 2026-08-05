@@ -21,12 +21,12 @@ discus: "journal"
 
 <a id="etap-1"></a> **Этап 1.** Изготовление конструкции и покраска
 
-![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-19.webp)
-![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-20.webp)
+![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-21.webp)
+![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-22.webp)
 
 <a id="etap-2"></a>**Этап 2.** Создание деталей и шарниров
 
-![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-21.webp)
+![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-23.webp)
 
 <a id="etap-3"></a>**Этап 3.** 
 

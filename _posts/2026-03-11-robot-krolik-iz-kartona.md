@@ -30,3 +30,5 @@ media-post-page: "N"
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-05.webm)
 
 🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/48#discussioncomment-17907651) 👈
+
+🗣️ Задать вопрос по самодельному редуктору можно [здесь](https://eaststandart.github.io/journal/robot-krolik-iz-kartona/2026/03/09/robot-krolik-iz-kartona.html) 👈

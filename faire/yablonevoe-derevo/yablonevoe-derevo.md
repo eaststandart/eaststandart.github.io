@@ -40,3 +40,8 @@ permalink: /faire/yablonevoe-derevo/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-12-22-yablonevoe-derevo|2025-12-22-yablonevoe-derevo]]
+[[../../_posts/2025-12-23-yablonevoe-derevo|2025-12-23-yablonevoe-derevo]]
+{% endcomment %}

@@ -37,3 +37,10 @@ permalink: /faire/vibrohod-iz-zubnoj-shchetki/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-11-21-vibrohod-iz-zubnoj-shchetki|2025-11-21-vibrohod-iz-zubnoj-shchetki]]
+[[../../_posts/2025-11-22-vibrohod-iz-zubnoj-shchetki|2025-11-22-vibrohod-iz-zubnoj-shchetki]]
+[[../../_posts/2025-11-23-vibrohod-iz-zubnoj-shchetki|2025-11-23-vibrohod-iz-zubnoj-shchetki]]
+[[../../_posts/2025-11-24-vibrohod-iz-zubnoj-shchetki|2025-11-24-vibrohod-iz-zubnoj-shchetki]]
+{% endcomment %}

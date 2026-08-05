@@ -32,3 +32,8 @@ permalink: /faire/pano-uslovnye-oboznacheniya/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2026-04-03-pano-uslovnye-oboznacheniya|2026-04-03-pano-uslovnye-oboznacheniya]]
+[[../../_posts/2026-04-04-pano-uslovnye-oboznacheniya|2026-04-04-pano-uslovnye-oboznacheniya]]
+{% endcomment %}

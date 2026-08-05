@@ -36,3 +36,9 @@ permalink: /faire/robot-korova-iz-kartona/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2026-02-22-robot-korova-iz-kartona|2026-02-22-robot-korova-iz-kartona]]
+[[../../_posts/2026-02-23-robot-korova-iz-kartona|2026-02-23-robot-korova-iz-kartona]]
+[[../../_posts/2026-02-24-robot-korova-iz-kartona|2026-02-24-robot-korova-iz-kartona]]
+{% endcomment %}

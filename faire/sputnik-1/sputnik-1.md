@@ -39,3 +39,8 @@ permalink: /faire/sputnik-1/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-11-06-sputnik-1|2025-11-06-sputnik-1]]
+[[../../_posts/2025-11-07-sputnik-1|2025-11-07-sputnik-1]]
+{% endcomment %}

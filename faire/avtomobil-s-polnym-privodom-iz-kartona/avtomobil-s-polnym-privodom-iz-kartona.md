@@ -42,5 +42,5 @@ permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 - [[../../_posts/2026-04-06-avtomobil-s-polnym-privodom-iz-kartona|2026-04-06-avtomobil-s-polnym-privodom-iz-kartona]]
 - [[../../_posts/2026-04-07-avtomobil-s-polnym-privodom-iz-kartona|2026-04-07-avtomobil-s-polnym-privodom-iz-kartona]]
-- [[../../_posts/2026-04-08-avtomobil-s-polnym-privodom-iz-kartona|2026-04-07-avtomobil-s-polnym-privodom-iz-kartona]]
+- [[../../_posts/2026-04-08-avtomobil-s-polnym-privodom-iz-kartona|2026-04-08-avtomobil-s-polnym-privodom-iz-kartona]]
 {% endcomment %}

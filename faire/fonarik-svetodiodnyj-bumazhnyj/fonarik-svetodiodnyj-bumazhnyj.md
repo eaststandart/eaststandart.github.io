@@ -34,3 +34,8 @@ permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-11-12-fonarik-svetodiodnyj-bumazhnyj|2025-11-12-fonarik-svetodiodnyj-bumazhnyj]]
+[[../../_posts/2025-11-13-fonarik-svetodiodnyj-bumazhnyj|2025-11-13-fonarik-svetodiodnyj-bumazhnyj]]
+{% endcomment %}

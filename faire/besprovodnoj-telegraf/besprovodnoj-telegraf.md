@@ -29,3 +29,8 @@ permalink: /faire/besprovodnoj-telegraf/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-11-02-besprovodnoj-telegraf|2025-11-02-besprovodnoj-telegraf]]
+[[../../_posts/2025-11-03-besprovodnoj-telegraf|2025-11-03-besprovodnoj-telegraf]]
+{% endcomment %}

@@ -33,3 +33,10 @@ permalink: /faire/prazdnichnyj-domik/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2026-02-02-prazdnichnyj-domik|2026-02-02-prazdnichnyj-domik]]
+[[../../_posts/2026-02-03-prazdnichnyj-domik|2026-02-03-prazdnichnyj-domik]]
+[[../../_posts/2026-02-04-prazdnichnyj-domik|2026-02-04-prazdnichnyj-domik]]
+[[../../_posts/2026-02-05-prazdnichnyj-domik|2026-02-05-prazdnichnyj-domik]]
+{% endcomment %}

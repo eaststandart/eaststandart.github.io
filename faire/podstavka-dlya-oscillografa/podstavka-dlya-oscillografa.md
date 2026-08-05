@@ -36,4 +36,7 @@ permalink: /faire/podstavka-dlya-oscillografa/
 {% include posts-page.liquid type="media" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2026-04-10-podstavka-dlya-oscillografa|2026-04-10-podstavka-dlya-oscillografa]]
+[[../../_posts/2026-04-11-podstavka-dlya-oscillografa|2026-04-11-podstavka-dlya-oscillografa]]
+[[../../_posts/2026-04-12-podstavka-dlya-oscillografa|2026-04-12-podstavka-dlya-oscillografa]]
 {% endcomment %}

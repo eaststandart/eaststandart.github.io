@@ -36,3 +36,8 @@ permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2025-10-30-nastolnaya-svetodiodnaya-lampa-s-rasteniem|2025-10-30-nastolnaya-svetodiodnaya-lampa-s-rasteniem]]
+[[../../_posts/2025-10-31-nastolnaya-svetodiodnaya-lampa-s-rasteniem|2025-10-31-nastolnaya-svetodiodnaya-lampa-s-rasteniem]]
+{% endcomment %}

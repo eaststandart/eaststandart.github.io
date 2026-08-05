@@ -38,3 +38,11 @@ permalink: /faire/robot-krolik-iz-kartona/
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+[[../../_posts/2026-03-08-robot-krolik-iz-kartona|2026-03-08-robot-krolik-iz-kartona]]
+[[../../_posts/2026-03-09-robot-krolik-iz-kartona|2026-03-09-robot-krolik-iz-kartona]]
+[[../../_posts/2026-03-10-robot-krolik-iz-kartona|2026-03-10-robot-krolik-iz-kartona]]
+[[../../_posts/2026-03-11-robot-krolik-iz-kartona|2026-03-11-robot-krolik-iz-kartona]]
+[[../../_posts/2026-06-05-robot-krolik-iz-kartona|2026-06-05-robot-krolik-iz-kartona]]
+{% endcomment %}

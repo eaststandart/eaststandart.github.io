@@ -49,4 +49,5 @@ permalink: /faire/metronom-signalnyj/
 [[../../_posts/2026-05-12-metronom-signalnyj|2026-05-12-metronom-signalnyj]]
 [[../../_posts/2026-05-13-metronom-signalnyj|2026-05-13-metronom-signalnyj]]
 [[../../_posts/2026-05-14-metronom-signalnyj|2026-05-14-metronom-signalnyj]]
+[[../../_posts/2026-05-15-metronom-signalnyj|2026-05-15-metronom-signalnyj]]
 {% endcomment %}

@@ -9,11 +9,12 @@ categories: [media, vibrohod-iz-zubnoj-shchetki]
 
 📷 Общий вид конструкции
 
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webp)
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webp)
-![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-5.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-03.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-04.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-05.webp)
+![](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-06.webp)
 
 🎬 Демонстрация свободного движения
 
-![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-3.webm)
-![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-4.webm)
+![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-03.webm)
+![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-04.webm)

@@ -26,6 +26,8 @@ discus: "questions"
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-07.webm)
 ![video](github/eaststandart.github.io/faire/vibrohod-iz-zubnoj-shchetki/vibrohod-iz-zubnoj-shchetki-08.webm)
 
+> 🔬 **Проведи исследования.** Проведи сам научный эксперимент и **предложи в комментариях** свой собственный способ настройки максимальной скорости робота-зубочиста! 🚀 
+
 🗣️ Прокомментировать соревнования можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/13#discussioncomment-17905255) 👈
 
-> 🔬 **Проведи исследования.** Проведи сам научный эксперимент и **предложи в комментариях** свой собственный способ настройки максимальной скорости робота-зубочиста! 🚀 
+🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇

@@ -20,3 +20,5 @@ categories: [media, detektor-pereliva]
 🎬 **Демонстрация общего вида**
 
 ![video](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-02.webm)
+
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/76#discussioncomment-17906260) 👈

@@ -7,14 +7,14 @@ date: 2025-11-28
 categories: [media, robot-strannik]
 ---
 
-📷 Общий вид конструкции
+📷 **Общий вид конструкции**
 
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-05.webp)
-![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-06.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-06.webp)
 ![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-07.webp)
-![v](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-08.webp)
+![](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-08.webp)
 
-🎬 Демонстрация движения
+🎬 **Демонстрация движения**
 
 ![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-03.webm)
 ![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-04.webm)

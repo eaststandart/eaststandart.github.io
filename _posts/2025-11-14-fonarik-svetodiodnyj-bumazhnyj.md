@@ -19,6 +19,8 @@ discus: "questions"
 
 ![](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 
+<center><img src="/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp"></center>
+
 <figcaption>Рис. 1 – Схема электрическая принципиальная</figcaption>
 
 Посмотрим из чего она состоит:

@@ -29,3 +29,5 @@ discus: "gallery"
 🎬 **Демонстрация движения**
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-05.webm)
+
+🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/48#discussioncomment-17907651) 👈

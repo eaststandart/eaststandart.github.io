@@ -12,15 +12,15 @@ permalink: /faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 ### Описание проекта
 Создание конструкции простой настольной светодиодной лампы с плафоном и горшочком из стеклянной бутылки для комнатного растения.
 
-![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-1.webp)
-![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-2.webp)
-![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-3.webp)
-![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-4.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-02.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-03.webp)
+![v](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-04.webp)
 
 ### Область применения
 Украшение комнаты или рабочего стола: удобный светильник и уютный уголок для живого растения. Создание атмосферы «рабочей каюты» юного космонавта для напоминания о Земле во время долгого полета к другим планетам.
 
-![video](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-1.webm)
+![video](github/eaststandart.github.io/faire/nastolnaya-svetodiodnaya-lampa-s-rasteniem/nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm)
 
 ### Развитие проекта
 Возможно изменение абажура, формы и цвета подставки, подбор новых видов растений и установка датчика освещенности или движения для автоматического включения лампы в темноте. Можно предусмотреть установку солнечных батарей и аккумулятора, чтобы лампа стала автономным прибором, как оборудование на настоящем космическом корабле.

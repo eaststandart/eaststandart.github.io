@@ -9,7 +9,7 @@ media-post-page: "N"
 discus: "gallery"
 ---
 
-📷 Общий вид конструкции
+📷 **Общий вид конструкции**
 
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-11.webp)
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-12.webp)
@@ -20,10 +20,10 @@ discus: "gallery"
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-17.webp)
 ![](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-18.webp)
 
-🎬 Демонстрация работы
+🎬 **Демонстрация работы**
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-04.webm)
 
-🎬 Демонстрация движения
+🎬 **Демонстрация движения**
 
 ![video](github/eaststandart.github.io/faire/robot-krolik-iz-kartona/robot-krolik-iz-kartona-05.webm)

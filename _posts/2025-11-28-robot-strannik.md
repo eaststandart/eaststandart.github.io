@@ -17,5 +17,6 @@ categories: [media, robot-strannik]
 🎬 Демонстрация движения
 
 ![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-03.webm)
+![video](github/eaststandart.github.io/faire/robot-strannik/robot-strannik-04.webm)
 
 > **Примечание.** Второй вариант робота (основной) отличается от первого тем, что у него переработан узел редуктор-колено, для увеличения жесткости, и более широкая основа, для повышения устойчивости при ходьбе.

@@ -22,3 +22,5 @@ discus: "questions"
 
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-02.webm)
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webm)
+
+🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇

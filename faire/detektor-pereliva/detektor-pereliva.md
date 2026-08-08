@@ -55,7 +55,7 @@ permalink: /faire/detektor-pereliva/
 [^4]: Иванов Б. Всего один транзистор (Юный техник, 1975, №1, с. 70-74).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-01-28-detektor-pereliva|2026-01-28-detektor-pereliva]]
+[[../../_posts/2026-01-29-detektor-pereliva|2026-01-29-detektor-pereliva]]
 [[../../_posts/2026-01-30-detektor-pereliva|2026-01-30-detektor-pereliva]]
 [[../../_posts/2026-01-31-detektor-pereliva|2026-01-31-detektor-pereliva]]
 {% endcomment %}

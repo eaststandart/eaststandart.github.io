@@ -51,7 +51,7 @@ discus: "questions"
 
 ##### Приложение 1
 
-![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-21.webp)
+![](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-22.webp)
 
 #### Налаживание схемы
 

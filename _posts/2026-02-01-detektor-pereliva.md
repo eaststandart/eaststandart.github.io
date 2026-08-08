@@ -2,7 +2,7 @@
 layout: page
 title: "Детектор перелива: описание"
 description: "При негерметичности системы водоснабжения в квартире или ее прорыве, а также наполнении сосуда водой, может произойти ее протечка или перелив. Чтобы своевременно обнаружить наступление такого случая нужно использовать устройство-сигнализатор."
-sources: "[Описание проекта, PDF](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-esd.pdf)"
+sources: "[Описание проекта, PDF](faire/detektor-pereliva/detektor-pereliva-esd.pdf)"
 date: 2026-02-01
 categories: [journal, detektor-pereliva]
 journal-post-page: "N"

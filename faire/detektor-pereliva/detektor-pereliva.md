@@ -58,4 +58,5 @@ permalink: /faire/detektor-pereliva/
 [[../../_posts/2026-01-29-detektor-pereliva|2026-01-29-detektor-pereliva]]
 [[../../_posts/2026-01-30-detektor-pereliva|2026-01-30-detektor-pereliva]]
 [[../../_posts/2026-01-31-detektor-pereliva|2026-01-31-detektor-pereliva]]
+[[../../_posts/2026-02-01-detektor-pereliva|2026-02-01-detektor-pereliva]]
 {% endcomment %}

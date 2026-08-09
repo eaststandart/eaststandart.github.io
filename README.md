@@ -13,47 +13,127 @@ A website for those who want to know how everything works and build technology w
 3. **Детско-юношеский инженерный клуб** — физическое место преподавательской деятельности, где данные проекты разрабатываются и тестируются с учащимися.
 4. **TechLab** — личный авторский бренд Лаборатории, под которым создается код, контент и архитектура данного сайта.
 
-### Структура проекта
+### Структура репозитория сайта
 
-```
+```text
 eaststandart.github.io/
-├── _includes              Код на языке liquid
+├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
+│   ├── arch/
 │   ├── discus.liquid
+│   ├── faire-grid.liquid
+│   ├── footer.liquid
+│   ├── header-theme.liquid
+│   ├── media-archive.liquid
+│   ├── media-data-src.liquid
+│   ├── media-logic.liquid
+│   ├── navigation.liquid
+│   ├── news-loop.liquid
+│   ├── pagination.liquid
+│   ├── posts-page.liquid
+│   └── tags-logic.liquid
 │
-├── _layouts               Шаблоны страниц
+├── _layouts/                   # Шаблоны оформления страниц сайта
+│   ├── arch/
+│   ├── default.md
+│   ├── faire.md
+│   ├── home.md
+│   ├── news.md
+│   └── page.md
 │
-├── core/
-│   ├── encryption.py      All crypto: XSalsa20-Poly1305, ChaCha20-Poly1305, X25519, Ed25519, BLAKE2b
-│   ├── ratchet.py         Sender Keys forward secrecy: SenderChain + RatchetState
-│   ├── animation.py       CRT boot and ratchet activation animations with SFX
-│   ├── sounds.py          Cross-platform sound playback (WAV/MP3, Linux/macOS/Windows)
-│   ├── identity.py        Ed25519 keypair generation and TOFU pubkey store
-│   ├── utils.py           Terminal output, ANSI colours, TUI chrome
-│   └── config.py          Configuration loading and CLI parsing
+├── _pages/                     # Системные разделы и агрегаторы сайта
+│   ├── faire.md
+│   ├── journal-posts-page.md
+│   ├── journal.md
+│   ├── media-posts-page.md
+│   ├── media.md
+│   ├── news.md
+│   └── people.md
 │
-├── network/
-│   ├── server.py          Async zero-metadata blind-forwarder server
-│   ├── client.py          Terminal chat client (E2E, DH, TOFU, file transfer)
-│   ├── client_ratchet.py  RatchetMixin — /ratchet command flow, migration wait
-│   ├── client_dh.py       X25519 DH handshake mixin
-│   ├── client_send.py     Outgoing message encryption (static + ratchet paths)
-│   ├── client_recv.py     Incoming frame routing and decryption
-│   └── client_commands.py Input loop, command dispatch, help
+├── _people/                    # Краткая библиография известных людей
+│   └── fran-blanche.md
 │
-├── ui/
-│   ├── launch.py          Guided launcher, arrow-key menu UI
-│   └── setup.py           Dependency wizard, auto-installs what's needed
+├── _posts/                     # Хронологические посты Лаборатории по дням
+│   └── 2025-10-26-simple-cardboard-walking-robot.md
+│   └── ... (хронология ежедневных отчётов о сборке поделок)
 │
-├── install/
-│   ├── install.sh         Bootstrap for Linux / macOS / Termux / iSH
-│   ├── install.bat        Bootstrap for Windows (CMD and PowerShell)
-│   ├── install.py         Cross-platform Python installer
-│   └── uninstall.py       Remove all NoEyes dependencies for clean reinstall
+├── _reference/                 # Справочные материалы и исходники
 │
-├── docs/
-│   ├── README.md          This file
-│   └── CHANGELOG.md       Version history
+├── assets/                     # Статические ресурсы сайта
+│   ├── css/
+│   ├── icons/
+│   ├── img/
+│   ├── js/
+│   └── webm_optimization.bat
 │
-├── update.py              Self-updater, pulls latest from GitHub
-└── sfx/                   Notification sounds
+├── biblio/                     # Описание книг для изучения
+│   ├── files/
+│   ├── img/
+│   ├── borisov-v-g-enciklopediya-yunogo-radiolyubitelya-konstruktora-2001.md
+│   ├── chernenko-g-t-puteshestvie-v-stranu-robotov-1977.md
+│   ├── index.md
+│   ├── kiselyov-l-kniga-yunogo-tekhnika-1948.md
+│   ├── materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.md
+│   ├── pchyolko-a-s-arifmetika-dlya-nachalnoj-shkoly-1955.md
+│   ├── rostovcev-n-n-risovanie-1957.md
+│   ├── svoren-r-a-elektronika-shag-za-shagom-1991.md
+│   └── zak-a-z-intellektika-2024.md
+│
+├── diary/                      # Дневник инженера
+│   ├── index.md
+│   └── note-schematics.md
+│
+├── faire/                      # Инструкции и чертежи поделок (по алфавиту)
+│   ├── avtomobil-s-polnym-privodom-iz-kartona
+│   ├── besprovodnoj-telegraf
+│   ├── blaster-elektroakusticheskij
+│   ├── detektor-pereliva
+│   ├── elektronnyj-organ
+│   ├── fonarik-svetodiodnyj-bumazhnyj
+│   ├── metronom-signalnyj
+│   ├── muzykalnyj-karandash
+│   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem
+│   ├── pano-uslovnye-oboznacheniya
+│   ├── plavnoe-zazhiganie-svetodioda
+│   ├── podstavka-dlya-oscillografa
+│   ├── prazdnichnyj-domik
+│   ├── robot-korova-iz-kartona
+│   ├── robot-krolik-iz-kartona
+│   ├── robot-strannik
+│   ├── simple-cardboard-walking-robot
+│   ├── sputnik-1
+│   ├── vibrohod-iz-zubnoj-shchetki
+│   └── yablonevoe-derevo
+│
+├── inspiration/                # Посты на тему технического вдохновения
+│   ├── img/
+│   ├── aluminum-electrolytic-capacitor.md
+│   ├── analog-panel-meter.md
+│   ├── carbon-film-resistor.md
+│   ├── ceramic-disc-capacitor.md
+│   ├── index.md
+│   ├── magnetic-buzzer.md
+│   ├── our-dream.md
+│   ├── strontium-atom.md
+│   └── through-hole-red-led.md
+│
+├── projects/                   # Учебные проекты устройств 
+│   ├── 1.webm
+│   ├── index.md
+│   ├── video.md
+│   └── novyj-robot-shagohod.md
+│
+├── tools/                      # Описание используемого инструментария и ПО
+│   ├── files/
+│   ├── img/
+│   ├── fritzing.md
+│   ├── index.md
+│   └── sprintlayout.md
+│
+├── _config.yml                 # Главный конфигурационный файл движка Jekyll
+├── CODE_OF_CONDUCT.md          # Правила поведения в сообществе проекта
+├── giscus.json                 # Настройки системы комментариев
+├── index.md                    # Главная страница Творческой лаборатории
+├── LICENSE.txt                 # Юридическая лицензия исходного кода
+└── tags.md                     # Индекс тегов для быстрой навигации
 ```
+

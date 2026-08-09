@@ -17,28 +17,8 @@ A website for those who want to know how everything works and build technology w
 
 ```text
 ├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
-│   ├── arch/
-│   ├── discus.liquid            # Интеграция и вывод блока дискуссий giscus
-│   ├── faire-grid.liquid        # Модуль автоматической сетки ярмарки поделок
-│   ├── footer.liquid            # Подвал сайта (копирайты, ссылки, контакты)
-│   ├── header-theme.liquid      # Смена логотипа главной страницы сайта
-│   ├── media-archive.liquid     # Генерация и фильтрация общей ленты публикаций
-│   ├── media-data-src.liquid    # Замена по расширениям медиафайлов
-│   ├── media-logic.liquid       # Глобальный модуль оптимизации медиаконтента
-│   ├── navigation.liquid        # Модуль навигация сайта
-│   ├── news-loop.liquid         # Сборка и фильтрация ленты обновлений
-│   ├── pagination.liquid        # Модуль пагинации страниц
-│   ├── posts-page.liquid        # Локальные ленты постов на страницах проектов
-│   └── tags-logic.liquid        # Сбор и генерация структуры тегов
 │
 ├── _layouts/                   # Шаблоны оформления страниц сайта
-│   ├── arch/
-│   ├── default.md              # Глобальный шаблон оформления страниц сайта
-│   ├── faire.md                # Шаблон структуры страниц в разделе faire
-│   ├── home.md                 # Шаблон главной страницы сайта
-│   ├── news.md                 # Шаблон ленты новостей и обновлений
-│   └── page.md                 # Шаблон для базовых страниц сайта
-
 │
 ├── _pages/                     # Системные разделы и агрегаторы сайта
 │   ├── faire.md
@@ -62,14 +42,7 @@ A website for those who want to know how everything works and build technology w
 │   ├── css/
 │   ├── icons/
 │   ├── img/
-│   ├── js/                      # Интерактивные скрипты проекта
-│   │   ├── image-lazy-load.js   # Модуль лези-лоада картинок
-│   │   ├── navigation-crumbs.js # Движок хлебных крошек навигации
-│   │   ├── pagination-logic.js  # Движок пагинации
-│   │   ├── posts-page-list.js   # Движок фильтрации и зачистки ленты медиа
-│   │   ├── posts-page-nav.js    # Движок локальной пагинации проектов
-│   │   ├── tags-search.js       # Движок js-фильтрации поиска по тегам
-│   │   └── video-lazy-load.js   # Модуль лези-лоада видеоплееров
+│   ├── js/                     # Интерактивные скрипты проекта
 │   ├── tree.bat                # Код для сборки структуры репозитория
 │   └── webm_optimization.bat   # Код для оптимизации видео webm
 │

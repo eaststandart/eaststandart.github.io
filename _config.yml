@@ -2,7 +2,18 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-url: https://eaststandart.github.io
+title: "Творческая лаборатория познавательного развития"
+description: "Познавательное развитие через техническое творчество учащихся."
+url: "https://eaststandart.github.io"
+telegram: "https://t.me/RadiotekhnikaClub"
+
+
+author:
+  name: "TechLab"
+  github: "eaststandart"
+  email: "eaststandart@gmail.com"
+  bio: "Детско-юношеский инженерный клуб"
+  location: "г. Владивосток"
 
 # -----------------------------------------------------------------------------
 # Collections
@@ -18,6 +29,7 @@ collections:
 # -----------------------------------------------------------------------------
 
 # Includes & excludes
+
 include: ["_pages"]
 exclude:
   - LICENSE

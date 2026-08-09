@@ -63,7 +63,8 @@ eaststandart.github.io/
 │   ├── icons/
 │   ├── img/
 │   ├── js/
-│   └── webm_optimization.bat
+│   ├── tree.bat                # Код для сборки структуры репозитория
+│   └── webm_optimization.bat   # Код для оптимизации видео webm
 │
 ├── biblio/                     # Описание книг для изучения
 │   ├── files/

@@ -4,7 +4,7 @@ description: Развитие навыков конструирования из
 author: ["Кирилл К., Лиза Б."]
 title: Яблоневое дерево
 tags: [электроникаисхемотехника, проектучебный, 1класс, проект, яблоневоедерево, kirill-k, eastemitting]
-sources: "RadiotekhnikaClub"
+sources: "[TechLab](https://github.com/eaststandart)"
 date: 2025-12-21
 permalink: /faire/yablonevoe-derevo/
 ---

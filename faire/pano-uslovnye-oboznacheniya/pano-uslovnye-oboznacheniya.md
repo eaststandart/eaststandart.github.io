@@ -4,7 +4,7 @@ description: Развитие базовых навыков техническо
 author: ["Лиза Б."]
 title: Условные обозначения
 tags: [электроникаисхемотехника, столярноедело, проектучебный, 4класс, проект, условныеобозначения, электрическоеискусство, electronicsart, панно, языксхем, eastemitting]
-sources: "RadiotekhnikaClub"
+sources: "[TechLab](https://github.com/eaststandart)"
 date: 2026-04-02
 permalink: /faire/pano-uslovnye-oboznacheniya/
 ---

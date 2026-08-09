@@ -16,29 +16,29 @@ A website for those who want to know how everything works and build technology w
 ### Структура репозитория сайта
 
 ```text
-eaststandart.github.io/
 ├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
 │   ├── arch/
-│   ├── discus.liquid
-│   ├── faire-grid.liquid
-│   ├── footer.liquid
-│   ├── header-theme.liquid
-│   ├── media-archive.liquid
-│   ├── media-data-src.liquid
-│   ├── media-logic.liquid
-│   ├── navigation.liquid
-│   ├── news-loop.liquid
-│   ├── pagination.liquid
-│   ├── posts-page.liquid
-│   └── tags-logic.liquid
+│   ├── discus.liquid            # Интеграция и вывод блока дискуссий giscus
+│   ├── faire-grid.liquid        # Модуль автоматической сетки ярмарки поделок
+│   ├── footer.liquid            # Подвал сайта (копирайты, ссылки, контакты)
+│   ├── header-theme.liquid      # Смена логотипа главной страницы сайта
+│   ├── media-archive.liquid     # Генерация и фильтрация общей ленты публикаций
+│   ├── media-data-src.liquid    # Замена по расширениям медиафайлов
+│   ├── media-logic.liquid       # Глобальный модуль оптимизации медиаконтента
+│   ├── navigation.liquid        # Модуль навигация сайта
+│   ├── news-loop.liquid         # Сборка и фильтрация ленты обновлений
+│   ├── pagination.liquid        # Модуль пагинации страниц
+│   ├── posts-page.liquid        # Локальные ленты постов на страницах проектов
+│   └── tags-logic.liquid        # Сбор и генерация структуры тегов
 │
 ├── _layouts/                   # Шаблоны оформления страниц сайта
 │   ├── arch/
-│   ├── default.md
-│   ├── faire.md
-│   ├── home.md
-│   ├── news.md
-│   └── page.md
+│   ├── default.md              # Глобальный шаблон оформления страниц сайта
+│   ├── faire.md                # Шаблон структуры страниц в разделе faire
+│   ├── home.md                 # Шаблон главной страницы сайта
+│   ├── news.md                 # Шаблон ленты новостей и обновлений
+│   └── page.md                 # Шаблон для базовых страниц сайта
+
 │
 ├── _pages/                     # Системные разделы и агрегаторы сайта
 │   ├── faire.md
@@ -62,7 +62,14 @@ eaststandart.github.io/
 │   ├── css/
 │   ├── icons/
 │   ├── img/
-│   ├── js/
+│   ├── js/                      # Интерактивные скрипты проекта
+│   │   ├── image-lazy-load.js   # Модуль лези-лоада картинок
+│   │   ├── navigation-crumbs.js # Движок хлебных крошек навигации
+│   │   ├── pagination-logic.js  # Движок пагинации
+│   │   ├── posts-page-list.js   # Движок фильтрации и зачистки ленты медиа
+│   │   ├── posts-page-nav.js    # Движок локальной пагинации проектов
+│   │   ├── tags-search.js       # Движок js-фильтрации поиска по тегам
+│   │   └── video-lazy-load.js   # Модуль лези-лоада видеоплееров
 │   ├── tree.bat                # Код для сборки структуры репозитория
 │   └── webm_optimization.bat   # Код для оптимизации видео webm
 │
@@ -161,3 +168,21 @@ eaststandart.github.io/
 > Материалы предоставлены [Творческой лабораторией познавательного развития](https://eaststandart.github.io/).
 
 **Сообщество Лаборатории приветствует развитие открытого инженерного образования и будет радо, если наши наработки помогут вашему кружку или домашнему творчеству!**
+
+
+
+eaststandart.github.io/
+├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
+│   ├── arch/
+│   ├── discus.liquid            # Интеграция и вывод блока дискуссий giscus
+│   ├── faire-grid.liquid        # Модуль: автоматическая сетка ярмарки поделок
+│   ├── footer.liquid            # Подвал сайта (копирайты, ссылки, контакты)
+│   ├── header-theme.liquid      # Смена верхнего логотипа главной страницы сайта
+│   ├── media-archive.liquid     # Генерация и фильтрация общей ленты публикаций
+│   ├── media-data-src.liquid    # Точечная серверная замена по расширениям медиафайлов
+│   ├── media-logic.liquid       # Глобальный модуль оптимизации медиаконтента
+│   ├── navigation.liquid        # Модуль: динамическая верхняя навигация сайта
+│   ├── news-loop.liquid         # Модуль цикла: универсальный сборщик и фильтр ленты обновлений
+│   ├── pagination.liquid        # Модуль пагинации страниц списков
+│   ├── posts-page.liquid        # Модуль: локальные ленты постов на страницах проектов
+│   └── tags-logic.liquid        # Ядро данных: серверный сбор и генерация структуры тегов

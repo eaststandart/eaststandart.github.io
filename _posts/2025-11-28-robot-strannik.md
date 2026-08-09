@@ -2,7 +2,7 @@
 layout: page
 title: "Робот странник: модель №1"
 description:  "Модель первого созданного робота."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2025-11-28
 categories: [media, robot-strannik]
 ---

@@ -2,7 +2,7 @@
 layout: page
 title: "Музыкальный карандаш: описание работы"
 description: "Описание работы устройства, взаимодействия его компонентов и функциональных блоков, а также физических процессов, протекающих в них при выполнении устройством заданных функций в различных режимах работы."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-04-18
 categories: [journal, muzykalnyj-karandash]
 journal-post-page: "N"

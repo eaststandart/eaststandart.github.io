@@ -2,7 +2,7 @@
 layout: page
 title: "Метроном сигнальный: этапы создания"
 description: "Некоторые медиаматериалы этапов процесса создания устройства."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-05-14
 categories: [journal, metronom-signalnyj]
 journal-post-page: "N"

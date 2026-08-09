@@ -2,7 +2,7 @@
 layout: page
 title: "Музыкальный карандаш: общий вид"
 description: "Дополнительные медиаматериалы вида конструкции."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-04-16
 categories: [media, muzykalnyj-karandash]
 media-post-page: "N"

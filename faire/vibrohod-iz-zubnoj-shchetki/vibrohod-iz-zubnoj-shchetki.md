@@ -1,7 +1,7 @@
 ---
 layout: page
 description: Развитие навыков сборки миниатюрных механизмов, работы с компактными вибромоторами, проектирования беспаячных цепей питания и балансировки центра тяжести для точного направления движения робота.
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 title: Виброход из зубной щетки
 tags: [электроникаисхемотехника, конструированиеимоделирование, проектучебный, 1класс, проект, виброход, виброходиззубнойщетки]
 sources: "[Build a Bristlebot, a Tiny Toothbrush Robot](https://www.sciencebuddies.org/stem-activities/toothbrush-bristlebot), [Building Bristlebots: Basic Toothbrush Robotics](https://www.sciencebuddies.org/blog/building-bristlebots-basic-toothbrush-robotics)"

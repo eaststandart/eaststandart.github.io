@@ -2,7 +2,7 @@
 layout: page
 title: "Эффект плавного зажигания светодиода: время зажигания и гашения"
 description: "Добавление в схему подстроечного резистора и диода для точной синхронизации длительности зажигания и гашения светодиода. Основы наблюдения электрических процессов на осциллографе."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-03-16
 categories: [journal, plavnoe-zazhiganie-svetodioda]
 journal-post-page: "N"

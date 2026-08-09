@@ -2,7 +2,7 @@
 layout: page
 title: "Робот зубочист: скорость движения"
 description: "Соревнования роботов зубочистов по прохождению препятствий."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2025-11-24
 categories: [journal, vibrohod-iz-zubnoj-shchetki]
 journal-post-page: "N"

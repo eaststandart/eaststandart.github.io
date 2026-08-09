@@ -2,7 +2,7 @@
 layout: page
 title: "Метроном сигнальный: изделие №1"
 description: "Модель первого созданного устройства."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-05-13
 categories: [media, metronom-signalnyj]
 ---

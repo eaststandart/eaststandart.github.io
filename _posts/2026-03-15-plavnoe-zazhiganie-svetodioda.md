@@ -2,7 +2,7 @@
 layout: page
 title: "Эффект плавного зажигания светодиода: макет эксперимента"
 description: "Макет эксперимента к проекту для демонстрации включения транзистора в обычном и инверсном режиме."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-03-15
 categories: [journal, plavnoe-zazhiganie-svetodioda]
 journal-post-page: "N"

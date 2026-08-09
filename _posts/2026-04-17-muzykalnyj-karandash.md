@@ -2,7 +2,7 @@
 layout: page
 title: "Музыкальный карандаш: сборка"
 description: "Дополнительные медиаматериалы процесса окончательной сборки конструкции."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-04-17
 categories: [journal, muzykalnyj-karandash]
 journal-post-page: "N"

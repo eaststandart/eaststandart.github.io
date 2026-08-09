@@ -2,7 +2,7 @@
 layout: page
 title: "Музыкальный карандаш: тестирование"
 description: "Тестирование работы устройства и исследование его функционирования с применением осциллографа."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-04-19
 categories: [journal, muzykalnyj-karandash]
 journal-post-page: "N"

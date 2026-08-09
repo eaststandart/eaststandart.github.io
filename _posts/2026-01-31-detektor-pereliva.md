@@ -2,7 +2,7 @@
 layout: page
 title: "Детектор перелива: общий вид"
 description: "Дополнительные медиаматериалы вида конструкции устройства."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-01-31
 categories: [media, detektor-pereliva]
 ---

@@ -2,7 +2,7 @@
 layout: page
 title: "Автомобиль 4wd из картона: вид и движение"
 description: "Вид конструкции автомобиля, демонстрация работоспособности и движения модели."
-author: ["RadiotekhnikaClub"]
+author: ["TechLab"]
 date: 2026-04-08
 categories: [media, avtomobil-s-polnym-privodom-iz-kartona]
 media-post-page: "N"

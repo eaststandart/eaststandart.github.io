@@ -17,9 +17,7 @@ A website for those who want to know how everything works and build technology w
 
 ```text
 ├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
-│
 ├── _layouts/                   # Шаблоны оформления страниц сайта
-│
 ├── _pages/                     # Системные разделы и агрегаторы сайта
 │   ├── faire.md
 │   ├── journal-posts-page.md

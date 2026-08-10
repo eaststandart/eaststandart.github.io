@@ -18,8 +18,8 @@ eaststandart.github.io/
     └── news-loop.liquid 
     └── pagination.liquid 
     └── posts-page.liquid 
-    └── README.md 
     └── tags-logic.liquid 
+    └── README.md 
 ```
 
 ## Назначение модулей

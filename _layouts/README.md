@@ -7,11 +7,11 @@
 ```text
 eaststandart.github.io/ 
 └── _layouts 
-    └── default.md 
-    └── faire.md 
-    └── home.md 
-    └── news.md 
-    └── page.md 
+    ├── default.md 
+    ├── faire.md 
+    ├── home.md 
+    ├── news.md 
+    ├── page.md 
     └── README.md 
 ```
 

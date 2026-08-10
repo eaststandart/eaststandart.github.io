@@ -16,14 +16,23 @@ A website for those who want to know how everything works and build technology w
 ### Структура репозитория сайта
 
 ```text
+eaststandart.github.io/
 ├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
 ├── _layouts/                   # Шаблоны оформления страниц сайта
 ├── _pages/                     # Системные разделы и агрегаторы сайта
+│   ├── faire.md
+│   ├── journal-posts-page.md
+│   ├── journal.md
+│   ├── media-posts-page.md
+│   ├── media.md
+│   ├── news.md
+│   └── people.md
+│
 ├── _people/                    # Краткая библиография известных людей
 │   └── fran-blanche.md
 │
 ├── _posts/                     # Хронологические посты Лаборатории
-│   └── 2025-10-26-simple-cardboard-walking-robot.md
+│   ├── 2025-10-26-simple-cardboard-walking-robot.md
 │   └── ... (хронология ежедневных отчётов о сборке поделок)
 │
 ├── _reference/                 # Справочные материалы и исходники (Или этот блок вывести в дискуссии?)
@@ -107,7 +116,6 @@ A website for those who want to know how everything works and build technology w
 ├── LICENSE.txt                 # Лицензия на материалы проекта (CC BY 4.0)
 └── tags.md                     # Индекс тегов для быстрой навигации
 ```
-
 
 ### Правообладание и правила использования материалов
 

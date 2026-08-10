@@ -12,6 +12,7 @@ eaststandart.github.io/
 │   └── home.md 
 │   └── news.md 
 │   └── page.md 
+│   └── README.md 
 ```
 
 ### Список доступных шаблонов

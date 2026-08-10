@@ -7,18 +7,18 @@
 ```text
 eaststandart.github.io/ 
 └── _includes
-    └── discus.liquid 
-    └── faire-grid.liquid 
-    └── footer.liquid 
-    └── header-theme.liquid 
-    └── media-archive.liquid 
-    └── media-data-src.liquid 
-    └── media-logic.liquid 
-    └── navigation.liquid 
-    └── news-loop.liquid 
-    └── pagination.liquid 
-    └── posts-page.liquid 
-    └── tags-logic.liquid 
+    ├── discus.liquid 
+    ├── faire-grid.liquid 
+    ├── footer.liquid 
+    ├── header-theme.liquid 
+    ├── media-archive.liquid 
+    ├── media-data-src.liquid 
+    ├── media-logic.liquid 
+    ├── navigation.liquid 
+    ├── news-loop.liquid 
+    ├── pagination.liquid 
+    ├── posts-page.liquid 
+    ├── tags-logic.liquid 
     └── README.md 
 ```
 

@@ -1,6 +1,26 @@
-# Системные компоненты разметки (Liquid-модули)
+# Системные компоненты разметки
 
-Каталог содержит переиспользуемые блоки кода, из которых движок Jekyll динамически собирает страницы Творческой лаборатории.
+Каталог содержит переиспользуемые liquid-блоки кода, из которых движок Jekyll динамически собирает страницы сайта Лаборатории.
+
+### Структура папки \_includes
+
+```text
+eaststandart.github.io/ 
+└── _includes
+    └── discus.liquid 
+    └── faire-grid.liquid 
+    └── footer.liquid 
+    └── header-theme.liquid 
+    └── media-archive.liquid 
+    └── media-data-src.liquid 
+    └── media-logic.liquid 
+    └── navigation.liquid 
+    └── news-loop.liquid 
+    └── pagination.liquid 
+    └── posts-page.liquid 
+    └── README.md 
+    └── tags-logic.liquid 
+```
 
 ## Назначение модулей
 

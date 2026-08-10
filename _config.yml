@@ -31,5 +31,7 @@ collections:
 
 include: ["_pages"]
 exclude:
-  - LICENSE
+  - ARCHITECTURE.md
+  - CODE_OF_CONDUCT.md
+  - LICENSE.txt
   - README.md

@@ -7,8 +7,7 @@
 ```text
 eaststandart.github.io/
 └── assets
-    └── js 
-        ├── arch 
+    └── js
         ├── image-lazy-load.js 
         ├── navigation-crumbs.js 
         ├── pagination-logic.js 

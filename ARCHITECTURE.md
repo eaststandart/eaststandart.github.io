@@ -1,4 +1,8 @@
+# Полная структура репозитория eaststandart.github.io
+
+```text
 eaststandart.github.io/ 
+├── ARCHITECTURE.md 
 ├── assets 
 │   └── css 
 │   └── icons 
@@ -181,3 +185,6 @@ eaststandart.github.io/
 │   └── 2026-06-05-robot-krolik-iz-kartona.md 
 │   └── 2026-06-10-multivibrator-nesimmetrichnyj.md 
 ├── _reference 
+
+
+```

@@ -15,14 +15,14 @@ eaststandart.github.io/
     └── README.md 
 ```
 
-eaststandart.github.io/ 
-└── layouts 
-    ├── default.md 
-    ├── faire.md 
-    ├── home.md 
-    ├── news.md 
-    ├── page.md 
-    └── README.md 
+eaststandart.github.io/ \
+└── layouts \
+    ├── default.md \
+    ├── faire.md \
+    ├── home.md \
+    ├── news.md \
+    ├── page.md \
+    └── README.md \
 
 ### Список доступных шаблонов
 

@@ -1,6 +1,9 @@
-/* ==========================================================================
-   ОРИГИНАЛЬНЫЙ ДВИЖОК ЛОКАЛЬНОЙ ПАГИНАЦИИ ПРОЕКТОВ (posts-page-nav.js)
-   ========================================================================== */
+/**
+ * @about Модуль локальной пагинации проектов.
+ * @purpose Обеспечивает навигацию между связанными записями.
+ * @author TechLab
+ * @version 1.0.0
+ */
 
 function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, projectSlugLast, sectionSlug, navTitle) {
     var ul = document.getElementById(containerId);

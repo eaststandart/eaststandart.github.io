@@ -1,6 +1,9 @@
-/* ==========================================================================
-   ОРИГИНАЛЬНЫЙ ДВИЖОК ПАГИНАЦИИ (pagination-logic.js)
-   ========================================================================== */
+/**
+ * @about Модуль пагинации.
+ * @purpose Отвечает за разбиение длинных списков публикаций на страницы.
+ * @author TechLab
+ * @version 1.0.0
+ */
 
 function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
   var list = document.getElementById(listId);

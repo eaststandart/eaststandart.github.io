@@ -1,6 +1,3 @@
-# Полная структура репозитория eaststandart.github.io
-
-```text
 eaststandart.github.io/ 
 ├── _includes/ 
 │   ├── discus.liquid 
@@ -154,6 +151,7 @@ eaststandart.github.io/
 │   │   ├── tags-search.js 
 │   │   └── video-lazy-load.js 
 │   ├── tree.bat 
+│   ├── tree-.bat 
 │   └── webm_optimization.bat 
 ├── biblio/ 
 │   ├── files/ 
@@ -668,5 +666,5 @@ eaststandart.github.io/
 ├── index.md 
 ├── LICENSE.txt 
 ├── README.md 
-└── tags.md 
-```
+├── tags.md 
+└── tree.bat 

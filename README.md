@@ -19,14 +19,6 @@ A website for those who want to know how everything works and build technology w
 ├── _includes/                  # Повторяющиеся блоки страниц (Liquid-код)
 ├── _layouts/                   # Шаблоны оформления страниц сайта
 ├── _pages/                     # Системные разделы и агрегаторы сайта
-│   ├── faire.md
-│   ├── journal-posts-page.md
-│   ├── journal.md
-│   ├── media-posts-page.md
-│   ├── media.md
-│   ├── news.md
-│   └── people.md
-│
 ├── _people/                    # Краткая библиография известных людей
 │   └── fran-blanche.md
 │

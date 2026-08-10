@@ -1,3 +1,9 @@
+{%- comment -%}
+@about Смена логотипа главной страницы сайта.
+@purpose Быстрое изменение шапки главной страницы.
+@author TechLab
+{%- endcomment -%}
+
 {%- if page.header_theme == "panel" -%}
     <!-- 👑 ТЕМА №2: СЛОЖНЫЙ ГОРИЗОНТАЛЬНЫЙ ПУЛЬТ (Новые изолированные panel-классы) -->
     <header class="panel-header">
@@ -26,7 +32,7 @@
     </header>
 
 {%- else -%}
-    <!-- 👑 ТЕМА №1: ВАША ИСХОДНАЯ КЛАССИЧЕСКАЯ ШАПКА (Включается по умолчанию) -->
+    <!-- 👑 ТЕМА №1: ИСХОДНАЯ КЛАССИЧЕСКАЯ ШАПКА (Включается по умолчанию) -->
     <header class="classic-header">
         <img src="{{ '/assets/icons/logo.svg' | relative_url }}" alt="Логотип" class="classic-avatar">
         <h1 class="classic-title">{{ page.title }}</h1>

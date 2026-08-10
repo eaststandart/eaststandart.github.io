@@ -1,4 +1,8 @@
-{%- comment -%} ТОЧЕЧНАЯ СЕРВЕРНАЯ ЗАМЕНА ПО РАСШИРЕНИЯМ МЕДИАФАЙЛОВ {%- endcomment -%}
+{%- comment -%}
+@about Замена по расширениям медиафайлов.
+@purpose Замена в свойстве src фото и видео тегов.
+@author TechLab
+{%- endcomment -%}
 
 {%- assign safe_page_content = content | replace: '.webm"', '.webm" data-video-file="Y"' | replace: '.mp4"', '.mp4" data-video-file="Y"' -%}
 {%- assign safe_page_content = safe_page_content | replace: '.webp"', '.webp" data-image-file="Y"' | replace: '.jpg"', '.jpg" data-image-file="Y"' | replace: '.png"', '.png" data-image-file="Y"' -%}

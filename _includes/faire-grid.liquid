@@ -1,8 +1,8 @@
-{% comment %}
+{%- comment -%}
 @about Модуль автоматической генерации сетки как на главной странице раздела: Ярмарка поделок
-@purpose Собирает все страницы внутри раздела /faire/ и выводит их в виде карточек. Оформление завязано на изолированные CSS-классы (.faire-list, .faire-card) в faire.css.
+@purpose Собирает все страницы внутри папки-раздела faire/ и выводит их в виде карточек. Оформление завязано на изолированные CSS-классы (.faire-list, .faire-card) в faire.css.
 @author TechLab
-{% endcomment %}
+{%- endcomment -%}
 
 <div class="faire-list">
   {% assign current_section = page.url %}

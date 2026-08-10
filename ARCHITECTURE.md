@@ -109,6 +109,9 @@ eaststandart.github.io/
 │   └── 2026-06-10-multivibrator-nesimmetrichnyj.md 
 ├── _reference/ 
 ├── assets/ 
+│   ├── batchfiles/ 
+│   │   ├── tree.bat 
+│   │   └── webm_optimization.bat 
 │   ├── css/ 
 │   │   ├── biblio.css 
 │   │   ├── diary.css 
@@ -144,17 +147,15 @@ eaststandart.github.io/
 │   │   ├── through-hole-red-led.webp 
 │   │   └── ugolok-mladshego-konstruktora.svg 
 │   ├── img/ 
-│   ├── js/ 
-│   │   ├── image-lazy-load.js 
-│   │   ├── navigation-crumbs.js 
-│   │   ├── pagination-logic.js 
-│   │   ├── posts-page-list.js 
-│   │   ├── posts-page-nav.js 
-│   │   ├── README.md 
-│   │   ├── tags-search.js 
-│   │   └── video-lazy-load.js 
-│   ├── tree.bat 
-│   └── webm_optimization.bat 
+│   └── js/ 
+│       ├── image-lazy-load.js 
+│       ├── navigation-crumbs.js 
+│       ├── pagination-logic.js 
+│       ├── posts-page-list.js 
+│       ├── posts-page-nav.js 
+│       ├── README.md 
+│       ├── tags-search.js 
+│       └── video-lazy-load.js 
 ├── biblio/ 
 │   ├── files/ 
 │   │   └── materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.pdf 

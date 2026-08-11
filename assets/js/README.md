@@ -24,6 +24,6 @@ eaststandart.github.io/
 *   **`navigation-crumbs.js`** — Модуль навигации.
 *   **`pagination-logic.js`** — Модуль пагинации.
 *   **`posts-page-list.js`** — Модуль фильтрации и зачистки ленты медиа.
-  *   **`posts-page-nav.js`** — Модуль локальной пагинации проектов.
+*   **`posts-page-nav.js`** — Модуль локальной пагинации проектов.
 *   **`tags-search.js`** — Модуль js-фильтрации страницы поиска по тегам.
 *   **`video-lazy-load.js`** — Модуль лези-лоада видеоплееров.

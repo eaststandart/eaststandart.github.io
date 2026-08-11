@@ -50,7 +50,7 @@ eaststandart.github.io/
 ├── README.md 
 └── tags.md                     # Индекс тегов для быстрой навигации
 ```
-
+ 
 Полную структуру репозитория смотри в файле [ARCHITECTURE](./ARCHITECTURE.md) 👈
 
 ## Лицензирование и правообладание

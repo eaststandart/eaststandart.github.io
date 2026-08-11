@@ -1,3 +1,9 @@
+/*
+@about Модуль стилей интерактивной панели управления и консольной шапки сайта.
+@purpose Задает геометрию, отладочную разметку границ и правила адаптивности для верхней панели бренда. Формирует текстовую зону с выключкой по ширине и двухкомпонентный блок инструментов (моноширинные кнопки действий и поле ввода консоли) с глубокой трансформацией интерфейса на экранах менее 445px.
+@author TechLab
+*/
+
 /* 1. РОДИТЕЛЬСКИЙ КОНТЕЙНЕР ШАПКИ (Серый квадрат) */
 .panel-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
 

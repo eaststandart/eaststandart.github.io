@@ -1,3 +1,9 @@
+/*
+@about Модуль тестовой интерактивной шапки сайта с имитацией псевдоконсоли
+@purpose Формирует сложную двухъярусную структуру верхнего блока с отладочной подсветкой контуров, резиновой выключкой текста по ширине, блоком системных моноширинных кнопок и полем ввода команд. Обеспечивает экстремальную мобильную адаптацию: ниже 445px скрывает описание бренда, убирает текстовые подписи кнопок и трансформирует их в компактные квадратные иконки.
+@author TechLab
+*/
+
 /* 1. СЕРЫЙ КВАДРАТ (Родитель всей шапки, аккуратно по центру ПК) */
 .test-header { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; width: 100% !important; max-width: 1000px !important; margin: 10px auto 20px auto !important; gap: 12px !important; outline: 2px dashed #999 !important; }
 

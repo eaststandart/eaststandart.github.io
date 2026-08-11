@@ -662,6 +662,7 @@ eaststandart.github.io/
 │   ├── fritzing.md 
 │   ├── index.md 
 │   └── sprintlayout.md 
+├── .gitignore
 ├── _config.yml 
 ├── ARCHITECTURE.md 
 ├── CODE_OF_CONDUCT.md 

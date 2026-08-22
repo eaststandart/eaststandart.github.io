@@ -1,3 +1,4 @@
+<!-- Начало общей конструкции шапки -->
 <div class="readme-header">
 
   <h1 align="center">

@@ -4,7 +4,7 @@
 </h3>
 
 <h3 align="center">
-  <img alt="Logo" src="https://github.io" width="120" height="120" bgcolor="#f5f5f5"><br/><br/>
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120" bgcolor="#f5f5f5"><br/><br/>
   Творческая лаборатория познавательного развития
 </h3>
 

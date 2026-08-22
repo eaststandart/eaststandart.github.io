@@ -1,7 +1,7 @@
-<h1 align="center">
-  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120"><br/><br/>
+<h2 align="center">
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120"><br/>
   Творческая лаборатория познавательного развития
-</h1>
+</h2>
 
 # Творческая лаборатория познавательного развития
 

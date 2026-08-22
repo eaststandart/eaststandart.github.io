@@ -4,9 +4,10 @@
 </h3>
 
 <h3 align="center">
-  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo.svg" style="border-radius: 50%;"><br/><br/>
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo.svg" width="120" style="border-radius: 50%;"><br/><br/>
   Творческая лаборатория познавательного развития
 </h3>
+
 
 
 

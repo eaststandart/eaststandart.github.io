@@ -3,6 +3,11 @@
   Творческая лаборатория познавательного развития
 </h3>
 
+<h3 align="center">
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo.svg" width="120" height="120" style="border-radius: 100px;"><br/><br/>
+  Творческая лаборатория познавательного развития
+</h3>
+
 
 
 # Творческая лаборатория познавательного развития

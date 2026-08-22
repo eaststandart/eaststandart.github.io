@@ -1,5 +1,5 @@
 <h2 align="center">
-  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120"><br/>
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120" style="background: transparent !important;"><br/>
   Творческая лаборатория познавательного развития
 </h2>
 

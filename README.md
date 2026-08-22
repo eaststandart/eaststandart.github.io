@@ -1,11 +1,7 @@
 <h2 align="center">
-  <kbd>
-    <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120">
-  </kbd>
-  <br/>
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120" bgcolor="#ffffff"><br/>
   Творческая лаборатория познавательного развития
 </h2>
-
 
 # Творческая лаборатория познавательного развития
 

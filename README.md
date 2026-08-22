@@ -21,6 +21,7 @@
       <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
     </picture><br/>
     Творческая лаборатория познавательного развития
+    <sup><i>A project for those who want to know how everything works and to independently build technology.</i></sup> 
   </h2>
 
   <!-- Русский текст приветствия с выравниванием по ширине -->

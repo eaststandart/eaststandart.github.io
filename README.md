@@ -8,7 +8,7 @@
     <tr>
       <!-- bgcolor задает светло-серый фон, а border-radius делает его круглым -->
       <td bgcolor="#f0f0f0" style="border-radius: 50%; line-height: 0;">
-        <img alt="Logo" src="https://github.io" width="120" height="120">
+        <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120">
       </td>
     </tr>
   </table>

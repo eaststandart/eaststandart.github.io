@@ -4,7 +4,7 @@
   <h2 align="center">
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
-    </picture><br/>
+    </picture><br/><br/>
     Творческая лаборатория познавательного развития
   </h2>
 

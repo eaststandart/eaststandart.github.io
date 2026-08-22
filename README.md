@@ -1,13 +1,12 @@
-<!-- Начало общей конструкции шапки -->
-  <h1 align="center"><!--
+<h1 align="center"><!--
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
     </picture><br/>-->
     Творческая лаборатория познавательного развития
-  </h1>
+</h1>
 
 <p align="center"> 
-    <sup><i>A project for those who want to know how everything works and to independently build technology.</i></sup> 
+    <i>A project for those who want to know how everything works and to independently build technology.</i>
 </p>
 
 **Добро пожаловать в репозиторий проекта!** Он разработан для поддержки технического творчества, обмена инженерным опытом и предназначен для тех, кто хочет знать, как всё устроено и создавать технологии самостоятельно.

@@ -7,7 +7,7 @@
    height="40mm"
    viewBox="0 0 400 399.99999"
    id="svg15"
-   sodipodi:docname="logo.svg"
+   sodipodi:docname="logo-round.svg"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -27,8 +27,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="5.7877599"
-     inkscape:cx="71.271098"
-     inkscape:cy="75.590558"
+     inkscape:cx="71.357487"
+     inkscape:cy="75.763336"
      inkscape:window-width="1920"
      inkscape:window-height="1124"
      inkscape:window-x="1590"
@@ -146,7 +146,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
      ry="157.01283"
      clip-path="url(#clipPath6)" />
   <polygon
-     points="314,301 314,332 160,332 160,301 "
+     points="160,332 160,301 314,301 314,332 "
      fill="#d6d6d6"
      stroke="#d6d6d6"
      stroke-width="2"
@@ -186,7 +186,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
        id="polyline5"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="155,277 185,301 178,262 "
+       points="178,262 155,277 185,301 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="1"
@@ -233,14 +233,14 @@ circle {stroke-linecap:round; stroke-linejoin:round}
        id="polyline14"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="285,142 285,130 197,130 197,142 "
+       points="197,130 197,142 285,142 285,130 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="4"
        id="polygon14"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="270,107 270,130 256,130 254,130 227,130 211,130 211,116 211,107 212,102 214,99 216,96 219,95 222,94 225,93 227,93 254,93 259,94 263,95 266,97 268,100 269,102 270,105 "
+       points="256,130 254,130 227,130 211,130 211,116 211,107 212,102 214,99 216,96 219,95 222,94 225,93 227,93 254,93 259,94 263,95 266,97 268,100 269,102 270,105 270,107 270,130 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="4"
@@ -328,7 +328,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
          id="polyline9"
          transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
       <polygon
-         points="120,218 146,233 150,226 124,211 "
+         points="150,226 124,211 120,218 146,233 "
          fill="#ff0000"
          stroke="#800000"
          stroke-width="1"

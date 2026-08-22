@@ -1,14 +1,14 @@
-<h3 align="center">
+<h2 align="center">
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120"><br/>
     </picture><br/><br/>
   Творческая лаборатория познавательного развития
-</h3>
+</h2>
 
-Добро пожаловать в репозиторий проекта! Ресурс разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы создавать технологии своими руками.
+Добро пожаловать в репозиторий проекта! Он разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы самостоятельно создавать технологии.
 
 <p align="center">
-    A project for those who want to know how everything works and build technology with their own hands.
+    A project for those who want to know how everything works and to independently build technology.
 </p>
 
 ### 🏗️ О проекте и структуре Лаборатории

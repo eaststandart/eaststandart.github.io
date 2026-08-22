@@ -4,8 +4,8 @@
 <svg
    version="1.1"
    width="39.999996mm"
-   height="39.999996mm"
-   viewBox="0 0 399.99996 399.99995"
+   height="40.000004mm"
+   viewBox="0 0 399.99996 400.00003"
    id="svg15"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
@@ -97,6 +97,13 @@ circle {stroke-linecap:round; stroke-linejoin:round}
          r="199.99998" />
     </clipPath>
   </defs>
+  <rect
+     style="fill:#ffffff;stroke-width:10;stroke-linecap:round;stroke-linejoin:bevel"
+     id="rect1"
+     width="399.99997"
+     height="399.99997"
+     x="1.6538867e-14"
+     y="7.1956892e-06" />
   <path
      stroke="none"
      stroke-width="3"
@@ -123,7 +130,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
      ry="157.01283"
      clip-path="url(#clipPath6)" />
   <polygon
-     points="160,332 160,301 314,301 314,332 "
+     points="314,332 160,332 160,301 314,301 "
      fill="#d6d6d6"
      stroke="#d6d6d6"
      stroke-width="2"
@@ -163,7 +170,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
        id="polyline5"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="155,277 185,301 178,262 "
+       points="178,262 155,277 185,301 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="1"
@@ -210,14 +217,14 @@ circle {stroke-linecap:round; stroke-linejoin:round}
        id="polyline14"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="197,130 197,142 285,142 285,130 "
+       points="285,142 285,130 197,130 197,142 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="4"
        id="polygon14"
        transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
     <polygon
-       points="211,116 211,107 212,102 214,99 216,96 219,95 222,94 225,93 227,93 254,93 259,94 263,95 266,97 268,100 269,102 270,105 270,107 270,130 256,130 254,130 227,130 211,130 "
+       points="212,102 214,99 216,96 219,95 222,94 225,93 227,93 254,93 259,94 263,95 266,97 268,100 269,102 270,105 270,107 270,130 256,130 254,130 227,130 211,130 211,116 211,107 "
        fill="#d6d6d6"
        stroke="#d6d6d6"
        stroke-width="4"
@@ -305,7 +312,7 @@ circle {stroke-linecap:round; stroke-linejoin:round}
          id="polyline9"
          transform="matrix(1.000007,0,0,0.99861896,-40.1561,-39.887658)" />
       <polygon
-         points="150,226 124,211 120,218 146,233 "
+         points="146,233 150,226 124,211 120,218 "
          fill="#ff0000"
          stroke="#800000"
          stroke-width="1"

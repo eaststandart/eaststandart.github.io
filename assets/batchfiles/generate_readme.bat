@@ -2,11 +2,11 @@
 chcp 65001 > nul
 setlocal enabledelayedexpansion
 
-:: @about Скрипт автоматического сбора описаний и документирования файлов папки
-:: @purpose Сканирует элементы текущего каталога, игнорирует подпапки, извлекает технические паспорта из комментариев кода (@about/@purpose) или Front Matter (about:/purpose:) и генерирует готовый упорядоченный список Markdown для README.md
+:: @about Скрипт автоматического сбора описаний и документирования файлов папки.
+:: @purpose Сканирует элементы текущего каталога, игнорирует подпапки, извлекает технические паспорта из комментариев кода (@about/@purpose) или Front Matter (about:/purpose:) и генерирует готовый упорядоченный список Markdown для README.md.
 :: @author TechLab
 
-set "output_list=readme_list_snapshot.txt"
+set "output_list=generate_readme_log.txt"
 
 echo ## Список файлов > "%output_list%"
 echo. >> "%output_list%"

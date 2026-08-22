@@ -1,8 +1,8 @@
 <!-- Начало общей конструкции шапки -->
-  <h1 align="center" style="margin: 0 !important; padding: 0 !important; line-height: 1 !important;">
+  <h1 align="center"><!--
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
-    </picture><br/>
+    </picture><br/>-->
     Творческая лаборатория познавательного развития
   </h1>
 

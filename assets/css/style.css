@@ -32,6 +32,11 @@ html {
     --text-color: #2c3e50;  /* Основной глубокий цвет текста */
 }
 
+.readme-header {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 /* Базовые параметры страницы и шрифтовая сетка */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

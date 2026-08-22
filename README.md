@@ -11,6 +11,34 @@
     A project for those who want to know how everything works and to independently build technology.
 </p>
 
+
+
+<!-- Начало общей конструкции шапки -->
+<div class="readme-header">
+
+  <h2 align="center">
+    <picture>
+      <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
+    </picture><br/><br/>
+    Творческая лаборатория познавательного развития
+  </h2>
+
+  <!-- Русский текст приветствия с выравниванием по ширине -->
+  <p align="justify">
+    Добро пожаловать в репозиторий проекта! Он разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы самостоятельно создавать технологии.
+  </p>
+
+  <!-- Английский подзаголовок остается строго по центру -->
+  <p align="center">
+    A project for those who want to know how everything works and to independently build technology.
+  </p>
+
+</div>
+<!-- Конец общей конструкции -->
+
+
+
+
 ### 🏗️ О проекте и структуре Лаборатории
 
 Для понимания структуры, целей и терминологии проекта ниже приведены ключевые определения:

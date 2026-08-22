@@ -1,7 +1,9 @@
-<h2 align="center">
-  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120"><br/>
+<h3 align="center">
+    <picture>
+        <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120"><br/>
+    </picture><br/><br/>
   Творческая лаборатория познавательного развития
-</h2> 
+</h3>
 
 <p align="center">
     <b>A website for those who want to know how everything works and build technology with their own hands.</b>

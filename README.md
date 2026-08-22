@@ -1,20 +1,13 @@
 <h3 align="center">
-  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120" style="max-width: 100%; object-fit: contain; background-color: #ffffff; padding: 10px;"><br/><br/>
+  <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120"><br/><br/>
   Творческая лаборатория познавательного развития
 </h3>
 
 <h3 align="center">
-  <table align="center" style="border-collapse: collapse; border: none;">
-    <tr>
-      <!-- bgcolor задает светло-серый фон, а border-radius делает его круглым -->
-      <td bgcolor="#f0f0f0" style="border-radius: 50%; line-height: 0;">
-        <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-round.svg" width="120" height="120">
-      </td>
-    </tr>
-  </table>
-  <br/>
+  <img alt="Logo" src="https://github.io" width="120" height="120" bgcolor="#f5f5f5"><br/><br/>
   Творческая лаборатория познавательного развития
 </h3>
+
 
 
 

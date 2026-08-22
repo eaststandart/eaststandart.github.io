@@ -28,15 +28,13 @@
     Добро пожаловать в репозиторий проекта! Он разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы самостоятельно создавать технологии.
   </p>
 
-  <!-- Английский подзаголовок остается строго по центру -->
-  <p align="center">
-    A project for those who want to know how everything works and to independently build technology.
-  </p>
+  <!-- Английский подзаголовок с выравниванием по центру -->
+<p align="center"> 
+    <sup><i>A project for those who want to know how everything works and to independently build technology.</i></sup> 
+</p>
 
 </div>
 <!-- Конец общей конструкции -->
-
-
 
 
 ### 🏗️ О проекте и структуре Лаборатории

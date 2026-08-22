@@ -1,28 +1,14 @@
-<h2 align="center">
-    <picture>
-        <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120"><br/>
-    </picture><br/>
-  Творческая лаборатория познавательного развития
-</h2>
-
-Добро пожаловать в репозиторий проекта! Он разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы самостоятельно создавать технологии.
-
-<p align="center">
-    A project for those who want to know how everything works and to independently build technology.
-</p>
-
-
-
 <!-- Начало общей конструкции шапки -->
 <div class="readme-header">
 
   <h2 align="center">
     <picture>
-      <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
+        <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120" height="120">
     </picture><br/>
     Творческая лаборатория познавательного развития
   </h2>
 
+  <!-- Английский подзаголовок с выравниванием по центру -->
 <p align="center"> 
     <sup><i>A project for those who want to know how everything works and to independently build technology.</i></sup> 
 </p>
@@ -31,9 +17,6 @@
   <p align="justify">
     Добро пожаловать в репозиторий проекта! Он разработан для поддержки технического творчества, обмена инженерным опытом и создан для тех, кто хочет знать, как всё устроено, чтобы самостоятельно создавать технологии.
   </p>
-
-  <!-- Английский подзаголовок с выравниванием по центру -->
-
 
 </div>
 <!-- Конец общей конструкции -->

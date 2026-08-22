@@ -5,7 +5,9 @@
 
 Добро пожаловать в репозиторий проекта! Данный сайт разработан для поддержки технического творчества и обмена инженерным опытом. Он для тех, кто хочет знать как все устроено и создавать технологии своими руками.
 
-A website for those who want to know how everything works and build technology with their own hands.
+<p align="center">
+    <b>A website for those who want to know how everything works and build technology with their own hands.</b>
+</p>
 
 ### 🏗️ О проекте и структуре Лаборатории
 

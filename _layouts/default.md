@@ -41,7 +41,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
     }
   };
 </script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net /npm/mathjax@3/es5/tex-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
 
 

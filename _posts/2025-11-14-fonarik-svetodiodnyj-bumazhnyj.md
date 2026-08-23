@@ -23,6 +23,7 @@ discus: "questions"
 ![](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 
 <figcaption>Рис. 1 – Схема электрическая принципиальная</figcaption>
+
 </figure>
 
 Посмотрим, из чего она состоит:

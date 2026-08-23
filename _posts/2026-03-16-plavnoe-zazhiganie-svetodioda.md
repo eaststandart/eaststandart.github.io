@@ -20,7 +20,7 @@ discus: "questions"
 
 ### Как работает синхронизация
 
-Рассмотрим, как установить время зажигания так, чтобы оно совпадало с временем гашения светодиода. Изучим электрическую принципиальную схему в части подключения цепочки установки длительности зажигания* VD1*:
+Рассмотрим, как установить время зажигания так, чтобы оно совпадало с временем гашения светодиода. Изучим электрическую принципиальную схему в части подключения цепочки установки длительности зажигания *VD1*:
 
 ![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-06.webp)
 ![](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-07.webp)

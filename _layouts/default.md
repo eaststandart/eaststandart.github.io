@@ -60,9 +60,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
       {%- assign first_cell = cells[1] | split: '</td>' | first -%}
       {%- assign second_cell = cells[2] | split: '</td>' | first -%}
       
-      {# ПРОВЕРКА: Если это была КАРТИНКА (внутри первой ячейки есть восклицательный знак перед скобкой) #}
       {%- if first_cell contains '![' or first_cell contains 'src=' -%}
-        {# Вытаскиваем маркер (center или v) и путь к файлу, отбрасывая размер #}
         {%- assign marker = first_cell | split: '![' | last | split: '|' | first -%}
         {%- if marker == "" or marker contains 'img' -%}
           {%- assign marker = first_cell | split: 'alt="' | last | split: '"' | first | split: '|' | first -%}
@@ -75,7 +73,6 @@ purpose: Базовый скелет для всего сайта (шапка, �
         
         <img src="{{ img_src }}" alt="{{ marker }}" class="image-embed">
       {%- else -%}
-        {# ТЕКСТОВАЯ ССЫЛКА: Оставляем только правую часть, убирая имя заметки #}
         {%- assign text_before_link = first_cell | split: '[[' | first -%}
         {{ text_before_link }}
         {%- assign text_after_link = second_cell | replace: ']]', '' -%}

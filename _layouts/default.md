@@ -46,7 +46,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
         <p class="page-description">{{ page.description }}</p>
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
 
-{%- if content contains '<table>' -%}
+{% if content contains '<table>' %}
   {%- assign tables = content | split: '<table>' -%}
   {{ tables[0] }}
   {%- for table_block in tables offset:1 -%}
@@ -71,7 +71,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
   {%- endfor -%}
 {%- else -%}
   {{ content }}
-{%- endif -%}
+{% endif %}
 
     </div>
 </div>

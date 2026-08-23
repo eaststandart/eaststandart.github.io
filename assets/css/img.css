@@ -25,6 +25,27 @@
     aspect-ratio: 9 / 16 !important;
 }
 
+/* ==========================================================================
+   5. ЦЕНТРИРОВАНИЕ КАРТИНОК И ПОДПИСЕЙ ПО МАРКЕРУ "center"
+   ========================================================================== */
+
+/* Если внутри абзаца есть картинка с alt="center", разворачиваем весь абзац в столбик по центру */
+.main-content p:has(img[alt="center"]) {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Страхуем, чтобы подпись figcaption под центрированной картинкой тоже занимала всю ширину и центрировалась */
+.main-content p:has(img[alt="center"]) figcaption {
+    width: 100% !important;
+    text-align: center !important;
+}
+
+
+
+
 /* 3. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {

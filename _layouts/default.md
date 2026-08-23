@@ -32,7 +32,6 @@ purpose: Базовый скелет для всего сайта (шапка, �
     {%- if page.mathjax == true -%}
         {%- include mathjax.html -%}
      {%- endif -%}
-
 </head>
 
 <body>

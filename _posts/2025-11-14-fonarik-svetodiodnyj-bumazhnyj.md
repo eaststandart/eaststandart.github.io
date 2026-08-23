@@ -33,7 +33,7 @@ discus: "questions"
 #### Принцип работы схемы
 Если соединить выводы батареи питания с выводами светодиода, то он начнёт испускать свет – загорится.  Почему горит светодиод в этом опыте? Потому что через него протекает электрический ток. Он протекает от батарейки к светодиоду, а затем возвращается к батарейке. Это и есть простейшая электрическая цепь (рис. 2) \[Мацкевич, 1986, с. 31\] [^2].
 
-![](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-04.webp)
+![center](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-04.webp)
 
 <figcaption>Рис. 2 – Электроны в замкнутой электрической цепи</figcaption>
 
@@ -45,7 +45,7 @@ discus: "questions"
 
 Так мы составили простейшую электрическую цепь, в которой электроны от «минуса» батарейки идут к светодиоду, а затем через выключатель и заземление возвращаются к «плюсу» батарейки (рис. 3) \[Мацкевич, 1986, с. 33\] [^2].
 
-![](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![center](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 <figcaption>Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»</figcaption>
 

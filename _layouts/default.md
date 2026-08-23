@@ -56,7 +56,14 @@ purpose: Базовый скелет для всего сайта (шапка, �
     
     {%- if table_inside contains '<td>' -%}
       {%- assign cells = table_inside | split: '<td>' -%}
-      {%- for cell in cells offset:1 -%}{%- assign cell_clean = cell | split: '</td>' | first -%}{{ cell_clean }} {%- endfor -%}
+      
+      {%- assign first_cell = cells[1] | split: '</td>' | first -%}
+      {%- assign text_before_link = first_cell | split: '[[' | first -%}
+      {{ text_before_link }}
+      
+      {%- assign second_cell = cells[2] | split: '</td>' | first -%}
+      {%- assign text_after_link = second_cell | replace: ']]', '' -%}
+      {{ text_after_link }}
     {%- else -%}
       <table>{{ table_inside }}</table>
     {%- endif -%}
@@ -65,9 +72,6 @@ purpose: Базовый скелет для всего сайта (шапка, �
 {%- else -%}
   {{ content }}
 {%- endif -%}
-
-
-
 
     </div>
 </div>

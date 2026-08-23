@@ -29,9 +29,9 @@ purpose: Базовый скелет для всего сайта (шапка, �
     {% endif %}
      
     <!-- Подключение MathJax  -->
-    {%- if page.mathjax == true -%}
+    {% if page.mathjax == true %}
         {%- include mathjax.html -%}
-     {%- endif -%}
+     {% endif %}
 </head>
 
 <body>

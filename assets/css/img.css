@@ -38,6 +38,7 @@
 .main-content p:has(img[alt="center"]) figcaption {
     width: 100% !important;
     text-align: center !important;
+    font-style: normal !important; /* Убираем курсив, делаем шрифт стандартным прямым */
 }
 
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */

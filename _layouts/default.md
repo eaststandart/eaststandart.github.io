@@ -46,7 +46,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
         <p class="page-description">{{ page.description }}</p>
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
 
-{% if content contains '<table>' %}
+{%- if content contains '<table>' -%}
   {%- assign tables = content | split: '<table>' -%}
   {{ tables[0] }}
   {%- for table_block in tables offset:1 -%}
@@ -58,12 +58,30 @@ purpose: Базовый скелет для всего сайта (шапка, �
       {%- assign cells = table_inside | split: '<td>' -%}
       
       {%- assign first_cell = cells[1] | split: '</td>' | first -%}
-      {%- assign text_before_link = first_cell | split: '[[' | first -%}
-      {{ text_before_link }}
-      
       {%- assign second_cell = cells[2] | split: '</td>' | first -%}
-      {%- assign text_after_link = second_cell | replace: ']]', '' -%}
-      {{ text_after_link }}
+      
+      {# ПРОВЕРКА: Если это была КАРТИНКА (внутри первой ячейки есть восклицательный знак перед скобкой) #}
+      {%- if first_cell contains '![' or first_cell contains 'src=' -%}
+        {# Вытаскиваем маркер (center или v) и путь к файлу, отбрасывая размер #}
+        {%- assign marker = first_cell | split: '![' | last | split: '|' | first -%}
+        {%- if marker == "" or marker contains 'img' -%}
+          {%- assign marker = first_cell | split: 'alt="' | last | split: '"' | first | split: '|' | first -%}
+        {%- endif -%}
+        
+        {%- assign img_src = second_cell | split: 'src="' | last | split: '"' | first -%}
+        {%- if img_src == "" or second_cell contains ']' -%}
+          {%- assign img_src = second_cell | split: '(' | last | split: ')' | first -%}
+        {%- endif -%}
+        
+        <img src="{{ img_src }}" alt="{{ marker }}" class="image-embed">
+      {%- else -%}
+        {# ТЕКСТОВАЯ ССЫЛКА: Оставляем только правую часть, убирая имя заметки #}
+        {%- assign text_before_link = first_cell | split: '[[' | first -%}
+        {{ text_before_link }}
+        {%- assign text_after_link = second_cell | replace: ']]', '' -%}
+        {{ text_after_link }}
+      {%- endif -%}
+      
     {%- else -%}
       <table>{{ table_inside }}</table>
     {%- endif -%}
@@ -71,7 +89,10 @@ purpose: Базовый скелет для всего сайта (шапка, �
   {%- endfor -%}
 {%- else -%}
   {{ content }}
-{% endif %}
+{%- endif -%}
+
+
+
 
     </div>
 </div>

@@ -110,7 +110,8 @@ eaststandart.github.io/
 ├── _reference/ 
 ├── assets/ 
 │   ├── batchfiles/ 
-│   │   ├── tree.bat 
+│   │   ├── generate_readme.bat
+│   │   ├── structure_tree.bat
 │   │   └── webm_optimization.bat 
 │   ├── css/ 
 │   │   ├── biblio.css 

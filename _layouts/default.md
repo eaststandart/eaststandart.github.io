@@ -29,7 +29,21 @@ purpose: Базовый скелет для всего сайта (шапка, �
     {% endif %}
 
 <!-- Mathjax Support --> 
-<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+<!--<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>--> 
+
+<!-- Подключение MathJax для красивых формул в $ и $$ -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net /npm/mathjax@3/es5/tex-chtml.js"></script>
+
+
 
 </head>
 

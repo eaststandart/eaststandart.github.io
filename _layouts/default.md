@@ -46,21 +46,11 @@ purpose: Базовый скелет для всего сайта (шапка, �
         <p class="page-description">{{ page.description }}</p>
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
 
-{%- assign blocks = content | split: '[[' -%}
-{%- for block in blocks -%}
-  {%- if forloop.first -%}
-    {{ block }}
-  {%- else -%}
-    {%- assign link_and_text = block | split: ']]' -%}
-    {%- assign inside_brackets = link_and_text | first -%}
-    {%- assign after_brackets = link_and_text | last -%}
-    
-    {%- if inside_brackets contains '|' -%}
-      {{ inside_brackets | split: '|' | last }}{{ after_brackets }}
-    {%- else -%}
-      {{ inside_brackets }}{{ after_brackets }}
-    {%- endif -%}
-  {%- endif -%}{%- endfor -%}
+{%- capture cleaned_content -%}
+  {{ page.content | replace_regex: '\[\[[^\]|]*\|', '' | replace: ']]', '' | replace: '[[', '' }}
+{%- endcapture -%}
+
+{{ cleaned_content | markdownify }}
 
 
 

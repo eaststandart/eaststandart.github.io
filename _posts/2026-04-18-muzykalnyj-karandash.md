@@ -7,7 +7,7 @@ date: 2026-04-18
 categories: [journal, muzykalnyj-karandash]
 journal-post-page: "N"
 discus: "questions"
-mathjax: true
+mathjax: false
 ---
 
 ### Описание работы устройства

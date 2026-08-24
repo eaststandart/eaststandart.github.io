@@ -71,13 +71,14 @@ purpose: Базовый скелет для всего сайта (шапка, �
           {%- assign img_src = second_cell | split: '(' | last | split: ')' | first -%}
         {%- endif -%}
         
-        {# ОЧИСТКА ПУТИ: Если путь содержит домен гитхаба, вырезаем его и ставим правильный слэш #}
         {%- if img_src contains 'github/eaststandart.github.io' -%}
           {%- assign img_src = img_src | split: 'github/eaststandart.github.io' | last -%}
         {%- endif -%}
-        {%- unless img_src startswith '/' -%}
-          {%- assign img_src = '/' | append: img_src -%}
-        {%- endunless -%}
+        
+        {%- assign first_char = img_src | slice: 0 -%}
+        {%- if first_char != '/' -%}
+          {%- assign img_src = img_src | prepend: '/' -%}
+        {%- endif -%}
         
         <p><img loading="lazy" alt="{{ marker }}" src="{{ img_src }}"></p>
       {%- else -%}

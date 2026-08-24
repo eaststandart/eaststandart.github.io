@@ -2,14 +2,14 @@
 @about Модуль изолированных стилей геометрической стабилизации и антипрыжка изображений.
 @purpose Предотвращает сдвиги контента (CLS) при загрузке страниц путем немедленного резервирования высоты под фотографии поделок на ПК. Управляет пропорциями контента (16:9 для горизонтальных и 9:16 для вертикальных картинок с классами) и перестраивает геометрию под мобильные портретные и ландшафтные режимы экранов.
 @author TechLab
-@version 1.1.0
 */
 
 /* 1. ПК-ВЕРСИЯ: ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждала style.css) */
-/* ИЗМЕНЕНО: Селектор img[alt="v"] заменен на чистый класс img.img-v */
+/* ИЗМЕНЕНО: img[alt="v"] переведен на новые вертикальные классы */
 .main-content p img[alt=""]:not(.content-img),
 .main-content p img:not([alt]):not(.content-img),
-.main-content p img.img-v:not(.content-img) {
+.main-content p.img-vertical img:not(.content-img),
+.main-content p.img-vertical-center img:not(.content-img) {
     background-color: #f0f0f0 !important;
     height: 209px !important;       /* Защита от прыжка: блокируем высоту немедленно */
     width: auto !important;         /* Браузер сам высчитает ширину на основе aspect-ratio */
@@ -22,28 +22,26 @@
 }
 
 /* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК НА ПК */
-/* ИЗМЕНЕНО: Переведено на точечный и легкий класс img.img-v */
-.main-content p img.img-v:not(.content-img) {
+/* ИЗМЕНЕНО: Заменено строго на классы p.img-vertical и p.img-vertical-center */
+.main-content p.img-vertical img:not(.content-img),
+.main-content p.img-vertical-center img:not(.content-img) {
     aspect-ratio: 9 / 16 !important;
 }
 
-/* 3. ЦЕНТРИРОВАНИЕ КАРТИНОК И ПОДПИСЕЙ ПО МАРКЕРУ "img-center" */
-/* ИЗМЕНЕНО: Старый тяжелый селектор :has(img[alt="center"]) заменен на быстрый :has(img.img-center) */
-.main-content p:has(img.img-center) {
+/* 3. ЦЕНТРИРОВАНИЕ КАРТИНОК И ПОДПИСЕЙ ПО КЛАССАМ "img-center" И "img-vertical-center" */
+/* ИЗМЕНЕНО: :has(...) переведен на классы p.img-center и p.img-vertical-center */
+.main-content p.img-center,
+.main-content p.img-vertical-center {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
 }
 
-/* Настройки для одиночной горизонтальной картинки по центру (убираем жесткие 209px, если она центрирована) */
-.main-content p img.img-center:not(.content-img) {
-    height: auto !important;        
-    max-width: 100% !important;     
-}
-
 /* Страхуем, чтобы подпись figcaption под центрированной картинкой тоже занимала всю ширину и центрировалась */
-.main-content p:has(img.img-center) figcaption {
+/* ИЗМЕНЕНО: Переведено на новые классы */
+.main-content p.img-center figcaption,
+.main-content p.img-vertical-center figcaption {
     width: 100% !important;
     text-align: center !important;
 }
@@ -54,15 +52,15 @@
     @media (orientation: portrait) {
         /* На смартфонах сбрасываем ПК-высоту 209px в auto, так как в style.css заложено width: 100% */
         .main-content p img[alt=""]:not(.content-img),
-        .main-content p img:not([alt]):not(.content-img),
-        .main-content p img.img-center:not(.content-img) {
+        .main-content p img:not([alt]):not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
         
-        /* Мобильная адаптация пропорций для вертикального класса */
-        .main-content p img.img-v:not(.content-img) {
+        /* ИЗМЕНЕНО: Переведено на новые вертикальные классы */
+        .main-content p.img-vertical img:not(.content-img),
+        .main-content p.img-vertical-center img:not(.content-img) {
             height: auto !important;
             width: 100% !important;
             aspect-ratio: 9 / 16 !important;
@@ -72,17 +70,17 @@
 
 /* 5. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Перебиваем ПК-высоту на мобильную ландшафтную (163px из твоего style.css) */
+    /* Перебиваем ПК-высоту на mobile ландшафтную (163px из твоего style.css) */
     .main-content p img[alt=""]:not(.content-img),
-    .main-content p img:not([alt]):not(.content-img),
-    .main-content p img.img-center:not(.content-img) {
+    .main-content p img:not([alt]):not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
     
-    /* Мобильная ландшафтная геометрия для вертикального класса */
-    .main-content p img.img-v:not(.content-img) {
+    /* ИЗМЕНЕНО: Переведено на новые вертикальные классы */
+    .main-content p.img-vertical img:not(.content-img),
+    .main-content p.img-vertical-center img:not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 9 / 16 !important;

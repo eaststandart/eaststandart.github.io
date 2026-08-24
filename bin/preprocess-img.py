@@ -1,11 +1,12 @@
 """
 @about Модуль предобработки разметки изображений на этапе GitHub Actions (до запуска Jekyll).
-@purpose Находит стандартный Markdown-синтаксис картинок, считывает параметры и на лету переписывает 
-         их в чистый HTML-код. Извлекает технические маркеры (v, center) и преобразует их в CSS-классы 
-         родительского абзаца (img-vertical, img-center, img-vertical-center). Очищает атрибут alt от мусора, 
-         оставляя только чистый человеческий текст для SEO, и нативно внедряет loading="lazy". Полностью 
-         исключает ложные срабатывания, если ключевые слова встречаются внутри предложений или в путях файлов.
+@purpose Находит стандартный Markdown-синтаксис картинок, считывает параметры и на лету преобразует 
+         их в чистые HTML-теги <img> без вмешательства в структуру абзацев <p>. 
+         Полностью сохраняет логику Obsidian: картинки, написанные в столбик без пустых строк, 
+         Jekyll объединит в единый абзац-галерею, а изолированные через пустую строку — разделит.
+         Переносит технические маркеры в точечные HTML-классы (img-v, img-center), очищая alt для SEO.
 @author TechLab
+@version 1.3.0
 """
 
 import os
@@ -15,13 +16,20 @@ def process_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Вспомогательная функция для разбора параметров ОДНОЙ картинки
-    def parse_alt_and_url(alt_part, url_part):
+    replacements_count = 0
+
+    def replace_to_pure_html(match):
+        nonlocal replacements_count
+        alt_part = match.group(1).strip()
+        url_part = match.group(2).strip()
+
+        # Защита видео: обрабатываем строго графические форматы
         valid_extensions = ('.webp', '.jpg', '.jpeg', '.png', '.gif', '.svg')
         url_low = url_part.lower()
         if not any(ext in url_low for ext in valid_extensions):
-            return None
+            return match.group(0)
 
+        # Чистим путь к картинке от мусорного префикса гитхаба
         if 'github/eaststandart.github.io' in url_part:
             url_part = url_part.split('github/eaststandart.github.io')[-1]
         if not url_part.startswith('/'):
@@ -31,6 +39,7 @@ def process_file(file_path):
         has_center = False
         caption_text = ""
 
+        # СЦЕНАРИЙ 1: Внутри скобок только один элемент (нет палочек '|')
         if '|' not in alt_part:
             alt_low = alt_part.lower()
             if alt_low == 'v':
@@ -39,22 +48,30 @@ def process_file(file_path):
                 has_center = True
             else:
                 caption_text = alt_part
+        
+        # СЦЕНАРИЙ 2: Есть палочки '|', разбиваем параметры
         else:
             parts = [p.strip() for p in alt_part.split('|')]
-            first_part_low = parts[0].lower() if len(parts) > 0 else ""
-            remaining_parts = parts
             
-            if first_part_low == 'v':
-                has_v = True
-                remaining_parts = parts[1:]
-            elif first_part_low == 'center':
-                has_center = True
-                remaining_parts = parts[1:]
-            elif first_part_low in ('v-center', 'center-v'):
-                has_v = True
-                has_center = True
-                remaining_parts = parts[1:]
+            # СТРОГАЯ ПРОВЕРКА: Проверяем ТОЛЬКО самый первый элемент на маркеры
+            if len(parts) > 0:
+                first_part_low = parts[0].lower()
+                remaining_parts = parts
+                
+                if first_part_low == 'v':
+                    has_v = True
+                    remaining_parts = parts[1:]
+                elif first_part_low == 'center':
+                    has_center = True
+                    remaining_parts = parts[1:]
+                elif first_part_low in ('v-center', 'center-v'):
+                    has_v = True
+                    has_center = True
+                    remaining_parts = parts[1:]
+            else:
+                remaining_parts = parts
 
+            # Проверяем второй элемент: вдруг там второй маркер (например, ![v|center|...])
             if len(remaining_parts) > 0:
                 next_part_low = remaining_parts[0].lower()
                 if next_part_low == 'v' and not has_v:
@@ -64,87 +81,41 @@ def process_file(file_path):
                     has_center = True
                     remaining_parts = remaining_parts[1:]
 
+            # Все остальные элементы сканируем. Игнорируем размеры, собираем текст
             for part in remaining_parts:
                 if part.isdigit():
-                    continue  # Игнорируем и стираем размер из Obsidian
+                    continue  # Полностью вырезаем мусорные размеры из Obsidian
                 elif part != "":
                     caption_text = f"{caption_text} {part}".strip() if caption_text else part
 
+        # Собираем классы СТРОГО на саму картинку, не трогая абзацы!
+        classes = []
+        if has_v: classes.append("img-v")
+        if has_center: classes.append("img-center")
+        
+        img_class_attr = f' class="{" ".join(classes)}"' if classes else ""
+
+        # Защита от пустого alt
         if not caption_text:
             if has_v and has_center: caption_text = "vertical centered image"
             elif has_v: caption_text = "vertical image"
             elif has_center: caption_text = "centered image"
 
-        return {
-            'has_v': has_v,
-            'has_center': has_center,
-            'caption': caption_text,
-            'url': url_part
-        }
-
-    replacements_count = 0
-
-    # Функция обрабатывает целую строку (абзац), если в ней найдены картинки
-    def process_line(line_content):
-        nonlocal replacements_count
-        
-        # Находим все маркдаун-картинки внутри текущей строки
-        md_images = re.findall(r'!\[(.*?)\]\((.*?)\)', line_content)
-        if not md_images:
-            return line_content
-
-        parsed_images = []
-        is_pure_gallery = True
-
-        for alt_p, url_p in md_images:
-            res = parse_alt_and_url(alt_p, url_p)
-            if res is None:
-                is_pure_gallery = False
-                break
-            parsed_images.append(res)
-
-        if not parsed_images or not is_pure_gallery:
-            return line_content
-
-        # Вычисляем общий класс выравнивания для всего ряда на основе картинок в нем
-        any_v = any(img['has_v'] for img in parsed_images)
-        any_center = any(img['has_center'] for img in parsed_images)
-
-        p_class = ""
-        if any_v and any_center: p_class = ' class="img-vertical-center"'
-        elif any_v: p_class = ' class="img-vertical"'
-        elif any_center: p_class = ' class="img-center"'
-
-        # Собираем чистые HTML теги картинок без width
-        html_images = []
-        for img in parsed_images:
-            html_images.append(f'<img loading="lazy" alt="{img["caption"]}" src="{img["url"]}">')
-
+        alt_attr = f' alt="{caption_text}"'
         replacements_count += 1
         
-        # Склеиваем ВСЕ картинки строки внутрь ОДНОГО тега <p>, возвращая сетку ряда!
-        return f'<p{p_class}>{" ".join(html_images)}</p>'
+        # Возвращаем СТРОГО чистый тег <img>. Никаких <p> и </p> скрипт больше не плодит!
+        return f'<img loading="lazy"{img_class_attr}{alt_attr} src="{url_part}">'
 
-    # Разбиваем контент на строки и обрабатываем каждую индивидуально
-    lines = content.split('\n')
-    new_lines = []
-    for line in lines:
-        if line.strip().startswith('![') or '![' in line:
-            # Ищем и заменяем группу картинок в пределах текущей строки
-            # Регулярка захватывает всю строку от первой до последней картинки
-            processed_line = re.sub(r'(!\[.*?\].*?\))', lambda m: process_line(m.group(0)), line)
-            new_lines.append(processed_line)
-        else:
-            new_lines.append(line)
-
-    new_content = '\n'.join(new_lines)
+    # Ювелирно перехватываем маркдаун-ссылки и меняем их на чистые теги <img>
+    new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_to_pure_html, content)
 
     if replacements_count > 0:
-        print(f"[ИЗМЕНЕН]: {file_path} — успешно собрано галерейных рядов: {replacements_count}")
+        print(f"[ИЗМЕНЕН]: {file_path} — успешно обработано картинок: {replacements_count}")
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
 
-# Сканируем репозиторий на сервере GitHub
+# Сканируем рабочую директорию репозитория на сервере GitHub
 for root, dirs, files in os.walk('.'):
     if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):
         continue

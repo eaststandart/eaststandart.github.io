@@ -6,8 +6,7 @@
 */
 
 /* 1. ПК-ВЕРСИЯ: ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждала style.css) */
-.main-content p img:not(.content-img),
-.main-content p img.img-v:not(.content-img) {
+.main-content p img:not(.content-img) {
     background-color: #f0f0f0 !important;
     height: 209px !important;       /* Защита от прыжка: блокируем высоту немедленно */
     width: auto !important;         /* Браузер сам высчитает ширину на основе aspect-ratio */

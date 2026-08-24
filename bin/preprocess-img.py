@@ -1,43 +1,40 @@
 import os
+import re
 
 def process_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    replacements_count = 0
-    new_content = ""
-    cursor = 0
-    length = len(content)
+    # Печатаем вообще ВСЁ, что похоже на картинки или ссылки в файле
+    # Это покажет, как именно они написаны (какие скобки, слэши, символы)
+    all_links = re.findall(r'(!\[.*?\]\(.*?\))|(!\[\[.*?\]\])', content)
+    for link in all_links:
+        # Фильтруем пустые совпадения из-за условий ИЛИ в регулярке
+        found = link[0] if link[0] else link[1]
+        print(f"[ОТЛАДКА ИЗ ФАЙЛА {os.path.basename(file_path)}]: Найдена строка -> {found}")
 
-    # Ищем конструкции ![alt](url) посимвольно, чтобы исключить ошибки регулярных выражений
-    while cursor < length:
-        if content[cursor:cursor+2] == '![':
-            # Нашли начало альтернативного текста картинки
-            close_bracket = content.find('](', cursor)
-            if close_bracket != -1:
-                close_paren = content.find(')', close_bracket)
-                if close_paren != -1:
-                    # Вырезаем параметры картинки внутри квадратных скобок [ ]
-                    alt_part = content[cursor+2:close_bracket]
-                    url_part = content[close_bracket+2:close_paren]
-                    
-                    # Если внутри параметров есть палочки, экранируем их
-                    if '|' in alt_part and '\\|' not in alt_part:
-                        alt_escaped = alt_part.replace('|', '\\|')
-                        new_content += f'![{alt_escaped}]({url_part})'
-                        replacements_count += 1
-                        cursor = close_paren + 1
-                        continue
+    replacements_count = 0
+
+    def replace_md_links(match):
+        nonlocal replacements_count
+        alt_part = match.group(1)
+        url_part = match.group(2)
         
-        new_content += content[cursor]
-        cursor += 1
+        if '|' in alt_part and '\\|' not in alt_part:
+            alt_escaped = alt_part.replace('|', '\\|')
+            replacements_count += 1
+            return f'![{alt_escaped}]({url_part})'
+        return match.group(0)
+
+    # Посимвольный поиск стыка скобок, чтобы точно ничего не пропустить
+    new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_md_links, content)
 
     if replacements_count > 0:
-        print(f"[ИЗМЕНЕН]: {file_path} — экранировано палочек в картинках: {replacements_count}")
+        print(f"=== [ИЗМЕНЕН]: {file_path} — экранировано палочек: {replacements_count} ===")
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
 
-# Сканируем строго текущую рабочую папку репозитория на сервере GitHub
+# Сканируем репозиторий
 md_files_found = 0
 for root, dirs, files in os.walk('.'):
     if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):
@@ -47,4 +44,4 @@ for root, dirs, files in os.walk('.'):
             md_files_found += 1
             process_file(os.path.join(root, file))
 
-print(f"[УСПЕХ]: Проверено заметок: {md_files_found}")
+print(f"[УСПЕХ]: Всего проверено заметок: {md_files_found}")

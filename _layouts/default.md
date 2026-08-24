@@ -46,40 +46,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
         <p class="page-description">{{ page.description }}</p>
         {% comment %} Вывод основного содержимого страницы или дочернего шаблона {% endcomment %}
 
-{%- if content contains '<table>' -%}
-  {%- assign tables = content | split: '<table>' -%}
-  {{ tables[0] }}
-  {%- for table_block in tables offset:1 -%}
-    {%- assign table_end = table_block | split: '</table>' -%}
-    {%- assign table_inside = table_end[0] -%}
-    {%- assign table_after = table_end[1] -%}
-    
-    {%- if table_inside contains '<td>' -%}
-      {%- assign cells = table_inside | split: '<td>' -%}
-      {%- assign first_cell = cells[1] | split: '</td>' | first -%}
-      {%- assign second_cell = cells[2] | split: '</td>' | first -%}
-      
-      {%- if table_inside contains '[[' -%}
-        {# ТЕКСТОВАЯ ССЫЛКА: Убираем скобки и выводим только нужное слово #}
-        {%- assign text_before_link = first_cell | split: '[[' | first -%}
-        {%- assign text_after_link = second_cell | replace: ']]', '' -%}
-        {{ text_before_link }}{{ text_after_link }}
-      {%- else -%}
-        {# КАРТИНКА: Возвращаем исходный вид с палочкой, чтобы её прочитал твой скрипт #}
-        {%- assign img_before = first_cell | replace: '<tr>', '' | replace: '<tbody>', '' -%}
-        {%- assign img_after = second_cell | replace: '</tr>', '' | replace: '</tbody>', '' -%}
-        <p>{{ img_before }}|{{ img_after }}</p>
-      {%- endif -%}
-      
-    {%- else -%}
-      <table>{{ table_inside }}</table>
-    {%- endif -%}
-    {{ table_after }}
-  {%- endfor -%}
-{%- else -%}
-  {{ content }}
-{%- endif -%}
-
+        {{ content }}
 
 
     </div>

@@ -38,7 +38,6 @@
     text-align: center !important;
 }
 
-
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
@@ -60,7 +59,7 @@
 /* 5. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
     /* Перебиваем ПК-высоту на мобильную ландшафтную (163px из твоего style.css) */
-    .main-content p img:not(.img-v):not(.img-center):not(.content-img) {
+    .main-content p img:not(.img-v):not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 16 / 9 !important;

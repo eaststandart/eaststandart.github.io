@@ -42,17 +42,13 @@
 @media (max-width: 900px) {
     @media (orientation: portrait) {
         /* Обычные картинки — им даем 16:9 */
-        .main-content p img:not(.img-v):not(.img-center):not(.content-img) {
+        .main-content p img:not(.img-v):not(.content-img),
+        .main-content p img.img-center:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
-        /* ЦЕНТРИРОВАННЫЕ КАРТИНКИ: сбрасываем высоту в auto и даем ширину 100%, 
-           но НЕ ЗАЖИМАЕМ в aspect-ratio! Серые края исчезнут! */
-        .main-content p img.img-center:not(.content-img) {
-            height: auto !important;    
-            width: 100% !important;
-        }
+
         /* Вертикальные картинки */
         .main-content p img.img-v:not(.content-img) {
             height: auto !important;
@@ -65,16 +61,13 @@
 /* 5. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
     /* Обычные картинки в ландшафте */
-    .main-content p img:not(.img-v):not(.img-center):not(.content-img) {
+    .main-content p img:not(.img-v):not(.content-img),
+        .main-content p img.img-center:not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
-    /* Центрированные картинки в ландшафте: без жесткого aspect-ratio */
-    .main-content p img.img-center:not(.content-img) {
-        height: 163px !important;
-        width: auto !important;
-    }
+
     /* Вертикальные картинки в ландшафте */
     .main-content p img.img-v:not(.content-img) {
         height: 163px !important;

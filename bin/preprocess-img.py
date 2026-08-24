@@ -5,13 +5,10 @@ def process_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Печатаем вообще ВСЁ, что похоже на картинки или ссылки в файле
-    # Это покажет, как именно они написаны (какие скобки, слэши, символы)
-    all_links = re.findall(r'(!\[.*?\]\(.*?\))|(!\[\[.*?\]\])', content)
+    # Печатаем для контроля все найденные картинки в лог
+    all_links = re.findall(r'(!\[.*?\]\(.*?\))', content)
     for link in all_links:
-        # Фильтруем пустые совпадения из-за условий ИЛИ в регулярке
-        found = link[0] if link[0] else link[1]
-        print(f"[ОТЛАДКА ИЗ ФАЙЛА {os.path.basename(file_path)}]: Найдена строка -> {found}")
+        print(f"[ОТЛАДКА ИЗ ФАЙЛА {os.path.basename(file_path)}]: Найдена строка -> {link}")
 
     replacements_count = 0
 
@@ -20,13 +17,21 @@ def process_file(file_path):
         alt_part = match.group(1)
         url_part = match.group(2)
         
-        if '|' in alt_part and '\\|' not in alt_part:
-            alt_escaped = alt_part.replace('|', '\\|')
-            replacements_count += 1
-            return f'![{alt_escaped}]({url_part})'
+        # Если внутри квадратных скобок есть хоть одна палочка
+        if '|' in alt_part:
+            # Сначала полностью очищаем от старых обратных слэшей, чтобы не плодить мусор
+            alt_clean = alt_part.replace('\\|', '|')
+            # Заново и гарантированно экранируем КАЖДУЮ палочку
+            alt_escaped = alt_clean.replace('|', '\\|')
+            
+            # Если строка изменилась, засчитываем замену
+            if alt_escaped != alt_part:
+                replacements_count += 1
+                return f'![{alt_escaped}]({url_part})'
+                
         return match.group(0)
 
-    # Посимвольный поиск стыка скобок, чтобы точно ничего не пропустить
+    # Ищем конструкции ![alt](url) с любыми символами внутри
     new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_md_links, content)
 
     if replacements_count > 0:
@@ -34,7 +39,7 @@ def process_file(file_path):
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
 
-# Сканируем репозиторий
+# Сканируем строго текущую рабочую папку репозитория
 md_files_found = 0
 for root, dirs, files in os.walk('.'):
     if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):

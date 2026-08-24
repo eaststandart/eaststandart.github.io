@@ -26,7 +26,7 @@ jobs:
           python-version: '3.x'
 
       - name: Run Markdown Preprocessor
-        run: python bin/preprocess-img.py
+        run: python bin/preprocess.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

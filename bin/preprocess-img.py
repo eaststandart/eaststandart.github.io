@@ -19,8 +19,8 @@ def process_file(file_path):
             return f'![{alt_escaped}]({url_part})'
         return match.group(0)
 
-    # Ищет СТРОГО стандартные картинки ![center|400](path)
-    new_content = re.sub(r'!\[(.*?)]\((.*?)\)', replace_md_links, content)
+    # ТОЧНЫЙ ФИКС: Экранировали скобку (\]), чтобы регулярка железно находила стык скобок ](
+    new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_md_links, content)
 
     if replacements_count > 0:
         print(f"[ИЗМЕНЕН]: {file_path} — сделано замен: {replacements_count}")
@@ -30,7 +30,6 @@ def process_file(file_path):
 # Сканируем строго текущую рабочую папку репозитория
 md_files_found = 0
 for root, dirs, files in os.walk('.'):
-    # Пропускаем служебные каталоги
     if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):
         continue
     for file in files:

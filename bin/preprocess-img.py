@@ -2,34 +2,40 @@ import os
 import re
 
 def process_file(file_path):
-    print(f"[НАЙДЕН ФАЙЛ]: Обрабатываю {file_path}")
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    def replace_links(match):
+    replacements_count = 0
+
+    def replace_md_links(match):
+        nonlocal replacements_count
         alt_part = match.group(1)
         url_part = match.group(2)
-        alt_escaped = alt_part.replace('|', '\\|')
-        return f'![{alt_escaped}]({url_part})'
+        
+        # Если внутри alt-текста обычной картинки есть палочка, экранируем её
+        if '|' in alt_part and '\\|' not in alt_part:
+            alt_escaped = alt_part.replace('|', '\\|')
+            replacements_count += 1
+            return f'![{alt_escaped}]({url_part})'
+        return match.group(0)
 
-    new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_links, content)
+    # Ищет СТРОГО стандартные картинки ![center|400](path)
+    new_content = re.sub(r'!\[(.*?)]\((.*?)\)', replace_md_links, content)
 
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(new_content)
+    if replacements_count > 0:
+        print(f"[ИЗМЕНЕН]: {file_path} — сделано замен: {replacements_count}")
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
 
-# Получаем абсолютный путь к корню репозитория (на уровень выше папки bin)
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-print(f"[СТАРТ]: Корень репозитория определен как: {root_dir}")
-print(f"[СПИСОК ПАПОК В КОРНЕ]: {os.listdir(root_dir)}")
-
-md_counter = 0
-for root, dirs, files in os.walk(root_dir):
-    # Пропускаем только служебные папки сборщика
+# Сканируем строго текущую рабочую папку репозитория
+md_files_found = 0
+for root, dirs, files in os.walk('.'):
+    # Пропускаем служебные каталоги
     if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):
         continue
     for file in files:
         if file.endswith('.md'):
-            md_counter += 1
+            md_files_found += 1
             process_file(os.path.join(root, file))
 
-print(f"[ИТОГ]: Скрипт успешно завершил обход. Всего изменено файлов: {md_counter}")
+print(f"[УСПЕХ]: Проверено заметок: {md_files_found}")

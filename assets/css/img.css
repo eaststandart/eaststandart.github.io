@@ -26,13 +26,7 @@
     aspect-ratio: 9 / 16 !important;
 }
 
-/* Если картинка центрированная (класс img-center) — центрируем её родительский абзац */
-.main-content p:has(img.img-center) {
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-}
+
 
 /* Для центрированной картинки ОТКЛЮЧАЕМ пропорции 16:9 на ПК! 
    Высота остается 209px, ширина адаптируется по файлу, серые поля по бокам исчезают! */

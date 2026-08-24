@@ -54,6 +54,8 @@
         aspect-ratio: 16 / 9 !important; 
     }
     .main-content p img.img-v {
+        height: auto !important;
+        width: 100% !important;
         aspect-ratio: 9 / 16 !important;
     }
     /* На смартфонах для центрированных картинок тоже отключаем жесткие 16:9, чтобы не лезли серые края */
@@ -70,6 +72,7 @@
         aspect-ratio: 16 / 9 !important; 
     }
     .main-content p img.img-v {
+        width: auto !important;
         aspect-ratio: 9 / 16 !important; 
     }
     /* В ландшафте для центрированных картинок тоже отключаем жесткие 16:9 */

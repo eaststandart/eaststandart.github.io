@@ -1,124 +1,47 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-@about Модуль предобработки разметки изображений на этапе GitHub Actions (до запуска Jekyll).
-@purpose Находит стандартный Markdown-синтаксис картинок, считывает параметры и на лету преобразует 
-         их в чистые HTML-теги <img> без вмешательства в структуру абзацев <p>. 
-         Полностью сохраняет логику Obsidian: картинки, написанные в столбик без пустых строк, 
-         Jekyll объединит в единый абзац-галерею, а изолированные через пустую строку — разделит.
-         Переносит технические маркеры в точечные HTML-классы (img-v, img-center), очищая alt для SEO.
-@author TechLab
-@version 1.3.0
+@script preprocess.py
+@about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
+@purpose Читает markdown-файлы заметок, последовательно пропускает их через изолированные
+         модули (картинки, видео и т.д.) и перезаписывает результат.
 """
 
+import sys
 import os
-import re
 
-def process_file(file_path):
+# Импортируем функцию обработки картинок из нашего нового модуля images.py
+from images import process_markdown_images
+
+def main():
+    # Проверяем, передан ли путь к файлу в качестве аргумента скрипту
+    if len(sys.argv) < 2:
+        print("Ошибка: Не указан путь к файлу для обработки.")
+        sys.exit(1)
+        
+    file_path = sys.argv[1]
+    
+    # Защитная проверка: существует ли файл физически
+    if not os.path.isfile(file_path):
+        print(f"Ошибка: Файл не найден по пути {file_path}")
+        sys.exit(1)
+        
+    # 1. ЧИТАЕМ ИСХОДНЫЙ КОНТЕНТ ЗАМЕТКИ
     with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    replacements_count = 0
-
-    def replace_to_pure_html(match):
-        nonlocal replacements_count
-        alt_part = match.group(1).strip()
-        url_part = match.group(2).strip()
-
-        # Защита видео: обрабатываем строго графические форматы
-        valid_extensions = ('.webp', '.jpg', '.jpeg', '.png', '.gif', '.svg')
-        url_low = url_part.lower()
-        if not any(ext in url_low for ext in valid_extensions):
-            return match.group(0)
-
-        # Чистим путь к картинке от мусорного префикса гитхаба
-        if 'github/eaststandart.github.io' in url_part:
-            url_part = url_part.split('github/eaststandart.github.io')[-1]
-        if not url_part.startswith('/'):
-            url_part = '/' + url_part
-
-        has_v = False
-        has_center = False
-        caption_text = ""
-
-        # СЦЕНАРИЙ 1: Внутри скобок только один элемент (нет палочек '|')
-        if '|' not in alt_part:
-            alt_low = alt_part.lower()
-            if alt_low == 'v':
-                has_v = True
-            elif alt_low == 'center':
-                has_center = True
-            else:
-                caption_text = alt_part
+        markdown_content = f.read()
         
-        # СЦЕНАРИЙ 2: Есть палочки '|', разбиваем параметры
-        else:
-            parts = [p.strip() for p in alt_part.split('|')]
-            
-            # СТРОГАЯ ПРОВЕРКА: Проверяем ТОЛЬКО самый первый элемент на маркеры
-            if len(parts) > 0:
-                first_part_low = parts[0].lower()
-                remaining_parts = parts
-                
-                if first_part_low == 'v':
-                    has_v = True
-                    remaining_parts = parts[1:]
-                elif first_part_low == 'center':
-                    has_center = True
-                    remaining_parts = parts[1:]
-                elif first_part_low in ('v-center', 'center-v'):
-                    has_v = True
-                    has_center = True
-                    remaining_parts = parts[1:]
-            else:
-                remaining_parts = parts
+    # 2. ПОСЛЕДОВАТЕЛЬНО ПРОПУСКАЕМ ЧЕРЕЗ МОДУЛИ-МОДИФИКАТОРЫ
+    
+    # Шаг А: Обработка картинок (убираем alt-мусор, вешаем классы .img-v, .img-center и .p-center)
+    markdown_content = process_markdown_images(markdown_content)
+    
+    # Шаг Б: Сюда мы в один клик добавим модуль обработки видео-ссылок, когда напишем его:
+    # from videos import process_videos
+    # markdown_content = process_videos(markdown_content)
+    
+    # 3. ЗАПИСЫВАЕМ ОЧИЩЕННЫЙ И ПРЕОБРАЗОВАННЫЙ ТЕКСТ ОБРАТНО В ФАЙЛ
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(markdown_content)
 
-            # Проверяем второй элемент: вдруг там второй маркер (например, ![v|center|...])
-            if len(remaining_parts) > 0:
-                next_part_low = remaining_parts[0].lower()
-                if next_part_low == 'v' and not has_v:
-                    has_v = True
-                    remaining_parts = remaining_parts[1:]
-                elif next_part_low == 'center' and not has_center:
-                    has_center = True
-                    remaining_parts = remaining_parts[1:]
-
-            # Все остальные элементы сканируем. Игнорируем размеры, собираем текст
-            for part in remaining_parts:
-                if part.isdigit():
-                    continue  # Полностью вырезаем мусорные размеры из Obsidian
-                elif part != "":
-                    caption_text = f"{caption_text} {part}".strip() if caption_text else part
-
-        # Собираем классы СТРОГО на саму картинку, не трогая абзацы!
-        classes = []
-        if has_v: classes.append("img-v")
-        if has_center: classes.append("img-center")
-        
-        img_class_attr = f' class="{" ".join(classes)}"' if classes else ""
-
-        # Защита от пустого alt
-        if not caption_text:
-            if has_v and has_center: caption_text = "vertical centered image"
-            elif has_v: caption_text = "vertical image"
-            elif has_center: caption_text = "centered image"
-
-        alt_attr = f' alt="{caption_text}"'
-        replacements_count += 1
-        
-        # Возвращаем СТРОГО чистый тег <img>. Никаких <p> и </p> скрипт больше не плодит!
-        return f'<img loading="lazy"{img_class_attr}{alt_attr} src="{url_part}">'
-
-    # Ювелирно перехватываем маркдаун-ссылки и меняем их на чистые теги <img>
-    new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_to_pure_html, content)
-
-    if replacements_count > 0:
-        print(f"[ИЗМЕНЕН]: {file_path} — успешно обработано картинок: {replacements_count}")
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-
-# Сканируем рабочую директорию репозитория на сервере GitHub
-for root, dirs, files in os.walk('.'):
-    if any(p in root for p in ['.git', '.github', '_site', '.jekyll-cache', 'bin']):
-        continue
-    for file in files:
-        if file.endswith('.md'):
-            process_file(os.path.join(root, file))
+if __name__ == '__main__':
+    main()

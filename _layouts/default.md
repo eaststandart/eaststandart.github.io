@@ -71,7 +71,15 @@ purpose: Базовый скелет для всего сайта (шапка, �
           {%- assign img_src = second_cell | split: '(' | last | split: ')' | first -%}
         {%- endif -%}
         
-        <img src="{{ img_src }}" alt="{{ marker }}" class="image-embed">
+        {# ОЧИСТКА ПУТИ: Если путь содержит домен гитхаба, вырезаем его и ставим правильный слэш #}
+        {%- if img_src contains 'github/eaststandart.github.io' -%}
+          {%- assign img_src = img_src | split: 'github/eaststandart.github.io' | last -%}
+        {%- endif -%}
+        {%- unless img_src startswith '/' -%}
+          {%- assign img_src = '/' | append: img_src -%}
+        {%- endunless -%}
+        
+        <p><img loading="lazy" alt="{{ marker }}" src="{{ img_src }}"></p>
       {%- else -%}
         {%- assign text_before_link = first_cell | split: '[[' | first -%}
         {{ text_before_link }}

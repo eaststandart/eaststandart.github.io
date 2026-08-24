@@ -56,14 +56,19 @@ purpose: Базовый скелет для всего сайта (шапка, �
     
     {%- if table_inside contains '<td>' -%}
       {%- assign cells = table_inside | split: '<td>' -%}
-      
-      {%- assign text_before = cells[1] | split: '</td>' | first | replace: '[[', '' -%}
-      {%- assign text_after = cells[2] | split: '</td>' | first | replace: ']]', '' -%}
+      {%- assign first_cell = cells[1] | split: '</td>' | first -%}
+      {%- assign second_cell = cells[2] | split: '</td>' | first -%}
       
       {%- if table_inside contains '[[' -%}
-        {{ text_after }}
+        {# ТЕКСТОВАЯ ССЫЛКА: Убираем скобки и выводим только нужное слово #}
+        {%- assign text_before_link = first_cell | split: '[[' | first -%}
+        {%- assign text_after_link = second_cell | replace: ']]', '' -%}
+        {{ text_before_link }}{{ text_after_link }}
       {%- else -%}
-        {{ text_before }}{{ text_after }}
+        {# КАРТИНКА: Возвращаем исходный вид с палочкой, чтобы её прочитал твой скрипт #}
+        {%- assign img_before = first_cell | replace: '<tr>', '' | replace: '<tbody>', '' -%}
+        {%- assign img_after = second_cell | replace: '</tr>', '' | replace: '</tbody>', '' -%}
+        <p>{{ img_before }}|{{ img_after }}</p>
       {%- endif -%}
       
     {%- else -%}

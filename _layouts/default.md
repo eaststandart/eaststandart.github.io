@@ -57,13 +57,9 @@ purpose: Базовый скелет для всего сайта (шапка, �
     {%- if table_inside contains '<td>' -%}
       {%- assign cells = table_inside | split: '<td>' -%}
       
-      {# 1. Достаем всё, что было в первой ячейке (до черты |), и очищаем от скобок Obsidian [[ #}
       {%- assign text_before = cells[1] | split: '</td>' | first | replace: '[[', '' -%}
-      
-      {# 2. Достаем всё, что было во второй ячейке (после черты |), и очищаем от скобок ]] #}
       {%- assign text_after = cells[2] | split: '</td>' | first | replace: ']]', '' -%}
       
-      {# 3. Если это была текстовая ссылка, выводим только правую часть. Иначе (для картинок) — склеиваем обе части обратно #}
       {%- if table_inside contains '[[' -%}
         {{ text_after }}
       {%- else -%}

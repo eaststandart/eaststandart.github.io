@@ -1,34 +1,27 @@
 /*
 @about Модуль изолированных стилей геометрической стабилизации и антипрыжка изображений.
-@purpose Предотвращает сдвиги контента (CLS) при загрузке страниц путем немедленного резервирования высоты под фотографии поделок на ПК. Управляет пропорциями контента (16:9 для горизонтальных и 9:16 для вертикальных картинок с классами) и перестраивает геометрию под мобильные портретные и ландшафтные режимы экранов.
+@purpose Предотвращает сдвиги контента (CLS) путем немедленного резервирования высоты под фотографии поделок на ПК. Управляет пропорциями контента через чистые HTML-классы от Python-скрипта.
 @author TechLab
-@version 1.1.0
+@version 1.3.0
 */
 
-/* 1. ПК-ВЕРСИЯ: ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждала style.css) */
-/* ИЗМЕНЕНО: Селектор img[alt="v"] заменен на чистый класс img.img-v */
-.main-content p img[alt=""]:not(.content-img),
-.main-content p img:not([alt]):not(.content-img),
-.main-content p img.img-v:not(.content-img) {
+/* 1. ПК-ВЕРСИЯ: БАЗОВАЯ ГЕОМЕТРИЯ (Для всех обычных и вертикальных картинок в тексте) */
+/* Резервируем высоту 209px для защиты от прыжков контента, ширину ставим в авто */
+.main-content p img:not(.content-img) {
     background-color: #f0f0f0 !important;
-    height: 209px !important;       /* Защита от прыжка: блокируем высоту немедленно */
-    width: auto !important;         /* Браузер сам высчитает ширину на основе aspect-ratio */
-}
-
-/* 1.1 ПК-ВЕРСИЯ: Пропорции 16:9 для горизонтальных картинок по умолчанию */
-.main-content p img[alt=""]:not(.content-img),
-.main-content p img:not([alt]):not(.content-img) {
-    aspect-ratio: 16 / 9 !important;
+    height: 209px !important;
+    width: auto !important;
+    aspect-ratio: 16 / 9 !important; /* По умолчанию все картинки горизонтальные 16:9 */
 }
 
 /* 2. СПЕЦИАЛЬНО ДЛЯ ВЕРТИКАЛЬНЫХ КАРТИНОК НА ПК */
-/* ИЗМЕНЕНО: Переведено на точечный и легкий класс img.img-v */
+/* Если у картинки есть класс img-v, просто точечно меняем ей пропорцию на 9:16. Высота сама останется 209px */
 .main-content p img.img-v:not(.content-img) {
     aspect-ratio: 9 / 16 !important;
 }
 
-/* 3. ЦЕНТРИРОВАНИЕ КАРТИНОК И ПОДПИСЕЙ ПО МАРКЕРУ "img-center" */
-/* ИЗМЕНЕНО: Старый тяжелый селектор :has(img[alt="center"]) заменен на быстрый :has(img.img-center) */
+/* 3. ЦЕНТРИРОВАНИЕ КАРТИНОК И ПОДПИСЕЙ ПО МАРКЕРУ "center" */
+/* Если внутри абзаца сидит центрированная картинка, разворачиваем весь абзац в столбик по центру */
 .main-content p:has(img.img-center) {
     flex-direction: column !important;
     align-items: center !important;
@@ -36,13 +29,13 @@
     width: 100% !important;
 }
 
-/* Настройки для одиночной горизонтальной картинки по центру (убираем жесткие 209px, если она центрирована) */
+/* Для самой центрированной картинки отменяем жесткую высоту рядов, даем ей авто-высоту и адаптивность */
 .main-content p img.img-center:not(.content-img) {
     height: auto !important;        
     max-width: 100% !important;     
 }
 
-/* Страхуем, чтобы подпись figcaption под центрированной картинкой тоже занимала всю ширину и центрировалась */
+/* Центрируем текст подписи под такой картинкой */
 .main-content p:has(img.img-center) figcaption {
     width: 100% !important;
     text-align: center !important;
@@ -52,19 +45,14 @@
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {
-        /* На смартфонах сбрасываем ПК-высоту 209px в auto, так как в style.css заложено width: 100% */
-        .main-content p img[alt=""]:not(.content-img),
-        .main-content p img:not([alt]):not(.content-img),
-        .main-content p img.img-center:not(.content-img) {
+        /* Сбрасываем высоту в auto и растягиваем на 100% ширины экрана смартфона */
+        .main-content p img:not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
-        
-        /* Мобильная адаптация пропорций для вертикального класса */
+        /* Вертикальные картинки на смартфонах */
         .main-content p img.img-v:not(.content-img) {
-            height: auto !important;
-            width: 100% !important;
             aspect-ratio: 9 / 16 !important;
         }
     }
@@ -72,19 +60,14 @@
 
 /* 5. МОБИЛЬНАЯ АДАПТАЦИЯ (ГОРИЗОНТАЛЬ/LANDSCAPE) — ДО 500px ВЫСОТЫ */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Перебиваем ПК-высоту на мобильную ландшафтную (163px из твоего style.css) */
-    .main-content p img[alt=""]:not(.content-img),
-    .main-content p img:not([alt]):not(.content-img),
-    .main-content p img.img-center:not(.content-img) {
+    /* Перебиваем ПК-высоту на мобильную ландшафтную 163px */
+    .main-content p img:not(.content-img) {
         height: 163px !important;
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
-    
-    /* Мобильная ландшафтная геометрия для вертикального класса */
+    /* Вертикальные картинки в мобильном ландшафте */
     .main-content p img.img-v:not(.content-img) {
-        height: 163px !important;
-        width: auto !important;
         aspect-ratio: 9 / 16 !important;
     }
 }

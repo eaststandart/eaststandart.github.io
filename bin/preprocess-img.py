@@ -31,6 +31,7 @@ def process_file(file_path):
         has_v = False
         has_center = False
         caption_text = ""
+        img_width = ""
 
         # СЦЕНАРИЙ 1: Внутри скобок только один элемент (нет палочек '|')
         if '|' not in alt_part:
@@ -40,6 +41,7 @@ def process_file(file_path):
             elif alt_low == 'center':
                 has_center = True
             else:
+                # Это обычный человеческий текст описания, маркеры не включаем
                 caption_text = alt_part
         
         # СЦЕНАРИЙ 2: Есть палочки '|', разбиваем параметры
@@ -61,7 +63,7 @@ def process_file(file_path):
                 has_center = True
                 remaining_parts = parts[1:]
 
-            # Проверяем второй элемент: вдруг там второй маркер
+            # Проверяем второй элемент: вдруг там второй маркер (например, ![v|center|...])
             if len(remaining_parts) > 0:
                 next_part_low = remaining_parts[0].lower()
                 if next_part_low == 'v' and not has_v:
@@ -71,11 +73,12 @@ def process_file(file_path):
                     has_center = True
                     remaining_parts = remaining_parts[1:]
 
-            # Все остальные элементы сканируем. Игнорируем цифры размеров, собираем только текст
+            # Все остальные элементы сканируем ТОЛЬКО на цифры (размер) или текст описания
             for part in remaining_parts:
                 if part.isdigit():
-                    continue # Просто пропускаем цифры размера, на сайт они не пойдут!
+                    img_width = part
                 elif part != "":
+                    # Собираем описание. Если их несколько, склеиваем через пробел
                     caption_text = f"{caption_text} {part}".strip() if caption_text else part
 
         # Сборка комбинированного класса на основе найденных маркеров
@@ -87,7 +90,10 @@ def process_file(file_path):
         elif has_center:
             p_class = ' class="img-center"'
 
-        # Защита от пустого alt
+        # Собираем атрибуты тега img
+        width_attr = f' width="{img_width}"' if img_width else ''
+        
+        # Защита от пустого alt: если маркер занял всю строку, пишем системное имя для SEO
         if not caption_text:
             if has_v and has_center:
                 caption_text = "vertical centered image"
@@ -99,8 +105,7 @@ def process_file(file_path):
         alt_attr = f' alt="{caption_text}"'
 
         replacements_count += 1
-        # Итоговый HTML-код: чистый, валидный, без каких-либо жестких ширин width=""
-        return f'<p{p_class}><img loading="lazy"{alt_attr} src="{url_part}"></p>'
+        return f'<p{p_class}><img loading="lazy"{alt_attr} src="{url_part}"{width_attr}></p>'
 
     # Перехватываем стандартные Markdown-картинки ![alt](url)
     new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_to_pure_html, content)

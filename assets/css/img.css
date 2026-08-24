@@ -7,7 +7,6 @@
     background-color: #f0f0f0 !important;
     height: 209px !important;       /* Твоя единая высота для всего на ПК */
     width: auto !important;         /* Браузер сам считает ширину, чтобы ничего не искажалось */
-aspect-ratio: 16 / 9 !important;
 }
 
 /* Если картинка вертикальная (класс img-v) — просто даем браузеру подсказку по пропорциям */

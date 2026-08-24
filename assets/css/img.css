@@ -43,7 +43,7 @@
 @media (max-width: 900px) {
     @media (orientation: portrait) {
         /* На смартфонах сбрасываем ПК-высоту 209px в auto, так как в style.css заложено width: 100% */
-        .main-content p img:not(.img-v):not(.img-center):not(.content-img) {
+        .main-content p img:not(.img-v):not(.content-img) {
             height: auto !important;    
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;

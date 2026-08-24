@@ -45,7 +45,7 @@ discus: "questions"
 
 Так мы составили простейшую электрическую цепь, в которой электроны от «минуса» батарейки идут к светодиоду, а затем через выключатель и заземление возвращаются к «плюсу» батарейки (рис. 3) \[Мацкевич, 1986, с. 33\] [^2].
 
-![center|text|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![center|text|100](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 <figcaption>Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»</figcaption>
 

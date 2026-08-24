@@ -12,6 +12,7 @@
 .main-content p.img-vertical-center img:not(.content-img) {
     background-color: #f0f0f0 !important;
     height: 209px;       /* Защита от прыжка: блокируем высоту немедленно */
+    width: auto;         /* Браузер сам высчитает ширину на основе aspect-ratio */
 }
 
 /* 1.1 ПК-ВЕРСИЯ: Пропорции 16:9 для горизонтальных картинок по умолчанию */

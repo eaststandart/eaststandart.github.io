@@ -26,7 +26,13 @@
     aspect-ratio: 9 / 16 !important;
 }
 
-
+/* ИЗБАВИЛИСЬ ОТ МУСОРА: Если сам абзац имеет класс p-center — тупо центрируем его как флекс-столбик */
+.main-content p.p-center {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
 
 /* Для центрированной картинки ОТКЛЮЧАЕМ пропорции 16:9 на ПК! 
    Высота остается 209px, ширина адаптируется по файлу, серые поля по бокам исчезают! */

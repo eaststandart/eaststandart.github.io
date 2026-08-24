@@ -13,8 +13,7 @@
 }
 
 /* 1.1 ПК-ВЕРСИЯ: Пропорции 16:9 для горизонтальных картинок по умолчанию */
-.main-content p img[alt=""]:not(.content-img),
-.main-content p img:not([alt]):not(.content-img) {
+.main-content p img:not(.img-v):not(.img-center):not(.content-img) {
     aspect-ratio: 16 / 9 !important;
 }
 

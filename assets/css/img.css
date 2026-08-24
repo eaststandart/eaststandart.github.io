@@ -7,8 +7,7 @@
 
 /* 1. ПК-ВЕРСИЯ: ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждала style.css) */
 /* ТОЧНЫЙ КЛОН ОРИГИНАЛА: Картинки с классами центрирования сюда не входят */
-.main-content p img[alt=""]:not(.content-img),
-.main-content p img:not([alt]):not(.content-img),
+
 .main-content p img.img-v:not(.content-img) {
     background-color: #f0f0f0 !important;
     height: 209px !important;       /* Защита от прыжка: блокируем высоту немедленно */

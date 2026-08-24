@@ -5,11 +5,6 @@ def process_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Печатаем для контроля все найденные картинки в лог
-    all_links = re.findall(r'(!\[.*?\]\(.*?\))', content)
-    for link in all_links:
-        print(f"[ОТЛАДКА ИЗ ФАЙЛА {os.path.basename(file_path)}]: Найдена строка -> {link}")
-
     replacements_count = 0
 
     def replace_md_links(match):
@@ -19,12 +14,12 @@ def process_file(file_path):
         
         # Если внутри квадратных скобок есть хоть одна палочка
         if '|' in alt_part:
-            # Сначала полностью очищаем от старых обратных слэшей, чтобы не плодить мусор
+            # Сначала полностью очищаем от старых обратных слэшей
             alt_clean = alt_part.replace('\\|', '|')
             # Заново и гарантированно экранируем КАЖДУЮ палочку
             alt_escaped = alt_clean.replace('|', '\\|')
             
-            # Если строка изменилась, засчитываем замену
+            # Если строка изменилась, возвращаем экранированный вариант
             if alt_escaped != alt_part:
                 replacements_count += 1
                 return f'![{alt_escaped}]({url_part})'
@@ -35,7 +30,7 @@ def process_file(file_path):
     new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_md_links, content)
 
     if replacements_count > 0:
-        print(f"=== [ИЗМЕНЕН]: {file_path} — экранировано палочек: {replacements_count} ===")
+        print(f"[ИЗМЕНЕН]: {file_path} — экранировано палочек: {replacements_count}")
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
 

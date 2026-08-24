@@ -57,35 +57,17 @@ purpose: Базовый скелет для всего сайта (шапка, �
     {%- if table_inside contains '<td>' -%}
       {%- assign cells = table_inside | split: '<td>' -%}
       
-      {%- assign first_cell = cells[1] | split: '</td>' | first -%}
-      {%- assign second_cell = cells[2] | split: '</td>' | first -%}
+      {# 1. Достаем всё, что было в первой ячейке (до черты |), и очищаем от скобок Obsidian [[ #}
+      {%- assign text_before = cells[1] | split: '</td>' | first | replace: '[[', '' -%}
       
-      {%- if first_cell contains '![' or first_cell contains 'src=' -%}
-        {%- assign marker = first_cell | split: '![' | last | split: '|' | first -%}
-        {%- if marker == "" or marker contains 'img' -%}
-          {%- assign marker = first_cell | split: 'alt="' | last | split: '"' | first | split: '|' | first -%}
-        {%- endif -%}
-        
-        {%- assign img_src = second_cell | split: 'src="' | last | split: '"' | first -%}
-        {%- if img_src == "" or second_cell contains ']' -%}
-          {%- assign img_src = second_cell | split: '(' | last | split: ')' | first -%}
-        {%- endif -%}
-        
-        {%- if img_src contains 'github/eaststandart.github.io' -%}
-          {%- assign img_src = img_src | split: 'github/eaststandart.github.io' | last -%}
-        {%- endif -%}
-        
-        {%- assign first_char = img_src | slice: 0 -%}
-        {%- if first_char != '/' -%}
-          {%- assign img_src = img_src | prepend: '/' -%}
-        {%- endif -%}
-        
-        <p><img loading="lazy" alt="{{ marker }}" src="{{ img_src }}"></p>
+      {# 2. Достаем всё, что было во второй ячейке (после черты |), и очищаем от скобок ]] #}
+      {%- assign text_after = cells[2] | split: '</td>' | first | replace: ']]', '' -%}
+      
+      {# 3. Если это была текстовая ссылка, выводим только правую часть. Иначе (для картинок) — склеиваем обе части обратно #}
+      {%- if table_inside contains '[[' -%}
+        {{ text_after }}
       {%- else -%}
-        {%- assign text_before_link = first_cell | split: '[[' | first -%}
-        {{ text_before_link }}
-        {%- assign text_after_link = second_cell | replace: ']]', '' -%}
-        {{ text_after_link }}
+        {{ text_before }}{{ text_after }}
       {%- endif -%}
       
     {%- else -%}

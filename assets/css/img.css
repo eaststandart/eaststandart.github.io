@@ -47,7 +47,12 @@
             width: 100% !important;
             aspect-ratio: 16 / 9 !important;
         }
-
+        /* ЦЕНТРИРОВАННЫЕ КАРТИНКИ: сбрасываем высоту в auto и даем ширину 100%, 
+           но НЕ ЗАЖИМАЕМ в aspect-ratio! Серые края исчезнут! */
+        .main-content p img.img-center:not(.content-img) {
+            height: auto !important;    
+            width: 100% !important;
+        }
         /* Вертикальные картинки */
         .main-content p img.img-v:not(.content-img) {
             height: auto !important;
@@ -65,7 +70,11 @@
         width: auto !important;
         aspect-ratio: 16 / 9 !important;
     }
-
+    /* Центрированные картинки в ландшафте: без жесткого aspect-ratio */
+    .main-content p img.img-center:not(.content-img) {
+        height: 163px !important;
+        width: auto !important;
+    }
     /* Вертикальные картинки в ландшафте */
     .main-content p img.img-v:not(.content-img) {
         height: 163px !important;

@@ -4,9 +4,10 @@
          их в чистые HTML-теги <img> без вмешательства в структуру абзацев <p>. 
          Полностью сохраняет логику Obsidian: картинки, написанные в столбик без пустых строк, 
          Jekyll объединит в единый абзац-галерею, а изолированные через пустую строку — разделит.
-         Переносит технические маркеры в точечные HTML-классы (img-v, img-center), очищая alt для SEO.
+         Переносит технические маркеры в точечные HTML-классы (img-v, img-center). 
+         Если человеческого описания нет, alt остается строго пустым (alt="").
 @author TechLab
-@version 1.3.0
+@version 1.3.3
 """
 
 import os
@@ -81,10 +82,10 @@ def process_file(file_path):
                     has_center = True
                     remaining_parts = remaining_parts[1:]
 
-            # Все остальные элементы сканируем. Игнорируем размеры, собираем текст
+            # Все остальные элементы сканируем. Игнорируем размеры, собираем только текст
             for part in remaining_parts:
                 if part.isdigit():
-                    continue  # Полностью вырезаем мусорные размеры из Obsidian
+                    continue  # Полностью вырезаем мусорные размеры из Obsidian для сайта
                 elif part != "":
                     caption_text = f"{caption_text} {part}".strip() if caption_text else part
 
@@ -94,17 +95,11 @@ def process_file(file_path):
         if has_center: classes.append("img-center")
         
         img_class_attr = f' class="{" ".join(classes)}"' if classes else ""
-
-        # Защита от пустого alt
-        if not caption_text:
-            if has_v and has_center: caption_text = "vertical centered image"
-            elif has_v: caption_text = "vertical image"
-            elif has_center: caption_text = "centered image"
-
+        
+        # ФИКС: Никаких системных подстановок текста. Если caption_text пустой, будет чистое alt=""
         alt_attr = f' alt="{caption_text}"'
         replacements_count += 1
         
-        # Возвращаем СТРОГО чистый тег <img>. Никаких <p> и </p> скрипт больше не плодит!
         return f'<img loading="lazy"{img_class_attr}{alt_attr} src="{url_part}">'
 
     # Ювелирно перехватываем маркдаун-ссылки и меняем их на чистые теги <img>

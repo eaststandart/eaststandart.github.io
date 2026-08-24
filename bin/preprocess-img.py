@@ -22,6 +22,12 @@ def process_file(file_path):
         alt_part = match.group(1).strip()
         url_part = match.group(2).strip()
 
+        # ФИКС ПУНКТА 2: Проверяем, что это точно картинка. Если видео — возвращаем исходную строку маркдауна без изменений!
+        valid_extensions = ('.webp', '.jpg', '.jpeg', '.png', '.gif', '.svg')
+        url_low = url_part.lower()
+        if not any(ext in url_low for ext in valid_extensions):
+            return match.group(0)
+
         # Чистим путь к картинке от мусорного префикса гитхаба
         if 'github/eaststandart.github.io' in url_part:
             url_part = url_part.split('github/eaststandart.github.io')[-1]
@@ -31,7 +37,6 @@ def process_file(file_path):
         has_v = False
         has_center = False
         caption_text = ""
-        img_width = ""
 
         # СЦЕНАРИЙ 1: Внутри скобок только один элемент (нет палочек '|')
         if '|' not in alt_part:
@@ -41,7 +46,6 @@ def process_file(file_path):
             elif alt_low == 'center':
                 has_center = True
             else:
-                # Это обычный человеческий текст описания, маркеры не включаем
                 caption_text = alt_part
         
         # СЦЕНАРИЙ 2: Есть палочки '|', разбиваем параметры
@@ -49,21 +53,24 @@ def process_file(file_path):
             parts = [p.strip() for p in alt_part.split('|')]
             
             # СТРОГАЯ ПРОВЕРКА: Проверяем ТОЛЬКО самый первый элемент на маркеры
-            first_part_low = parts[0].lower()
-            remaining_parts = parts
-            
-            if first_part_low == 'v':
-                has_v = True
-                remaining_parts = parts[1:]
-            elif first_part_low == 'center':
-                has_center = True
-                remaining_parts = parts[1:]
-            elif first_part_low == 'v-center' or first_part_low == 'center-v':
-                has_v = True
-                has_center = True
-                remaining_parts = parts[1:]
+            if len(parts) > 0:
+                first_part_low = parts[0].lower()
+                remaining_parts = parts
+                
+                if first_part_low == 'v':
+                    has_v = True
+                    remaining_parts = parts[1:]
+                elif first_part_low == 'center':
+                    has_center = True
+                    remaining_parts = parts[1:]
+                elif first_part_low in ('v-center', 'center-v'):
+                    has_v = True
+                    has_center = True
+                    remaining_parts = parts[1:]
+            else:
+                remaining_parts = parts
 
-            # Проверяем второй элемент: вдруг там второй маркер (например, ![v|center|...])
+            # Проверяем второй элемент: вдруг там второй маркер
             if len(remaining_parts) > 0:
                 next_part_low = remaining_parts[0].lower()
                 if next_part_low == 'v' and not has_v:
@@ -73,12 +80,11 @@ def process_file(file_path):
                     has_center = True
                     remaining_parts = remaining_parts[1:]
 
-            # Все остальные элементы сканируем ТОЛЬКО на цифры (размер) или текст описания
+            # Все остальные элементы сканируем. ИГНОРИРУЕМ ЦИФРЫ РАЗМЕРОВ (вырезаем их)
             for part in remaining_parts:
                 if part.isdigit():
-                    img_width = part
+                    continue # Просто пропускаем размер, в HTML-код сайта он не пойдет!
                 elif part != "":
-                    # Собираем описание. Если их несколько, склеиваем через пробел
                     caption_text = f"{caption_text} {part}".strip() if caption_text else part
 
         # Сборка комбинированного класса на основе найденных маркеров
@@ -90,10 +96,7 @@ def process_file(file_path):
         elif has_center:
             p_class = ' class="img-center"'
 
-        # Собираем атрибуты тега img
-        width_attr = f' width="{img_width}"' if img_width else ''
-        
-        # Защита от пустого alt: если маркер занял всю строку, пишем системное имя для SEO
+        # Защита от пустого alt
         if not caption_text:
             if has_v and has_center:
                 caption_text = "vertical centered image"
@@ -105,7 +108,8 @@ def process_file(file_path):
         alt_attr = f' alt="{caption_text}"'
 
         replacements_count += 1
-        return f'<p{p_class}><img loading="lazy"{alt_attr} src="{url_part}"{width_attr}></p>'
+        # ФИКС ПУНКТА 1: Полностью убрали width="" из сборки. HTML теперь кристально чистый
+        return f'<p{p_class}><img loading="lazy"{alt_attr} src="{url_part}"></p>'
 
     # Перехватываем стандартные Markdown-картинки ![alt](url)
     new_content = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_to_pure_html, content)

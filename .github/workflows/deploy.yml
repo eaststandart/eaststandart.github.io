@@ -26,10 +26,7 @@ jobs:
           python-version: '3.x'
 
       - name: Run Markdown Preprocessor
-        run: |
-          for file in _posts/*.md; do
-            [ -f "$file" ] && python bin/preprocess.py "$file"
-          done
+        run: python bin/preprocess.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

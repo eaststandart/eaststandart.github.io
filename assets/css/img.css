@@ -40,6 +40,48 @@
     text-align: center !important;
 }
 
+/* ============================================================
+   НОВЫЕ КЛАССЫ ВЫРАВНИВАНИЯ АБЗАЦЕВ С КАРТИНКАМИ И ВИДЕО
+   ============================================================ */
+
+/* 1. Картинка по центру (center) */
+.main-content p.img-center {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 15px 0 !important;
+}
+
+/* 2. Вертикальная картинка (v) 
+   Здесь мы задаем геометрию для вертикального ряда (твои родные 209px и пропорции) */
+.main-content p.img-vertical img {
+  height: 209px !important;
+  width: auto !important;
+  aspect-ratio: 9 / 16 !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+}
+
+/* 3. Вертикальная картинка по центру (v + center) 
+   Объединяем: центрируем сам абзац и зажимаем картинку в вертикальные пропорции */
+.main-content p.img-vertical-center {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 15px 0 !important;
+}
+.main-content p.img-vertical-center img {
+  height: 209px !important;
+  width: auto !important;
+  aspect-ratio: 9 / 16 !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+}
+
+
+
 /* 4. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ/PORTRAIT) — ДО 900px */
 @media (max-width: 900px) {
     @media (orientation: portrait) {

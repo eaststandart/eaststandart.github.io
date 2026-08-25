@@ -12,7 +12,7 @@
 /* Жестко резервируем высоту 209px и включаем серую заглушку абсолютно для ВСЕХ картинок на ПК.
    Это гарантирует, что ни одна картинка (галерея, центр или кастомная) не прыгнет при загрузке. */
 .main-content p img:not(.content-img) {
-    background-color: #f0f0f0 !important; /* Твоя серая заглушка */
+    background-color: #f0f0f0 !important; /* Серая заглушка */
     height: 209px !important;              /* Фиксированная высота против CLS */
     width: auto !important;                /* Авто-ширина по умолчанию */
     max-width: 100% !important;            /* Страховка от вылета за края экрана */
@@ -47,8 +47,8 @@
 /* ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) тоже отключаем 16:9.
    Они держат высоту 209px, но выводятся строго в своих пропорциях из Obsidian без искажений. */
 .main-content p img.img-custom {
-    aspect-ratio: attr(width) / attr(height) !important;
-    background-color: transparent !important; /* Убираем серый фон намертво */
+
+    background-color: #f0f0f0 !important; /* Серая заглушка */
     border: 1px solid var(--primary-bg) !important; /* Едва заметная рамка из твоей палитры :root */
     border-radius: 8px !important;            /* Легкое скругление углов рамки */
 }

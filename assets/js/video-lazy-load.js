@@ -1,42 +1,52 @@
 /**
  * @file video-lazy-load.js
- * @about Твой оригинальный рабочий модуль ленивой загрузки видеоплееров.
+ * @about Профессиональный модуль ленивой предзагрузки нативных видеоплееров.
  * @purpose Отслеживает появление тегов <video> и за 200 пикселей до экрана активирует их src.
  */
 
 function runVideoLazyLoad() {
-    // Находим все видеоплееры контента, у которых подготовлен data-src
+    // Находим все видеоплееры, у которых подготовлен data-src
     const lazyVideos = document.querySelectorAll('video[data-src]');
     
     if ('IntersectionObserver' in window) {
         const videoObserver = new IntersectionObserver(function(entries, observer) {
             entries.forEach(function(videoEntry) {
-                // Твоя родная проверка на вхождение в зону 200px
+                // Если видео оказалось в 200 пикселях от зоны видимости
                 if (videoEntry.isIntersecting) {
                     const video = videoEntry.target;
                     
-                    // СТРОГО ТВОЙ РАБОЧИЙ КОД ИЗ ФАЙЛА:
-                    video.setAttribute('src', video.getAttribute('data-src'));
-                    video.preload = "metadata"; // Запускаем предзагрузку метаданных
+                    // ЖЕЛЕЗОБЕТОННЫЙ ФИКС: Читаем ссылку напрямую через getAttribute
+                    const realSrc = video.getAttribute('data-src');
                     
-                    video.onload = function() {
+                    if (realSrc) {
+                        video.src = realSrc;
+                        video.preload = "metadata"; 
                         video.removeAttribute('data-src');
-                    };
+                    }
                     
                     // Перестаем следить за этим видео
                     videoObserver.unobserve(video);
                 }
             });
         }, {
-            // ТВОЯ НАСТРОЙКА: Ровно за 200 пикселей до появления на экране
+            // ТВОЯ НАСТРОЙКА: Начинать загрузку ровно за 200 пикселей до появления на экране!
             rootMargin: "0px 0px 200px 0px"
         });
         
         lazyVideos.forEach(function(video) {
             videoObserver.observe(video);
         });
+    } else {
+        // Резервный вариант для совсем старых браузеров: грузим всё сразу
+        lazyVideos.forEach(function(video) {
+            const realSrc = video.getAttribute('data-src');
+            if (realSrc) {
+                video.src = realSrc;
+                video.removeAttribute('data-src');
+            }
+        });
     }
 }
 
-// Автоматический запуск движка при полной сборке страницы
+// Запускаем движок автоматически, если он подключен на странице
 document.addEventListener("DOMContentLoaded", runVideoLazyLoad);

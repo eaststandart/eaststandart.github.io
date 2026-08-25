@@ -1,32 +1,34 @@
 /*
-@about Модуль изолированных стилей геометрической стабилизации и центрирования.
-@purpose Фиксирует высоту 209px для ВСЕХ картинок на ПК, включая центрированные. Управляет пропорциями контента (16:9 для горизонтальных и 9:16 для вертикальных картинок с классом "img-v") и перестраивает геометрию под мобильные портретные и ландшафтные режимы экранов.
+@about Модуль изолированных стилей геометрической стабилизации и антипрыжка изображений.
+@purpose Фиксирует высоту 209px для ВСЕХ картинок на ПК, предотвращая CLS. Управляет пропорциями контента через чистые классы от Python-скрипта на всех типах экранов.
 @author TechLab
-@version 1.0.0
+@version 14.0.0
 */
 
 /* ============================================================
-   1. ПК-ВЕРСИЯ: ВСЕ КАРТИНКИ ОДНОЙ ВЫСОТЫ
+   1. ПК-ВЕРСИЯ: ВСЕ КАРТИНКИ ОДНОЙ ВЫСОТЫ (Твои правила 1, 2 и 3)
    ============================================================ */
 
-/*  ОБЩИЕ СТИЛИ ГЕОМЕТРИИ (Фиксируем высоту 209px СРАЗУ, чтобы не ждать style.css) */
-.main-content p img:not(.content-img) {
+/* Жестко зажимаем в рост 209px и ставим серый фон только для ОБЫЧНЫХ картинок и галерей.
+   ФИКС: Полностью исключаем картинки со своими размерами (:not(.img-custom)), чтобы снять с них серую коробку! */
+.main-content p img:not(.img-custom):not(.content-img) {
     background-color: #f0f0f0 !important;
-    height: 209px !important;       /* Защита от прыжка. Единая высота для всего контента на ПК */
-    width: auto !important;         /* Браузер сам считает ширину на основе кадра */
+    height: 209px !important;       /* Единая высота для защиты от CLS на ПК */
+    width: auto !important;         /* Браузер сам считает ширину на основе aspect-ratio */
+    max-width: 100% !important;     /* Страховка от вылета за границы экрана */
 }
 
-/* Пропорции 16:9 для горизонтальных картинок по умолчанию на ПК */
-.main-content p img:not(.content-img) {
+/* ТВОЁ ОРИГИНАЛЬНОЕ ПРАВИЛО: Пропорции 16:9 по умолчанию включаются СТРОГО для пустых картинок! */
+.main-content p img[alt=""]:not(.img-custom):not(.content-img) {
     aspect-ratio: 16 / 9 !important;
 }
 
-/* Если картинка вертикальная (класс img-v) — переключаем её пропорцию на 9:16 */
+/* Если картинка вертикальная (класс img-v) — точечно переключаем пропорцию на 9:16 */
 .main-content p img.img-v {
     aspect-ratio: 9 / 16 !important;
 }
 
-/* Если абзац имеет класс p-center — центрируем его как флекс-столбик */
+/* Если сам родительский абзац имеет класс p-center — тупо центрируем его как флекс-столбик */
 .main-content p.p-center {
     flex-direction: column !important;
     align-items: center !important;
@@ -34,44 +36,63 @@
     width: 100% !important;
 }
 
-/* Для центрированной картинки ОТКЛЮЧАЕМ пропорции 16:9 на ПК! 
-   Высота остается 209px, ширина адаптируется по файлу, серые поля по бокам исчезают! */
-.main-content p img.img-center {
+/* СВОБОДНЫЕ РАЗМЕРЫ: Для картинок с классом .img-custom полностью обнуляем геометрию.
+   Они будут отображаться пиксель-в-пиксель так, как задано в width="..." и height="..." */
+.main-content p img.img-custom {
+    height: auto !important;
+    width: auto !important;
     aspect-ratio: auto !important;
+    background-color: transparent !important; /* Убираем серый фон намертво */
 }
 
+
 /* ============================================================
-   2. МОБИЛЬНАЯ АДАПТАЦИЯ
+   2. МОБИЛЬНАЯ АДАПТАЦИЯ (Твои заглушки тоже адаптируются)
    ============================================================ */
 
 /* 2.1 На смартфонах вертикально (до 900px): сбрасываем ПК-высоту в auto, растягиваем на 100% */
 @media (max-width: 900px) and (orientation: portrait) {
-    .main-content p img:not(.content-img) {
+    /* Мобильная адаптация для пустых картинок галерей */
+    .main-content p img[alt=""]:not(.content-img) {
         height: auto !important;    
         width: 100% !important;
         aspect-ratio: 16 / 9 !important; 
     }
+    /* Для картинок с текстом или кастомными размерами — даем им сжиматься по пропорциям файла */
+    .main-content p img:not([alt=""]):not(.content-img) {
+        height: auto !important;    
+        width: 100% !important;
+        aspect-ratio: auto !important;
+    }
+    /* Индивидуальные размеры на смартфонах сжимаются по ширине экрана, сохраняя пропорции */
+    .main-content p img.img-custom {
+        height: auto !important;
+        max-width: 100% !important;
+        aspect-ratio: auto !important;
+    }
+    /* Вертикальные картинки на смартфонах */
     .main-content p img.img-v {
         aspect-ratio: 9 / 16 !important;
-    }
-    /* На смартфонах для центрированных картинок тоже отключаем жесткие 16:9, чтобы не лезли серые края */
-    .main-content p img.img-center {
-        aspect-ratio: auto !important;
     }
 }
 
 /* 2.2 На смартфонах горизонтально: зажимаем высоту в 163px, чтобы не перекрывали экран */
 @media (max-height: 500px) and (orientation: landscape) {
-    .main-content p img:not(.content-img) {
+    .main-content p img:not(.img-custom):not(.content-img) {
         height: 163px !important;
         width: auto !important;
+    }
+    .main-content p img[alt=""]:not(.content-img) {
         aspect-ratio: 16 / 9 !important; 
+    }
+    .main-content p img:not([alt=""]):not(.content-img) {
+        aspect-ratio: auto !important;
+    }
+    .main-content p img.img-custom {
+        height: 163px !important;
+        width: auto !important;
     }
     .main-content p img.img-v {
         aspect-ratio: 9 / 16 !important; 
-    }
-    /* В ландшафте для центрированных картинок тоже отключаем жесткие 16:9 */
-    .main-content p img.img-center {
-        aspect-ratio: auto !important;
     }
 }

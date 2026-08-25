@@ -96,8 +96,8 @@ def process_markdown_images(markdown_content):
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # ТВОЯ НАХОДКА: Добавляем нативный loading="lazy" прямо в сердце тега!
-            img_html = f'<img{class_str}{attr_str} loading="lazy" alt="{clean_alt}" src="{img_url}">'
+            # Добавляем нативный loading="lazy" прямо в сердце тега!
+            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:
                 return f'<p class="p-center">{img_html}</p>'

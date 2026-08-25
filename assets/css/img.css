@@ -47,7 +47,7 @@
 /* ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) тоже отключаем 16:9.
    Они держат высоту 209px, но выводятся строго в своих пропорциях из Obsidian без искажений. */
 .main-content p img.img-custom {
-    aspect-ratio: auto !important;
+    aspect-ratio: 9 / 16 !important;
     background-color: #f0f0f0 !important; /* Серая заглушка */
     border: 1px solid var(--primary-bg) !important; /* Едва заметная рамка из твоей палитры :root */
     border-radius: 8px !important;            /* Легкое скругление углов рамки */

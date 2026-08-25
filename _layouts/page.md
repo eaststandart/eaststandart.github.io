@@ -9,7 +9,7 @@ custom_css: ["/assets/css/video.css", "/assets/css/img.css"]
 {% include media-data-src.liquid %}
 {% endcomment %}
 
-<!-- ЧИСТЫЙ ПАС: Передаем неизмененный текст статьи напрямую в глобальный шаблон default -->
+<!-- ВКЛЮЧЕНО: Передаем неизмененный текст статьи напрямую в глобальный шаблон default -->
 {{ content }}
 
 {%- if page.bibliography -%}

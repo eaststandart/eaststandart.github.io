@@ -1,59 +1,86 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@module images
-@about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose Вычищает технические маркеры (v, center) из alt, вешает чистые классы 
-         на <img> и переносит центрирование сразу на родительский тег <p class="p-center">.
-"""
+/*
+@about Модуль изолированных стилей геометрической стабилизации и антипрыжка изображений.
+@purpose Фиксирует высоту 209px для ВСЕХ картинок на ПК, предотвращая CLS. Управляет пропорциями контента через чистые классы от Python-скрипта на всех типах экранов.
+@author TechLab
+@version 13.0.0
+*/
 
-import re
+/* ============================================================
+   1. ПК-ВЕРСИЯ: ВСЕ КАРТИНКИ ОДНОЙ ВЫСОТЫ (Твои правила 1, 2 и 3)
+   ============================================================ */
 
-def process_markdown_images(markdown_content):
-    """
-    Ищет маркдаун-картинки и превращает их в HTML-блоки с классами.
-    """
-    # Регулярное выражение ловит: ![маркеры|текст](ссылка)
-    pattern = r'!\[(.*?)\]\((.*?)\)'
-    
-    def replacer(match):
-        alt_text = match.group(1).strip()
-        img_url = match.group(2).strip()
-        
-        # Разбиваем параметры по палочке
-        parts = [p.strip() for p in alt_text.split('|')]
-        
-        classes = []
-        is_centered = False
-        clean_alt_parts = []
-        
-        # Разбираем маркеры
-        for part in parts:
-            if part.lower() == 'v':
-                classes.append('img-v')
-            elif part.lower() == 'center':
-                classes.append('img-center')
-                is_centered = True
-            else:
-                # Если это не маркер, значит это человеческий текст для SEO
-                if part:
-                    clean_alt_parts.append(part)
-        
-        # Собираем чистый текст для alt
-        clean_alt = " | ".join(clean_alt_parts)
-        
-        # Собираем строку классов для картинки
-        class_str = f' class="{" ".join(classes)}"' if classes else ''
-        
-        # Генерируем финальный HTML-тег картинки
-        img_html = f'<img{class_str} alt="{clean_alt}" src="{img_url}">'
-        
-        # Если был маркер center — сразу формируем класс у родительского абзаца!
-        if is_centered:
-            return f'<p class="p-center">{img_html}</p>'
-        
-        # Для обычной картинки отдаем чистый тег (Jekyll сам обернет его в обычный <p>)
-        return img_html
+/* Жестко зажимаем абсолютно любую картинку в статьях в рост 209px и ставим единый серый фон */
+.main-content p img:not(.content-img) {
+    background-color: #f0f0f0 !important;
+    height: 209px !important;       /* Единая высота для защиты от CLS на ПК */
+    width: auto !important;         /* Браузер сам считает ширину на основе aspect-ratio */
+    max-width: 100% !important;     /* Страховка от вылета за границы экрана */
+}
 
-    # Запускаем замену по всему тексту файла
-    return re.sub(pattern, replacer, markdown_content)
+/* ТВОЁ ОРИГИНАЛЬНОЕ ПРАВИЛО: Пропорции 16:9 по умолчанию включаются СТРОГО для пустых картинок! */
+.main-content p img[alt=""]:not(.content-img) {
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* Если картинка вертикальная (класс img-v) — точечно переключаем пропорцию на 9:16 */
+.main-content p img.img-v {
+    aspect-ratio: 9 / 16 !important;
+}
+
+/* Если сам родительский абзац имеет класс p-center — тупо центрируем его как флекс-столбик */
+.main-content p.p-center {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* ФИКС СВОБОДНЫХ РАЗМЕРОВ: Если у картинки есть класс .img-custom (заданы размеры в Obsidian),
+   мы НАМЕРТВО СБРАСЫВАЕМ принудительные 209px высоты! Она встанет строго в размерах width и height! */
+.main-content p img.img-custom {
+    height: auto !important;
+    width: auto !important;
+    aspect-ratio: auto !important;
+}
+
+
+/* ============================================================
+   2. МОБИЛЬНАЯ АДАПТАЦИЯ (Твои заглушки тоже адаптируются)
+   ============================================================ */
+
+/* 2.1 На смартфонах вертикально (до 900px): сбрасываем ПК-высоту в auto, растягиваем на 100% */
+@media (max-width: 900px) and (orientation: portrait) {
+    /* Мобильная адаптация для пустых картинок галерей */
+    .main-content p img[alt=""]:not(.content-img) {
+        height: auto !important;    
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important; 
+    }
+    /* Для картинок с текстом или кастомными размерами — даем им сжиматься по пропорциям файла */
+    .main-content p img:not([alt=""]):not(.content-img) {
+        height: auto !important;    
+        width: 100% !important;
+        aspect-ratio: auto !important;
+    }
+    /* Вертикальные картинки на смартфонах */
+    .main-content p img.img-v {
+        aspect-ratio: 9 / 16 !important;
+    }
+}
+
+/* 2.2 На смартфонах горизонтально: зажимаем высоту в 163px, чтобы не перекрывали экран */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content p img:not(.content-img) {
+        height: 163px !important;
+        width: auto !important;
+    }
+    .main-content p img[alt=""]:not(.content-img) {
+        aspect-ratio: 16 / 9 !important; 
+    }
+    .main-content p img:not([alt=""]):not(.content-img) {
+        aspect-ratio: auto !important;
+    }
+    .main-content p img.img-v {
+        aspect-ratio: 9 / 16 !important; 
+    }
+}

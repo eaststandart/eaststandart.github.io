@@ -3,92 +3,114 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose Разбирает Obsidian-синтаксис строго по спецификации [Зона 1 | Зона 2].
-         Выделяет свойства размеров, вычищает мусор Obsidian и формирует alt.
+@purpose Автоматически вычисляет одиночные и групповые (в столбиках) картинки в Маркдауне.
+         Для одиночных вертикалок отключает класс img-v, убирая серые уши в CSS.
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки и превращает их в HTML-блоки с классами и свойствами.
+    Ищет маркдаун-картинки и превращает их в HTML-блоки на основе их окружения.
     """
-    # Регулярное выражение ловит стандартный маркдаун: ![параметры](ссылка)
-    pattern = r'!\[(.*?)\]\((.*?)\)'
+    # Шаблон для поиска стандартной разметки картинки: ![параметры](ссылка)
+    img_pattern = r'!\[(.*?)\]\((.*?)\)'
     
-    def replacer(match):
-        alt_text = match.group(1).strip()
-        img_url = match.group(2).strip()
-        
-        # Если внутри скобок совсем пусто (вариант `![](url)`) — отдаем чистый базовый тег
-        if not alt_text:
-            return f'<img alt="" src="{img_url}">'
+    # Сначала разбиваем весь текст статьи на отдельные строки
+    lines = markdown_content.split('\n')
+    
+    # Массив, где мы отметим индексы строк, которые являются частью "столбика-галереи"
+    grouped_line_indices = set()
+    
+    # Пасс 1: Находим все групповые картинки (столбики без пустых строк)
+    for i in range(len(lines)):
+        current_line = lines[i].strip()
+        # Если текущая строка — это картинка
+        if current_line and re.match(img_pattern, current_line):
+            is_grouped = False
             
-        # Разбиваем параметры по палочке, убирая пустые пробелы
-        parts = [p.strip() for p in alt_text.split('|')]
-        
-        # Фильтруем пустые строки, которые могли возникнуть из-за конструкций вида `![|400]`
-        parts = [p for p in parts if p]
-        
-        # Если после фильтрации всё равно пусто — отдаем базовый тег
-        if not parts:
-            return f'<img alt="" src="{img_url}">'
-            
-        classes = []
-        custom_attrs = []
-        is_centered = False
-        
-        # --------------------------------------------------------
-        # ШАГ 1: РАЗБОР ЗОНЫ 1 (На первом месте до палочки)
-        # --------------------------------------------------------
-        first_part = parts[0]
-        
-        if first_part.lower() == 'v':
-            classes.append('img-v')
-            parts.pop(0) # Удаляем маркер, чтобы не попал в alt
-            
-        elif first_part.lower() == 'center':
-            classes.append('img-center')
-            is_centered = True
-            parts.pop(0) # Удаляем маркер, чтобы не попал в alt
-            
-        # Проверяем точечное совпадение с физическим разрешением (цифры + x + цифры)
-        elif re.match(r'^\d+[xх]\d+$', first_part, re.IGNORECASE):
-            # Разрезаем по букве X (учитываем латинскую x и русскую х)
-            dimensions = re.split(r'[xх]', first_part, flags=re.IGNORECASE)
-            width, height = dimensions[0], dimensions[1]
-            
-            # Добавляем родные HTML-свойства и класс индивидуального размера
-            custom_attrs.append(f'width="{width}"')
-            custom_attrs.append(f'height="{height}"')
-            classes.append('img-custom')
-            parts.pop(0) # Удаляем технический маркер, чтобы не попал в alt
-            
-        # --------------------------------------------------------
-        # ШАГ 2: РАЗБОР ЗОНЫ 2 (Проверка хвоста на размер Obsidian)
-        # --------------------------------------------------------
-        if parts:
-            last_part = parts[-1]
-            # Если самый последний элемент — чистая одиночная цифра (размер вроде 400)
-            if re.match(r'^\d+$', last_part):
-                parts.pop() # Безвозвратно удаляем её из кода сайта
+            # Проверяем строку ВЫШЕ: если она тоже картинка, то это столбик!
+            if i > 0 and lines[i-1].strip() and re.match(img_pattern, lines[i-1].strip()):
+                is_grouped = True
+                grouped_line_indices.add(i-1)
                 
-        # --------------------------------------------------------
-        # ШАГ 3: СБОРКА СЕРЕДИНЫ (Чистый человеческий SEO-текст)
-        # --------------------------------------------------------
-        clean_alt = " | ".join(parts) if parts else ""
-        
-        # Формируем итоговые строки классов и кастомных атрибутов
-        class_str = f' class="{" ".join(classes)}"' if classes else ''
-        attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
-        
-        # Генерируем финальный HTML-тег картинки
-        img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}">'
-        
-        # Если был маркер center — оборачиваем в готовый родительский класс абзаца
-        if is_centered:
-            return f'<p class="p-center">{img_html}</p>'
-            
-        return img_html
+            # Проверяем строку НИЖЕ: если она тоже картинка, то это столбик!
+            if i < len(lines) - 1 and lines[i+1].strip() and re.match(img_pattern, lines[i+1].strip()):
+                is_grouped = True
+                grouped_line_indices.add(i+1)
+                
+            if is_grouped:
+                grouped_line_indices.add(i)
 
-    return re.sub(pattern, replacer, markdown_content)
+    # Пасс 2: Построчно обрабатываем контент
+    processed_lines = []
+    for i, line in enumerate(lines):
+        # Проверяем, находится ли текущая строка в группе-галерее
+        is_in_gallery = i in grouped_line_indices
+        
+        def replacer(match):
+            alt_text = match.group(1).strip()
+            img_url = match.group(2).strip()
+            
+            if not alt_text:
+                return f'<img alt="" src="{img_url}">'
+                
+            # Разбиваем параметры строго по палочке, убирая пустые элементы
+            parts = [p.strip() for p in alt_text.split('|') if p.strip()]
+            
+            if not parts:
+                return f'<img alt="" src="{img_url}">'
+                
+            classes = []
+            custom_attrs = []
+            is_centered = False
+            
+            first_part = parts[0]
+            
+            # РАЗБОР МАРКЕРА ВЕРТИКАЛИ 'v'
+            if first_part.lower() == 'v':
+                # ТВОЯ ЛОГИКА: Класс img-v присваиваем ТОЛЬКО если картинка в галерейном столбике!
+                if is_in_gallery:
+                    classes.append('img-v')
+                # Если она одиночная (отделена пустыми строками) — класс img-v НЕ пишем,
+                # и в CSS для неё автоматически отключатся ложные пропорции 9:16!
+                parts.pop(0)
+                
+            # РАЗБОР МАРКЕРА ЦЕНТРА 'center'
+            elif first_part.lower() == 'center':
+                classes.append('img-center')
+                is_centered = True
+                parts.pop(0)
+                
+            # РАЗБОР ФИЗИЧЕСКОГО РАЗРЕШЕНИЯ (например, 320x405)
+            elif re.match(r'^\d+[xх]\d+$', first_part, re.IGNORECASE):
+                dimensions = re.split(r'[xх]', first_part, flags=re.IGNORECASE)
+                width, height = dimensions[0], dimensions[1]
+                
+                custom_attrs.append(f'width="{width}"')
+                custom_attrs.append(f'height="{height}"')
+                classes.append('img-custom')
+                parts.pop(0)
+                
+            # ПРОВЕРКА ХВОСТА: отрезаем мусорный размер Obsidian (например, |400)
+            if parts and re.match(r'^\d+$', parts[-1]):
+                parts.pop()
+                
+            # Собираем чистый SEO-текст
+            clean_alt = " | ".join(parts) if parts else ""
+            
+            class_str = f' class="{" ".join(classes)}"' if classes else ''
+            attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
+            
+            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}">'
+            
+            if is_centered:
+                return f'<p class="p-center">{img_html}</p>'
+                
+            return img_html
+
+        # Запускаем замену картинок для текущей строки
+        new_line = re.sub(img_pattern, replacer, line)
+        processed_lines.append(new_line)
+        
+    return '\n'.join(processed_lines)

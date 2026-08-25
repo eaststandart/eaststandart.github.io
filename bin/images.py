@@ -22,20 +22,19 @@ def process_markdown_images(markdown_content):
     # Массив, где мы отметим индексы строк, которые являются частью "столбика-галереи"
     grouped_line_indices = set()
     
-    # Пасс 1: Находим все групповые картинки (столбики без пустых строк)
+    # Пасс 1: Находим все групповые картинки (используем search вместо капризного match)
     for i in range(len(lines)):
         current_line = lines[i].strip()
-        # Если текущая строка — это картинка
-        if current_line and re.match(img_pattern, current_line):
+        if current_line and re.search(img_pattern, current_line):
             is_grouped = False
             
             # Проверяем строку ВЫШЕ: если она тоже картинка, то это столбик!
-            if i > 0 and lines[i-1].strip() and re.match(img_pattern, lines[i-1].strip()):
+            if i > 0 and lines[i-1].strip() and re.search(img_pattern, lines[i-1].strip()):
                 is_grouped = True
                 grouped_line_indices.add(i-1)
                 
             # Проверяем строку НИЖЕ: если она тоже картинка, то это столбик!
-            if i < len(lines) - 1 and lines[i+1].strip() and re.match(img_pattern, lines[i+1].strip()):
+            if i < len(lines) - 1 and lines[i+1].strip() and re.search(img_pattern, lines[i+1].strip()):
                 is_grouped = True
                 grouped_line_indices.add(i+1)
                 
@@ -45,15 +44,13 @@ def process_markdown_images(markdown_content):
     # Пасс 2: Построчно обрабатываем контент
     processed_lines = []
     for i, line in enumerate(lines):
-        # Проверяем, находится ли текущая строка в группе-галерее
         is_in_gallery = i in grouped_line_indices
         
         def replacer(match):
             alt_text = match.group(1).strip()
             img_url = match.group(2).strip()
             
-            # ТВОЯ ЛОГИКА: Если скобки пустые И картинка одиночная, принудительно делаем её кастомной,
-            # чтобы у неё в CSS отключились широкие ложные 16:9!
+            # Если скобки пустые и картинка одиночная — делаем её кастомной
             if not alt_text:
                 if not is_in_gallery:
                     return f'<img class="img-custom" alt="" src="{img_url}">'
@@ -71,26 +68,24 @@ def process_markdown_images(markdown_content):
             custom_attrs = []
             is_centered = False
             
-            # Если картинка одиночная — принудительно вешаем на неё img-custom в CSS,
+            # Если картинка одиночная — принудительно вешаем на неё img-custom,
             # чтобы сбросить для неё ложные горизонтальные рамки 16:9
             if not is_in_gallery:
                 classes.append('img-custom')
             
-            first_part = parts
+            # ИСПРАВЛЕНИЕ: Строго берём первый элемент списка по индексу!
+            first_part = parts[0]
             
             # РАЗБОР МАРКЕРА ВЕРТИКАЛИ 'v'
             if first_part.lower() == 'v':
-                # Если картинка в галерейном столбике — честно даём ей img-v
                 if is_in_gallery:
                     classes.append('img-v')
-                # Если одиночка — маркер просто стираем (класс img-custom на ней уже висит)
                 parts.pop(0)
                 
             # РАЗБОР МАРКЕРА ЦЕНТРА 'center'
             elif first_part.lower() == 'center':
                 classes.append('img-center')
                 is_centered = True
-                # Если картинка центрированная, убираем img-custom (у центра свои правила аспект-решио)
                 if 'img-custom' in classes:
                     classes.remove('img-custom')
                 parts.pop(0)
@@ -123,7 +118,6 @@ def process_markdown_images(markdown_content):
                 
             return img_html
 
-        # Запускаем замену картинок для текущей строки
         new_line = re.sub(img_pattern, replacer, line)
         processed_lines.append(new_line)
         

@@ -4,7 +4,7 @@
 @script preprocess.py
 @about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
 @purpose Автоматически находит ВСЕ markdown-файлы в репозитории и последовательно 
-         пропускает их через изолированные модули (картинки, видео и т.д.).
+         пропускает их через изолированные модули (пути, картинки, видео и т.д.).
 """
 
 import sys
@@ -15,15 +15,20 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
+# Импортируем оба наших изолированных модуля
+from pathlinks import process_markdown_paths
 from images import process_markdown_images
 
 def process_single_file(file_path):
-    """Открывает, обрабатывает через модули и перезаписывает один .md файл."""
+    """Открывает, последовательно обрабатывает через модули и перезаписывает один .md файл."""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             markdown_content = f.read()
             
-        # Шаг А: Обработка картинок через images.py (классы img-v, img-center и p-center)
+        # Шаг А: Глобальная очистка путей домена Obsidian через pathlinks.py
+        markdown_content = process_markdown_paths(markdown_content)
+            
+        # Шаг Б: Обработка геометрии картинок через images.py (классы img-v, img-center, img-custom)
         markdown_content = process_markdown_images(markdown_content)
         
         with open(file_path, 'w', encoding='utf-8') as f:

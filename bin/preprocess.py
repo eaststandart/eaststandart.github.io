@@ -4,19 +4,20 @@
 @script preprocess.py
 @about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
 @purpose Автоматически находит ВСЕ markdown-файлы в репозитории и последовательно 
-         пропускает их через изолированные модули (пути, картинки, видео и т.д.).
+         пропускает их через изолированные модули (пути -> видео -> картинки).
 """
 
 import sys
 import os
 
-# ФИКС ПУТЕЙ ДЛЯ GITHUB ACTIONS: Явно добавляем папку скрипта в системные пути поиска
+# ФИКС ПУТЕЙ ДЛЯ GITHUB ACTIONS: Добавляем папку скрипта в системные пути поиска
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-# Импортируем оба наших изолированных модуля
+# Импортируем все наши изолированные модули конвейера
 from pathlinks import process_markdown_paths
+from videos import process_markdown_videos
 from images import process_markdown_images
 
 def process_single_file(file_path):
@@ -25,10 +26,13 @@ def process_single_file(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             markdown_content = f.read()
             
-        # Шаг А: Глобальная очистка путей домена Obsidian через pathlinks.py
+        # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
         markdown_content = process_markdown_paths(markdown_content)
             
-        # Шаг Б: Обработка геометрии картинок через images.py (классы img-v, img-center, img-custom)
+        # ЭТАП 2: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
+        markdown_content = process_markdown_videos(markdown_content)
+            
+        # ЭТАП 3: Обработка геометрии оставшихся картинок через images.py
         markdown_content = process_markdown_images(markdown_content)
         
         with open(file_path, 'w', encoding='utf-8') as f:
@@ -38,29 +42,21 @@ def process_single_file(file_path):
         print(f"[ERROR] Не удалось обработать файл {file_path}: {e}")
 
 def main():
-    # ЛОГИКА АРГУМЕНТОВ: Если передан аргумент (локальный тест конкретной статьи)
     if len(sys.argv) > 1:
-        file_path = sys.argv[1]
+        file_path = sys.argv
         if os.path.isfile(file_path):
             process_single_file(file_path)
         else:
             print(f"[ERROR] Указанный файл не найден: {file_path}")
         return
 
-    # ЕСЛИ АРГУМЕНТОВ НЕТ (Автоматический запуск на сервере GitHub Actions):
     print("[PREPROCESS] Аргументы не переданы. Запускаю полный обход репозитория...")
-    
-    # Начинаем сканирование с корня проекта (на уровень выше папки bin)
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
-    
-    # Папки, в которые скрипту заходить категорически запрещено
     exclude_dirs = {'_site', '.sass-cache', '.git', '.github', 'bin'}
     
     md_count = 0
     for root, dirs, files in os.walk(root_dir):
-        # Вырезаем системные папки на лету
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
-        
         for file in files:
             if file.endswith('.md'):
                 full_path = os.path.join(root, file)

@@ -15,10 +15,14 @@ function runVideoLazyLoad() {
                 if (videoEntry.isIntersecting) {
                     const video = videoEntry.target;
                     
-                    // Переносим ссылку в настоящий src и включаем предзагрузку метаданных
-                    video.src = video.dataset.src;
-                    video.preload = "metadata"; 
-                    video.removeAttribute('data-src');
+                    // ЖЕЛЕЗОБЕТОННЫЙ ФИКС: Читаем ссылку напрямую через getAttribute
+                    const realSrc = video.getAttribute('data-src');
+                    
+                    if (realSrc) {
+                        video.src = realSrc;
+                        video.preload = "metadata"; 
+                        video.removeAttribute('data-src');
+                    }
                     
                     // Перестаем следить за этим видео
                     videoObserver.unobserve(video);
@@ -35,8 +39,11 @@ function runVideoLazyLoad() {
     } else {
         // Резервный вариант для совсем старых браузеров: грузим всё сразу
         lazyVideos.forEach(function(video) {
-            video.src = video.dataset.src;
-            video.removeAttribute('data-src');
+            const realSrc = video.getAttribute('data-src');
+            if (realSrc) {
+                video.src = realSrc;
+                video.removeAttribute('data-src');
+            }
         });
     }
 }

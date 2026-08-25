@@ -4,7 +4,7 @@
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
 @purpose Автоматически вычисляет одиночные и групповые (в столбиках) картинки в Маркдауне.
-         Для одиночных вертикалок отключает класс img-v, убирая серые уши в CSS.
+         Для одиночных картинок включает класс img-custom, убирая серые уши в CSS.
 """
 
 import re
@@ -52,34 +52,47 @@ def process_markdown_images(markdown_content):
             alt_text = match.group(1).strip()
             img_url = match.group(2).strip()
             
+            # ТВОЯ ЛОГИКА: Если скобки пустые И картинка одиночная, принудительно делаем её кастомной,
+            # чтобы у неё в CSS отключились широкие ложные 16:9!
             if not alt_text:
+                if not is_in_gallery:
+                    return f'<img class="img-custom" alt="" src="{img_url}">'
                 return f'<img alt="" src="{img_url}">'
                 
             # Разбиваем параметры строго по палочке, убирая пустые элементы
             parts = [p.strip() for p in alt_text.split('|') if p.strip()]
             
             if not parts:
+                if not is_in_gallery:
+                    return f'<img class="img-custom" alt="" src="{img_url}">'
                 return f'<img alt="" src="{img_url}">'
                 
             classes = []
             custom_attrs = []
             is_centered = False
             
-            first_part = parts[0]
+            # Если картинка одиночная — принудительно вешаем на неё img-custom в CSS,
+            # чтобы сбросить для неё ложные горизонтальные рамки 16:9
+            if not is_in_gallery:
+                classes.append('img-custom')
+            
+            first_part = parts
             
             # РАЗБОР МАРКЕРА ВЕРТИКАЛИ 'v'
             if first_part.lower() == 'v':
-                # ТВОЯ ЛОГИКА: Класс img-v присваиваем ТОЛЬКО если картинка в галерейном столбике!
+                # Если картинка в галерейном столбике — честно даём ей img-v
                 if is_in_gallery:
                     classes.append('img-v')
-                # Если она одиночная (отделена пустыми строками) — класс img-v НЕ пишем,
-                # и в CSS для неё автоматически отключатся ложные пропорции 9:16!
+                # Если одиночка — маркер просто стираем (класс img-custom на ней уже висит)
                 parts.pop(0)
                 
             # РАЗБОР МАРКЕРА ЦЕНТРА 'center'
             elif first_part.lower() == 'center':
                 classes.append('img-center')
                 is_centered = True
+                # Если картинка центрированная, убираем img-custom (у центра свои правила аспект-решио)
+                if 'img-custom' in classes:
+                    classes.remove('img-custom')
                 parts.pop(0)
                 
             # РАЗБОР ФИЗИЧЕСКОГО РАЗРЕШЕНИЯ (например, 320x405)
@@ -89,7 +102,8 @@ def process_markdown_images(markdown_content):
                 
                 custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
-                classes.append('img-custom')
+                if 'img-custom' not in classes:
+                    classes.append('img-custom')
                 parts.pop(0)
                 
             # ПРОВЕРКА ХВОСТА: отрезаем мусорный размер Obsidian (например, |400)

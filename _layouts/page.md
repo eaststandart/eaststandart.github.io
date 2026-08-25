@@ -4,8 +4,10 @@ purpose: Отображение конечных страниц контента
 layout: default
 custom_css: ["/assets/css/video.css", "/assets/css/img.css"]
 ---
-<!-- Замена по в медиафайлах src на data-src -->
+<!-- ВЫКЛЮЧЕНО: Замена по в медиафайлах src на data-src -->
+{% comment %}
 {% include media-data-src.liquid %}
+{% endcomment %}
 
 {%- if page.bibliography -%}
 {% comment %} {% endcomment %}

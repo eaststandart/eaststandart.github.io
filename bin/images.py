@@ -120,15 +120,14 @@ def process_markdown_images(markdown_content):
         new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)
         processed_lines.append(new_line)
         
-    # Склеиваем строки в финальный HTML-текст статьи
-    final_html = '\n'.join(processed_lines)
+    # Склеиваем все обработанные строки в один большой текст
+    markdown_content = '\n'.join(processed_lines)
     
-    # ГРУППИРОВКА: Находим любые непрерывные цепочки из <figure class="figure-center">
-    # (даже если между ними есть переносы строк) и упаковываем их в один общий div.figure-center-row
-    final_html = re.sub(
+    # Автоматически оборачиваем одиночные и групповые figure в один общий div-ряд
+    markdown_content = re.sub(
         r'((?:<figure class="figure-center">.*?</figure>\s*)+)',
         r'<div class="figure-center-row">\1</div>',
-        final_html
+        markdown_content
     )
         
-    return final_html
+    return markdown_content

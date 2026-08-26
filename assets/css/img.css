@@ -33,6 +33,7 @@
    Высота держится 209px, а заглушка принимает естественные пропорции файла, ужимаясь по ширине кадра. */
 .main-content p img.img-center {
     aspect-ratio: auto !important;
+    object-fit: unset !important;
 }
 
 /* Если сам родительский абзац имеет класс p-center — разворачиваем его как флекс-столбик */
@@ -42,7 +43,6 @@
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
-    object-fit: unset !important;
 }
 
 /* ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) 

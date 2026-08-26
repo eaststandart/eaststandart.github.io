@@ -41,12 +41,12 @@ discus: "questions"
 
 Так мы составили простейшую электрическую цепь, в которой электроны от «минуса» батарейки идут к светодиоду, а затем через выключатель и заземление возвращаются к «плюсу» батарейки (рис. 3) \[Мацкевич, 1986, с. 33\] [^2].
 
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 > **Смотри подробнее:** объяснение принципа работы схемы в \[Мацкевич, 1986, с. 31-34\] [^2].
 
 ![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)

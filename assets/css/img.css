@@ -50,28 +50,38 @@
     align-items: center !important;
     justify-content: center !important;
     margin: 0 !important;               /* Обнуляем маргины, так как зазоры контролируются через gap */
-    
-    /* ИСПРАВЛЕНИЕ БАГА: Блок сжимается строго по максимальной ширине картинки (примерно 371px при пропорциях 16:9).
-       Текст подписи больше не сможет растянуть этот блок и сломать ряд. */
-    width: max-content !important;      
-    max-width: calc(50% - 8px) !important; /* Гарантирует, что две карточки идеально поделят ряд на ПК */
+    width: max-content !important;      /* Блок сжимается строго по максимальной ширине картинки */
+    max-width: 100% !important;         /* По умолчанию одиночная фигура может занимать 100% ширины */
 }
 
-/* 2.3 Сама картинка внутри figure 
-   Один в один копирует параметры рабочей галереи .main-content p img:not(.content-img) из style.css */
+/* Если картинок в ряду ДВЕ И БОЛЕЕ, зажимаем максимальную ширину карточки до 50% */
+.main-content .figure-center-row figure.figure-center:not(:only-child) {
+    max-width: calc(50% - 8px) !important; /* Две в ряд на ПК, только если они не одиночки */
+}
+
+/* 2.3 Сама картинка внутри figure */
 .main-content .figure-center-row figure.figure-center img.img-center {
-    height: 209px !important;           /* Жесткая ПК-высота ряда (как в style.css:296) */
+    height: auto !important;            /* Позволяет маленьким картинкам держать свой родной размер */
+    max-height: 209px !important;       /* Ограничение сверху для больших картинок (не более 209px) */
     width: auto !important;             /* Авто-ширина по пропорциям кадра */
     max-width: 100% !important;         /* Страховка от вылета за края */
-    aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 (как в style.css:292) */
-    object-fit: unset !important;       /* Защита от серых вспышек */
+    object-fit: unset !important;       /* Наша защита от серых полос */
     background-color: #f0f0f0 !important;
+    
+    /* УМНОЕ ПРАВИЛО: По умолчанию для одиночной картинки ставим родные пропорции файла */
+    aspect-ratio: auto !important;      
+}
+
+/* КРИТИЧЕСКИ ВАЖНО: Если картинок в ряду ДВЕ И БОЛЕЕ, включаем им жесткие 16:9 для эффекта галереи */
+.main-content .figure-center-row figure.figure-center:not(:only-child) img.img-center {
+    aspect-ratio: 16 / 9 !important;    /* Картинки в галерее выравниваются пиксель в пиксель */
 }
 
 /* 2.4 Стили подписи под картинкой */
 .main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;      /* Держим центровку текста подписи */
+    text-align: center !important;      /* Железно держим центровку текста подписи */
 }
+
 
 /* 2.5 Стили подписи под картинкой */
 .main-content .figure-center-row figure.figure-center figcaption.figcaption-center {

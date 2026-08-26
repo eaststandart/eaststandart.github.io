@@ -62,7 +62,8 @@
 
 /* 2.4 Сама картинка внутри figure: возвращаем ей высоту 209px и убираем contain */
 .main-content .figure-center-row figure.figure-center img.img-center {
-    height: 209px !important;
+    height: auto !important;       /* Позволяет маленьким картинкам держать свой родной размер */
+    max-height: 209px !important;  /* Жесткий верхний лимит для больших изображений */
     width: auto !important;
     aspect-ratio: auto !important; /* Позволяет картинке быть любой нативной ширины */
     object-fit: unset !important;  /* Наша защита от серых полос */

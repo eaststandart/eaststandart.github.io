@@ -84,14 +84,9 @@ def process_markdown_images(markdown_content):
                 
                 custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
-                
-                # Автоматически рассчитываем и внедряем персональный aspect-ratio в HTML
-                custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
-                
                 if 'img-custom' not in classes:
                     classes.append('img-custom')
                 parts.pop(0)
-
                 
             if parts and re.match(r'^\d+$', parts[-1]):
                 parts.pop()

@@ -80,7 +80,7 @@
 @media (max-width: 900px) and (orientation: portrait) {
     /* Добавляем селекторы через запятую, чтобы правило работало и для тега p, и для figure */
     .main-content p img:not(.content-img),
-    .main-content figure img:not(.content-img) {
+    .main-content figure.figure-center img.img-center  {
         height: auto !important;    /* Сбрасываем 209px, чтобы картинка сжималась пропорционально */
         width: 100% !important;     /* Растягиваем на всю ширину экрана смартфона */
     }

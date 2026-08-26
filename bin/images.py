@@ -121,9 +121,9 @@ def process_markdown_images(markdown_content):
     # 1. Склеиваем все обработанные строки в единый текст статьи
     article_html = '\n'.join(processed_lines)
     
-    # 2. Находим любые цепочки из <figure class="figure-center"> и упаковываем их в общий div.figure-center-row
+    # 2. Группируем фигурные теги в ряды, ЗАПРЕЩАЯ регулярке перешагивать через пустые строки контента
     article_html = re.sub(
-        r'((?:<figure class="figure-center">.*?</figure>\s*)+)',
+        r'((?:<figure class="figure-center">.*?</figure>[ \t]*\n?)+)',
         r'<div class="figure-center-row">\1</div>',
         article_html
     )

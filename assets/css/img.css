@@ -55,9 +55,6 @@
 
 /* 2.3 Стили подписи под картинкой */
 .main-content figure.figure-center figcaption.figcaption-center {
-    margin-top: 8px !important;    /* Отступ подписи от нижнего края картинки */
-    font-size: 0.9em !important;   /* Огранка текста, чтобы он выглядел изящнее */
-    color: #555555 !important;     /* Приглушенный цвет для подписи */
     text-align: center !important;
 }
 

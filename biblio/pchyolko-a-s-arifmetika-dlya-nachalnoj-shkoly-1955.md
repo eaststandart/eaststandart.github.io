@@ -16,14 +16,14 @@ parent_url: "/biblio/"
 
 Чтобы освоить начала этого языка математики – арифметику, подойдут проверенные учебники, и сборники задач к ним, 40–60-х годов XX века. На фотографиях представлены их современные переиздания.
 
-![320x405](img/pchyolko-a-s-arifmetika-dlya-vtorogo-klassa-nachalnoj-shkoly-2022.webp)
-![320x405](img/pchyolko-a-s-arifmetika-dlya-tretego-klassa-nachalnoj-shkoly-2021.webp)
-![320x405](img/pchyolko-a-s-arifmetika-dlya-chetvertogo-klassa-nachalnoj-shkoly-2021.webp)
-![320x405](img/kiselev-a-p-arifmetika-dlya-pyatogo-klassa-srednej-shkoly-2021.webp)
-![320x405](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-1-2022.webp)
-![320x405](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-2-2022.webp)
-![320x405](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-3-2022.webp)
-![320x405](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-4-2022.webp)
-![320x405](img/berezanskaya-e-c-sbornik-zadach-i-uprazhnenij-po-arifmetike-2021.webp)
+![320x509](img/pchyolko-a-s-arifmetika-dlya-vtorogo-klassa-nachalnoj-shkoly-2022.webp)
+![320x509](img/pchyolko-a-s-arifmetika-dlya-tretego-klassa-nachalnoj-shkoly-2021.webp)
+![320x509](img/pchyolko-a-s-arifmetika-dlya-chetvertogo-klassa-nachalnoj-shkoly-2021.webp)
+![320x509](img/kiselev-a-p-arifmetika-dlya-pyatogo-klassa-srednej-shkoly-2021.webp)
+![320x509](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-1-2022.webp)
+![320x509](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-2-2022.webp)
+![320x509](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-3-2022.webp)
+![320x509](img/popova-n-s-pchyolko-a-s-sbornik-arifmeticheskih-zadach-chast-4-2022.webp)
+![320x509](img/berezanskaya-e-c-sbornik-zadach-i-uprazhnenij-po-arifmetike-2021.webp)
 
 **Смотри также:** [материалы для самостоятельного изучения.](materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.html)

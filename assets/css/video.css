@@ -94,8 +94,3 @@
         aspect-ratio: 16 / 9 !important;
     }
 }
-
-/* Принудительно красим внутреннюю панель плеера в серый цвет, пока идет ленивая загрузка */
-.video-test-row video[data-src]::-webkit-media-controls-panel {
-    background-color: #f0f0f0 !important;
-}

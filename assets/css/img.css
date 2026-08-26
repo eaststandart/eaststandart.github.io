@@ -80,9 +80,11 @@
        сохраняя свои родные пропорции кадра без деформаций и серых полос по бокам */
     .main-content p img.img-center,
     .main-content p img.img-custom {
-        aspect-ratio: auto !important;
-    height: 209px !important;
-    width: auto !important;
+    aspect-ratio: 16 / 9 auto !important;
+    
+    background-color: #f0f0f0 !important;
+    border: 1px solid var(--primary-bg) !important;
+    border-radius: 8px !important;
     }
 }
 

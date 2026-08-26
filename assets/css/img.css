@@ -78,10 +78,11 @@
 
 /* 2.1 На смартфонах вертикально (до 900px): переводим картинки в адаптивный режим */
 @media (max-width: 900px) and (orientation: portrait) {
-    /* Все картинки на смартфонах сбрасывают ПК-высоту и растягиваются на 100% ширины экрана */
-    .main-content p img:not(.content-img) {
-        height: auto !important;    
-        width: 100% !important;
+    /* Добавляем селекторы через запятую, чтобы правило работало и для тега p, и для figure */
+    .main-content p img:not(.content-img),
+    .main-content figure img:not(.content-img) {
+        height: auto !important;    /* Сбрасываем 209px, чтобы картинка сжималась пропорционально */
+        width: 100% !important;     /* Растягиваем на всю ширину экрана смартфона */
     }
     
     /* Стандартные галерейные картинки удерживают пропорции 16:9 */
@@ -94,20 +95,22 @@
         aspect-ratio: 9 / 16 !important;
     }
     
-    /* Центрированные и произвольные (320x405) картинки сжимаются по ширине экрана свободно,
-       сохраняя свои родные пропорции кадра без деформаций и серых полос по бокам */
-    .main-content p img.img-center,
-    .main-content p img.img-custom {
+    /* Центрированные и кастомные картинки на мобильных подстраиваются под экран */
+    .main-content p img.img-custom,
+    .main-content figure img.img-center,
+    .main-content p img.img-center {
         aspect-ratio: auto !important;
     }
 }
 
 /* 2.2 На смартфонах горизонтально: зажимаем высоту в 163px, чтобы не перекрывали экран */
 @media (max-height: 500px) and (orientation: landscape) {
-    .main-content p img:not(.content-img) {
+    .main-content p img:not(.content-img),
+    .main-content figure img:not(.content-img) {
         height: 163px !important;
         width: auto !important;
     }
+    
     /* Горизонтальные ряды в ландшафте */
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
         aspect-ratio: 16 / 9 !important; 
@@ -117,8 +120,9 @@
         aspect-ratio: 9 / 16 !important; 
     }
     /* Центр и кастомные в ландшафте */
-    .main-content p img.img-center,
-    .main-content p img.img-custom {
+    .main-content p img.img-custom,
+    .main-content figure img.img-center,
+    .main-content p img.img-center {
         aspect-ratio: auto !important;
     }
 }

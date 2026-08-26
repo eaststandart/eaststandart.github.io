@@ -18,9 +18,7 @@ discus: "questions"
 ### Описание схемы
 Схема электрическая принципиальная фонарика представляет собой последовательное соединение батареи, выключателя и светоизлучающего диода (рис. 1).
 
-![center](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
-
-<figcaption>Рис. 1 – Схема электрическая принципиальная</figcaption>
+![center|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 
 Посмотрим, из чего она состоит:
 

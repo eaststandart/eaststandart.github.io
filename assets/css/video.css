@@ -20,12 +20,18 @@
     height: 209px !important;
     max-height: 250px !important;
     width: auto !important;
-    max-width: calc(50% - 10px) !important; /* Страховка: не шире половины контента, чтобы двое встали в ряд */
+    
+    /* Страховка: не шире половины контента, чтобы двое встали в ряд */
+    max-width: calc(50% - 10px) !important;
+    
     flex: 0 1 auto !important; /* Позволяет ужиматься, если не влезают */
     border-radius: 8px !important;
+    
+    /* Родной фон загруженного видео — черный, чтобы скрыть поля */
+    background: #000000 !important; 
     object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    background: #000000 !important;
+    display: block;
 }
 
 /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ) */
@@ -70,11 +76,10 @@
 .main-content video[data-src] {
     background-color: #f0f0f0 !important;
     aspect-ratio: 16 / 9 !important;
-    display: block;
 }
 
 /* 2. Для видеоплееров внутри флекс-ряда в процессе их загрузки */
-.video-test-row video {
+.video-test-row video[data-src] {
     /* Родной черный фон меняем на серую заглушку для эффекта загрузки */
     background: #f0f0f0 !important; 
     

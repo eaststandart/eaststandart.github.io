@@ -105,16 +105,7 @@ def process_markdown_images(markdown_content):
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:
-                import re
-                # Находим текст внутри alt="..."
-                alt_match = re.search(r'alt=["\'](.*?)["\']', img_html)
-                alt_text = alt_match.group(1).strip() if alt_match else ""
-
-                # Создаем подпись figcaption, только если alt не пустой
-                figcaption_html = f'<figcaption class="figcaption-center">{alt_text}</figcaption>' if alt_text else ''
-
-                # Собираем HTML5 структуру figure
-                return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
+                return f'<p class="p-center">{img_html}</p>'
                 
             return img_html
 

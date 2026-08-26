@@ -70,7 +70,7 @@
    ========================================================================== */
 
 /* 1. Для картинок контента, пока они находятся в режиме data-src */
-.main-content img[data-src] {
+.main-content video[data-src] {
     aspect-ratio: 16 / 9 !important;
     background-color: #f0f0f0 !important;
     width: 100% !important;

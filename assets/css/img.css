@@ -98,6 +98,7 @@
     .main-content p img:not(.content-img),
     .main-content .figure-center-row figure.figure-center img.img-center {
         height: auto !important;    /* Сбрасываем 209px, чтобы картинка сжималась пропорционально */
+        max-height: none !important;   /* КРИТИЧЕСКИ ВАЖНО: Отключаем лимит 209px на смартфонах */
         width: 100% !important;     /* Растягиваем на всю ширину экрана смартфона */
     }
     

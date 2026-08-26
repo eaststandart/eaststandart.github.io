@@ -49,6 +49,7 @@
     width: auto !important;
     border: 1px solid var(--primary-bg) !important;
     border-radius: 8px !important;
+    box-sizing: border-box !important;
 }
 
 

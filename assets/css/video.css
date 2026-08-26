@@ -76,6 +76,7 @@
 .main-content video[data-src] {
     background-color: #f0f0f0 !important;
     aspect-ratio: 16 / 9 !important;
+    display: block;
 }
 
 /* 2. Для видеоплееров внутри флекс-ряда в процессе их загрузки */
@@ -92,4 +93,9 @@
     .video-test-row video {
         aspect-ratio: 16 / 9 !important;
     }
+}
+
+/* Принудительно красим внутреннюю панель плеера в серый цвет, пока идет ленивая загрузка */
+.video-test-row video[data-src]::-webkit-media-controls-panel {
+    background-color: #f0f0f0 !important;
 }

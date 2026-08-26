@@ -57,7 +57,7 @@
 
 /* 2.3 Если картинок в ряду ДВЕ И БОЛЕЕ, зажимаем их максимальную ширину до 50% */
 .main-content .figure-center-row figure.figure-center:not(:only-child) {
-    max-width: calc(50% - 8px) !important; /* Две в ряд на ПК, только если они не одиночки */
+    max-width: calc(50% - 10px) !important; /* Две в ряд на ПК, только если они не одиночки */
 }
 
 /* 2.4 Сама картинка внутри figure: возвращаем ей высоту 209px и убираем contain */

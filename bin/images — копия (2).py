@@ -105,12 +105,8 @@ def process_markdown_images(markdown_content):
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:
-                # Берём текст подписи напрямую из готовой переменной clean_alt
+                # Берём текст подписи напрямую из готовой переменной clean_alt, без всяких повторных поисков
                 figcaption_html = f'<figcaption class="figcaption-center">{clean_alt}</figcaption>' if clean_alt else ''
-                
-                # Возвращаем чистую одиночную фигуру
-                return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
-
 
                 # Собираем красивую HTML5 структуру figure
                 return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
@@ -120,15 +116,4 @@ def process_markdown_images(markdown_content):
         new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)
         processed_lines.append(new_line)
         
-    # Склеиваем строки в финальный HTML-текст статьи
-    final_html = '\n'.join(processed_lines)
-    
-    # ГРУППИРОВКА: Находим любые непрерывные цепочки из <figure class="figure-center">
-    # (даже если между ними есть переносы строк) и упаковываем их в один общий div.figure-center-row
-    final_html = re.sub(
-        r'((?:<figure class="figure-center">.*?</figure>\s*)+)',
-        r'<div class="figure-center-row">\1</div>',
-        final_html
-    )
-        
-    return final_html
+    return '\n'.join(processed_lines)

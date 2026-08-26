@@ -85,7 +85,7 @@ def process_markdown_images(markdown_content):
                 custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
                 
-                # Автоматически рассчитываем и внедряем персональный aspect-ratio в HTML
+                # Автоматически рассчитываем и विनम्रяем персональный aspect-ratio в HTML
                 custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
                 
                 if 'img-custom' not in classes:
@@ -105,12 +105,8 @@ def process_markdown_images(markdown_content):
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:
-                # Берём текст подписи напрямую из готовой переменной clean_alt
+                # Берём текст подписи напрямую из готовой переменной clean_alt, без всяких повторных поисков
                 figcaption_html = f'<figcaption class="figcaption-center">{clean_alt}</figcaption>' if clean_alt else ''
-                
-                # Возвращаем чистую одиночную фигуру
-                return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
-
 
                 # Собираем красивую HTML5 структуру figure
                 return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
@@ -120,14 +116,17 @@ def process_markdown_images(markdown_content):
         new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)
         processed_lines.append(new_line)
         
-    # Склеиваем все обработанные строки в один большой текст
-    markdown_content = '\n'.join(processed_lines)
+    # === ФИНАЛЬНАЯ СКЛЕЙКА И АВТОМАТИЧЕСКАЯ ГРУППИРОВКА РЯДОВ ДЛЯ JEKYLL ===
     
-    # Автоматически оборачиваем одиночные и групповые figure в один общий div-ряд
-    markdown_content = re.sub(
+    # 1. Склеиваем все обработанные строки в единый текст статьи
+    article_html = '\n'.join(processed_lines)
+    
+    # 2. Находим любые цепочки из <figure class="figure-center"> и упаковываем их в общий div.figure-center-row
+    article_html = re.sub(
         r'((?:<figure class="figure-center">.*?</figure>\s*)+)',
         r'<div class="figure-center-row">\1</div>',
-        markdown_content
+        article_html
     )
         
-    return markdown_content
+    # 3. Отдаем готовый сгруппированный HTML-контент дальше в Jekyll
+    return article_html

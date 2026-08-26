@@ -2,7 +2,7 @@
 @about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
 @purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
          управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
-@version 17.0.0
+@version 17.1.0
 */
 
 /* ============================================================
@@ -31,32 +31,47 @@
 
 /* ПРАВИЛО 2: Для центрированных картинок в контейнере HTML5 figure */
 
-/* 2.1 Контейнер figure: сбрасываем встроенные отступы браузера и центрируем всё флексом */
-.main-content figure.figure-center {
+/* 2.1 Общий ряд из одной или нескольких центрированных картинок figure */
+.main-content .figure-center-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;         /* Перенос на новую строку на мобильных */
+    gap: 15px !important;               /* Зазор между карточками */
+    justify-content: center !important; /* ГЛАВНОЕ: центрирует и одну, и две картинки на странице */
+    align-items: flex-start !important; /* Выравнивание по верхнему краю */
+    width: 100% !important;
+}
+
+/* 2.2 Карточка figure внутри этого ряда: обнуляем боковые браузерные отступы */
+.main-content .figure-center-row figure.figure-center {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
-    /* Обнуляет боковые отступы (40px), но сохраняет дефолтные вертикальные маргины браузера */
     margin-left: 0 !important;
     margin-right: 0 !important;
+    flex: 1 1 auto !important;          /* Разрешаем элементам гибко занимать свободное место */
+    max-width: 100% !important;         /* По умолчанию одиночная фигура занимает 100% ширины */
 }
 
-/* 2.2 Сама картинка внутри figure: возвращаем ей высоту 209px и убираемcontain */
-.main-content figure.figure-center img.img-center {
+/* 2.3 Если картинок в ряду ДВЕ И БОЛЕЕ, зажимаем их максимальную ширину до 50% */
+.main-content .figure-center-row figure.figure-center:not(:only-child) {
+    max-width: calc(50% - 8px) !important; /* Две в ряд на ПК, только если они не одиночки */
+}
+
+/* 2.4 Сама картинка внутри figure: возвращаем ей высоту 209px и убираем contain */
+.main-content .figure-center-row figure.figure-center img.img-center {
     height: 209px !important;
     width: auto !important;
     aspect-ratio: auto !important; /* Позволяет картинке быть любой нативной ширины */
     object-fit: unset !important;  /* Наша защита от серых полос */
-    
-    /* Копируем базовые стили одиночных картинок, так как они ушли из тега <p> */
     background-color: #f0f0f0 !important;
     max-width: 100% !important;
 }
 
-/* 2.3 Стили подписи под картинкой */
-.main-content figure.figure-center figcaption.figcaption-center {
+/* 2.5 Стили подписи под картинкой */
+.main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
     text-align: center !important;
 }
 
@@ -78,9 +93,9 @@
 
 /* 2.1 На смартфонах вертикально (до 900px): переводим картинки в адаптивный режим */
 @media (max-width: 900px) and (orientation: portrait) {
-    /* Добавляем селекторы через запятую, чтобы правило работало и для тега p, и для figure */
+    /* Добавляем точный селектор ряда figure-center-row, чтобы перебить ПК-версию */
     .main-content p img:not(.content-img),
-    .main-content figure.figure-center img.img-center  {
+    .main-content .figure-center-row figure.figure-center img.img-center {
         height: auto !important;    /* Сбрасываем 209px, чтобы картинка сжималась пропорционально */
         width: 100% !important;     /* Растягиваем на всю ширину экрана смартфона */
     }
@@ -95,18 +110,23 @@
         aspect-ratio: 9 / 16 !important;
     }
     
-    /* Центрированные и кастомные картинки на мобильных подстраиваются под экран */
+    /* Центрированные и кастомные картинки на mobile подстраиваются под экран */
     .main-content p img.img-custom,
-    .main-content figure img.img-center,
+    .main-content .figure-center-row figure.figure-center img.img-center,
     .main-content p img.img-center {
         aspect-ratio: auto !important;
+    }
+    
+    /* На мобильных заставляем карточки figure всегда вставать на 100% ширины */
+    .main-content .figure-center-row figure.figure-center {
+        max-width: 100% !important;
     }
 }
 
 /* 2.2 На смартфонах горизонтально: зажимаем высоту в 163px, чтобы не перекрывали экран */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img),
-    .main-content figure img:not(.content-img) {
+    .main-content .figure-center-row figure.figure-center img.img-center {
         height: 163px !important;
         width: auto !important;
     }
@@ -121,7 +141,7 @@
     }
     /* Центр и кастомные в ландшафте */
     .main-content p img.img-custom,
-    .main-content figure img.img-center,
+    .main-content .figure-center-row figure.figure-center img.img-center,
     .main-content p img.img-center {
         aspect-ratio: auto !important;
     }

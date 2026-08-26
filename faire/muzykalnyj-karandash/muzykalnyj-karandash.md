@@ -37,7 +37,7 @@ permalink: /faire/muzykalnyj-karandash/
 3\. 🔢[Музыкальный карандаш. Трафарет пианино, PDF](muzykalnyj-karandash-trafaret.pdf)\
 4\. 🔢[Музыкальный карандаш. Трафарет пианино, sPlan](muzykalnyj-karandash-trafaret.spl8)
 
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
+![720х1018](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->

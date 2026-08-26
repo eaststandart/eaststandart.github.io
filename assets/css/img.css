@@ -43,15 +43,18 @@
     margin: 1em 0 !important;           /* Фирменный отступ галерей вашей темы */
 }
 
-/* 2.2 Карточка figure внутри этого ряда на ПК
-   Убираем любые ограничения ширины (50% или 340px). Блок сжимается строго по размеру картинки. */
+/* 2.2 Карточка figure внутри этого ряда на ПК */
 .main-content .figure-center-row figure.figure-center {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     margin: 0 !important;               /* Обнуляем маргины, так как зазоры контролируются через gap */
-    width: auto !important;             /* Резиновая ширина по контенту */
+    
+    /* ИСПРАВЛЕНИЕ БАГА: Блок сжимается строго по максимальной ширине картинки (примерно 371px при пропорциях 16:9).
+       Текст подписи больше не сможет растянуть этот блок и сломать ряд. */
+    width: max-content !important;      
+    max-width: calc(50% - 10px) !important; /* Гарантирует, что две карточки идеально поделят ряд на ПК */
 }
 
 /* 2.3 Сама картинка внутри figure 

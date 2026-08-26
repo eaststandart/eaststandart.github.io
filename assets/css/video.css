@@ -26,7 +26,7 @@
     
     flex: 0 1 auto !important; /* Позволяет ужиматься, если не влезают */
     border-radius: 8px !important;
-    background-color: #f0f0f0 !important;
+    background: #000 !important;
     object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
@@ -61,7 +61,6 @@
         max-height: 180px !important; 
         flex: 0 0 auto !important;
         object-fit: contain;
-        aspect-ratio: 16 / 9 !important;
     }
 }
 
@@ -70,12 +69,12 @@
    РЕЗЕРВИРОВАНИЕ МЕСТА И СЕРЫЕ ЗАГЛУШКИ (АНТИ-ПРЫЖОК СТРАНИЦЫ)
    ========================================================================== */
 
-/* 1. Для видео контента, пока они находятся в режиме data-src */
-.main-content video[data-src]:not(.video-test-row video) {
+/* 1. Для картинок контента, пока они находятся в режиме data-src */
+.main-content video[data-src] {
+    aspect-ratio: 16 / 9 !important;
     background-color: #f0f0f0 !important;
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 16 / 9 !important;
     display: block;
 }
 

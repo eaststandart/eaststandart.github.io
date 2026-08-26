@@ -20,15 +20,12 @@
     height: 209px !important;
     max-height: 250px !important;
     width: auto !important;
-    
-    /* Страховка: не шире половины контента, чтобы двое встали в ряд */
-    max-width: calc(50% - 10px) !important;
-    
+    max-width: calc(50% - 10px) !important; /* Страховка: не шире половины контента, чтобы двое встали в ряд */
     flex: 0 1 auto !important; /* Позволяет ужиматься, если не влезают */
     border-radius: 8px !important;
-    background: #000 !important;
     object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #000000 !important;
 }
 
 /* 2. МОБИЛЬНАЯ АДАПТАЦИЯ (ВЕРТИКАЛЬ) */

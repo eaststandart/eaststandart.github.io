@@ -379,7 +379,7 @@ figcaption {
     text-align: center;
     font-size: 0.85rem;
     color: #6a737d;
-    margin-top: 6px; /* Небольшой зазор от фото/видео до текста подписи */
+    margin-top: 1rem; /* зазор от фото/видео до текста подписи */
 }
 
 

@@ -38,6 +38,9 @@
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
+    /* Обнуляет боковые отступы (40px), но сохраняет дефолтные вертикальные маргины браузера */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 /* 2.2 Сама картинка внутри figure: возвращаем ей высоту 209px и убираемcontain */

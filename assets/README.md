@@ -42,7 +42,6 @@ eaststandart.github.io/
 │   │   └── ugolok-mladshego-konstruktora.svg 
 │   ├── img/ 
 │   └── js/ 
-│       ├── image-lazy-load.js 
 │       ├── navigation-crumbs.js 
 │       ├── pagination-logic.js 
 │       ├── posts-page-list.js 

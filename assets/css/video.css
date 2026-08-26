@@ -26,7 +26,7 @@
     
     flex: 0 1 auto !important; /* Позволяет ужиматься, если не влезают */
     border-radius: 8px !important;
-    background: #000 !important;
+    background: #f0f0f0 !important;
     object-fit: contain !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }

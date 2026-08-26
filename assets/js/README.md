@@ -8,7 +8,6 @@
 eaststandart.github.io/
 └── assets
     └── js
-        ├── image-lazy-load.js 
         ├── navigation-crumbs.js 
         ├── pagination-logic.js 
         ├── posts-page-list.js 
@@ -20,7 +19,6 @@ eaststandart.github.io/
 
 ### Список скриптов
 
-*   **`image-lazy-load.js`** — Модуль лези-лоада картинок.
 *   **`navigation-crumbs.js`** — Модуль навигации.
 *   **`pagination-logic.js`** — Модуль пагинации.
 *   **`posts-page-list.js`** — Модуль фильтрации и зачистки ленты медиа.

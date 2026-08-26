@@ -80,9 +80,7 @@
        сохраняя свои родные пропорции кадра без деформаций и серых полос по бокам */
     .main-content p img.img-center,
     .main-content p img.img-custom {
-    /* Говорит браузеру: возьми пропорции из атрибутов width и height в HTML */
-    aspect-ratio: attr(width) / attr(height) !important; 
-    
+        aspect-ratio: auto !important;
     height: 209px !important;
     width: auto !important;
     }

@@ -16,6 +16,9 @@
 }
 
 .video-test-row video {
+    /* Добавляем пропорции сюда, чтобы они не пропадали после удаления data-src */
+    aspect-ratio: 16 / 9 !important;
+
     /* Ограничиваем высоту (как у фото) */
     height: 209px !important;
     max-height: 250px !important;

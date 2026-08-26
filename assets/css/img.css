@@ -55,18 +55,20 @@
 }
 
 /* 2.3 Сама картинка внутри figure 
-   Один в один копирует параметры .main-content p img:not(.content-img) из вашей темы */
+   Полная копия логики обычной галереи с пропорцией 16:9 и умным лимитом max-height */
 .main-content .figure-center-row figure.figure-center img.img-center {
-    height: 209px !important;           /* Намертво заблокированная высота ПК-ряда */
+    height: auto !important;            /* Позволяет маленьким картинкам держать свой родной размер */
+    max-height: 209px !important;       /* Ограничение сверху для больших картинок (не более 209px) */
     width: auto !important;             /* Авто-ширина по пропорциям кадра */
     max-width: 100% !important;         /* Страховка от вылета за края */
-    object-fit: unset !important;       /* Ваша личная победа над серыми вспышками */
+    aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для идеального сходства с обычной галереей */
+    object-fit: unset !important;       /* Наша защита от серых полос */
     background-color: #f0f0f0 !important;
 }
 
 /* 2.4 Стили подписи под картинкой */
 .main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;      /* Железно держим центровку текста подписи */
+    text-align: center !important;      /* Держим центровку текста подписи */
 }
 
 /* 2.5 Стили подписи под картинкой */

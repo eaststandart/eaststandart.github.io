@@ -31,44 +31,42 @@
 
 /* ПРАВИЛО 2: Для центрированных картинок в контейнере HTML5 figure */
 
-/* 2.1 Общий ряд из одной или нескольких центрированных картинок figure */
+/* 2.1 Общий ряд из одной или нескольких центрированных картинок figure 
+   Полная копия геометрии обычной галереи из style.css */
 .main-content .figure-center-row {
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;         /* Перенос на новую строку на мобильных */
-    gap: 15px !important;               /* Зазор между карточками */
-    justify-content: center !important; /* ГЛАВНОЕ: центрирует и одну, и две картинки на странице */
+    flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку при нехватке места */
+    gap: 15px !important;               /* Точный зазор вашей темы между элементами и рядами */
     align-items: flex-start !important; /* Выравнивание по верхнему краю */
+    justify-content: center !important; /* ГЛАВНОЕ: выравнивает весь ряд строго по центру страницы */
     width: 100% !important;
+    margin: 1em 0 !important;           /* Фирменный отступ галерей вашей темы */
 }
 
-/* 2.2 Карточка figure внутри этого ряда: обнуляем боковые браузерные отступы */
+/* 2.2 Карточка figure внутри этого ряда на ПК
+   Убираем любые ограничения ширины (50% или 340px). Блок сжимается строго по размеру картинки. */
 .main-content .figure-center-row figure.figure-center {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    flex: 1 1 auto !important;          /* Разрешаем элементам гибко занимать свободное место */
-    max-width: 100% !important;         /* По умолчанию одиночная фигура занимает 100% ширины */
+    margin: 0 !important;               /* Обнуляем маргины, так как зазоры контролируются через gap */
+    width: auto !important;             /* Резиновая ширина по контенту */
 }
 
-/* 2.3 Если картинок в ряду ДВЕ И БОЛЕЕ, зажимаем их максимальную ширину до 50% */
-.main-content .figure-center-row figure.figure-center:not(:only-child) {
-    max-width: calc(50% - 10px) !important; /* Две в ряд на ПК, только если они не одиночки */
-}
-
-/* 2.4 Сама картинка внутри figure: возвращаем ей высоту 209px и убираем contain */
+/* 2.3 Сама картинка внутри figure 
+   Один в один копирует параметры .main-content p img:not(.content-img) из вашей темы */
 .main-content .figure-center-row figure.figure-center img.img-center {
-    height: auto !important;       /* Позволяет маленьким картинкам держать свой родной размер */
-    max-height: 209px !important;  /* Жесткий верхний лимит для больших изображений */
-    width: auto !important;
-    aspect-ratio: auto !important; /* Позволяет картинке быть любой нативной ширины */
-    object-fit: unset !important;  /* Наша защита от серых полос */
+    height: 209px !important;           /* Намертво заблокированная высота ПК-ряда */
+    width: auto !important;             /* Авто-ширина по пропорциям кадра */
+    max-width: 100% !important;         /* Страховка от вылета за края */
+    object-fit: unset !important;       /* Ваша личная победа над серыми вспышками */
     background-color: #f0f0f0 !important;
-    max-width: 100% !important;
+}
+
+/* 2.4 Стили подписи под картинкой */
+.main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
+    text-align: center !important;      /* Железно держим центровку текста подписи */
 }
 
 /* 2.5 Стили подписи под картинкой */

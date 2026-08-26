@@ -72,10 +72,10 @@
 
 /* 1. Для видео контента, пока они находятся в режиме data-src */
 .main-content video[data-src]:not(.video-test-row video) {
-    aspect-ratio: 16 / 9 !important;
     background-color: #f0f0f0 !important;
     width: 100% !important;
     height: auto !important;
+    aspect-ratio: 16 / 9 !important;
     display: block;
 }
 

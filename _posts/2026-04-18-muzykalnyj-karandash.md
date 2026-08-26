@@ -14,8 +14,8 @@ mathjax: true
 
 Изучим электрическую принципиальную схему:
 
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-23.webp)
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-24.webp)
+![1087x720](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-23.webp)
+![1087x720](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-24.webp)
 
 <!---
 <div style="text-align: center;">

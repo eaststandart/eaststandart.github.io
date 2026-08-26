@@ -46,7 +46,9 @@
 /* ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) 
    Персональные пропорции теперь динамически внедряются скриптом через тег style */
 .main-content p img.img-custom {
-    width: auto !important; 
+    width: auto !important;
+    border: 1px solid var(--primary-bg) !important;
+    border-radius: 8px !important;
 }
 
 

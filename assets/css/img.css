@@ -191,10 +191,10 @@
     /* Ограничения для картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center {
-        height: 163px !important;
+        height: auto !important;       
+        max-height: 209px !important;   
         width: auto !important;
-        max-width: 289px !important; 
-        object-fit: contain !important;
+        max-width: 100% !important;
     }
 
     /* Ограничения для картинок */

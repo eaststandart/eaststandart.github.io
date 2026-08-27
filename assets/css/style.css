@@ -315,8 +315,13 @@ p:has(img) + blockquote,
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-width: 800px;
-    width: 100%;       
+    
+    /* 🛠️ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ ДЛЯ ПК: */
+    /* Фиксируем ширину белого поля намертво. Оно больше не сможет дергаться,
+       расширяться или прыгать относительно картинок на больших экранах. */
+    width: 800px !important;       
+    max-width: 800px !important;
+    
     margin: 15px auto; 
     padding: 10px 20px 20px 20px;
 }
@@ -539,17 +544,13 @@ figcaption {
     }
     
     /* Унификация отступов карточки: перевод в резиновый full-width режим */
-/* Главная центральная карточка-оболочка для текстовых материалов */
-.content-wrapper {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-width: 800px;
-    width: 100%;       
-    margin: 15px auto; 
-    padding: 10px 20px 20px 20px;
-}
-
+    .content-wrapper { 
+        width: 100% !important; 
+        max-width: 100% !important;
+        padding: 15px 12px !important; /* Жестко заданный зазор 12px по бокам */
+        border-radius: 0 !important;
+        margin: 0px !important;
+    }
 
     /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {

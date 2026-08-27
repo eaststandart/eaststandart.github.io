@@ -548,12 +548,17 @@ figcaption {
     .content-wrapper { 
         width: 100% !important; 
         padding: 10px 12px !important; /* Жестко заданный зазор 12px по бокам */
-        border-radius: 0 !important;
         margin: 0px !important;
     }
 
     /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {
+
+    /* Убираем закругления */
+    .content-wrapper { 
+        border-radius: 0 !important;
+    }
+
         /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */
         .main-content p:has(img) {
             display: flex !important;

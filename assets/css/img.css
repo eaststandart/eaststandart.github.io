@@ -85,34 +85,26 @@
 
 /* Карточка figure внутри галерейного ряда на ПК */
 .main-content .figure-center-row figure.figure-center {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
+    /* ЗАМЕНЯЕМ display: flex на display: table! 
+       Это заставит блок вычислять ширину строго по картинке 16:9,
+       а длинный текст подписи мгновенно сложится в строки. */
+    display: table !important;          
     margin: 0 !important;               
-    flex-shrink: 0 !important;          /* Запрещаем карточке сжиматься */
+    flex-shrink: 0 !important;          /* Запрет сжатия карточки */
     
-    /* 🛠️ ВОТ КРИТИЧЕСКИЙ ШАГ ДЛЯ ПОДПИСИ: */
-    /* Говорим карточке: "Твоя ширина равна ровно ширине картинки 16:9!" 
-       Длинный текст подписи больше не сможет растянуть этот блок. */
-    width: max-content !important;      
+    width: auto !important;             /* Свободная автоматическая ширина */
     max-width: 100% !important;         
 }
 
 /* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
-    height: 209px !important;           /* Жесткая высота ряда против прыжков кадра */
-    
-    /* 🛠️ КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ ШАГА 1.2: */
-    /* Заменяем width: auto на width: 100%. Теперь картинка послушно сожмется в ширину 
-       до идеальных 371px, которые диктует пропорция 16:9, а не ее собственный файл! */
-    width: 100% !important;             
-    
+    height: 209px !important;           /* Жесткая высота ряда против прыжков */
+    width: auto !important;             /* Авто-ширина от высоты и пропорций кадра */
     max-width: 100% !important;         
-    aspect-ratio: 16 / 9 !important;    /* Удерживаем ровный формат галереи */
-    object-fit: contain !important;     /* Картинка аккуратно вписывается в бокс */
+    aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для выравнивания */
+    object-fit: contain !important;     
     background-color: #f0f0f0 !important;
-    flex-shrink: 0 !important;          /* Запрет ужимания при ресайзе */
+    flex-shrink: 0 !important;          
 }
 
 

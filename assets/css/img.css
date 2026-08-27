@@ -69,7 +69,7 @@
        Браузер сам создаёт колонки шириной ровно по размеру картинки (371px).
        Если места на ПК много — они встают по 2 в ряд, а третья картинка ГАРАНТИРОВАННО 
        встает слева под первую! Но сам этот блок грида всегда ЖЕЛЕЗНО ЦЕНТРИРУЕТСЯ по статье. */
-    grid-template-columns: repeat(auto-fit, 371px) !important;
+    grid-template-columns: repeat(auto-fit, max-content) !important;
     justify-content: center !important; /* Центрирует саму сетку на странице */
 
     align-items: start !important;      /* Выравнивает карточки строго по их ВЕРХНЕМУ краю */

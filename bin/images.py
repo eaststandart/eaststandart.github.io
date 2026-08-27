@@ -121,10 +121,17 @@ def process_markdown_images(markdown_content):
     # 1. Склеиваем все обработанные строки в единый текст статьи
     article_html = '\n'.join(processed_lines)
     
-    # 2. Группируем фигурные теги в ряды, ЗАПРЕЩАЯ регулярке перешагивать через пустые строки контента
+    # 2. УМНАЯ ГРУППИРОВКА: разделяем одиночные картинки и галереи на разные классы
+    def group_rows(match):
+        content = match.group(1)
+        # Считаем, сколько картинок внутри цепочки
+        if content.count('<figure') > 1:
+            return f'<div class="figure-center-row">{content}</div>' # Галерея
+        return f'<div class="figure-center-single">{content}</div>' # Одиночная
+
     article_html = re.sub(
         r'((?:<figure class="figure-center">.*?</figure>[ \t]*\n?)+)',
-        r'<div class="figure-center-row">\1</div>',
+        group_rows,
         article_html
     )
         

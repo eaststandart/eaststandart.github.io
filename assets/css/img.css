@@ -2,7 +2,7 @@
 @about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
 @purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
          управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
-@version 17.1.0
+@version 18.0.0
 */
 
 /* ============================================================
@@ -29,68 +29,92 @@
     aspect-ratio: 9 / 16 !important;
 }
 
-/* ПРАВИЛО 2: Для центрированных картинок в контейнере HTML5 figure */
+/* ============================================================
+   ПРАВИЛО 2: ЦЕНТРИРОВАННЫЕ КАРТИНКИ (В контейнерах figure)
+   ============================================================ */
 
-/* 2.1 Общий ряд из одной или нескольких центрированных картинок figure 
-   Полная копия геометрии обычной галереи из style.css */
+/* ------------------------------------------------------------
+   2.A ВАРИАНТ ДЛЯ ОДИНОЧНОЙ КАРТИНКИ (класс figure-center-single)
+   ------------------------------------------------------------ */
+
+/* Главный контейнер одиночной картинки */
+.main-content .figure-center-single {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 1em 0 !important;           /* Вертикальный отступ */
+}
+
+/* Одиночная карточка figure */
+.main-content .figure-center-single figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    width: max-content !important;      /* Сжимается строго по контуру картинки */
+    max-width: 100% !important;         /* Занимает всю ширину контента, если нужно */
+}
+
+/* Сама одиночная картинка по центру */
+.main-content .figure-center-single img.img-center {
+    height: auto !important;            /* Позволяет маленьким изображениям держать свой размер */
+    max-height: 209px !important;       /* Ограничение сверху (не более 209px) */
+    width: auto !important;             
+    max-width: 100% !important;         
+    aspect-ratio: auto !important;      /* РОДНЫЕ пропорции файла, без сплющивания */
+    object-fit: unset !important;       /* Защита от серых полос */
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   2.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (класс figure-center-row)
+   ------------------------------------------------------------ */
+
+/* Общий флекс-ряд для галереи центрированных картинок */
 .main-content .figure-center-row {
     display: flex !important;
     flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку при нехватке места */
-    gap: 15px !important;               /* Точный зазор вашей темы между элементами и рядами */
+    gap: 15px !important;               /* Идеально ровный зазор вашей темы между колонками и рядами */
     align-items: flex-start !important; /* Выравнивание по верхнему краю */
-    justify-content: center !important; /* ГЛАВНОЕ: выравнивает весь ряд строго по центру страницы */
+    justify-content: center !important; /* ГЛАВНОЕ: держит галерею строго по центру страницы */
     width: 100% !important;
-    margin: 1em 0 !important;           /* Фирменный отступ галерей вашей темы */
+    margin: 1em 0 !important;           
 }
 
-/* 2.2 Карточка figure внутри этого ряда на ПК */
+/* Карточка figure внутри галерейного ряда */
 .main-content .figure-center-row figure.figure-center {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 !important;               /* Обнуляем маргины, так как зазоры контролируются через gap */
-    width: max-content !important;      /* Блок сжимается строго по максимальной ширине картинки */
-    max-width: 100% !important;         /* По умолчанию одиночная фигура может занимать 100% ширины */
+    margin: 0 !important;               
+    width: max-content !important;      /* Длинная подпись не сможет растолкать и сломать ряд */
+    max-width: calc(50% - 8px) !important; /* Строго половина ряда на ПК для двух колонок */
 }
 
-/* Если картинок в ряду ДВЕ И БОЛЕЕ, зажимаем максимальную ширину карточки до 50% */
-.main-content .figure-center-row figure.figure-center:not(:only-child) {
-    max-width: calc(50% - 8px) !important; /* Две в ряд на ПК, только если они не одиночки */
-}
-
-/* 2.3 Сама картинка внутри figure */
-.main-content .figure-center-row figure.figure-center img.img-center {
-    height: auto !important;            /* Разрешает маленьким картинкам держать свой размер */
-    max-height: 209px !important;       /* Ограничение сверху для больших картинок (не более 209px) */
-    width: auto !important;             /* Авто-ширина по пропорциям кадра */
-    max-width: 100% !important;         /* Страховка от вылета за края */
-    object-fit: unset !important;       /* Наша защита от серых полос */
+/* Картинки внутри галерейного ряда */
+.main-content .figure-center-row img.img-center {
+    height: auto !important;            
+    max-height: 209px !important;       /* Ограничение не более 209px */
+    width: auto !important;             
+    max-width: 100% !important;         
+    aspect-ratio: 16 / 9 !important;    /* ЖЕСТКИЕ 16:9 для идеального выравнивания сетки и переноса */
+    object-fit: unset !important;       
     background-color: #f0f0f0 !important;
-    
-    /* 1. По умолчанию для ОДИНОЧНОЙ картинки ставим родные пропорции файла */
-    aspect-ratio: auto !important;      
 }
 
-/* Если картинок в ряду ДВЕ И БОЛЕЕ, включаем им жесткие 16:9 для эффекта галереи.
-   Это правило должно идти строго ОТДЕЛЬНЫМ блоком ниже! */
-.main-content .figure-center-row figure.figure-center:not(:only-child) img.img-center {
-    aspect-ratio: 16 / 9 !important;    /* Картинки в галерее выравниваются пиксель в пиксель и будут переноситься */
-}
-
-/* 2.4 Стили подписи под картинкой */
-.main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;      /* Железно держим центровку текста подписи */
-}
-
-/* 2.5 Стили подписи под картинкой */
-.main-content .figure-center-row figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;
+/* ------------------------------------------------------------
+   2.C ОБЩИЕ СТИЛИ ПОДПИСИ К ЦЕНТРИРОВАННЫМ КАРТИНКАМ
+   ------------------------------------------------------------ */
+.main-content figure.figure-center figcaption.figcaption-center {
+    text-align: center !important;      /* Железно держит центровку текста подписи */
 }
 
 
-/* ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) 
-   Персональные пропорции теперь динамически внедряются скриптом через тег style */
+/* ============================================================
+   ПРАВИЛО 3: Для картинок с произвольным размером (класс img-custom) 
+   ============================================================ */
 .main-content p img.img-custom {
     width: auto !important;
     border: 1px solid var(--primary-bg) !important;
@@ -106,12 +130,13 @@
 
 /* 2.1 На смартфонах вертикально (до 900px): переводим картинки в адаптивный режим */
 @media (max-width: 900px) and (orientation: portrait) {
-    /* Добавляем точный селектор ряда figure-center-row, чтобы перебить ПК-версию */
+    /* Сбрасываем жесткую высоту и лимиты для абсолютно ВСЕХ картинок на мобильных */
     .main-content p img:not(.content-img),
-    .main-content .figure-center-row figure.figure-center img.img-center {
-        height: auto !important;    /* Сбрасываем 209px, чтобы картинка сжималась пропорционально */
-        max-height: none !important;   /* КРИТИЧЕСКИ ВАЖНО: Отключаем лимит 209px на смартфонах */
-        width: 100% !important;     /* Растягиваем на всю ширину экрана смартфона */
+    .main-content .figure-center-single img.img-center,
+    .main-content .figure-center-row img.img-center {
+        height: auto !important;       
+        max-height: none !important;   /* Отключаем лимит 209px на смартфонах */
+        width: 100% !important;        /* Растягиваем на всю ширину экрана */
     }
     
     /* Стандартные галерейные картинки удерживают пропорции 16:9 */
@@ -124,14 +149,19 @@
         aspect-ratio: 9 / 16 !important;
     }
     
-    /* Центрированные и кастомные картинки на mobile подстраиваются под экран */
+    /* УМНАЯ МОБИЛЬНАЯ НАСТРОЙКА ЦЕНТРА: 
+       Одиночные картинки уходят в свободный auto, а парные галереи удерживают 16:9 для ровной сетки */
     .main-content p img.img-custom,
-    .main-content .figure-center-row figure.figure-center img.img-center,
-    .main-content p img.img-center {
+    .main-content p img.img-center,
+    .main-content .figure-center-single img.img-center {
         aspect-ratio: auto !important;
     }
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: 16 / 9 !important;
+    }
     
-    /* На мобильных заставляем карточки figure всегда вставать на 100% ширины */
+    /* На мобильных заставляем любые карточки figure вставать на 100% ширины экрана */
+    .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
         max-width: 100% !important;
     }
@@ -140,7 +170,8 @@
 /* 2.2 На смартфонах горизонтально: зажимаем высоту в 163px, чтобы не перекрывали экран */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img),
-    .main-content .figure-center-row figure.figure-center img.img-center {
+    .main-content .figure-center-single img.img-center,
+    .main-content .figure-center-row img.img-center {
         height: 163px !important;
         width: auto !important;
     }
@@ -155,7 +186,8 @@
     }
     /* Центр и кастомные в ландшафте */
     .main-content p img.img-custom,
-    .main-content .figure-center-row figure.figure-center img.img-center,
+    .main-content .figure-center-single img.img-center,
+    .main-content .figure-center-row img.img-center,
     .main-content p img.img-center {
         aspect-ratio: auto !important;
     }

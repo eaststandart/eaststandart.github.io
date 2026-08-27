@@ -62,10 +62,15 @@
    ------------------------------------------------------------ */
 .main-content .figure-center-row {
     display: flex !important;
-    flex-wrap: wrap !important;         /* Перенос без сжатия высоты */
-    gap: 15px !important;               
+    flex-wrap: wrap !important;         /* Разрешает перенос без сжатия высоты */
+    gap: 15px !important;               /* Точный зазор вашей темы */
     align-items: flex-start !important; 
-    justify-content: flex-start !important; /* На ПК картинки строятся строго СЛЕВА */
+    
+    /* ВОЗВРАЩАЕМ ВЫРАВНИВАНИЕ СЛЕВА: 
+       Ряд всегда строится по левому краю статьи. Благодаря этому, 
+       пока картинки стоят в ряд, третья картинка ГАРАНТИРОВАННО прижата влево! */
+    justify-content: flex-start !important; 
+    
     width: 100% !important;
     margin: 1em 0 !important;           
 }
@@ -75,20 +80,25 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 !important;               
-    flex-shrink: 0 !important;          
+    flex-shrink: 0 !important;          /* Запрет сжатия карточки */
     width: auto !important;      
     max-width: 100% !important;         
+    
+    /* 🛠️ ВОТ ОНО, АВТОМАТИЧЕСКОЕ ОТСЛЕЖИВАНИЕ ПЕРЕНОСА: */
+    /* Задаем боковые маргины auto, но с обнулением маргина СЛЕВА!
+       Это создает односторонний пружинный эффект, который работает гениально: */
+    margin: 0 auto 0 0 !important;               
 }
 
+/* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
     height: 209px !important;           /* Жесткая ПК-высота ряда */
     width: auto !important;             
     max-width: 100% !important;         
     aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для ровной сетки */
-    object-fit: contain !important;     /* Картинка аккуратно вписывается в бокс */
+    object-fit: contain !important;     
     background-color: #f0f0f0 !important;
-    flex-shrink: 0 !important;          /* Запрет сжатия */
+    flex-shrink: 0 !important;          
 }
 
 /* ------------------------------------------------------------

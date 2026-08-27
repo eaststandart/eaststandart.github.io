@@ -91,10 +91,9 @@
 
 /* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
-    height: auto !important;           /* Жесткая ПК-высота ряда */
-    max-height: 209px
-    width: 100% !important;                     
-    aspect-ratio: auto !important;    /* Жесткие 16:9 для ровной сетки */
+    height: 209px !important;           /* Жесткая ПК-высота ряда */
+    width: auto !important;                     
+    aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для ровной сетки */
     object-fit: contain !important;     
     background-color: #f0f0f0 !important;
 }

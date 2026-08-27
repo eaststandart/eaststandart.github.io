@@ -78,7 +78,7 @@
     flex-wrap: wrap !important;         /* Мгновенный перенос без сжатия высоты */
     gap: 15px !important;               /* Точный зазор вашей темы */
     align-items: flex-start !important; 
-    justify-content: flex-start !important; /* Центрирует всю группу картинок на странице */
+    justify-content: center !important; /* Центрирует всю группу картинок на странице */
     width: 100% !important;
     margin: 1em 0 !important;           
 }

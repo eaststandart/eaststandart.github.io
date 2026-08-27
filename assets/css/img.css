@@ -179,26 +179,25 @@
         grid-template-columns: repeat(2, max-content) !important;
         justify-content: center !important;
         align-items: start !important;
-        gap: 15px !important;
+        gap: 15px !important; /* Настоящий фиксированный зазор */
     }
 
-    /* Задаём лимиты для картинок, чтобы широкие кадры не вылезали за рамки */
+    /* Заставляем карточку сжиматься ровно по границам самой картинки */
+    .main-content .figure-center-row figure.figure-center {
+        width: max-content !important;
+        max-width: 289px !important;
+    }
+
+    /* Ограничения для картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {
         height: 163px !important;
         width: auto !important;
-        max-width: 289px !important; /* Наш жесткий ограничитель для горизонтальных 16:9 (163 * 16 / 9) */
+        max-width: 289px !important; 
         object-fit: contain !important;
     }
 
-    .main-content p img:not(.content-img),
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
-        height: 163px !important;
-        width: auto !important;
-        max-width: 100%
-    }
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
         aspect-ratio: 16 / 9 !important; 
     }

@@ -71,17 +71,14 @@
    2.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
    ============================================================ */
 
-/* Общий флекс-ряд для галереи центрированных картинок */
+/* Общий флекс-ряд для галереи центрированных картинок 
+   Полная копия вашей идеальной обычной галереи */
 .main-content .figure-center-row {
     display: flex !important;
-    flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку */
-    gap: 15px !important;               /* Точный зазор вашей темы */
-    align-items: flex-start !important; /* Выравнивание по верхнему краю элементов */
-    
-    /* ИСПРАВЛЕНИЕ ЦЕНТРОВКИ: Выравниваем элементы по ЛЕВОМУ краю ряда.
-       Теперь 2 картинки встанут ровно, а третья аккуратно ляжет под первую, а не по центру. */
-    justify-content: flex-start !important; 
-    
+    flex-wrap: wrap !important;         /* Мгновенный перенос без сжатия высоты */
+    gap: 15px !important;               /* Железно одинаковый зазор во все стороны */
+    align-items: flex-start !important; 
+    justify-content: center !important; /* Центрирует всю группу картинок на странице */
     width: 100% !important;
     margin: 1em 0 !important;           
 }
@@ -94,38 +91,37 @@
     justify-content: center !important;
     margin: 0 !important;               
     
-    /* ЖЕЛЕЗНЫЙ ЗАПРЕТ СЖАТИЯ И СДВИГОВ: 
-       flex-basis задает ровную сетку в 50% ширины контента для каждого блока на ПК.
-       Поскольку flex-shrink равен 0, картинка при сужении экрана не будет уменьшаться по высоте, 
-       а сразу чисто перенесется вниз. Левые края блоков станут идеально ровными! */
-    flex: 0 0 calc(50% - 8px) !important; 
-    max-width: calc(50% - 8px) !important;
+    /* НА СВЯЗКЕ СВОЙСТВ НИЖЕ СЕТКА СТАНЕТ ИДЕАЛЬНОЙ:
+       1. Блок занимает ровно столько места, сколько весит сама картинка.
+       2. Запрещаем карточке сжиматься или раздуваться из-за текста. */
+    width: min-content !important;      
+    max-width: 100% !important;         
+    flex: 0 0 auto !important;          
 }
 
 /* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
-    height: auto !important;            
-    max-height: 209px !important;       /* Ограничение не более 209px */
+    height: 209px !important;           /* Возвращаем ЖЕСТКУЮ высоту, как в обычной галерее */
     width: auto !important;             /* Авто-ширина по пропорциям кадра */
     max-width: 100% !important;         
-    aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для идеального выравнивания сетки */
+    aspect-ratio: 16 / 9 !important;    /* Удерживаем ровный формат */
+    object-fit: contain !important;     /* Ваш лучший вариант отображения */
     background-color: #f0f0f0 !important;
-    flex-shrink: 0 !important;          /* Запрет сжатия самой картинки */
-    
-    /* ВАШЕ ИСПРАВЛЕНИЕ: Картинки аккуратно вписываются, сохраняя свои пропорции */
-    object-fit: contain !important;     
+    flex-shrink: 0 !important;          /* Намертво запрещаем картинке ужиматься при ресайзе */
 }
 
 /* ------------------------------------------------------------
    2.C ОБЩИЕ СТИЛИ ПОДПИСИ К ЦЕНТРИРОВАННЫМ КАРТИНКАМ
    ------------------------------------------------------------ */
 .main-content figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;      /* Железно держим центровку текста подписи */
-    width: 100% !important;             /* Занимает всю доступную ширину карточки */
-    word-break: break-word !important;  /* Перенос длинных слов */
+    text-align: center !important;      
+    width: 100% !important;             /* Текст заперт строго в границах картинки */
+    word-break: break-word !important;  
     box-sizing: border-box !important;
-    padding: 0 5px !important;          /* Небольшие аккуратные отступы текста по бокам */
+    padding: 0 5px !important;          
+    margin-top: 0.375rem !important;    /* Масштабируемый зазор 6px в rem, который мы обсуждали */
 }
+
 
 
 /* ============================================================

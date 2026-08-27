@@ -91,6 +91,7 @@
     margin: 0 !important;               
     width: max-content !important;      /* Длинная подпись не сможет растолкать и сломать ряд */
     max-width: calc(50% - 8px) !important; /* Строго половина ряда на ПК для двух колонок */
+    flex-shrink: 0 !important;
 }
 
 /* Картинки внутри галерейного ряда */
@@ -102,6 +103,7 @@
     aspect-ratio: 16 / 9 !important;    /* ЖЕСТКИЕ 16:9 для идеального выравнивания сетки и переноса */
     object-fit: unset !important;       
     background-color: #f0f0f0 !important;
+    flex-shrink: 0 !important;
 }
 
 /* ------------------------------------------------------------

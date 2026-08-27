@@ -542,7 +542,7 @@ figcaption {
     .content-wrapper { 
         width: 100% !important; 
         max-width: 800px !important;
-        padding: 15px 12px !important; /* Жестко заданный зазор 12px по бокам */
+        padding: 15px 20px !important; /* Жестко заданный зазор 12px по бокам */
         border-radius: 0 !important;
         margin: 0px !important;
     }

@@ -16,7 +16,7 @@ parent_url: "/biblio/"
 В 1977 году вышла его первая книга — *«Путешествие в страну роботов»*. Затем появились рассказы об авиации — *«Наши крылья»*, книга о космических конструкторах — *«А все-таки полетим!»*, о изобретателях прошлого — *«На пользу и славу Отечества»*, о первых ученых — *«Творцы наук российских»* и многие другие. Геннадий Черненко — автор около двух тысяч журнальных публикаций и [более тридцати книг](https://deti.spb.ru/writers_rus/cher_gt/list).
 
 ![320x405](img/chernenko-g-t-nashi-krylya-1979.webp)
-![320x405](img/chernenko-g-t-a-vse-taki-poletim-1984.webp)
+![420x405](img/chernenko-g-t-a-vse-taki-poletim-1984.webp)
 ![320x405](img/chernenko-g-t-chto-umeyut-mashiny-rasskazy-ob-avtomatike-1986.webp)
 ![320x405](img/chernenko-g-t-kak-chelovek-poletel-v-kosmos-1987.webp)
 ![320x405](img/chernenko-g-t-na-polzu-i-slavu-otechestva-1988.webp)

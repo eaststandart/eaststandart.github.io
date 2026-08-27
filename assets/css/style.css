@@ -544,20 +544,16 @@ figcaption {
         margin: 5px 0 10px 0 !important; 
     }
     
-    /* Унификация отступов карточки: перевод в резиновый full-width режим */
+    /* Убираем углы и маргины для ВСЕХ устройств ниже 900px) */
     .content-wrapper { 
         width: 100% !important; 
-        padding: 10px 12px !important; /* Жестко заданный зазор 12px по бокам */
+        padding: 10px 12px !important; /* Зазор 12px по бокам внутри карточки */
+        border-radius: 0 !important;   /* Углы гарантированно острые на планшетах и мобилках */
+        margin: 0px !important;        /* Карточка намертво прижимается к краям экрана */
     }
 
     /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {
-
-    /* Убираем закругления */
-    .content-wrapper { 
-        border-radius: 0 !important;
-        margin: 0px !important;
-    }
 
         /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */
         .main-content p:has(img) {
@@ -582,11 +578,6 @@ figcaption {
 
 /* --- Б. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-
-    .content-wrapper {
-        border-radius: 0 !important; 
-        margin: 0px !important;
-    }
 
     /* Компактная фиксированная высота изображений для экономии высоты экрана */
     .main-content p img:not(.content-img) {

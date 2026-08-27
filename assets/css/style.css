@@ -548,7 +548,6 @@ figcaption {
     .content-wrapper { 
         width: 100% !important; 
         padding: 10px 12px !important; /* Жестко заданный зазор 12px по бокам */
-        margin: 0px !important;
     }
 
     /* Вертикальный режим отображения смартфонов (Portrait) */
@@ -557,6 +556,7 @@ figcaption {
     /* Убираем закругления */
     .content-wrapper { 
         border-radius: 0 !important;
+        margin: 0px !important;
     }
 
         /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */

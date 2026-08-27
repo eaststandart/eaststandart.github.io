@@ -90,11 +90,12 @@
     align-items: center !important;
     justify-content: center !important;
     margin: 0 !important;               
-    flex-shrink: 0 !important;          /* Запрет сжатия карточки */
+    flex-shrink: 0 !important;          /* Запрещаем карточке сжиматься */
     
-    /* ИСПРАВЛЕНИЕ: Никаких жестких пикселей и min-content! 
-       Карточка свободно растягивается по нативной ширине картинки 16:9. */
-    width: auto !important;      
+    /* 🛠️ ВОТ КРИТИЧЕСКИЙ ШАГ ДЛЯ ПОДПИСИ: */
+    /* Говорим карточке: "Твоя ширина равна ровно ширине картинки 16:9!" 
+       Длинный текст подписи больше не сможет растянуть этот блок. */
+    width: max-content !important;      
     max-width: 100% !important;         
 }
 

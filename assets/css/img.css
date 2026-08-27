@@ -200,7 +200,6 @@
         max-height: 163px !important; /* Мобильный потолок высоты кадра */
         width: 100% !important;        /* Растягиваем вширь на 289px, уничтожая серые поля */
         object-fit: contain !important;     
-        aspect-ratio: auto !important;
     }
 
     /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape (остаются как были) */
@@ -225,7 +224,7 @@
     }
 
     .main-content .figure-center-row img.img-center {
-        aspect-ratio: 16 / 9 !important;
+        aspect-ratio: auto !important;
     }
 
 }

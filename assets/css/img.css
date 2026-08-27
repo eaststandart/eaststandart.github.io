@@ -2,7 +2,7 @@
 @about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
 @purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
          управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
-@version 21.0.0
+@version 20.0.0
 */
 
 /* ============================================================
@@ -115,47 +115,35 @@
 }
 
 /* ============================================================
-   4. МОБИЛЬНАЯ АДАПТАЦИЯ (Пошаговое умное сжатие)
+   4. МОБИЛЬНАЯ АДАПТАЦИЯ (Медиа-запросы)
    ============================================================ */
 
-/* ------------------------------------------------------------
-   СТУПЕНЬ 1: При сужении окна браузера (до 900px)
-   Включаем центровку ряда. Картинки удерживают ПК-размеры 
-   и монолитно падают в красивый центрированный столбик.
-   ------------------------------------------------------------ */
-@media (max-width: 900px) {
+/* 4.1 На смартфонах вертикально (до 900px) */
+@media (max-width: 900px) and (orientation: portrait) {
+    
     /* Переключаем галерейный ряд на мобильную центровку */
     .main-content .figure-center-row {
-        justify-content: flex-start !important;
+        justify-content: center !important;
     }
-}
 
-/* ------------------------------------------------------------
-   СТУПЕНЬ 2: На экранах смартфонов (до 500px)
-   Полностью сбрасываем лимиты высоты и переводим в резиновый 
-   режим на 100% ширины экрана телефона.
-   ------------------------------------------------------------ */
-@media (max-width: 500px) {
-    /* Сбрасываем ПК-высоту и лимиты для абсолютно ВСЕХ картинок */
+    /* Сбрасываем ПК-высоту и лимиты для картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
-        max-height: none !important;   /* Отключаем лимит 209px на смартфонах */
-        width: 100% !important;        /* Растягиваем на всю ширину экрана смартфона */
+        max-height: none !important;   
+        width: 100% !important;        
     }
     
-    /* Стандартные галерейные картинки удерживают пропорции 16:9 */
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
         aspect-ratio: 16 / 9 !important;
     }
     
-    /* Вертикальные картинки на смартфонах удерживают пропорции 9:16 */
     .main-content p img.img-v {
         aspect-ratio: 9 / 16 !important;
     }
     
-    /* Мобильные пропорции: одиночные в auto, галереи держат 16:9 */
+    /* Пропорции на смартфонах */
     .main-content p img.img-custom,
     .main-content p img.img-center,
     .main-content .figure-center-single img.img-center {
@@ -165,21 +153,15 @@
         aspect-ratio: 16 / 9 !important;
     }
     
-    /* На мобильных заставляем любые карточки figure вставать на 100% ширины экрана */
+    /* Карточки figure встают во всю ширину мобильного экрана */
     .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
         width: 100% !important;
         max-width: 100% !important;
     }
-    
-    /* Снимаем ПК-ограничение ширины подписи под экраны телефонов */
-    .main-content figure.figure-center figcaption.figcaption-center {
-        max-width: 100% !important;
-        width: 100% !important;
-    }
 }
 
-/* 4.3 На смартфонах горизонтально (ландшафтный режим) */
+/* 4.2 На смартфонах горизонтально */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,

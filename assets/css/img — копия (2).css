@@ -173,23 +173,9 @@
 /* 4.2 На смартфонах горизонтально */
 @media (max-height: 500px) and (orientation: landscape) {
 
-    /* Сетка теперь не раздувается, а зазоры между колонками всегда ровно 15px */
     .main-content .figure-center-row {
-        display: grid !important;
-        grid-template-columns: repeat(2, max-content) !important;
+        grid-template-columns: repeat(2, minmax(150px, 1fr)) !important;
         justify-content: center !important;
-        align-items: start !important;
-        gap: 15px !important;
-    }
-
-    /* Задаём лимиты для картинок, чтобы широкие кадры не вылезали за рамки */
-    .main-content p img:not(.content-img),
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
-        height: 163px !important;
-        width: auto !important;
-        max-width: 289px !important; /* Наш жесткий ограничитель для горизонтальных 16:9 (163 * 16 / 9) */
-        object-fit: contain !important;
     }
 
     .main-content p img:not(.content-img),

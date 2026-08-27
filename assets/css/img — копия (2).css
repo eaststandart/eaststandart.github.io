@@ -140,8 +140,7 @@
 
 /* 2.1 На смартфонах вертикально (до 900px): переводим картинки в адаптивный режим */
 @media (max-width: 900px) and (orientation: portrait) {
-    
-    /* Возвращаем мобильную центровку для всего галерейного ряда */
+
     .main-content .figure-center-row {
         justify-content: center !important;
     }
@@ -176,11 +175,10 @@
         aspect-ratio: 16 / 9 !important;
     }
     
-    /* ИСПРАВЛЕНИЕ ТУТ: На мобильных заставляем любые карточки figure вставать на 100% ширины экрана,
-       полностью сбрасывая ПК-свойства флекс-базиса */
+    /* На мобильных заставляем любые карточки figure вставать на 100% ширины экрана */
     .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
-        width: 100% !important;
+        width: auto !important;
         max-width: 100% !important;
     }
 }
@@ -210,4 +208,3 @@
         aspect-ratio: auto !important;
     }
 }
-

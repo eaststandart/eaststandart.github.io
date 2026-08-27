@@ -76,8 +76,12 @@
     display: flex !important;
     flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку */
     gap: 15px !important;               /* Точный зазор вашей темы */
-    align-items: flex-start !important; /* Выравнивание по верхнему краю */
-    justify-content: center !important; /* ГЛАВНОЕ: держит галерею строго по центру страницы */
+    align-items: flex-start !important; /* Выравнивание по верхнему краю элементов */
+    
+    /* ИСПРАВЛЕНИЕ ЦЕНТРОВКИ: Выравниваем элементы по ЛЕВОМУ краю ряда.
+       Теперь 2 картинки встанут ровно, а третья аккуратно ляжет под первую, а не по центру. */
+    justify-content: flex-start !important; 
+    
     width: 100% !important;
     margin: 1em 0 !important;           
 }
@@ -91,23 +95,25 @@
     margin: 0 !important;               
     flex-shrink: 0 !important;          /* Запрет сжатия карточки */
     
-    /* ЖЕСТКАЯ ШИРИНА НА ПК: Задает идеальный размер под формат 16:9 при высоте 209px.
-       Полностью ликвидирует баг схлопывания картинок в столбики. 
-       Длинная подпись теперь гарантированно переносится строго по границам кадра. */
-    width: 371px !important;      
-    max-width: 100% !important;         
+    /* АВТОМАТИЧЕСКИЙ РАСЧЕТ ШИРИНЫ (Без жестких 371px):
+       max-width зажимает карточку ровно на половину текстового контента, 
+       не давая длинной подписи растянуть блок и развалить ряд. */
+    width: max-content !important;      
+    max-width: calc(50% - 8px) !important; 
 }
 
 /* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
     height: auto !important;            
     max-height: 209px !important;       /* Ограничение не более 209px */
-    width: 100% !important;             /* Растягиваем картинку ровно на всю ширину карточки (371px) */
+    width: auto !important;             /* Авто-ширина по пропорциям кадра */
     max-width: 100% !important;         
     aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для идеального выравнивания сетки */
-    object-fit: contain !important;       
     background-color: #f0f0f0 !important;
     flex-shrink: 0 !important;          /* Запрет сжатия самой картинки */
+    
+    /* ВАШЕ ИСПРАВЛЕНИЕ: Картинки аккуратно вписываются, сохраняя свои пропорции */
+    object-fit: contain !important;     
 }
 
 /* ------------------------------------------------------------
@@ -115,7 +121,7 @@
    ------------------------------------------------------------ */
 .main-content figure.figure-center figcaption.figcaption-center {
     text-align: center !important;      /* Железно держим центровку текста подписи */
-    width: 100% !important;             /* Занимает всю ширину карточки */
+    width: 100% !important;             /* Занимает всю доступную ширину карточки */
     word-break: break-word !important;  /* Перенос длинных слов */
     box-sizing: border-box !important;
     padding: 0 5px !important;          /* Небольшие аккуратные отступы текста по бокам */

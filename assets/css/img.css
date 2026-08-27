@@ -165,7 +165,7 @@
     .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
         width: 100% !important;
-
+        max-width: 100% !important;
     }
 }
 

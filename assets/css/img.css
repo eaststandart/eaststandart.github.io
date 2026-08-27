@@ -169,6 +169,11 @@
 
 /* 4.2 На смартфонах горизонтально */
 @media (max-height: 500px) and (orientation: landscape) {
+
+    .main-content .figure-center-row {
+        grid-template-columns: 1fr !important;
+        justify-content: center !important;
+
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {

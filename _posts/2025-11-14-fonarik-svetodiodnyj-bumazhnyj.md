@@ -50,10 +50,10 @@ discus: "questions"
 ![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇

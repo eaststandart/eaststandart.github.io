@@ -585,6 +585,7 @@ figcaption {
 
     .content-wrapper {
         border-radius: 0 !important; 
+        margin: 0px !important;
     }
 
     /* Компактная фиксированная высота изображений для экономии высоты экрана */

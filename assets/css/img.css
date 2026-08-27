@@ -61,42 +61,30 @@
    2.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
    ------------------------------------------------------------ */
 
-/* Уровень 1: Внешний контейнер. Отвечает СТРОГО за центровку всего блока на странице */
+/* МИРОВОЙ СТАНДАРТ: Автоматическая журнальная сетка Grid */
 .main-content .figure-center-row {
-    display: flex !important;
-    justify-content: center !important; /* Ряд и будущий столбик ВСЕГДА железно по центру статьи */
+    display: grid !important;
+    
+    /* 🛠️ МАГИЯ ГРИДОВ: 
+       Браузер сам создаёт колонки шириной ровно по размеру картинки (371px).
+       Если места на ПК много — они встают по 2 в ряд, а третья картинка ГАРАНТИРОВАННО 
+       встает слева под первую! Но сам этот блок грида всегда ЖЕЛЕЗНО ЦЕНТРИРУЕТСЯ по статье. */
+    grid-template-columns: repeat(auto-fit, 371px) !important;
+    justify-content: center !important; /* Центрирует саму сетку на странице */
+    
+    gap: 15px !important;               /* Фирменный зазор вашей темы во все стороны */
     width: 100% !important;
     margin: 1em 0 !important;           
 }
 
-/* Уровень 2: Внутренний контейнер. Ужимается по размеру контента, но держит левую журнальную сетку! */
-.main-content .figure-center-row .figure-row-inner {
-    /* Табличный режим заставляет блок рассчитывать ширину строго по картинкам,
-       полностью избавляя нас от багов с inline-flex и жестких пикселей max-width */
-    display: table !important;          
-    width: auto !important;      
-    max-width: 100% !important;         
-}
-
-/* Внутри таблицы элементы figure должны вести себя как блоки в ряд с gap */
-.main-content .figure-center-row .figure-row-inner figure.figure-center {
-    display: inline-flex !important;
+/* Карточка figure внутри галерейного ряда */
+.main-content .figure-center-row figure.figure-center {
+    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    
-    /* Фирменный горизонтальный зазор между картинками вашей темы */
-    margin-right: 15px !important;       
-    margin-bottom: 15px !important;     /* Отступ вниз при переносе на новую строку */
-    
-    vertical-align: top !important;
-    width: auto !important;      
-    max-width: 100% !important;         
-}
-
-/* Находим самую последнюю картинку в ряду и убираем у нее правый маргин, чтобы не двигал центр */
-.main-content .figure-center-row .figure-row-inner figure.figure-center:last-child {
-    margin-right: 0 !important;
+    margin: 0 !important;               
+    width: 100% !important;             /* Занимает всю выделенную ячейку в 371px */
 }
 
 /* Картинки внутри галерейного ряда */
@@ -108,7 +96,6 @@
     object-fit: contain !important;     
     background-color: #f0f0f0 !important;
 }
-
 
 /* ------------------------------------------------------------
    2.C ОБЩИЕ СТИЛИ ПОДПИСИ К КАРТИНКАМ

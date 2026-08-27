@@ -92,7 +92,7 @@
 /* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
     height: auto !important;           /* Жесткая ПК-высота ряда */
-    max-height: 209px
+    max-height: 209px  !important;
     width: 100% !important;                     
     aspect-ratio: auto !important;    /* Жесткие 16:9 для ровной сетки */
     object-fit: contain !important;     

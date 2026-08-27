@@ -359,14 +359,20 @@ p:has(img) + blockquote,
     object-fit: contain; 
     border-radius: 8px;
     margin: 0 !important;
-    cursor: zoom-in;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Параметры картинок в ряду и в блоках figure (курсор-лупа и плавность) */
+.main-content p img:not(.content-img),
+.main-content .figure-center img.img-center {
+    cursor: zoom-in !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     position: relative;
     z-index: 1;
 }
 
 /* Интерактивный зум изображения при удержании клика мышкой (работает без JS) */
-.main-content p img:not(.content-img):active {
+.main-content p img:not(.content-img):active,
+.main-content .figure-center img.img-center:active {
     transform: scale(2.0); 
     z-index: 999;          
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);

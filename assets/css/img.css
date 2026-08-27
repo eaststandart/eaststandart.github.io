@@ -72,7 +72,7 @@
     grid-template-columns: repeat(auto-fit, 371px) !important;
     justify-content: center !important; /* Центрирует саму сетку на странице */
 
-
+align-items: start !important;
     
     gap: 15px !important;               /* Фирменный зазор вашей темы во все стороны */
     width: 100% !important;
@@ -139,7 +139,8 @@
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
         max-height: none !important;   
-        width: 100% !important;        
+        width: 100% !important;
+        max-width: 100% !important;        
     }
     
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {

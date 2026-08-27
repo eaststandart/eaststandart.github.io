@@ -210,10 +210,15 @@
     .main-content p img.img-v { 
         aspect-ratio: 9 / 16 !important; 
     }
+
     .main-content p img.img-custom,
     .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center,
     .main-content p img.img-center {
         aspect-ratio: auto !important;
     }
+
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: 16 / 9 !important;
+    }
+
 }

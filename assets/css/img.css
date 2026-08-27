@@ -75,7 +75,6 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 auto !important;
     margin: 0 !important;               
     flex-shrink: 0 !important;          
     width: auto !important;      
@@ -116,35 +115,48 @@
 }
 
 /* ============================================================
-   4. МОБИЛЬНАЯ АДАПТАЦИЯ (Медиа-запросы)
+   4. МОБИЛЬНАЯ АДАПТАЦИЯ (Пошаговое умное сжатие)
    ============================================================ */
 
-/* 4.1 На смартфонах вертикально (до 900px) */
+/* ------------------------------------------------------------
+   СТУПЕНЬ 1: Промежуточный режим на ПК при сужении окна (от 900px)
+   Включаем только центровку ряда. Картинки удерживают свои ПК-размеры, 
+   НЕ растягиваются на 100%, а просто аккуратно падают друг под друга 
+   в один красивый столбик строго по центру страницы!
+   ------------------------------------------------------------ */
 @media (max-width: 900px) {
-    
     /* Переключаем галерейный ряд на мобильную центровку */
     .main-content .figure-center-row {
         justify-content: center !important;
     }
+}
 
-    /* Сбрасываем ПК-высоту и лимиты для картинок */
+/* ------------------------------------------------------------
+   СТУПЕНЬ 2: Чистокровный мобильный режим для смартфонов (от 500px)
+   Вот теперь, когда экран телефона уже уже, чем сама картинка, 
+   мы отключаем фиксированную высоту и растягиваем фото на 100% ширины.
+   ------------------------------------------------------------ */
+@media (max-width: 500px) {
+    /* Сбрасываем ПК-высоту и лимиты для абсолютно ВСЕХ картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
-        max-height: none !important;   
-        width: 100% !important;        
+        max-height: none !important;   /* Отключаем лимит 209px на смартфонах */
+        width: 100% !important;        /* Растягиваем на всю ширину экрана смартфона */
     }
     
+    /* Стандартные галерейные картинки удерживают пропорции 16:9 */
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
         aspect-ratio: 16 / 9 !important;
     }
     
+    /* Вертикальные картинки на смартфонах удерживают пропорции 9:16 */
     .main-content p img.img-v {
         aspect-ratio: 9 / 16 !important;
     }
     
-    /* Пропорции на смартфонах */
+    /* Мобильные пропорции: одиночные в auto, галереи держат 16:9 */
     .main-content p img.img-custom,
     .main-content p img.img-center,
     .main-content .figure-center-single img.img-center {
@@ -160,26 +172,11 @@
         width: 100% !important;
         max-width: 100% !important;
     }
+    
+    /* Снимаем ПК-ограничение ширины подписи под экраны телефонов */
+    .main-content figure.figure-center figcaption.figcaption-center {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
 }
 
-/* 4.2 На смартфонах горизонтально */
-@media (max-height: 500px) and (orientation: landscape) {
-    .main-content p img:not(.content-img),
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
-        height: 163px !important;
-        width: auto !important;
-    }
-    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
-        aspect-ratio: 16 / 9 !important; 
-    }
-    .main-content p img.img-v { 
-        aspect-ratio: 9 / 16 !important; 
-    }
-    .main-content p img.img-custom,
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center,
-    .main-content p img.img-center {
-        aspect-ratio: auto !important;
-    }
-}

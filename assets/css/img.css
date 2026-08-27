@@ -140,13 +140,17 @@
 
 /* 2.1 На смартфонах вертикально (до 900px): переводим картинки в адаптивный режим */
 @media (max-width: 900px) and (orientation: portrait) {
+
+    .main-content .figure-center-row {
+        justify-content: center !important;
+    }
+
     /* Сбрасываем жесткую высоту и лимиты для абсолютно ВСЕХ картинок на мобильных */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
         max-height: none !important;   /* Отключаем лимит 209px на смартфонах */
-        width: auto !important;
         width: 100% !important;        /* Растягиваем на всю ширину экрана */
     }
     

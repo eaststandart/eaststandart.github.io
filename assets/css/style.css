@@ -580,6 +580,15 @@ figcaption {
     }
 }
 
+    /* Горизонтальный режим отображения смартфонов (Portrait) */
+    @media (orientation: landscape) {
+    /* Убираем закругления */
+    .content-wrapper { 
+        border-radius: 0 !important;
+        margin: 0px !important;
+    }
+
+
 /* --- Б. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     /* Компактная фиксированная высота изображений для экономии высоты экрана */

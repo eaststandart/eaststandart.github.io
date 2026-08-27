@@ -176,13 +176,10 @@
     /* Сетка теперь не раздувается, а зазоры между колонками всегда ровно 15px */
     .main-content .figure-center-row {
         display: grid !important;
-        
-        /* Изменяем repeat(2) на auto-fit с гибким диапазоном от ширины узкой схемы до ширины кадра 16:9 */
-        grid-template-columns: repeat(auto-fit, minmax(150px, max-content)) !important;
-        
-        justify-content: center !important; /* Центрирует всю сетку и одиночные нижние элементы */
+        grid-template-columns: repeat(2, max-content) !important;
+        justify-content: center !important;
         align-items: start !important;
-        gap: 15px !important;
+        gap: 15px !important; /* Настоящий фиксированный зазор */
     }
 
     /* Заставляем карточку сжиматься ровно по границам самой картинки */

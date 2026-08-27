@@ -190,9 +190,15 @@
 
     /* Ограничения для картинок */
     .main-content p img:not(.content-img),
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
+    .main-content .figure-center-single img.img-center {
         height: 163px !important;
+        width: auto !important;
+        max-width: 289px !important; 
+        object-fit: contain !important;
+    }
+
+    /* Ограничения для картинок */
+    .main-content .figure-center-row img.img-center {
         width: auto !important;
         max-width: 289px !important; 
         object-fit: contain !important;

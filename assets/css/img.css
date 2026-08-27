@@ -71,6 +71,8 @@
        встает слева под первую! Но сам этот блок грида всегда ЖЕЛЕЗНО ЦЕНТРИРУЕТСЯ по статье. */
     grid-template-columns: repeat(auto-fit, 371px) !important;
     justify-content: center !important; /* Центрирует саму сетку на странице */
+
+align-items: start !important; 
     
     gap: 15px !important;               /* Фирменный зазор вашей темы во все стороны */
     width: 100% !important;

@@ -173,41 +173,35 @@
 /* 4.2 На смартфонах горизонтально */
 @media (max-height: 500px) and (orientation: landscape) {
 
-    /* ИСПРАВЛЕНО: Полная копия ПК-логики 2.B, но с шириной ячейки 289px */
+    /* Сетка теперь не раздувается, а зазоры между колонками всегда ровно 15px */
     .main-content .figure-center-row {
         display: grid !important;
-        grid-template-columns: repeat(auto-fit, 289px) !important;
-        justify-content: center !important; 
-        align-items: start !important;      
-        gap: 15px !important;               
-        width: 100% !important;
-        margin: 1em 0 !important; /* Родные отступы: 1em сверху/снизу, 0 по бокам, как на ПК */          
-    }
-
-    /* Карточка figure внутри галерейного ряда (Копия ПК-версии) */
-    .main-content .figure-center-row figure.figure-center {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
+        grid-template-columns: repeat(2, max-content) !important;
         justify-content: center !important;
-        margin: 0 !important;               
-        width: 100% !important; /* Занимает всю мобильную ячейку в 289px */
+        align-items: start !important;
+        gap: 15px !important; /* Настоящий фиксированный зазор */
     }
 
-    /* ИСПРАВЛЕНО: Полная копия ПК-логики для картинок, но с высотой 163px */
-    .main-content .figure-center-row img.img-center {
-        height: auto !important;           
-        max-height: 163px !important; /* Мобильный потолок высоты кадра */
-        width: 100% !important;        /* Растягиваем вширь на 289px, уничтожая серые поля */
-        object-fit: contain !important;     
+    /* Заставляем карточку сжиматься ровно по границам самой картинки */
+    .main-content .figure-center-row figure.figure-center {
+        width: max-content !important;
+        max-width: 289px !important;
     }
 
-    /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape (остаются как были) */
+    /* Ограничения для картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center {
-        height: 163px !important;
+        height: auto !important;       
+        max-height: 209px !important;   
         width: auto !important;
         max-width: 100% !important;
+    }
+
+    /* Ограничения для картинок */
+    .main-content .figure-center-row img.img-center {
+        width: auto !important;
+        max-width: 289px !important; 
+        object-fit: contain !important;
     }
 
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 

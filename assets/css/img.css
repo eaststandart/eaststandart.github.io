@@ -2,7 +2,7 @@
 @about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
 @purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
          управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
-@version 19.0.0
+@version 18.0.0
 */
 
 /* ============================================================
@@ -74,8 +74,8 @@
 /* Общий флекс-ряд для галереи центрированных картинок */
 .main-content .figure-center-row {
     display: flex !important;
-    flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку при нехватке места */
-    gap: 15px !important;               /* Точный зазор вашей темы между элементами и рядами */
+    flex-wrap: wrap !important;         /* Разрешает картинкам падать на новую строку */
+    gap: 15px !important;               /* Точный зазор вашей темы */
     align-items: flex-start !important; /* Выравнивание по верхнему краю */
     justify-content: center !important; /* ГЛАВНОЕ: держит галерею строго по центру страницы */
     width: 100% !important;
@@ -91,9 +91,10 @@
     margin: 0 !important;               
     flex-shrink: 0 !important;          /* Запрет сжатия карточки */
     
-    /* ИСПРАВЛЕНИЕ: Блок рассчитывается по минимальной ширине (по КАРТИНКЕ),
-       полностью игнорируя горизонтальную длину текста подписи! */
-    width: min-content !important;      
+    /* ЖЕСТКАЯ ШИРИНА НА ПК: Задает идеальный размер под формат 16:9 при высоте 209px.
+       Полностью ликвидирует баг схлопывания картинок в столбики. 
+       Длинная подпись теперь гарантированно переносится строго по границам кадра. */
+    width: 371px !important;      
     max-width: 100% !important;         
 }
 
@@ -101,7 +102,7 @@
 .main-content .figure-center-row img.img-center {
     height: auto !important;            
     max-height: 209px !important;       /* Ограничение не более 209px */
-    width: auto !important;             
+    width: 100% !important;             /* Растягиваем картинку ровно на всю ширину карточки (371px) */
     max-width: 100% !important;         
     aspect-ratio: 16 / 9 !important;    /* Жесткие 16:9 для идеального выравнивания сетки */
     object-fit: unset !important;       
@@ -113,13 +114,11 @@
    2.C ОБЩИЕ СТИЛИ ПОДПИСИ К ЦЕНТРИРОВАННЫМ КАРТИНКАМ
    ------------------------------------------------------------ */
 .main-content figure.figure-center figcaption.figcaption-center {
-    text-align: center !important;      /* Железно держит центровку текста подписи */
-    
-    /* ИСПРАВЛЕНИЕ БАГА РАСПИРАНИЯ: 
-       Текст подписи жестко принимает ширину картинки над ним (100%) 
-       и аккуратно переносится по словам, не раздувая figure наружу. */
-    width: 100% !important;
-    word-break: break-word !important;  /* Защита от слишком длинных слов */
+    text-align: center !important;      /* Железно держим центровку текста подписи */
+    width: 100% !important;             /* Занимает всю ширину карточки */
+    word-break: break-word !important;  /* Перенос длинных слов */
+    box-sizing: border-box !important;
+    padding: 0 5px !important;          /* Небольшие аккуратные отступы текста по бокам */
 }
 
 
@@ -147,6 +146,7 @@
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
         max-height: none !important;   /* Отключаем лимит 209px на смартфонах */
+        width: auto !important;
         width: 100% !important;        /* Растягиваем на всю ширину экрана */
     }
     

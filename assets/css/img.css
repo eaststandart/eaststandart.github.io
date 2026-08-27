@@ -71,12 +71,17 @@
 
 /* Уровень 2: Внутренний контейнер. Ужимается по размеру контента, но держит левую журнальную сетку! */
 .main-content .figure-center-row .figure-row-inner {
-    display: flex !important;
+    /* ЗАМЕНЯЕМ display: flex на display: inline-flex! 
+       Это заставит блок сбросить флекс-растяжение родителя 
+       и сжаться строго под нативную ширину стоящих в ряд картинок! */
+    display: inline-flex !important;
     flex-wrap: wrap !important;         /* Разрешает перенос без сжатия высоты */
     gap: 15px !important;               /* Точный зазор вашей темы */
     align-items: flex-start !important; 
     justify-content: flex-start !important; /* Картинки внутри блока строятся строго СЛЕВА */
-    width: max-content !important;      /* Авто-схлопывание до 371px, когда картинки упали в столбик */
+    
+    /* Дополнительная страховка сжатия бокса */
+    width: fit-content !important;      
     max-width: 100% !important;         
 }
 

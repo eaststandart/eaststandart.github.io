@@ -47,7 +47,7 @@ discus: "questions"
 
 ![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)

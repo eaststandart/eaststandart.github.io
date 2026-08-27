@@ -581,7 +581,7 @@ figcaption {
 }
 
     /* Горизонтальный режим отображения смартфонов (Portrait) */
-    @media (orientation: landscape) {
+    @media (max-width: 900px) and (orientation: landscape) {
     /* Убираем закругления */
     .content-wrapper { 
         border-radius: 0 !important;

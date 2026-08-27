@@ -199,6 +199,7 @@
 
     /* Ограничения для картинок */
     .main-content .figure-center-row img.img-center {
+        height: 163px !important;
         width: auto !important;
         max-width: 289px !important; 
         object-fit: contain !important;

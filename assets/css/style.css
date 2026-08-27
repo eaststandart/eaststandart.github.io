@@ -582,6 +582,11 @@ figcaption {
 
 /* --- Б. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
+
+    .content-wrapper {
+        border-radius: 0 !important; 
+    }
+
     /* Компактная фиксированная высота изображений для экономии высоты экрана */
     .main-content p img:not(.content-img) {
         height: 163px !important;

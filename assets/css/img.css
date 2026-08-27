@@ -194,12 +194,13 @@
         width: 100% !important; /* Занимает всю мобильную ячейку в 289px */
     }
 
-    /* ИСПРАВЛЕНО: Полная копия ПК-логики для картинок, но с высотой 163px */
+    /* Полная копия ПК-логики для картинок, но с высотой 163px */
     .main-content .figure-center-row img.img-center {
         height: auto !important;           
         max-height: 163px !important; /* Мобильный потолок высоты кадра */
         width: 100% !important;        /* Растягиваем вширь на 289px, уничтожая серые поля */
         object-fit: contain !important;     
+        aspect-ratio: auto !important;
     }
 
     /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape (остаются как были) */

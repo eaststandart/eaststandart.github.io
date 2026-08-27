@@ -165,7 +165,7 @@
     .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
         width: 100% !important;
-        max-width: 100% !important;
+
     }
 }
 
@@ -182,7 +182,7 @@
     .main-content .figure-center-row img.img-center {
         height: 163px !important;
         width: auto !important;
-
+        max-width: 100%
     }
     .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
         aspect-ratio: 16 / 9 !important; 

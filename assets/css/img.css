@@ -126,12 +126,12 @@
 
 /* 4.1 На смартфонах вертикально (до 900px) */
 @media (max-width: 900px) and (orientation: portrait) {
-    
-    /* Переключаем галерейный ряд на мобильную центровку */
+
     .main-content .figure-center-row {
+        grid-template-columns: 1fr !important;
         justify-content: center !important;
     }
-
+    
     /* Сбрасываем ПК-высоту и лимиты для картинок */
     .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,

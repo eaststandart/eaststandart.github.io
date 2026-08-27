@@ -25,9 +25,6 @@ parent_url: "/biblio/"
 ![320x405](img/chernenko-g-t-prostaya-avtomatika-1989.webp)
 ![320x405](img/chernenko-g-t-zvezdy-planety-teleskopy-1991.webp)
 
-![320x605](img/chernenko-g-t-prostaya-avtomatika-1989.webp)
-![320x605](img/chernenko-g-t-zvezdy-planety-teleskopy-1991.webp)
-
 Книги в [электронном виде](http://publ.lib.ru/ARCHIVES/CH/CHERNENKO_Gennadiy_Trofimovich/_Chernenko_G.T..html); для чтения детьми предпочтителен бумажный вариант.
 
 **Смотри также:** [материалы для самостоятельного изучения.](materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.html)

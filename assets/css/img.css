@@ -126,7 +126,7 @@
 @media (max-width: 900px) {
     /* Переключаем галерейный ряд на мобильную центровку */
     .main-content .figure-center-row {
-        justify-content: center !important;
+        justify-content: flex-start !important;
     }
 }
 

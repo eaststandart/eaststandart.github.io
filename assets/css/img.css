@@ -75,6 +75,7 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    margin: 0 auto !important;
     margin: 0 !important;               
     flex-shrink: 0 !important;          
     width: auto !important;      

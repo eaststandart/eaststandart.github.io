@@ -52,6 +52,8 @@ discus: "questions"
 
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)
+![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)
 ![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇

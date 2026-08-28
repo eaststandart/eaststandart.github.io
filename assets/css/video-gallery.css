@@ -74,7 +74,6 @@
     .main-content .video-row {
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        /* gap: 10px !important; */
     }
     
     .main-content .video-row video {

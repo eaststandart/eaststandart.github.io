@@ -22,8 +22,8 @@ discus: "questions"
 
 Нарисуй графитовым карандашом дорожку или линию произвольной формы и сыграй на ней свою мелодию!
 
-![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
-![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
+![Звуки графитовой линии](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
+![Звуки графитовой линии](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
 
 > 🧠 Подумай и **напиши в комментариях** 👇, как это можно применить для исследования физических свойств и измерения параметров окружающих материалов или использовать в новых видах устройств, где регулятор громкости можно нарисовать на любой поверхности!
 
@@ -31,7 +31,7 @@ discus: "questions"
 
 Извлеки мелодию из струи воды. Пробуй использовать различные материалы и вещества для проигрывания своей мелодии!
 
-![video](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-07.webm)
+![Мелодия из струи воды](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-07.webm)
 
 > 🧠 Подумай, какие жидкости можно исследовать устройством. Изучи их и сравни звуки. Найди из них самое музыкальное, а потом **поделись в комментариях** 👇 своими результатами!
 

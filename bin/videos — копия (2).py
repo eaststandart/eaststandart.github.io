@@ -5,7 +5,6 @@
 @about Модуль предобработки видео-ссылок для Obsidian -> Jekyll с поддержкой ленивой загрузки.
 @purpose Автоматически вычисляет одиночные и групповые видеоролики в Маркдауне.
          Ключевое слово для центрирования и figure изменено с 'center' на 'fig'.
-         Добавлена автоматическая генерация SEO-атрибута title для всех плееров.
 """
 
 import re
@@ -69,11 +68,8 @@ def process_markdown_videos(markdown_content):
                     
                 clean_alt = " | ".join(parts) if parts else ""
                 class_str = f' class="{" ".join(classes)}"'
-                # Формируем title, если текст описания существует
-                title_str = f' title="{clean_alt}"' if clean_alt else ''
                 
-                # Собираем плеер с атрибутом title контента
-                video_html = f'<video{class_str}{title_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
+                video_html = f'<video{class_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
                 figcaption_html = f'<figcaption class="figcaption-video">{clean_alt}</figcaption>' if clean_alt else ''
                 
                 processed_lines.append(f'<figure class="figure-video">{video_html}{figcaption_html}</figure>')
@@ -97,13 +93,9 @@ def process_markdown_videos(markdown_content):
                     if parts and re.match(r'^\d+$', parts[-1]):
                         parts.pop()
                         
-                    clean_alt = " | ".join(parts) if parts else ""
                     class_str = f' class="{" ".join(classes)}"' if classes else ''
-                    # Формируем title, если текст описания существует
-                    title_str = f' title="{clean_alt}"' if clean_alt else ''
                     
-                    # Собираем плеер с атрибутом title контента
-                    video_html = f'<video{class_str}{title_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
+                    video_html = f'<video{class_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
                     video_group.append(video_html)
                     i += 1
                     

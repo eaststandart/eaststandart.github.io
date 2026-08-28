@@ -1,0 +1,26 @@
+/* ============================================================
+   МОДУЛЬ ИЗОБРАЖЕНИЙ 1: БАЗОВЫЕ И ОДИНОЧНЫЕ КАРТИНКИ (img-base.css)
+   ============================================================ */
+
+/* Резервируем высоту 209px и включаем серую заглушку для картинок в абзацах текста */
+.main-content p img:not(.content-img) {
+    background-color: #f0f0f0 !important;
+    height: 209px !important;              
+    width: auto !important;                
+    max-width: 100% !important;            
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* Если картинка вертикальная в ряду — переключаем пропорции */
+.main-content p img.img-v {
+    aspect-ratio: 9 / 16 !important;
+}
+
+/* Картинки с произвольным размером (img-custom) */
+.main-content p img.img-custom {
+    width: auto !important;
+    border: 1px solid var(--primary-bg) !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    object-fit: unset !important;
+}

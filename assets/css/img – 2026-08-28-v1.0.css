@@ -1,0 +1,230 @@
+/*
+@about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
+@purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
+         управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
+@version Версия когда картинки в галереи принимают свои исходные размеры по высоте но не более 209px
+*/
+
+/* ============================================================
+   1. ПК-ВЕРСИЯ: ГЕОМЕТРИЧЕСКИЙ АНТИПРЫЖОК
+   ============================================================ */
+
+/* Резервируем высоту 209px и включаем серую заглушку для картинок в абзацах текста */
+.main-content p img:not(.content-img) {
+    background-color: #f0f0f0 !important;
+    height: 209px !important;              
+    width: auto !important;                
+    max-width: 100% !important;            
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* Если картинка вертикальная в ряду — переключаем пропорции */
+.main-content p img.img-v {
+    aspect-ratio: 9 / 16 !important;
+}
+
+/* ============================================================
+   ПРАВИЛО 2: ЦЕНТРИРОВАННЫЕ КАРТИНКИ (В контейнерах figure)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   2.A ВАРИАНТ ДЛЯ ОДИНОЧНОЙ КАРТИНКИ (класс figure-center-single)
+   ------------------------------------------------------------ */
+.main-content .figure-center-single {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+.main-content .figure-center-single figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    width: max-content !important;      
+    max-width: 100% !important;         
+}
+
+.main-content .figure-center-single img.img-center {
+    height: auto !important;            
+    max-height: 209px !important;       /* Ограничение не более 209px */
+    width: auto !important;             
+    max-width: 100% !important;         
+    aspect-ratio: auto !important;      /* Родные пропорции файла */
+    object-fit: unset !important;       
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   2.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
+   ------------------------------------------------------------ */
+
+/* МИРОВОЙ СТАНДАРТ: Автоматическая журнальная сетка Grid */
+.main-content .figure-center-row {
+    display: grid !important;
+    
+    /* 🛠️ МАГИЯ ГРИДОВ: 
+       Браузер сам создаёт колонки шириной ровно по размеру картинки (371px).
+       Если места на ПК много — они встают по 2 в ряд, а третья картинка ГАРАНТИРОВАННО 
+       встает слева под первую! Но сам этот блок грида всегда ЖЕЛЕЗНО ЦЕНТРИРУЕТСЯ по статье. */
+    grid-template-columns: repeat(auto-fit, 371px) !important;
+    justify-content: center !important; /* Центрирует саму сетку на странице */
+
+    align-items: start !important;      /* Выравнивает карточки строго по их ВЕРХНЕМУ краю */
+    
+    gap: 15px !important;               /* Фирменный зазор вашей темы во все стороны */
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+/* Карточка figure внутри галерейного ряда */
+.main-content .figure-center-row figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;               
+    width: 100% !important;             /* Занимает всю выделенную ячейку в 371px */
+}
+
+/* Картинки внутри галерейного ряда */
+.main-content .figure-center-row img.img-center {
+    height: auto !important;           /* Жесткая ПК-высота ряда */
+    max-height: 209px  !important;
+    width: 100% !important;                     
+    aspect-ratio: auto !important;    /* Жесткие 16:9 для ровной сетки */
+    object-fit: contain !important;     
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   2.C ОБЩИЕ СТИЛИ ПОДПИСИ К КАРТИНКАМ
+   ------------------------------------------------------------ */
+.main-content figure.figure-center figcaption.figcaption-center {
+    text-align: center !important;      
+    margin-top: 1rem !important;        /* Фирменный отступ 1rem */
+    display: block !important;
+    max-width: 371px !important;        /* Зажимаем текст под обрез кадра 16:9 */
+    width: 100% !important;
+    word-break: break-word !important;  
+}
+
+/* ============================================================
+   ПРАВИЛО 3: КАРТИНКИ С ПРОИЗВОЛЬНЫМ РАЗМОРOМ (img-custom)
+   ============================================================ */
+.main-content p img.img-custom {
+    width: auto !important;
+    border: 1px solid var(--primary-bg) !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    object-fit: unset !important;
+}
+
+/* ============================================================
+   4. МОБИЛЬНАЯ АДАПТАЦИЯ (Медиа-запросы)
+   ============================================================ */
+
+/* 4.1 На смартфонах вертикально (до 900px) */
+@media (max-width: 900px) and (orientation: portrait) {
+
+    .main-content .figure-center-row {
+        grid-template-columns: 1fr !important;
+        justify-content: center !important;
+    }
+    
+    /* Сбрасываем ПК-высоту и лимиты для картинок */
+    .main-content p img:not(.content-img),
+    .main-content .figure-center-single img.img-center,
+    .main-content .figure-center-row img.img-center {
+        height: auto !important;       
+        max-height: none !important;   
+        width: 100% !important;
+        max-width: 100% !important;        
+    }
+    
+    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    .main-content p img.img-v {
+        aspect-ratio: 9 / 16 !important;
+    }
+    
+    /* Пропорции на смартфонах */
+    .main-content p img.img-custom,
+    .main-content p img.img-center,
+    .main-content .figure-center-single img.img-center {
+        aspect-ratio: auto !important;
+    }
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    /* Карточки figure встают во всю ширину мобильного экрана */
+    .main-content .figure-center-single figure.figure-center,
+    .main-content .figure-center-row figure.figure-center {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* 4.2 На смартфонах горизонтально */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* ИСПРАВЛЕНО: Полная копия ПК-логики 2.B, но с шириной ячейки 289px */
+    .main-content .figure-center-row {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, 289px) !important;
+        justify-content: center !important; 
+        align-items: start !important;      
+        gap: 15px !important;               
+        width: 100% !important;
+        margin: 1em 0 !important; /* Родные отступы: 1em сверху/снизу, 0 по бокам, как на ПК */          
+    }
+
+    /* Карточка figure внутри галерейного ряда (Копия ПК-версии) */
+    .main-content .figure-center-row figure.figure-center {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;               
+        width: 100% !important; /* Занимает всю мобильную ячейку в 289px */
+    }
+
+    /* Полная копия ПК-логики для картинок, но с высотой 163px */
+    .main-content .figure-center-row img.img-center {
+        height: auto !important;           
+        max-height: 163px !important; /* Мобильный потолок высоты кадра */
+        width: 100% !important;        /* Растягиваем вширь на 289px, уничтожая серые поля */
+        object-fit: contain !important;     
+    }
+
+    /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape (остаются как были) */
+    .main-content p img:not(.content-img),
+    .main-content .figure-center-single img.img-center {
+        height: 163px !important;
+        width: auto !important;
+        max-width: 100% !important;
+    }
+
+    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
+        aspect-ratio: 16 / 9 !important; 
+    }
+    .main-content p img.img-v { 
+        aspect-ratio: 9 / 16 !important; 
+    }
+
+    .main-content p img.img-custom,
+    .main-content .figure-center-single img.img-center,
+    .main-content p img.img-center {
+        aspect-ratio: auto !important;
+    }
+
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: auto !important;
+    }
+
+}

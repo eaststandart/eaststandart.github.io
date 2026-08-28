@@ -1,0 +1,193 @@
+/* ============================================================
+   МОДУЛЬ ИЗОБРАЖЕНИЙ 3: ЖУРНАЛЬНЫЕ СЕТКИ И ВСЯ АДАПТИВНОСТЬ (img-figure.css)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   3.A ВАРИАНТ ДЛЯ ОДИНОЧНОЙ КАРТИНКИ (класс figure-center-single)
+   ------------------------------------------------------------ */
+.main-content .figure-center-single {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+.main-content .figure-center-single figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    width: max-content !important;      
+    max-width: 100% !important;         
+}
+
+.main-content .figure-center-single img.img-center {
+    height: auto !important;            
+    max-height: 209px !important;       
+    width: auto !important;             
+    max-width: 100% !important;         
+    aspect-ratio: auto !important;      
+    object-fit: unset !important;       
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   3.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
+   ------------------------------------------------------------ */
+
+/* Автоматическая журнальная сетка Grid на ПК */
+.main-content .figure-center-row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, 371px) !important;
+    justify-content: center !important; 
+    align-items: start !important;      
+    gap: 15px !important;               
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+/* Карточка figure внутри галерейного ряда */
+.main-content .figure-center-row figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;               
+    width: 100% !important;             
+}
+
+/* Картинки внутри галерейного ряда */
+.main-content .figure-center-row img.img-center {
+    height: auto !important;           
+    max-height: 209px !important;
+    width: 100% !important;                     
+    aspect-ratio: auto !important;    
+    object-fit: contain !important;     
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   3.C ОБЩИЕ СТИЛИ ПОДПИСИ К КАРТИНКАМ
+   ------------------------------------------------------------ */
+.main-content figure.figure-center figcaption.figcaption-center {
+    text-align: center !important;      
+    margin-top: 1rem !important;        
+    display: block !important;
+    max-width: 371px !important;        
+    width: 100% !important;
+    word-break: break-word !important;  
+}
+
+
+/* ============================================================
+   4. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ ДЛЯ ВСЕХ МОДУЛЕЙ
+   ============================================================ */
+
+/* --- 4.1 На смартфонах вертикально (до 900px, Portrait) --- */
+@media (max-width: 900px) and (orientation: portrait) {
+
+    /* Адаптация сетки figure */
+    .main-content .figure-center-row {
+        grid-template-columns: 1fr !important;
+        justify-content: center !important;
+    }
+    
+    /* Сбрасываем ПК-высоту и лимиты для ВСЕХ типов картинок контента */
+    .main-content p img:not(.content-img),
+    .main-content .figure-center-single img.img-center,
+    .main-content .figure-center-row img.img-center {
+        height: auto !important;       
+        max-height: none !important;   
+        width: 100% !important;
+        max-width: 100% !important;        
+    }
+    
+    /* Пропорции обычных картинок */
+    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    /* Пропорции вертикальных картинок */
+    .main-content p img.img-v {
+        aspect-ratio: 9 / 16 !important;
+    }
+    
+    /* Пропорции кастомных и центрированных картинок */
+    .main-content p img.img-custom,
+    .main-content p img.img-center,
+    .main-content .figure-center-single img.img-center {
+        aspect-ratio: auto !important;
+    }
+    
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    /* Карточки figure встают во всю ширину мобильного экрана */
+    .main-content .figure-center-single figure.figure-center,
+    .main-content .figure-center-row figure.figure-center {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* --- 4.2 На смартфонах горизонтально (до 500px, Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* ИСПРАВЛЕНО: Полная копия ПК-логики 3.B, но с шириной ячейки 289px */
+    .main-content .figure-center-row {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, 289px) !important;
+        justify-content: center !important; 
+        align-items: start !important;      
+        gap: 15px !important;               
+        width: 100% !important;
+        margin: 1em 0 !important;          
+    }
+
+    /* Карточка figure внутри галерейного ряда (Копия ПК-версии) */
+    .main-content .figure-center-row figure.figure-center {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;               
+        width: 100% !important; 
+    }
+
+    /* ИСПРАВЛЕНО: Полная копия ПК-логики для картинок, но с высотой 163px */
+    .main-content .figure-center-row img.img-center {
+        height: auto !important;           
+        max-height: 163px !important; 
+        width: 100% !important;        
+        object-fit: contain !important;     
+    }
+
+    /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape */
+    .main-content p img:not(.content-img),
+    .main-content .figure-center-single img.img-center {
+        height: 163px !important;
+        width: auto !important;
+        max-width: 100% !important;
+    }
+
+    /* Сброс пропорций в landscape */
+    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
+        aspect-ratio: 16 / 9 !important; 
+    }
+    
+    .main-content p img.img-v { 
+        aspect-ratio: 9 / 16 !important; 
+    }
+
+    .main-content p img.img-custom,
+    .main-content .figure-center-single img.img-center,
+    .main-content p img.img-center {
+        aspect-ratio: auto !important;
+    }
+
+    .main-content .figure-center-row img.img-center {
+        aspect-ratio: auto !important;
+    }
+}

@@ -1,5 +1,5 @@
 /* ============================================================
-   МОДУЛЬ ИЗОБРАЖЕНИЙ 3: ЖУРНАЛЬНЫЕ СЕТКИ И ВСЯ АДАПТИВНОСТЬ (img-figure.css)
+   МОДУЛЬ ИЗОБРАЖЕНИЙ 3: ЖУРНАЛЬНЫЕ СЕТКИ FIGURE (img-figure.css)
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -47,7 +47,6 @@
     margin: 1em 0 !important;           
 }
 
-/* Карточка figure внутри галерейного ряда */
 .main-content .figure-center-row figure.figure-center {
     display: flex !important;
     flex-direction: column !important;
@@ -57,7 +56,6 @@
     width: 100% !important;             
 }
 
-/* Картинки внутри галерейного ряда */
 .main-content .figure-center-row img.img-center {
     height: auto !important;           
     max-height: 209px !important;
@@ -81,42 +79,22 @@
 
 
 /* ============================================================
-   4. ОБЩАЯ МОБИЛЬНАЯ АДАПТАЦИЯ ДЛЯ ВСЕХ МОДУЛЕЙ
+   4. АДАПТИВНОСТЬ ИСКЛЮЧИТЕЛЬНО ДЛЯ БЛОКОВ FIGURE
    ============================================================ */
 
-/* --- 4.1 На смартфонах вертикально (до 900px, Portrait) --- */
+/* --- 4.1 Смартфоны вертикально (Portrait) --- */
 @media (max-width: 900px) and (orientation: portrait) {
-
-    /* Адаптация сетки figure */
     .main-content .figure-center-row {
         grid-template-columns: 1fr !important;
         justify-content: center !important;
     }
     
-    /* Сбрасываем ПК-высоту и лимиты для ВСЕХ типов картинок контента */
-    .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center,
     .main-content .figure-center-row img.img-center {
         height: auto !important;       
         max-height: none !important;   
         width: 100% !important;
         max-width: 100% !important;        
-    }
-    
-    /* Пропорции обычных картинок */
-    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
-        aspect-ratio: 16 / 9 !important;
-    }
-    
-    /* Пропорции вертикальных картинок */
-    .main-content p img.img-v {
-        aspect-ratio: 9 / 16 !important;
-    }
-    
-    /* Пропорции кастомных и центрированных картинок */
-    .main-content p img.img-custom,
-    .main-content p img.img-center,
-    .main-content .figure-center-single img.img-center {
         aspect-ratio: auto !important;
     }
     
@@ -124,7 +102,6 @@
         aspect-ratio: 16 / 9 !important;
     }
     
-    /* Карточки figure встают во всю ширину мобильного экрана */
     .main-content .figure-center-single figure.figure-center,
     .main-content .figure-center-row figure.figure-center {
         width: 100% !important;
@@ -132,10 +109,8 @@
     }
 }
 
-/* --- 4.2 На смартфонах горизонтально (до 500px, Landscape) --- */
+/* --- 4.2 Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-
-    /* ИСПРАВЛЕНО: Полная копия ПК-логики 3.B, но с шириной ячейки 289px */
     .main-content .figure-center-row {
         display: grid !important;
         grid-template-columns: repeat(auto-fit, 289px) !important;
@@ -143,10 +118,9 @@
         align-items: start !important;      
         gap: 15px !important;               
         width: 100% !important;
-        margin: 1em 0 !important;          
+        margin: 1em 0 !important;           
     }
 
-    /* Карточка figure внутри галерейного ряда (Копия ПК-версии) */
     .main-content .figure-center-row figure.figure-center {
         display: flex !important;
         flex-direction: column !important;
@@ -156,7 +130,6 @@
         width: 100% !important; 
     }
 
-    /* ИСПРАВЛЕНО: Полная копия ПК-логики для картинок, но с высотой 163px */
     .main-content .figure-center-row img.img-center {
         height: auto !important;           
         max-height: 163px !important; 
@@ -164,29 +137,13 @@
         object-fit: contain !important;     
     }
 
-    /* Ограничения для ОДИНOЧНЫХ картинок и обычного текста в landscape */
-    .main-content p img:not(.content-img),
     .main-content .figure-center-single img.img-center {
         height: 163px !important;
         width: auto !important;
         max-width: 100% !important;
     }
 
-    /* Сброс пропорций в landscape */
-    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
-        aspect-ratio: 16 / 9 !important; 
-    }
-    
-    .main-content p img.img-v { 
-        aspect-ratio: 9 / 16 !important; 
-    }
-
-    .main-content p img.img-custom,
     .main-content .figure-center-single img.img-center,
-    .main-content p img.img-center {
-        aspect-ratio: auto !important;
-    }
-
     .main-content .figure-center-row img.img-center {
         aspect-ratio: auto !important;
     }

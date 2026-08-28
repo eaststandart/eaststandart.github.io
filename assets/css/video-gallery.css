@@ -84,6 +84,6 @@
         max-height: 214px !important; 
         flex: 0 0 auto !important;
         max-height: 180px !important;
-        /*object-fit: contain;*/
+        object-fit: contain;
     }
 }

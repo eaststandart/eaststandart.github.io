@@ -114,7 +114,7 @@
     /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
-        gap: 15px;
+        /*gap: 15px;*/
         align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 

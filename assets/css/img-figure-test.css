@@ -134,9 +134,10 @@
         max-width: 100% !important; 
     }
 
-    /* 🔥 ТВОЯ ВЕРНАЯ ГЕОМЕТРИЯ: Картинки пропорционально раскрываются на всю ширину колонок */
+    /* Картинки пропорционально раскрываются на всю ширину колонок */
     .main-content .figure-center-row img.img-fig {
         height: auto !important;          
+        max-height: 212px !important;
         width: 100% !important; 
         max-width: 100% !important;        
         aspect-ratio: auto !important; 

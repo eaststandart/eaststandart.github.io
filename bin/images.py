@@ -5,6 +5,7 @@
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
 @purpose Автоматически вычисляет одиночные и групповые картинки в Маркдауне.
          Для одиночных включает класс img-custom, ко всем добавляет loading="lazy".
+         Ключевое слово для центрирования и figure изменено с 'center' на 'fig'.
 """
 
 import re
@@ -68,25 +69,23 @@ def process_markdown_images(markdown_content):
             
             first_part = parts[0]
             
-            if first_part.lower() == 'v':
-                if is_in_gallery:
-                    classes.append('img-v')
-                parts.pop(0)
-                
-                # Повторная проверка на случай конструкции ![v | fig | Текст]
-                if parts and parts[0].lower() == 'fig':
-                    classes.append('img-fig')
-                    is_centered = True
-                    if 'img-custom' in classes:
-                        classes.remove('img-custom')
-                    parts.pop(0)
-                
-            # Строгое точное совпадение с 'fig'. Любые 'fig.', 'figure 1' и т.д. пойдут в текст подписи
-            elif first_part.lower() == 'fig':
+            # Базовым ключом первого уровня всегда является 'fig'
+            if first_part.lower() == 'fig':
                 classes.append('img-fig')
                 is_centered = True
                 if 'img-custom' in classes:
                     classes.remove('img-custom')
+                parts.pop(0)
+                
+                # Если вторым ключом идёт 'v', докидываем класс вертикалки
+                if parts and parts[0].lower() == 'v':
+                    classes.append('img-v')
+                    parts.pop(0)
+            
+            # Старая логика одиночной вертикальной картинки без fig (если вдруг используется ![v](url))
+            elif first_part.lower() == 'v':
+                if is_in_gallery:
+                    classes.append('img-v')
                 parts.pop(0)
                 
             elif re.match(r'^\d+[xх]\d+$', first_part, re.IGNORECASE):
@@ -129,8 +128,8 @@ def process_markdown_images(markdown_content):
     def group_rows(match):
         content = match.group(1)
         if content.count('<figure class="figure-img"') > 1:
-            return f'<div class="figure-img-row">{content}</div>' # Новая галерея картинок
-        return f'<div class="figure-img-single">{content}</div>' # Новая одиночная картинка
+            return f'<div class="figure-img-row">{content}</div>' 
+        return f'<div class="figure-img-single">{content}</div>' 
 
     article_html = re.sub(
         r'((?:<figure class="figure-img">.*?</figure>[ \t]*\n?)+)',

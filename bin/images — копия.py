@@ -75,7 +75,6 @@ def process_markdown_images(markdown_content):
                 
                 # Повторная проверка на случай конструкции ![v | fig | Текст]
                 if parts and parts[0].lower() == 'fig':
-                    # 🔥 ПЕРЕИМЕНОВАНО: Заменили img-center на img-fig
                     classes.append('img-fig')
                     is_centered = True
                     if 'img-custom' in classes:
@@ -84,7 +83,6 @@ def process_markdown_images(markdown_content):
                 
             # Строгое точное совпадение с 'fig'. Любые 'fig.', 'figure 1' и т.д. пойдут в текст подписи
             elif first_part.lower() == 'fig':
-                # 🔥 ПЕРЕИМЕНОВАНО: Заменили img-center на img-fig
                 classes.append('img-fig')
                 is_centered = True
                 if 'img-custom' in classes:
@@ -117,8 +115,8 @@ def process_markdown_images(markdown_content):
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:
-                figcaption_html = f'<figcaption class="figcaption-center">{clean_alt}</figcaption>' if clean_alt else ''
-                return f'<figure class="figure-center">{img_html}{figcaption_html}</figure>'
+                figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
+                return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
                 
             return img_html
 
@@ -130,12 +128,12 @@ def process_markdown_images(markdown_content):
     
     def group_rows(match):
         content = match.group(1)
-        if content.count('<figure') > 1:
-            return f'<div class="figure-center-row">{content}</div>' 
-        return f'<div class="figure-center-single">{content}</div>' 
+        if content.count('<figure class="figure-img"') > 1:
+            return f'<div class="figure-img-row">{content}</div>' # Новая галерея картинок
+        return f'<div class="figure-img-single">{content}</div>' # Новая одиночная картинка
 
     article_html = re.sub(
-        r'((?:<figure class="figure-center">.*?</figure>[ \t]*\n?)+)',
+        r'((?:<figure class="figure-img">.*?</figure>[ \t]*\n?)+)',
         group_rows,
         article_html
     )

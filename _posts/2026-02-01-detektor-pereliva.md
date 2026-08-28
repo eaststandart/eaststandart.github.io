@@ -18,36 +18,34 @@ discus: "questions"
 ### Описание схемы
 Схема детектора представляет собой однотранзисторный генератор колебаний звуковой частоты с маломощным динамиком на выводе рис. 1. 
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-16.webp)
-
-<figcaption>Рис. 1 – Схема электрическая принципиальная</figcaption>
+![fig|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-16.webp)
 
 Посмотрим, из чего она состоит: *R1* – резистор с сопротивлением 1–6,8 кОм, *R2* – резистор с сопротивлением 2,7–3,6 кОм, *С1* – конденсатор емкостью 10 мкФ х 10 В, рассчитанный на рабочее напряжение не ниже 6–10 В, *VT1* – любой маломощный транзистор структуры *p-n-p* (МП39–МП42). *G1* – батарея питания напряжением 9 В типа «Крона». *SA1* – выключатель любой конструкции. *Т1* – любой выходной трансформатор транзисторного радиоприемника (ТВКП – трансформатор выходной карманного приемника), от радиоточки (абонентского громкоговорителя) или [[самодельный трансформатор\|самодельный]]. *BA1* – любой динамик до 0,5 Вт сопротивлением 8 Ом, возможно от радиоточки.
 
 #### Принцип работы схемы 
 Теперь вникнем в суть работы схемы. Пока нет питания схема не работает. Но стоит к ней подключить батарею, то плюсовой потенциал, попадая на базу транзистора, запирает его (приложение 1, рисунок 1).
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-17.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-17.webp)
 
 Но если к разъему А и Б подключить резистор сопротивлением 10 кОм, имитирующий сопротивление воды, то на базу транзистора попадает минусовой потенциал и отпирает транзистор (приложение 1, рисунок 2).
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-18.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-18.webp)
 
 Через открывшийся транзистор напряжение проходит на первичную обмотку трансформатора [^1] (приложение 1, рисунок 3).
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-19.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-19.webp)
 
 Появление тока в первичной обмотке вызывает аналогичный процесс во вторичной (приложение 1, рисунок 4).
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-20.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-20.webp)
 
 А ток из нее попадает на динамик, что выражается его щелчком. В тоже время импульс положительной полярности со вторичной обмотки трансформатора через конденсатор *C1* проходит на базу транзистора и запирает его на мгновение (приложение 1, рисунок 5).
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-21.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-21.webp)
 
 И такой цикл повторяется вновь и вновь.
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-22.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-22.webp)
 
 При достаточно частом повторении из динамика слышатся не отдельные щелчки, а сигнал звуковой частоты. Частота таких повторений определяется емкостью конденсатора *C1* и сопротивлением резистора *R2*. А значит мы получили звуковой генератор, который может подать сигнал оповещения.
 
@@ -55,7 +53,7 @@ discus: "questions"
 
 ##### Приложение 1
 
-![center](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+![fig](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
 
 #### Налаживание схемы
 

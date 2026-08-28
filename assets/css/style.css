@@ -364,7 +364,7 @@ p:has(img) + blockquote,
 .main-content p:has(img) {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: var(--gap-pc);
     align-items: flex-start;
     margin: 1em 0 !important; /* Стандартный, предсказуемый отступ темы */
     padding: 0 !important;
@@ -591,7 +591,7 @@ figcaption {
         .main-content p:has(img) {
             display: flex !important;
             flex-direction: column !important;
-            gap: 1.2em !important; 
+            gap: var(--gap-mobile-portrait) !important; 
         }
 
         /* Картинки растягиваются на всю ширину экрана смартфона */
@@ -622,7 +622,7 @@ figcaption {
     
     /* Сохранение горизонтального зазора между картинками */
     .main-content p:has(img) {
-        gap: 15px !important;
+        gap: var(--gap-pc) !important;
     }
 
     /* Глобальное уплотнение всех типов карточных сеток для ликвидации пустых дыр */

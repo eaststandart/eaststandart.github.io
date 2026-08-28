@@ -110,7 +110,7 @@
     /* Твои жесткие 2 колонки картинок с выравниванием по верхней кромке */
     .main-content .figure-img-row {
         grid-template-columns: repeat(2, 1fr); 
-        gap: 15px;
+        gap: 12px;
         align-items: start; 
     }
 

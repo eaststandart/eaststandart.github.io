@@ -1,69 +1,75 @@
 /* ============================================================
-   МОДУЛЬ ИЗОБРАЖЕНИЙ 1: БАЗОВЫЕ И ОДИНОЧНЫЕ КАРТИНКИ (img-base.css)
+   📦 КОМПОНЕНТ: БАЗОВЫЕ И ОДИНОЧНЫЕ КАРТИНКИ (img-base.css)
+   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
    ============================================================ */
 
-/* --- ПК-ВЕРСИЯ --- */
+/* [БЛОК] Базовые изображения внутри абзацев контента */
 .main-content p img:not(.content-img) {
-    background-color: var(--media-background-plug) !important;
-    height: 209px !important;              
-    width: auto !important;                
-    max-width: 100% !important;            
-    aspect-ratio: 16 / 9 !important;
+    height: 209px;              
+    width: auto;                
+    max-width: 100%;            
+    aspect-ratio: 16 / 9;
+    background-color: var(--media-background-plug);
 }
 
+/* [МОДИФИКАТОР] Вертикальная картинка в текстовом потоке */
 .main-content p img.img-v {
-    aspect-ratio: 9 / 16 !important;
+    aspect-ratio: 9 / 16;
 }
 
+/* [МОДИФИКАТОР] Изображение с произвольным пользовательским размером */
 .main-content p img.img-custom {
-    width: auto !important;
-    border: 1px solid var(--primary-bg) !important;
-    border-radius: 8px !important;
-    box-sizing: border-box !important;
-    object-fit: unset !important;
+    width: auto;
+    object-fit: unset;
+    box-sizing: border-box;
+    border: 1px solid var(--primary-bg);
+    border-radius: 8px;
 }
 
-/* --- АДАПТИВНОСТЬ ДЛЯ ОДИНОЧНЫХ КАРТИНОК --- */
 
-/* Смартфоны вертикально (Portrait) */
+/* ============================================================
+   📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ БАЗОВЫХ КАРТИНОК
+   ============================================================ */
+
+/* --- Смартфоны вертикально (Portrait) --- */
 @media (max-width: 900px) and (orientation: portrait) {
     .main-content p img:not(.content-img) {
-        height: auto !important;       
-        max-height: none !important;   
-        width: 100% !important;
-        max-width: 100% !important;        
+        height: auto;       
+        max-height: none;   
+        width: 100%;
+        max-width: 100%;        
     }
     
-    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) {
-        aspect-ratio: 16 / 9 !important;
+    .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
+        aspect-ratio: 16 / 9;
     }
     
     .main-content p img.img-v {
-        aspect-ratio: 9 / 16 !important;
+        aspect-ratio: 9 / 16;
     }
     
     .main-content p img.img-custom {
-        aspect-ratio: auto !important;
+        aspect-ratio: auto;
     }
 }
 
-/* Смартфоны горизонтально (Landscape) */
+/* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img) {
-        height: 163px !important;
-        width: auto !important;
+        height: 163px;
+        width: auto;
         max-width: 100% !important;
     }
 
-    .main-content p img:not(.img-v):not(.img-center):not(.img-custom):not(.content-img) { 
-        aspect-ratio: 16 / 9 !important; 
+    .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) { 
+        aspect-ratio: 16 / 9; 
     }
 
     .main-content p img.img-v { 
-        aspect-ratio: 9 / 16 !important; 
+        aspect-ratio: 9 / 16; 
     }
 
     .main-content p img.img-custom {
-        aspect-ratio: auto !important;
+        aspect-ratio: auto;
     }
 }

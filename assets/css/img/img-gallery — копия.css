@@ -1,0 +1,31 @@
+/* ============================================================
+   МОДУЛЬ ИЗОБРАЖЕНИЙ 2: СТАНДАРТНАЯ ФЛЕКС-ГАЛЕРЕЯ (img-gallery.css)
+   ============================================================ */
+
+/* --- ПК-ВЕРСИЯ --- */
+.main-content p:has(img) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+    margin: 1em 0 !important;
+    padding: 0 !important;
+}
+
+/* --- АДАПТИВНОСТЬ ДЛЯ ТЕКСТОВОЙ ФЛЕКС-ГАЛЕРЕИ --- */
+
+/* Смартфоны вертикально (Portrait) */
+@media (max-width: 900px) and (orientation: portrait) {
+    .main-content p:has(img) {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.2em !important; 
+    }
+}
+
+/* Смартфоны горизонтально (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content p:has(img) {
+        gap: 15px !important; /* Сохранение горизонтального зазора между картинками */
+    }
+}

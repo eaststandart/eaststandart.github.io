@@ -1,0 +1,123 @@
+/* ============================================================
+   📦 КОМПОНЕНТ: ЖУРНАЛЬНЫЕ СЕТКИ FIGURE (img-figure-test.css)
+   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   [БЛОК] Одиночная карточка центрирования (figure-center-single)
+   ------------------------------------------------------------ */
+.main-content .figure-center-single {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 1em 0;           
+}
+
+/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
+.main-content .figure-center-single figure.figure-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: max-content;      
+    max-width: 100%;         
+}
+
+/* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
+.main-content .figure-center-single img.img-fig {
+    height: auto;            
+    max-height: 209px;       
+    width: auto;             
+    max-width: 100%;         
+    aspect-ratio: auto;      
+    object-fit: unset;       
+    background-color: var(--media-background-plug);
+}
+
+
+/* ------------------------------------------------------------
+   [БЛОК] Галерейный ряд карточек (figure-center-row) — Режим ПК
+   ------------------------------------------------------------ */
+.main-content .figure-center-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 371px);
+    justify-content: center; 
+    align-items: start;      
+    gap: 15px;               
+    width: 100%;
+    margin: 1em 0;           
+}
+
+/* [ЭЛЕМЕНТ] Контейнер figure внутри многоколоночного ряда */
+.main-content .figure-center-row figure.figure-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;               
+    width: 100%;             
+}
+
+/* [ЭЛЕМЕНТ] Картинка внутри галерейного ряда */
+.main-content .figure-center-row img.img-fig {
+    height: auto;           
+    max-height: 209px;
+    width: 100%;                     
+    aspect-ratio: auto;    
+    object-fit: contain;     
+    background-color: var(--media-background-plug);
+}
+
+
+/* ------------------------------------------------------------
+   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к картинкам figcaption
+   ------------------------------------------------------------ */
+.main-content figure.figure-center figcaption.figcaption-center {
+    display: block;
+    width: 100%;
+    max-width: 371px;        
+    margin-top: 1rem;        
+    text-align: center;      
+    word-break: break-word;  
+}
+
+
+/* ============================================================
+   📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ КОМПОНЕНТА
+   ============================================================ */
+
+/* --- Смартфоны вертикально (Portrait) --- */
+@media (max-width: 900px) and (orientation: portrait) {
+    .main-content .figure-center-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-content .figure-center-single img.img-fig,
+    .main-content .figure-center-row img.img-fig {
+        max-height: none;   
+    }
+    
+    .main-content .figure-center-row img.img-fig {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+/* --- Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    
+    .main-content .figure-center-row {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;              
+    }
+
+    /* Лимит высоты с микро-запасом для iPhone */
+    .main-content .figure-center-row img.img-fig {
+        max-height: 214px; 
+    }
+
+    .main-content .figure-center-single img.img-fig {
+        height: 163px;
+        width: auto;
+    }
+}

@@ -37,7 +37,7 @@ def process_markdown_videos(markdown_content):
                 i += 1
                 
             if video_group:
-                processed_lines.append(f'<div class="video-row">{"".join(video_group)}</div>')
+                processed_lines.append(f'<div class="video-test-row">{"".join(video_group)}</div>')
             continue
         else:
             processed_lines.append(line)

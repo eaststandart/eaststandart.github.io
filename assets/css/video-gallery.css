@@ -1,0 +1,88 @@
+/* ============================================================
+   📦 КОМПОНЕНТ: СТАНДАРТНАЯ ГАЛЕРЕЯ ВИДЕОРОЛИКОВ (video-gallery.css)
+   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
+   ============================================================ */
+
+/* [БЛОК] Гибкий флекс-ряд видеороликов без подписей */
+.main-content .video-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    gap: 15px;       
+    margin: 12px 0 0 0 !important;
+    width: 100%;
+    align-items: flex-start;
+}
+
+/* [ЭЛЕМЕНТ] Видеоплеер внутри флекс-ряда (Режим ПК) */
+.main-content .video-row video {
+    aspect-ratio: 16 / 9;
+    height: 209px;
+    max-height: 250px;
+    width: auto;
+    max-width: calc(50% - 10px);
+    flex: 0 1 auto; 
+    border-radius: 8px;
+    background: #000000; /* Родной фон загруженного видео, чтобы скрыть черные поля */
+    object-fit: contain;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: block;
+}
+
+
+/* ============================================================
+   ⚡ РЕЗЕРВИРОВАНИЕ МЕСТА И ЗАГЛУШКИ (АНТИ-ПРЫЖОК СТРАНИЦЫ)
+   ============================================================ */
+
+/* Для любых видео контента на сайте, пока они находятся в режиме data-src */
+.main-content video[data-src] {
+    background-color: var(--media-background-plug) !important; /* Твоя глобальная переменная */
+    aspect-ratio: 16 / 9 !important;
+    display: block;
+}
+
+/* Для видеоплееров внутри флекс-ряда в процессе их ленивой загрузки */
+.main-content .video-row video[data-src] {
+    background: var(--media-background-plug) !important; /* Меняем черный фон на серую заглушку */
+    aspect-ratio: 16 / 9 !important; 
+}
+
+
+/* ============================================================
+   📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ ВИДЕО-ГАЛЕРЕИ
+   ============================================================ */
+
+/* --- Смартфоны вертикально (Portrait) --- */
+@media (max-width: 600px) and (orientation: portrait) {
+    .main-content .video-row {
+        flex-direction: column !important;
+        gap: 1.2em !important;
+    }
+    
+    .main-content .video-row video {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        margin: 0 !important;
+        aspect-ratio: 16 / 9 !important;
+    }
+}
+
+/* --- Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content .video-row {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+    }
+    
+    .main-content .video-row video {
+        width: calc(50% - 8px) !important; 
+        max-width: calc(50% - 8px) !important;
+        height: auto !important; 
+        max-height: 180px !important; 
+        flex: 0 0 auto !important;
+        object-fit: contain;
+    }
+}

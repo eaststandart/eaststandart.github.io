@@ -18,7 +18,7 @@ discus: "questions"
 ### Описание схемы
 Схема электрическая принципиальная фонарика представляет собой последовательное соединение батареи, выключателя и светоизлучающего диода (рис. 1).
 
-![center|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
+![fig|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 
 Посмотрим, из чего она состоит:
 
@@ -31,7 +31,7 @@ discus: "questions"
 #### Принцип работы схемы
 Если соединить выводы батареи питания с выводами светодиода, то он начнёт испускать свет – загорится.  Почему горит светодиод в этом опыте? Потому что через него протекает электрический ток. Он протекает от батарейки к светодиоду, а затем возвращается к батарейке. Это и есть простейшая электрическая цепь (рис. 2) \[Мацкевич, 1986, с. 31\] [^2].
 
-![center|Рис. 2 – Электроны в замкнутой электрической цепи](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-04.webp)
+![fig|Рис. 2 – Электроны в замкнутой электрической цепи](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-04.webp)
 
 Сделаем сейчас так, чтобы между плюсовым выводом батарейки и выводом светодиода было небольшое пространство. Ясно, что светодиод не горит, потому что электрический ток по воздуху не течет.
 
@@ -41,20 +41,20 @@ discus: "questions"
 
 Так мы составили простейшую электрическую цепь, в которой электроны от «минуса» батарейки идут к светодиоду, а затем через выключатель и заземление возвращаются к «плюсу» батарейки (рис. 3) \[Мацкевич, 1986, с. 33\] [^2].
 
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 > **Смотри подробнее:** объяснение принципа работы схемы в \[Мацкевич, 1986, с. 31-34\] [^2].
 
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![center|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![center|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-![center](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇
 

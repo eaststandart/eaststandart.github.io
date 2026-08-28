@@ -36,3 +36,39 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     background-color: var(--media-background-plug); /* Серый фон во время лези-лоада */
 }
+
+
+/* ------------------------------------------------------------
+   [БЛОК] Галерейный ряд карточек видео (figure-video-row) — Режим ПК
+   ------------------------------------------------------------ */
+.main-content .figure-video-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 371px);
+    justify-content: center; 
+    align-items: start;      
+    gap: 15px;               
+    width: 100%;
+    margin: 1em 0;           
+}
+
+/* [ЭЛЕМЕНТ] Контейнер figure внутри многоколоночного ряда */
+.main-content .figure-video-row figure.figure-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;               
+    width: 100%;             
+}
+
+/* [ЭЛЕМЕНТ] Видеоплеер внутри галерейного ряда */
+.main-content .figure-video-row video.video-fig {
+    height: auto;           
+    max-height: 209px;
+    width: 100%;                     
+    aspect-ratio: 16 / 9;    
+    object-fit: contain;     
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug);
+}

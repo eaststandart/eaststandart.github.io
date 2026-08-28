@@ -74,12 +74,12 @@
     .main-content .video-row {
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        /*gap: 10px !important;*/
+        /* gap: 10px !important; */
     }
     
     .main-content .video-row video {
-        width: calc(50% - 8px) !important; 
-        max-width: calc(50% - 8px) !important;
+        /* width: calc(50% - 8px) !important; */
+        /* max-width: calc(50% - 8px) !important;*/
         height: auto !important; 
         flex: 0 0 auto !important;
         object-fit: contain;

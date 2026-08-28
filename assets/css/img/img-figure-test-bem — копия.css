@@ -4,9 +4,9 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   [БЛОК] Одиночная карточка картинок (figure-img-single)
+   [БЛОК] Одиночная карточка центрирования (figure-center-single)
    ------------------------------------------------------------ */
-.main-content .figure-img-single {
+.main-content .figure-center-single {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -14,7 +14,7 @@
 }
 
 /* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
-.main-content .figure-img-single figure.figure-img {
+.main-content .figure-center-single figure.figure-center {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,7 @@
 }
 
 /* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
-.main-content .figure-img-single img.img-fig {
+.main-content .figure-center-single img.img-fig {
     height: auto;            
     max-height: 209px;       
     width: auto;             
@@ -37,9 +37,9 @@
 
 
 /* ------------------------------------------------------------
-   [БЛОК] Галерейный ряд карточек картинок (figure-img-row) — Режим ПК
+   [БЛОК] Галерейный ряд карточек (figure-center-row) — Режим ПК
    ------------------------------------------------------------ */
-.main-content .figure-img-row {
+.main-content .figure-center-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, 371px);
     justify-content: center; 
@@ -50,7 +50,7 @@
 }
 
 /* [ЭЛЕМЕНТ] Контейнер figure внутри многоколоночного ряда */
-.main-content .figure-img-row figure.figure-img {
+.main-content .figure-center-row figure.figure-center {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,7 +60,7 @@
 }
 
 /* [ЭЛЕМЕНТ] Картинка внутри галерейного ряда */
-.main-content .figure-img-row img.img-fig {
+.main-content .figure-center-row img.img-fig {
     height: auto;           
     max-height: 209px;
     width: 100%;                     
@@ -71,9 +71,9 @@
 
 
 /* ------------------------------------------------------------
-   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к картинкам figcaption (figcaption-img)
+   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к картинкам figcaption
    ------------------------------------------------------------ */
-.main-content figure.figure-img figcaption.figcaption-img {
+.main-content figure.figure-center figcaption.figcaption-center {
     display: block;
     width: 100%;
     max-width: 371px;        
@@ -89,17 +89,16 @@
 
 /* --- Смартфоны вертикально (Portrait) --- */
 @media (max-width: 900px) and (orientation: portrait) {
-    /* Переводим сетку картинок в 1 колонку */
-    .main-content .figure-img-row {
+    .main-content .figure-center-row {
         grid-template-columns: 1fr;
     }
     
-    .main-content .figure-img-single img.img-fig,
-    .main-content .figure-img-row img.img-fig {
+    .main-content .figure-center-single img.img-fig,
+    .main-content .figure-center-row img.img-fig {
         max-height: none;   
     }
     
-    .main-content .figure-img-row img.img-fig {
+    .main-content .figure-center-row img.img-fig {
         aspect-ratio: 16 / 9;
     }
 }
@@ -107,24 +106,22 @@
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* Твои жесткие 2 колонки картинок с выравниванием по верхней кромке */
-    .main-content .figure-img-row {
+    .main-content .figure-center-row {
         grid-template-columns: repeat(2, 1fr); 
-        gap: 15px;
-        align-items: start; 
+        gap: 15px;              
     }
 
-    /* Мобильный лимит высоты с микро-запасом для iPhone */
-    .main-content .figure-img-row img.img-fig {
+    /* Лимит высоты с микро-запасом для iPhone */
+    .main-content .figure-center-row img.img-fig {
         max-height: 214px; 
     }
 
-    /* Точечный пересчет пропорций для вертикальных картинок в галерее fig боком */
-    .main-content .figure-img-row img.img-fig.img-v {
-        aspect-ratio: 16 / 9; 
+    /* Специальный пересчет пропорций для вертикальных картинок в галерее fig боком */
+    .main-content .figure-center-row img.img-fig.img-v {
+        aspect-ratio: 16 / 9; /* Зажимаем бокс в 16:9, чтобы выровнять высоту ряда */
     }
 
-    .main-content .figure-img-single img.img-fig {
+    .main-content .figure-center-single img.img-fig {
         height: 163px;
         width: auto;
     }

@@ -1,5 +1,5 @@
 /* ============================================================
-   🧪 ТЕСТОВЫЙ МОДУЛЬ: ЖУРНАЛЬНЫЕ СЕТКИ С АВТО-РАСЧЕТОМ НА БОКУ (img-figure-test.css)
+   🧪 ТЕСТОВЫЙ МОДУЛЬ: ОКОНЧАТЕЛЬНАЯ ЖЕСТКАЯ СЕТКА GRID (img-figure-test.css)
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -36,7 +36,7 @@
    3.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
    ------------------------------------------------------------ */
 
-/* Автоматическая журнальная сетка Grid на ПК (остается жесткой, как тебе нравилось) */
+/* Автоматическая журнальная сетка Grid на ПК */
 .main-content .figure-center-row {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, 371px) !important;
@@ -109,42 +109,43 @@
     }
 }
 
-/* --- 4.2 ТЕСТИРУЕМ: Смартфоны горизонтально (Landscape) --- */
+/* --- 4.2 Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* 🚀 ТЕСТ 1: Переводим строку галереи fig на Flexbox для авто-расчета */
+    /* 🔥 ЖЕСТКИЕ 2 КОЛОНКИ: Делят экран ровно пополам, центрирование Grid-блока */
     .main-content .figure-center-row {
-        display: flex !important;
-        flex-wrap: wrap !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; 
         justify-content: center !important; 
         align-items: start !important;      
-        gap: 15px !important; /* Четкий фиксированный зазор без дыр */              
+        gap: 15px !important; /* Ровный фиксированный зазор */              
         width: 100% !important;
         margin: 1em 0 !important;           
     }
 
-    /* 🚀 ТЕСТ 2: Карточка figure теперь не раздувается, а строго обжимает картинку */
+    /* Карточка figure послушно занимает свою половинку экрана */
     .main-content .figure-center-row figure.figure-center {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         margin: 0 !important;               
-        width: auto !important; 
-        max-width: max-content !important; 
+        width: 100% !important; 
+        max-width: 100% !important; 
     }
 
-    /* 🚀 ТЕСТ 3: Картинка сама вычисляет свою ширину по пропорциям файла */
+    /* 🔥 КАРТИНКА В СЕТКЕ: Занимает 100% ширины своей колонки (всегда по 2 в ряд),
+       высота строго ограничена, а object-fit: cover убирает любые серые поля! */
     .main-content .figure-center-row img.img-fig {
-        height: 163px !important; /* Наш неизменный мобильный потолок высоты */          
-        width: auto !important;   /* Включаем авто-расчет ширины! */
+        height: 163px !important;          
+        width: 100% !important; /* Принудительно растягиваем на пол-экрана */
         max-height: 163px !important; 
         max-width: 100% !important;        
-        object-fit: contain !important;     
-        aspect-ratio: auto !important; /* Убираем любые жесткие рамки */
+        object-fit: cover !important; /* Магия: картинка заполняет бокс без серых ушей */    
+        aspect-ratio: auto !important; 
     }
 
-    /* Одиночные центрированные картинки в landscape (остаются как были) */
+    /* Одиночные центрированные картинки в landscape (остаются аккуратными с родными пропорциями) */
     .main-content .figure-center-single img.img-fig {
         height: 163px !important;
         width: auto !important;

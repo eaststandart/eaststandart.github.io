@@ -359,7 +359,7 @@ p:has(img) + blockquote,
     max-width: 100%;
     object-fit: contain; 
     border-radius: 8px;
-    margin: 0 !important;
+    /*margin: 0 !important;*/
 }
 
 /* Базовые ПК-параметры для одиночных видеороликов контента */

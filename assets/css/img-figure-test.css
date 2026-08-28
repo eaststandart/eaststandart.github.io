@@ -137,11 +137,9 @@
     /* 🔥 КАРТИНКА В СЕТКЕ: Занимает 100% ширины своей колонки (всегда по 2 в ряд),
        высота строго ограничена, а object-fit: cover убирает любые серые поля! */
     .main-content .figure-center-row img.img-fig {
-        height: 163px !important;          
-        width: 100% !important; /* Принудительно растягиваем на пол-экрана */
-        max-height: 163px !important; 
+        height: auto !important;          
+        width: 100% !important; /* Принудительно растягиваем на пол-экрана */ 
         max-width: 100% !important;        
-        object-fit: cover !important; /* Магия: картинка заполняет бокс без серых ушей */    
         aspect-ratio: auto !important; 
     }
 

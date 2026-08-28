@@ -5,7 +5,6 @@
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
 @purpose Автоматически вычисляет одиночные и групповые картинки в Маркдауне.
          Для одиночных включает класс img-custom, ко всем добавляет loading="lazy".
-         Ключевое слово для центрирования и figure изменено с 'center' на 'fig'.
 """
 
 import re
@@ -46,7 +45,7 @@ def process_markdown_images(markdown_content):
             alt_text = match.group(1).strip()
             img_url = match.group(2).strip()
             
-            # 🔥 ИСПРАВЛЕНО 1 & 2: Перенесли loading="lazy" в самый конец пустых тегов
+            # Перенесли loading="lazy" в самый конец пустых тегов
             if not alt_text:
                 if not is_in_gallery:
                     return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
@@ -54,7 +53,7 @@ def process_markdown_images(markdown_content):
                 
             parts = [p.strip() for p in alt_text.split('|') if p.strip()]
             
-            # 🔥 ИСПРАВЛЕНО 3 & 4: Перенесли loading="lazy" в самый конец пустых отфильтрованных тегов
+            # Перенесли loading="lazy" в самый конец пустых отфильтрованных тегов
             if not parts:
                 if not is_in_gallery:
                     return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
@@ -76,7 +75,8 @@ def process_markdown_images(markdown_content):
                 
                 # Повторная проверка на случай конструкции ![v | fig | Текст]
                 if parts and parts[0].lower() == 'fig':
-                    classes.append('img-center')
+                    # 🔥 ПЕРЕИМЕНОВАНО: Заменили img-center на img-fig
+                    classes.append('img-fig')
                     is_centered = True
                     if 'img-custom' in classes:
                         classes.remove('img-custom')
@@ -84,7 +84,8 @@ def process_markdown_images(markdown_content):
                 
             # Строгое точное совпадение с 'fig'. Любые 'fig.', 'figure 1' и т.д. пойдут в текст подписи
             elif first_part.lower() == 'fig':
-                classes.append('img-center')
+                # 🔥 ПЕРЕИМЕНОВАНО: Заменили img-center на img-fig
+                classes.append('img-fig')
                 is_centered = True
                 if 'img-custom' in classes:
                     classes.remove('img-custom')
@@ -112,7 +113,7 @@ def process_markdown_images(markdown_content):
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # 🔥 ИСПРАВЛЕНО 5: loading="lazy" теперь гарантированно замыкает основной тег img
+            # loading="lazy" гарантированно замыкает основной тег img
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:

@@ -22,7 +22,7 @@
     max-width: 100% !important;         
 }
 
-.main-content .figure-center-single img.img-center {
+.main-content .figure-center-single img.img-fig {
     height: auto !important;            
     max-height: 209px !important;       
     width: auto !important;             
@@ -56,7 +56,7 @@
     width: 100% !important;             
 }
 
-.main-content .figure-center-row img.img-center {
+.main-content .figure-center-row img.img-fig {
     height: auto !important;           
     max-height: 209px !important;
     width: 100% !important;                     
@@ -89,8 +89,8 @@
         justify-content: center !important;
     }
     
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
+    .main-content .figure-center-single img.img-fig,
+    .main-content .figure-center-row img.img-fig {
         height: auto !important;       
         max-height: none !important;   
         width: 100% !important;
@@ -98,7 +98,7 @@
         aspect-ratio: auto !important;
     }
     
-    .main-content .figure-center-row img.img-center {
+    .main-content .figure-center-row img.img-fig {
         aspect-ratio: 16 / 9 !important;
     }
     
@@ -130,21 +130,21 @@
         width: 100% !important; 
     }
 
-    .main-content .figure-center-row img.img-center {
+    .main-content .figure-center-row img.img-fig {
         height: auto !important;           
         max-height: 163px !important; 
         width: 100% !important;        
         object-fit: contain !important;     
     }
 
-    .main-content .figure-center-single img.img-center {
+    .main-content .figure-center-single img.img-fig {
         height: 163px !important;
         width: auto !important;
         max-width: 100% !important;
     }
 
-    .main-content .figure-center-single img.img-center,
-    .main-content .figure-center-row img.img-center {
+    .main-content .figure-center-single img.img-fig,
+    .main-content .figure-center-row img.img-fig {
         aspect-ratio: auto !important;
     }
 }

@@ -382,10 +382,10 @@ p:has(img) + blockquote,
 
 /* Базовые ПК-параметры для одиночных видеороликов контента */
 .main-content video:not(.video-fig) {
-    height: 209px;       /* Точно такой же аккуратный потолок высоты, как у фото */
+    height: var(--media-pc-height);       /* Точно такой же потолок высоты, как у фото */
     width: auto;
     max-width: 100%;
-    aspect-ratio: 16 / 9; /* Защита от прыжков верстки на этапе data-src */
+    aspect-ratio: var(--ratio-landscape); /* Защита от прыжков верстки на этапе data-src */
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);

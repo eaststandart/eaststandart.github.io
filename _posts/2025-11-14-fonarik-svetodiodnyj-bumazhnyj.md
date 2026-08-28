@@ -65,11 +65,11 @@ discus: "questions"
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
 
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
-![fig|Процесс демонстрации скрипта](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-07.webm)
+![fig|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
+![fig|Процесс демонстрации скрипта|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-07.webm)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-08.webm)
 
-![fig|Процесс демонстрации скрипта](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
+![fig|Процесс демонстрации скрипта}400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 
 🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇
 

@@ -72,6 +72,10 @@ def process_markdown_videos(markdown_content):
             elif first_part.lower() == 'v':
                 classes.append('video-v')
                 parts.pop(0)
+
+            # Защита от цифр размера в конце квадратных скобок Обсидиана
+            if parts and re.match(r'^\d+$', parts[-1]):
+                parts.pop()
                 
             clean_alt = " | ".join(parts) if parts else ""
             class_str = f' class="{" ".join(classes)}"' if classes else ''

@@ -116,6 +116,11 @@
         max-height: 214px; 
     }
 
+    /* Специальный пересчет пропорций для вертикальных картинок в галерее fig боком */
+    .main-content .figure-center-row img.img-fig.img-v {
+        aspect-ratio: 16 / 9; /* Зажимаем бокс в 16:9, чтобы выровнять высоту ряда */
+    }
+
     .main-content .figure-center-single img.img-fig {
         height: 163px;
         width: auto;

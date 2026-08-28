@@ -364,7 +364,7 @@ p:has(img) + blockquote,
 
 /* Параметры картинок в ряду и в блоках figure (курсор-лупа и плавность) */
 .main-content p img:not(.content-img),
-.main-content .figure-img img.img-center {
+.main-content .figure-img img.img-fig {
     cursor: zoom-in !important;
     transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     position: relative;

@@ -80,7 +80,7 @@ h1 {
 
 /* Для медиафайлов (карниток и видео) оставляем чистый ноль, так как у них нет скрытого воздуха над рамкой */
 .main-content h3 + p:has(img),
-.main-content h3 + .video-test-row {
+.main-content h3 + .video-row {
     margin-top: 0px !important; 
 }
 
@@ -109,7 +109,7 @@ blockquote + h3 {
 }
 
 /* Если H3 идет сразу ПОСЛЕ медиа (видео или фото) — увеличиваем отступ сверху для воздуха */
-.video-test-row + h3,
+.video-row + h3,
 .main-content p:has(img) + h3 {
     margin-top: 1em !important;
 }
@@ -185,7 +185,7 @@ blockquote + h3 {
 .media-entry p,
 .media-entry > ul,
 .media-entry > ol,
-.media-entry > .video-test-row,
+.media-entry > .video-row,
 .media-entry > .posts-page-list {
     margin-top: 0px !important;
 }
@@ -198,18 +198,18 @@ blockquote + h3 {
 }
 
 .media-entry > p:has(img),
-.media-entry > .video-test-row {
+.media-entry > .video-row {
     margin-top: 0px !important; 
 }
 
 /* Для страниц галерей при нажатии кнопки 0. НАЧАЛО */
-.media-entry .video-test-row + p,
+.media-entry .video-row + p,
 .media-entry p:has(img) + p {
     margin-top: 1em !important;
 }
 
 /* Возвращаем отступ тексту снизу, если после него сразу идет видео. */
-.media-entry p:has(+ .video-test-row) { 
+.media-entry p:has(+ .video-row) { 
     margin-bottom: 1em !important; 
 }
 /* Для страниц галерей при нажатии кнопки 0. КОНЕЦ */
@@ -296,7 +296,7 @@ blockquote p:not(:last-child) {
 
 /* Если цитата идет сразу после картинки или видео в абзаце */
 p:has(img) + blockquote,
-.video-test-row + blockquote {
+.video-row + blockquote {
     margin-top: 1.2em; /* Увеличиваем верхний зазор, компенсируя отсутствие отступа у фото */
 }
 
@@ -360,6 +360,18 @@ p:has(img) + blockquote,
     object-fit: contain; 
     border-radius: 8px;
     margin: 0 !important;
+}
+
+/* Базовые ПК-параметры для одиночных видеороликов контента */
+.main-content video:not(.video-fig) {
+    height: 209px;       /* Точно такой же аккуратный потолок высоты, как у фото */
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: 16 / 9; /* Защита от прыжков верстки на этапе data-src */
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug); /* Серый щит лези-лоада */
 }
 
 /* Параметры картинок в ряду и в блоках figure (курсор-лупа и плавность) */

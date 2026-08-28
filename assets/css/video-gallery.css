@@ -82,7 +82,6 @@
         max-width: calc(50% - 8px) !important;
         height: auto !important; 
         flex: 0 0 auto !important;
-        /*max-height: 180px !important;*/
         object-fit: contain;
     }
 }

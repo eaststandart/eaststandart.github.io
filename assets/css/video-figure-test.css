@@ -1,0 +1,38 @@
+/* ============================================================
+   📦 КОМПОНЕНТ: ЖУРНАЛЬНЫЕ СЕТКИ ВИДЕОРОЛИКОВ (video-figure-test.css)
+   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   [БЛОК] Одиночная карточка видео (figure-video-single)
+   ------------------------------------------------------------ */
+.main-content .figure-video-single {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 1em 0;           
+}
+
+/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
+.main-content .figure-video-single figure.figure-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: max-content;      
+    max-width: 100%;         
+}
+
+/* [ЭЛЕМЕНТ] Видеоплеер внутри одиночного контейнера */
+.main-content .figure-video-single video.video-fig {
+    height: auto;            
+    max-height: 209px;       
+    width: auto;             
+    max-width: 100%;         
+    aspect-ratio: 16 / 9; /* Задаем пропорции плеера для предотвращения сдвигов макета */     
+    object-fit: contain;       
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug); /* Серый фон во время лези-лоада */
+}

@@ -29,7 +29,7 @@
     max-width: 100% !important;         
     aspect-ratio: auto !important;      
     object-fit: unset !important;       
-    background-color: #f0f0f0 !important;
+    background-color: var(--media-background-plug) !important;
 }
 
 /* ------------------------------------------------------------
@@ -62,7 +62,7 @@
     width: 100% !important;                     
     aspect-ratio: auto !important;    
     object-fit: contain !important;     
-    background-color: #f0f0f0 !important;
+    background-color: var(--media-background-plug) !important;
 }
 
 /* ------------------------------------------------------------
@@ -112,13 +112,13 @@
 /* --- 4.2 Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* 🔥 ЖЕСТКИЕ 2 КОЛОНКИ: Делят экран ровно пополам, центрирование Grid-блока */
+    /* 🔥 ТВОИ ЖЕСТКИЕ 2 КОЛОНКИ: Делят экран ровно пополам */
     .main-content .figure-center-row {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important; 
         justify-content: center !important; 
         align-items: start !important;      
-        gap: 15px !important; /* Ровный фиксированный зазор */              
+        gap: 15px !important;              
         width: 100% !important;
         margin: 1em 0 !important;           
     }
@@ -134,20 +134,21 @@
         max-width: 100% !important; 
     }
 
-    /* 🔥 КАРТИНКА В СЕТКЕ: Занимает 100% ширины своей колонки (всегда по 2 в ряд),
-       высота строго ограничена, а object-fit: cover убирает любые серые поля! */
+    /* 🔥 ТВОЯ ВЕРНАЯ ГЕОМЕТРИЯ: Картинки пропорционально раскрываются на всю ширину колонок */
     .main-content .figure-center-row img.img-fig {
         height: auto !important;          
-        width: 100% !important; /* Принудительно растягиваем на пол-экрана */ 
+        width: 100% !important; 
         max-width: 100% !important;        
         aspect-ratio: auto !important; 
+        background-color: var(--media-background-plug) !important;
     }
 
-    /* Одиночные центрированные картинки в landscape (остаются аккуратными с родными пропорциями) */
+    /* Одиночные центрированные картинки в landscape */
     .main-content .figure-center-single img.img-fig {
         height: 163px !important;
         width: auto !important;
         max-width: 100% !important;
         aspect-ratio: auto !important;
+        background-color: var(--media-background-plug) !important;
     }
 }

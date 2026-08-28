@@ -56,6 +56,12 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
 🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇
 
 [^1]: Даль Э.Н. Электроника для детей. Собираем простые схемы, экспериментируем с электричеством / Даль Э.Н.; пер. с англ. И. Е. Сацевича; \[науч. ред. Р. В. Тихонов\]. — М.: Манн, Иванов и Фербер, 2017. — 288 с. — ISBN 978-5-00100-687-9, УДК 087.5:621.31, ББК 84:22.33.

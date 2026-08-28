@@ -112,13 +112,13 @@
 /* --- 4.2 Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* 🔥 ТВОИ ЖЕСТКИЕ 2 КОЛОНКИ: Делят экран ровно пополам */
+    /* Колонки делят экран ровно пополам */
     .main-content .figure-center-row {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important; 
         justify-content: center !important; 
         align-items: start !important;      
-        gap: 15px !important;              
+        gap: 12px !important;              
         width: 100% !important;
         margin: 1em 0 !important;           
     }

@@ -373,7 +373,7 @@ p:has(img) + blockquote,
 
 /* Интерактивный зум изображения при удержании клика мышкой (работает без JS) */
 .main-content p img:not(.content-img):active,
-.main-content .figure-center img.img-center:active {
+.main-content .figure-center img.img-fig:active {
     transform: scale(2.0); 
     z-index: 999;          
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);

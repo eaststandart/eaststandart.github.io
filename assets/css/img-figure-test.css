@@ -1,0 +1,154 @@
+/* ============================================================
+   🧪 ТЕСТОВЫЙ МОДУЛЬ: ЖУРНАЛЬНЫЕ СЕТКИ С АВТО-РАСЧЕТОМ НА БОКУ (img-figure-test.css)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   3.A ВАРИАНТ ДЛЯ ОДИНОЧНОЙ КАРТИНКИ (класс figure-center-single)
+   ------------------------------------------------------------ */
+.main-content .figure-center-single {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+.main-content .figure-center-single figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    width: max-content !important;      
+    max-width: 100% !important;         
+}
+
+.main-content .figure-center-single img.img-fig {
+    height: auto !important;            
+    max-height: 209px !important;       
+    width: auto !important;             
+    max-width: 100% !important;         
+    aspect-ratio: auto !important;      
+    object-fit: unset !important;       
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   3.B ВАРИАНТ ДЛЯ ГАЛЕРЕИ (ДВЕ И БОЛЕЕ КАРТИНКИ) (figure-center-row)
+   ------------------------------------------------------------ */
+
+/* Автоматическая журнальная сетка Grid на ПК (остается жесткой, как тебе нравилось) */
+.main-content .figure-center-row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, 371px) !important;
+    justify-content: center !important; 
+    align-items: start !important;      
+    gap: 15px !important;               
+    width: 100% !important;
+    margin: 1em 0 !important;           
+}
+
+.main-content .figure-center-row figure.figure-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;               
+    width: 100% !important;             
+}
+
+.main-content .figure-center-row img.img-fig {
+    height: auto !important;           
+    max-height: 209px !important;
+    width: 100% !important;                     
+    aspect-ratio: auto !important;    
+    object-fit: contain !important;     
+    background-color: #f0f0f0 !important;
+}
+
+/* ------------------------------------------------------------
+   3.C ОБЩИЕ СТИЛИ ПОДПИСИ К КАРТИНКАМ
+   ------------------------------------------------------------ */
+.main-content figure.figure-center figcaption.figcaption-center {
+    text-align: center !important;      
+    margin-top: 1rem !important;        
+    display: block !important;
+    max-width: 371px !important;        
+    width: 100% !important;
+    word-break: break-word !important;  
+}
+
+
+/* ============================================================
+   4. АДАПТИВНОСТЬ
+   ============================================================ */
+
+/* --- 4.1 Смартфоны вертикально (Portrait) --- */
+@media (max-width: 900px) and (orientation: portrait) {
+    .main-content .figure-center-row {
+        grid-template-columns: 1fr !important;
+        justify-content: center !important;
+    }
+    
+    .main-content .figure-center-single img.img-fig,
+    .main-content .figure-center-row img.img-fig {
+        height: auto !important;       
+        max-height: none !important;   
+        width: 100% !important;
+        max-width: 100% !important;        
+        aspect-ratio: auto !important;
+    }
+    
+    .main-content .figure-center-row img.img-fig {
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    .main-content .figure-center-single figure.figure-center,
+    .main-content .figure-center-row figure.figure-center {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* --- 4.2 ТЕСТИРУЕМ: Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    
+    /* 🚀 ТЕСТ 1: Переводим строку галереи fig на Flexbox для авто-расчета */
+    .main-content .figure-center-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important; 
+        align-items: start !important;      
+        gap: 15px !important; /* Четкий фиксированный зазор без дыр */              
+        width: 100% !important;
+        margin: 1em 0 !important;           
+    }
+
+    /* 🚀 ТЕСТ 2: Карточка figure теперь не раздувается, а строго обжимает картинку */
+    .main-content .figure-center-row figure.figure-center {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;               
+        width: auto !important; 
+        max-width: max-content !important; 
+    }
+
+    /* 🚀 ТЕСТ 3: Картинка сама вычисляет свою ширину по пропорциям файла */
+    .main-content .figure-center-row img.img-fig {
+        height: 163px !important; /* Наш неизменный мобильный потолок высоты */          
+        width: auto !important;   /* Включаем авто-расчет ширины! */
+        max-height: 163px !important; 
+        max-width: 100% !important;        
+        object-fit: contain !important;     
+        aspect-ratio: auto !important; /* Убираем любые жесткие рамки */
+    }
+
+    /* Одиночные центрированные картинки в landscape (остаются как были) */
+    .main-content .figure-center-single img.img-fig {
+        height: 163px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        aspect-ratio: auto !important;
+    }
+}

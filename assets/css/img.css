@@ -13,4 +13,5 @@
 
 @import url("img-base.css");    /* 1. Стили для одиночных картинок в тексте */
 @import url("img-gallery.css"); /* 2. Стили для стандартной флекс-галереи в <p> */
-@import url("img-figure.css");  /* 3. Стили для журнальных сеток figure и адаптивности */
+/*@import url("img-figure.css");   3. Стили для журнальных сеток figure и адаптивности */
+@import url("img-figure-test.css");  /* 🧪 ТЕСТИРУЕМ НОВУЮ АВТО-ЛОГИКУ ТУТ */

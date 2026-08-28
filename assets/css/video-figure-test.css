@@ -72,3 +72,16 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     background-color: var(--media-background-plug);
 }
+
+
+/* ------------------------------------------------------------
+   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к видеофайлам figcaption (figcaption-video)
+   ------------------------------------------------------------ */
+.main-content figure.figure-video figcaption.figcaption-video {
+    display: block;
+    width: 100%;
+    max-width: 371px;        
+    margin-top: 1rem;        
+    text-align: center;      
+    word-break: break-word;  
+}

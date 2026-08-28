@@ -4,7 +4,7 @@
 
 /* --- ПК-ВЕРСИЯ --- */
 .main-content p img:not(.content-img) {
-    background-color: #f0f0f0 !important;
+    background-color: var(--media-background-plug) !important;
     height: 209px !important;              
     width: auto !important;                
     max-width: 100% !important;            

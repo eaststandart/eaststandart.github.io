@@ -29,7 +29,7 @@
     max-width: 100% !important;         
     aspect-ratio: auto !important;      
     object-fit: unset !important;       
-    background-color: #f0f0f0 !important;
+    background-color: var(--media-background-plug) !important;
 }
 
 /* ------------------------------------------------------------
@@ -62,7 +62,7 @@
     width: 100% !important;                     
     aspect-ratio: auto !important;    
     object-fit: contain !important;     
-    background-color: #f0f0f0 !important;
+    background-color: var(--media-background-plug) !important;
 }
 
 /* ------------------------------------------------------------

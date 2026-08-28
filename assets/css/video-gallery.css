@@ -20,7 +20,7 @@
     height: 209px;
     max-height: 250px;
     width: auto;
-    max-width: calc(50% - 10px);
+    max-width: calc(50% - 8px);
     flex: 0 1 auto; 
     border-radius: 8px;
     background: #000000; /* Родной фон загруженного видео, чтобы скрыть черные поля */
@@ -81,7 +81,6 @@
         width: calc(50% - 8px) !important; 
         max-width: calc(50% - 8px) !important;
         height: auto !important; 
-        max-height: 214px !important; 
         flex: 0 0 auto !important;
         /*max-height: 180px !important;*/
         object-fit: contain;

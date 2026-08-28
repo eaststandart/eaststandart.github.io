@@ -46,17 +46,19 @@ def process_markdown_images(markdown_content):
             alt_text = match.group(1).strip()
             img_url = match.group(2).strip()
             
+            # 🔥 ИСПРАВЛЕНО 1 & 2: Перенесли loading="lazy" в самый конец пустых тегов
             if not alt_text:
                 if not is_in_gallery:
-                    return f'<img class="img-custom" loading="lazy" alt="" src="{img_url}">'
-                return f'<img loading="lazy" alt="" src="{img_url}">'
+                    return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
+                return f'<img alt="" src="{img_url}" loading="lazy">'
                 
             parts = [p.strip() for p in alt_text.split('|') if p.strip()]
             
+            # 🔥 ИСПРАВЛЕНО 3 & 4: Перенесли loading="lazy" в самый конец пустых отфильтрованных тегов
             if not parts:
                 if not is_in_gallery:
-                    return f'<img class="img-custom" loading="lazy" alt="" src="{img_url}">'
-                return f'<img loading="lazy" alt="" src="{img_url}">'
+                    return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
+                return f'<img alt="" src="{img_url}" loading="lazy">'
                 
             classes = []
             custom_attrs = []
@@ -80,7 +82,7 @@ def process_markdown_images(markdown_content):
                         classes.remove('img-custom')
                     parts.pop(0)
                 
-            # 🔥 ИСПРАВЛЕНО: Строгое точное совпадение с 'fig'. Любые 'fig.', 'figure 1' и т.д. пойдут в текст подписи
+            # Строгое точное совпадение с 'fig'. Любые 'fig.', 'figure 1' и т.д. пойдут в текст подписи
             elif first_part.lower() == 'fig':
                 classes.append('img-center')
                 is_centered = True
@@ -110,6 +112,7 @@ def process_markdown_images(markdown_content):
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
+            # 🔥 ИСПРАВЛЕНО 5: loading="lazy" теперь гарантированно замыкает основной тег img
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
             if is_centered:

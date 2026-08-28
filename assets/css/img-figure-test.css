@@ -137,7 +137,7 @@
     /* Картинки пропорционально раскрываются на всю ширину колонок */
     .main-content .figure-center-row img.img-fig {
         height: auto !important;          
-        max-height: 213px !important;
+        max-height: 214px !important;
         width: 100% !important; 
         max-width: 100% !important;        
         aspect-ratio: auto !important; 

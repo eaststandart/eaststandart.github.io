@@ -70,11 +70,19 @@ figcaption {
 
 /* Сама увеличенная картинка внутри оверлея */
 .lightbox-overlay img {
-    max-width: 90%;                             /* Аккуратные зазоры по бокам экрана */
-    max-height: 90%;                            /* Зазоры сверху и снизу */
-    width: auto;
-    height: auto;
-    object-fit: contain;                        /* Идеальные пропорции без искажений */
+    width: 90%;                             /* Аккуратные зазоры по бокам экрана */
+    height: 90%;                            /* Зазоры сверху и снизу */
+    object-fit: contain;                    /* Идеальные пропорции без искажений */
+    
+    /* Сохраняет четкость пикселей при сильном увеличении мелких картинок/скриншотов */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    
+    border-radius: 12px;                        
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);  
+    transform: scale(0.95);                     
+    transition: transform 0.3s ease;
+}
     border-radius: 12px;                        /* Мягкие скругленные углы на превью */
     box-shadow: 0 20px 50px rgba(0,0,0,0.15);  /* Глубокая тень объема */
     transform: scale(0.95);                     

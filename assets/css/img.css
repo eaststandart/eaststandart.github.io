@@ -98,4 +98,6 @@ figcaption {
     border-radius: 8px;                             /* Мягкие скругленные углы */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
     background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
+    background-clip: padding-box !important;
+    -webkit-background-clip: padding-box !important;
 }

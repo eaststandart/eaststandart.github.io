@@ -95,7 +95,6 @@ figcaption {
     width: 100%;
     height: var(--media-pc-height) !important; /* Насильно зажимаем в 209px, пока идет загрузка */
     aspect-ratio: var(--ratio-landscape) !important; /* Удерживаем форму кадра 16/9 */
-    object-fit: contain;
 }
 
 /* ============================================================

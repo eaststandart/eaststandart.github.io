@@ -13,25 +13,34 @@
     margin: 1em 0;           
 }
 
-/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
+/* [ЭЛЕМЕНТ] Визуальный контейнер одиночной картинки fig */
 .main-content .figure-img-single figure.figure-img {
+    width: 371px;                                    /* Жёсткий журнальный шаг по ширине */
+    max-width: 100%;
+    height: var(--media-pc-height);                  /* Жёсткий потолок 209px из :root */
+    background-color: var(--media-background-plug);  /* Коробка всегда серая */
+    border-radius: 8px;
+    overflow: hidden;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0;
-    width: max-content;      
-    max-width: 100%;         
 }
 
-/* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
+/* [ЭЛЕМЕНТ] Базовое состояние загруженной одиночной журнальной картинки fig */
 .main-content .figure-img-single img.img-fig {
-    height: auto;            
-    max-height: var(--media-pc-height);       
-    width: auto;             
-    max-width: 100%;         
-    aspect-ratio: auto;      
-    object-fit: unset;       
+    height: auto;
+    max-height: var(--media-pc-height);              /* Ограничение высоты 209px на ПК */
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: auto;                              /* Свободные родные пропорции файла */
+    object-fit: contain;                             /* Защита от искажений */
+}
+
+/* 🧱 АНТИПРЫЖКОВЫЙ ЩИТ: Работает ТОЛЬКО в момент ожидания ленивой загрузки */
+.main-content .figure-img-single img.img-fig[data-src] {
+    width: 371px !important;                          /* Жесткий журнальный шаг заглушки */
+    height: var(--media-pc-height) !important;        /* Высота заглушки 209px */
+    aspect-ratio: var(--ratio-landscape) !important;  /* Прямоугольная форма 16/9 */
 }
 
 

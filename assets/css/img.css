@@ -89,7 +89,9 @@ figcaption {
 }
 
 .main-content img[data-src] {
-clip-path: inset(0 round 8px) !important;
+    box-shadow: none !important; /* Отключаем тень на время ожидания JS */
+    outline: 2px solid #f0f0f0 !important;
+    outline-offset: -1px !important;
 }
 
 

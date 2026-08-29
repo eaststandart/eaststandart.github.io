@@ -13,25 +13,25 @@
     margin: 1em 0;           
 }
 
-/* [ЭЛЕМЕНТ] Визуальный контейнер одиночной картинки fig */
+/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
 .main-content .figure-img-single figure.figure-img {
-    width: 371px;                                    /* Жёсткий журнальный шаг по ширине */
-    max-width: 100%;
-    height: var(--media-pc-height);                  /* Жёсткий потолок 209px из :root */
-    background-color: var(--media-background-plug);  /* Коробка всегда серая */
-    border-radius: 8px;
-    overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    width: max-content;      
+    max-width: 100%;         
 }
 
-/* [ЭЛЕМЕНТ] Сама картинка внутри одиночного журнального блока */
+/* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
 .main-content .figure-img-single img.img-fig {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;                  /* Идеально вписывает фото любой формы без прыжков вёрстки */
-    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
+    height: auto;            
+    max-height: var(--media-pc-height);       
+    width: auto;             
+    max-width: 100%;         
+    aspect-ratio: auto;      
+    object-fit: unset;       
 }
 
 

@@ -2,117 +2,92 @@
 # -*- coding: utf-8 -*-
 """
 @module images
-@about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose Автоматически вычисляет одиночные и групповые картинки в Маркдауне.
-         Для одиночных включает класс img-custom, ко всем добавляет loading="lazy".
-         Ключевое слово для центрирования и figure изменено с 'center' на 'fig'.
+@about Модуль предобработки изображений для Obsidian -> Jekyll с нативным лези-лоадом.
+@purpose Реализует строгое левостороннее чтение служебных ключей (fig, v, 320x405),
+         автоматически отсекает обсидиановские хвосты размеров |400, изолирует
+         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> src.
+@author TechLab
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с нативным лези-лоадом.
+    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки.
+    Гарантирует порядок атрибутов alt перед src и нативный loading="lazy".
     """
     # Паттерн ловит картинки с расширениями webp, jpg, jpeg, png, gif, svg (регистронезависимо)
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     
     lines = markdown_content.split('\n')
-    grouped_line_indices = set()
-    
-    # Пасс 1: Находим все групповые картинки (столбики без пустых строк)
-    for i in range(len(lines)):
-        current_line = lines[i].strip()
-        if current_line and re.search(img_pattern, current_line, re.IGNORECASE):
-            is_grouped = False
-            
-            if i > 0 and lines[i-1].strip() and re.search(img_pattern, lines[i-1].strip(), re.IGNORECASE):
-                is_grouped = True
-                grouped_line_indices.add(i-1)
-                
-            if i < len(lines) - 1 and lines[i+1].strip() and re.search(img_pattern, lines[i+1].strip(), re.IGNORECASE):
-                is_grouped = True
-                grouped_line_indices.add(i+1)
-                
-            if is_grouped:
-                grouped_line_indices.add(i)
-
-    # Пасс 2: Построчно обрабатываем контент
     processed_lines = []
-    for i, line in enumerate(lines):
-        is_in_gallery = i in grouped_line_indices
-        
+
+    for line in lines:
         def replacer(match):
-            alt_text = match.group(1).strip()
+            alt_content = match.group(1).strip()
             img_url = match.group(2).strip()
             
-            # Перенесли loading="lazy" в самый конец пустых тегов
-            if not alt_text:
-                if not is_in_gallery:
-                    return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
+            # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
+            # Находим и намертво вырезаем конструкцию "| число" в самом конце скобок
+            alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
+            
+            # Если после очистки скобки оказались пустыми — отдаем чистую базовую картинку
+            if not alt_content:
                 return f'<img alt="" src="{img_url}" loading="lazy">'
                 
-            parts = [p.strip() for p in alt_text.split('|') if p.strip()]
+            # Разбиваем содержимое по вертикальной палочке
+            parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
-            # Перенесли loading="lazy" в самый конец пустых отфильтрованных тегов
+            # Если массив частей пуст — отдаем чистую базовую картинку
             if not parts:
-                if not is_in_gallery:
-                    return f'<img class="img-custom" alt="" src="{img_url}" loading="lazy">'
                 return f'<img alt="" src="{img_url}" loading="lazy">'
                 
             classes = []
             custom_attrs = []
             is_centered = False
             
-            if not is_in_gallery:
-                classes.append('img-custom')
+            # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ (Слева направо) ---
             
-            first_part = parts[0]
-            
-            # Базовым ключом первого уровня всегда является 'fig'
-            if first_part.lower() == 'fig':
+            # Проверяем Ключ 1: Журнальная сетка 'fig'
+            if parts[0].lower() == 'fig':
                 classes.append('img-fig')
                 is_centered = True
-                if 'img-custom' in classes:
-                    classes.remove('img-custom')
-                parts.pop(0)
+                parts.pop(0) # Удаляем отработанный ключ fig
                 
-                # Если вторым ключом идёт 'v', докидываем класс вертикалки
+                # Проверяем вложенный Ключ 2: Вертикальный модификатор 'v' внутри fig
                 if parts and parts[0].lower() == 'v':
                     classes.append('img-v')
                     parts.pop(0)
-            
-            # Старая логика одиночной вертикальной картинки без fig (если вдруг используется ![v](url))
-            elif first_part.lower() == 'v':
-                if is_in_gallery:
-                    classes.append('img-v')
+                    
+            # Проверяем Ключ 1: Одиночная вертикалка в тексте 'v' (без fig)
+            elif parts[0].lower() == 'v':
+                classes.append('img-v')
                 parts.pop(0)
                 
-            elif re.match(r'^\d+[xх]\d+$', first_part, re.IGNORECASE):
-                dimensions = re.split(r'[xх]', first_part, flags=re.IGNORECASE)
+            # Проверяем Ключ 1: Ручной кастомный размер сторон '320x405'
+            elif re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
+                classes.append('img-custom')
+                dimensions = re.split(r'[xх]', parts[0], flags=re.IGNORECASE)
                 width, height = dimensions[0], dimensions[1]
                 
+                # Записываем точные физические атрибуты сторон
                 custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
-                
+                # Включаем жесткую защиту CLS и инлайновые пропорции соотношения сторон
                 custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
+                parts.pop(0) # Удаляем отработанный ключ размера
                 
-                if 'img-custom' not in classes:
-                    classes.append('img-custom')
-                parts.pop(0)
-
-                
-            if parts and re.match(r'^\d+$', parts[-1]):
-                parts.pop()
-                
+            # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
             clean_alt = " | ".join(parts) if parts else ""
             
+            # Формируем строки атрибутов
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # loading="lazy" гарантированно замыкает основной тег img
+            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (alt перед src) ---
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
             
+            # Если был запрошен журнальный режим, упаковываем в семантическую коробку figure
             if is_centered:
                 figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                 return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'

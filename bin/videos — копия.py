@@ -4,10 +4,8 @@
 @script videos.py
 @about Модуль предобработки видео-ссылок для Obsidian -> Jekyll с поддержкой ленивой загрузки.
 @purpose Автоматически вычисляет одиночные и групповые видеоролики в Маркдауне.
-         Реализует глобальный закон очистки служебных хвостов Обсидиана (|400),
-         выстраивает правильный HTML-порядок атрибутов title -> data-src
-         и собирает простые видео во флекс-ряды .video-row.
-@author TechLab
+         Ключевое слово для центрирования и figure изменено с 'center' на 'fig'.
+         Добавлена автоматическая генерация SEO-атрибута title для всех плееров.
 """
 
 import re
@@ -15,22 +13,20 @@ import re
 def process_markdown_videos(markdown_content):
     """
     Ищет ссылки на видео и собирает их в HTML5-блоки с data-src для ленивой загрузки.
-    Гарантирует порядок атрибутов title перед data-src и защиту от лишних цифр.
+    Поддерживает одиночные и групповые журнальные видеосетки с подписями,
+    а также собирает простые видео без ключей во флекс-ряды .video-row.
     """
     video_pattern = r'!\[(.*?)\]\((.*?\.(?:webm|mp4))\)'
     
     lines = markdown_content.split('\n')
     fig_line_indices = set()
     
-    # Пасс 1: Заранее находим все строки, где на первой позиции запрошен ключ fig
+    # Пасс 1: Заранее находим все строки, где ЯВНО запрошен журнальный ключ fig
     for i in range(len(lines)):
         current_line = lines[i].strip()
         if current_line and re.search(video_pattern, current_line, re.IGNORECASE):
             match = re.search(video_pattern, current_line, re.IGNORECASE)
             alt_text = match.group(1).strip()
-            
-            # Предварительно чистим хвост для точного определения ключа
-            alt_text = re.sub(r'\|\s*\d+\s*$', '', alt_text).strip()
             parts = [p.strip() for p in alt_text.split('|') if p.strip()]
             if parts and parts[0].lower() == 'fig':
                 fig_line_indices.add(i)
@@ -42,11 +38,13 @@ def process_markdown_videos(markdown_content):
         line = lines[i]
         line_stripped = line.strip()
         
+        # Если строка пустая — просто пропускаем её дальше
         if not line_stripped:
             processed_lines.append(line)
             i += 1
             continue
             
+        # Проверяем, является ли строка видеороликом
         is_video = re.match(video_pattern, line_stripped, re.IGNORECASE)
         
         if is_video:
@@ -55,9 +53,6 @@ def process_markdown_videos(markdown_content):
                 match = re.match(video_pattern, line_stripped, re.IGNORECASE)
                 alt_text = match.group(1).strip()
                 video_url = match.group(2).strip()
-                
-                # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
-                alt_text = re.sub(r'\|\s*\d+\s*$', '', alt_text).strip()
                 parts = [p.strip() for p in alt_text.split('|') if p.strip()]
                 
                 classes = ['video-fig']
@@ -68,12 +63,16 @@ def process_markdown_videos(markdown_content):
                     classes.append('video-v')
                     parts.pop(0)
                     
+                # Отсекаем цифры размера Обсидиана в конце
+                if parts and re.match(r'^\d+$', parts[-1]):
+                    parts.pop()
+                    
                 clean_alt = " | ".join(parts) if parts else ""
                 class_str = f' class="{" ".join(classes)}"'
                 # Формируем title, если текст описания существует
                 title_str = f' title="{clean_alt}"' if clean_alt else ''
                 
-                # --- ШАГ 2: СБОРКА HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (title перед data-src) ---
+                # Собираем плеер с атрибутом title контента
                 video_html = f'<video{class_str}{title_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
                 figcaption_html = f'<figcaption class="figcaption-video">{clean_alt}</figcaption>' if clean_alt else ''
                 
@@ -87,9 +86,6 @@ def process_markdown_videos(markdown_content):
                     match = re.match(video_pattern, lines[i].strip(), re.IGNORECASE)
                     alt_text = match.group(1).strip()
                     video_url = match.group(2).strip()
-                    
-                    # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
-                    alt_text = re.sub(r'\|\s*\d+\s*$', '', alt_text).strip()
                     parts = [p.strip() for p in alt_text.split('|') if p.strip()]
                     
                     classes = []
@@ -97,11 +93,16 @@ def process_markdown_videos(markdown_content):
                         classes.append('video-v')
                         parts.pop(0)
                         
+                    # Отсекаем цифры размера
+                    if parts and re.match(r'^\d+$', parts[-1]):
+                        parts.pop()
+                        
                     clean_alt = " | ".join(parts) if parts else ""
                     class_str = f' class="{" ".join(classes)}"' if classes else ''
+                    # Формируем title, если текст описания существует
                     title_str = f' title="{clean_alt}"' if clean_alt else ''
                     
-                    # --- ШАГ 2: СБОРКА HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (title перед data-src) ---
+                    # Собираем плеер с атрибутом title контента
                     video_html = f'<video{class_str}{title_str} data-src="{video_url}" controls muted playsinline preload="none"></video>'
                     video_group.append(video_html)
                     i += 1
@@ -109,9 +110,11 @@ def process_markdown_videos(markdown_content):
                 if video_group:
                     processed_lines.append(f'<div class="video-row">{"".join(video_group)}</div>')
         else:
+            # Обычный текст, заголовки, списки
             processed_lines.append(line)
             i += 1
             
+    # === ФИНАЛЬНЫЙ ПАСС: Автоматическая группировка рядов figure-video ДЛЯ JEKYLL ===
     article_html = '\n'.join(processed_lines)
     
     def group_rows(match):

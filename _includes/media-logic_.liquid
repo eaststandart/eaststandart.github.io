@@ -1,0 +1,20 @@
+{%- comment -%}
+@about Глобальный модуль оптимизации медиаконтента.
+@purpose Подключение и последовательный запуск скрипта ленивой загрузки видеоплееров.
+@author TechLab
+{%- endcomment -%}
+
+<!-- Подключаем изолированный внешний файл ленивой загрузки ВИДЕОПЛЕЕРОВ -->
+<script src="{{ '/assets/js/video-lazy-load.js' | relative_url }}"></script>
+
+<script>
+  // Запускаем движок видео строго после полной сборки страницы браузером
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // Активируем ленивую трансформацию видеоплееров (.webm)
+    if (typeof runVideoLazyLoad === 'function') {
+        runVideoLazyLoad();
+    }
+    
+  });
+</script>

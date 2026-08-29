@@ -27,7 +27,7 @@
 /* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
 .main-content .figure-img-single img.img-fig {
     height: auto;            
-    max-height: 209px;       
+    max-height: var(--media-pc-height);       
     width: auto;             
     max-width: 100%;         
     aspect-ratio: auto;      
@@ -44,7 +44,7 @@
     grid-template-columns: repeat(auto-fit, 371px);
     justify-content: center; 
     align-items: start;      
-    gap: 15px;               
+    gap: var(--gap-pc);               
     width: 100%;
     margin: 1em 0;           
 }
@@ -62,7 +62,7 @@
 /* [ЭЛЕМЕНТ] Картинка внутри галерейного ряда */
 .main-content .figure-img-row img.img-fig {
     height: auto;           
-    max-height: 209px;
+    max-height: var(--media-pc-height);
     width: 100%;                     
     aspect-ratio: auto;    
     object-fit: contain;     
@@ -100,7 +100,7 @@
     }
     
     .main-content .figure-img-row img.img-fig {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: var(--ratio-landscape);
     }
 }
 
@@ -110,22 +110,22 @@
     /* Твои жесткие 2 колонки картинок с выравниванием по верхней кромке */
     .main-content .figure-img-row {
         grid-template-columns: repeat(2, 1fr); 
-        gap: 15px;
+        gap: var(--gap-pc);
         align-items: start; 
     }
 
     /* Мобильный лимит высоты с микро-запасом для iPhone */
     .main-content .figure-img-row img.img-fig {
-        max-height: 214px; 
+        max-height: var(--media-figure-landscape-max); 
     }
 
     /* Точечный пересчет пропорций для вертикальных картинок в галерее fig боком */
     .main-content .figure-img-row img.img-fig.img-v {
-        aspect-ratio: 16 / 9; 
+        aspect-ratio: var(--ratio-landscape)var(--ratio-landscape); 
     }
 
     .main-content .figure-img-single img.img-fig {
-        height: 163px;
+        height: var(--media-mobile-landscape-height);
         width: auto;
     }
 }

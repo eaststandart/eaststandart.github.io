@@ -88,12 +88,10 @@ figcaption {
     transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
 }
 
-.main-content img[data-src]:not(.img-custom) {
+.main-content img[data-src] {
     box-shadow: none !important; /* Отключаем тень на время ожидания JS */
-    border: 0 !important;        /* Полностью стираем заводскую обводку Chrome */
-    outline: 0 !important;       /* Убираем внешний контур битого тега */
-    font-size: 0 !important;     /* Прячем значок разбитого кадра */
-    color: transparent !important;
+    content: "" !important;                   
+    display: inline-block;
 }
 
 

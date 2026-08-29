@@ -78,13 +78,8 @@ figcaption {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     
-    border-radius: 12px;                        
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);  
-    transform: scale(0.95);                     
-    transition: transform 0.3s ease;
-}
     border-radius: 12px;                        /* Мягкие скругленные углы на превью */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);  /* Глубокая тень объема */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);   /* Глубокая тень объема */
     transform: scale(0.95);                     
     transition: transform 0.3s ease;
 }

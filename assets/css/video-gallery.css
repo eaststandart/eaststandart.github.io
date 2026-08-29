@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap; 
-    gap: 15px;       
+    gap: var(--gap-pc);       
     margin: 12px 0 0 0 !important;
     width: 100%;
     align-items: flex-start;
@@ -16,8 +16,8 @@
 
 /* [ЭЛЕМЕНТ] Видеоплеер внутри флекс-ряда (Режим ПК) */
 .main-content .video-row video {
-    aspect-ratio: 16 / 9;
-    height: 209px;
+    aspect-ratio: var(--ratio-landscape);
+    height: var(--media-pc-height);
     max-height: 250px;
     width: auto;
     max-width: calc(50% - 8px);
@@ -37,14 +37,14 @@
 /* Для любых видео контента на сайте, пока они находятся в режиме data-src */
 .main-content video[data-src] {
     background-color: var(--media-background-plug) !important; /* Твоя глобальная переменная */
-    aspect-ratio: 16 / 9 !important;
+    aspect-ratio: var(--ratio-landscape) !important;
     display: block;
 }
 
 /* Для видеоплееров внутри флекс-ряда в процессе их ленивой загрузки */
 .main-content .video-row video[data-src] {
     background: var(--media-background-plug) !important; /* Меняем черный фон на серую заглушку */
-    aspect-ratio: 16 / 9 !important; 
+    aspect-ratio: var(--ratio-landscape) !important; 
 }
 
 
@@ -65,7 +65,7 @@
         height: auto !important;
         max-height: none !important;
         margin: 0 !important;
-        aspect-ratio: 16 / 9 !important;
+        aspect-ratio: var(--ratio-landscape) !important;
     }
 }
 

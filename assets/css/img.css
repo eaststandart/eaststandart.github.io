@@ -90,8 +90,8 @@ figcaption {
 
 .main-content img[data-src] {
     box-shadow: none !important; /* Отключаем тень на время ожидания JS */
-    content: "" !important;                   
-    display: inline-block;
+    border: 1px solid var(--media-background-plug) !important;
+    outline: none !important;
 }
 
 

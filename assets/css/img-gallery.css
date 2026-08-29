@@ -12,6 +12,7 @@
 @media (max-width: 900px) and (orientation: portrait) {
     /* Перестраиваем горизонтальный флекс-ряд в плотный вертикальный столбец */
     .main-content p:has(img) {
+        display: flex !important;
         flex-direction: column !important;
         gap: 1.2em !important; 
     }

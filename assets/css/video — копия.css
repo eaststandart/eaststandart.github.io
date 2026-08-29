@@ -22,17 +22,7 @@
     max-width: 100%;
     aspect-ratio: var(--ratio-landscape); /* Защита от прыжков верстки на этапе data-src. Управляется с пульта :root */
     object-fit: contain;
-}
-
-/* ============================================================
-   🎨 ЕДИНЫЙ ЦЕНТР ДЕКОРАТИВНОГО ОФОРМЛЕНИЯ КАРТИНОК
-   ============================================================ */
-
-/* Применяем скругление, тени и серый щит лези-лоада ко всем плеерам контента */
-.main-content video:not(.video-fig),
-.main-content .video-row video,
-.main-content .figure-video video.video-fig {
-    border-radius: 8px;                             /* Мягкие скругленные углы */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
-    background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug); 
 }

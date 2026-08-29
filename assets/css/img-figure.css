@@ -119,7 +119,7 @@
 
     /* Точечный пересчет пропорций для вертикальных картинок в галерее fig боком */
     .main-content .figure-img-row img.img-fig.img-v {
-        aspect-ratio: var(--ratio-landscape)var(--ratio-landscape); 
+        aspect-ratio: var(--ratio-landscape); 
     }
 
     .main-content .figure-img-single img.img-fig {

@@ -22,8 +22,10 @@
     width: auto;
     max-width: calc(50% - 8px);
     flex: 0 1 auto; 
+    border-radius: 8px;
     background: #000000; /* Родной фон загруженного видео, чтобы скрыть черные поля */
     object-fit: contain;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     display: block;
 }
 
@@ -34,6 +36,7 @@
 
 /* Для любых видео контента на сайте, пока они находятся в режиме data-src */
 .main-content video[data-src] {
+    background-color: var(--media-background-plug) !important; /* Твоя глобальная переменная */
     aspect-ratio: var(--ratio-landscape) !important;
     display: block;
 }

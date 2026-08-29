@@ -32,6 +32,9 @@
     max-width: 100%;         
     aspect-ratio: var(--ratio-landscape); /* Задаем пропорции плеера для предотвращения сдвигов макета */     
     object-fit: contain;       
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug); /* Серый фон во время лези-лоада */
 }
 
 
@@ -65,6 +68,9 @@
     width: 100%;                     
     aspect-ratio: var(--ratio-landscape);    
     object-fit: contain;     
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--media-background-plug);
 }
 
 

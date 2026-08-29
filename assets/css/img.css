@@ -88,12 +88,6 @@ figcaption {
     transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
 }
 
-.main-content img[data-src] {
-    box-shadow: none !important; /* Отключаем тень на время ожидания JS */
-    outline: 2px solid #f0f0f0 !important;
-    outline-offset: -1px !important;
-}
-
 
 /* ============================================================
    🎨 ЕДИНЫЙ ЦЕНТР ДЕКОРАТИВНОГО ОФОРМЛЕНИЯ КАРТИНОК

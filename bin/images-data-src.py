@@ -6,8 +6,7 @@
 @purpose Заменяет нативный src на data-src для жесткого контроля трафика через JavaScript,
          реализует строгое левостороннее чтение служебных ключей (fig, v, 320x405),
          автоматически отсекает обсидиановские хвосты размеров |400, изолирует
-         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> src -> data-src.
-         Внедряет прозрачный 1x1 GIF в src для полного уничтожения системной рамки Chrome.
+         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> data-src.
 @author TechLab
 """
 
@@ -16,14 +15,10 @@ import re
 def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
-    Внедряет прозрачный пиксель Base64 в src для защиты от системных рамок Chromium.
+    Гарантирует порядок атрибутов alt перед data-src для последующей ленивой загрузки.
     """
     # Паттерн ловит картинки с расширениями webp, jpg, jpeg, png, gif, svg (регистронезависимо)
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
-    
-    # 🛡️ СИСТЕМНЫЙ ХАК: Прозрачный GIF 1x1 в формате Base64
-    # Он заставит Chrome считать картинку валидной и навсегда отключит серую обводку
-    transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
     lines = markdown_content.split('\n')
     processed_lines = []
@@ -36,16 +31,16 @@ def process_markdown_images(markdown_content):
             # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
-            # Если после очистки скобки оказались пустыми — отдаем чистую базовую картинку с пикселем в src
+            # Если после очистки скобки оказались пустыми — отдаем чистую базовую картинку с data-src
             if not alt_content:
-                return f'<img alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img alt="" data-src="{img_url}">'
                 
             # Разбиваем содержимое по вертикальной палочке
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
-            # Если массив частей пуст — отдаем чистую базовую картинку с пикселем в src
+            # Если массив частей пуст — отдаем чистую базовую картинку с data-src
             if not parts:
-                return f'<img alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img alt="" data-src="{img_url}">'
                 
             classes = []
             custom_attrs = []
@@ -89,8 +84,8 @@ def process_markdown_images(markdown_content):
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (alt -> src -> data-src) ---
-            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
+            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (alt перед data-src) ---
+            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" data-src="{img_url}">'
             
             # Если был запрошен журнальный режим, упаковываем в семантическую коробку figure
             if is_centered:

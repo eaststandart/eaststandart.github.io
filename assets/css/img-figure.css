@@ -23,6 +23,7 @@
     
     width: auto !important;
     max-width: 100% !important;
+    margin: 0;  
 }
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */

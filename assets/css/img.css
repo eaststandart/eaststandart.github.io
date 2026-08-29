@@ -34,3 +34,21 @@ figcaption {
     margin-top: 1rem; 
     line-height: 1.4; 
 }
+
+/* 4. ОБЩИЙ ЦЕНТРАЛИЗОВАННЫЙ ЗУМ ДЛЯ ВСЕХ ТИПОВ КАРТИНОК НА САЙТЕ */
+.main-content p img:not(.content-img),
+.main-content .figure-img img.img-fig {
+    cursor: zoom-in !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Интерактивный зум изображения при удержании клика мышкой */
+.main-content p img:not(.content-img):active,
+.main-content .figure-img img.img-fig:active {
+    transform: scale(2.0); 
+    z-index: 999;          
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    cursor: zoom-out;
+}

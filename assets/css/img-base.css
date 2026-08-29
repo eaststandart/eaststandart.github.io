@@ -61,11 +61,11 @@
     }
     
     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: var(--ratio-landscape);
     }
     
     .main-content p img.img-v {
-        aspect-ratio: 9 / 16;
+        aspect-ratio: var(--ratio-portrait);
     }
     
     .main-content p img.img-custom {
@@ -76,17 +76,17 @@
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     .main-content p img:not(.content-img) {
-        height: 163px;
+        height: var(--media-mobile-landscape-height);
         width: auto;
         max-width: 100% !important;
     }
 
     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) { 
-        aspect-ratio: 16 / 9; 
+        aspect-ratio: var(--ratio-landscape); 
     }
 
     .main-content p img.img-v { 
-        aspect-ratio: 9 / 16; 
+        aspect-ratio: var(--ratio-portrait); 
     }
 
     .main-content p img.img-custom {

@@ -64,3 +64,6 @@ custom_css: ["/assets/css/giscus.css"]
     {%- include discus.liquid -%}
 </div>
 {%- endif -%}
+
+<!--  ПОДКЛЮЧЕНИЕ ЦЕНТРАЛИЗОВАННОГО МОДУЛЯ ЗУМА КАРТИНОК -->
+{%- include zoom.liquid -%}

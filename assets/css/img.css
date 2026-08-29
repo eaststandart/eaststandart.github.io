@@ -35,20 +35,52 @@ figcaption {
     line-height: 1.4; 
 }
 
-/* 4. ОБЩИЙ ЦЕНТРАЛИЗОВАННЫЙ ЗУМ ДЛЯ ВСЕХ ТИПОВ КАРТИНОК НА САЙТЕ */
+/*  4. ПОДГОТОВКА КУРСОРОВ ДЛЯ ВСЕХ КАРТИНОК КОНТЕНТА */
 .main-content p img:not(.content-img),
 .main-content .figure-img img.img-fig {
     cursor: zoom-in !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     position: relative;
     z-index: 1;
 }
 
-/* Интерактивный зум изображения при удержании клика мышкой */
-.main-content p img:not(.content-img):active,
-.main-content .figure-img img.img-fig:active {
-    transform: scale(2.0); 
-    z-index: 999;          
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    cursor: zoom-out;
+/*  5. СТИЛИ ПОЛНОЭКРАННОГО МОДЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(244, 247, 246, 0.85); /* Базовый фон темы с мягким размытием */
+    backdrop-filter: blur(8px);                 /* Красивое размытие заднего плана (iOS-стиль) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;                             /* Железно поверх всего контента, шапок и подвалов */
+    opacity: 0;
+    pointer-events: none;                       /* Пока скрыт — клики пролетают насквозь */
+    transition: opacity 0.3s ease;
+    cursor: zoom-out;                           /* Клик в любое место закроет просмотр */
+}
+
+/* Модификатор класса активации оверлея из JS */
+.lightbox-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;                       /* Включаем кликабельность */
+}
+
+/* Сама увеличенная картинка внутри оверлея */
+.lightbox-overlay img {
+    max-width: 90%;                             /* Аккуратные зазоры по бокам экрана */
+    max-height: 90%;                            /* Зазоры сверху и снизу */
+    width: auto;
+    height: auto;
+    object-fit: contain;                        /* Идеальные пропорции без искажений */
+    border-radius: 12px;                        /* Мягкие скругленные углы на превью */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);  /* Глубокая тень объема */
+    transform: scale(0.95);                     
+    transition: transform 0.3s ease;
+}
+
+.lightbox-overlay.is-active img {
+    transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
 }

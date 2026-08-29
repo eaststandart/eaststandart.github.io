@@ -26,21 +26,12 @@
     justify-content: center;
 }
 
-/* [ЭЛЕМЕНТ] Базовое состояние загруженной одиночной журнальной картинки fig */
+/* [ЭЛЕМЕНТ] Сама картинка внутри одиночного журнального блока */
 .main-content .figure-img-single img.img-fig {
-    height: auto;
-    max-height: var(--media-pc-height);              /* Ограничение высоты 209px на ПК */
-    width: auto;
-    max-width: 100%;
-    aspect-ratio: auto;                              /* Свободные родные пропорции файла */
-    object-fit: contain;                             /* Защита от искажений */
-}
-
-/* 🧱 АНТИПРЫЖКОВЫЙ ЩИТ: Работает ТОЛЬКО в момент ожидания ленивой загрузки */
-.main-content .figure-img-single img.img-fig[data-src] {
-    width: 371px !important;                          /* Жесткий журнальный шаг заглушки */
-    height: var(--media-pc-height) !important;        /* Высота заглушки 209px */
-    aspect-ratio: var(--ratio-landscape) !important;  /* Прямоугольная форма 16/9 */
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;                  /* Идеально вписывает фото любой формы без прыжков вёрстки */
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
 }
 
 

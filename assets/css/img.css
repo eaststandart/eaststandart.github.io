@@ -95,6 +95,7 @@ figcaption {
     width: 100%;
     height: var(--media-pc-height) !important; /* Насильно зажимаем в 209px, пока идет загрузка */
     aspect-ratio: var(--ratio-landscape) !important; /* Удерживаем форму кадра 16/9 */
+    object-fit: contain;
 }
 
 /* ============================================================
@@ -107,5 +108,4 @@ figcaption {
     border-radius: 8px;                             /* Мягкие скругленные углы */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
     background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
-    overflow: hidden !important;                    /* Запечатываем углы, чтобы декор и тени не прерывались */
 }

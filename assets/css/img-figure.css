@@ -37,7 +37,7 @@
 /* Снимает ограничения высоты, позволяя заглушке и фото принять точные инлайновые пропорции */
 .main-content .figure-img-single img.img-fig.img-custom {
     height: auto !important;
-    max-height: none !important;                     /* Отключаем 209px для ручных панорам/схем */
+    max-height: 100% !important;                     /* Отключаем 209px для ручных панорам/схем */
     width: 100% !important;                          /* Растягиваем до физических границ */
     object-fit: contain !important;
 }

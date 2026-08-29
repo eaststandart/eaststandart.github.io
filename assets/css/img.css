@@ -7,10 +7,30 @@
 */
 
 /* ============================================================
-   ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
-   Назначение: Собирает изолированные модули картинок в один блок
+   🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
-@import url("img-base.css");    /* 1. Стили для одиночных картинок в тексте */
-@import url("img-gallery.css"); /* 2. Стили для стандартной флекс-галереи в <p> */
-@import url("img-figure.css");  /* 3. Стили для журнальных сеток figure и адаптивности */
+/* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
+@import url("img-base.css");         
+@import url("img-gallery.css");      
+@import url("img-figure-test.css");  
+
+/* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
+.main-content p:has(img) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--gap-pc);         
+    margin: 1em 0 !important;   
+    padding: 0 !important;      
+}
+
+/* 3. ОБЩИЙ СТИЛЬ ДЛЯ ПОДПИСЕЙ К МЕДИАФАЙЛАМ КАРТИНОК */
+figcaption {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6a737d;
+    margin-top: 1rem; 
+    line-height: 1.4; 
+}

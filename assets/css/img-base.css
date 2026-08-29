@@ -1,20 +1,40 @@
 /* ============================================================
    📦 КОМПОНЕНТ: БАЗОВЫЕ И ОДИНОЧНЫЕ КАРТИНКИ (img-base.css)
-   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
    ============================================================ */
 
 /* [БЛОК] Базовые изображения внутри абзацев контента */
 .main-content p img:not(.content-img) {
-    height: 209px;              
+    height: var(--media-pc-height);              
     width: auto;                
     max-width: 100%;            
-    aspect-ratio: 16 / 9;
+    aspect-ratio: var(--ratio-landscape);
     background-color: var(--media-background-plug);
+    object-fit: contain; 
+    border-radius: 8px;
+    margin: 0 !important;
+}
+
+/* [ЭЛЕМЕНТ] Параметры картинок в ряду контента и в блоках figure (курсор-лупа и плавность) */
+.main-content p img:not(.content-img),
+.main-content .figure-img img.img-fig {
+    cursor: zoom-in !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* [МОДИФИКАТОР] Интерактивный зум изображения при удержании клика мышкой */
+.main-content p img:not(.content-img):active,
+.main-content .figure-img img.img-fig:active {
+    transform: scale(2.0); 
+    z-index: 999;          
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    cursor: zoom-out;
 }
 
 /* [МОДИФИКАТОР] Вертикальная картинка в текстовом потоке */
 .main-content p img.img-v {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: var(--ratio-portrait);
 }
 
 /* [МОДИФИКАТОР] Изображение с произвольным пользовательским размером */

@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 @module images
-@about Модуль предобработки изображений для Obsidian -> Jekyll с нативным лези-лоадом.
-@purpose Реализует строгое левостороннее чтение служебных ключей (fig, v, 320x405),
+@about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
+@purpose Заменяет нативный src на data-src для жесткого контроля трафика через JavaScript,
+         реализует строгое левостороннее чтение служебных ключей (fig, v, 320x405),
          автоматически отсекает обсидиановские хвосты размеров |400, изолирует
-         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> src.
+         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> data-src.
 @author TechLab
 """
 
@@ -13,8 +14,8 @@ import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки.
-    Гарантирует порядок атрибутов alt перед src и нативный loading="lazy".
+    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
+    Гарантирует порядок атрибутов alt перед data-src для последующей ленивой загрузки.
     """
     # Паттерн ловит картинки с расширениями webp, jpg, jpeg, png, gif, svg (регистронезависимо)
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
@@ -28,19 +29,18 @@ def process_markdown_images(markdown_content):
             img_url = match.group(2).strip()
             
             # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
-            # Находим и намертво вырезаем конструкцию "| число" в самом конце скобок
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
-            # Если после очистки скобки оказались пустыми — отдаем чистую базовую картинку
+            # Если после очистки скобки оказались пустыми — отдаем чистую базовую картинку с data-src
             if not alt_content:
-                return f'<img alt="" src="{img_url}" loading="lazy">'
+                return f'<img alt="" data-src="{img_url}">'
                 
             # Разбиваем содержимое по вертикальной палочке
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
-            # Если массив частей пуст — отдаем чистую базовую картинку
+            # Если массив частей пуст — отдаем чистую базовую картинку с data-src
             if not parts:
-                return f'<img alt="" src="{img_url}" loading="lazy">'
+                return f'<img alt="" data-src="{img_url}">'
                 
             classes = []
             custom_attrs = []
@@ -84,8 +84,8 @@ def process_markdown_images(markdown_content):
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (alt перед src) ---
-            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{img_url}" loading="lazy">'
+            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ПРАВИЛЬНЫМ ПОРЯДКОМ (alt перед data-src) ---
+            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" data-src="{img_url}">'
             
             # Если был запрошен журнальный режим, упаковываем в семантическую коробку figure
             if is_centered:

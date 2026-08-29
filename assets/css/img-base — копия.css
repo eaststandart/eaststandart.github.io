@@ -8,7 +8,9 @@
     width: auto;                
     max-width: 100%;            
     aspect-ratio: var(--ratio-landscape);
+    background-color: var(--media-background-plug);
     object-fit: contain; 
+    border-radius: 8px;
     margin: 0 !important;
 }
 

@@ -13,30 +13,25 @@
     margin: 1em 0;           
 }
 
-/* ============================================================
-   📦 КОМПОНЕНТ: ЖУРНАЛЬНАЯ ОДИНОЧНАЯ КАРТИНКА (figure-img-single)
-   ============================================================ */
-
-/* [БЛОК] Внешний контейнер-коробка одиночного журнального элемента */
+/* [ЭЛЕМЕНТ] Визуальный контейнер одиночной картинки fig */
 .main-content .figure-img-single figure.figure-img {
-    display: flex !important;
-    /* 🔥 ИСПРАВЛЕНО: Строго вертикальный поток. Подпись всегда падает СНИЗУ картинки! */
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    
-    width: auto !important;
-    max-width: 100% !important;
-    margin: 1.5em auto !important;
-    padding: 0 !important;
+    width: 371px;                                    /* Жёсткий журнальный шаг по ширине */
+    max-width: 100%;
+    height: var(--media-pc-height);                  /* Жёсткий потолок 209px из :root */
+    background-color: var(--media-background-plug);  /* Коробка всегда серая */
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
+/* [ЭЛЕМЕНТ] Сама картинка внутри одиночного журнального блока */
 .main-content .figure-img-single img.img-fig {
-    height: auto !important;
-    max-height: var(--media-pc-height) !important;  /* Жесткий потолок 209px для защиты верстки */
-    width: auto !important;
-    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;                  /* Идеально вписывает фото любой формы без прыжков вёрстки */
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
 }
 
 /* 🧱 СПЕЦ-РЕЖИМ ДЛЯ КАСTОМНЫХ ЖУРНАЛЬНЫХ РАЗМЕРОВ (fig|503x152) */
@@ -47,7 +42,6 @@
     width: 100% !important;                          /* Растягиваем до физических границ */
     object-fit: contain !important;
 }
-
 
 
 /* ------------------------------------------------------------

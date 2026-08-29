@@ -88,6 +88,15 @@ figcaption {
     transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
 }
 
+.main-content img[data-src]:not(.img-custom) {
+    box-shadow: none !important; /* Отключаем тень на время ожидания JS */
+    border: 0 !important;        /* Полностью стираем заводскую обводку Chrome */
+    outline: 0 !important;       /* Убираем внешний контур битого тега */
+    font-size: 0 !important;     /* Прячем значок разбитого кадра */
+    color: transparent !important;
+}
+
+
 /* ============================================================
    🎨 ЕДИНЫЙ ЦЕНТР ДЕКОРАТИВНОГО ОФОРМЛЕНИЯ КАРТИНОК
    ============================================================ */
@@ -98,6 +107,4 @@ figcaption {
     border-radius: 8px;                             /* Мягкие скругленные углы */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
     background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
-    background-clip: padding-box !important;
-    -webkit-background-clip: padding-box !important;
 }

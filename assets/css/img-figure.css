@@ -20,12 +20,15 @@
     align-items: center !important;
     justify-content: center !important;
 
-    width: 371px !important;   
-    height: var(--media-pc-height) !important;
-
     width: auto !important;
     max-width: 100% !important;
     margin: 0 !important;
+
+    width: 371px !important;   
+    height: var(--media-pc-height) !important;
+    background-color: var(--media-background-plug);  
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */

@@ -91,9 +91,16 @@
     .main-content .figure-video-row {
         grid-template-columns: 1fr;
     }
-    
+
+    .main-content .figure-video-single figure.figure-video {
+        width: 100%;
+    }
+
+    .main-content .figure-video-single video[data-src],    
     .main-content .figure-video-single video.video-fig,
     .main-content .figure-video-row video.video-fig {
+        width: 100%;
+        height: auto;
         max-height: none;   
     }
     
@@ -111,7 +118,7 @@
         align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 
-    /* 🔥 ТВОЙ ПОБЕДНЫЙ Мобильный лимит высоты с микро-запасом для защиты от зазоров */
+    /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
     .main-content .figure-video-row video.video-fig {
         max-height: var(--media-figure-landscape-max); 
         object-fit: contain; 

@@ -99,10 +99,15 @@
     .main-content .figure-img-row {
         grid-template-columns: 1fr;
     }
+
     
+    /* Снимаем ПК-ограничения по высоте для ВСЕХ типов картинок на смартфонах */
     .main-content .figure-img-single img.img-fig,
+    .main-content .figure-img-single img.img-fig.img-custom,
     .main-content .figure-img-row img.img-fig {
-        max-height: none;   
+        height: auto !important;                     /* Высота теперь свободно дышит */
+        max-height: none !important;                 /* Намертво стираем ПК-потолок 209px */
+        width: 100% !important;                      /* Картинка честно занимает 100% ширины экрана */
     }
     
     .main-content .figure-img-row img.img-fig {

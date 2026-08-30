@@ -43,6 +43,10 @@
     max-height: 100% !important;                     /* Отключаем 209px для ручных панорам/схем */
     object-fit: contain !important;
     aspect-ratio: auto !important;
+
+    width: auto !important;
+    max-height: none !important;
+
 }
 
 

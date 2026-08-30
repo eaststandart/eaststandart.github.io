@@ -15,7 +15,7 @@
 
 /* [ЭЛЕМЕНТ] Визуальный контейнер одиночной картинки fig */
 .main-content .figure-img-single figure.figure-img {
-    display: flex !important;
+    display: inline-flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;

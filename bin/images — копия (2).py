@@ -3,10 +3,11 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose Автоматически изолирует класс img-custom и выстраивает правильный HTML-порядок атрибутов.
+@purpose Реализует строгое левостороннее чтение служебных ключей (fig, v, 320x405),
+         автоматически отсекает обсидиановские хвосты размеров |400, изолирует
+         класс img-custom и выстраивает правильный HTML-порядок атрибутов alt -> src -> data-src.
          Внедряет прозрачный 1x1 GIF в src для полного уничтожения системной рамки Chrome.
-         🔥 ИСПРАВЛЕНО: Автоматически рассчитывает безопасный коридор max-width и min-width 
-         для подписи figcaption, защищая вёрстку узких и широких кастомных кадров.
+         🔥 ДОБАВЛЕНО: Поддержка кастомных размеров для журнальных блоков fig|320x405.
 @author TechLab
 """
 
@@ -15,6 +16,7 @@ import re
 def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
+    Внедряет прозрачный пиксель Base64 в src для защиты от системных рамок Chromium.
     """
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -27,7 +29,7 @@ def process_markdown_images(markdown_content):
             alt_content = match.group(1).strip()
             img_url = match.group(2).strip()
             
-            # Очистка обсидиановских хвостов размеров
+            # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
             if not alt_content:
@@ -41,56 +43,58 @@ def process_markdown_images(markdown_content):
             classes = []
             custom_attrs = []
             is_centered = False
-            custom_width = None # Запоминаем ширину для безопасного коридора подписи
             
-            # --- РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ (Слева направо) ---
+            # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ (Слева направо) ---
+            
+            # ПРОВЕРКА 1: Это журнальный блок 'fig'
             if parts[0].lower() == 'fig':
                 classes.append('img-fig')
                 is_centered = True
-                parts.pop(0)
+                parts.pop(0) # Удаляем отработанный ключ fig
                 
+                # Проверяем вложенный подпараметр: Вертикалка внутри fig -> ![fig|v]
                 if parts and parts[0].lower() == 'v':
                     classes.append('img-v')
                     parts.pop(0)
                     
+                # 🔥 НОВОЕ: Проверяем вложенный подпараметр: Точный размер внутри fig -> ![fig|320x405]
                 elif parts and re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
-                    classes.append('img-custom')
+                    classes.append('img-custom') # Добавляем класс кастома для сброса object-fit
                     dimensions = re.split(r'[xх]', parts[0], flags=re.IGNORECASE)
-                    custom_width, height = dimensions[0], dimensions[1]
+                    width, height = dimensions[0], dimensions[1]
                     
-                    custom_attrs.append(f'width="{custom_width}"')
+                    custom_attrs.append(f'width="{width}"')
                     custom_attrs.append(f'height="{height}"')
-                    custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
-                    parts.pop(0)
+                    custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
+                    parts.pop(0) # Удаляем отработанный ключ размера
                 
+            # ПРОВЕРКА 2: Одиночная вертикалка в тексте 'v' (без fig)
             elif parts[0].lower() == 'v':
                 classes.append('img-v')
                 parts.pop(0)
                 
+            # ПРОВЕРКА 3: Ручной кастомный размер сторон в тексте '320x405' (без fig)
             elif re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
                 classes.append('img-custom')
                 dimensions = re.split(r'[xх]', parts[0], flags=re.IGNORECASE)
-                custom_width, height = dimensions[0], dimensions[1]
+                width, height = dimensions[0], dimensions[1]
                 
-                custom_attrs.append(f'width="{custom_width}"')
+                custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
-                custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
+                custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
                 parts.pop(0)
                 
+            # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
             clean_alt = " | ".join(parts) if parts else ""
             
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
+            # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML (alt -> src -> data-src) ---
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
             
             if is_centered:
-                # 🔥 ТВОЙ РАБОЧИЙ ВАРИАНТ: Если картинка кастомная, зашиваем безопасный коридор в тег
-                if custom_width:
-                    figcaption_html = f'<figcaption class="figcaption-img" style="max-width: {custom_width}px !important; min-width: 371px !important;">{clean_alt}</figcaption>' if clean_alt else ''
-                else:
-                    figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
-                    
+                figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                 return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
                 
             return img_html

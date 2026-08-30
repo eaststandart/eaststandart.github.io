@@ -27,7 +27,7 @@
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
 .main-content .figure-img-single img.img-fig {
     height: auto !important;
-    max-height: var(--media-pc-height)               /* Потолок 209px для защиты верстки */
+    max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
     width: auto !important;
     max-width: 100% !important;
 }

@@ -27,12 +27,13 @@
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
 .main-content .figure-img-single img.img-fig {
-    height: auto !important;
+    height: var(--media-pc-height);
     max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
+
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
+
     width: auto !important;
     max-width: 100% !important;
-    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */ 
-    background-color: var(--media-background-plug);               
 }
 
 /* 🧱 СПЕЦ-РЕЖИМ ДЛЯ КАСTОМНЫХ ЖУРНАЛЬНЫХ РАЗМЕРОВ (fig|503x152) */

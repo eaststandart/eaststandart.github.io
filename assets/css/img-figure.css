@@ -46,9 +46,8 @@
 .main-content .figure-img-single img.img-fig.img-custom {
     height: auto !important;
     max-height: 100% !important;                     /* Отключаем 209px для ручных панорам/схем */
-    width: 100% !important;                          /* Растягиваем до физических границ */
     object-fit: contain !important;
-    aspect-ratio: auto !important;    aspect-ratio: auto !important;
+    aspect-ratio: auto !important;
 }
 
 

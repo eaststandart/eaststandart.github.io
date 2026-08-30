@@ -24,7 +24,6 @@
     max-width: 100% !important;
     margin: 0 !important;
 
-    width: 371px !important;   
     height: var(--media-pc-height) !important;
     background-color: var(--media-background-plug);  
     border-radius: 8px;
@@ -48,6 +47,7 @@
     max-height: 100% !important;                     /* Отключаем 209px для ручных панорам/схем */
     width: 100% !important;                          /* Растягиваем до физических границ */
     object-fit: contain !important;
+    aspect-ratio: auto !important;    aspect-ratio: auto !important;
 }
 
 

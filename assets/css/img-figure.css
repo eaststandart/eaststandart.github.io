@@ -29,11 +29,9 @@
 .main-content .figure-img-single img.img-fig {
     height: var(--media-pc-height);
     max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
-
-    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
-
     width: auto;
     max-width: 100% !important;
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
 }
 
 /* Снимает ограничения высоты, позволяя фото принять точные инлайновые пропорции */

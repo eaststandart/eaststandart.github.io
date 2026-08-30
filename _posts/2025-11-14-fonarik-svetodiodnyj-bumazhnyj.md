@@ -77,7 +77,7 @@ discus: "questions"
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
 
-Здесь запись fig|v| видео
+Здесь запись одиночного fig|v| видео
 
 ![fig|v|](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
 
@@ -88,6 +88,18 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-10.webm)
 
 одиночный fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400
+
+![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
+
+Групповой fig-v
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
+![fig|v|400](github/eaststandart.github.io/faire/test-vertical.webm)
+
+одиночный fig-v
+
+![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/test-vertical.webm)
+
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 

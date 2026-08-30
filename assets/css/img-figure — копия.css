@@ -13,25 +13,33 @@
     margin: 1em 0;           
 }
 
-/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] Каркас, обжимающий картинку */
 .main-content .figure-img-single figure.figure-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    width: max-content;      
-    max-width: 100%;         
+    display: inline-flex !important;
+    flex-direction: column !important;               /* Подпись всегда строго внизу фото */
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    max-width: 100% !important;
+    background-color: transparent !important;        /* Убираем серый фон, защищая от пустых ушей */
+    margin: 0 !important;
 }
 
-/* [ЭЛЕМЕНТ] Картинка внутри одиночного контейнера */
+/* [ЭЛЕМЕНТ] Обычные картинки контента (Принимают декор заглушки) */
 .main-content .figure-img-single img.img-fig {
-    height: auto;            
-    max-height: var(--media-pc-height);       
-    width: auto;             
-    max-width: 100%;         
-    aspect-ratio: auto;      
-    object-fit: unset;       
+    height: var(--media-pc-height) !important;       /* Держит высоту 209px на ПК */
+    /*width: auto !important;*/                          /* Авто-ширина по пропорциям кадра */
+    aspect-ratio: var(--ratio-landscape) !important; /* Форма 16/9 для обычных одиночек */
+    object-fit: contain;
+    background-color: var(--media-background-plug) !important; /* Серый щит лоадера на самой картинке */
+    border-radius: 8px !important;
+}
+
+/* [ЭЛЕМЕНТ] Кастомные картинки fig|503x152 (Снимаем лимиты 16/9) */
+.main-content .figure-img-single img.img-fig.img-custom {
+    height: auto !important;                         
+    max-height: var(--media-pc-height) !important;   
+    aspect-ratio: auto !important;                   /* Свободные пропорции из инлайн-стиля */
 }
 
 
@@ -91,15 +99,34 @@
     .main-content .figure-img-row {
         grid-template-columns: 1fr;
     }
+
+    .main-content .figure-img-single figure.figure-img {
+        display: flex !important;                    /* Сбрасываем десктопный inline-flex */
+        width: 100% !important;                      /* Раскрываем коробку во всю ширину статьи */
+        max-width: 100% !important;
+    }
     
+    /* Снимаем ПК-ограничения по высоте для ВСЕХ типов картинок на смартфонах */
     .main-content .figure-img-single img.img-fig,
+    .main-content .figure-img-single img.img-fig.img-custom,
     .main-content .figure-img-row img.img-fig {
-        max-height: none;   
+        height: auto !important;                     /* Высота теперь свободно дышит */
+        max-height: none !important;                 /* Намертво стираем ПК-потолок 209px */
+        width: 100% !important;                      /* Картинка честно занимает 100% ширины экрана */
     }
     
     .main-content .figure-img-row img.img-fig {
         aspect-ratio: var(--ratio-landscape);
     }
+
+    /* Полностью сбрасываем нижний порог 371px у кастомной подписи,
+       чтобы текст не распирал экран телефона вбок и не вызывал горизонтальный скролл */
+    .main-content figure.figure-img:has(img.img-custom) figcaption.figcaption-img {
+        min-width: 0 !important;                     /* Убираем десктопные 371px */
+        width: 100% !important;                      /* Текст сжимается по экрану смартфона */
+        max-width: 100% !important;
+    }
+
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */

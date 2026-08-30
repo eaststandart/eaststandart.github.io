@@ -25,8 +25,7 @@
     padding: 0 !important;
 }
 
-/* 🔥 ИСПРАВЛЕНО: Строго изолируем табличную подпись ОДИНОЧНОГО видеоролика, 
-   чтобы она не ломала многоколоночную галерейную сетку ниже */
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика */
 .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
     display: table-caption !important;               /* Превращаем в официальную подпись таблицы */
     caption-side: bottom !important;                 /* Намертво прижимаем строго СНИЗУ видео */
@@ -83,8 +82,7 @@
     object-fit: contain;     
 }
 
-/* 🔥 ИСПРАВЛЕНО: Строго изолируем БЛОЧНУЮ подпись ГАЛЕРЕЙНОГО ряда,
-   чтобы она удерживала журнальный шаг 371px и не ломала Grid-колонки */
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда */
 .main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block !important;
     width: 100% !important;
@@ -107,8 +105,7 @@
         grid-template-columns: 1fr;
     }
 
-    /* На смартфонах намертво сбрасываем десктопную таблицу одиночки 
-       в полноценный, адаптивный flex-бокс контента */
+    /* На смартфонах намертво сбрасываем десктопную таблицу одиночки в гибкий флекс */
     .main-content .figure-video-single figure.figure-video {
         display: flex !important;
         width: 100% !important;                      /* Раскрываем коробку во всю ширину статьи */
@@ -119,17 +116,20 @@
     .main-content .figure-video-single video[data-src],    
     .main-content .figure-video-single video.video-fig,
     .main-content .figure-video-row video.video-fig {
-        height: auto !important;                     /* Высота свободно дышит по пропорциям */
-        max-height: none !important;                 /* Намертво стираем ПК-ограничения */
         width: 100% !important;                      /* Видео честно занимает 100% ширины экрана */
+        height: auto !important;                     /* Высота свободно дышит по пропорциям кадра */
+        max-height: none !important;                 /* Намертво стираем ПК-ограничения */
+        
+        /* 🔥 ИСПРАВЛЕНО: Полностью ликвидируем вытягивание по высоте на смартфонах! */
+        aspect-ratio: auto !important;               
+        object-fit: contain !important;
     }
     
     .main-content .figure-video-row video.video-fig {
         aspect-ratio: var(--ratio-landscape);
     }
 
-    /* На смартфонах переводим подпись видео из десктопной таблицы в обычный блок,
-       чтобы текст идеально сжимался по экрану телефона без горизонтального скролла */
+    /* На смартфонах переводим подписи из таблицы в обычный адаптивный блок */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block !important;
         width: 100% !important;
@@ -139,3 +139,37 @@
     }
 }
 
+/* --- Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    
+    /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
+    .main-content .figure-video-row {
+        grid-template-columns: repeat(2, 1fr); 
+        align-items: start;                          /* Гарантия выравнивания плееров по верхней кромке ряда */              
+    }
+
+    /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
+    .main-content .figure-video-row video.video-fig {
+        max-height: var(--media-figure-landscape-max) !important; 
+        object-fit: contain; 
+    }
+
+    /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
+    .main-content .figure-video-row video.video-fig.video-v {
+        aspect-ratio: var(--ratio-landscape) !important; 
+        object-fit: contain; 
+    }
+
+    /* Одиночные центрированные плееры на боку телефона */
+    .main-content .figure-video-single video.video-fig {
+        height: var(--media-mobile-landscape-height) !important;
+        width: auto !important;
+    }
+
+    /* Ограничиваем подпись на боку телефона */
+    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
+        display: block !important;
+        max-width: 290px !important;
+        width: 100% !important;
+    }
+}

@@ -36,7 +36,7 @@
 /* 🔥 🧱 РЕЖИМ ЗАГЛУШКИ ДЛЯ КАСTОМНЫХ РАЗМЕРОВ (Пока активен data-src)
    Прозрачный пиксель держит форму, а мы даём ему авто-размеры для идеального обжатия */
 .main-content .figure-img-single img.img-fig.img-custom[data-src] {
-    width: auto !important;                          /* Убираем 100%, ширина берётся из инлайнового стиля Python */
+    /*width: auto !important;                          /* Убираем 100%, ширина берётся из инлайнового стиля Python */
     height: auto !important;                         /* Убираем 100%, высота рассчитывается по кадру */
     max-height: var(--media-pc-height) !important;   /* Защита от CLS: удерживает высоту схемы в рамках 209px */
     aspect-ratio: auto !important;                   /* Игнорирует 16/9, берёт точные пропорции схемы */
@@ -58,13 +58,6 @@
     max-width: 100% !important;                      /* Стираем 371px, текст сжимается по рамке схемы */
     padding: 0 10px !important;                      /* Внутренние поля для аккуратности */
     box-sizing: border-box !important;
-}
-
-/* 🔥 🧱 РЕЖИМ ЗАГЛУШКИ ДЛЯ КАСTОМНЫХ РАЗМЕРОВ (Пока активен data-src)
-   Прозрачный пиксель держит форму, а мы мягко разрешаем авто-размеры без перекосов */
-.main-content .figure-img-single img.img-fig.img-custom[data-src] {
-    width: 100%;
-    height: 100%; 
 }
 
 

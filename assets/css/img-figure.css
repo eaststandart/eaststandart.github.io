@@ -28,8 +28,6 @@
     background-color: var(--media-background-plug);  
     border-radius: 8px;
     overflow: hidden;
-
-    aspect-ratio: var(--ratio-landscape) !important;
 }
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */

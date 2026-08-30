@@ -13,39 +13,24 @@
     margin: 1em 0;           
 }
 
-/* [ВНЕШНИЙ КОНТЕЙНЕР] Коробка одиночного журнального видео */
+/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
 .main-content .figure-video-single figure.figure-video {
-    display: table !important;                       /* Включаем нативный режим таблицы */
-    width: min-content !important;                   /* Намертво сжимает блок по ширине видео */
-    max-width: 100% !important;
-    background-color: var(--media-background-plug);  
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 0 auto !important;                       /* Идеально центрирует блок на странице */
-    padding: 0 !important;
-}
-
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика */
-.main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
-    display: table-caption !important;               /* Превращаем в официальную подпись таблицы */
-    caption-side: bottom !important;                 /* Намертво прижимаем строго СНИЗУ видео */
-    width: 100% !important;
-    max-width: 100% !important;                      /* Текст заперт в рамки ширины плеера */
-    margin-top: 1rem !important;        
-    text-align: center !important;      
-    word-break: break-word !important;  
-    box-sizing: border-box !important;
-    padding: 0 10px !important;                      /* Эстетичные защитные поля */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: max-content;      
+    max-width: 100%;         
 }
 
 /* [ЭЛЕМЕНТ] Видеоплеер внутри одиночного контейнера */
 .main-content .figure-video-single video.video-fig {
-    display: block !important;                       /* Убираем дефолтные инлайновые зазоры */
     height: auto;            
     max-height: var(--media-pc-height);       
     width: auto;             
     max-width: 100%;         
-    aspect-ratio: var(--ratio-landscape);            /* Задаем пропорции плеера для предотвращения сдвигов макета */     
+    aspect-ratio: var(--ratio-landscape); /* Задаем пропорции плеера для предотвращения сдвигов макета */     
     object-fit: contain;       
 }
 
@@ -82,14 +67,17 @@
     object-fit: contain;     
 }
 
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда */
-.main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
-    display: block !important;
-    width: 100% !important;
-    max-width: 371px !important;        
-    margin-top: 1rem !important;        
-    text-align: center !important;      
-    word-break: break-word !important;  
+
+/* ------------------------------------------------------------
+   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к видеофайлам figcaption (figcaption-video)
+   ------------------------------------------------------------ */
+.main-content figure.figure-video figcaption.figcaption-video {
+    display: block;
+    width: 100%;
+    max-width: 371px;        
+    margin-top: 1rem;        
+    text-align: center;      
+    word-break: break-word;  
 }
 
 
@@ -97,45 +85,20 @@
    📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ ВИДЕО-КОМПОНЕНТА
    ============================================================ */
 
-/* --- Мобильные устройства и суженные экраны (Меньше 900px) --- */
-@media (max-width: 900px) {
-    
+/* --- Смартфоны вертикально (Portrait) --- */
+@media (max-width: 900px) and (orientation: portrait) {
     /* Переводим сетку видеороликов в 1 аккуратную колонку-ленту */
     .main-content .figure-video-row {
         grid-template-columns: 1fr;
     }
-
-    /* На смартфонах намертво сбрасываем десктопную таблицу одиночки в гибкий флекс */
-    .main-content .figure-video-single figure.figure-video {
-        display: flex !important;
-        width: 100% !important;                      /* Раскрываем коробку во всю ширину статьи */
-        max-width: 100% !important;
-    }
-
-    /* Снимаем ПК-ограничения по высоте для ВСЕХ типов видеороликов на смартфонах */
-    .main-content .figure-video-single video[data-src],    
+    
     .main-content .figure-video-single video.video-fig,
     .main-content .figure-video-row video.video-fig {
-        width: 100% !important;                      /* Видео честно занимает 100% ширины экрана */
-        height: auto !important;                     /* Высота свободно дышит по пропорциям кадра */
-        max-height: none !important;                 /* Намертво стираем ПК-ограничения */
-        
-        /* 🔥 ИСПРАВЛЕНО: Полностью ликвидируем вытягивание по высоте на смартфонах! */
-        aspect-ratio: auto !important;               
-        object-fit: contain !important;
+        max-height: none;   
     }
     
     .main-content .figure-video-row video.video-fig {
         aspect-ratio: var(--ratio-landscape);
-    }
-
-    /* На смартфонах переводим подписи из таблицы в обычный адаптивный блок */
-    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 10px !important;
-        box-sizing: border-box !important;
     }
 }
 
@@ -145,31 +108,24 @@
     /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
-        align-items: start;                          /* Гарантия выравнивания плееров по верхней кромке ряда */              
+        align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 
-    /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
+    /* 🔥 ТВОЙ ПОБЕДНЫЙ Мобильный лимит высоты с микро-запасом для защиты от зазоров */
     .main-content .figure-video-row video.video-fig {
-        max-height: var(--media-figure-landscape-max) !important; 
+        max-height: var(--media-figure-landscape-max); 
         object-fit: contain; 
     }
 
-    /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
+    /* Точечный пересчет для вертикальных видеороликов, если засать ![fig | v] */
     .main-content .figure-video-row video.video-fig.video-v {
-        aspect-ratio: var(--ratio-landscape) !important; 
+        aspect-ratio: var(--ratio-landscape); 
         object-fit: contain; 
     }
 
     /* Одиночные центрированные плееры на боку телефона */
     .main-content .figure-video-single video.video-fig {
-        height: var(--media-mobile-landscape-height) !important;
-        width: auto !important;
-    }
-
-    /* Ограничиваем подпись на боку телефона */
-    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
-        display: block !important;
-        max-width: 290px !important;
-        width: 100% !important;
+        height: var(--media-mobile-landscape-height);
+        width: auto;
     }
 }

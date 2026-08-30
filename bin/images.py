@@ -85,14 +85,13 @@ def process_markdown_images(markdown_content):
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
             
             if is_centered:
-                # 🔥 ТВОЙ РАБОЧИЙ ВАРИАНТ: Если картинка кастомная, зашиваем безопасный коридор в тег
                 if custom_width:
-                    figcaption_html = f'<figcaption class="figcaption-img" style="max-width: {custom_width}px !important; min-width: 371px !important;">{clean_alt}</figcaption>' if clean_alt else ''
+                    figcaption_html = f'<figcaption class="figcaption-img" style="max-width: {custom_width}px !important; min-width: 371px;">{clean_alt}</figcaption>' if clean_alt else ''
                 else:
                     figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                     
                 return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
-                
+           
             return img_html
 
         new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)

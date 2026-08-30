@@ -13,24 +13,25 @@
     margin: 1em 0;           
 }
 
-/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК держит журнальный стандарт видео */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК жестко держит журнальный стандарт Лаборатории */
 .main-content .figure-video-single figure.figure-video {
     display: table;                                  /* Включаем нативный режим таблицы */
     width: 371px;                                    /* Жесткий ПК-шаг одиночки, равный картинкам */
     max-width: 100%;
-    background-color: var(--media-background-plug);  
+    background-color: transparent;                   /* Защита от серой плиты контента */
     border-radius: 8px;
     overflow: hidden;
     margin: 0 auto;                                  /* Идеально центрирует блок на странице */
     padding: 0;
 }
 
-/* Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
 .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
     display: table-caption;                          /* Превращаем в официальную подпись таблицы */
-    caption-side: bottom;                            /* Прижимаем строго СНИЗУ видео */
+    caption-side: bottom;                            /* Намертво прижимаем строго СНИЗУ видео */
     width: 100%;
     max-width: 100%;                                 /* Текст заперт строго в рамки 371px */
+    margin-top: 0.6rem;                              /* 🔥 УСТАНОВЛЕН ЕДИНЫЙ ШАГ КОНТЕНТА */
     text-align: center;      
     word-break: break-word;  
     box-sizing: border-box;
@@ -81,11 +82,12 @@
     object-fit: contain;     
 }
 
-/* БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
 .main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block;
     width: 100%;
-    max-width: 371px;              
+    max-width: 371px;        
+    margin-top: 0.6rem;                              /* 🔥 УСТАНОВЛЕН ЕДИНЫЙ ШАГ КОНТЕНТА */
     text-align: center;      
     word-break: break-word;  
 }
@@ -102,57 +104,57 @@
         grid-template-columns: 1fr;
     }
 
-    /* Сбрасываем десктопную таблицу и мобильный flex в чистый block,
-       а серый фон карточки делаем прозрачным, чтобы он не лез под буквы */
+    /* На смартфонах переводим десктопную таблицу одиночки в чистый block */
     .main-content .figure-video-single figure.figure-video {
         display: block;
-        width: 100%;
+        width: 100%;                      
         max-width: 100%;
+        background-color: transparent;
     }
 
-    /* Переносим серый щит заглушки и скругления углов строго на само видео.
-       Сбрасываем жесткий ПК-потолок высоты, возвращая стабильные 16/9 на смартфонах */
-    .main-content .figure-video-single video[data-src],
+    /* Намертво переносим серый цвет заглушки и скругления углов на само видео */
+    .main-content .figure-video-single video[data-src],    
     .main-content .figure-video-single video.video-fig,
     .main-content .figure-video-row video.video-fig {
-        width: 100%;
-        height: auto;
-        max-height: none;   
-        aspect-ratio: 16 / 9;
+        width: 100%;                      
+        height: auto;                     
+        max-height: none;                 
+        aspect-ratio: var(--ratio-landscape);
         object-fit: contain;
-        background-color: var(--media-background-plug); /* Серый фон только на видео */
-        border-radius: 8px;                             /* Скругления только на видео */
+        background-color: var(--media-background-plug); 
+        border-radius: 8px;                             
     }
-
+    
     .main-content .figure-video-row video.video-fig {
         aspect-ratio: var(--ratio-landscape);
     }
-    
-    /* Возвращаем подпись в обычный блок на чистом фоне статьи */
+
+    /* На смартфонах возвращаем подпись в обычный блок на чистом фоне статьи */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
         width: 100%;
         max-width: 100%;
         padding: 0 10px;
         box-sizing: border-box;
+        /* margin-top наследуется автоматически из десктопного пульта (0.6rem) */
     }
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* 2 колонки видеороликов, делящие мобильный экран пополам */
+    /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
-        align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
+        align-items: start;                                           
     }
 
-    /* Сбрасываем десктопную таблицу и флекс в чистый block на боку телефона.
-       Убираем общий серый фон. Математика calc идеально синхронизирует одиночный блок с рядом */
+    /* Сбрасываем десктопную таблицу в чистый block на боку телефона */
     .main-content .figure-video-single figure.figure-video {
         display: block;
         width: calc(50% - (var(--gap-pc) / 2));
         max-width: 100%;
+        background-color: transparent;
     }
 
     /* Переносим серый щит заглушки и скругления углов на само видео для ландшафта */
@@ -163,8 +165,8 @@
         max-height: var(--media-figure-landscape-max); 
         object-fit: contain; 
         aspect-ratio: var(--ratio-landscape);
-        background-color: var(--media-background-plug); /* Серый фон только на видео */
-        border-radius: 8px;                             /* Скругления только на видео */
+        background-color: var(--media-background-plug); 
+        border-radius: 8px;                             
     }
 
     /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
@@ -173,13 +175,14 @@
         object-fit: contain; 
     }
 
-    /* Переводим подпись на боку телефона в блок на чистом фоне статьи */
+    /* 🔥 ИСПРАВЛЕНО И ПОДТВЕРЖДЕНО: Подпись на боку телефона идеально обжимает кадр 
+       через 100% без лишних жестких цифр вроде 290px */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
-        max-width: 100%;
         width: 100%;
+        max-width: 100%; 
         padding: 0 10px;
         box-sizing: border-box;
+        /* margin-top наследуется автоматически из десктопного пульта (0.6rem) */
     }
 }
-

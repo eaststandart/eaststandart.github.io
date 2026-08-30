@@ -13,53 +13,40 @@
     margin: 1em 0;           
 }
 
-/* ------------------------------------------------------------
-   [БЛОК] Одиночная карточка картинок (figure-img-single)
-   ------------------------------------------------------------ */
-.main-content .figure-img-single {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 1em 0;           
-}
-
-/* [ВНЕШНИЙ КОНТЕЙНЕР] По умолчанию зажат в жесткий журнальный бокс Лаборатории */
+/* [ЭЛЕМЕНТ] Визуальный контейнер одиночной картинки fig */
 .main-content .figure-img-single figure.figure-img {
-    display: flex !important;
-    flex-direction: column !important;               /* Строго вертикальный поток подписи */
+    display: inline-flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    
-    width: 371px !important;                         /* 🔥 ЖЕСТКО: Обычная одиночка всегда 371px */
+
+    width: auto !important;
     max-width: 100% !important;
-    height: var(--media-pc-height) !important;       /* 🔥 ЖЕСТКО: Обычная одиночка всегда 209px */
+    margin: 0 !important;
+
+    height: var(--media-pc-height) !important;
     background-color: var(--media-background-plug);  
     border-radius: 8px;
     overflow: hidden;
 }
 
-/* 🔥 СПЕЦ-РЕЖИМ КОНТЕЙНЕРА: Включается ТОЛЬКО если внутри сидит кастомный размер fig|503x152 */
-.main-content .figure-img-single figure.figure-img:has(img.img-custom) {
-    width: auto !important;                          /* Полная свобода ширины под пропорции */
-    height: auto !important;                         /* Высота сжимается плотно по кадру схемы */
-}
-
-/* [ЭЛЕМЕНТ] Картинка внутри стандартного одиночного бокса */
+/* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
 .main-content .figure-img-single img.img-fig {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;                  
-    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
-}
-
-/* 🔥 СПЕЦ-РЕЖИМ КАРТИНКИ: Включается ТОЛЬКО для кастомных журнальных размеров */
-.main-content .figure-img-single img.img-fig.img-custom {
-    width: auto !important;
     height: auto !important;
-    max-height: none !important;                     /* Полностью снимаем потолок 209px для ручных схем */
-    aspect-ratio: auto !important;                   /* Возвращаем свободу пропорциям из Python */
+    max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
+    width: auto !important;
+    max-width: 100% !important;
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */              
 }
 
+/* 🧱 СПЕЦ-РЕЖИМ ДЛЯ КАСTОМНЫХ ЖУРНАЛЬНЫХ РАЗМЕРОВ (fig|503x152) */
+/* Снимает ограничения высоты, позволяя заглушке и фото принять точные инлайновые пропорции */
+.main-content .figure-img-single img.img-fig.img-custom {
+    height: auto !important;
+    max-height: 100% !important;                     /* Отключаем 209px для ручных панорам/схем */
+    object-fit: contain !important;
+    aspect-ratio: auto !important;
+}
 
 
 /* ------------------------------------------------------------

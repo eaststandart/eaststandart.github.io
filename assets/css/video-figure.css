@@ -123,12 +123,18 @@
         background-color: var(--media-background-plug); /* Серый фон только на видео */
         border-radius: 8px;                             /* Скругления только на видео */
     }
+
+    .main-content .figure-video-row video.video-fig {
+        aspect-ratio: var(--ratio-landscape);
+    }
     
     /* Возвращаем подпись в обычный блок на чистом фоне статьи */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
         width: 100%;
         max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 }
 

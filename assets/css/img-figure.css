@@ -44,18 +44,17 @@
 
 /* 🔥 🧱 РЕЖИМ ЗАГЛУШКИ ДЛЯ КАСTОМНЫХ РАЗМЕРОВ (Пока активен data-src)
    Прозрачный пиксель держит форму, а мы даём ему авто-размеры для идеального обжатия */
-.main-content .figure-img-single img.img-fig.img-custom,
-.main-content .figure-img-single img.img-fig.img-custom[data-src] {
-    width: revert !important;                        /* Возвращает честные 503px из HTML */
-    height: revert !important;                       /* Возвращает честные 152px из HTML */
-    max-height: var(--media-pc-height) !important;   /* Защита от CLS: удерживает высоту в рамках 209px */
+.main-content .figure-img-single img.img-fig.img-custom {
+    height: auto !important;                         
+    max-height: var(--media-pc-height) !important;   /* Защита от CLS: удерживает высоту схемы в рамках 209px */
+    aspect-ratio: auto !important;                   /* Игнорирует 16/9, берет точные пропорции схемы из style */
     object-fit: contain !important;
 }
 
 /* 🔥 ИСПРАВЛЕНИЕ РАСПИРАНИЯ ПОДПИСИ: Ограничиваем текст шириной кастомного кадра Vin */
 .main-content figure.figure-img:has(img.img-custom) figcaption.figcaption-img {
     width: 100% !important;
-    max-width: 100% !important;                      /* Текст сжимается ровно по рамке схемы */
+    max-width: 100% !important;                      /* Стираем 371px, текст сжимается по рамке схемы */
     padding: 0 10px !important;                      /* Внутренние поля для аккуратности */
     box-sizing: border-box !important;
 }

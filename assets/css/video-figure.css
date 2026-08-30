@@ -25,13 +25,12 @@
     padding: 0;
 }
 
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
+/* Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
 .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
     display: table-caption;                          /* Превращаем в официальную подпись таблицы */
     caption-side: bottom;                            /* Намертво прижимаем строго СНИЗУ видео */
     width: 100%;
     max-width: 100%;                                 /* Текст заперт строго в рамки 371px */
-    margin-top: 0.6rem;                              /* 🔥 УСТАНОВЛЕН ЕДИНЫЙ ШАГ КОНТЕНТА */
     text-align: center;      
     word-break: break-word;  
     box-sizing: border-box;
@@ -82,12 +81,11 @@
     object-fit: contain;     
 }
 
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
+/* БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
 .main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block;
     width: 100%;
     max-width: 371px;        
-    margin-top: 0.6rem;                              /* 🔥 УСТАНОВЛЕН ЕДИНЫЙ ШАГ КОНТЕНТА */
     text-align: center;      
     word-break: break-word;  
 }
@@ -136,7 +134,6 @@
         max-width: 100%;
         padding: 0 10px;
         box-sizing: border-box;
-        /* margin-top наследуется автоматически из десктопного пульта (0.6rem) */
     }
 }
 
@@ -175,7 +172,7 @@
         object-fit: contain; 
     }
 
-    /* 🔥 ИСПРАВЛЕНО И ПОДТВЕРЖДЕНО: Подпись на боку телефона идеально обжимает кадр 
+    /* Подпись на боку телефона идеально обжимает кадр 
        через 100% без лишних жестких цифр вроде 290px */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
@@ -183,6 +180,5 @@
         max-width: 100%; 
         padding: 0 10px;
         box-sizing: border-box;
-        /* margin-top наследуется автоматически из десктопного пульта (0.6rem) */
     }
 }

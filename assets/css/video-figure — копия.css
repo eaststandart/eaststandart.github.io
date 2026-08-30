@@ -100,15 +100,6 @@
     .main-content .figure-video-row video.video-fig {
         aspect-ratio: var(--ratio-landscape);
     }
-
-    .main-content .figure-video-single video[data-src],
-    .main-content .figure-video-single video {
-        width: 100% !important;                      /* Занимает 100% ширины экрана мобильного */
-        height: auto !important;                     /* Высота пропорционально подстраивается */
-        max-height: none !important;                 /* Намертво стираем ПК-ограничения высоты */
-    }
-
-
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */

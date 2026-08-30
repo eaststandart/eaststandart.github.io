@@ -94,11 +94,11 @@ discus: "questions"
 Групповой fig-v
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
-![fig|v|400](github/eaststandart.github.io/faire/test-vertical.webm)
+![fig|v|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/test-vertical.webm)
 
 одиночный fig-v
 
-![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/test-vertical.webm)
+![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/test-vertical.webm)
 
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)

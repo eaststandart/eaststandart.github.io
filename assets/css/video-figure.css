@@ -134,4 +134,8 @@
         height: var(--media-mobile-landscape-height);
         width: auto;
     }
+
+   .main-content figure.figure-video figcaption.figcaption-video {
+        max-width: 290px;
+    }
 }

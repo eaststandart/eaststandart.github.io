@@ -45,7 +45,8 @@
     width: 100%;                                     /* Заполняет 371px родительской таблицы */
     max-width: 100%;         
     aspect-ratio: var(--ratio-landscape);            /* Задаем пропорции плеера для предотвращения сдвигов макета */     
-    object-fit: contain;       
+    object-fit: contain;
+    border-radius: 8px;       
 }
 
 

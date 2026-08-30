@@ -29,6 +29,7 @@
     border-radius: 8px;
     overflow: hidden;
 
+    aspect-ratio: var(--ratio-landscape) !important;
 }
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
@@ -36,10 +37,7 @@
     height: auto !important;
     max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
     width: auto !important;
-    max-width: 100% !important;
-
-    object-fit: contain !important;                  
-    aspect-ratio: var(--ratio-landscape) !important;
+    max-width: 100% !important;              
 
 }
 

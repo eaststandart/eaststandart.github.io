@@ -30,9 +30,17 @@
 
 /* Применяем скругление, тени и серый щит лези-лоада ко всем плеерам контента */
 .main-content video:not(.video-fig),
-.main-content .video-row video,
-.main-content .figure-video video.video-fig {
+.main-content .video-row video {
     border-radius: 8px;                             /* Мягкие скругленные углы */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
     background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
+}
+
+/* ============================================================
+   📐 ГЛАВНЫЙ ЦЕНТР УПРАВЛЕНИЯ ПОДПИСЯМИ МЕДИАОКРУЖЕНИЯ
+   ============================================================ */
+
+/* Единый ритм отступов для всех журнальных подписей к видео */
+.main-content figure.figure-video figcaption.figcaption-video {
+    margin-top: 0.6rem;                             /* Аккуратный плотный зазор между кадром и текстом */
 }

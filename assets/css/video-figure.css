@@ -31,7 +31,6 @@
     caption-side: bottom;                            /* Прижимаем строго СНИЗУ видео */
     width: 100%;
     max-width: 100%;                                 /* Текст заперт строго в рамки 371px */
-    margin-top: 1rem;        
     text-align: center;      
     word-break: break-word;  
     box-sizing: border-box;
@@ -86,8 +85,7 @@
 .main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block;
     width: 100%;
-    max-width: 371px;        
-    margin-top: 1rem;        
+    max-width: 371px;              
     text-align: center;      
     word-break: break-word;  
 }
@@ -110,8 +108,6 @@
         display: block;
         width: 100%;
         max-width: 100%;
-        height: auto;
-        background-color: transparent;
     }
 
     /* Переносим серый щит заглушки и скругления углов строго на само видео.
@@ -133,7 +129,6 @@
         display: block;
         width: 100%;
         max-width: 100%;
-        margin-top: 1rem;
     }
 }
 
@@ -152,8 +147,6 @@
         display: block;
         width: calc(50% - (var(--gap-pc) / 2));
         max-width: 100%;
-        height: auto;
-        background-color: transparent;
     }
 
     /* Переносим серый щит заглушки и скругления углов на само видео для ландшафта */

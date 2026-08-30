@@ -101,6 +101,12 @@
         aspect-ratio: var(--ratio-landscape);
     }
 
+    .main-content .figure-video-single figure.figure-video {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     .main-content .figure-video-single video[data-src],
     .main-content .figure-video-single video {
         width: 100% !important;                      /* Занимает 100% ширины экрана мобильного */

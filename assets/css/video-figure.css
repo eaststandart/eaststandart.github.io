@@ -13,7 +13,7 @@
     margin: 1em 0;           
 }
 
-/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК жестко держит журнальный стандарт Лаборатории */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК держит журнальный стандарт видео */
 .main-content .figure-video-single figure.figure-video {
     display: table;                                  /* Включаем нативный режим таблицы */
     width: 371px;                                    /* Жесткий ПК-шаг одиночки, равный картинкам */
@@ -25,10 +25,10 @@
     padding: 0;
 }
 
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
+/* Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
 .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
     display: table-caption;                          /* Превращаем в официальную подпись таблицы */
-    caption-side: bottom;                            /* Намертво прижимаем строго СНИЗУ видео */
+    caption-side: bottom;                            /* Прижимаем строго СНИЗУ видео */
     width: 100%;
     max-width: 100%;                                 /* Текст заперт строго в рамки 371px */
     margin-top: 1rem;        
@@ -82,7 +82,7 @@
     object-fit: contain;     
 }
 
-/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
+/* БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
 .main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block;
     width: 100%;
@@ -104,7 +104,7 @@
         grid-template-columns: 1fr;
     }
 
-    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и мобильный flex в чистый block,
+    /* Сбрасываем десктопную таблицу и мобильный flex в чистый block,
        а серый фон карточки делаем прозрачным, чтобы он не лез под буквы */
     .main-content .figure-video-single figure.figure-video {
         display: block;
@@ -114,7 +114,7 @@
         background-color: transparent;
     }
 
-    /* 🔥 ФИКСАЦИЯ: Переносим серый щит заглушки и скругления углов строго на само видео.
+    /* Переносим серый щит заглушки и скругления углов строго на само видео.
        Сбрасываем жесткий ПК-потолок высоты, возвращая стабильные 16/9 на смартфонах */
     .main-content .figure-video-single video[data-src],
     .main-content .figure-video-single video.video-fig,
@@ -128,7 +128,7 @@
         border-radius: 8px;                             /* Скругления только на видео */
     }
     
-    /* 🔥 ФИКСАЦИЯ: Возвращаем подпись в обычный блок на чистом фоне статьи */
+    /* Возвращаем подпись в обычный блок на чистом фоне статьи */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
         width: 100%;
@@ -140,13 +140,13 @@
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
+    /* 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
         align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 
-    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и флекс в чистый block на боку телефона.
+    /* Сбрасываем десктопную таблицу и флекс в чистый block на боку телефона.
        Убираем общий серый фон. Математика calc идеально синхронизирует одиночный блок с рядом */
     .main-content .figure-video-single figure.figure-video {
         display: block;
@@ -156,7 +156,7 @@
         background-color: transparent;
     }
 
-    /* 🔥 ФИКСАЦИЯ: Переносим серый щит заглушки и скругления углов на само видео для ландшафта */
+    /* Переносим серый щит заглушки и скругления углов на само видео для ландшафта */
     .main-content .figure-video-row video.video-fig,
     .main-content .figure-video-single video.video-fig {
         width: 100%;
@@ -174,10 +174,10 @@
         object-fit: contain; 
     }
 
-    /* 🔥 ФИКСАЦИЯ: Переводим подпись на боку телефона в блок на чистом фоне статьи */
+    /* Переводим подпись на боку телефона в блок на чистом фоне статьи */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
-        max-width: 290px;
+        max-width: 100%;
         width: 100%;
         padding: 0 10px;
         box-sizing: border-box;

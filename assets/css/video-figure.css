@@ -104,53 +104,59 @@
         grid-template-columns: 1fr;
     }
 
-    /* На смартфонах переводим таблицу одиночки в полноценный гибкий флекс-бокс */
+    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и мобильный flex в чистый block,
+       а серый фон карточки делаем прозрачным, чтобы он не лез под буквы */
     .main-content .figure-video-single figure.figure-video {
-        display: flex;
-        width: 100%;                      
-        max-width: 100%;
-    }
-
-    /* Снимаем ПК-ограничения по высоте для ВСЕХ типов видеороликов на смартфонах */
-    .main-content .figure-video-single video[data-src],    
-    .main-content .figure-video-single video.video-fig,
-    .main-content .figure-video-row video.video-fig {
-        width: 100%;                      /* Видео честно занимает 100% ширины экрана */
-        height: auto;                     /* Высота свободно дышит по пропорциям кадра */
-        max-height: none;                 /* Намертво стираем ПК-ограничения */
-        aspect-ratio: var(--ratio-landscape);
-        object-fit: contain;
-    }
-
-    /* На смартфонах принудительно возвращаем подпись одиночки в обычный блок */
-    .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
         display: block;
         width: 100%;
         max-width: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
+        height: auto;
+        background-color: transparent;
+    }
+
+    /* 🔥 ФИКСАЦИЯ: Переносим серый щит заглушки и скругления углов строго на само видео.
+       Сбрасываем жесткий ПК-потолок высоты, возвращая стабильные 16/9 на смартфонах */
+    .main-content .figure-video-single video[data-src],
+    .main-content .figure-video-single video.video-fig,
+    .main-content .figure-video-row video.video-fig {
+        width: 100%;
+        height: auto;
+        max-height: none;   
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        background-color: var(--media-background-plug); /* Серый фон только на видео */
+        border-radius: 8px;                             /* Скругления только на видео */
+    }
+    
+    /* 🔥 ФИКСАЦИЯ: Возвращаем подпись в обычный блок на чистом фоне статьи */
+    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1rem;
     }
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* Жесткие 2 колонки видеороликов, делящие мобильный экран пополам */
+    /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
         align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 
-    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и флекс в чистый block.
-       Математика calc идеально синхронизирует одиночную заглушку с групповым рядом без перекосов */
+    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и флекс в чистый block на боку телефона.
+       Убираем общий серый фон. Математика calc идеально синхронизирует одиночный блок с рядом */
     .main-content .figure-video-single figure.figure-video {
         display: block;
         width: calc(50% - (var(--gap-pc) / 2));
         max-width: 100%;
         height: auto;
+        background-color: transparent;
     }
 
-    /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
+    /* 🔥 ФИКСАЦИЯ: Переносим серый щит заглушки и скругления углов на само видео для ландшафта */
     .main-content .figure-video-row video.video-fig,
     .main-content .figure-video-single video.video-fig {
         width: 100%;
@@ -158,6 +164,8 @@
         max-height: var(--media-figure-landscape-max); 
         object-fit: contain; 
         aspect-ratio: var(--ratio-landscape);
+        background-color: var(--media-background-plug); /* Серый фон только на видео */
+        border-radius: 8px;                             /* Скругления только на видео */
     }
 
     /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
@@ -166,9 +174,8 @@
         object-fit: contain; 
     }
 
-    /* 🔥 ФИКСАЦИЯ: Переводим подпись на боку телефона в обычный блок с лимитом, 
-       чтобы буквы аккуратно переносились и не распирали рамку кадра */
-    .main-content figure.figure-video figcaption.figcaption-video {
+    /* 🔥 ФИКСАЦИЯ: Переводим подпись на боку телефона в блок на чистом фоне статьи */
+    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
         max-width: 290px;
         width: 100%;
@@ -176,3 +183,4 @@
         box-sizing: border-box;
     }
 }
+

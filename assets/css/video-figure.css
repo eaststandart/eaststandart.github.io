@@ -135,18 +135,19 @@
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
     
-    /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
+    /* Жесткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
-        align-items: start;                          /* Гарантия выравнивания плееров по верхней кромке ряда */              
+        align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
     }
 
-    /* 🔥 ИСПРАВЛЕНО И ПРОВЕРЕНО: Математика calc идеально синхронизирует размеры 
-       одиночной заглушки с групповым рядом с учетом системного зазора gap */
+    /* 🔥 ФИКСАЦИЯ: Сбрасываем десктопную таблицу и флекс в чистый block.
+       Математика calc идеально синхронизирует одиночную заглушку с групповым рядом без перекосов */
     .main-content .figure-video-single figure.figure-video {
-        display: flex;
+        display: block;
         width: calc(50% - (var(--gap-pc) / 2));
         max-width: 100%;
+        height: auto;
     }
 
     /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
@@ -165,8 +166,9 @@
         object-fit: contain; 
     }
 
-    /* Ограничиваем подпись на боку телефона */
-    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
+    /* 🔥 ФИКСАЦИЯ: Переводим подпись на боку телефона в обычный блок с лимитом, 
+       чтобы буквы аккуратно переносились и не распирали рамку кадра */
+    .main-content figure.figure-video figcaption.figcaption-video {
         display: block;
         max-width: 290px;
         width: 100%;

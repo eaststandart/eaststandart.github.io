@@ -32,6 +32,7 @@
     /*width: auto !important;*/
     max-width: 100% !important;
     aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */
+    object-fit: contain;
 }
 
 /* Снимает ограничения высоты, позволяя фото принять точные инлайновые пропорции */

@@ -43,14 +43,18 @@
     object-fit: contain !important;
 }
 
+.main-content figure.figure-img:has(img.img-custom) figcaption.figcaption-img {
+    width: 100% !important;
+    max-width: 100% !important;  /* Стираем 371px, текст сжимается ровно по границам схемы */
+    padding: 0 10px !important;  /* Эстетичные внутренние отступы, чтобы буквы не липли к краям */
+    box-sizing: border-box !important;
+}
+
 /* 🔥 🧱 РЕЖИМ ЗАГЛУШКИ ДЛЯ КАСTОМНЫХ РАЗМЕРОВ (Пока активен data-src)
    Прозрачный пиксель держит форму, а мы мягко разрешаем авто-размеры без перекосов */
 .main-content .figure-img-single img.img-fig.img-custom[data-src] {
-    width: auto !important;
-    height: auto !important;
-    max-height: var(--media-pc-height) !important;   /* Защита: удерживает высоту заглушки схемы в рамках 209px */
-    aspect-ratio: auto !important;                   /* Берёт точное инлайновое соотношение сторон из Python */
-    object-fit: contain !important;
+    width: 100%;
+    height: 100%;
 }
 
 

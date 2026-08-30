@@ -23,11 +23,6 @@
     width: auto !important;
     max-width: 100% !important;
     margin: 0 !important;
-
-    height: var(--media-pc-height) !important;
-    background-color: var(--media-background-plug);  
-    border-radius: 8px;
-    overflow: hidden;
 }
 
 /* [ЭЛЕМЕНТ] Базовые и кастомные одиночные картинки fig */
@@ -36,7 +31,8 @@
     max-height: var(--media-pc-height);               /* Потолок 209px для защиты верстки */
     width: auto !important;
     max-width: 100% !important;
-    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */              
+    aspect-ratio: var(--ratio-landscape) !important; /* Удерживает 16/9 на время загрузки */ 
+    background-color: var(--media-background-plug);               
 }
 
 /* 🧱 СПЕЦ-РЕЖИМ ДЛЯ КАСTОМНЫХ ЖУРНАЛЬНЫХ РАЗМЕРОВ (fig|503x152) */

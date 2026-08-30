@@ -118,6 +118,15 @@
     .main-content .figure-img-row img.img-fig {
         aspect-ratio: var(--ratio-landscape);
     }
+
+    /* 🔥 ИСПРАВЛЕНО: На смартфонах полностью сбрасываем нижний порог 371px у кастомной подписи,
+       чтобы текст не распирал экран телефона вбок и не вызывал горизонтальный скролл */
+    .main-content figure.figure-img:has(img.img-custom) figcaption.figcaption-img {
+        min-width: 0 !important;                     /* Намертво гасим десктопные 371px */
+        width: 100% !important;                      /* Текст послушно сжимается по экрану смартфона */
+        max-width: 100% !important;
+    }
+
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */

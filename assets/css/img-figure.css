@@ -36,7 +36,6 @@
 /* 🔥 🧱 РЕЖИМ ЗАГЛУШКИ ДЛЯ КАСTОМНЫХ РАЗМЕРОВ (Пока активен data-src)
    Прозрачный пиксель держит форму, а мы даём ему авто-размеры для идеального обжатия */
 .main-content .figure-img-single img.img-fig.img-custom[data-src] {
-    width: auto !important;                          /* Убираем 100%, ширина берётся из инлайнового стиля Python */
     height: auto !important;                         /* Убираем 100%, высота рассчитывается по кадру */
     max-height: var(--media-pc-height) !important;   /* Защита от CLS: удерживает высоту схемы в рамках 209px */
     aspect-ratio: auto !important;                   /* Игнорирует 16/9, берёт точные пропорции схемы */

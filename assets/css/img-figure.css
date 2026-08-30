@@ -28,7 +28,7 @@
 /* [ЭЛЕМЕНТ] Обычные картинки контента (Принимают декор заглушки) */
 .main-content .figure-img-single img.img-fig {
     height: var(--media-pc-height) !important;       /* Держит высоту 209px на ПК */
-    width: auto !important;                          /* Авто-ширина по пропорциям кадра */
+    /*width: auto !important;*/                          /* Авто-ширина по пропорциям кадра */
     aspect-ratio: var(--ratio-landscape) !important; /* Форма 16/9 для обычных одиночек */
     object-fit: contain;
     background-color: var(--media-background-plug) !important; /* Серый щит лоадера на самой картинке */

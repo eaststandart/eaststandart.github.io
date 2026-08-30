@@ -79,7 +79,8 @@
     max-height: var(--media-pc-height);
     width: 100%;                     
     aspect-ratio: var(--ratio-landscape);    
-    object-fit: contain;     
+    object-fit: contain;
+    border-radius: 8px;     
 }
 
 /* БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */

@@ -91,6 +91,10 @@ discus: "questions"
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 
+одиночный fig-v без v
+
+![fig|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/test-vertical.webm)
+
 Групповой fig-v
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)

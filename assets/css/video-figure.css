@@ -13,24 +13,39 @@
     margin: 1em 0;           
 }
 
-/* [ЭЛЕМЕНТ] Контейнер figure — внутренний Flexbox-автомат */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК жестко держит журнальный стандарт Лаборатории */
 .main-content .figure-video-single figure.figure-video {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    width: max-content;      
-    max-width: 100%;         
+    display: table;                                  /* Включаем нативный режим таблицы */
+    width: 371px;                                    /* Жесткий ПК-шаг одиночки, равный картинкам */
+    max-width: 100%;
+    background-color: var(--media-background-plug);  
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto;                                  /* Идеально центрирует блок на странице */
+    padding: 0;
+}
+
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
+.main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
+    display: table-caption;                          /* Превращаем в официальную подпись таблицы */
+    caption-side: bottom;                            /* Намертво прижимаем строго СНИЗУ видео */
+    width: 100%;
+    max-width: 100%;                                 /* Текст заперт строго в рамки 371px */
+    margin-top: 1rem;        
+    text-align: center;      
+    word-break: break-word;  
+    box-sizing: border-box;
+    padding: 0 10px;                                 /* Эстетичные защитные поля */
 }
 
 /* [ЭЛЕМЕНТ] Видеоплеер внутри одиночного контейнера */
 .main-content .figure-video-single video.video-fig {
+    display: block;                                  /* Убираем дефолтные инлайновые зазоры браузера */
     height: auto;            
     max-height: var(--media-pc-height);       
-    width: auto;             
+    width: 100%;                                     /* Заполняет 371px родительской таблицы */
     max-width: 100%;         
-    aspect-ratio: var(--ratio-landscape); /* Задаем пропорции плеера для предотвращения сдвигов макета */     
+    aspect-ratio: var(--ratio-landscape);            /* Задаем пропорции плеера для предотвращения сдвигов макета */     
     object-fit: contain;       
 }
 
@@ -67,11 +82,8 @@
     object-fit: contain;     
 }
 
-
-/* ------------------------------------------------------------
-   [ОБЩИЙ ЭЛЕМЕНТ] Подпись к видеофайлам figcaption (figcaption-video)
-   ------------------------------------------------------------ */
-.main-content figure.figure-video figcaption.figcaption-video {
+/* 🔥 СТРОГАЯ ИЗОЛЯЦИЯ: БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
+.main-content .figure-video-row figure.figure-video figcaption.figcaption-video {
     display: block;
     width: 100%;
     max-width: 371px;        
@@ -92,20 +104,31 @@
         grid-template-columns: 1fr;
     }
 
+    /* На смартфонах переводим таблицу одиночки в полноценный гибкий флекс-бокс */
     .main-content .figure-video-single figure.figure-video {
-        width: 100%;
+        display: flex;
+        width: 100%;                      
+        max-width: 100%;
     }
 
+    /* Снимаем ПК-ограничения по высоте для ВСЕХ типов видеороликов на смартфонах */
     .main-content .figure-video-single video[data-src],    
     .main-content .figure-video-single video.video-fig,
     .main-content .figure-video-row video.video-fig {
-        width: 100%;
-        height: auto;
-        max-height: none;   
-    }
-    
-    .main-content .figure-video-row video.video-fig {
+        width: 100%;                      /* Видео честно занимает 100% ширины экрана */
+        height: auto;                     /* Высота свободно дышит по пропорциям кадра */
+        max-height: none;                 /* Намертво стираем ПК-ограничения */
         aspect-ratio: var(--ratio-landscape);
+        object-fit: contain;
+    }
+
+    /* На смартфонах принудительно возвращаем подпись одиночки в обычный блок */
+    .main-content .figure-video-single figure.figure-video figcaption.figcaption-video {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 }
 
@@ -115,24 +138,39 @@
     /* Жёсткие 2 колонки видеороликов, делящие мобильный экран пополам */
     .main-content .figure-video-row {
         grid-template-columns: repeat(2, 1fr); 
-        align-items: start; /* Гарантия выравнивания плееров по верхней кромке ряда */              
+        align-items: start;                          /* Гарантия выравнивания плееров по верхней кромке ряда */              
+    }
+
+    /* 🔥 ИСПРАВЛЕНО И ПРОВЕРЕНО: Математика calc идеально синхронизирует размеры 
+       одиночной заглушки с групповым рядом с учетом системного зазора gap */
+    .main-content .figure-video-single figure.figure-video {
+        display: flex;
+        width: calc(50% - (var(--gap-pc) / 2));
+        max-width: 100%;
     }
 
     /* Мобильный лимит высоты с микро-запасом для защиты от зазоров */
-    .main-content .figure-video-row video.video-fig {
+    .main-content .figure-video-row video.video-fig,
+    .main-content .figure-video-single video.video-fig {
+        width: 100%;
+        height: auto;
         max-height: var(--media-figure-landscape-max); 
         object-fit: contain; 
+        aspect-ratio: var(--ratio-landscape);
     }
 
-    /* Точечный пересчет для вертикальных видеороликов, если засать ![fig | v] */
+    /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
     .main-content .figure-video-row video.video-fig.video-v {
         aspect-ratio: var(--ratio-landscape); 
         object-fit: contain; 
     }
 
-    /* Одиночные центрированные плееры на боку телефона */
-    .main-content .figure-video-single video.video-fig {
-        height: var(--media-mobile-landscape-height);
-        width: auto;
+    /* Ограничиваем подпись на боку телефона */
+    .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
+        display: block;
+        max-width: 290px;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 }

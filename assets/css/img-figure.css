@@ -100,6 +100,11 @@
         grid-template-columns: 1fr;
     }
 
+    .main-content .figure-img-single figure.figure-img {
+        display: flex !important;                    /* Сбрасываем десктопный inline-flex */
+        width: 100% !important;                      /* Раскрываем коробку во всю ширину статьи */
+        max-width: 100% !important;
+    }
     
     /* Снимаем ПК-ограничения по высоте для ВСЕХ типов картинок на смартфонах */
     .main-content .figure-img-single img.img-fig,

@@ -60,8 +60,7 @@ figcaption {
     opacity: 0;
     pointer-events: none;                       
     transition: opacity 0.25s ease;
-    cursor: zoom-out;
-    border-radius: 0 !important;                           
+    cursor: zoom-out;                          
 }
 
 /* Модификатор активации оверлея из JS */
@@ -82,7 +81,6 @@ figcaption {
     object-fit: contain !important;            /* Браузер сам идеально впишет и вертикалку, и горизонталку */
     background-color: transparent !important;  /* Полный отказ от искусственных плашек и рамок */
     padding: 0 !important;                     /* Полное обнуление внутренних зазоров */
-    border-radius: 8px;                        /* Мягкое скругление углов самого изображения */
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* Глубокая тень для отделения кадра от затенения */
     
     image-rendering: -webkit-optimize-contrast;

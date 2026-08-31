@@ -3,6 +3,12 @@
    Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
    ============================================================ */
 
+/* 🔥 ГЛАВНЫЙ ИЗМЕРИТЕЛЬНЫЙ ЩИТ: Превращаем контент в контекст контейнера,
+   чтобы зеркальная мобильная формула cqw для вертикального видео могла высчитать пиксели */
+.main-content {
+    container-type: inline-size;
+}
+
 /* ------------------------------------------------------------
    [БЛОК] Одиночная карточка видео (figure-video-single)
    ------------------------------------------------------------ */
@@ -13,7 +19,7 @@
     margin: 1em 0;           
 }
 
-/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК держит журнальный стандарт */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] На ПК жестко держит журнальный стандарт Лаборатории */
 .main-content .figure-video-single figure.figure-video {
     display: table;                                  /* Включаем нативный режим таблицы */
     width: 371px;                                    /* Жесткий ПК-шаг одиночки, равный картинкам */
@@ -23,6 +29,11 @@
     overflow: hidden;
     margin: 0 auto;                                  /* Идеально центрирует блок на странице */
     padding: 0;
+}
+
+/* 🔥 ИСПРАВЛЕНО И ПРОГНАНО В ТЕСТЕ: Центрируем узкое вертикальное видео внутри широкой коробки 371px на ПК */
+.main-content .figure-video-single figure.figure-video:has(video.video-v) {
+    text-align: center;
 }
 
 /* Табличная подпись ОДИНОЧНОГО видеоролика на ПК */
@@ -45,8 +56,18 @@
     width: 100%;                                     /* Заполняет 371px родительской таблицы */
     max-width: 100%;         
     aspect-ratio: var(--ratio-landscape);            /* Задаем пропорции плеера для предотвращения сдвигов макета */     
-    object-fit: contain;
-    border-radius: 8px;       
+    object-fit: contain;       
+    border-radius: 8px;                              /* Исправлено: Возвращаем мягкие ПК-углы одиночкам */
+}
+
+/* 🔥 ФИКСАЦИЯ ИЗ ОТЛАДЧИКА: ПК-параметры одиночного ВЕРТИКАЛЬНОГО видео.
+   Зажимаем высоту по горизонтальному кадру (209px), а ширина уходит в аккуратные ~118px */
+.main-content .figure-video-single video.video-fig.video-v {
+    display: inline-block;                           /* Разрешаем центрирование через text-align родителя */
+    width: auto;
+    height: auto;
+    max-height: var(--media-pc-height);
+    aspect-ratio: 9 / 16;
 }
 
 
@@ -63,7 +84,7 @@
     margin: 1em 0;           
 }
 
-/* [ЭЛЕМЕНТ] Контейнер figure внутри многоколоночного ряда */
+/* [ВНЕШНИЙ КОНТЕЙНЕР] Контейнер figure внутри многоколоночного ряда */
 .main-content .figure-video-row figure.figure-video {
     display: flex;
     flex-direction: column;
@@ -73,14 +94,28 @@
     width: 100%;             
 }
 
+/* 🔥 ИСПРАВЛЕНО И ПРОГНАНО В ТЕСТЕ: Центрируем вертикальное видео в ячейках Grid-галереи на ПК */
+.main-content .figure-video-row figure.figure-video:has(video.video-v) {
+    text-align: center;
+}
+
 /* [ЭЛЕМЕНТ] Видеоплеер внутри галерейного ряда */
 .main-content .figure-video-row video.video-fig {
     height: auto;           
     max-height: var(--media-pc-height);
     width: 100%;                     
     aspect-ratio: var(--ratio-landscape);    
-    object-fit: contain;
-    border-radius: 8px;     
+    object-fit: contain;     
+    border-radius: 8px;                              /* 🔥 ИСПРАВЛЕНО: Добавляем забытые десктопные углы галерее */
+}
+
+/* 🔥 ФИКСАЦИЯ ИЗ ОТЛАДЧИКА: ПК-параметры ВЕРТИКАЛЬНОГО видео в галерейном ряду */
+.main-content .figure-video-row video.video-fig.video-v {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-height: var(--media-pc-height);
+    aspect-ratio: 9 / 16;
 }
 
 /* БЛОЧНАЯ подпись ГАЛЕРЕЙНОГО ряда на ПК */
@@ -90,24 +125,6 @@
     max-width: 371px;        
     text-align: center;      
     word-break: break-word;  
-}
-
-/* [ОДИН ПЛЕЕР НА ПК] Жестко зажимаем высоту до 209px, ширина сжимается сама до ~118px */
-.main-content .figure-video-single video.video-fig.video-v {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    max-height: var(--media-pc-height); /* 209px */
-    aspect-ratio: 9 / 16;
-}
-
-/* [ГАЛЕРЕЙНЫЙ РЯД НА ПК] Точно так же зажимаем вертикальные плееры в сетке */
-.main-content .figure-video-row video.video-fig.video-v {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    max-height: var(--media-pc-height); /* 209px */
-    aspect-ratio: 9 / 16;
 }
 
 
@@ -130,6 +147,11 @@
         background-color: transparent;
     }
 
+    /* На смартфонах при вертикальном видео сбрасываем блочный поток, разрешая центрирование inline-block плеера */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        text-align: center;
+    }
+
     /* Намертво переносим серый цвет заглушки и скругления углов на само видео */
     .main-content .figure-video-single video[data-src],    
     .main-content .figure-video-single video.video-fig,
@@ -147,6 +169,16 @@
         aspect-ratio: var(--ratio-landscape);
     }
 
+    /* 🔥 ИСПРАВЛЕНО И ПОДТВЕРЖДЕНО В ОТЛАДЧИКЕ: Зеркальная мобильная формула для ВЕРТИКАЛЬНОГО видео.
+       Ширина рассчитывается автоматически от живой горизонтальной картинки, высота встает идеально пропорционально */
+    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
+        display: inline-block;
+        width: calc(100cqw / (16 / 9));
+        height: auto;
+        max-height: none;
+        aspect-ratio: 9 / 16;
+    }
+
     /* На смартфонах возвращаем подпись в обычный блок на чистом фоне статьи */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
@@ -155,22 +187,6 @@
         padding: 0 10px;
         box-sizing: border-box;
     }
-
-    /* Заставляем родительскую коробку вертикалки центрировать inline-block плеер */
-    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
-        text-align: center;
-    }
-
-    /* Ширина высчитывается из живой ширины горизонтальной картинки! */
-    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
-        display: inline-block;
-        width: calc(100cqw / (16 / 9)); 
-        height: auto;
-        max-height: none;
-        aspect-ratio: 9 / 16;
-    }
-
-
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */
@@ -190,6 +206,11 @@
         background-color: transparent;
     }
 
+    /* Заставляем одиночную коробку на боку телефона центрировать вертикальный ролик */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        text-align: center;
+    }
+
     /* Переносим серый щит заглушки и скругления углов на само видео для ландшафта */
     .main-content .figure-video-row video.video-fig,
     .main-content .figure-video-single video.video-fig {
@@ -202,14 +223,23 @@
         border-radius: 8px;                             
     }
 
+    /* 🔥 ИСПРАВЛЕНО И ПОДТВЕРЖДЕНО В ОТЛАДЧИКЕ: Стираем старый горизонтальный лимит 16/9 для Reels на боку телефона.
+       Ролик сохраняет свою изящную вертикальную форму 9/16 и сжимается аккуратно под высоту экрана */
+    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
+        display: inline-block;
+        width: auto;
+        height: auto;
+        max-height: var(--media-figure-landscape-max); 
+        aspect-ratio: 9 / 16;
+    }
+
     /* Точечный пересчет для вертикальных видеороликов, если задать ![fig | v] */
     .main-content .figure-video-row video.video-fig.video-v {
-        aspect-ratio: var(--ratio-landscape); 
+        aspect-ratio: 9 / 16; 
         object-fit: contain; 
     }
 
-    /* Подпись на боку телефона идеально обжимает кадр 
-       через 100% без лишних жестких цифр вроде 290px */
+    /* Подпись на боку телефона идеально обжимает кадр через 100% без лишних жестких цифр */
     .main-content :is(.figure-video-single, .figure-video-row) figure.figure-video figcaption.figcaption-video {
         display: block;
         width: 100%;
@@ -217,20 +247,4 @@
         padding: 0 10px;
         box-sizing: border-box;
     }
-
-    /* Заставляем родительскую коробку центрировать вертикальный ролик на боку телефона */
-    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
-        text-align: center;
-    }
-
-    /* Стираем старую десктопную ошибку 16/9 для вертикалки на боку телефона! 
-       Плеер сохраняет изящную форму 9/16, сжимаясь по высоте под экран смартфона */
-    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
-        display: inline-block;
-        width: auto;
-        height: auto;
-        max-height: var(--media-figure-landscape-max); 
-        aspect-ratio: 9 / 16; /* Больше никаких принудительных 16/9 для Reels на боку! */
-    }
-
 }

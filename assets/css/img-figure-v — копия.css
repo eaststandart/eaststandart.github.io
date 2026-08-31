@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* 📐 Главный измерительный контекст для зеркальной формулы cqw */
-.main-content .figure-img-single {
+.main-content {
     container-type: inline-size;
 }
 

@@ -51,8 +51,8 @@ html {
 
     /* ЗЕРКАЛЬНЫЙ АВТОМАТИЧЕСКИЙ ПЕРЕСЧЁТ ДЛЯ ВЕРТИКАЛЬНЫХ МЕДИАФАЙЛОВ
        Высчитывает ширину вертикалок из живой ширины горизонтальных кадров */
-    --v-portrait-width: calc(100cqw / var(--ratio-landscape));
-    --v-landscape-width: calc((50cqw - (var(--gap-pc) / 2)) / var(--ratio-landscape));
+    --v-fig-portrait-width: calc(100cqw / var(--ratio-landscape));
+    --v-fig-landscape-width: calc((50cqw - (var(--gap-pc) / 2)) / var(--ratio-landscape));
 
     /* ПУЛЬТ ЗЕРКАЛЬНОГО ПЕРЕСЧЁТА ОБЫЧНЫХ КАРТИНОК
        Вычисляет безупречные мобильные размеры от ширины экрана за вычетом 44px полей твоей статьи */

@@ -18,13 +18,15 @@
 }
 
 /* ПК-параметры одиночного ВЕРТИКАЛЬНОГО видео.
-   Вертикальный !important применяется строго к ОДИНОЧНОЙ заглушке */
+   🔥 ФИКСАЦИЯ: Зеркальный переворот осей. Высота горизонтального кадра (209px) 
+      приписана в ширину вертикалки. Высота автоматически вырастает до идеальных 371px */
 .main-content .figure-video-single video.video-fig.video-v {
     display: inline-block;                           /* Чтобы сработало центрирование от родителя */
-    width: auto !important;
+    width: var(--media-pc-height) !important;
     height: auto !important;
-    max-height: var(--media-pc-height) !important;   /* Наш жесткий ПК-шаг 209px */
+    max-height: none !important;                     /* Стираем старый низкий потолок */
     aspect-ratio: 9 / 16 !important;
+    border-radius: 8px;                              /* Мягкие углы плеера */
 }
 
 

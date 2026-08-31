@@ -529,7 +529,7 @@ p:has(img) + blockquote,
     @media (orientation: portrait) {
 
         /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */
-        .main-content p:has(img) {
+        .main-content p:has(img + img) {
             display: flex !important;
             flex-direction: column !important;
             gap: var(--gap-mobile-portrait) !important; 

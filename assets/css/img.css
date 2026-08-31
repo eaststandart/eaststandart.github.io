@@ -13,7 +13,8 @@
 /* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
 @import url("img-base.css");         
 @import url("img-gallery.css");      
-@import url("img-figure.css");  
+@import url("img-figure.css");
+@import url("img-figure-v.css"); 
 
 /* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
 .main-content p:has(img) {

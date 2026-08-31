@@ -55,10 +55,14 @@ discus: "questions"
 
 Сейчас заменим провод выключателем и нажмем на кнопку. Светодиод загорелся. Когда кнопка выключателя нажата, в нем соединяются две пластинки, и электрическая цепь замыкается. Действие выключателя, таким образом, состоит в соединении двух выводов – батарейки и светодиода.
 
+Группа fig картинок без v
+
 ![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+
+Группа fig картинок с v в конце
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
 ![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
@@ -67,7 +71,7 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-Здесь запись fig|v| картинка
+Группа fig картинок c записью fig|v|
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)

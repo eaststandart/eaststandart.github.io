@@ -1,38 +1,41 @@
 /*
 @about Модуль стандартных вертикальных картинок в текстовых абзацах контента.
-@purpose Задаёт единый фиксированный зеркальный размер 209х371px на ПК строго для одиночек через :only-child, а на смартфонах автоматически переключает элементы .img-v на адаптивный расчёт по автоматическим переменным из пульта управления style.css, используя безопасный контекст главного каркаса контента.
+@purpose Задаёт единый фиксированный зеркальный размер 209х371px на ПК строго для одиночек через :only-child, а на смартфонах автоматически переключает элементы .img-v на адаптивный расчёт по безопасным vw-переменным из пульта управления style.css.
 @author TechLab
-@version 3.2
+@version 3.3
 */
 
-/* 📐 ГЛАВНЫЙ ИЗМЕРИТЕЛЬНЫЙ ЩИТ: Включаем измерительный контекст на центральный каркас статьи.
-   Он никогда не схлопнется в ноль, гарантируя стабильность вёрстки и идеальный расчёт cqw-переменных! */
-.content-wrapper {
-    container-type: inline-size;
-}
+/* ============================================================
+   📦 МОДУЛЬ СТАНДАРТНЫХ ВЕРТИКАЛЬНЫХ КАРТИНОК (img-base-v.css)
+   ============================================================ */
 
 /* ------------------------------------------------------------
    💻 ПК И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше мобильного портрета)
    ------------------------------------------------------------ */
+
+/* На ПК и средних экранах одиночная вертикалка в тексте держит жесткие 209px ширины */
 .main-content p img.img-v:only-child {
     display: inline-block !important;
     width: var(--media-pc-height) !important;        /* Наш сквозной шаг 209px в ширину */
     height: auto !important;                         /* Высота сама вырастает до идеальных 371px */
     max-height: none !important;                     
-    aspect-ratio: var(--ratio-portrait) !important;  /* */               
+    aspect-ratio: var(--ratio-portrait) !important;                 
 }
 
 /* ------------------------------------------------------------
    📱 РЕЖИМ СМАРТФОНОВ И ПЛАНШЕТОВ (Меньше 900px + Portrait)
    ------------------------------------------------------------ */
 @media (max-width: 900px) and (orientation: portrait) {
+
+    /* 🔥 БЕЗОПАСНЫЙ ПЕРЕСЧЁТ: Забираем готовую портретную ширину из пульта.
+       Картинки больше никогда не пропадут с экрана, так как мы не используем container-type! */
     .main-content p img.img-v,
     .main-content p img.img-v:only-child {
         display: inline-block !important;
-        width: var(--v-portrait-width) !important;    /* Забираем готовую портретную ширину из пульта */
+        width: var(--v-portrait-width) !important; 
         height: auto !important;
         max-height: none !important;
-        aspect-ratio: var(--ratio-portrait) !important; /* */
+        aspect-ratio: var(--ratio-portrait) !important;
     }
 }
 
@@ -40,12 +43,15 @@
    🧭 РЕЖИМ СМАРТФОНОВ ГОРИЗОНТАЛЬНО (Landscape на боку)
    ------------------------------------------------------------ */
 @media (max-height: 500px) and (orientation: landscape) {
+
+    /* На боку телефона обычные вертикалки контента принимают идеальную 
+       зеркальную ширину соседа из центрального пульта управления */
     .main-content p img.img-v,
     .main-content p img.img-v:only-child {
         display: inline-block !important;
-        width: var(--v-landscape-width) !important;   /* Забираем готовую ландшафтную ширину из пульта */
+        width: var(--v-landscape-width) !important;
         height: auto !important;
         max-height: none !important;
-        aspect-ratio: var(--ratio-portrait) !important; /* */
+        aspect-ratio: var(--ratio-portrait) !important;
     }
 }

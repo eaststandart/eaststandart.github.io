@@ -6,12 +6,45 @@
 @version 
 */
 
-
 /* ============================================================
    🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
-/* 1. СТИЛИ ПОЛНОЭКРАННОГО МОДАЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
+/* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
+@import url("img-base.css");         
+@import url("img-gallery.css");      
+@import url("img-figure.css");
+@import url("img-figure-v.css"); 
+
+/* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
+.main-content p:has(img) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--gap-pc);         
+    margin: 1em 0 !important;   
+    padding: 0 !important;      
+}
+
+/* 3. ОБЩИЙ СТИЛЬ ДЛЯ ПОДПИСЕЙ К МЕДИАФАЙЛАМ КАРТИНОК */
+figcaption {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6a737d;
+    margin-top: 1rem; 
+    line-height: 1.4; 
+}
+
+/*  4. ПОДГОТОВКА КУРСОРОВ ДЛЯ ВСЕХ КАРТИНОК КОНТЕНТА */
+.main-content p img:not(.content-img),
+.main-content .figure-img img.img-fig {
+    cursor: zoom-in !important;
+    position: relative;
+    z-index: 1;
+}
+
+/*  5. СТИЛИ ПОЛНОЭКРАННОГО МОДЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
 .lightbox-overlay {
     position: fixed;
     top: 0;
@@ -60,7 +93,6 @@
 .lightbox-overlay.is-active img {
     transform: scale(1);                        /* Мягкий эффект проявления при клике */
 }
-
 
 
 /* ============================================================

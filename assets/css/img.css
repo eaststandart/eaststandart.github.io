@@ -60,7 +60,8 @@ figcaption {
     opacity: 0;
     pointer-events: none;                       
     transition: opacity 0.25s ease;
-    cursor: zoom-out;                           
+    cursor: zoom-out;
+    border-radius: 0 !important;                           
 }
 
 /* Модификатор активации оверлея из JS */

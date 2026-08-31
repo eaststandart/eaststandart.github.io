@@ -86,5 +86,15 @@
         max-height: none !important;
         aspect-ratio: 9 / 16 !important;
     }
+
+    /* Центрируем подпись на боку телефона */
+    .main-content .figure-img-single figure.figure-img:has(img.img-v) figcaption.figcaption-img {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
 }
 

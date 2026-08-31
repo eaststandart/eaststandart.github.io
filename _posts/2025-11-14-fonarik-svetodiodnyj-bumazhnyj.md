@@ -91,7 +91,7 @@ discus: "questions"
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-1
+12
 
 Одиночная простая картинка (!!! ее распирает при режиме ниже 900!!!)
 

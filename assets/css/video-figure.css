@@ -92,6 +92,24 @@
     word-break: break-word;  
 }
 
+/* [ОДИН ПЛЕЕР НА ПК] Жестко зажимаем высоту до 209px, ширина сжимается сама до ~118px */
+.main-content .figure-video-single video.video-fig.video-v {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-height: var(--media-pc-height); /* 209px */
+    aspect-ratio: 9 / 16;
+}
+
+/* [ГАЛЕРЕЙНЫЙ РЯД НА ПК] Точно так же зажимаем вертикальные плееры в сетке */
+.main-content .figure-video-row video.video-fig.video-v {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-height: var(--media-pc-height); /* 209px */
+    aspect-ratio: 9 / 16;
+}
+
 
 /* ============================================================
    📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ ВИДЕО-КОМПОНЕНТА
@@ -137,6 +155,22 @@
         padding: 0 10px;
         box-sizing: border-box;
     }
+
+    /* Заставляем родительскую коробку вертикалки центрировать inline-block плеер */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        text-align: center;
+    }
+
+    /* Ширина высчитывается из живой ширины горизонтальной картинки! */
+    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
+        display: inline-block;
+        width: calc(100cqw / (16 / 9)); 
+        height: auto;
+        max-height: none;
+        aspect-ratio: 9 / 16;
+    }
+
+
 }
 
 /* --- Смартфоны горизонтально (Landscape) --- */

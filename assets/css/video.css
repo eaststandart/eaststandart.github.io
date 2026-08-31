@@ -14,6 +14,7 @@
 /* 1. СНАЧАЛА СТРОГО ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
 @import url("video-gallery.css");     /* 1. Простые флекс-ряды видеороликов без подписей */ 
 @import url("video-figure.css");      /* 2. Видео-сеток figure с подписями */
+@import url("video-figure-v.css");
 
 /* 2. БАЗОВЫЕ ПК-ПАРАМЕТРЫ ДЛЯ ОДИНОЧНЫХ ВИДЕОРОЛИКОВ КОНТЕНТА */
 .main-content video:not(.video-fig) {

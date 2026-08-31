@@ -100,7 +100,7 @@ discus: "questions"
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 Одиночное видео
 

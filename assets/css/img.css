@@ -14,7 +14,8 @@
 @import url("img-base.css");         
 @import url("img-gallery.css");      
 @import url("img-figure.css");
-@import url("img-figure-v.css"); 
+@import url("img-figure-v.css");
+@import url("zoom.css");
 
 /* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
 .main-content p:has(img) {
@@ -42,55 +43,6 @@ figcaption {
     cursor: zoom-in !important;
     position: relative;
     z-index: 1;
-}
-
-/*  5. СТИЛИ ПОЛНОЭКРАННОГО МОДЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
-.lightbox-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(24, 28, 31, 0.88);  /* 🔥 Ультимативное благородное затенение фона */
-    backdrop-filter: blur(10px);               /* Мягкое размытие заднего плана статьи */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;                             /* Поверх всех элементов сайта */
-    opacity: 0;
-    pointer-events: none;                       
-    transition: opacity 0.25s ease;
-    cursor: zoom-out;                          
-}
-
-/* Модификатор активации оверлея из JS */
-.lightbox-overlay.is-active {
-    opacity: 1;
-    pointer-events: auto;                       
-}
-
-/* Сама увеличенная картинка внутри оверлея */
-.lightbox-overlay img {
-    /* Картинка занимает максимум пространства, но сохраняет 
-       аккуратные одинаковые зазоры безопасности (4vw / 4vh) со всех сторон экрана! */
-    width: calc(100% - 4vw) !important;
-    height: calc(100% - 4vh) !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    
-    object-fit: contain !important;            /* Браузер сам идеально впишет и вертикалку, и горизонталку */
-    background-color: transparent !important;  /* Полный отказ от искусственных плашек и рамок */
-    padding: 0 !important;                     /* Полное обнуление внутренних зазоров */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* Глубокая тень для отделения кадра от затенения */
-    
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    transform: scale(0.97);                     
-    transition: transform 0.25s ease;
-}
-
-.lightbox-overlay.is-active img {
-    transform: scale(1);                        /* Мягкий эффект проявления при клике */
 }
 
 

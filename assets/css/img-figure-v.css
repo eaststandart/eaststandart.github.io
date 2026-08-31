@@ -1,12 +1,7 @@
 /* ============================================================
    📦 МОДУЛЬ ВЕРТИКАЛЬНЫХ ЖУРНАЛЬНЫХ ИЗОБРАЖЕНИЙ (img-figure-v.css)
-   Назначение: Изолированная отладка класса .img-v для одиночных блоков
+   Назначение: Чистая адаптация .img-v БЕЗ использования container-type
    ============================================================ */
-
-/* 📐 Главный измерительный контекст для зеркальной формулы cqw */
-.main-content .figure-img-single {
-    container-type: inline-size;
-}
 
 /* ------------------------------------------------------------
    💻 РЕЖИМ ДЕСКТОПА И ПК (От 900px и выше)
@@ -15,26 +10,25 @@
 /* Центрируем узкую инлайновую вертикальную картинку внутри широкой коробки 371px на ПК */
 .main-content .figure-img-single figure.figure-img:has(img.img-v) {
     text-align: center;
-    display: block !important;                       /* Переводим из инлайн-флекса в блок для центрирования */
+    display: block !important;
 }
 
-/* ПК-параметры одиночной ВЕРТИКАЛЬНОЙ картинки.
-   🔥 ЗЕРКАЛЬНЫЙ ПЕРЕВОРOT ОСЕЙ: Высота горизонтального кадра (209px) 
-      приписана в ширину вертикалки. Высота автоматически вырастает до идеальных 371px */
+/* ПК-параметры одиночной ВЕРТИКАЛЬНОЙ картинки */
 .main-content .figure-img-single img.img-fig.img-v {
-    display: inline-block !important;                /* Чтобы сработало центрирование от родителя */
-    width: var(--media-pc-height) !important;        /* Записываем 209px в ширину, перебивая десктопный !important */
-    height: auto !important;                         /* Отпускаем высоту дышать свободно */
-    max-height: none !important;                     /* Снимаем старый низкий потолок */
-    aspect-ratio: 9 / 16 !important;                 /* Намертво запечатываем вертикальные пропорции */
+    display: inline-block !important;
+    width: var(--media-pc-height) !important;
+    height: auto !important;
+    max-height: none !important;
+    aspect-ratio: 9 / 16 !important;
 }
+
 
 /* ------------------------------------------------------------
    📱 РЕЖИМ СМАРТФОНОВ И ПЛАНШЕТОВ (От 900px и ниже — Portrait)
    ------------------------------------------------------------ */
 @media (max-width: 900px) and (orientation: portrait) {
 
-    /* Включаем на родителе блочный поток и центрирование inline-block элементов */
+    /* Включаем на родителе блочный поток и центрирование */
     .main-content .figure-img-single figure.figure-img:has(img.img-v) {
         display: block !important;
         width: 100% !important;
@@ -43,17 +37,17 @@
         text-align: center;
     }
 
-    /* Зеркальная мобильная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
-       Ширина высчитывается из живой ширины горизонтального кадра, перебивая базовый !important */
+    /* 🔥 ФИКСАЦИЯ ЗУМА: Зеркальная мобильная формула через ширину экрана (vw) за вычетом полей.
+       Освобождает лайтбокс от багов fixed-позиционирования на реальных смартфонах */
     .main-content .figure-img-single img.img-fig.img-v {
         display: inline-block !important;
-        width: calc(100cqw / (16 / 9)) !important;
+        width: calc((100vw - 40px) / (16 / 9)) !important;
         height: auto !important;
         max-height: none !important;
         aspect-ratio: 9 / 16 !important;
     }
 
-    /* Центрируем подпись под вертикальной картинкой */
+    /* Центрируем подпись под вертикальной картинкой БЕЗ max-width */
     .main-content .figure-img-single figure.figure-img:has(img.img-v) figcaption.figcaption-img {
         display: block !important;
         width: 100% !important;
@@ -61,10 +55,12 @@
         margin-left: auto !important;
         margin-right: auto !important;
     }
-
 }
 
-/* --- Смартфоны горизонтально (Landscape) --- */
+
+/* ------------------------------------------------------------
+   🧭 РЕЖИМ СМАРТФОНОВ ГОРИЗОНТАЛЬНО (Landscape на боку)
+   ------------------------------------------------------------ */
 @media (max-height: 500px) and (orientation: landscape) {
 
     /* Сжимаем коробку под ландшафтный шаг соседа и включаем центрирование */
@@ -77,17 +73,16 @@
         text-align: center;
     }
 
-    /* Зеркальная ландшафтная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
-       Высчитывает идеальную ширину из ширины горизонтального кадра на боку телефона */
+    /* 🔥 ФИКСАЦИЯ ЗУМА: Зеркальная ландшафтная формула на боку телефона через ширину экрана (vw) */
     .main-content .figure-img-single img.img-fig.img-v {
         display: inline-block !important;
-        width: calc((50cqw - (var(--gap-pc) / 2)) / (16 / 9)) !important;
+        width: calc(((100vw - 40px) / 2 - (var(--gap-pc) / 2)) / (16 / 9)) !important;
         height: auto !important;
         max-height: none !important;
         aspect-ratio: 9 / 16 !important;
     }
 
-    /* Центрируем подпись на боку телефона */
+    /* Центрируем подпись на боку телефона БЕЗ max-width */
     .main-content .figure-img-single figure.figure-img:has(img.img-v) figcaption.figcaption-img {
         display: block !important;
         width: 100% !important;
@@ -95,6 +90,4 @@
         margin-left: auto !important;
         margin-right: auto !important;
     }
-
 }
-

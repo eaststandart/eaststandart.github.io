@@ -43,7 +43,7 @@
         text-align: center;
     }
 
-    /* 🔥 ФИКСАЦИЯ: Зеркальная мобильная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
+    /* Зеркальная мобильная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
        Ширина высчитывается из живой ширины горизонтального кадра, перебивая базовый !important */
     .main-content .figure-img-single img.img-fig.img-v {
         display: inline-block !important;
@@ -53,3 +53,28 @@
         aspect-ratio: 9 / 16 !important;
     }
 }
+
+/* --- Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* Сжимаем коробку под ландшафтный шаг соседа и включаем центрирование */
+    .main-content .figure-img-single figure.figure-figure:has(img.img-v),
+    .main-content .figure-img-single figure.figure-img:has(img.img-v) {
+        display: block !important;
+        width: calc(50% - (var(--gap-pc) / 2)) !important;
+        max-width: 100% !important;
+        height: auto !important;
+        text-align: center;
+    }
+
+    /* Зеркальная ландшафтная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
+       Высчитывает идеальную ширину из ширины горизонтального кадра на боку телефона */
+    .main-content .figure-img-single img.img-fig.img-v {
+        display: inline-block !important;
+        width: calc((50cqw - (var(--gap-pc) / 2)) / (16 / 9)) !important;
+        height: auto !important;
+        max-height: none !important;
+        aspect-ratio: 9 / 16 !important;
+    }
+}
+

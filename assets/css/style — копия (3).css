@@ -553,7 +553,7 @@ p:has(img) + blockquote,
         .main-content p img:not(.content-img),
         .main-content video:not(.video-fig) {
             height: auto !important;    
-            width: 100%; !important; 
+            width: 100%;
             margin: 0 !important;
         }
         

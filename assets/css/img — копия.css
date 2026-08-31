@@ -89,11 +89,6 @@ figcaption {
     transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
 }
 
-.lightbox-overlay img.img-v-zoom {
-    height: 75% !important;
-    width: auto !important;
-}
-
 
 /* ============================================================
    🎨 ЕДИНЫЙ ЦЕНТР ДЕКОРАТИВНОГО ОФОРМЛЕНИЯ КАРТИНОК

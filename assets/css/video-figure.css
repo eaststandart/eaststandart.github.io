@@ -217,4 +217,20 @@
         padding: 0 10px;
         box-sizing: border-box;
     }
+
+    /* Заставляем родительскую коробку центрировать вертикальный ролик на боку телефона */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        text-align: center;
+    }
+
+    /* Стираем старую десктопную ошибку 16/9 для вертикалки на боку телефона! 
+       Плеер сохраняет изящную форму 9/16, сжимаясь по высоте под экран смартфона */
+    .main-content :is(.figure-video-single, .figure-video-row) video.video-fig.video-v {
+        display: inline-block;
+        width: auto;
+        height: auto;
+        max-height: var(--media-figure-landscape-max); 
+        aspect-ratio: 9 / 16; /* Больше никаких принудительных 16/9 для Reels на боку! */
+    }
+
 }

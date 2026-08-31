@@ -95,7 +95,7 @@ discus: "questions"
 
 \Одиночная простая картинка (ее распирает при режиме ниже 900)
 
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 Галерея простых картинок с параметром v
 

@@ -26,3 +26,29 @@
     max-height: var(--media-pc-height) !important;   /* Наш жесткий ПК-шаг 209px */
     aspect-ratio: 9 / 16 !important;
 }
+
+
+/* ------------------------------------------------------------
+   📱 РЕЖИМ СМАРТФОНОВ И ПЛАНШЕТОВ (От 900px и ниже — Portrait)
+   ------------------------------------------------------------ */
+@media (max-width: 900px) and (orientation: portrait) {
+
+    /* Включаем на родителе блочный поток и центрирование inline-block элементов */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        text-align: center;
+    }
+
+    /* 🔥 ФИКСАЦИЯ: Зеркальная мобильная формула для одиночного ВЕРТИКАЛЬНОГО видео.
+       Ширина высчитывается из живой ширины горизонтальной картинки, перебивая базовый !important */
+    .main-content .figure-video-single video.video-fig.video-v {
+        display: inline-block;
+        width: calc(100cqw / (16 / 9)) !important;
+        height: auto !important;
+        max-height: none !important;
+        aspect-ratio: 9 / 16 !important;
+    }
+}

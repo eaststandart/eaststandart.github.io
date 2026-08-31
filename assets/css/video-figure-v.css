@@ -18,7 +18,7 @@
 }
 
 /* ПК-параметры одиночного ВЕРТИКАЛЬНОГО видео.
-   🔥 ФИКСАЦИЯ: Вертикальный !important применяется строго к ОДИНОЧНОЙ заглушке */
+   Вертикальный !important применяется строго к ОДИНОЧНОЙ заглушке */
 .main-content .figure-video-single video.video-fig.video-v {
     display: inline-block;                           /* Чтобы сработало центрирование от родителя */
     width: auto !important;
@@ -42,11 +42,34 @@
         text-align: center;
     }
 
-    /* 🔥 ФИКСАЦИЯ: Зеркальная мобильная формула для одиночного ВЕРТИКАЛЬНОГО видео.
+    /* Зеркальная мобильная формула для одиночного ВЕРТИКАЛЬНОГО видео.
        Ширина высчитывается из живой ширины горизонтальной картинки, перебивая базовый !important */
     .main-content .figure-video-single video.video-fig.video-v {
         display: inline-block;
         width: calc(100cqw / (16 / 9)) !important;
+        height: auto !important;
+        max-height: none !important;
+        aspect-ratio: 9 / 16 !important;
+    }
+}
+
+/* --- Смартфоны горизонтально (Landscape) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* Сжимаем коробку под ландшафтный шаг соседа и включаем центрирование */
+    .main-content .figure-video-single figure.figure-video:has(video.video-v) {
+        display: block;
+        width: calc(50% - (var(--gap-pc) / 2));
+        max-width: 100%;
+        height: auto;
+        text-align: center;
+    }
+
+    /* Зеркальная ландшафтная формула для одиночного ВЕРТИКАЛЬНОГО видео.
+       Высчитывает идеальную ширину из ширины горизонтального кадра на боку телефона */
+    .main-content .figure-video-single video.video-fig.video-v {
+        display: inline-block;
+        width: calc((50cqw - (var(--gap-pc) / 2)) / (16 / 9)) !important;
         height: auto !important;
         max-height: none !important;
         aspect-ratio: 9 / 16 !important;

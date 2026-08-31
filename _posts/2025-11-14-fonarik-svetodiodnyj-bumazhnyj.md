@@ -91,7 +91,59 @@ discus: "questions"
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-12
+1
 
 Одиночная простая картинка (!!! ее распирает при режиме ниже 900!!!)
 
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+Галерея простых картинок с параметром v
+
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+Одиночная простая картинка (!!! ее распирает при режиме ниже 900!!!)
+
+![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+Одиночное видео
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
+
+Здесь запись одиночного fig|v| видео !!! РАЗОБРАТЬСЯ НЕ ПРАВИЛЬНО ОТОБРАЖАЕТСЯ!!!
+
+![fig|v|](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-05.webm)
+
+![fig|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-06.webm)
+![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-07.webm)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-08.webm)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-09.webm)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-10.webm)
+
+одиночный fig|с подписью|400
+
+![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
+
+одиночный fig-v без v
+
+![fig|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
+
+Групповой fig-v
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
+![fig|v|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
+
+одиночный fig-v без подписи
+
+![fig|v](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
+
+одиночный fig-v с подписью
+
+![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
+
+🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇
+
+[^1]: Даль Э.Н. Электроника для детей. Собираем простые схемы, экспериментируем с электричеством / Даль Э.Н.; пер. с англ. И. Е. Сацевича; \[науч. ред. Р. В. Тихонов\]. — М.: Манн, Иванов и Фербер, 2017. — 288 с. — ISBN 978-5-00100-687-9, УДК 087.5:621.31, ББК 84:22.33.
+[^2]: [Мацкевич В.В. Занимательная радиоэлектроника в пионерлагере / Рец.: В.Г. Борисов, В.Т. Поляков. — М.: ДОСААФ СССР, 1986. — 141. с.: ил. — ББК 32.884.19](http://publ.lib.ru/ARCHIVES/M/MACKEVICH_Vadim_Viktorovich/_Mackevich_V.V..html).

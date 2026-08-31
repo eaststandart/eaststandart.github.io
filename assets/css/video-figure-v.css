@@ -1,6 +1,6 @@
 /* ============================================================
    📦 МОДУЛЬ ВЕРТИКАЛЬНЫХ ЖУРНАЛЬНЫХ ВИДЕОРОЛИКОВ (video-figure-v.css)
-   Назначение: Изолированная отладка класса .video-v без влияния на общие стили
+   Назначение: Изолированная отладка класса .video-v для одиночных блоков
    ============================================================ */
 
 /* 📐 Главный измерительный контекст для зеркальной формулы cqw */
@@ -13,26 +13,16 @@
    ------------------------------------------------------------ */
 
 /* Центрируем узкий инлайновый вертикальный плеер внутри широкой коробки 371px на ПК */
-.main-content .figure-video-single figure.figure-video:has(video.video-v),
-.main-content .figure-video-row figure.figure-video:has(video.video-v) {
+.main-content .figure-video-single figure.figure-video:has(video.video-v) {
     text-align: center;
 }
 
 /* ПК-параметры одиночного ВЕРТИКАЛЬНОГО видео.
-   Зажимаем высоту до 209px, а ширина сама уходит в аккуратные ~118px */
+   🔥 ФИКСАЦИЯ: Вертикальный !important применяется строго к ОДИНОЧНОЙ заглушке */
 .main-content .figure-video-single video.video-fig.video-v {
     display: inline-block;                           /* Чтобы сработало центрирование от родителя */
-    width: auto;
-    height: auto;
-    max-height: var(--media-pc-height);              /* Наш жесткий ПК-шаг 209px */
-    aspect-ratio: 9 / 16;
-}
-
-/* ПК-параметры ВЕРТИКАЛЬНОГО видео в галерейном ряду */
-.main-content .figure-video-row video.video-fig.video-v {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    max-height: var(--media-pc-height);              /* Зажимаем вровень с одиночным видео */
-    aspect-ratio: 9 / 16;
+    width: auto !important;
+    height: auto !important;
+    max-height: var(--media-pc-height) !important;   /* Наш жесткий ПК-шаг 209px */
+    aspect-ratio: 9 / 16 !important;
 }

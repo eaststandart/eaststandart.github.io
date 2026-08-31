@@ -87,7 +87,7 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-09.webm)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-10.webm)
 
-одиночный fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400
+одиночный fig|с подписью|400
 
 ![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 
@@ -100,12 +100,13 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 ![fig|v|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
 
-одиночный fig-v
+одиночный fig-v без подписи
+
+![fig|v](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
+
+одиночный fig-v с подписью
 
 ![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/test-vertical.webm)
-
-
-![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-11.webm)
 
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)

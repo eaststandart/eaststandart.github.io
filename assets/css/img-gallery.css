@@ -10,20 +10,16 @@
 
 /* --- Смартфоны вертикально (Portrait) --- */
 @media (max-width: 900px) and (orientation: portrait) {
+
     /* Перестраиваем горизонтальный флекс-ряд в плотный вертикальный столбец */
     .main-content p:has(img) {
         display: flex !important;
         flex-direction: column !important;
-        gap: 1.2em !important; 
-        
-        /* 🔥 ИСПРАВЛЕНО ДЛЯ REDMI NOTE 4: Намертво запрещаем картинкам переноситься 
-           на другие строки, гарантируя монолитный и ровный журнальный ряд */
         flex-wrap: nowrap !important;
+        gap: var(--gap-mobile-portrait) !important; 
     }
 
-    /* 🔥 ИСПРАВЛЕНО ДЛЯ REDMI NOTE 4: Силой заставляем горизонтальные кадры в галерее 
-       занять полные 327х183px ширины статьи контента, полностью сбрасывая оковы 163px 
-       и убирая боковые щели и дыры на смартфонах */
+    /*  Раскрываем горизонтальные кадры галереи на полные журнальные 327х183px */
     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
         width: 100% !important;
         height: auto !important;

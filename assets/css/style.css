@@ -542,13 +542,6 @@ p:has(img) + blockquote,
     /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {
 
-        /* Перестраиваем галерею картинок Markdown из строки в вертикальный столбец */
-        .main-content p:has(img) {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: var(--gap-mobile-portrait) !important; 
-        }
-
         /* Картинки растягиваются на всю ширину экрана смартфона */
         .main-content p img:not(.content-img),
         .main-content video:not(.video-fig) {

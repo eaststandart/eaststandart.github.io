@@ -1,6 +1,7 @@
 /**
  * @about Модуль идеального центрированного модального зума (Лайтбокса) для картинок.
  * @purpose Защищает вёрстку от вылетов картинок за края экрана на ПК и смартфонах.
+ *          🔥 Исправлен баг смещения координат при работе с Container Queries.
  * @author TechLab
  */
 
@@ -8,7 +9,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");
     
-    // Намертво вырываем оверлей из контейнера статьи и переносим в корень body
+    // 🔥 ФИКСАЦИЯ ЗУМА: Намертво вырываем оверлей из контейнера статьи и переносим в корень body,
+    // чтобы position: fixed на реальных смартфонах всегда считался от экрана, а не от cqw-обёрток.
     if (lightbox) {
         document.body.appendChild(lightbox);
     }
@@ -22,16 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
         img.addEventListener("click", function() {
             lightboxImg.src = this.src;
             lightboxImg.alt = this.alt;
-            
-            // 🔥 ТВОЯ ЛОГИКА: Проверяем, является ли картинка вертикальной (по классу или пропорциям)
-            if (this.classList.contains("img-v") || this.src.includes("-v") || this.naturalHeight > this.naturalWidth) {
-                // Если картинка вертикальная — вешаем на оверлей класс-модификатор ужимания масштаба
-                lightbox.classList.add("lightbox-vertical");
-            } else {
-                // Если обычная горизонтальная — снимаем его
-                lightbox.classList.remove("lightbox-vertical");
-            }
-            
             lightbox.classList.add("is-active");
         });
     });
@@ -40,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (lightbox) {
         lightbox.addEventListener("click", function() {
             lightbox.classList.remove("is-active");
-            lightbox.classList.remove("lightbox-vertical"); // Сбрасываем модификатор
             setTimeout(() => { lightboxImg.src = ""; }, 300);
         });
     }

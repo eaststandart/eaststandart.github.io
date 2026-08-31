@@ -90,8 +90,12 @@ figcaption {
 }
 
 .lightbox-overlay img.img-v-zoom {
-    height: 75% !important;
+    height: 85% !important;                       /* Чуть-чуть ужимаем высоту, давая воздуху дышать */
     width: auto !important;
+    background-color: #ffffff !important;         /* Проявляем плотную белую плашку строго под кадром */
+    padding: 12px !important;                     /* Идеальные внутренние поля рамки-паспарту */
+    box-sizing: border-box !important;            /* Запихиваем отступы внутрь границ элемента */
+    border-radius: 12px !important;               /* Скругляем саму белую плашку по краям */
 }
 
 

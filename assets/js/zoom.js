@@ -1,7 +1,6 @@
 /**
  * @about Модуль идеального центрированного модального зума (Лайтбокса) для картинок.
  * @purpose Защищает вёрстку от вылетов картинок за края экрана на ПК и смартфонах.
- *          🔥 Исправлен баг срезания углов контента у вертикальных изображений.
  * @author TechLab
  */
 
@@ -24,13 +23,11 @@ document.addEventListener("DOMContentLoaded", function() {
             lightboxImg.src = this.src;
             lightboxImg.alt = this.alt;
             
-            // 🔥 ТВОЯ ЛОГИКА: Проверяем, является ли картинка вертикальной
+            // 🔥 ПРОВЕРКА: Если картинка вертикальная — вешаем класс на ВЕСЬ оверлей лайтбокса
             if (this.classList.contains("img-v") || this.src.includes("-v") || this.naturalHeight > this.naturalWidth) {
-                // Если картинка вертикальная — вешаем класс ужимания СТРОГО НА САМУ КАРТИНКУ
-                lightboxImg.classList.add("img-v-zoom");
+                lightbox.classList.add("lightbox-vertical");
             } else {
-                // Если горизонтальная — снимаем
-                lightboxImg.classList.remove("img-v-zoom");
+                lightbox.classList.remove("lightbox-vertical");
             }
             
             lightbox.classList.add("is-active");
@@ -41,9 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (lightbox) {
         lightbox.addEventListener("click", function() {
             lightbox.classList.remove("is-active");
-            if (lightboxImg) {
-                lightboxImg.classList.remove("img-v-zoom"); // Сбрасываем класс ужимания картинки
-            }
+            lightbox.classList.remove("lightbox-vertical"); // Сбрасываем модификатор
             setTimeout(() => { lightboxImg.src = ""; }, 300);
         });
     }

@@ -6,92 +6,67 @@
 @version 
 */
 
+
 /* ============================================================
    🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
-/* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
-@import url("img-base.css");         
-@import url("img-gallery.css");      
-@import url("img-figure.css");
-@import url("img-figure-v.css"); 
-
-/* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
-.main-content p:has(img) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: var(--gap-pc);         
-    margin: 1em 0 !important;   
-    padding: 0 !important;      
-}
-
-/* 3. ОБЩИЙ СТИЛЬ ДЛЯ ПОДПИСЕЙ К МЕДИАФАЙЛАМ КАРТИНОК */
-figcaption {
-    display: block;
-    text-align: center;
-    font-size: 0.85rem;
-    color: #6a737d;
-    margin-top: 1rem; 
-    line-height: 1.4; 
-}
-
-/*  4. ПОДГОТОВКА КУРСОРОВ ДЛЯ ВСЕХ КАРТИНОК КОНТЕНТА */
-.main-content p img:not(.content-img),
-.main-content .figure-img img.img-fig {
-    cursor: zoom-in !important;
-    position: relative;
-    z-index: 1;
-}
-
-/*  5. СТИЛИ ПОЛНОЭКРАННОГО МОДЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
+/* 1. СТИЛИ ПОЛНОЭКРАННОГО МОДАЛЬНОГО ЗУМА (ЛАЙТБОКСА) */
 .lightbox-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(244, 247, 246, 0.85); /* Базовый фон темы с мягким размытием */
-    backdrop-filter: blur(8px);                 /* Красивое размытие заднего плана (iOS-стиль) */
+    background-color: rgba(24, 28, 31, 0.88);  /* 🔥 Ультимативное благородное затенение фона */
+    backdrop-filter: blur(10px);               /* Мягкое размытие заднего плана статьи */
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 99999;                             /* Железно поверх всего контента, шапок и подвалов */
+    z-index: 99999;                             /* Поверх всех элементов сайта */
     opacity: 0;
-    pointer-events: none;                       /* Пока скрыт — клики пролетают насквозь */
-    transition: opacity 0.3s ease;
-    cursor: zoom-out;                           /* Клик в любое место закроет просмотр */
+    pointer-events: none;                       
+    transition: opacity 0.25s ease;
+    cursor: zoom-out;                           
 }
 
-/* Модификатор класса активации оверлея из JS */
+/* Модификатор активации оверлея из JS */
 .lightbox-overlay.is-active {
     opacity: 1;
-    pointer-events: auto;                       /* Включаем кликабельность */
+    pointer-events: auto;                       
 }
 
 /* Сама увеличенная картинка внутри оверлея */
 .lightbox-overlay img {
-    width: 90%;                             /* Аккуратные зазоры по бокам экрана */
-    height: 90%;                            /* Зазоры сверху и снизу */
-    object-fit: contain;                    /* Идеальные пропорции без искажений */
+    /* 🔥 ТВОЯ ФОРМУЛА: Картинка занимает максимум пространства, но сохраняет 
+       аккуратные одинаковые зазоры безопасности (4vw / 4vh) со всех сторон экрана! */
+    width: calc(100% - 4vw) !important;
+    height: calc(100% - 4vh) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     
-    /* Сохраняет четкость пикселей при сильном увеличении мелких картинок/скриншотов */
+    object-fit: contain !important;            /* Браузер сам идеально впишет и вертикалку, и горизонталку */
+    background-color: transparent !important;  /* Полный отказ от искусственных плашек и рамок */
+    padding: 0 !important;                     /* Полное обнуление внутренних зазоров */
+    border-radius: 8px;                        /* Мягкое скругление углов самого изображения */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* Глубокая тень для отделения кадра от затенения */
+    
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    
-    border-radius: 12px;                        /* Мягкие скругленные углы на превью */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);   /* Глубокая тень объема */
-    transform: scale(0.95);                     
-    transition: transform 0.3s ease;
+    transform: scale(0.97);                     
+    transition: transform 0.25s ease;
 }
 
 .lightbox-overlay.is-active img {
-    transform: scale(1);                        /* Эффект мягкого увеличения при открытии */
+    transform: scale(1);                        /* Мягкий эффект проявления при клике */
 }
 
-.lightbox-overlay.lightbox-vertical img {
-    height: 82% !important;
-    width: auto !important;
+/* 2. БАЗОВЫЙ ДЕКОР ДЛЯ КАРТИНОК ВНУТРИ СТАТЬИ КОНТЕНТА */
+.main-content p img:not(.content-img),
+.main-content .figure-img img.img-fig {
+    border-radius: 8px;                             
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     
+    background-color: var(--media-background-plug); /* Серая заглушка до срабатывания лези-лоада */
 }
 
 

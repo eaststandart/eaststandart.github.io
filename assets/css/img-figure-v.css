@@ -28,3 +28,28 @@
     max-height: none !important;                     /* Снимаем старый низкий потолок */
     aspect-ratio: 9 / 16 !important;                 /* Намертво запечатываем вертикальные пропорции */
 }
+
+/* ------------------------------------------------------------
+   📱 РЕЖИМ СМАРТФОНОВ И ПЛАНШЕТОВ (От 900px и ниже — Portrait)
+   ------------------------------------------------------------ */
+@media (max-width: 900px) and (orientation: portrait) {
+
+    /* Включаем на родителе блочный поток и центрирование inline-block элементов */
+    .main-content .figure-img-single figure.figure-img:has(img.img-v) {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        text-align: center;
+    }
+
+    /* 🔥 ФИКСАЦИЯ: Зеркальная мобильная формула для одиночной ВЕРТИКАЛЬНОЙ картинки.
+       Ширина высчитывается из живой ширины горизонтального кадра, перебивая базовый !important */
+    .main-content .figure-img-single img.img-fig.img-v {
+        display: inline-block !important;
+        width: calc(100cqw / (16 / 9)) !important;
+        height: auto !important;
+        max-height: none !important;
+        aspect-ratio: 9 / 16 !important;
+    }
+}

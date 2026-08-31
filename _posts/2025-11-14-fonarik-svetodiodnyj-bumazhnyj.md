@@ -87,7 +87,7 @@ discus: "questions"
 
 ![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-Одиночная простая картинка
+Одиночная простая картинка (!!! ее распирает при режиме ниже 900)
 
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 

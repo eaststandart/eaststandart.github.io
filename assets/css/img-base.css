@@ -1,8 +1,8 @@
 /*
-@about Модуль базовых одиночных горизонтальных изображений.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
+@about Модуль базовых одиночных горизонтальных изображений Markdown.
+@purpose Профессиональный рефакторинг: внедрена нативная вложенность (CSS Nesting) и сквозная защита lazy-load заглушек [data-src].
 @author TechLab
-@version 1.0
+@version 1.2
 */
 
 /* ==========================================================================
@@ -11,53 +11,46 @@
 
 @layer components {
 
-/* ------------------------------------------------------------
-   💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px)
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   [БЛОК] Одиночное горизонтальное изображение в потоке контента (img)
-   ------------------------------------------------------------ */
-
-    /* [ЭЛЕМЕНТ] Горизонтальная картинка-одиночка в абзаце текста */
-    .main-content p img:only-child {
-        height: var(--media-pc-height);              
-        width: auto;                
-        max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-        aspect-ratio: var(--ratio-landscape);
-        object-fit: contain; 
-        margin: 0; 
-    }
-
-
-/* ============================================================
-   📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px)
-   ============================================================ */
-
-    /* --- А. Смартфоны вертикально (Portrait) --- */
-    @media (max-width: 900px) and (orientation: portrait) {
+    /* Вся логика базовых картинок теперь собрана в один главный контекст */
+    .main-content p img {
         
-        /* 🔥 ВАЖНО: Приводим портрет к единому стандарту расчёта полной ширины строки */
-        .main-content p img:only-child {
-            width: var(--mobile-full-width);
-            max-width: none;
-            height: auto;       
-            max-height: none;   
-            aspect-ratio: var(--ratio-landscape);
-        }
-    }
-
-    /* --- Б. Смартфоны горизонтально (Landscape) --- */
-    @media (max-height: 500px) and (orientation: landscape) {
-        
-        /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой 
-           унифицированной ландшафтной ширине с главного пульта */
-        .main-content p img:only-child {
-            display: inline-block;
-            height: auto;
-            width: var(--mobile-landscape-base-width);
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        &:only-child,
+        &[data-src]:only-child {
+            height: var(--media-pc-height);              
+            width: auto;                
             max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-            aspect-ratio: var(--ratio-landscape); 
+            aspect-ratio: var(--ratio-landscape);
+            object-fit: contain; 
+            margin: 0; 
+        }
+
+        /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
+        
+        /* --- А. Смартфоны вертикально (Portrait) --- */
+        @media (max-width: 900px) and (orientation: portrait) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                width: var(--mobile-full-width);
+                max-width: none;
+                height: auto;       
+                max-height: none;   
+                aspect-ratio: var(--ratio-landscape);
+            }
+        }
+
+        /* --- Б. Смартфоны горизонтально (Landscape) --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                display: inline-block;
+                height: auto;
+                width: var(--mobile-landscape-base-width);
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-landscape); 
+            }
         }
     }
 

@@ -64,8 +64,9 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой двухколоночной журнальной сетке сайта */
-        .main-content p img:not(.img-v):not(.content-img):only-child {
+        /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой 
+           двухколоночной журнальной сетке сайта через базовую ширину */
+        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child {
             width: var(--v-landscape-base-width);
             max-width: none; 
             height: auto;
@@ -79,4 +80,3 @@
         }
     }
 
-}

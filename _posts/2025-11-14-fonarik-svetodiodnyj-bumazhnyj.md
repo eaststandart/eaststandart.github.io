@@ -45,6 +45,76 @@ discus: "questions"
 
 > **Смотри подробнее:** объяснение принципа работы схемы в \[Мацкевич, 1986, с. 31-34\] [^2].
 
+!!! РАЗДЕЛ ФОТО !!!
+
+1-1 Одиночная простая картинка
+
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+1-2 Одиночная fig картинка
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+1-3 Одиночная fig картинка с подписью
+
+![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+2-1 Одиночная простая картинка с параметром v
+
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+2-2 Одиночная fig картинка с параметром v
+
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+2-3 Одиночная fig картинка с параметром v и подписью
+
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+!!! РАЗДЕЛ ФОТО ГАЛЕРЕИ !!!
+
+1-1 Простые горизонтальные 
+
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+1-2 fig горизонтальные 
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+1-3 Простые горизонтальные c v
+
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+1-4 fig горизонтальные c v
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+=================
+
+Группа fig картинок  с подписью
+
+![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+
+Группа fig картинок c v
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+Группа fig картинок с подписью и с v в конце 
+
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
+![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+!!! КАРТИНКИ fig в тексте !!!
+
 Сейчас заменим провод выключателем и нажмем на кнопку. Светодиод загорелся. Когда кнопка выключателя нажата, в нем соединяются две пластинки, и электрическая цепь замыкается. Действие выключателя, таким образом, состоит в соединении двух выводов – батарейки и светодиода.
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
@@ -55,55 +125,8 @@ discus: "questions"
 
 Сейчас заменим провод выключателем и нажмем на кнопку. Светодиод загорелся. Когда кнопка выключателя нажата, в нем соединяются две пластинки, и электрическая цепь замыкается. Действие выключателя, таким образом, состоит в соединении двух выводов – батарейки и светодиода.
 
-Группа fig картинок без v
 
-![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![fig|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-
-Группа fig картинок с v в конце
-
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
-![fig|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-Группа fig картинок c записью fig|v|
-
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-16.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-17.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-18.webp)
-![fig|v|](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-
-Одиночная картинка fig|v
-
-![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-Одиночная картинка fig|v с подписью
-
-![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-Простая одиночная fig картинка с подписью
-
-![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-
-Одиночная простая картинка (!!! ее распирает при режиме ниже 900 !!!)
-
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-Галерея простых картинок с параметром v
-
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
-![fig|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+!!! РАЗДЕЛ ВИДЕО !!!
 
 Одиночное видео
 

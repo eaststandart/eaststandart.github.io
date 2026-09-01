@@ -57,7 +57,7 @@
             display: inline-block;
             width: auto;
             height: var(--mobile-landscape-base-width);
-            max-height: var(--media-pc-height);
+            max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
             aspect-ratio: var(--ratio-portrait);
         }
     }

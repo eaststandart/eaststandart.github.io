@@ -10,13 +10,20 @@
    🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
-/* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
-@import url("img-base.css");
-@import url("img-base-v.css"); 
-@import url("img-custom.css"); 
-@import url("img-gallery.css");      
+/* СЛОЙ ОДИНОЧНЫХ КАРТИНОК (Один тег img внутри тега p) */
+@import url("img-single-landscape.css");
+@import url("img-single-portrait.css");
+@import url("img-single-custom.css");
+
+/* СЛОЙ ГРУППОВЫХ ГАЛЕРЕЙ И РЯДОВ (Два и более img внутри тега p) */
+@import url("img-row.css");
+
+/* СЛОЙ ЖУРНАЛЬНЫХ БЛОКОВ FIGURE */
 @import url("img-figure.css");
 @import url("img-figure-v.css");
+
+/* СЛОЙ ZOOM */
+
 @import url("zoom.css");
 
 /* 2. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */

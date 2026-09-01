@@ -1,6 +1,6 @@
 /*
 @about Модуль стандартных вертикальных картинок в текстовых абзацах контента.
-@purpose Задаёт единый фиксированный зеркальный размер на ПК для одиночек, а в мобильных режимах переводит их на адаптивный зеркальный расчёт.
+@purpose Задаёт единый фиксированный зеркальный размер на ПК для одиночек, а в мобильных режимах переводит их на адаптивный зеркальный расчёт, полностью изолируя от групповых галерей.
 @author TechLab
 @version 3.0
 */
@@ -22,9 +22,9 @@
     /* [МОДИФИКАТОР] Вертикальная одиночная картинка внутри абзаца текста */
     .main-content p img.img-v:only-child {
         display: inline-block;
-        width: var(--media-pc-height);        
-        height: auto;                         
-        max-height: none;                     
+        width: var(--media-pc-height);        /* Наш сквозной шаг 209px в ширину */
+        height: auto;                         /* Высота сама вырастает до идеальных 371px */
+        max-height: none;                     /* Снимаем дефолтные лимиты базового файла */
         aspect-ratio: var(--ratio-portrait);                 
     }
 
@@ -37,11 +37,11 @@
     @media (max-width: 900px) and (orientation: portrait) {
         
         /* 🔥 ВАЖНО: Единый стандарт расчёта Лаборатории. Управляем СТРОГО свойством width, 
-           умножая живую ширину строки на коэффициент вертикальной пропорции 9/16. 
+           умножая живую контентную ширину строки на коэффициент вертикальной пропорции. 
            При этом height: auto сам достроит высоту ровно в размер ширины экрана! */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--mobile-portrait-full-width) * var(--ratio-portrait));
+            width: calc(var(--mobile-full-width) * var(--ratio-portrait));
             height: auto;
             max-height: none;
             aspect-ratio: var(--ratio-portrait);
@@ -51,12 +51,12 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Отключаем ширину и привязываем высоту вертикальной одиночки 
-           к базовой ландшафтной переменной, чтобы сохранить симметрию соседа */
+        /* 🔥 ВАЖНО: Высчитываем ширину вертикальной одиночки от ландшафтной переменной 
+           нашего пульта, чтобы её живая высота совпала с шириной ландшафтного соседа */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--v-landscape-base-width) * (var(--ratio-portrait)));
-            height: var(--v-landscape-base-width);
+            width: calc(var(--mobile-landscape-base-width) * var(--ratio-portrait));
+            height: auto;
             max-height: none;
             aspect-ratio: var(--ratio-portrait);
         }

@@ -5,9 +5,8 @@
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
 @purpose Автоматически изолирует класс img-custom и выстраивает правильный HTML-порядок атрибутов.
          Внедряет прозрачный 1x1 GIF в src для полного уничтожения системной рамки Chrome.
-         🔥 ИСПРАВЛЕНО: Автоматически рассчитывает безопасный коридор max-width и min-width 
-         для подписи figcaption, защищая вёрстку узких и широких кастомных кадров.
 @author TechLab
+@version 3.1
 """
 
 import re
@@ -30,13 +29,14 @@ def process_markdown_images(markdown_content):
             # Очистка обсидиановских хвостов размеров
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
+            # 🔥 ИСПРАВЛЕНИЕ ЛОВУШКИ 1: Если alt пустой, сразу отдаем чистый БЭМ-класс
             if not alt_content:
-                return f'<img alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img class="img-base" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
             if not parts:
-                return f'<img alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img class="img-base" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             classes = []
             custom_attrs = []
@@ -76,7 +76,9 @@ def process_markdown_images(markdown_content):
                 custom_attrs.append(f'height="{height}"')
                 custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                 parts.pop(0)
-
+                
+            # --- 🔥 АВТОМАТИЧЕСКИЙ ФИКСАТОР БАЗОВОГО КЛАССА ---
+            # Если массив классов пуст, картинка гарантированно базовая горизонтальная
             if not classes:
                 classes.append('img-base')
                 

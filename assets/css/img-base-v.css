@@ -53,7 +53,6 @@
 
     /* Дублирование селектора для боковой ориентации смартфона. 
        Все вертикальные картинки в тексте принимают идеальную зеркальную ширину */
-    .main-content p img.img-v,
     .main-content p img.img-v:only-child {
         display: inline-block !important;
         width: calc(((100vw - 44px) / 2 - (var(--gap-pc) / 2)) / (16 / 9)) !important;

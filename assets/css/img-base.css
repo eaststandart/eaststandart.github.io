@@ -54,7 +54,7 @@
            унифицированной ландшафтной ширине с главного пульта */
         .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
             width: var(--mobile-landscape-base-width);
-            max-width: none; 
+            max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* 🔥 ВАЖНО: Защита от бесконечного растяжения кадра */ 
             height: auto;
             max-height: none;
             aspect-ratio: var(--ratio-landscape); 

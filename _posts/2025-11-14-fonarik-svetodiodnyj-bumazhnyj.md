@@ -73,22 +73,22 @@ discus: "questions"
 
 !!! РАЗДЕЛ ФОТО ГАЛЕРЕИ !!!
 
-1-1 Простые горизонтальные 
+3-1 Простые горизонтальные 
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-1-2 fig горизонтальные 
+3-2 fig горизонтальные 
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-1-3 Простые горизонтальные c параметром v
+3-3 Простые горизонтальные c параметром v
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-1-4 fig горизонтальные c параметром v
+3-4 fig горизонтальные c параметром v
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)

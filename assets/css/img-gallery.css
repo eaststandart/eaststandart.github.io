@@ -46,7 +46,7 @@
     }
 
     /* Все картинки в галерее (включая и img-v) автоматически делят 
-       строку пополам, не конфликтуя с базовым файлом вертикалок */
+       строку пополам, не конфликтуя с базовым файлом вертикалок 
     .main-content p img:not(.img-fig):not(.img-custom):not(.content-img) {
         width: calc(50% - (var(--gap-pc) / 2)) !important;
         max-width: none !important;
@@ -54,5 +54,5 @@
         max-height: none !important;
         aspect-ratio: 16 / 9 !important;
         flex: unset !important; 
-    }
+    }*/
 }

@@ -23,10 +23,6 @@ def process_markdown_images(markdown_content):
     processed_lines = []
 
     for line in lines:
-        # Считаем количество картинок на строке абзаца для разделения синглов и рядов
-        matches = list(re.finditer(img_pattern, line, flags=re.IGNORECASE))
-        is_row_mode = len(matches) > 1
-        
         def replacer(match):
             alt_content = match.group(1).strip()
             img_url = match.group(2).strip()
@@ -35,15 +31,12 @@ def process_markdown_images(markdown_content):
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
             if not alt_content:
-                # Если пустая, вешаем базовый класс одиночки или ряда
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                return f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img class="img-single-landscape" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
             if not parts:
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                return f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                return f'<img class="img-single-landscape" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             classes = []
             custom_attrs = []
@@ -57,7 +50,7 @@ def process_markdown_images(markdown_content):
                 parts.pop(0)
                 
                 if parts and parts[0].lower() == 'v':
-                    classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
+                    classes.append('img-single-portrait')
                     parts.pop(0)
                     
                 elif parts and re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
@@ -71,7 +64,7 @@ def process_markdown_images(markdown_content):
                     parts.pop(0)
                 
             elif parts[0].lower() == 'v':
-                classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
+                classes.append('img-single-portrait')
                 parts.pop(0)
                 
             elif re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
@@ -84,10 +77,9 @@ def process_markdown_images(markdown_content):
                 custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                 parts.pop(0)
                 
-            # Если специфичные классы формы не назначены, вешаем дефолтные горизонтальные
-            if not classes or (len(classes) == 1 and classes[0] == 'img-fig'):
-                horiz_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                classes.append(horiz_class)
+            # Если специфичные классы формы не назначены, вешаем наш базовый класс одиночки
+            if not classes:
+                classes.append('img-single-landscape')
                 
             clean_alt = " | ".join(parts) if parts else ""
             

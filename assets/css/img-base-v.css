@@ -36,12 +36,12 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* 🔥 ВАЖНО: Зеркальный переворот осей. Высота вертикальной картинки 
+        /* 🔥 ВАЖНО: Зеркальный переворот осей. Высота вертикальной одиночки 
            становится строго равна полной ширине горизонтального кадра на весь экран */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc((100vw - 44px) / (16 / 9)); /* Чистая ширина текстового поля делится на 16/9 */
-            height: auto;
+            width: auto;
+            height: calc(100vw - 44px);       /* Привязываемся к стопроцентной ширине статьи */
             max-height: none;
             aspect-ratio: 9 / 16;
         }
@@ -50,12 +50,12 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Высчитываем ширину вертикальной одиночки от ландшафтной 
-           переменной, чтобы её живая высота совпала с шириной ландшафтного соседа */
+        /* 🔥 ВАЖНО: Отключаем ширину и привязываем высоту вертикальной одиночки 
+           к базовой ландшафтной переменной, чтобы сохранить симметрию соседа */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--v-landscape-base-width) / (16 / 9));
-            height: auto;
+            width: auto;
+            height: var(--v-landscape-base-width);
             max-height: none;
             aspect-ratio: 9 / 16;
         }

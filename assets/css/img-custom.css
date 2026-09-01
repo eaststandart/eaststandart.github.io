@@ -1,13 +1,9 @@
 /*
-@about Модуль изображений с произвольным пользовательским размером.
-@purpose Профессиональный рефакторинг: внедрена нативная вложенность (CSS Nesting) и сквозная защита lazy-load заглушек [data-src], полностью изолируя нестандартные картинки.
+@about Модуль изображений с произвольным пользовательским размером (img-custom.css).
+@purpose Полная изоляция кастомных картинок за счет явного перекрытия всех осей (width/height/ratio). Сохраняет инлайновый aspect-ratio тега.
 @author TechLab
-@version 1.0
+@version 1.2
 */
-
-/* ==========================================================================
-   📦 БЭМ-КОМПОНЕНТ: КАСТОМНЫЕ КАРТИНКИ (img-custom.css)
-   ========================================================================== */
 
 @layer components {
 
@@ -17,13 +13,17 @@
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
         &:only-child,
         &[data-src]:only-child {
-            width: auto;
-            height: auto;
+            display: block;
+            width: auto;                  /* Жестко отсекаем базовую ширину */
+            height: var(--media-pc-height); /* Строго 209px по условию Шага 1 */
             max-width: 100%;
+            max-height: none;
             object-fit: unset;
             box-sizing: border-box;
             border: 1px solid var(--primary-bg);
             border-radius: 8px;
+            margin: 0;
+            /* aspect-ratio НЕ пишем, чтобы работал родной инлайн тега */
         }
 
         /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
@@ -33,10 +33,11 @@
             
             &:only-child,
             &[data-src]:only-child {
-                width: var(--mobile-full-width);
-                height: auto;
+                display: block;
+                width: var(--mobile-full-width); /* Явно перебиваем и берем управление на себя */
+                max-width: none;
+                height: auto;                    /* Сбрасываем ПК-высоту 209px */
                 max-height: none;
-                aspect-ratio: auto;
             }
         }
 
@@ -45,10 +46,11 @@
             
             &:only-child,
             &[data-src]:only-child {
-                width: auto;
-                height: var(--mobile-landscape-base-width);
+                display: block;
+                width: auto;                     /* Отключаем базовую ландшафтную ширину соседа */
+                max-width: 100%;
+                height: var(--media-mobile-landscape-height); /* Строго фиксированные 163px из исходников */
                 max-height: none;
-                aspect-ratio: auto;
             }
         }
     }

@@ -49,8 +49,9 @@ def process_markdown_images(markdown_content):
                 is_centered = True
                 parts.pop(0)
                 
+                # ❄️ ЗАМОРОЖЕНО: Возвращаем оригинальный класс img-v для блока fig
                 if parts and parts[0].lower() == 'v':
-                    classes.append('img-single-portrait')
+                    classes.append('img-v')
                     parts.pop(0)
                     
                 elif parts and re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
@@ -63,6 +64,7 @@ def process_markdown_images(markdown_content):
                     custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                     parts.pop(0)
                 
+            # 🔥 Для текстовых одиночек включаем новый БЭМ-класс
             elif parts[0].lower() == 'v':
                 classes.append('img-single-portrait')
                 parts.pop(0)

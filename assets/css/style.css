@@ -560,8 +560,7 @@ p:has(img) + blockquote,
 /* --- Б. СПЕЦИАЛЬНО ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА СМАРТФОНОВ (LANDSCAPE) --- */
 @media (max-height: 500px) and (orientation: landscape) {
 
-    /* Компактная фиксированная высота изображений для экономии высоты экрана */
-    .main-content p img:not(.content-img),
+    /* Компактная фиксированная высота видео для экономии высоты экрана */
     .main-content video:not(.video-fig) {
         height: 163px !important;
         width: auto !important;

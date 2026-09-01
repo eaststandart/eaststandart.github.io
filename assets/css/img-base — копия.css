@@ -1,6 +1,6 @@
 /*
 @about Модуль базовых одиночных горизонтальных изображений.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок контента.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
 @author TechLab
 @version 1.0
 */
@@ -11,18 +11,18 @@
 
 @layer components {
 
-    /* Вся логика базовых картинок теперь завязана на изолированный БЭМ-класс */
-    .main-content p img.img-base {
+    /* Вся логика базовых картинок теперь собрана в один главный контекст */
+    .main-content p img {
         
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
         &:only-child,
         &[data-src]:only-child {
-            height: var(--media-pc-height);              
-            width: auto;                
+            height: var(--media-pc-height);
+            width: auto;
             max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
             aspect-ratio: var(--ratio-landscape);
-            object-fit: contain; 
-            margin: 0; 
+            object-fit: contain;
+            margin: 0;
         }
 
         /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */

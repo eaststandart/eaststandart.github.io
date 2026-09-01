@@ -76,6 +76,9 @@ def process_markdown_images(markdown_content):
                 custom_attrs.append(f'height="{height}"')
                 custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                 parts.pop(0)
+
+            if not classes:
+                classes.append('img-base')
                 
             clean_alt = " | ".join(parts) if parts else ""
             

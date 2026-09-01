@@ -49,7 +49,7 @@
             &[data-src] {
                 display: inline-block;
                 height: auto;
-                width: var(--mobile-landscape-base-width); /* Ровно половина строки контента по нашей ландшафтной сетке */
+                width: var(--mobile-base-landscape-width); /* Ровно половина строки контента по нашей ландшафтной сетке */
                 max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* Защита на случай широких экранов/планшетов */
                 aspect-ratio: var(--ratio-landscape); 
             }

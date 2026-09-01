@@ -47,7 +47,7 @@
             &[data-src] {
                 display: inline-block;
                 width: auto;
-                height: var(--mobile-landscape-base-width);
+                height: var(--mobile-base-landscape-width);
                 max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
                 aspect-ratio: var(--ratio-portrait);
             }

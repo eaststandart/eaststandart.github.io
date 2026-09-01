@@ -57,7 +57,7 @@
             display: inline-block;
             height: auto;
             width: var(--mobile-landscape-base-width);
-            max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* 🔥 ВАЖНО: Защита от бесконечного растяжения кадра */ 
+            max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
             aspect-ratio: var(--ratio-landscape); 
         }
     }

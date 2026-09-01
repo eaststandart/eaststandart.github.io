@@ -1,6 +1,6 @@
 /*
 @about Модуль базовых одиночных горизонтальных изображений Markdown.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев, полностью изолируя их от вертикалок и кастомных стилей.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
 @author TechLab
 @version 1.0
 */
@@ -20,10 +20,10 @@
    ------------------------------------------------------------ */
 
     /* [ЭЛЕМЕНТ] Горизонтальная картинка-одиночка в абзаце текста */
-    .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
+    .main-content p img:only-child {
         height: var(--media-pc-height);              
         width: auto;                
-        max-width: 100%;            
+        max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
         aspect-ratio: var(--ratio-landscape);
         object-fit: contain; 
         margin: 0; 
@@ -38,12 +38,10 @@
     @media (max-width: 900px) and (orientation: portrait) {
         
         /* 🔥 ВАЖНО: Приводим портрет к единому стандарту расчёта полной ширины строки */
-        .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
-            display: inline-block;
+        .main-content p img:only-child {
             width: var(--mobile-full-width);
             height: auto;       
             max-height: none;   
-            max-width: 100%;        
             aspect-ratio: var(--ratio-landscape);
         }
     }
@@ -53,7 +51,7 @@
         
         /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой 
            унифицированной ландшафтной ширине с главного пульта */
-        .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
+        .main-content p img:only-child {
             display: inline-block;
             height: auto;
             width: var(--mobile-landscape-base-width);

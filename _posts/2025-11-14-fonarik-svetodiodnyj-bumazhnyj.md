@@ -47,7 +47,7 @@ discus: "questions"
 
 !!! РАЗДЕЛ ФОТО !!!
 
-1-1 Одиночная простая картинка
+1-1 Одиночная простая картинка (! меньше чем у fig размеры!)
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
@@ -69,7 +69,7 @@ discus: "questions"
 
 2-3 Одиночная fig картинка с параметром v и подписью
 
-![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![fig|v|Процесс демонстрации скрипта. Электроника для детей. Собираем простые схемы.](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 !!! РАЗДЕЛ ФОТО ГАЛЕРЕИ !!!
 
@@ -83,17 +83,17 @@ discus: "questions"
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-1-3 Простые горизонтальные c v
+1-3 Простые горизонтальные c параметром v
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-1-4 fig горизонтальные c v
+1-4 fig горизонтальные c параметром v
 
 ![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-=================
+!!! РАЗДЕЛ ГАЛЕРЕЯ КОМБИНИРОВАННАЯ !!!
 
 Группа fig картинок  с подписью
 

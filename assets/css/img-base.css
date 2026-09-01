@@ -1,75 +1,104 @@
-/* ============================================================
-   📦 КОМПОНЕНТ: БАЗОВЫЕ И ОДИНОЧНЫЕ КАРТИНКИ (img-base.css)
+/*
+@about Модуль базовых одиночных изображений Markdown.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных картинок внутри текстовых абзацев, полностью изолируя их от групповых галерей.
+@author TechLab
+@version 3.0
+*/
+
+/* ==========================================================================
+   📦 БЭМ-КОМПОНЕНТ: БАЗОВЫЕ КАРТИНКИ (img-base.css)
+   ========================================================================= */
+
+@layer components {
+
+/* ------------------------------------------------------------
+   💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px)
    ============================================================ */
 
-/* [БЛОК] Базовые изображения внутри абзацев контента */
-.main-content p img:not(.content-img) {
-    height: var(--media-pc-height);              
-    width: auto;                
-    max-width: 100%;            
-    aspect-ratio: var(--ratio-landscape);
-    object-fit: contain; 
-    margin: 0 !important;
-}
+/* ------------------------------------------------------------
+   [БЛОК] Одиночное базовое изображение в потоке контента (img)
+   ------------------------------------------------------------ */
 
-/* [МОДИФИКАТОР] Вертикальная картинка в текстовом потоке */
-.main-content p img.img-v {
-    aspect-ratio: var(--ratio-portrait);
-}
-
-/* [МОДИФИКАТОР] Изображение с произвольным пользовательским размером */
-.main-content p img.img-custom {
-    width: auto;
-    object-fit: unset;
-    box-sizing: border-box;
-    border: 1px solid var(--primary-bg);
-    border-radius: 8px;
-}
-
-
-/* ============================================================
-   📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ БАЗОВЫХ КАРТИНОК
-   ============================================================ */
-
-/* --- Смартфоны вертикально (Portrait) --- */
-@media (max-width: 900px) and (orientation: portrait) {
-    .main-content p img:not(.content-img) {
-        height: auto;       
-        max-height: none;   
-        width: 100%;
-        max-width: 100%;        
-    }
-    
-    .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
+    /* [ЭЛЕМЕНТ] Горизонтальная картинка-одиночка в абзаце текста */
+    .main-content p img:not(.content-img):only-child {
+        height: var(--media-pc-height);              
+        width: auto;                
+        max-width: 100%;            
         aspect-ratio: var(--ratio-landscape);
+        object-fit: contain; 
+        margin: 0; /* Убрали !important — слой components сам побеждает дефолты style.css */
     }
-    
-    .main-content p img.img-v {
+
+    /* [МОДИФИКАТОР] Вертикальная одиночная картинка в текстовом потоке */
+    .main-content p img.img-v:only-child {
         aspect-ratio: var(--ratio-portrait);
     }
-    
-    .main-content p img.img-custom {
-        aspect-ratio: auto;
-    }
-}
 
-/* --- Смартфоны горизонтально (Landscape) --- */
-@media (max-height: 500px) and (orientation: landscape) {
-    .main-content p img:not(.content-img) {
-        height: var(--media-mobile-landscape-height);
+    /* [МОДИФИКАТОР] Одиночное изображение с произвольным пользовательским размером */
+    .main-content p img.img-custom:only-child {
         width: auto;
-        max-width: 100% !important;
+        object-fit: unset;
+        box-sizing: border-box;
+        border: 1px solid var(--primary-bg);
+        border-radius: 8px;
     }
 
-    .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) { 
-        aspect-ratio: var(--ratio-landscape); 
+
+/* ============================================================
+   📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px)
+   ============================================================ */
+
+    /* --- А. Смартфоны вертикально (Portrait) --- */
+    @media (max-width: 900px) and (orientation: portrait) {
+        
+        /* Растягиваем одиночную картинку на всю доступную ширину контента */
+        .main-content p img:not(.content-img):only-child {
+            height: auto;       
+            max-height: none;   
+            width: 100%;
+            max-width: 100%;        
+        }
+        
+        /* Защита оригинальных горизонтальных пропорций одиночки */
+        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child {
+            aspect-ratio: var(--ratio-landscape);
+        }
+        
+        /* Защита вертикальных пропорций одиночки */
+        .main-content p img.img-v:only-child {
+            aspect-ratio: var(--ratio-portrait);
+        }
+        
+        /* Сброс пропорций для кастомных одиночных изображений */
+        .main-content p img.img-custom:only-child {
+            aspect-ratio: auto;
+        }
     }
 
-    .main-content p img.img-v { 
-        aspect-ratio: var(--ratio-portrait); 
+    /* --- Б. Смартфоны горизонтально (Landscape) --- */
+    @media (max-height: 500px) and (orientation: landscape) {
+        
+        /* 🔥 ВАЖНО: Фиксируем высоту одиночной картинки на боку телефона для экономии экрана */
+        .main-content p img:not(.content-img):only-child {
+            height: var(--media-mobile-landscape-height);
+            width: auto;
+            max-width: 100%; 
+        }
+
+        /* Сохранение пропорций 16/9 для горизонтальной одиночки на боку телефона */
+        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child { 
+            aspect-ratio: var(--ratio-landscape); 
+        }
+
+        /* Сохранение пропорций 9/16 для вертикальной одиночки на боку телефона */
+        .main-content p img.img-v:only-child { 
+            aspect-ratio: var(--ratio-portrait); 
+        }
+
+        /* Сброс пропорций для кастомной одиночки на боку телефона */
+        .main-content p img.img-custom:only-child {
+            aspect-ratio: auto;
+        }
     }
 
-    .main-content p img.img-custom {
-        aspect-ratio: auto;
-    }
 }

@@ -1,8 +1,8 @@
 /*
-@about Модуль базовых одиночных горизонтальных изображений Markdown.
-@purpose Профессиональный рефакторинг: внедрена нативная вложенность (CSS Nesting) и сквозная защита lazy-load заглушек [data-src].
+@about Модуль базовых одиночных горизонтальных изображений.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
 @author TechLab
-@version 1.2
+@version 1.0
 */
 
 /* ==========================================================================
@@ -17,12 +17,12 @@
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
         &:only-child,
         &[data-src]:only-child {
-            height: var(--media-pc-height);              
-            width: auto;                
+            height: var(--media-pc-height);
+            width: auto;
             max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
             aspect-ratio: var(--ratio-landscape);
-            object-fit: contain; 
-            margin: 0; 
+            object-fit: contain;
+            margin: 0;
         }
 
         /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */

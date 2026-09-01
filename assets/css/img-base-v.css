@@ -11,53 +11,45 @@
 
 @layer components {
 
-/* ------------------------------------------------------------
-   💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px)
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   [БЛОК] Вертикальное изображение в потоке контента (img-v)
-   ------------------------------------------------------------ */
-
-    /* [МОДИФИКАТОР] Вертикальная одиночная картинка внутри абзаца текста */
-    .main-content p img.img-v:only-child {
-        display: inline-block;
-        width: var(--media-pc-height);        
-        height: auto;                         
-        max-height: none;                     
-        aspect-ratio: var(--ratio-portrait);                 
-    }
-
-
-/* ============================================================
-   📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px)
-   ============================================================ */
-
-    /* --- А. Смартфоны вертикально (Portrait) --- */
-    @media (max-width: 900px) and (orientation: portrait) {
+    /* Вся логика вертикальных одиночных картинок в одном контексте */
+    .main-content p img.img-v {
         
-        /* 🔥 ВАЖНО: Управляем строго свойством width через коэффициент,
-           а height: auto сам достроит зеркальную высоту строки */
-        .main-content p img.img-v:only-child {
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        &:only-child,
+        &[data-src]:only-child {
             display: inline-block;
-            width: calc(var(--mobile-full-width) * var(--ratio-portrait));
-            height: auto;
+            width: var(--media-pc-height);
+            height: auto;      
             max-height: none;
-            aspect-ratio: var(--ratio-portrait);
+            aspect-ratio: var(--ratio-portrait);                 
         }
-    }
 
-    /* --- Б. Смартфоны горизонтально (Landscape) --- */
-    @media (max-height: 500px) and (orientation: landscape) {
+        /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
         
-        /* 🔥 ВАЖНО: Высота напрямую берет живую ландшафтную ширину соседа,
-           а max-height зеркально ограничивает её (~371px) */
-        .main-content p img.img-v:only-child {
-            display: inline-block;
-            width: auto;
-            height: var(--mobile-landscape-base-width);
-            max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
-            aspect-ratio: var(--ratio-portrait);
+        /* --- А. Смартфоны вертикально (Portrait) --- */
+        @media (max-width: 900px) and (orientation: portrait) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                display: inline-block;
+                width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                height: auto;
+                max-height: none;
+                aspect-ratio: var(--ratio-portrait);
+            }
+        }
+
+        /* --- Б. Смартфоны горизонтально (Landscape) --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                display: inline-block;
+                width: auto;
+                height: var(--mobile-landscape-base-width);
+                max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-portrait);
+            }
         }
     }
 

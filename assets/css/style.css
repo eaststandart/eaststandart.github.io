@@ -565,8 +565,7 @@ p:has(img) + blockquote,
     /* Вертикальный режим отображения смартфонов (Portrait) */
     @media (orientation: portrait) {
 
-        /* Картинки растягиваются на всю ширину экрана смартфона */
-        .main-content p img:not(.content-img),
+        /* Видео растягиваются на всю ширину экрана смартфона */
         .main-content video:not(.video-fig) {
             height: auto !important;    
             width: 100%; !important; 

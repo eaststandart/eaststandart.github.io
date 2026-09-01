@@ -1,12 +1,12 @@
 /*
-@about Модуль базовых одиночных изображений Markdown.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных картинок внутри текстовых абзацев, полностью изолируя их от групповых галерей.
+@about Модуль базовых одиночных горизонтальных изображений Markdown.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
 @author TechLab
-@version 1.0
+@version 3.0
 */
 
 /* ==========================================================================
-   📦 БЭМ-КОМПОНЕНТ: БАЗОВЫЕ КАРТИНКИ (img-base.css)
+   📦 БЭМ-КОМПОНЕНТ: БАЗОВЫЕ ГОРИЗОНТАЛЬНЫЕ КАРТИНКИ (img-base.css)
    ========================================================================= */
 
 @layer components {
@@ -16,22 +16,17 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   [БЛОК] Одиночное базовое изображение в потоке контента (img)
+   [БЛОК] Одиночное горизонтальное изображение в потоке контента (img)
    ------------------------------------------------------------ */
 
     /* [ЭЛЕМЕНТ] Горизонтальная картинка-одиночка в абзаце текста */
-    .main-content p img:not(.content-img):only-child {
+    .main-content p img:not(.img-v):not(.content-img):only-child {
         height: var(--media-pc-height);              
         width: auto;                
         max-width: 100%;            
         aspect-ratio: var(--ratio-landscape);
         object-fit: contain; 
-        margin: 0; /* Убрали !important — слой components сам побеждает дефолты style.css */
-    }
-
-    /* [МОДИФИКАТОР] Вертикальная одиночная картинка в текстовом потоке */
-    .main-content p img.img-v:only-child {
-        aspect-ratio: var(--ratio-portrait);
+        margin: 0; 
     }
 
     /* [МОДИФИКАТОР] Одиночное изображение с произвольным пользовательским размером */
@@ -51,22 +46,13 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* Растягиваем одиночную картинку на всю доступную ширину контента */
-        .main-content p img:not(.content-img):only-child {
+        /* Растягиваем горизонтальную одиночную картинку на всю доступную ширину контента */
+        .main-content p img:not(.img-v):not(.content-img):only-child {
             height: auto;       
             max-height: none;   
             width: 100%;
             max-width: 100%;        
-        }
-        
-        /* Защита оригинальных горизонтальных пропорций одиночки */
-        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child {
             aspect-ratio: var(--ratio-landscape);
-        }
-        
-        /* Защита вертикальных пропорций одиночки */
-        .main-content p img.img-v:only-child {
-            aspect-ratio: var(--ratio-portrait);
         }
         
         /* Сброс пропорций для кастомных одиночных изображений */
@@ -78,23 +64,13 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Вместо фиксированной высоты выстраиваем одиночку по единой 
-           двухколоночной журнальной сетке сайта, вровень с будущими галереями */
-        .main-content p img:not(.content-img):only-child {
+        /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой двухколоночной журнальной сетке сайта */
+        .main-content p img:not(.img-v):not(.content-img):only-child {
             width: var(--v-landscape-base-width);
             max-width: none; 
             height: auto;
             max-height: none;
-        }
-
-        /* Сохранение пропорций 16/9 для горизонтальной одиночки на боку телефона */
-        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child { 
             aspect-ratio: var(--ratio-landscape); 
-        }
-
-        /* Сохранение пропорций 9/16 для вертикальной одиночки на боку телефона */
-        .main-content p img.img-v:only-child { 
-            aspect-ratio: var(--ratio-portrait); 
         }
 
         /* Сброс пропорций для кастомной одиночки на боку телефона */

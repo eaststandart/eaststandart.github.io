@@ -37,23 +37,23 @@
 
 /* --- Смартфоны горизонтально (Landscape) --- */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* Сохраняем стабильный horizontal шаг в 15px на боку телефона */
+    /* Гарантируем стабильный горизонтальный ряд из двух картинок без переносов */
     .main-content p:has(img) {
         display: flex !important;
-        flex-direction: row !important; /* Гарантируем горизонтальный ряд */
-        flex-wrap: nowrap !important;   /* Запрещаем случайный перенос и убираем wrap */
+        flex-direction: row !important; 
+        flex-wrap: nowrap !important;   
         gap: var(--gap-pc) !important; 
     }
 
-    /* 🔥 СИНХРОНИЗАЦИЯ С ГАЛЕРЕЕЙ FIG ДЛЯ ЛАНДШАФТА:
-       Внедряем проверенные в диспетчере параметры, которые принудительно
-       сжимают картинки флекс-ряда до идеальных журнальных 327х183px */
+    /* 🔥 ПОЛНАЯ АВТОМАТИКА НА 2 КОЛОНКИ:
+       Картинки занимают ровно половину строки с учетом зазора,
+       не вылетают за экран и сохраняют журнальные пропорции 16/9 */
     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
-        width: 100% !important;
-        max-width: 327px !important;
+        width: calc(50% - (var(--gap-pc) / 2)) !important;
+        max-width: none !important;
         height: auto !important;
         max-height: none !important;
         aspect-ratio: 16 / 9 !important;
-        flex: unset !important; /* Снимаем flex: 0 0 auto из style.css для свободного сжатия */
+        flex: unset !important; /* Отключаем flex-растяжение из style.css */
     }
 }

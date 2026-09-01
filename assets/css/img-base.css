@@ -1,8 +1,8 @@
 /*
 @about Модуль базовых одиночных горизонтальных изображений Markdown.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев.
+@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок внутри текстовых абзацев, полностью изолируя их от вертикалок и кастомных стилей.
 @author TechLab
-@version 3.0
+@version 1.0
 */
 
 /* ==========================================================================
@@ -20,22 +20,13 @@
    ------------------------------------------------------------ */
 
     /* [ЭЛЕМЕНТ] Горизонтальная картинка-одиночка в абзаце текста */
-    .main-content p img:not(.img-v):not(.content-img):only-child {
+    .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
         height: var(--media-pc-height);              
         width: auto;                
         max-width: 100%;            
         aspect-ratio: var(--ratio-landscape);
         object-fit: contain; 
         margin: 0; 
-    }
-
-    /* [МОДИФИКАТОР] Одиночное изображение с произвольным пользовательским размером */
-    .main-content p img.img-custom:only-child {
-        width: auto;
-        object-fit: unset;
-        box-sizing: border-box;
-        border: 1px solid var(--primary-bg);
-        border-radius: 8px;
     }
 
 
@@ -46,18 +37,13 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* 🔥 ВАЖНО: Приводим портрет к единому стандарту расчёта ширины строки контента */
-        .main-content p img:not(.img-v):not(.content-img):only-child {
-            width: var(--mobile-portrait-full-width);
+        /* 🔥 ВАЖНО: Приводим портрет к единому стандарту расчёта полной ширины строки */
+        .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
+            width: var(--mobile-full-width);
             height: auto;       
             max-height: none;   
             max-width: 100%;        
             aspect-ratio: var(--ratio-landscape);
-        }
-        
-        /* Сброс пропорций для кастомных одиночных изображений */
-        .main-content p img.img-custom:only-child {
-            aspect-ratio: auto;
         }
     }
 
@@ -65,18 +51,14 @@
     @media (max-height: 500px) and (orientation: landscape) {
         
         /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой 
-           двухколоночной журнальной сетке сайта через базовую ширину */
-        .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):only-child {
-            width: var(--v-landscape-base-width);
+           унифицированной ландшафтной ширине с главного пульта */
+        .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
+            width: var(--mobile-landscape-base-width);
             max-width: none; 
             height: auto;
             max-height: none;
             aspect-ratio: var(--ratio-landscape); 
         }
-
-        /* Сброс пропорций для кастомной одиночки на боку телефона */
-        .main-content p img.img-custom:only-child {
-            aspect-ratio: auto;
-        }
     }
 
+}

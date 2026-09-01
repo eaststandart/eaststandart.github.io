@@ -1,8 +1,8 @@
 /*
-@about Модуль изображений с произвольным пользовательским размером (img-custom.css).
-@purpose Полностью изолирует нестандартные картинки, сбрасывая журнальные пропорции 16/9 и 9/16, чтобы они отображались в своих оригинальных размерах на всех типах устройств.
+@about Модуль изображений с произвольным пользовательским размером.
+@purpose Профессиональный рефакторинг: внедрена нативная вложенность (CSS Nesting) и сквозная защита lazy-load заглушек [data-src], полностью изолируя нестандартные картинки.
 @author TechLab
-@version 3.0
+@version 1.0
 */
 
 /* ==========================================================================
@@ -11,53 +11,45 @@
 
 @layer components {
 
-/* ------------------------------------------------------------
-   💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px)
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   [МОДИФИКАТОР] Одиночное изображение с произвольным размером (img-custom)
-   ------------------------------------------------------------ */
-
-    /* [ЭЛЕМЕНТ] Кастомная картинка-одиночка в абзаце текста */
-    .main-content p img.img-custom:only-child {
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        object-fit: unset;
-        box-sizing: border-box;
-        border: 1px solid var(--primary-bg);
-        border-radius: 8px;
-    }
-
-
-/* ============================================================
-   📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px)
-   ============================================================ */
-
-    /* --- А. Смартфоны вертикально (Portrait) --- */
-    @media (max-width: 900px) and (orientation: portrait) {
+    /* Вся логика кастомных одиночных изображений в одном контексте */
+    .main-content p img.img-custom {
         
-        /* 🔥 ВАЖНО: Сбрасываем жесткие пропорции сетки, чтобы вернуть 
-           оригинальную форму кастомного изображения на весь экран */
-        .main-content p img.img-custom:only-child {
-            width: var(--mobile-full-width);
-            height: auto;
-            max-height: none;
-            aspect-ratio: auto;
-        }
-    }
-
-    /* --- Б. Смартфоны горизонтально (Landscape) --- */
-    @media (max-height: 500px) and (orientation: landscape) {
-        
-        /* 🔥 ВАЖНО: Сбрасываем пропорции, позволяя кастомной одиночке 
-           аккуратно вписаться в высоту ландшафтного экрана */
-        .main-content p img.img-custom:only-child {
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        &:only-child,
+        &[data-src]:only-child {
             width: auto;
-            height: var(--mobile-landscape-base-width);
-            max-height: none;
-            aspect-ratio: auto;
+            height: auto;
+            max-width: 100%;
+            object-fit: unset;
+            box-sizing: border-box;
+            border: 1px solid var(--primary-bg);
+            border-radius: 8px;
+        }
+
+        /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
+        
+        /* --- А. Смартфоны вертикально (Portrait) --- */
+        @media (max-width: 900px) and (orientation: portrait) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                width: var(--mobile-full-width);
+                height: auto;
+                max-height: none;
+                aspect-ratio: auto;
+            }
+        }
+
+        /* --- Б. Смартфоны горизонтально (Landscape) --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            
+            &:only-child,
+            &[data-src]:only-child {
+                width: auto;
+                height: var(--mobile-landscape-base-width);
+                max-height: none;
+                aspect-ratio: auto;
+            }
         }
     }
 

@@ -1,25 +1,27 @@
 /*
 @about Модуль базовых одиночных горизонтальных изображений.
-@purpose Задаёт пропорции, скругления, лимиты и адаптивность для одиночных горизонтальных картинок контента.
+@purpose Задаёт пропорции, лимиты, скругления и адаптивность для одиночных горизонтальных картинок.
+         Полностью изолирован на уровне БЭМ-класса от галерей, вертикалок и кастомных элементов.
 @author TechLab
-@version 1.0
+@version 4.0
 */
 
 /* ==========================================================================
-   📦 БЭМ-КОМПОНЕНТ: БАЗОВЫЕ ГОРИЗОНТАЛЬНЫЕ КАРТИНКИ (img-base.css)
+   📦 БЭМ-КОМПОНЕНТ: ОДИНОЧНЫЕ ГОРИЗОНТАЛЬНЫЕ КАРТИНКИ
    ========================================================================= */
 
 @layer components {
 
-    /* Вся логика базовых картинок теперь завязана на изолированный БЭМ-класс */
-    .main-content p img.img-base {
+    /* Вся логика компонента собрана внутри одного селектора */
+    .main-content p img.img-single-landscape {
         
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
-        &:only-child,
-        &[data-src]:only-child {
+        &,
+        &[data-src] {
+            display: block;
             height: var(--media-pc-height);              
             width: auto;                
-            max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+            max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* (~371px) Защита от раздувания кадра */
             aspect-ratio: var(--ratio-landscape);
             object-fit: contain; 
             margin: 0; 
@@ -30,10 +32,10 @@
         /* --- А. Смартфоны вертикально (Portrait) --- */
         @media (max-width: 900px) and (orientation: portrait) {
             
-            &:only-child,
-            &[data-src]:only-child {
-                width: var(--mobile-full-width);
-                max-width: none;
+            &,
+            &[data-src] {
+                width: var(--mobile-full-width); /* Растягиваем строго на всю чистую ширину текстового поля */
+                max-width: none;                 /* Сбрасываем десктопный потолок в 371px */
                 height: auto;       
                 max-height: none;   
                 aspect-ratio: var(--ratio-landscape);
@@ -43,12 +45,12 @@
         /* --- Б. Смартфоны горизонтально (Landscape) --- */
         @media (max-height: 500px) and (orientation: landscape) {
             
-            &:only-child,
-            &[data-src]:only-child {
+            &,
+            &[data-src] {
                 display: inline-block;
                 height: auto;
-                width: var(--mobile-landscape-base-width);
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                width: var(--mobile-landscape-base-width); /* Ровно половина строки контента по нашей ландшафтной сетке */
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* Защита на случай широких экранов/планшетов */
                 aspect-ratio: var(--ratio-landscape); 
             }
         }

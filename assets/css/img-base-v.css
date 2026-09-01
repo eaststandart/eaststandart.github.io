@@ -51,15 +51,14 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Высчитываем ширину вертикальной одиночки от ландшафтной переменной 
-           нашего пульта, чтобы её живая высота совпала с шириной ландшафтного соседа */
+        /* 🔥 ВАЖНО: Упрощённый расчёт. Напрямую приравниваем высоту вертикалки 
+           к ширине ландшафтного соседа, а max-height жёстко защищает её от перераздувания */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--mobile-landscape-base-width) * var(--ratio-portrait));
-            height: auto;
-            max-height: none;
+            width: auto;
+            height: var(--mobile-landscape-base-width);
+            max-height: var(--media-pc-height);
             aspect-ratio: var(--ratio-portrait);
         }
     }
-
 }

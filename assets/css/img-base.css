@@ -53,10 +53,10 @@
         /* 🔥 ВАЖНО: Выстраиваем горизонтальную одиночку по единой 
            унифицированной ландшафтной ширине с главного пульта */
         .main-content p img:not(.img-v):not(.img-fig):not(.content-img):only-child {
+            display: inline-block;
+            height: auto;
             width: var(--mobile-landscape-base-width);
             max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* 🔥 ВАЖНО: Защита от бесконечного растяжения кадра */ 
-            height: auto;
-            max-height: none;
             aspect-ratio: var(--ratio-landscape); 
         }
     }

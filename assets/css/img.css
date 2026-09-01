@@ -12,7 +12,8 @@
 
 /* 1. СНАЧАЛА ПОДКЛЮЧАЕМ ВСЕ ПОДМОДУЛИ */
 @import url("img-base.css");
-@import url("img-base-v.css");  
+@import url("img-base-v.css"); 
+@import url("img-custom.css"); 
 @import url("img-gallery.css");      
 @import url("img-figure.css");
 @import url("img-figure-v.css");

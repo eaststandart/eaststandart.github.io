@@ -31,17 +31,29 @@
         }
 
         /* 📱 МОБИЛЬНЫЙ ВЕРТИКАЛЬНЫЙ РЕЖИМ (Portrait) */
-        @media (max-width: 900px) and (orientation: portrait) {
-            
-            &,
-            &[data-src] {
+        
+        /* А. Планшеты в портрете (Широкие экраны от 500px до 900px) */
+        @media (min-width: 501px) and (max-width: 900px) and (orientation: portrait) {
+            &, &[data-src] {
                 display: block;
-                width: var(--mobile-full-width); /* Растягиваем строго по ширине текстовой строки */
+                width: calc(var(--mobile-full-width) * var(--ratio-portrait)); /* Аккуратно сжимаем по коэффициенту */
                 max-width: none;
-                height: auto;                    /* Перебиваем базовые 209px, давая кадру расти вниз по ratio */
+                height: auto;
                 max-height: none;
             }
         }
+
+        /* Б. Смартфоны в портрете (Узкие экраны меньше 500px) */
+        @media (max-width: 500px) and (orientation: portrait) {
+            &, &[data-src] {
+                display: block;
+                width: var(--mobile-full-width); /* Раскрываем на всю ширину текстовой строки */
+                max-width: none;
+                height: auto;
+                max-height: none;
+            }
+        }
+
     }
 
 }

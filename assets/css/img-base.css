@@ -46,11 +46,11 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* Растягиваем горизонтальную одиночную картинку на всю доступную ширину контента */
+        /* 🔥 ВАЖНО: Приводим портрет к единому стандарту расчёта ширины строки контента */
         .main-content p img:not(.img-v):not(.content-img):only-child {
+            width: var(--mobile-portrait-full-width);
             height: auto;       
             max-height: none;   
-            width: 100%;
             max-width: 100%;        
             aspect-ratio: var(--ratio-landscape);
         }

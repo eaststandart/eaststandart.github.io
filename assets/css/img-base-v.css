@@ -1,6 +1,6 @@
 /*
-@about Модуль стандартных vertical картинок в текстовых абзацах контента.
-@purpose Задаёт единый фиксированный зеркальный размер на ПК для одиночек, а в мобильных режимах переводит их на адаптивный зеркальный расчёт, полностью изолируя от групповых галерей.
+@about Модуль стандартных вертикальных картинок в текстовых абзацах контента.
+@purpose Задаёт единый фиксированный зеркальный размер на ПК для одиночек, а в мобильных режимах переводит их на адаптивный зеркальный расчёт.
 @author TechLab
 @version 3.0
 */
@@ -22,10 +22,10 @@
     /* [МОДИФИКАТОР] Вертикальная одиночная картинка внутри абзаца текста */
     .main-content p img.img-v:only-child {
         display: inline-block;
-        width: var(--media-pc-height);        /* Наш сквозной шаг 209px в ширину */
-        height: auto;                         /* Высота сама вырастает до идеальных 371px */
-        max-height: none;                     /* Снимаем дефолтные лимиты базового файла */
-        aspect-ratio: 9 / 16;                 /* Намертво запечатываем вертикальные пропорции */
+        width: var(--media-pc-height);        
+        height: auto;                         
+        max-height: none;                     
+        aspect-ratio: var(--ratio-portrait);                 
     }
 
 
@@ -36,15 +36,14 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* 🔥 ВАЖНО: Зеркальный переворот осей. Высота вертикальной одиночки становится 
-           строго равна чистой ширине горизонтального кадра на весь экран (var(--v-portrait-full-width)), 
-           а ширина автоматически ужимается под пропорцию 9/16, предотвращая раздувание контента */
+        /* 🔥 ВАЖНО: Наша проверенная в диспетчере формула симметрии. 
+           Высота вертикальной одиночки становится строго равна полной ширине строки */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--v-portrait-full-width) * (9 / 16));
+            width: calc(var(--v-portrait-full-width) * (var(--ratio-portrait)));
             height: var(--v-portrait-full-width);
             max-height: none;
-            aspect-ratio: 9 / 16;
+            aspect-ratio: var(--ratio-portrait);
         }
     }
 
@@ -55,10 +54,10 @@
            к базовой ландшафтной переменной, чтобы сохранить симметрию соседа */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--v-landscape-base-width) / (16 / 9));
-            height: auto;
+            width: calc(var(--v-landscape-base-width) * (var(--ratio-portrait)));
+            height: var(--v-landscape-base-width);
             max-height: none;
-            aspect-ratio: 9 / 16;
+            aspect-ratio: var(--ratio-portrait);
         }
     }
 

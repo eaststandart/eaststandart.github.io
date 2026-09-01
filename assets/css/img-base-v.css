@@ -36,12 +36,13 @@
     /* --- А. Смартфоны вертикально (Portrait) --- */
     @media (max-width: 900px) and (orientation: portrait) {
         
-        /* 🔥 ВАЖНО: Наша проверенная в диспетчере формула симметрии. 
-           Высота вертикальной одиночки становится строго равна полной ширине строки */
+        /* 🔥 ВАЖНО: Единый стандарт расчёта Лаборатории. Управляем СТРОГО свойством width, 
+           умножая живую ширину строки на коэффициент вертикальной пропорции 9/16. 
+           При этом height: auto сам достроит высоту ровно в размер ширины экрана! */
         .main-content p img.img-v:only-child {
             display: inline-block;
-            width: calc(var(--v-portrait-full-width) * (var(--ratio-portrait)));
-            height: var(--v-portrait-full-width);
+            width: calc(var(--mobile-portrait-full-width) * var(--ratio-portrait));
+            height: auto;
             max-height: none;
             aspect-ratio: var(--ratio-portrait);
         }

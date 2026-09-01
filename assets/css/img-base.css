@@ -78,11 +78,13 @@
     /* --- Б. Смартфоны горизонтально (Landscape) --- */
     @media (max-height: 500px) and (orientation: landscape) {
         
-        /* 🔥 ВАЖНО: Фиксируем высоту одиночной картинки на боку телефона для экономии экрана */
+        /* 🔥 ВАЖНО: Вместо фиксированной высоты выстраиваем одиночку по единой 
+           двухколоночной журнальной сетке сайта, вровень с будущими галереями */
         .main-content p img:not(.content-img):only-child {
-            height: var(--media-mobile-landscape-height);
-            width: auto;
-            max-width: 100%; 
+            width: var(--v-landscape-base-width);
+            max-width: none; 
+            height: auto;
+            max-height: none;
         }
 
         /* Сохранение пропорций 16/9 для горизонтальной одиночки на боку телефона */

@@ -1,21 +1,27 @@
 /*
-@about Модуль изображений с произвольным пользовательским размером (img-custom.css).
-@purpose Полная изоляция кастомных картинок за счет явного перекрытия всех осей (width/height/ratio). Сохраняет инлайновый aspect-ratio тега.
+@about Модуль изображений с произвольным пользовательским размером (img-single-custom.css).
+@purpose Задаёт фиксированную высоту на ПК и в мобильном ландшафте для нестандартных картинок,
+         позволяя их ширине автоматически рассчитываться от родного инлайнового aspect-ratio.
+         Полностью изолирован на уровне БЭМ-класса от всех остальных модулей.
 @author TechLab
-@version 1.2
+@version 4.0
 */
+
+/* ==========================================================================
+   📦 БЭМ-КОМПОНЕНТ: КАСТОМНЫЕ ОДИНОЧНЫЕ КАРТИНКИ
+   ========================================================================= */
 
 @layer components {
 
-    /* Вся логика кастомных одиночных изображений в одном контексте */
-    .main-content p img.img-custom {
+    /* Вся логика кастомного компонента собрана в одном чистом селекторе */
+    .main-content p img.img-single-custom {
         
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
-        &:only-child,
-        &[data-src]:only-child {
+        &,
+        &[data-src] {
             display: block;
-            width: auto;                  /* Жестко отсекаем базовую ширину */
-            height: var(--media-pc-height); /* Строго 209px по условию Шага 1 */
+            width: auto;                    /* Отсекаем влияние базовых ширин */
+            height: var(--media-pc-height);   /* Наш подтверждённый Шаг 1: строго 209px */
             max-width: 100%;
             max-height: none;
             object-fit: unset;
@@ -23,7 +29,7 @@
             border: 1px solid var(--primary-bg);
             border-radius: 8px;
             margin: 0;
-            /* aspect-ratio НЕ пишем, чтобы работал родной инлайн тега */
+            /* aspect-ratio НЕ пишем, чтобы не затереть родной инлайн тега! */
         }
 
         /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
@@ -31,12 +37,12 @@
         /* --- А. Смартфоны вертикально (Portrait) --- */
         @media (max-width: 900px) and (orientation: portrait) {
             
-            &:only-child,
-            &[data-src]:only-child {
+            &,
+            &[data-src] {
                 display: block;
-                width: var(--mobile-full-width); /* Явно перебиваем и берем управление на себя */
+                width: var(--mobile-full-width); /* Наш Шаг 2: растягиваем по ширине строки */
                 max-width: none;
-                height: auto;                    /* Сбрасываем ПК-высоту 209px */
+                height: auto;                    /* Перебиваем ПК-высоту, давая кадру расти вниз по ratio */
                 max-height: none;
             }
         }
@@ -44,12 +50,12 @@
         /* --- Б. Смартфоны горизонтально (Landscape) --- */
         @media (max-height: 500px) and (orientation: landscape) {
             
-            &:only-child,
-            &[data-src]:only-child {
+            &,
+            &[data-src] {
                 display: block;
-                width: auto;                     /* Отключаем базовую ландшафтную ширину соседа */
+                width: auto;                     /* Сбрасываем ландшафтную ширину строки */
                 max-width: 100%;
-                height: var(--media-mobile-landscape-height); /* Строго фиксированные 163px из исходников */
+                height: var(--media-mobile-landscape-height); /* Наш Шаг 3: строго фиксированные 163px */
                 max-height: none;
             }
         }

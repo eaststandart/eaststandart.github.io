@@ -27,11 +27,12 @@
         gap: var(--gap-mobile-portrait) !important; 
     }
 
-    /*  Раскрываем горизонтальные кадры галереи на полные журнальные 327х183px */
-    .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img) {
-        width: 100% !important;
-        height: auto !important;
-        flex: unset !important; /* Намертво снимаем flex: 0 0 auto ландшафтного режима */
+     /* 🔥 ВАЖНО: Добавили :not(:only-child), чтобы галерейные стили 
+        срабатывали строго при наличии двух и более картинок в абзаце */
+     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):not(:only-child) {
+         width: 100% !important;
+         height: auto !important;
+         flex: unset !important;
     }
 }
 

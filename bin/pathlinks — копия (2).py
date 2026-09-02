@@ -40,10 +40,8 @@ def process_markdown_paths(markdown_content, file_path=None):
         code_vault.append(match.group(0))
         return f'==CODE_BLOCK_{len(code_vault)-1}=='
 
-    # 1. Сначала прячем многострочные блоки кода (``` ... ```)
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    # 2. Затем прячем любые строчные элементы кода (от 1 до 3 бэктиков подряд: `...`, ``...``)
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
+    temporary_content = re.sub(r'`[\s\S]*?`', code_freezer, temporary_content)
 
     # В. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'

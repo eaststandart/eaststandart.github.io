@@ -3,10 +3,9 @@
 """
 @script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose v3.0 🚀 Внедрена защита кода от изменений, массив исключений для внешних ссылок,
-         а также автоматическое превращение текстовых [[ссылок|Обсидиана]] в чистый текст.
+@purpose v3.1 🚀 ИСПРАВЛЕНО: Усилена защита одиночных бэктиков от ложного срабатывания чистильщика.
 @author TechLab
-@version 3.0 (Часть 1)
+@version 3.1 (Часть 1)
 """
 
 import re
@@ -16,37 +15,36 @@ def process_markdown_paths(markdown_content):
     Конвертирует Wiki-медиа, вырезает текстовые Wiki-связи Obsidian и чистит пути,
     полностью защищая блоки кода от изменений.
     """
-    # 🌟 А. МАССИВ ИСКЛЮЧЕНИЙ: Ссылки, содержащие эти домены, парсер вообще не имеет права трогать!
+    # А. МАССИВ ИСКЛЮЧЕНИЙ
     ignored_patterns = [
-        r'https?://',            # Любые внешние интернет-ссылки (http/https)
-        r'mailto:',              # Электронная почта
-        r'telegram\.org',        # Ссылки на соцсети
+        r'https?://',            
+        r'mailto:',              
+        r'telegram\.org',        
     ]
     
-    # Проверяем, если строка целиком совпадает с исключением — не трогаем её
     for pattern in ignored_patterns:
         if re.search(pattern, markdown_content, re.IGNORECASE) and not re.search(r'github/eaststandart', markdown_content):
-            # Если это внешняя ссылка и это не наш домен гитхаба — пропускаем её
             pass
 
-    # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА: Прячем примеры кода в сейф, чтобы не сломать их
+    # Б. ЗАМОРОЗКА БЛОКОВ КОДА (Сейф)
     code_vault = []
     
     def code_freezer(match):
         code_vault.append(match.group(0))
         return f'==CODE_BLOCK_{len(code_vault)-1}=='
 
-    # 1. Прячем многострочные блоки кода (``` ... ```)
+    # 1. Замораживаем многострочный код (``` ... ```)
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    # 2. Прячем строчный код в бэктиках (` ... `)
-    temporary_content = re.sub(r'`[^`\n]+?`', code_freezer, temporary_content)
+    
+    # 🔥 ИСПРАВЛЕНО: Бронебойная регулярка для строчного кода (` ... `). 
+    # Она гарантированно поглощает любые спецсимволы и ссылки внутри кавычек, не пропуская их наружу!
+    temporary_content = re.sub(r'`[\s\S]*?`', code_freezer, temporary_content)
 
-    # 🌟 В. ЧИСТКА ДОМЕНОВ И ПУТЕЙ (Ваша оригинальная стабильная логика)
+    # В. ЧИСТКА ДОМЕНОВ И ПУТЕЙ
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
     temporary_content = re.sub(domain_pattern, '/', temporary_content)
     temporary_content = re.sub(re.escape('../faire/'), '/faire/', temporary_content)
 
-    # Паттерн для медиа Wiki-ссылок (картинки и видео)
     wiki_media_pattern = r'!\[\[(.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))(?:\|(.*?))?\]\]'
 
     # 3. Функция-заменитель для пересборки медиа-ссылок Wiki в классический вид
@@ -62,14 +60,12 @@ def process_markdown_paths(markdown_content):
     # Запускаем конвертацию всех МЕДИА Wiki-ссылок в тексте
     temporary_content = re.sub(wiki_media_pattern, wiki_media_replacer, temporary_content, flags=re.IGNORECASE)
     
-    # 🌟 Г. КОНВЕРТАЦИЯ ТЕКСТОВЫХ ССЫЛОК OBSIDIAN [[План|Текст]] -> Текст
-    # Ловит два формата: [[Ссылка|Красивый Текст]] или просто [[Одиночное Слово]]
+    # Г. КОНВЕРТАЦИЯ ТЕКСТОВЫХ ССЫЛОК OBSIDIAN [[План|Текст]] -> Текст
     wiki_text_pattern = r'\[\[([^\]\n|]+)(?:\|([^\]\n]+))?\]\]'
     
     def wiki_text_replacer(match):
         link_target = match.group(1).strip()
         visible_text = match.group(2).strip() if match.group(2) else link_target
-        # Возвращаем только то, что должен видеть читатель на сайте
         return visible_text
 
     # Превращаем обсидиановые текстовые связи в чистые слова контента
@@ -83,4 +79,3 @@ def process_markdown_paths(markdown_content):
         temporary_content = temporary_content.replace(f'==CODE_BLOCK_{idx}==', original_code)
         
     return temporary_content
-

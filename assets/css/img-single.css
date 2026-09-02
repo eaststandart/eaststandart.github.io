@@ -106,18 +106,17 @@
                 max-width: none;
                 height: auto;       
                 max-height: none;   
-                aspect-ratio: var(--ratio-landscape);
             }
         }
 
         /* [Ландшафт]: Выстраиваем по ландшафтной базовой ширине с пульта */
         @media (max-height: 500px) and (orientation: landscape) {
             &, &[data-src] {
-                display: inline-block;
-                height: auto;
-                width: var(--mobile-base-landscape-width);
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                aspect-ratio: var(--ratio-landscape); 
+                display: block;
+                width: auto;
+                max-width: none;
+                height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));;
+                max-height: var(--media-pc-height);
             }
         }
     }

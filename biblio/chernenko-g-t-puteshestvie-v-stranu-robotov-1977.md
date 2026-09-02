@@ -14,7 +14,7 @@ parent_url: "/biblio/"
 **Развитие инженерного мышления неразрывно связано с изучением научно-технической литературы**. Школьникам младшего и среднего возраста (1–4 класс) рекомендую читать произведения Геннадия Трофимовича Черненко. Он написал множество увлекательных инженерно-технических книг для любознательных ребят. **Прежде чем стать детским писателем, долгое время работал инженером, был исследователем**.
 
 В 1977 году вышла его первая книга — *«Путешествие в страну роботов»*. Затем появились рассказы об авиации — *«Наши крылья»*, книга о космических конструкторах — *«А все-таки полетим!»*, о изобретателях прошлого — *«На пользу и славу Отечества»*, о первых ученых — *«Творцы наук российских»* и многие другие. Геннадий Черненко — автор около двух тысяч журнальных публикаций и [более тридцати книг](https://deti.spb.ru/writers_rus/cher_gt/list).
-<!--
+
 ![320x405](img/chernenko-g-t-nashi-krylya-1979.webp)
 ![320x405](img/chernenko-g-t-a-vse-taki-poletim-1984.webp)
 ![320x405](img/chernenko-g-t-chto-umeyut-mashiny-rasskazy-ob-avtomatike-1986.webp)
@@ -23,7 +23,7 @@ parent_url: "/biblio/"
 ![320x405](img/chernenko-g-t-kak-roboty-rabotat-nauchilis-1989.webp)
 ![320x405](img/chernenko-g-t-tvorcy-nauk-rossijskih-1989.webp)
 ![320x405](img/chernenko-g-t-prostaya-avtomatika-1989.webp)
-![320x405](img/chernenko-g-t-zvezdy-planety-teleskopy-1991.webp)-->
+![320x405](img/chernenko-g-t-zvezdy-planety-teleskopy-1991.webp)
 
 Книги в [электронном виде](http://publ.lib.ru/ARCHIVES/CH/CHERNENKO_Gennadiy_Trofimovich/_Chernenko_G.T..html); для чтения детьми предпочтителен бумажный вариант.
 

@@ -99,9 +99,14 @@ def process_markdown_images(markdown_content):
                     parts.pop(0)
                     
                 elif re.match(r'^\d+[xх]\d+$', first_key, re.IGNORECASE):
-                    classes.append('img-single-custom')
                     dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
                     width, height = dimensions[0], dimensions[1]
+                    
+                    # 🌟 Новая логика: сравниваем ширину и высоту
+                    if int(width) > int(height):
+                        classes.append('img-single-custom-landscape')
+                    else:
+                        classes.append('img-single-custom-portrait')
                     
                     custom_attrs.append(f'width="{width}"')
                     custom_attrs.append(f'height="{height}"')

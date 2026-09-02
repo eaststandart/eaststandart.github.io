@@ -1,0 +1,57 @@
+/*
+@about Модуль вертикальных одиночных изображений.
+@purpose Задаёт зеркальные адаптивные пропорции 9/16 для вертикальных картинок контента.
+         Полностью изолирован на уровне БЭМ-класса от галерей, журналов figure и горизонталок.
+@author TechLab
+@version 1.0
+*/
+
+/* ==========================================================================
+   📦 БЭМ-КОМПОНЕНТ: ОДИНОЧНЫЕ ВЕРТИКАЛЬНЫЕ КАРТИНКИ
+   ========================================================================= */
+
+@layer components {
+
+    /* Вся логика вертикальной одиночки внутри одного изолированного селектора */
+    .main-content p img.img-single-portrait {
+        
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        &,
+        &[data-src] {
+            display: inline-block;
+            width: var(--media-pc-height);        /* Наш сквозной шаг 209px в ширину */
+            height: auto;                         /* Высота сама вырастает до идеальных 371px */
+            max-height: none;                     
+            aspect-ratio: var(--ratio-portrait);                 
+        }
+
+        /* 📱 МОБИЛЬНЫЙ РЕЖИМ И АДАПТИВНОСТЬ (Все экраны ниже 900px) */
+        
+        /* --- А. Смартфоны вертикально (Portrait) --- */
+        @media (max-width: 900px) and (orientation: portrait) {
+            
+            &,
+            &[data-src] {
+                display: inline-block;
+                width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                height: auto;
+                max-height: none;
+                aspect-ratio: var(--ratio-portrait);
+            }
+        }
+
+        /* --- Б. Смартфоны горизонтально (Landscape) --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            
+            &,
+            &[data-src] {
+                display: inline-block;
+                width: auto;
+                height: var(--mobile-base-landscape-width);
+                max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-portrait);
+            }
+        }
+    }
+
+}

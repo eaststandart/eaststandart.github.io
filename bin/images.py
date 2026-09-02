@@ -3,114 +3,124 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose ИСПРАВЛЕНО v5.7: Построчный анализ научен видеть плотные группы картинок (память соседей).
-         Гарантирует присвоение рядных классов img-row-landscape/portrait для галерей.
+@purpose v5.8 🚀 Переведён на стабильный алгоритм сбора плотных строк из модуля видео (videos.py).
+         Безошибочно отличает одиночки от галерей на основе структуры Obsidian-текста.
 @author TechLab
-@version 5.7 🚀 (Часть 1)
+@version 5.8 (Часть 1)
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки и превращает их в HTML-блоки с автоматическим определением рядов.
+    Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
+    Использует логику группировки плотных строк из videos.py.
     """
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
     lines = markdown_content.split('\n')
     processed_lines = []
-
-    for idx, line in enumerate(lines):
-        current_line = line
+    
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        line_stripped = line.strip()
         
-        # Проверяем, есть ли картинка на текущей строке
-        has_current_img = bool(re.search(img_pattern, current_line, re.IGNORECASE))
-        is_row_mode = False
+        if not line_stripped:
+            processed_lines.append(line)
+            i += 1
+            continue
+            
+        is_image = re.match(img_pattern, line_stripped, re.IGNORECASE)
         
-        if has_current_img:
-            # 🔥 МАГИЯ УМНОГО РЯДА: Проверяем, есть ли плотные соседи-картинки сверху или снизу
-            has_prev_img = (idx > 0 and bool(re.search(img_pattern, lines[idx-1].strip(), re.IGNORECASE)))
-            has_next_img = (idx < len(lines) - 1 and bool(re.search(img_pattern, lines[idx+1].strip(), re.IGNORECASE)))
+        if is_image:
+            # Запускаем сборщик плотной группы картинок, идущих друг под другом
+            image_group_lines = []
             
-            # Если хоть один сосед рядом — это ГАЛЕРЕЯ (Ряд)!
-            if has_prev_img or has_next_img:
-                is_row_mode = True
+            while i < len(lines) and lines[i].strip() and re.match(img_pattern, lines[i].strip(), re.IGNORECASE):
+                image_group_lines.append(lines[i].strip())
+                i += 1
+                
+            # Переменная флага ряда: если в группе больше одной картинки подряд — это ГАЛЕРЕЯ!
+            is_row_mode = len(image_group_lines) > 1
+            
+            # Теперь обрабатываем каждую собранную строку внутри этой группы
+            for group_line in image_group_lines:
+                match = re.match(img_pattern, group_line, re.IGNORECASE)
+                alt_content = match.group(1).strip()
+                img_url = match.group(2).strip()
+                
+                # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
+                alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
+                
+                if not alt_content:
+                    final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
+                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    continue
+                    
+                parts = [p.strip() for p in alt_content.split('|') if p.strip()]
+                
+                if not parts:
+                    final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
+                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    continue
+                    
+                classes = []
+                custom_attrs = []
+                is_centered = False
+                
+                first_key = parts[0].strip('{} ')
 
-        def replacer(match):
-            alt_content = match.group(1).strip()
-            img_url = match.group(2).strip()
-            
-            # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
-            alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
-            
-            if not alt_content:
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                return f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                
-            parts = [p.strip() for p in alt_content.split('|') if p.strip()]
-            
-            if not parts:
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                return f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                
-            classes = []
-            custom_attrs = []
-            is_centered = False
-            
-            first_key = parts.strip('{} ')
-            
-            # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ ---
-            if first_key.lower() == 'fig':
-                classes.append('img-fig')
-                is_centered = True
-                parts.pop(0)
-                
-                if parts and parts.strip('{} ').lower() == 'v':
-                    classes.append('img-v')
+                # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ ---
+                if first_key.lower() == 'fig':
+                    classes.append('img-fig')
+                    is_centered = True
+                    parts.pop(0) # Удаляем отработанный ключ fig
+                    
+                    if parts and parts[0].strip('{} ').lower() == 'v':
+                        classes.append('img-v')
+                        parts.pop(0)
+                        
+                elif first_key.lower() == 'v':
+                    # Выдаем точный класс формы в зависимости от режима одиночки/галереи
+                    classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
                     parts.pop(0)
-
-            # Проверяем Ключ 1: Текстовая вертикалка 'v' (без fig)
-            elif first_key.lower() == 'v':
-                # 🔥 ИСПРАВЛЕНО: Выдаем рядный или одиночный класс в зависимости от соседей!
-                classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
-                parts.pop(0)
+                    
+                elif re.match(r'^\d+[xх]\d+$', first_key, re.IGNORECASE):
+                    classes.append('img-single-custom')
+                    dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
+                    width, height = dimensions[0], dimensions[1]
+                    
+                    custom_attrs.append(f'width="{width}"')
+                    custom_attrs.append(f'height="{height}"')
+                    custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
+                    parts.pop(0)
+                    
+                if not classes:
+                    # Выдаем точный базовый класс формы
+                    classes.append('img-row-landscape' if is_row_mode else 'img-single-landscape')
+                    
+                # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
+                clean_parts = [p.strip('{} ') for p in parts if p.strip()]
+                clean_alt = " | ".join(clean_parts) if clean_parts else ""
                 
-            # Проверяем Ключ 1: Ручной кастомный размер сторон '320x405'
-            elif re.match(r'^\d+[xх]\d+$', first_key, re.IGNORECASE):
-                classes.append('img-single-custom')
-                dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
-                width, height = dimensions[0], dimensions[1]
+                class_str = f' class="{" ".join(classes)}"' if classes else ''
+                attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
                 
-                custom_attrs.append(f'width="{width}"')
-                custom_attrs.append(f'height="{height}"')
-                custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
-                parts.pop(0)
+                # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ЛЕНИВОЙ ЗАГРУЗКОЙ ---
+                img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
                 
-            # Если специфичные классы формы не назначены, вешаем дефолтные горизонтальные
-            if not classes:
-                # 🔥 ИСПРАВЛЕНО: Выдаем рядный или одиночный класс для обычных картинок!
-                classes.append('img-row-landscape' if is_row_mode else 'img-single-landscape')
-                
-            # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
-            clean_parts = [p.strip('{} ') for p in parts if p.strip()]
-            clean_alt = " | ".join(clean_parts) if clean_parts else ""
+                if is_centered:
+                    figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
+                    processed_lines.append(f'<figure class="figure-img">{img_html}{figcaption_html}</figure>')
+                else:
+                    processed_lines.append(img_html)
+                    
+        else:
+            processed_lines.append(line)
+            i += 1
             
-            class_str = f' class="{" ".join(classes)}"' if classes else ''
-            attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
-            
-            # --- ШАГ 4: СБОРКА HTML С КРИСТАЛЬНЫМ LAZY-LOAD ---
-            img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
-            
-            if is_centered:
-                figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
-                return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
-                
-            return img_html
-
-        new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)
-        processed_lines.append(new_line)
-        
     # === ВАША РОДНАЯ СКЛЕЙКА И АВТОМАТИЧЕСКАЯ ГРУППИРОВКА РЯДОВ ДЛЯ JEKYLL ===
     article_html = '\n'.join(processed_lines)
     

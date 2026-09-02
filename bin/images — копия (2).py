@@ -3,19 +3,19 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose ОПТИМИЗИРОВАННАЯ СБОРКА v5.6: Из кода полностью удалён дублирующий узел очистки путей.
-         Скрипт принимает идеально чистые абсолютные пути от pathlinks.py.
+@purpose СТАБИЛЬНАЯ СБОРКА: Возврат к оригинальному построчному алгоритму с точечной очисткой {...}.
+         Гарантирует lazy-load (data-src) и сохраняет вёрстку.
 @author TechLab
-@version 5.6 🚀 (Часть 1)
+@version 5.4 🚀 (Часть 1)
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
+    Ищет маркдаун-картинки и превращает их в HTML-блоки с data-src.
     """
-    # Ваша родная, проверенная регулярка классического маркдауна
+    # Ваша родная регулярка, которая железно работала и ничего не ломала!
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
@@ -25,7 +25,7 @@ def process_markdown_images(markdown_content):
     for line in lines:
         def replacer(match):
             alt_content = match.group(1).strip()
-            img_url = match.group(2).strip() # Путь уже идеально чистый благодаря pathlinks.py!
+            img_url = match.group(2).strip()
             
             # --- ШАГ 1: ВАШ РОДНОЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
@@ -33,7 +33,7 @@ def process_markdown_images(markdown_content):
             if not alt_content:
                 return f'<img class="img-single-landscape" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
-            # Разбиваем содержимое по вертикальной палочке
+            # Разбираем содержимое по палочкам
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
             if not parts:
@@ -43,7 +43,8 @@ def process_markdown_images(markdown_content):
             custom_attrs = []
             is_centered = False
             
-            # Извлекаем первый ключ и очищаем его от фигурных скобок Обсидиана
+            # 🔥 МАГИЯ v5.4: Если ключ обёрнут в фигурные скобки для Обсидиана, 
+            # мы просто убираем их перед проверкой, чтобы не ломать вашу левостороннюю логику!
             first_key = parts[0].strip('{} ')
             
             # --- ШАГ 2: ВАШ СЛУЖЕБНЫЙ РАЗБОР КЛЮЧЕЙ (Слева направо) ---
@@ -56,6 +57,7 @@ def process_markdown_images(markdown_content):
                 if parts and parts[0].strip('{} ').lower() == 'v':
                     classes.append('img-v')
                     parts.pop(0)
+
             # Проверяем Ключ 1: Текстовая вертикалка 'v' (без fig)
             elif first_key.lower() == 'v':
                 classes.append('img-single-portrait') # Наш новый изолированный класс
@@ -77,16 +79,17 @@ def process_markdown_images(markdown_content):
                 classes.append('img-single-landscape')
                 
             # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
+            # Очищаем все оставшиеся текстовые элементы от фигурных скобок Обсидиана
             clean_parts = [p.strip('{} ') for p in parts if p.strip()]
             clean_alt = " | ".join(clean_parts) if clean_parts else ""
             
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # --- ШАГ 4: СБОРКА HTML С КРИСТАЛЬНЫМ LAZY-LOAD ---
+            # --- ШАГ 4: СБОРКА HTML С КРИСТАЛЬНЫМ LAZY-LOAD (data-src + прозрачный src) ---
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
             
-            # Если журнальный режим fig, упаковываем в семантическую коробку figure
+            # Если был запрошен журнальный режим fig, упаковываем в коробку figure
             if is_centered:
                 figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                 return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'

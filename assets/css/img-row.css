@@ -1,59 +1,47 @@
 /*
-@about Модуль стандартных горизонтальных флекс-галерей и картинок в тексте.
-@purpose Управляет поведением рядовых изображений Markdown внутри текстовых абзацев, перестраивая горизонтальные ряды в жесткие монолитные столбики 327х183px на смартфонах без случайных переносов строк и боковых щелей.
+@about Модуль групповых галерей и рядов контента (img-row.css).
+@purpose Управляет сеткой картинок, идущих в Obsidian плотным столбцом. 
+         Выравнивает горизонтальные и вертикальные кадры строго в один уровень по высоте.
 @author TechLab
-@version 2.0
+@version 4.0
 */
 
+@layer components {
 
-/* ============================================================
-   📦 КОМПОНЕНТ: СТАНДАРТНАЯ ФЛЕКС-ГАЛЕРЕЯ В ТЕКСТЕ (img-gallery.css)
-   Стиль верстки: Модульный / Семантический (Стандарт IT-компаний)
-   ============================================================ */
+    /* 🔥 ВАЖНО: Селектор находит абзац <p>, только если внутри него есть рядные картинки, 
+       и превращает этот абзац в красивый журнальный флекс-контейнер */
+    .main-content p:has(.img-row-landscape),
+    .main-content p:has(.img-row-portrait) {
+        
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        & {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: var(--gap-pc); /* Наш системный зазор 15px с главного пульта */
+            width: 100%;
+            margin: 0 0 var(--gap-pc) 0; /* Нижний отступ ряда равен зазору */
+        }
 
+        /* ------------------------------------------------------------
+           👥 ВНУТРЕННИЕ ЭЛЕМЕНТЫ ГАЛЕРЕИ (Ландшафт и Портрет)
+           ============================================================ */
+        
+        /* 🌅 Горизонтальный кадр внутри галереи */
+        & img.img-row-landscape {
+            &, &[data-src] {
+                /* Здесь мы настроим его поведение на следующем шаге */
+            }
+        }
 
-/* ============================================================
-   📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ ФЛЕКС-ГАЛЕРЕИ
-   ============================================================ */
+        /* 🌌 Вертикальный кадр внутри галереи (Обложки, плакаты) */
+        & img.img-row-portrait {
+            &, &[data-src] {
+                /* Здесь мы настроим его поведение на следующем шаге */
+            }
+        }
 
-/* --- Смартфоны вертикально (Portrait) --- */
-@media (max-width: 900px) and (orientation: portrait) {
-
-    /* Перестраиваем горизонтальный флекс-ряд в плотный вертикальный столбец */
-    .main-content p:has(img) {
-        display: flex !important;
-        flex-direction: column !important;
-        flex-wrap: nowrap !important;
-        gap: var(--gap-mobile-portrait) !important; 
     }
 
-     /* 🔥 ВАЖНО: Добавили :not(:only-child), чтобы галерейные стили 
-        срабатывали строго при наличии двух и более картинок в абзаце */
-     .main-content p img:not(.img-v):not(.img-fig):not(.img-custom):not(.content-img):not(:only-child) {
-         width: 100% !important;
-         height: auto !important;
-         flex: unset !important;
-    }
-}
-
-/* --- Смартфоны горизонтально (Landscape) --- */
-@media (max-height: 500px) and (orientation: landscape) {
-    /* Гарантируем стабильный горизонтальный ряд из картинок без переносов */
-    .main-content p:has(img) {
-        display: flex !important;
-        flex-direction: row !important; 
-        flex-wrap: nowrap !important;   
-        gap: var(--gap-pc) !important; 
-    }
-
-    /* Все картинки в галерее (включая и img-v) автоматически делят 
-       строку пополам, не конфликтуя с базовым файлом вертикалок 
-    .main-content p img:not(.img-fig):not(.img-custom):not(.content-img) {
-        width: calc(50% - (var(--gap-pc) / 2)) !important;
-        max-width: none !important;
-        height: auto !important;
-        max-height: none !important;
-        aspect-ratio: 16 / 9 !important;
-        flex: unset !important; 
-    }*/
 }

@@ -3,10 +3,10 @@
 """
 @script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose v3.4 🚀 ИСПРАВЛЕНО: Умный фильтр папок-исключений. Предотвращает ложную приставку /test/ 
-         для путей, которые ведут в глобальные папки контента (faire, assets и т.д.).
+@purpose v3.5 🚀 ИСПРАВЛЕНО: Убран ошибочный префикс 'folder' из глобальных исключений, 
+         который ломал локальные относительные пути вида folder/image.webp.
 @author TechLab
-@version 3.4 (Часть 1)
+@version 3.5 (Часть 1)
 """
 
 import re
@@ -17,9 +17,8 @@ def process_markdown_paths(markdown_content, file_path=None):
     Вычисляет имя папки статьи, чистит любые пути и конвертирует Wiki-ссылки,
     исключая ложную приставку папок для известных корней.
     """
-    # 🌟 СПИСОК ГЛОБАЛЬНЫХ ПАПОК КОНТЕНТА: Если путь начинается с них, префикс текущей папки НЕ дописывается!
-    # Сюда вы можете через запятую добавить любые папки вашего репозитория (например, 'assets', 'images')
-    known_root_folders = ['faire', 'folder', 'assets', 'img']
+    # 🌟 Утвержденный список глобальных корневых папок медиа-ресурсов сайта
+    known_root_folders = ['faire', 'assets', 'img']
 
     current_folder_prefix = "/"
     if file_path:
@@ -66,10 +65,10 @@ def process_markdown_paths(markdown_content, file_path=None):
             img_url = re.sub(r'^[\s./]+', '', img_url)
             if not img_url.startswith('/'):
                 img_url = '/' + img_url
-        # 3. 🔥 ИСПРАВЛЕНО: Если путь начинается с известной контентной папки — просто ставим слэш /
+        # 3. Если путь начинается с известной контентной папки — просто ставим слэш /
         elif first_segment in known_root_folders:
             img_url = '/' + img_url
-        # 4. Во всех остальных случаях (чистый локальный folder/) — дописываем префикс папки статьи
+        # 4. Во всех остальных случаях (локальные папки статей) — дописываем префикс папки статьи
         else:
             img_url = (current_folder_prefix + img_url).replace('//', '/')
 
@@ -81,7 +80,7 @@ def process_markdown_paths(markdown_content, file_path=None):
     temporary_content = re.sub(classic_media_pattern, classic_path_cleaner, temporary_content, flags=re.IGNORECASE)
     wiki_media_pattern = r'!\[\[(.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))(?:\|(.*?))?\]\]'
 
-    # 3. Функция-заменитель для пересборки медиа-ссылок Wiki в классический вид
+    # Функция-заменитель для пересборки медиа-ссылок Wiki в классический вид
     def wiki_media_replacer(match):
         img_url = match.group(1).strip()
         alt_content = match.group(2).strip() if match.group(2) else ""
@@ -98,7 +97,7 @@ def process_markdown_paths(markdown_content, file_path=None):
             img_url = re.sub(r'^[\s./]+', '', img_url)
             if not img_url.startswith('/'):
                 img_url = '/' + img_url
-        # 3. 🔥 ИСПРАВЛЕНО: Если Wiki-путь начинается с известной контентной папки — просто ставим слэш /
+        # 3. Если Wiki-путь начинается с известной контентной папки — просто ставим слэш /
         elif first_segment in known_root_folders:
             img_url = '/' + img_url
         # 4. Во всех остальных случаях — дописываем префикс текущей папки статьи
@@ -125,7 +124,7 @@ def process_markdown_paths(markdown_content, file_path=None):
     # Превращаем обсидиановые текстовые связи в чистые слова контента
     temporary_content = re.sub(wiki_text_pattern, wiki_text_replacer, temporary_content)
 
-    # Ваша родная страховка от случайных двойных слэшей
+    # Страховка от случайных двойных слэшей
     temporary_content = temporary_content.replace('//', '/')
     
     # Д. РАЗМОРОЗКА БЛОКОВ КОДА: Возвращаем примеры из сейфа в полной целости

@@ -18,7 +18,7 @@ def process_markdown_paths(markdown_content, file_path=None):
     исключая ложную приставку папок для известных корней.
     """
     # 🌟 Утвержденный список глобальных корневых папок медиа-ресурсов сайта
-    known_root_folders = ['faire', 'assets', 'img']
+    known_root_folders = ['assets', 'faire', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
 
     current_folder_prefix = "/"
     if file_path:

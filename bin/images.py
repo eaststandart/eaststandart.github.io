@@ -105,7 +105,7 @@ def process_markdown_images(markdown_content):
                     
                     custom_attrs.append(f'width="{width}"')
                     custom_attrs.append(f'height="{height}"')
-                    custom_attrs.append(f'style="aspect-ratio: {width} / {height}"')
+                    custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
                     parts.pop(0)
                     
                 if not classes:

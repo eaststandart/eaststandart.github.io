@@ -31,10 +31,18 @@
         /* 🌅 Горизонтальный кадр внутри галереи */
         & img.img-row-landscape {
             &, &[data-src] {
-                height: var(--media-pc-height); 
+                height: var(--media-pc-height); /* Строго 209px в высоту на ПК */
                 width: auto;                    
+                
+                /* 🔥 ВАЖНО: Намертво заставляем браузер выделить под кадр 
+                   горизонтальный бокс 16/9, независимо от реального разрешения файла */
                 aspect-ratio: var(--ratio-landscape); 
-                object-fit: cover;
+                
+                /* 🔥 МАГИЯ СЕРЫХ УШЕК ДЛЯ ЛЮБЫХ НЕСТАНДАРТНЫХ КАДРОВ */
+                object-fit: contain;       /* Если картинка 16/9 — она встанет на весь бокс. 
+                                              Если картинка вертикальная — она сожмется по центру БЕЗ обрезки! */
+                background-color: #ededed; /* Серый цвет ушек с вашего фото */
+                object-position: center;   
                 margin: 0;
             }
 

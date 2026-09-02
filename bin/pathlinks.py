@@ -74,7 +74,7 @@ def process_markdown_paths(markdown_content, file_path=None):
             img_url = (current_folder_prefix + img_url).replace('//', '/')
 
         if original_url != img_url:
-            print(f"[PATHLINKS-LOG] Классический путь изменен: {original_url} ➡️ {img_url}")
+            print(f"[PATHLINKS-LOG] Путь изменен: {original_url} ➡️ {img_url}")
             
         return f'![{alt_text}]({img_url})'
 

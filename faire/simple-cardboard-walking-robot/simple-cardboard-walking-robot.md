@@ -8,7 +8,7 @@ sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templ
 date: 2025-10-25
 permalink: /faire/simple-cardboard-walking-robot/
 ---
-![[simple-cardboard-walking-robot-1785908970029-2026-08-05.webp]]
+
 ### Описание проекта
 Создание конструкции шагающего робота из картона, приводимого в движение электромотором и оснащённого самодельным редуктором с ремённой передачей.
 

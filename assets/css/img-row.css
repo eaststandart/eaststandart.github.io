@@ -31,13 +31,35 @@
         /* 🌅 Горизонтальный кадр внутри галереи */
         & img.img-row-landscape {
             &, &[data-src] {
-                height: var(--media-pc-height); /* Строго 209px в высоту, как у одиночки на ПК */
-                width: auto;                    /* Ширина свободно рассчитывается по пропорциям */
-                aspect-ratio: var(--ratio-landscape); /* Намертво запечатываем журнальные 16/9 */
+                height: var(--media-pc-height); 
+                width: auto;                    
+                aspect-ratio: var(--ratio-landscape); 
                 object-fit: cover;
                 margin: 0;
             }
+
+            /* --- А. Смартфоны вертикально (Portrait) --- */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    width: var(--mobile-full-width); /* Раскрываем во всю ширину строки */
+                    max-width: none;
+                    height: auto;       
+                    max-height: none;   
+                    aspect-ratio: var(--ratio-landscape);
+                }
+            }
+
+            /* --- Б. Смартфоны горизонтально (Landscape) --- */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    height: auto;
+                    width: var(--mobile-base-landscape-width); /* Ровно половина экрана контента */
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); 
+                    aspect-ratio: var(--ratio-landscape); 
+                }
+            }
         }
+
 
         /* 🌌 Вертикальный кадр внутри галереи (Обложки, плакаты) */
         & img.img-row-portrait {

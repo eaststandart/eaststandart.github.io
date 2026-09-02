@@ -39,6 +39,8 @@ discus: "questions"
 
 ### ТЕСТ ПРЕОБРАЗОВАНИЯ ССЫЛОК
 
+#### Одиночные картинки
+
 1-1 `![](url) и ![[путь]]`
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
@@ -75,7 +77,11 @@ discus: "questions"
 
 ![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{320x405|alt text}]]
 
-1-7 `сокращенный вариант записи ссылки ![](../путь)`
+#### Групповые картинки
+
+#### Сокращенный вариант записи ссылки
+
+3-7 `![](../путь)`
 
 ![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 

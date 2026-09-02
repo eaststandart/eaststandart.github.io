@@ -3,18 +3,17 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose Поддерживает ДВА формата ссылок параллельно (Wiki-стиль и Классический).
+@purpose ИСПРАВЛЕНО: Полное сохранение Lazy-Load (data-src) для чистых ссылок без параметров.
 @author TechLab
-@version 5.0 🚀 (Часть 1)
+@version 5.1 🚀 (Часть 1)
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Парсит маркдаун-изображения двух стандартов и превращает их в валидный HTML v5.0.
+    Парсит маркдаун-изображения двух стандартов и превращает их в валидный HTML v5.1.
     """
-    # Паттерны для двух типов синтаксиса
     wiki_pattern = r'!\[\[(.*?)\]\]'
     classic_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     
@@ -26,7 +25,7 @@ def process_markdown_images(markdown_content):
     for line in lines:
         current_line = line
         
-        # Счетчик картинок на строке для автоматического режима галереи
+        # Считаем количество картинок на строке
         wiki_matches = list(re.finditer(wiki_pattern, current_line, flags=re.IGNORECASE))
         classic_matches = list(re.finditer(classic_pattern, current_line, flags=re.IGNORECASE))
         is_row_mode = (len(wiki_matches) + len(classic_matches)) > 1
@@ -39,19 +38,19 @@ def process_markdown_images(markdown_content):
                 raw_match = match.group(0)
                 inner_content = match.group(1).strip()
                 
-                # Очистка обсидиановских хвостов размеров (например, |400 в конце)
+                # Очистка обсидиановских хвостов размеров (|400 в конце)
                 inner_content = re.sub(r'\|\s*\d+\s*$', '', inner_content).strip()
                 
-                # Дробим внутренности ссылки по вертикальным палочкам
+                # Дробим внутренности ссылки по палочкам
                 wiki_parts = [p.strip() for p in inner_content.split('|') if p.strip()]
                 if not wiki_parts:
                     continue
                     
-                # 1. Первый элемент — всегда путь к файлу. Извлекаем и чистим относительный путь!
+                # 1. Первый элемент — всегда путь к файлу
                 img_url = wiki_parts.pop(0)
                 img_url = re.sub(r'^\.\.\/', '/', img_url) # Превращаем ../faire/ в /faire/
                 
-                # Инициализируем переменные для сборки HTML тега
+                # Инициализируем переменные сборки HTML
                 classes = []
                 custom_attrs = []
                 is_centered = False
@@ -59,19 +58,18 @@ def process_markdown_images(markdown_content):
                 alt_text = ""
                 figcaption_text = ""
                 
-                # 2. Ищем контейнер скрытых параметров {...} среди оставшихся частей
+                # 2. Ищем контейнер скрытых параметров {...}
                 params_str = ""
                 for index, part in enumerate(wiki_parts):
                     if part.startswith('{') and part.endswith('}'):
                         params_str = wiki_parts.pop(index)
                         break
                 
-                # Разбираем скрытые параметры и вытаскиваем из них ALT-текст
+                # Разбираем скрытые параметры
                 if params_str:
                     clean_params = params_str.strip('{}')
                     param_parts = [p.strip() for p in clean_params.split('|') if p.strip()]
                     
-                    # Поочередно проверяем и вырезаем служебные ключи
                     while param_parts:
                         current_param = param_parts[0]
                         if current_param.lower() == 'fig':
@@ -90,21 +88,21 @@ def process_markdown_images(markdown_content):
                             custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                             param_parts.pop(0)
                         else:
-                            # Всё, что не является ключом — это наш священный ALT-текст!
                             alt_text = " | ".join(param_parts)
                             break
                 
-                # 3. Всё, что осталось снаружи фигурных скобок — это чистая подпись figcaption!
+                # 3. Всё, что осталось снаружи — это чистый figcaption
                 if wiki_parts:
                     figcaption_text = " | ".join(wiki_parts)
                 
-                # Если специфичные классы формы не назначены, вешаем дефолтные горизонтальные
+                # Фиксируем дефолтный базовый класс, если специфичные не назначены
                 if not classes:
                     classes.append('img-row-landscape' if is_row_mode else 'img-single-landscape')
                     
                 class_str = f' class="{" ".join(classes)}"' if classes else ''
                 attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
                 
+                # 🔥 ИСПРАВЛЕНО ЖЕСТКО: Путь уходит СТРОГО в data-src, а в src встает прозрачный пиксель!
                 img_html = f'<img{class_str}{attr_str} alt="{alt_text}" src="{transparent_pixel}" data-src="{img_url}">'
                 
                 if is_centered:
@@ -206,5 +204,4 @@ def process_markdown_images(markdown_content):
     )
         
     return article_html
-
 

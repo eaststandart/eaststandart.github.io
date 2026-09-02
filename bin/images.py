@@ -3,17 +3,17 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll.
-@purpose ИСПРАВЛЕНО: Полная поддержка фигурных скобок {...} в ОБОИХ форматах ссылок.
-         Восстановлен ленивый JS-слой (data-src) во всех режимах.
+@purpose ОТЛАДОЧНЫЙ ВАРИАНТ: Полная изоляция от блока группировки figure. 
+         Жесткий контроль сохранения lazy-load (data-src) в Wiki-ссылках.
 @author TechLab
-@version 5.2 🚀 (Часть 1)
+@version 5.3 🚀 (Часть 1)
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Парсит маркдаун-изображения двух стандартов и превращает их в валидный HTML v5.2.
+    Парсит маркдаун-изображения двух стандартов и превращает их в валидный HTML v5.3.
     """
     wiki_pattern = r'!\[\[(.*?)\]\]'
     classic_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
@@ -32,7 +32,7 @@ def process_markdown_images(markdown_content):
         is_row_mode = (len(wiki_matches) + len(classic_matches)) > 1
 
         # ==========================================================================
-        # 🌟 ВЕТКА А: ПАРСИНГ WIKI-ССЫЛОК OBSIDIAN ![[...]]
+        # 🌟 ВЕТКА А: ПАРСИНГ НОВЫХ WIKI-ССЫЛОК OBSIDIAN ![[...]]
         # ==========================================================================
         if wiki_matches:
             for match in wiki_matches:
@@ -44,6 +44,7 @@ def process_markdown_images(markdown_content):
                 if not wiki_parts:
                     continue
                     
+                # 1. Извлекаем и чистим путь
                 img_url = wiki_parts.pop(0)
                 img_url = re.sub(r'^\.\.\/', '/', img_url)
                 
@@ -54,12 +55,14 @@ def process_markdown_images(markdown_content):
                 alt_text = ""
                 figcaption_text = ""
                 
+                # 2. Ищем контейнер скрытых параметров {...}
                 params_str = ""
                 for index, part in enumerate(wiki_parts):
                     if part.startswith('{') and part.endswith('}'):
                         params_str = wiki_parts.pop(index)
                         break
                 
+                # Разбираем скрытые параметры
                 if params_str:
                     clean_params = params_str.strip('{}')
                     param_parts = [p.strip() for p in clean_params.split('|') if p.strip()]
@@ -85,6 +88,7 @@ def process_markdown_images(markdown_content):
                             alt_text = " | ".join(param_parts)
                             break
                 
+                # 3. Всё, что снаружи — это подпись figcaption
                 if wiki_parts:
                     figcaption_text = " | ".join(wiki_parts)
                 
@@ -94,6 +98,7 @@ def process_markdown_images(markdown_content):
                 class_str = f' class="{" ".join(classes)}"' if classes else ''
                 attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
                 
+                # Порядок запечатан железно: прозрачный пиксель в src, путь в data-src!
                 img_html = f'<img{class_str}{attr_str} alt="{alt_text}" src="{transparent_pixel}" data-src="{img_url}">'
                 
                 if is_centered:
@@ -104,7 +109,6 @@ def process_markdown_images(markdown_content):
                     img_html = f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
                     
                 current_line = current_line.replace(raw_match, img_html, 1)
-
         # ==========================================================================
         # 🌅 ВЕТКА Б: КЛАССИЧЕСКИЙ МАРКДАУН ![](url) С ПОДДЕРЖКОЙ {ПАРАМЕТРОВ}
         # ==========================================================================
@@ -114,7 +118,7 @@ def process_markdown_images(markdown_content):
                 alt_content = match.group(1).strip()
                 img_url = match.group(2).strip()
                 
-                # Вырезаем обсидиановские хвосты размеров
+                # Автоматически отсекаем обсидиановские хвосты размеров
                 alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
                 
                 # Если alt пустой, сразу отдаем дефолтный ландшафтный класс
@@ -147,7 +151,7 @@ def process_markdown_images(markdown_content):
                     param_parts = [p.strip() for p in clean_params.split('|') if p.strip()]
                     
                     while param_parts:
-                        current_param = param_parts[0]
+                        current_param = param_parts
                         if current_param.lower() == 'fig':
                             classes.append('img-fig')
                             is_centered = True
@@ -201,20 +205,7 @@ def process_markdown_images(markdown_content):
 
         processed_lines.append(current_line)
         
+    # 🔥 ВРЕМЕННО ОЧИЩЕНО: Оставляем простую склейку строк без вмешательства старого group_rows
     article_html = '\n'.join(processed_lines)
-    
-    # Сборка рядов блоков figure (Журнальная группировка строк)
-    def group_rows(match):
-        content = match.group(1)
-        if content.count('<figure class="figure-img"') > 1:
-            return f'<div class="figure-img-row">{content}</div>' 
-        return f'<div class="figure-img-single">{content}</div>' 
-
-    article_html = re.sub(
-        r'((?:<figure class="figure-img">.*?</figure>[ \t]*\n?)+)',
-        group_rows,
-        article_html
-    )
-        
     return article_html
 

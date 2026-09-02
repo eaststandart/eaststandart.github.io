@@ -65,15 +65,25 @@
         /* 🌌 Вертикальный кадр внутри галереи (Обложки, плакаты) */
         & img.img-row-portrait {
             &, &[data-src] {
-                height: var(--media-pc-height); /* Строго 209px в высоту, как и сосед на ПК */
-                width: auto;                    /* Ширина свободно сжимается по осям */
-                aspect-ratio: var(--ratio-portrait); /* Намертво запечатываем чистые вертикальные 9/16 */
-                object-fit: cover;              /* Кадр честно заполняет свою узкую форму */
+                height: var(--media-pc-height); 
+                width: auto;                    
+                aspect-ratio: var(--ratio-portrait); 
+                object-fit: cover;              
                 object-position: center;   
                 margin: 0;
+            }
+
+            /* --- А. Смартфоны вертикально (Portrait) --- */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    display: inline-block;
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait)); /* Аккуратно сжимаем ширину по коэффициенту */
+                    height: auto;
+                    max-height: none;
+                    aspect-ratio: var(--ratio-portrait);
+                }
             }
         }
 
     }
-
 }

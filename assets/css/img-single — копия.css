@@ -81,51 +81,9 @@
     }
 
     /* ==========================================================================
-       🛠️ 3А. КАСТОМНЫЕ ОДИНОЧКИ С РУЧНЫМ РАЗМЕРОМ (img-single-custom)
+       🛠️ 3. КАСТОМНЫЕ ОДИНОЧКИ С РУЧНЫМ РАЗМЕРОМ (img-single-custom)
        ========================================================================= */
-    .main-content p img.img-single-custom-landscape {
-        
-        /* [База]: ПК-режим и мобильный ландшафт наследуют фиксированные 209px высоты */
-        &, &[data-src] {
-            display: block;
-            width: auto;                    
-            height: var(--media-pc-height);   
-            max-width: 100%;
-            max-height: none;
-            object-fit: unset;
-            box-sizing: border-box;
-            border: 1px solid var(--primary-bg);
-            border-radius: 8px;
-            margin: 0;
-        }
-
-        /* [Портрет]: Раскрываем горизонтальный кадр на всю ширину строки контента */
-        @media (max-width: 900px) and (orientation: portrait) {
-            &, &[data-src] {
-                width: var(--mobile-full-width);
-                max-width: none;
-                height: auto;       
-                max-height: none;   
-                aspect-ratio: var(--ratio-landscape);
-            }
-        }
-
-        /* [Ландшафт]: Выстраиваем по ландшафтной базовой ширине с пульта */
-        @media (max-height: 500px) and (orientation: landscape) {
-            &, &[data-src] {
-                display: inline-block;
-                height: auto;
-                width: var(--mobile-base-landscape-width);
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                aspect-ratio: var(--ratio-landscape); 
-            }
-        }
-    }
-
-/* ==========================================================================
-       🛠️ 3Б. КАСТОМНЫЕ ОДИНОЧКИ С РУЧНЫМ РАЗМЕРОМ (img-single-custom)
-       ========================================================================= */
-    .main-content p img.img-single-custom-portrait {
+    .main-content p img.img-single-custom {
         
         /* [База]: ПК-режим и мобильный ландшафт наследуют фиксированные 209px высоты */
         &, &[data-src] {

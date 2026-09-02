@@ -1,9 +1,8 @@
 /*
-@about Модуль групповых галерей и рядов контента (img-row.css).
-@purpose Управляет сеткой картинок, идущих в Obsidian плотным столбцом. 
-         Выравнивает горизонтальные и вертикальные кадры строго в один уровень по высоте.
+@about Модуль групповых галерей простых изображений.
+@purpose Управляет сеткой картинок. Выравнивает горизонтальные и вертикальные кадры строго в один уровень по высоте.
 @author TechLab
-@version 4.0
+@version 1.0
 */
 
 @layer components {
@@ -77,9 +76,21 @@
             @media (max-width: 900px) and (orientation: portrait) {
                 &, &[data-src] {
                     display: inline-block;
-                    width: calc(var(--mobile-full-width) * var(--ratio-portrait)); /* Аккуратно сжимаем ширину по коэффициенту */
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait)); 
                     height: auto;
                     max-height: none;
+                    aspect-ratio: var(--ratio-portrait);
+                }
+            }
+
+            /* --- Б. Смартфоны горизонтально (Landscape) --- */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    display: inline-block;
+                    width: auto;
+                    /* 🔥 ИДЕАЛЬНЫЙ РАСЧЕТ: Берем живую высоту ландшафтного соседа */
+                    height: calc(var(--mobile-base-landscape-width) * (9 / 16)); 
+                    max-height: var(--media-pc-height);
                     aspect-ratio: var(--ratio-portrait);
                 }
             }

@@ -27,7 +27,7 @@ def process_single_file(file_path):
             markdown_content = f.read()
             
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
-        markdown_content = process_markdown_paths(markdown_content, file_path)
+        markdown_content = process_markdown_paths(markdown_content)
             
         # ЭТАП 2: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
         markdown_content = process_markdown_videos(markdown_content)

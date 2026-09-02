@@ -41,7 +41,7 @@ discus: "questions"
 
 #### Одиночные картинки
 
-1-1 `!\[\](url) и !\[\[путь\]\]`
+1-1 `!\[](url) и !\[[путь\]] `
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 

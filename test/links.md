@@ -92,7 +92,7 @@ permalink: /test/links/
 
 3-7 `![](путь) ![](/путь) ![](../путь)`
 
-1 `![](folder/test-v.webp)`
+1 `![](folder/test-v.webp)` `\!\[\](folder/test-v.webp)`
 
 ![](folder/test-v.webp)
 

@@ -3,80 +3,111 @@
 """
 @script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose v3.2 🚀 ИСПРАВЛЕНО: Ультимативный чистильщик путей. Автоматически переводит любые относительные 
-         адреса картинок (faire, folder и т.д.) в абсолютный стандарт /.../ с жесткой защитой кода в бэктиках.
+@purpose v3.4 🚀 ИСПРАВЛЕНО: Умный фильтр папок-исключений. Предотвращает ложную приставку /test/ 
+         для путей, которые ведут в глобальные папки контента (faire, assets и т.д.).
 @author TechLab
-@version 3.2 (Часть 1)
+@version 3.4 (Часть 1)
 """
 
 import re
+import os
 
-def process_markdown_paths(markdown_content):
+def process_markdown_paths(markdown_content, file_path=None):
     """
-    Конвертирует Wiki-медиа, вырезает текстовые Wiki-связи Obsidian и чистит любые пути,
-    полностью защищая блоки кода от изменений.
+    Вычисляет имя папки статьи, чистит любые пути и конвертирует Wiki-ссылки,
+    исключая ложную приставку папок для известных корней.
     """
-    # А. МАССИВ ИСКЛЮЧЕНИЙ
+    # 🌟 СПИСОК ГЛОБАЛЬНЫХ ПАПОК КОНТЕНТА: Если путь начинается с них, префикс текущей папки НЕ дописывается!
+    # Сюда вы можете через запятую добавить любые папки вашего репозитория (например, 'assets', 'images')
+    known_root_folders = ['faire', 'folder', 'assets', 'img']
+
+    current_folder_prefix = "/"
+    if file_path:
+        folder_name = os.path.basename(os.path.dirname(file_path))
+        if folder_name and folder_name not in ['', '.', '..']:
+            current_folder_prefix = f"/{folder_name}/"
+
+    # А. МАССИВ ИСКЛЮЧЕНИЙ ДЛЯ ВНЕШНИХ ССЫЛОК
     ignored_patterns = [
         r'https?://',            
         r'mailto:',              
         r'telegram\.org',        
     ]
-    
-    for pattern in ignored_patterns:
-        if re.search(pattern, markdown_content, re.IGNORECASE) and not re.search(r'github/eaststandart', markdown_content):
-            pass
 
-    # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф - Выполняется ПЕРВЫМ!)
+    # Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф)
     code_vault = []
     
     def code_freezer(match):
         code_vault.append(match.group(0))
         return f'==CODE_BLOCK_{len(code_vault)-1}=='
 
-    # 1. Прячем многострочный код (``` ... ```)
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    # 2. Прячем строчный код в бэктиках (` ... `)
     temporary_content = re.sub(r'`[\s\S]*?`', code_freezer, temporary_content)
 
-    # 🌟 В. УЛЬТИМАТИВНАЯ ЧИСТКА ЛЮБЫХ МАРКДАУН-ПУТЕЙ КАРТИНОК И ВИДЕО
-    # Ваша родная зачистка домена гитхаба
+    # В. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
     temporary_content = re.sub(domain_pattern, '/', temporary_content)
 
-    # Паттерн находит любые стандартные маркдаун-ссылки ![](путь) в тексте статьи
     classic_media_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))\)'
     
     def classic_path_cleaner(match):
         alt_text = match.group(1).strip()
         img_url = match.group(2).strip()
+        original_url = img_url
         
-        # Снимем любые относительные двоеточия и точки из начала пути (../ или ./)
-        img_url = re.sub(r'^[\s./]+', '', img_url)
+        # Вычисляем первое слово в пути (имя корневой папки ссылки)
+        first_segment = img_url.split('/')[0].strip()
         
-        # Гарантируем, что путь теперь железно начинается с абсолютного слэша /
-        if not img_url.startswith('/'):
+        # 1. Если путь изначально абсолютный — не трогаем
+        if img_url.startswith('/'):
+            pass
+        # 2. Если путь относительный с двоеточиями (../faire/) — делаем абсолютным от корня
+        elif img_url.startswith('../') or img_url.startswith('./'):
+            img_url = re.sub(r'^[\s./]+', '', img_url)
+            if not img_url.startswith('/'):
+                img_url = '/' + img_url
+        # 3. 🔥 ИСПРАВЛЕНО: Если путь начинается с известной контентной папки — просто ставим слэш /
+        elif first_segment in known_root_folders:
             img_url = '/' + img_url
+        # 4. Во всех остальных случаях (чистый локальный folder/) — дописываем префикс папки статьи
+        else:
+            img_url = (current_folder_prefix + img_url).replace('//', '/')
+
+        if original_url != img_url:
+            print(f"[PATHLINKS-LOG] Классический путь изменен: {original_url} ➡️ {img_url}")
             
         return f'![{alt_text}]({img_url})'
 
-    # На лету выравниваем пути всех классических картинок до единого абсолютного стандарта
     temporary_content = re.sub(classic_media_pattern, classic_path_cleaner, temporary_content, flags=re.IGNORECASE)
-
-    # Паттерн для Wiki-ссылок Obsidian
     wiki_media_pattern = r'!\[\[(.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))(?:\|(.*?))?\]\]'
 
     # 3. Функция-заменитель для пересборки медиа-ссылок Wiki в классический вид
     def wiki_media_replacer(match):
         img_url = match.group(1).strip()
         alt_content = match.group(2).strip() if match.group(2) else ""
+        original_url = img_url
         
-        # Срезаем точки, двоеточия и слэши из начала пути Wiki-ссылки
-        img_url = re.sub(r'^[\s./]+', '', img_url)
+        # Вычисляем первое слово в пути (имя корневой папки ссылки)
+        first_segment = img_url.split('/')[0].strip()
         
-        # Гарантируем, что путь железно начинается с одиночного абсолютного слэша /
-        if not img_url.startswith('/'):
+        # 1. Если путь изначально абсолютный
+        if img_url.startswith('/'):
+            pass
+        # 2. Если путь относительный с двоеточиями (../faire/)
+        elif img_url.startswith('../') or img_url.startswith('./'):
+            img_url = re.sub(r'^[\s./]+', '', img_url)
+            if not img_url.startswith('/'):
+                img_url = '/' + img_url
+        # 3. 🔥 ИСПРАВЛЕНО: Если Wiki-путь начинается с известной контентной папки — просто ставим слэш /
+        elif first_segment in known_root_folders:
             img_url = '/' + img_url
+        # 4. Во всех остальных случаях — дописываем префикс текущей папки статьи
+        else:
+            img_url = (current_folder_prefix + img_url).replace('//', '/')
+            
+        # Логирование для Wiki-медиа в GitHub Actions
+        if original_url != img_url:
+            print(f"[PATHLINKS-LOG] Wiki-путь изменен: {original_url} ➡️ {img_url}")
             
         return f'![{alt_content}]({img_url})'
 
@@ -97,7 +128,7 @@ def process_markdown_paths(markdown_content):
     # Ваша родная страховка от случайных двойных слэшей
     temporary_content = temporary_content.replace('//', '/')
     
-    # 🌟 Д. РАЗМОРОЗКА БЛОКОВ КОДА: Возвращаем примеры из сейфа в полной целости
+    # Д. РАЗМОРОЗКА БЛОКОВ КОДА: Возвращаем примеры из сейфа в полной целости
     for idx, original_code in enumerate(code_vault):
         temporary_content = temporary_content.replace(f'==CODE_BLOCK_{idx}==', original_code)
         

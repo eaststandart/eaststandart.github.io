@@ -20,17 +20,6 @@ discus: "questions"
 
 ![fig|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 
-1
-
-![[../faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp|{v}|text|400]]
-
-fig|v - {fig|v|text}, 
-
-![[путь|{fig|v|302x420|text}|alt-text|размер для Obsidian]], где
-
-text - это подпись под картинкой (идет в тег figcaption)
-alt-text - этот текст идет в alt тега img или title для тега video
-
 Посмотрим, из чего она состоит:
 
 \- *G1* – батарея питания напряжением 3 В типа «CR2032»;\

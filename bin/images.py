@@ -3,10 +3,9 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose v5.8 🚀 Переведён на стабильный алгоритм сбора плотных строк из модуля видео (videos.py).
-         Безошибочно отличает одиночки от галерей на основе структуры Obsidian-текста.
+@purpose v5.9 🚀 ИСПРАВЛЕНО: Добавлен Железный Сейф для защиты картинок внутри бэктиков от поломки.
 @author TechLab
-@version 5.8 (Часть 1)
+@version 5.9 (Часть 1)
 """
 
 import re
@@ -16,14 +15,14 @@ def process_markdown_images(markdown_content):
     Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
     Использует логику группировки плотных строк из videos.py.
     """
-    # 🌟 ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
+    # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
     code_vault = []
     
     def code_freezer(match):
         code_vault.append(match.group(0))
         return f'==CODE_BLOCK_{len(code_vault)-1}=='
 
-    # Прячем код, чтобы images.py не лез внутрь бэктиков
+    # Прячем код, чтобы этот модуль не лез внутрь бэктиков
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
     temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
 
@@ -32,10 +31,6 @@ def process_markdown_images(markdown_content):
     
     # Режем на строки уже ЗАМОРОЖЕННЫЙ контент
     lines = temporary_content.split('\n')
-    processed_lines = []
-    
-    i = 0
-    while i < len(lines):
     processed_lines = []
     
     i = 0
@@ -152,7 +147,7 @@ def process_markdown_images(markdown_content):
         article_html
     )
         
-    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в целости)
+    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в полной целости)
     for idx, original_code in enumerate(code_vault):
         article_html = article_html.replace(f'==CODE_BLOCK_{idx}==', original_code)
         

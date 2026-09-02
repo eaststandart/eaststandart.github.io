@@ -16,26 +16,10 @@ def process_markdown_images(markdown_content):
     Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
     Использует логику группировки плотных строк из videos.py.
     """
-    # 🌟 ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
-    code_vault = []
-    
-    def code_freezer(match):
-        code_vault.append(match.group(0))
-        return f'==CODE_BLOCK_{len(code_vault)-1}=='
-
-    # Прячем код, чтобы images.py не лез внутрь бэктиков
-    temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
-
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
-    # Режем на строки уже ЗАМОРОЖЕННЫЙ контент
-    lines = temporary_content.split('\n')
-    processed_lines = []
-    
-    i = 0
-    while i < len(lines):
+    lines = markdown_content.split('\n')
     processed_lines = []
     
     i = 0
@@ -151,9 +135,5 @@ def process_markdown_images(markdown_content):
         group_rows,
         article_html
     )
-        
-    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в целости)
-    for idx, original_code in enumerate(code_vault):
-        article_html = article_html.replace(f'==CODE_BLOCK_{idx}==', original_code)
         
     return article_html

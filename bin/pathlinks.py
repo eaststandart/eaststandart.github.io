@@ -3,16 +3,17 @@
 """
 @script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose v3.1 🚀 ИСПРАВЛЕНО: Усилена защита одиночных бэктиков от ложного срабатывания чистильщика.
+@purpose v3.2 🚀 ИСПРАВЛЕНО: Ультимативный чистильщик путей. Автоматически переводит любые относительные 
+         адреса картинок (faire, folder и т.д.) в абсолютный стандарт /.../ с жесткой защитой кода в бэктиках.
 @author TechLab
-@version 3.1 (Часть 1)
+@version 3.2 (Часть 1)
 """
 
 import re
 
 def process_markdown_paths(markdown_content):
     """
-    Конвертирует Wiki-медиа, вырезает текстовые Wiki-связи Obsidian и чистит пути,
+    Конвертирует Wiki-медиа, вырезает текстовые Wiki-связи Obsidian и чистит любые пути,
     полностью защищая блоки кода от изменений.
     """
     # А. МАССИВ ИСКЛЮЧЕНИЙ
@@ -26,25 +27,43 @@ def process_markdown_paths(markdown_content):
         if re.search(pattern, markdown_content, re.IGNORECASE) and not re.search(r'github/eaststandart', markdown_content):
             pass
 
-    # Б. ЗАМОРОЗКА БЛОКОВ КОДА (Сейф)
+    # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф - Выполняется ПЕРВЫМ!)
     code_vault = []
     
     def code_freezer(match):
         code_vault.append(match.group(0))
         return f'==CODE_BLOCK_{len(code_vault)-1}=='
 
-    # 1. Замораживаем многострочный код (``` ... ```)
+    # 1. Прячем многострочный код (``` ... ```)
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    
-    # 🔥 ИСПРАВЛЕНО: Бронебойная регулярка для строчного кода (` ... `). 
-    # Она гарантированно поглощает любые спецсимволы и ссылки внутри кавычек, не пропуская их наружу!
+    # 2. Прячем строчный код в бэктиках (` ... `)
     temporary_content = re.sub(r'`[\s\S]*?`', code_freezer, temporary_content)
 
-    # В. ЧИСТКА ДОМЕНОВ И ПУТЕЙ
+    # 🌟 В. УЛЬТИМАТИВНАЯ ЧИСТКА ЛЮБЫХ МАРКДАУН-ПУТЕЙ КАРТИНОК И ВИДЕО
+    # Ваша родная зачистка домена гитхаба
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
     temporary_content = re.sub(domain_pattern, '/', temporary_content)
-    temporary_content = re.sub(re.escape('../faire/'), '/faire/', temporary_content)
 
+    # Паттерн находит любые стандартные маркдаун-ссылки ![](путь) в тексте статьи
+    classic_media_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))\)'
+    
+    def classic_path_cleaner(match):
+        alt_text = match.group(1).strip()
+        img_url = match.group(2).strip()
+        
+        # Снимем любые относительные двоеточия и точки из начала пути (../ или ./)
+        img_url = re.sub(r'^[\s./]+', '', img_url)
+        
+        # Гарантируем, что путь теперь железно начинается с абсолютного слэша /
+        if not img_url.startswith('/'):
+            img_url = '/' + img_url
+            
+        return f'![{alt_text}]({img_url})'
+
+    # На лету выравниваем пути всех классических картинок до единого абсолютного стандарта
+    temporary_content = re.sub(classic_media_pattern, classic_path_cleaner, temporary_content, flags=re.IGNORECASE)
+
+    # Паттерн для Wiki-ссылок Obsidian
     wiki_media_pattern = r'!\[\[(.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))(?:\|(.*?))?\]\]'
 
     # 3. Функция-заменитель для пересборки медиа-ссылок Wiki в классический вид
@@ -52,6 +71,10 @@ def process_markdown_paths(markdown_content):
         img_url = match.group(1).strip()
         alt_content = match.group(2).strip() if match.group(2) else ""
         
+        # Срезаем точки, двоеточия и слэши из начала пути Wiki-ссылки
+        img_url = re.sub(r'^[\s./]+', '', img_url)
+        
+        # Гарантируем, что путь железно начинается с одиночного абсолютного слэша /
         if not img_url.startswith('/'):
             img_url = '/' + img_url
             

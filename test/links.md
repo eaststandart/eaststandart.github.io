@@ -50,12 +50,50 @@ permalink: /test/links/
 
 ![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{alt text|400}]]
 
-
 #### Групповые картинки
+
+2-1 `!\[](url) и ![[путь]] `
+
+![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp]]
+![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+2-2 `![{v}](url) и ![[путь|{v}]]`
+
+![{v}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{v}]]
+
+2-3  `![{alt text}](url) и ![[путь|{alt text}]]`
+
+![{alt text}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp|{alt text}]]
+
+2-4  `![{v|alt text}](url) и ![[путь|{v|alt text}]]`
+
+![{v|alt text}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{v|alt text}]]
+
+2-5 `![{320x405}](url) и ![[путь|{320x405}]]`
+
+![{320x405}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{320x405}]]
+
+2-6  `![{320x405|alt text}](url) и ![[путь|{320x405|alt text}]]`
+
+![{320x405|alt text}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{320x405|alt text}]]
+
+2-7  `![{alt text}|400](url) и ![[путь|{alt text}|400]]`
+
+![{alt text}|400](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![[../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp|{alt text|400}]]
 
 #### Сокращенный вариант записи ссылки
 
-3-7 `![](../путь)`
+3-7 `![](путь) ![](/путь) ![](../путь)`
+
+![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 ![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-

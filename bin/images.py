@@ -3,9 +3,9 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose v6.2 🚀 ЖЕСТКО ИСПРАВЛЕНО: Убран ошибочный parts.strip(), полностью восстановлена генерация классов и геометрии.
+@purpose v6.3 🚀 АБСОЛЮТНЫЙ ОТКАТ К СТАБИЛЬНОСТИ: Опечатки parts.strip() полностью устранены, разметка восстановлена.
 @author TechLab
-@version 6.2 (Часть 1)
+@version 6.3 (Часть 1)
 """
 
 import re
@@ -71,7 +71,7 @@ def process_markdown_images(markdown_content):
                 custom_attrs = []
                 is_centered = False
                 
-                # 🔥 ЗДЕСЬ ИСПРАВЛЕНО: Берем первый элемент списка и очищаем его как СТРОКУ
+                # Четко берем СТРОКУ (индекс 0), а не весь список!
                 first_key = parts[0].strip('{} ')
 
                 if first_key.lower() == 'fig':
@@ -87,7 +87,7 @@ def process_markdown_images(markdown_content):
                 elif re.match(r'^\d+[xх]\d+$', first_key, re.IGNORECASE):
                     classes.append('img-single-custom')
                     dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
-                    # 🔥 ЗДЕСЬ ИСПРАВЛЕНО: Извлекаем конкретные элементы строк
+                    # Извлекаем ширину и высоту как строки из массива
                     width, height = dimensions[0].strip(), dimensions[1].strip()
                     
                     custom_attrs.append(f'width="{width}"')

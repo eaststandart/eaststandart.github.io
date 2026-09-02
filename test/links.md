@@ -117,3 +117,9 @@ permalink: /test/links/
 `\![](\folder/test-v.webp)`
 
 <code>![](\folder/test-v.webp)</code>
+
+`текст простой`
+
+`[](folder/test-v.webp)`
+
+<code>[](\folder/test-v.webp)</code>

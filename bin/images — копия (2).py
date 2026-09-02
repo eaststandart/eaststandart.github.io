@@ -3,42 +3,27 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose Автоматически разделяет одиночки и плотные группы (галереи), написанные в Obsidian столбцом.
-         Полностью изолирует классы форм img-row-landscape и img-row-portrait внутри рядов.
-         Внедряет прозрачный 1x1 GIF в src для уничтожения системной рамки Chrome.
-         Автоматически рассчитывает безопасный коридор max-width и min-width для подписи figcaption.
+@purpose Автоматически изолирует класс img-single-custom и выстраивает правильный HTML-порядок атрибутов.
+         Внедряет прозрачный 1x1 GIF в src для полного уничтожения системной рамки Chrome.
+         🔥 ИСПРАВЛЕНО: Автоматически рассчитывает безопасный коридор max-width и min-width 
+         для подписи figcaption, защищая вёрстку узких и широких кастомных кадров.
 @author TechLab
-@version 4.5
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с БЭМ-классами v4.5.
-    Разделение одиночек и групп происходит на основе анализа пустых строк (\n\n).
+    Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
     """
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
-    # 🔥 ШАГ v4.5: Разбираем контент блоками (абзацами) между пустыми строками!
-    blocks = markdown_content.split('\n\n')
-    processed_blocks = []
+    lines = markdown_content.split('\n')
+    processed_lines = []
 
-    for block in blocks:
-        # Находим все картинки внутри текущего плотного блока контента
-        matches = list(re.finditer(img_pattern, block, flags=re.IGNORECASE))
-        
-        if not matches:
-            processed_blocks.append(block)
-            continue
-            
-        # Если картинок в блоке больше одной — это ГРУППА (ряд), иначе — ОДИНОЧКА!
-        is_row_mode = len(matches) > 1
-        current_block = block
-        
-        for match in matches:
-            raw_match = match.group(0)
+    for line in lines:
+        def replacer(match):
             alt_content = match.group(1).strip()
             img_url = match.group(2).strip()
             
@@ -46,19 +31,12 @@ def process_markdown_images(markdown_content):
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
             if not alt_content:
-                # Если подпись пустая, вешаем базовый горизонтальный класс одиночки или ряда
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                img_html = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                current_block = current_block.replace(raw_match, img_html, 1)
-                continue
+                return f'<img class="img-single-landscape" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             parts = [p.strip() for p in alt_content.split('|') if p.strip()]
             
             if not parts:
-                final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                img_html = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                current_block = current_block.replace(raw_match, img_html, 1)
-                continue
+                return f'<img class="img-single-landscape" alt="" src="{transparent_pixel}" data-src="{img_url}">'
                 
             classes = []
             custom_attrs = []
@@ -71,7 +49,7 @@ def process_markdown_images(markdown_content):
                 is_centered = True
                 parts.pop(0)
                 
-                # ❄️ ЗАМОРОЖЕНО: Блок fig работает строго по вашей старой схеме
+                # ❄️ ЗАМОРОЖЕНО: Возвращаем оригинальный класс img-v для блока fig
                 if parts and parts[0].lower() == 'v':
                     classes.append('img-v')
                     parts.pop(0)
@@ -86,9 +64,9 @@ def process_markdown_images(markdown_content):
                     custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                     parts.pop(0)
                 
-            # 🔥 ВАЖНО: Разделение классов форм для текстовых картинок (Сингл vs Ряд)
+            # 🔥 Для текстовых одиночек включаем новый БЭМ-класс
             elif parts[0].lower() == 'v':
-                classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
+                classes.append('img-single-portrait')
                 parts.pop(0)
                 
             elif re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
@@ -101,10 +79,9 @@ def process_markdown_images(markdown_content):
                 custom_attrs.append(f'style="aspect-ratio: {custom_width} / {height} !important;"')
                 parts.pop(0)
                 
-            # Если специфичные классы формы не назначены, вешаем дефолтные горизонтальные
+            # Если специфичные классы формы не назначены, вешаем наш базовый класс одиночки
             if not classes:
-                horiz_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                classes.append(horiz_class)
+                classes.append('img-single-landscape')
                 
             clean_alt = " | ".join(parts) if parts else ""
             
@@ -119,16 +96,15 @@ def process_markdown_images(markdown_content):
                 else:
                     figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                     
-                img_html = f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
+                return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
            
-            # Заменяем текущий маркдаун-шаблон на готовый HTML-код
-            current_block = current_block.replace(raw_match, img_html, 1)
-            
-        processed_blocks.append(current_block)
+            return img_html
+
+        new_line = re.sub(img_pattern, replacer, line, flags=re.IGNORECASE)
+        processed_lines.append(new_line)
         
-    article_html = '\n\n'.join(processed_blocks)
+    article_html = '\n'.join(processed_lines)
     
-    # Наша оригинальная финальная группировка строк figure-img блоков
     def group_rows(match):
         content = match.group(1)
         if content.count('<figure class="figure-img"') > 1:

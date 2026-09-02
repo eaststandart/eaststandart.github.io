@@ -3,9 +3,10 @@
 """
 @script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose v3.6 🚀 ИСПРАВЛЕНО: Полный список корневых разделов контента + встроенное логирование сейфа кода.
+@purpose v3.5 🚀 ИСПРАВЛЕНО: Убран ошибочный префикс 'folder' из глобальных исключений, 
+         который ломал локальные относительные пути вида folder/image.webp.
 @author TechLab
-@version 3.6 (Часть 1)
+@version 3.5 (Часть 1)
 """
 
 import re
@@ -16,8 +17,8 @@ def process_markdown_paths(markdown_content, file_path=None):
     Вычисляет имя папки статьи, чистит любые пути и конвертирует Wiki-ссылки,
     исключая ложную приставку папок для известных корней.
     """
-    # 🌟 Утвержденный список глобальных корневых разделов и папок медиа-ресурсов сайта
-    known_root_folders = ['faire', 'assets', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
+    # 🌟 Утвержденный список глобальных корневых папок медиа-ресурсов сайта
+    known_root_folders = ['assets', 'faire', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
 
     current_folder_prefix = "/"
     if file_path:
@@ -43,11 +44,6 @@ def process_markdown_paths(markdown_content, file_path=None):
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
     # 2. Затем прячем любые строчные элементы кода (от 1 до 3 бэктиков подряд: `...`, ``...``)
     temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
-    
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: Проверяем, зашел ли проблемный файл в сейф
-    if "test-v.webp" in markdown_content:
-        print(f"[PATHLINKS-VAULT-LOG] Сейф заполнен. Содержимое сейфа: {code_vault}")
-        print(f"[PATHLINKS-VAULT-LOG] Текст с масками перед обработкой:\n{temporary_content.strip()}\n---")
 
     # В. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
@@ -133,16 +129,8 @@ def process_markdown_paths(markdown_content, file_path=None):
     # Страховка от случайных двойных слэшей
     temporary_content = temporary_content.replace('//', '/')
     
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: Проверяем текст перед разморозкой
-    if "test-v.webp" in markdown_content:
-        print(f"[PATHLINKS-VAULT-LOG] Текст перед разморозкой путей:\n{temporary_content.strip()}\n---")
-
     # Д. РАЗМОРОЗКА БЛОКОВ КОДА: Возвращаем примеры из сейфа в полной целости
     for idx, original_code in enumerate(code_vault):
         temporary_content = temporary_content.replace(f'==CODE_BLOCK_{idx}==', original_code)
-        
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: Итоговый выход из первого модуля
-    if "test-v.webp" in markdown_content:
-        print(f"[PATHLINKS-VAULT-LOG] Выход из модуля pathlinks:\n{temporary_content.strip()}\n================\n")
         
     return temporary_content

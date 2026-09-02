@@ -3,7 +3,7 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose v5.9 🚀 ИСПРАВЛЕНО: Добавлен Железный Сейф кода во избежание порчи ссылок внутри бэктиков + логи.
+@purpose v5.9 🚀 ИСПРАВЛЕНО: Добавлен Железный Сейф для защиты картинок внутри бэктиков от поломки.
 @author TechLab
 @version 5.9 (Часть 1)
 """
@@ -25,11 +25,6 @@ def process_markdown_images(markdown_content):
     # Прячем код, чтобы этот модуль не лез внутрь бэктиков
     temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
     temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
-
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: Проверяем, как файл зашел в сейф картинок
-    if "test-v.webp" in markdown_content:
-        print(f"[IMAGES-VAULT-LOG] Вход в images. Сейф заполнен: {code_vault}")
-        print(f"[IMAGES-VAULT-LOG] Замороженный текст перед циклом:\n{temporary_content.strip()}\n---")
 
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -152,16 +147,8 @@ def process_markdown_images(markdown_content):
         article_html
     )
         
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: Проверяем текст перед возвращением бэктиков
-    if "test-v.webp" in markdown_content:
-        print(f"[IMAGES-VAULT-LOG] Разметка готова, текст перед демаскированием:\n{article_html.strip()}\n---")
-
-    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в целости)
+    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в полной целости)
     for idx, original_code in enumerate(code_vault):
         article_html = article_html.replace(f'==CODE_BLOCK_{idx}==', original_code)
-        
-    # 🔍 ДИАГНОСТИЧЕСКИЙ ЛОГ: То, что улетает в файл на диске
-    if "test-v.webp" in markdown_content:
-        print(f"[IMAGES-VAULT-LOG] Финальный выход из модуля images (запись на диск):\n{article_html.strip()}\n================")
         
     return article_html

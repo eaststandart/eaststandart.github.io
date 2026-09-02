@@ -104,7 +104,7 @@ permalink: /test/links/
 
 ![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-4 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
+4 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)` 
 
 ![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 

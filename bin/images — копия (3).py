@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 @module images
-@about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose ОПТИМИЗИРОВАННАЯ СБОРКА v5.6: Принимает чистые абсолютные пути от pathlinks.py.
-         Реализует строгое левостороннее чтение очищенных от скобок служебных ключей (fig, v, размеры),
-         автоматически отсекает обсидиановские хвосты |400 и изолирует новые БЭМ-классы.
+@about Модуль предобработки изображений для Obsidian -> Jekyll.
+@purpose ОПТИМИЗИРОВАННАЯ СБОРКА v5.6: Из кода полностью удалён дублирующий узел очистки путей.
+         Скрипт принимает идеально чистые абсолютные пути от pathlinks.py.
 @author TechLab
 @version 5.6 🚀 (Часть 1)
 """
@@ -15,9 +14,8 @@ import re
 def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки всех форматов и превращает их в HTML-блоки с data-src.
-    Гарантирует порядок атрибутов alt перед data-src для последующей ленивой загрузки.
     """
-    # Ваша родная регулярка классического маркдауна, которая работает без багов
+    # Ваша родная, проверенная регулярка классического маркдауна
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
@@ -27,9 +25,9 @@ def process_markdown_images(markdown_content):
     for line in lines:
         def replacer(match):
             alt_content = match.group(1).strip()
-            img_url = match.group(2).strip() # Путь уже идеально абсолютный благодаря pathlinks.py
+            img_url = match.group(2).strip() # Путь уже идеально чистый благодаря pathlinks.py!
             
-            # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
+            # --- ШАГ 1: ВАШ РОДНОЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
             alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
             
             if not alt_content:
@@ -45,24 +43,20 @@ def process_markdown_images(markdown_content):
             custom_attrs = []
             is_centered = False
             
-            # 🔥 МАГИЯ v5.6: Очищаем первый ключ от фигурных скобок Обсидиана,
-            # чтобы не ломать вашу оригинальную левостороннюю логику разбора!
+            # Извлекаем первый ключ и очищаем его от фигурных скобок Обсидиана
             first_key = parts[0].strip('{} ')
             
-            # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ ---
-            
-            # Проверяем Ключ 1: Журнальная сетка 'fig'
+            # --- ШАГ 2: ВАШ СЛУЖЕБНЫЙ РАЗБОР КЛЮЧЕЙ (Слева направо) ---
             if first_key.lower() == 'fig':
                 classes.append('img-fig')
                 is_centered = True
-                parts.pop(0) # Удаляем отработанный ключ fig
+                parts.pop(0)
                 
-                # Проверяем вложенный Ключ 2: Вертикальный модификатор внутри fig
+                # Проверяем вложенный вертикальный ключ внутри fig
                 if parts and parts[0].strip('{} ').lower() == 'v':
                     classes.append('img-v')
                     parts.pop(0)
-
-            # Проверяем Ключ 1: Одиночная вертикалка в тексте 'v' (без fig)
+            # Проверяем Ключ 1: Текстовая вертикалка 'v' (без fig)
             elif first_key.lower() == 'v':
                 classes.append('img-single-portrait') # Наш новый изолированный класс
                 parts.pop(0)
@@ -73,28 +67,26 @@ def process_markdown_images(markdown_content):
                 dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
                 width, height = dimensions[0], dimensions[1]
                 
-                # Записываем точные физические атрибуты сторон и пропорции
                 custom_attrs.append(f'width="{width}"')
                 custom_attrs.append(f'height="{height}"')
                 custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
-                parts.pop(0) # Удаляем отработанный ключ размера
+                parts.pop(0)
                 
             # Если специфичные классы формы не назначены, вешаем дефолтные горизонтальные
             if not classes:
                 classes.append('img-single-landscape')
                 
-            # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ИЛИ ПОДПИСИ ---
-            # Очищаем все оставшиеся текстовые элементы от фигурных скобок Обсидиана
+            # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
             clean_parts = [p.strip('{} ') for p in parts if p.strip()]
             clean_alt = " | ".join(clean_parts) if clean_parts else ""
             
             class_str = f' class="{" ".join(classes)}"' if classes else ''
             attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
             
-            # --- ШАГ 4: СБОРКА HTML С КРИСТАЛЬНЫМ LAZY-LOAD (data-src + прозрачный src) ---
+            # --- ШАГ 4: СБОРКА HTML С КРИСТАЛЬНЫМ LAZY-LOAD ---
             img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
             
-            # Если был запрошен журнальный режим, упаковываем в семантическую коробку figure
+            # Если журнальный режим fig, упаковываем в семантическую коробку figure
             if is_centered:
                 figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
                 return f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'

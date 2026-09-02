@@ -92,14 +92,18 @@ permalink: /test/links/
 
 3-7 `![](путь) ![](/путь) ![](../путь)`
 
-1
+1 `![](folder/test-v.webp)`
+
+![](folder/test-v.webp)
+
+2 `![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
 ![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-2
+3 `![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
 ![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
-3
+4 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
 ![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)

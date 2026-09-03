@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 @script fig_landscape.py
-@about Изолированный модуль для обработки одиночных журнальных блоков (Landscape / Portrait).
-@purpose Находит новые ссылки вида ![{fig...}] с поддержкой обсидиановых хвостов,
-         за один шаг определяет ориентацию кадра и собирает семантическую HTML-структуру.
+@about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
+@purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
+         и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
 @author TechLab
-@version 1.1
+@version 1.2
 """
 
 import re
@@ -16,7 +16,6 @@ def process_single_figure_landscape(markdown_content):
     Ищет маркдаун-ссылки журнального типа со скобками {fig} 
     и преобразует их в независимые HTML-блоки figure.
     """
-    # Универсальный паттерн: находит квадратные скобки, внутри которых есть {fig...}
     pattern = r'!\[(.*?)\]\((.*?)\)'
     
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -39,32 +38,50 @@ def process_single_figure_landscape(markdown_content):
         # Контент снаружи — это всё, что осталось после удаления фигурных скобок
         outside_content = alt_content.replace(f"{{{inner_bracket}}}", "").strip("| ")
 
-        # --- ШАГ 3: ОПРЕДЕЛЕНИЕ КЛАССА И ОЧИСТКА ALT ЗА 1 ШАГ ---
-        # Проверяем наличие ключа 'v' внутри скобок как отдельного элемента
-        bracket_clean = inner_bracket.lower().replace(' ', '')
-        if '|v' in bracket_clean or 'v|' in bracket_clean or bracket_clean == 'fig|v':
-            target_class = "img-single-figure-portrait"
-        else:
-            target_class = "img-single-figure-landscape"
+        # --- ШАГ 3: ОПРЕДЕЛЕНИЕ КЛАССА И ГЕОМЕТРИИ ЗА 1 ШАГ ---
+        target_class = "img-single-figure-landscape"
+        custom_attrs_str = ""
 
-        # Начисто вырезаем служебные маркеры fig и v из внутренней части, чтобы получить скрытый alt
-        clean_alt = re.sub(r'\b(fig|v)\b', '', inner_bracket)
+        bracket_clean = inner_bracket.lower().replace(' ', '')
+
+        # Проверяем кастомный размер (например, 320x405) по аналогии с images.py
+        size_match = re.search(r'(\d+)[xх](\d+)', bracket_clean, re.IGNORECASE)
+
+        if size_match:
+            width, height = int(size_match.group(1)), int(size_match.group(2))
+            if width > height:
+                target_class = "img-single-figure-custom-landscape"
+            else:
+                target_class = "img-single-figure-custom-portrait"
+            custom_attrs_str = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
+
+        # Если размеров нет, проверяем стандартный флаг вертикали 'v'
+        elif '|v' in bracket_clean or 'v|' in bracket_clean or bracket_clean == 'fig|v':
+            target_class = "img-single-figure-portrait"
+
+        # Начисто вырезаем служебные маркеры fig, v и размеры из скрытой части для получения clean_alt
+        clean_alt = re.sub(r'\b(fig|v)\b|\d+[xх]\d+', '', inner_bracket, flags=re.IGNORECASE)
         clean_alt = re.sub(r'[\s|]+', ' ', clean_alt).strip()
 
-        # --- ШАГ 4: РАЗБОР ЖИВОГО ТЕКСТА ДЛЯ ПОДПИСИ ---
+        # --- ШАГ 4: РАЗБОР ЖИВОГО ТЕКСТА ДЛЯ ПОДПИСИ И ЗАЩИТА ALT ---
         outside_text = outside_content if outside_content else ""
 
-        # --- ШАГ 5: ВЫВОД ИСПРАВЛЕННЫХ ДАННЫХ В ЛОГ-СИСТЕМУ ---
+        # Если скрытый SEO alt пуст, но есть живая подпись — дублируем её в alt для поисковиков
+        if not clean_alt and outside_text:
+            clean_alt = outside_text
+
+        # --- ШАГ 5: ВЫВОД ОЧИЩЕННЫХ ДАННЫХ В ЛОГ-СИСТЕМУ ---
         print("\n" + "="*70)
         print("[FIG-LANDSCAPE-LOG] Найдена целевая ссылка на обработку:")
         print(f"  • Исходная строка: {match.group(0)}")
         print(f"  • Выбранный класс:       '{target_class}'")
         print(f"  • Скрытый alt (из {{}}):  '{clean_alt}'")
         print(f"  • Текст для подписи:      '{outside_text}'")
+        print(f"  • Кастомные атрибуты:     '{custom_attrs_str.strip()}'")
         print(f"  • Путь к медиафайлу:      '{img_url}'")
         print("-"*70)
 
-        # --- ШАГ 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
+        # --- ШAG 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
         figcaption_html = ""
         if outside_text:
             figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'
@@ -72,7 +89,7 @@ def process_single_figure_landscape(markdown_content):
         html_output = (
             f'<div class="img-single-figure">\n'
             f'    <figure class="img-figure">\n'
-            f'        <img class="{target_class}" alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
+            f'        <img class="{target_class}"{custom_attrs_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
             f'{figcaption_html}\n'
             f'    </figure>\n'
             f'</div>'

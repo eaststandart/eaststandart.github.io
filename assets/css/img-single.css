@@ -81,7 +81,7 @@
     }
 
     /* ==========================================================================
-       🛠️ 3А. КАСТОМНЫЕ ОДИНОЧКИ С РУЧНЫМ РАЗМЕРОМ (img-single-custom)
+       🛠️ 3А. КАСТОМНЫЕ ГОРИЗОНТАЛЬНЫЕ ОДИНОЧКИ (img-single-custom-landscape)
        ========================================================================= */
     .main-content p img.img-single-custom-landscape {
         
@@ -112,7 +112,7 @@
         /* [Ландшафт]: Выстраиваем по ландшафтной базовой ширине с пульта */
         @media (max-height: 500px) and (orientation: landscape) {
             &, &[data-src] {
-                display: block;
+                display: inline-block;
                 width: auto;
                 max-width: none;
                 height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
@@ -122,13 +122,13 @@
     }
 
 /* ==========================================================================
-       🛠️ 3Б. КАСТОМНЫЕ ОДИНОЧКИ С РУЧНЫМ РАЗМЕРОМ (img-single-custom)
+       🛠️ 3Б. КАСТОМНЫЕ ВЕРТИКАЛЬНЫЕ ОДИНОЧКИ (img-single-custom-portrait)
        ========================================================================= */
     .main-content p img.img-single-custom-portrait {
         
         /* [База]: ПК-режим и мобильный ландшафт наследуют фиксированные 209px высоты */
         &, &[data-src] {
-            display: block;
+            display: inline-block;
             width: auto;                    
             height: var(--media-pc-height);   
             max-width: 100%;
@@ -143,7 +143,7 @@
         /* [Портрет А]: Планшеты (Широкие экраны от 501px до 900px) — сжимаем аккуратно */
         @media (min-width: 501px) and (max-width: 900px) and (orientation: portrait) {
             &, &[data-src] {
-                display: block;
+                display: inline-block;
                 width: calc(var(--mobile-full-width) * var(--ratio-portrait));
                 max-width: none;
                 height: auto;

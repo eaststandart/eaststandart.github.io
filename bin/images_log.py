@@ -9,12 +9,22 @@
 """
 
 import re
+import inspect
 
 def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
     Использует логику группировки плотных строк из videos.py.
     """
+    # Автоматически вытаскиваем относительный путь к файлу из preprocess.py без изменения аргументов функции
+    file_rel_path = "Неизвестный файл"
+    try:
+        frame = inspect.currentframe().f_back
+        if 'file_rel_path' in frame.f_locals:
+            file_rel_path = frame.f_locals['file_rel_path']
+    except Exception:
+        pass
+
     # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
     code_vault = []
     
@@ -62,19 +72,27 @@ def process_markdown_images(markdown_content):
                 alt_content = match.group(1).strip()
                 img_url = match.group(2).strip()
                 
+                # СТРОГИЙ ТЕХНИЧЕСКИЙ ЛОГ С ИМЕНЕМ ФАЙЛА И ПУТЕМ
+                print(f"\n[IMAGES-DBG] ФАЙЛ: {file_rel_path}")
+                print(f"[IMAGES-DBG] ВХОД: {group_line}")
+                
                 # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
                 alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
                 
                 if not alt_content:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    img_html_simple = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                    print(f"[IMAGES-DBG] ВЫХОД:\n{img_html_simple}")
+                    processed_lines.append(img_html_simple)
                     continue
                     
                 parts = [p.strip() for p in alt_content.split('|') if p.strip()]
                 
                 if not parts:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    img_html_simple = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                    print(f"[IMAGES-DBG] ВЫХОД:\n{img_html_simple}")
+                    processed_lines.append(img_html_simple)
                     continue
                     
                 classes = []
@@ -102,7 +120,7 @@ def process_markdown_images(markdown_content):
                     dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
                     width, height = dimensions[0], dimensions[1]
                     
-                    # 🌟 Новая логика: сравниваем ширину и высоту
+                    # Новая логика: сравниваем ширину и высоту
                     if int(width) > int(height):
                         classes.append('img-single-custom-landscape')
                     else:
@@ -129,9 +147,12 @@ def process_markdown_images(markdown_content):
                 
                 if is_centered:
                     figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
-                    processed_lines.append(f'<figure class="figure-img">{img_html}{figcaption_html}</figure>')
+                    final_output = f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
                 else:
-                    processed_lines.append(img_html)
+                    final_output = img_html
+                    
+                print(f"[IMAGES-DBG] ВЫХОД:\n{final_output}")
+                processed_lines.append(final_output)
                     
         else:
             processed_lines.append(line)

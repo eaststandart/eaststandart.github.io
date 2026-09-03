@@ -5,9 +5,8 @@
 @about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Железно защищен от ложных срабатываний внутри строчного кода и бэктиков.
 @author TechLab
-@version 1.3
+@version 1.2
 """
 
 import re
@@ -16,19 +15,18 @@ def process_single_figure_landscape(markdown_content):
     """
     Ищет маркдаун-ссылки журнального типа со скобками {fig} 
     и преобразует их в независимые HTML-блоки figure.
-    Полностью игнорирует любые примеры, экранированные бэктиками.
     """
-    # 🛡️ ЗАЩИЩЕННЫЙ ПАТТЕРН:
-    # (?<!`)(?<!` )!\[ — Запрещает старт, если перед ![ стоит бэктик или бэктик с пробелом
-    # ([^`\]]*\{fig[^`\]]*) — Группа 1: Захватывает alt-зону, но строго запрещает бэктики ` внутри скобок []
-    # ([^`)]*) — Группа 2: Захватывает URL-зону, также намертво запрещая бэктики ` внутри скобок ()
-    pattern = r'(?<!`)(?<!` )!\[([^`\]]*\{fig[^`\]]*)\].*?\]\(([^`)]*)\)'
+    pattern = r'!\[(.*?)\]\((.*?)\)'
     
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
     def replacer(match):
         alt_content = match.group(1).strip()
         img_url = match.group(2).strip()
+
+        # Если это не наша новая целевая ссылка со скобками {fig}, возвращаем её без изменений
+        if '{fig' not in alt_content:
+            return match.group(0)
 
         # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА (|400) ---
         alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
@@ -83,7 +81,7 @@ def process_single_figure_landscape(markdown_content):
         print(f"  • Путь к медиафайлу:      '{img_url}'")
         print("-"*70)
 
-        # --- ШАГ 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
+        # --- ШAG 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
         figcaption_html = ""
         if outside_text:
             figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'

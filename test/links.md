@@ -4,6 +4,18 @@ title: Tест с преобразованием ссылок фото и вид
 permalink: /test/links/
 ---
 
+![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![текст](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![{текст}](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![v](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![{v}](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
+![{v}|текст](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+
 ### Одиночные картинки
 
 1-1 `!\[](url) и ![[путь]] `

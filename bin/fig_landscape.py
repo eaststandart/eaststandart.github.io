@@ -1,104 +1,68 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@script fig_landscape.py
-@about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
-@purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
-         и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-@author TechLab
-@version 1.2
-"""
-
 import re
 
 def process_single_figure_landscape(markdown_content):
-    """
-    Ищет маркдаун-ссылки журнального типа со скобками {fig} 
-    и преобразует их в независимые HTML-блоки figure.
-    """
-    pattern = r'!\[(.*?)\]\((.*?)\)'
+    lines = markdown_content.split('\n')
+    processed_lines = []
     
+    img_pattern = r'!\[(.*?)\]\((.*?)\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-
-    def replacer(match):
+    
+    for line in lines:
+        match = re.search(img_pattern, line)
+        if not match or 'fig' not in match.group(1):
+            processed_lines.append(line)
+            continue
+            
         alt_content = match.group(1).strip()
         img_url = match.group(2).strip()
-
-        # Если это не наша новая целевая ссылка со скобками {fig}, возвращаем её без изменений
-        if '{fig' not in alt_content:
-            return match.group(0)
-
-        # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА (|400) ---
-        alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
-
-        # --- ШАГ 2: ИЗОЛЯЦИЯ СОДЕРЖИМОГО ФИГУРНЫХ СКОБОК ---
-        inner_match = re.search(r'\{(fig.*?)\}', alt_content)
-        inner_bracket = inner_match.group(1).strip() if inner_match else ""
         
-        # Контент снаружи — это всё, что осталось после удаления фигурных скобок
-        outside_content = alt_content.replace(f"{{{inner_bracket}}}", "").strip("| ")
-
-        # --- ШАГ 3: ОПРЕДЕЛЕНИЕ КЛАССА И ГЕОМЕТРИИ ЗА 1 ШАГ ---
+        # ЛОГ ВХОДА СТРОКИ ПОСЛЕ PATHLINKS.PY
+        print(f"\n[FIG-CONVERT] ВХОД: {line.strip()}")
+        
+        # 1. Очистка хвоста
+        alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
+        
+        # 2. Разбивка по пайпам с очисткой от скобок {}
+        parts = [p.strip('{} ') for p in alt_content.split('|') if p.strip()]
+        
         target_class = "img-single-figure-landscape"
-        custom_attrs_str = ""
-
-        bracket_clean = inner_bracket.lower().replace(' ', '')
-
-        # Проверяем кастомный размер (например, 320x405) по аналогии с images.py
-        size_match = re.search(r'(\d+)[xх](\d+)', bracket_clean, re.IGNORECASE)
-
-        if size_match:
-            width, height = int(size_match.group(1)), int(size_match.group(2))
+        custom_attrs = ""
+        
+        if parts and parts[0].lower() == 'fig':
+            parts.pop(0)
+            
+        if parts and parts[0].lower() == 'v':
+            target_class = "img-single-figure-portrait"
+            parts.pop(0)
+            
+        elif parts and re.match(r'^\d+[xх]\d+$', parts[0], re.IGNORECASE):
+            size_match = re.split(r'[xх]', parts[0], flags=re.IGNORECASE)
+            width, height = int(size_match[0]), int(size_match[1])
             if width > height:
                 target_class = "img-single-figure-custom-landscape"
             else:
                 target_class = "img-single-figure-custom-portrait"
-            custom_attrs_str = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
-
-        # Если размеров нет, проверяем стандартный флаг вертикали 'v'
-        elif '|v' in bracket_clean or 'v|' in bracket_clean or bracket_clean == 'fig|v':
-            target_class = "img-single-figure-portrait"
-
-        # Начисто вырезаем служебные маркеры fig, v и размеры из скрытой части для получения clean_alt
-        clean_alt = re.sub(r'\b(fig|v)\b|\d+[xх]\d+', '', inner_bracket, flags=re.IGNORECASE)
-        clean_alt = re.sub(r'[\s|]+', ' ', clean_alt).strip()
-
-        # --- ШАГ 4: РАЗБОР ЖИВОГО ТЕКСТА ДЛЯ ПОДПИСИ И ЗАЩИТА ALT ---
-        outside_text = outside_content if outside_content else ""
-
-        # Если скрытый SEO alt пуст, но есть живая подпись — дублируем её в alt для поисковиков
-        if not clean_alt and outside_text:
-            clean_alt = outside_text
-
-        # --- ШАГ 5: ВЫВОД ОЧИЩЕННЫХ ДАННЫХ В ЛОГ-СИСТЕМУ ---
-        print("\n" + "="*70)
-        print("[FIG-LANDSCAPE-LOG] Найдена целевая ссылка на обработку:")
-        print(f"  • Исходная строка: {match.group(0)}")
-        print(f"  • Выбранный класс:       '{target_class}'")
-        print(f"  • Скрытый alt (из {{}}):  '{clean_alt}'")
-        print(f"  • Текст для подписи:      '{outside_text}'")
-        print(f"  • Кастомные атрибуты:     '{custom_attrs_str.strip()}'")
-        print(f"  • Путь к медиафайлу:      '{img_url}'")
-        print("-"*70)
-
-        # --- ШAG 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
+            custom_attrs = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
+            parts.pop(0)
+            
+        clean_text = " | ".join(parts) if parts else ""
+        
         figcaption_html = ""
-        if outside_text:
-            figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'
-
+        if clean_text:
+            figcaption_html = f'\n        <figcaption class="img-figcaption">{clean_text}</figcaption>'
+            
         html_output = (
             f'<div class="img-single-figure">\n'
             f'    <figure class="img-figure">\n'
-            f'        <img class="{target_class}"{custom_attrs_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
+            f'        <img class="{target_class}"{custom_attrs} alt="{clean_text}" src="{transparent_pixel}" data-src="{img_url}">'
             f'{figcaption_html}\n'
             f'    </figure>\n'
             f'</div>'
         )
-
-        print("[FIG-LANDSCAPE-LOG] Успешная трансформация в HTML:")
-        print(html_output)
-        print("="*70)
-
-        return html_output
-
-    return re.sub(pattern, replacer, markdown_content)
+        
+        # ЛОГ ВЫХOДА ГОТОВОГО HTML
+        print(f"[FIG-CONVERT] ВЫХOД:\n{html_output}")
+        
+        processed_lines.append(html_output)
+        
+    return '\n'.join(processed_lines)

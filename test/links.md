@@ -6,7 +6,7 @@ permalink: /test/links/
 
 ![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-![текст](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![|текст](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
 ![{текст}](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
@@ -14,7 +14,7 @@ permalink: /test/links/
 
 ![{v}](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
-![{v}|текст](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![{v|текст 1}|текст2](../faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
 ### Одиночные картинки
 

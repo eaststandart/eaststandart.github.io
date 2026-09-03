@@ -55,8 +55,8 @@ permalink: /test/row-photo/
 
 3-2 fig горизонтальные 
 
-![{fig}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-![{fig}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
 3-3 Простые горизонтальные c параметром v
 
@@ -84,5 +84,5 @@ permalink: /test/row-photo/
 
 3-4 fig горизонтальные c параметром v
 
-![{fig}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-![{fig|v}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+![fig](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![fig|v](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)

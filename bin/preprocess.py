@@ -119,7 +119,7 @@ def process_single_file(file_path, root_dir):
         markdown_content = process_markdown_paths(markdown_content, file_path)
         markdown_content = process_single_figure_landscape(markdown_content)
         # markdown_content = process_markdown_videos(markdown_content)
-        markdown_content = process_markdown_images(markdown_content)
+        # markdown_content = process_markdown_images(markdown_content)
         
         # ШАГ 4: ДЕАКТИВАЦИЯ СКВОЗНОГО ГЛОБАЛЬНОГО СЕЙФА
         if global_vault:

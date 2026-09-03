@@ -3,10 +3,11 @@
 """
 @script preprocess.py
 @about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
-@purpose Запускает сквозной глобальный сейф исключений с наглядным логированием,
-         освобождая изолированные модули от избыточной локальной заморозки.
+@purpose Запускает СКВOЗНОЙ ТОЧЕЧНЫЙ сейф исключений с наглядным логированием.
+         Изолирует в бэктиках только опасные медиа-ссылки (с fig или расширениями),
+         пропуская обычный код без лишней нагрузки на процессор.
 @author TechLab
-@version 2.0
+@version 2.1
 """
 
 import sys
@@ -26,16 +27,26 @@ from images import process_markdown_images
 
 def global_freeze_content(markdown_content, file_rel_path):
     """
-    Находит все блоки исключений, выводит наглядный лог с содержимым
-    и заменяет их на безопасные глобальные маркеры.
+    Сканирует кодовые блоки и комментарии, точечно замораживая только те элементы,
+    внутри которых обнаружен маркер fig или медиа-расширения сайтов.
     """
     global_vault = []
     
-    def freezer(match, block_type):
+    def freezer(match, block_type, force_freeze=False):
         raw_text = match.group(0)
+        
+        # ТОЧЕЧНЫЙ ФИЛЬТР: Если это код, проверяем, есть ли внутри медиа-маркеры
+        if not force_freeze:
+            has_fig = 'fig' in raw_text.lower()
+            has_media = re.search(r'\.(webp|jpg|jpeg|png|gif|svg|webm|mp4)\b', raw_text, re.IGNORECASE)
+            
+            # Если в коде нет ни fig, ни расширений картинок/видео — этот код БЕЗОПАСЕН. Пропускаем.
+            if not (has_fig or has_media):
+                return raw_text
+
         global_vault.append(raw_text)
         
-        # Подготавливаем наглядное превью содержимого (первые 70 символов в одну строку)
+        # Подготавливаем превью содержимого (первые 70 символов)
         preview = raw_text.replace('\n', ' ')
         if len(preview) > 70:
             preview = preview[:67] + "..."
@@ -43,28 +54,27 @@ def global_freeze_content(markdown_content, file_rel_path):
         print(f"  📦 [GLOBAL-FREEZE-LOG] Изолирован {block_type}: `{preview}` | Файл: {file_rel_path}")
         return f'==GLOBAL_VAULT_BLOCK_{len(global_vault)-1}=='
 
-    # 1. Многострочные блоки кода ``` ... ```
+    # 1. Liquid-комментарии и HTML-комментарии прячем ВСЕГДА (force_freeze=True), они короткие и критичные
     temporary_content = re.sub(
-        r'```[\s\S]*?```', 
-        lambda m: freezer(m, "блок кода (multi)"), 
+        r'{%\s*comment\s*%}[\s\S]*?{%\s*endcomment\s*%}', 
+        lambda m: freezer(m, "Liquid-коммент  ", force_freeze=True), 
         markdown_content
     )
     
-    # 2. Liquid-комментарии {% comment %} ... {% endcomment %}
-    temporary_content = re.sub(
-        r'{%\s*comment\s*%}[\s\S]*?{%\s*endcomment\s*%}', 
-        lambda m: freezer(m, "Liquid-коммент  "), 
-        temporary_content
-    )
-    
-    # 3. HTML-комментарии <!-- ... -->
     temporary_content = re.sub(
         r'<!--[\s\S]*?-->', 
-        lambda m: freezer(m, "HTML-коммент    "), 
+        lambda m: freezer(m, "HTML-коммент    ", force_freeze=True), 
         temporary_content
     )
     
-    # 4. Строчный код ` ... ` (от 1 до 3 бэктиков)
+    # 2. Многострочные блоки кода ``` ... ``` (Применяем точечный фильтр)
+    temporary_content = re.sub(
+        r'```[\s\S]*?```', 
+        lambda m: freezer(m, "блок кода (multi)"), 
+        temporary_content
+    )
+    
+    # 3. Строчный код ` ... ` (Применяем точечный фильтр)
     temporary_content = re.sub(
         r'`{1,3}[^`\n]+?`{1,3}', 
         lambda m: freezer(m, "строчный код    "), 
@@ -75,12 +85,9 @@ def global_freeze_content(markdown_content, file_rel_path):
 
 def global_unfreeze_content(markdown_content, global_vault, file_rel_path):
     """
-    Возвращает все изолированные блоки из глобального сейфа на свои места,
-    выводя прозрачный отчет о восстановлении.
+    Возвращает все изолированные точечные блоки из глобального сейфа на свои места.
     """
     temporary_content = markdown_content
-    
-    # Разворачиваем в обратном порядке, чтобы избежать смещения индексов
     for idx in reversed(range(len(global_vault))):
         raw_text = global_vault[idx]
         marker = f'==GLOBAL_VAULT_BLOCK_{idx}=='
@@ -96,16 +103,18 @@ def global_unfreeze_content(markdown_content, global_vault, file_rel_path):
     return temporary_content
 
 def process_single_file(file_path, root_dir):
-    """Открывает, пропускает через сквозной сейф и последовательно обрабатывает через модули один .md файл."""
+    """Открывает, пропускает через точечный сейф и последовательно обрабатывает через модули один .md файл."""
     file_rel_path = os.path.relpath(file_path, root_dir)
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             markdown_content = f.read()
             
-        print(f"\n[PREPROCESS] >>> Начало обработки файла: {file_rel_path}")
-            
-        # ШАГ 0: АКТИВАЦИЯ СКВОЗНОГО ГЛОБАЛЬНОГО СЕЙФА
+        # ШАГ 0: АКТИВАЦИЯ ТОЧЕЧНОГО СКВОЗНОГО СЕЙФА
         markdown_content, global_vault = global_freeze_content(markdown_content, file_rel_path)
+            
+        # Если в сейф что-то попало, выводим заголовок файла для логов
+        if global_vault:
+            print(f"\n[PREPROCESS] >>> Начало обработки файла: {file_rel_path}")
             
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
         markdown_content = process_markdown_paths(markdown_content, file_path)
@@ -122,11 +131,9 @@ def process_single_file(file_path, root_dir):
         # ШАГ 4: ДЕАКТИВАЦИЯ СКВОЗНОГО ГЛОБАЛЬНОГО СЕЙФА
         if global_vault:
             markdown_content = global_unfreeze_content(markdown_content, global_vault, file_rel_path)
-            print(f"[PREPROCESS] Успешно синхронизировано блоков в сейфе: {len(global_vault)}")
-        
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(markdown_content)
-        print(f"[SUCCESS] Файл полностью сохранен на диск: {file_rel_path}")
+            print(f"[PREPROCESS] Успешно восстановлено блоков из сейфа: {len(global_vault)}")
+            print(f"[SUCCESS] Файл полностью сохранен на диск: {file_rel_path}")
+            
     except Exception as e:
         print(f"[ERROR] Не удалось обработать файл {file_rel_path}: {e}")
 
@@ -134,7 +141,7 @@ def main():
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
     if len(sys.argv) > 1:
-        file_path = sys.argv[1]
+        file_path = sys.argv
         if os.path.isfile(file_path):
             process_single_file(file_path, root_dir)
         else:

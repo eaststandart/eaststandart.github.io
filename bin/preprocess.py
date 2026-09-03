@@ -4,9 +4,9 @@
 @script preprocess.py
 @about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
 @purpose Запускает СКВOЗНОЙ ТОЧЕЧНЫЙ сейф исключений с наглядным логированием.
-         Исправлены имена импорта оригинальных модулей во избежание сбоя конвейера.
+         Строго восстановлены оригинальные имена функций и все этапы конвейера.
 @author TechLab
-@version 2.3
+@version 2.4
 """
 
 import sys
@@ -18,11 +18,11 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-# ИСПРАВЛЕНО: Импортируем модули строго по их оригинальным системным именам
+# СТРОГО ОРИГИНАЛЬНЫЕ ИМЕНА ИМПОРТА (Без изменений)
 from pathlinks import process_markdown_paths
 from fig_landscape import process_single_figure_landscape
-from videos import process_videos
-from images import process_images
+from videos import process_markdown_videos
+from images import process_markdown_images
 
 def global_freeze_content(markdown_content, file_rel_path):
     """
@@ -87,13 +87,11 @@ def process_single_file(file_path, root_dir):
         if global_vault:
             print(f"\n[PREPROCESS] >>> Начало обработки файла: {file_rel_path}")
             
-        # ИСПРАВЛЕНО: Вызовы оригинальных стабильных функций из цепочки
+        # СТРОГО ОРИГИНАЛЬНАЯ НАТИВНАЯ ЦЕПОЧКА ВЫЗOВОВ (Без изменений и комментариев)
         markdown_content = process_markdown_paths(markdown_content, file_path)
         markdown_content = process_single_figure_landscape(markdown_content)
-        markdown_content = process_videos(markdown_content)
-        
-        # ИСПРАВЛЕНО: Обычные картинки пока оставляем закомментированными по твоему требованию для чистоты теста
-        # markdown_content = process_images(markdown_content)
+        #markdown_content = process_markdown_videos(markdown_content)
+        #markdown_content = process_markdown_images(markdown_content)
         
         if global_vault:
             markdown_content = global_unfreeze_content(markdown_content, global_vault, file_rel_path)

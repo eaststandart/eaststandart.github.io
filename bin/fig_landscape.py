@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 @script fig_landscape.py
-@about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
+@about Полностью облегченный стабильный модуль для обработки одиночных журнальных блоков.
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Изолирует строчный код для предотвращения ложных срабатываний.
+         Очищен от локальных сейфов, работает в стерильной среде глобального препроцессинга.
 @author TechLab
-@version 1.3
+@version 1.6-final
 """
 
 import re
@@ -16,22 +16,10 @@ def process_single_figure_landscape(markdown_content):
     """
     Ищет маркдаун-ссылки журнального типа со скобками {fig} 
     и преобразует их в независимые HTML-блоки figure.
-    Полностью игнорирует ссылки внутри строчного кода.
     """
-    # --- ЭТАП 1: ИЗОЛЯЦИЯ СТРОЧНОГО КОДА ---
-    code_vault = []
-    
-    def code_freezer(match):
-        code_vault.append(match.group(0))
-        # Фиксируем в лог факт нахождения и изоляции блока кода
-        print(f"[FIG-SKIP-LOG] Заморожен блок кода: {match.group(0)}")
-        return f'==FIG_CODE_BLOCK_{len(code_vault)-1}=='
-
-    # Находим и временно прячем любые элементы строчного кода `...`
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, markdown_content)
-
-    # --- ЭТАП 2: ОБРАБОТКА МАРКДАУН ССЫЛОК ---
+    # Твой родной, жадный и на 100% рабочий паттерн
     pattern = r'!\[(.*?)\]\((.*?)\)'
+    
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
     def replacer(match):
@@ -115,11 +103,4 @@ def process_single_figure_landscape(markdown_content):
 
         return html_output
 
-    # Запускаем замену на очищенном от строчного кода контенте
-    temporary_content = re.sub(pattern, replacer, temporary_content)
-
-    # --- ЭТАП 3: РАЗМОРОЗКА СТРОЧНОГО КОДА ---
-    for idx, original_code in enumerate(code_vault):
-        temporary_content = temporary_content.replace(f'==FIG_CODE_BLOCK_{idx}==', original_code)
-        
-    return temporary_content
+    return re.sub(pattern, replacer, markdown_content)

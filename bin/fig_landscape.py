@@ -1,55 +1,58 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@script fig_landscape.py
-@about Изолированный тестовый модуль для обработки одиночных горизонтальных журнальных блоков.
-@purpose Находит новые ссылки вида ![{fig|alt}|text] с поддержкой обсидиановых хвостов,
-         выводит подробные логи трансформации и собирает утвержденную HTML-структуру.
-@author TechLab
-@version 1.0
-"""
-
 import re
 
 def process_single_figure_landscape(markdown_content):
     """
-    Ищет маркдаун-ссылки журнального типа и преобразует их в HTML-блоки.
-    Полностью изолирован от старого кода.
+    Изолированная обработка одиночных горизонтальных журнальных блоков 
+    с поддержкой фигурных скобок по аналогии с простыми картинками.
     """
-    # 🎯 УЛЬТИМАТИВНЫЙ ПАТТЕРН:
-    # 1. !\[\{fig — Ищет жесткое начало ![{fig
-    # 2. ([^}]*) — Группа 1: Всё, что внутри скобок после fig (например, '|скрытый alt')
-    # 3. \}(?:\|([^\]]*))? — Находит } и опционально захватывает Группу 2: Всё, что после скобки до конца знака ]
-    # 4. \(([^)]*)\) — Группа 3: Вытаскивает чистый URL из круглых скобок
-    pattern = r'!\[\{fig([^}]*)\}(?:\|([^\]]*))?\]\(([^)]*)\)'
+    # Паттерн ищет открытые квадратные скобки, внутри которых обязательно есть {fig...}
+    pattern = r'!\[([^\]]*\{fig[^\]]*)\].*?\]\(([^)]*)\)'
+    
+    # Но мы применим более точный и чистый вариант, который сразу делит на контент и URL:
+    pattern = r'!\[(.*?)\]\((.*?)\)'
     
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
     def replacer(match):
-        inner_content = match.group(1).strip()  # Служебная часть внутри {}
-        outside_text = match.group(2).strip() if match.group(2) else ""   # Пользовательский текст
-        img_url = match.group(3).strip()
+        alt_content = match.group(1).strip()
+        img_url = match.group(2).strip()
 
-        # --- ШАГ 1: БЕЗОПАСНАЯ ОЧИСТКА ОБСИДИАНОВЫХ ХВОСТОВ ШИРИНЫ (|400) ---
-        # Если в самом конце внешнего текста затесался хвост ширины, намертво стираем его
-        outside_text = re.sub(r'\|\s*\d+\s*$', '', outside_text).strip()
+        # Проверяем, является ли эта картинка нашей целевой одиночной {fig}
+        if '{fig' not in alt_content:
+            return match.group(0) # Если это не {fig}, возвращаем как было без изменений
 
-        # --- ШАГ 2: РАЗБОР СКРЫТОГО SEO ALT-ТЕКСТА ---
-        # Вытаскиваем alt text, если он передан внутри фигурных скобок через пайп
-        clean_alt = ""
-        if inner_content.startswith('|'):
-            clean_alt = inner_content[1:].strip()
+        # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА (|400) ---
+        alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
 
-        # --- ШАГ 3: ФИКСАЦИЯ ДАННЫХ В ЛОГ-СИСТЕМУ ---
+        # --- ШАГ 2: ИЗОЛЯЦИЯ СОДЕРЖИМОГО ФИГУРНЫХ СКОБОК ---
+        # Вытаскиваем то, что внутри скобок {}, и то, что осталось снаружи
+        inner_match = re.search(r'\{(fig.*?)\}', alt_content)
+        
+        inner_bracket = inner_match.group(1).strip() if inner_match else ""
+        # К контенту снаружи относится всё, что осталось после удаления фигурных скобок и лишних пайпов
+        outside_content = alt_content.replace(f"{{{inner_bracket}}}", "").strip("| ")
+
+        # --- ШАГ 3: РАЗБОР СКРЫТОГО SEO ALT-ТЕКСТА ---
+        # Убираем само слово fig из внутренней части
+        inner_parts = [p.strip() for p in inner_bracket.split('|') if p.strip()]
+        if inner_parts and inner_parts[0] == 'fig':
+            inner_parts.pop(0) # Удаляем служебное слово 'fig'
+        
+        clean_alt = " | ".join(inner_parts) if inner_parts else ""
+
+        # --- ШАГ 4: РАЗБОР ТЕКСТА ДЛЯ ПОДПИСИ ---
+        outside_text = outside_content if outside_content else ""
+
+        # --- ШАГ 5: ВЫВОД ИСПРАВЛЕННЫХ ДАННЫХ В ЛОГ-СИСТЕМУ ---
         print("\n" + "="*70)
         print("[FIG-LANDSCAPE-LOG] Найдена целевая ссылка на обработку:")
         print(f"  • Исходная строка: {match.group(0)}")
-        print(f"  • Служебный раздел {{fig}}: '{inner_content}' ➡️ Скрытый alt: '{clean_alt}'")
+        print(f"  • Скрытый alt (из {{}}):  '{clean_alt}'")
         print(f"  • Текст для подписи:      '{outside_text}'")
         print(f"  • Путь к медиафайлу:      '{img_url}'")
         print("-"*70)
 
-        # --- ШАГ 4: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
+        # --- ШАГ 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
         figcaption_html = ""
         if outside_text:
             figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'
@@ -70,27 +73,3 @@ def process_single_figure_landscape(markdown_content):
         return html_output
 
     return re.sub(pattern, replacer, markdown_content)
-
-
-# ==========================================================================
-# БЛОК ЛОКАЛЬНОГО ТЕСТИРОВАНИЯ (ЭМУЛЯЦИЯ СТАТЬИ ИЗ OBSIDIAN)
-# ==========================================================================
-if __name__ == '__main__':
-    # Входной тестовый текст с тремя разными вариантами написания и хвостами ширины
-    test_markdown = """
-# Тестовая статья Obsidian
-
-Привет! Вот пример чистой журнальной горизонтальной картинки без текстов:
-![{fig}](/assets/photo1.webp)
-
-А вот вариант со скрытым SEO-текстом и текстом для людей, плюс хвост ширины Обсидиана 400:
-![{fig|Скрытый SEO-текст}|Живая подпись для людей|400](/assets/photo2.jpg)
-
-И еще один вариант без SEO, но с подписью читателям и хвостом 300:
-![{fig}|Просто красивая подпись кадра|300](/assets/photo3.png)
-
-Конец теста.
-    """
-
-    print("--- ЗАПУСК ИЗОЛИРОВАННОГО ТЕСТА МОДУЛЯ ---")
-    final_html = process_single_figure_landscape(test_markdown)

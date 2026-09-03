@@ -8,6 +8,7 @@ permalink: /test/links/
 
 ![{fig|503x152|alt text}|Текст FIGCUPTION|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![{fig|503x152}|Текст FIGCUPTION|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![{fig|152x503}|Текст FIGCUPTION|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 #### Одиночные картинки
 

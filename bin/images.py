@@ -3,15 +3,14 @@
 """
 @module images
 @about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose Автоматически преобразует маркдаун-ссылки в HTML-теги, группирует их в ряды
-         и выводит прозрачные технические логи путей и контента для отладки.
+@purpose 
 @author TechLab
-@version 1.1-debug
+@version 1.0
 """
 
 import re
 
-def process_markdown_images(markdown_content, file_rel_path):
+def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
     Использует логику группировки плотных строк из videos.py.
@@ -63,27 +62,19 @@ def process_markdown_images(markdown_content, file_rel_path):
                 alt_content = match.group(1).strip()
                 img_url = match.group(2).strip()
                 
-                # 🛠️ [ОТЛАДКА] ЛОГ ПУТИ К ФАЙЛУ И ВХОДЯЩЕЙ СТРОКИ ИЗ КОНВЕЙЕРА
-                print(f"\n[IMAGES-DBG] ФАЙЛ: {file_rel_path}")
-                print(f"[IMAGES-DBG] ВХОД: {group_line}")
-                
                 # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
                 alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
                 
                 if not alt_content:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    output_html = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                    print(f"[IMAGES-DBG] ВЫХОД:\n{output_html}")
-                    processed_lines.append(output_html)
+                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
                     continue
                     
                 parts = [p.strip() for p in alt_content.split('|') if p.strip()]
                 
                 if not parts:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    output_html = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
-                    print(f"[IMAGES-DBG] ВЫХОД:\n{output_html}")
-                    processed_lines.append(output_html)
+                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
                     continue
                     
                 classes = []
@@ -111,7 +102,7 @@ def process_markdown_images(markdown_content, file_rel_path):
                     dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
                     width, height = dimensions[0], dimensions[1]
                     
-                    # Логика: сравниваем ширину и высоту
+                    # 🌟 Новая логика: сравниваем ширину и высоту
                     if int(width) > int(height):
                         classes.append('img-single-custom-landscape')
                     else:
@@ -138,13 +129,9 @@ def process_markdown_images(markdown_content, file_rel_path):
                 
                 if is_centered:
                     figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
-                    final_output = f'<figure class="figure-img">{img_html}{figcaption_html}</figure>'
+                    processed_lines.append(f'<figure class="figure-img">{img_html}{figcaption_html}</figure>')
                 else:
-                    final_output = img_html
-                    
-                # 🛠️ [ОТЛАДКА] ЛОГ РЕЗУЛЬТАТА ТРАНСФОРМАЦИИ
-                print(f"[IMAGES-DBG] ВЫХОД:\n{final_output}")
-                processed_lines.append(final_output)
+                    processed_lines.append(img_html)
                     
         else:
             processed_lines.append(line)

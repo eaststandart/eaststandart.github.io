@@ -38,10 +38,6 @@ permalink: /test/figure-single/
 
 ![{fig|v|alt text}|Текст подписи](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
-2-4. `![{fig|alt text|v}|Текст подписи|300](url)`
-
-![{fig|alt text|v}|Текст подписи|300](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
-
 
 #### 🛠️ Группа 3: Кастомные размеры (Сравнение сторон за 1 шаг)
 

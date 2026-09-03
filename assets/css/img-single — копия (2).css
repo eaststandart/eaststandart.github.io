@@ -140,19 +140,6 @@
             margin: 0;
         }
 
-        /* [Ландшафт]: Высота зеркально равна ширине ландшафтного соседа */
-        @media (max-height: 500px) and (orientation: landscape) {
-            &, &[data-src] {
-                display: inline-block;
-                width: auto;
-                max-width: none;
-                height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
-                max-height: var(--media-pc-height);
-            }
-        }
-
-/*
-
         /* [Портрет А]: Планшеты (Широкие экраны от 501px до 900px) — сжимаем аккуратно */
         @media (min-width: 501px) and (max-width: 900px) and (orientation: portrait) {
             &, &[data-src] {
@@ -174,9 +161,6 @@
                 max-height: none;
             }
         }
-
-*/
-
     }
 
 }

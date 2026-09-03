@@ -5,30 +5,30 @@
 @about Построчный стабильный модуль для обработки одиночных журнальных блоков.
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Строго ориентирован на порядок параметров внутри фигурных скобок.
+         Работает строго построчно по аналогии с оригинальным images.py.
 @author TechLab
-@version 2.0
+@version 1.8
 """
 
 import re
 
 def process_single_figure_landscape(markdown_content):
     """
-    Обрабатывает контент строго построчно по аналогии с images.py.
-    Реагирует только на новые ссылки, начинающиеся с ![{fig.
+    Обрабатывает контент строго построчно, исключая видеофайлы
+    по аналогии с оригинальным images.py.
     """
     lines = markdown_content.split('\n')
     processed_lines = []
     
-    # Строгий оригинальный паттерн из images.py для фильтрации картинок
+    # СТРОГО ОРИГИНАЛЬНЫЙ ПАТТЕРН ИЗ IMAGES.PY (Фильтрация только картинок)
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
     for line in lines:
         line_stripped = line.strip()
         
-        # СТРОГИЙ ФИЛЬТР: Реагируем только на те ссылки, которые содержат маркер ![{fig
-        if '![{fig' not in line_stripped.lower():
+        # Если в строке нет маркера fig, пропускаем её без изменений
+        if 'fig' not in line_stripped.lower():
             processed_lines.append(line)
             continue
             
@@ -44,7 +44,7 @@ def process_single_figure_landscape(markdown_content):
         # ЛОГ ВХОДА СТРОКИ ПОСЛЕ PATHLINKS.PY
         print(f"\n[FIG-CONVERT] ВХОД: {line_stripped}")
         
-        # 1. Очистка хвоста ширины Obsidian
+        # 1. Очистка хвоста
         alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
         
         # 2. Разбивка по пайпам с очисткой от скобок {} и пробелов
@@ -53,11 +53,9 @@ def process_single_figure_landscape(markdown_content):
         target_class = "img-single-figure-landscape"
         custom_attrs = ""
         
-        # Шаг А: Первым параметром всегда идет и удаляется 'fig'
         if parts and parts[0].lower() == 'fig':
             parts.pop(0)
             
-        # Шаг Б: Проверяем второй параметр (флаг вертикали 'v' или размеры)
         if parts and parts[0].lower() == 'v':
             target_class = "img-single-figure-portrait"
             parts.pop(0)
@@ -72,7 +70,6 @@ def process_single_figure_landscape(markdown_content):
             custom_attrs = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
             parts.pop(0)
             
-        # Сборка оставшегося чистого текста (скрытый alt или живая подпись)
         clean_text = " | ".join(parts) if parts else ""
         
         figcaption_html = ""

@@ -39,7 +39,7 @@ def process_single_file(file_path):
         # markdown_content = process_markdown_videos(markdown_content)
             
         # ЭТАП 3: Обработка геометрии оставшихся картинок через images.py
-         markdown_content = process_markdown_images(markdown_content)
+        markdown_content = process_markdown_images(markdown_content)
         
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(markdown_content)

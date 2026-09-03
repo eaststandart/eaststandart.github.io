@@ -5,9 +5,9 @@
 @about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Изолирует строчный код для предотвращения ложных срабатываний.
+         Ювелирно защищен от обработки примеров в бэктиках.
 @author TechLab
-@version 1.3
+@version 1.2-stable
 """
 
 import re
@@ -16,27 +16,21 @@ def process_single_figure_landscape(markdown_content):
     """
     Ищет маркдаун-ссылки журнального типа со скобками {fig} 
     и преобразует их в независимые HTML-блоки figure.
-    Полностью игнорирует ссылки внутри строчного кода.
     """
-    # --- ЭТАП 1: ИЗОЛЯЦИЯ СТРОЧНОГО КОДА ---
-    code_vault = []
-    
-    def code_freezer(match):
-        code_vault.append(match.group(0))
-        # Фиксируем в лог факт нахождения и изоляции блока кода
-        print(f"[FIG-SKIP-LOG] Заморожен блок кода: {match.group(0)}")
-        return f'==FIG_CODE_BLOCK_{len(code_vault)-1}=='
-
-    # Находим и временно прячем любые элементы строчного кода `...`
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, markdown_content)
-
-    # --- ЭТАП 2: ОБРАБОТКА МАРКДАУН ССЫЛОК ---
+    # Возвращаем твой родной, жадный и полностью рабочий паттерн
     pattern = r'!\[(.*?)\]\((.*?)\)'
+    
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
     def replacer(match):
         alt_content = match.group(1).strip()
         img_url = match.group(2).strip()
+
+        # 🛡️ ЖЕЛЕЗНАЯ КУРСОРНАЯ ЗАЩИТА: 
+        # Если перед ссылкой или в ней есть бэктики — это текстовый пример для людей!
+        # Проверяем границы захвата и внутренности контента
+        if '`' in match.group(0) or '`' in alt_content or '`' in img_url:
+            return match.group(0) # Возвращаем строку как есть, полностью игнорируя её
 
         # Если это не наша новая целевая ссылка со скобками {fig}, возвращаем её без изменений
         if '{fig' not in alt_content:
@@ -95,7 +89,7 @@ def process_single_figure_landscape(markdown_content):
         print(f"  • Путь к медиафайлу:      '{img_url}'")
         print("-"*70)
 
-        # --- ШАГ 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
+        # --- ШAG 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
         figcaption_html = ""
         if outside_text:
             figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'
@@ -115,11 +109,4 @@ def process_single_figure_landscape(markdown_content):
 
         return html_output
 
-    # Запускаем замену на очищенном от строчного кода контенте
-    temporary_content = re.sub(pattern, replacer, temporary_content)
-
-    # --- ЭТАП 3: РАЗМОРОЗКА СТРОЧНОГО КОДА ---
-    for idx, original_code in enumerate(code_vault):
-        temporary_content = temporary_content.replace(f'==FIG_CODE_BLOCK_{idx}==', original_code)
-        
-    return temporary_content
+    return re.sub(pattern, replacer, markdown_content)

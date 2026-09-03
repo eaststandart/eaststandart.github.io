@@ -5,9 +5,9 @@
 @about Полный независимый модуль для обработки одиночных журнальных блоков (Landscape / Portrait / Custom).
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Железно защищен от обработки внутри кода (```), HTML и Liquid комментариев.
+         Железно защищен от ложных срабатываний внутри строчного кода и бэктиков.
 @author TechLab
-@version 1.4
+@version 1.3
 """
 
 import re
@@ -16,29 +16,14 @@ def process_single_figure_landscape(markdown_content):
     """
     Ищет маркдаун-ссылки журнального типа со скобками {fig} 
     и преобразует их в независимые HTML-блоки figure.
-    Полностью игнорирует закомментированные и кодовые блоки.
+    Полностью игнорирует любые примеры, экранированные бэктиками.
     """
-    # 🔒 ЭТАП А: ЖЕЛЕЗНЫЙ СЕЙФ (Замораживаем всё, что нельзя трогать)
-    vault = []
+    # 🛡️ ЗАЩИЩЕННЫЙ ПАТТЕРН:
+    # (?<!`)(?<!` )!\[ — Запрещает старт, если перед ![ стоит бэктик или бэктик с пробелом
+    # ([^`\]]*\{fig[^`\]]*) — Группа 1: Захватывает alt-зону, но строго запрещает бэктики ` внутри скобок []
+    # ([^`)]*) — Группа 2: Захватывает URL-зону, также намертво запрещая бэктики ` внутри скобок ()
+    pattern = r'(?<!`)(?<!` )!\[([^`\]]*\{fig[^`\]]*)\].*?\]\(([^`)]*)\)'
     
-    def freezer(match):
-        vault.append(match.group(0))
-        return f'==FIG_VAULT_BLOCK_{len(vault)-1}=='
-
-    # 1. Прячем многострочные блоки кода ``` ... ```
-    temporary_content = re.sub(r'```[\s\S]*?```', freezer, markdown_content)
-    
-    # 2. Прячем Liquid-комментарии {% comment %} ... {% endcomment %}
-    temporary_content = re.sub(r'{%\s*comment\s*%}[\s\S]*?{%\s*endcomment\s*%}', freezer, temporary_content)
-    
-    # 3. Прячем HTML-комментарии <!-- ... -->
-    temporary_content = re.sub(r'<!--[\s\S]*?-->', freezer, temporary_content)
-    
-    # 4. Прячем строчный код ` ... `
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', freezer, temporary_content)
-
-    # 🎯 ЭТАП Б: ОБРАБОТКА ЦЕЛЕВЫХ ССЫЛОК
-    pattern = r'!\[([^\]]*\{fig[^\]]*)\].*?\]\(([^)]*)\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
     def replacer(match):
@@ -52,6 +37,7 @@ def process_single_figure_landscape(markdown_content):
         inner_match = re.search(r'\{(fig.*?)\}', alt_content)
         inner_bracket = inner_match.group(1).strip() if inner_match else ""
         
+        # Контент снаружи — это всё, что осталось после удаления фигурных скобок
         outside_content = alt_content.replace(f"{{{inner_bracket}}}", "").strip("| ")
 
         # --- ШАГ 3: ОПРЕДЕЛЕНИЕ КЛАССА И ГЕОМЕТРИИ ЗА 1 ШАГ ---
@@ -60,6 +46,7 @@ def process_single_figure_landscape(markdown_content):
 
         bracket_clean = inner_bracket.lower().replace(' ', '')
 
+        # Проверяем кастомный размер (например, 320x405) по аналогии с images.py
         size_match = re.search(r'(\d+)[xх](\d+)', bracket_clean, re.IGNORECASE)
 
         if size_match:
@@ -70,15 +57,18 @@ def process_single_figure_landscape(markdown_content):
                 target_class = "img-single-figure-custom-portrait"
             custom_attrs_str = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
 
+        # Если размеров нет, проверяем стандартный флаг вертикали 'v'
         elif '|v' in bracket_clean or 'v|' in bracket_clean or bracket_clean == 'fig|v':
             target_class = "img-single-figure-portrait"
 
+        # Начисто вырезаем служебные маркеры fig, v и размеры из скрытой части для получения clean_alt
         clean_alt = re.sub(r'\b(fig|v)\b|\d+[xх]\d+', '', inner_bracket, flags=re.IGNORECASE)
         clean_alt = re.sub(r'[\s|]+', ' ', clean_alt).strip()
 
         # --- ШАГ 4: РАЗБОР ЖИВОГО ТЕКСТА ДЛЯ ПОДПИСИ И ЗАЩИТА ALT ---
         outside_text = outside_content if outside_content else ""
 
+        # Если скрытый SEO alt пуст, но есть живая подпись — дублируем её в alt для поисковиков
         if not clean_alt and outside_text:
             clean_alt = outside_text
 
@@ -93,6 +83,7 @@ def process_single_figure_landscape(markdown_content):
         print(f"  • Путь к медиафайлу:      '{img_url}'")
         print("-"*70)
 
+        # --- ШАГ 6: СБОРКА СЕМАНТИЧЕСКОГО HTML ---
         figcaption_html = ""
         if outside_text:
             figcaption_html = f'\n        <figcaption class="img-figcaption">{outside_text}</figcaption>'
@@ -112,11 +103,4 @@ def process_single_figure_landscape(markdown_content):
 
         return html_output
 
-    # Запускаем трансформацию на защищенном контенте
-    temporary_content = re.sub(pattern, replacer, temporary_content)
-
-    # 🔓 ЭТАП В: РАЗМОРОЗКА (Возвращаем всё из сейфа на свои места)
-    for idx, original_block in enumerate(vault):
-        temporary_content = temporary_content.replace(f'==FIG_VAULT_BLOCK_{idx}==', original_block)
-        
-    return temporary_content
+    return re.sub(pattern, replacer, markdown_content)

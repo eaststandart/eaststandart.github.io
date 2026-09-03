@@ -33,13 +33,13 @@ def process_single_file(file_path):
         # ==================================================================================
         # ЭТАП 1.5: ИЗОЛИРОВАННЫЙ ТЕСТОВЫЙ БЛОК ДЛЯ ОДИНОЧНЫХ ГОРИЗОНТАЛЬНЫХ ЖУРНАЛЬНЫХ FIG
         # ==================================================================================
-        # markdown_content = process_single_figure_landscape(markdown_content)
+        markdown_content = process_single_figure_landscape(markdown_content)
             
         # ЭТАП 2: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
         # markdown_content = process_markdown_videos(markdown_content)
             
         # ЭТАП 3: Обработка геометрии оставшихся картинок через images.py
-        markdown_content = process_markdown_images(markdown_content)
+        # markdown_content = process_markdown_images(markdown_content)
         
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(markdown_content)

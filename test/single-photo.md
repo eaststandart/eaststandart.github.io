@@ -4,8 +4,6 @@ title: Tесты с одиночными фото
 permalink: /test/single-photo/
 ---
 
-![{fig|v|alt text}|ПОДПИСЬ](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-
 1-1 Одиночная простая картинка (! меньше чем у fig размеры !)
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)

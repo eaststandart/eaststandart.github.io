@@ -6,6 +6,11 @@ permalink: /test/figure-single/
 
 #### 🌅 Группа 1: Базовые горизонтальные одиночки (Landscape)
 
+1-1. текст
+
+![{fig}|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+
+
 1-1. `![{fig}|400](url)`
 
 ![{fig}|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)

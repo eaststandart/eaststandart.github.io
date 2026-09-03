@@ -9,12 +9,22 @@
 """
 
 import re
+import inspect
 
 def process_markdown_images(markdown_content):
     """
     Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
     Использует логику группировки плотных строк из videos.py.
     """
+    # Автоматически вытаскиваем относительный путь к файлу из preprocess.py без изменения аргументов функции
+    file_rel_path = "Неизвестный файл"
+    try:
+        frame = inspect.currentframe().f_back
+        if 'file_rel_path' in frame.f_locals:
+            file_rel_path = frame.f_locals['file_rel_path']
+    except Exception:
+        pass
+
     # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
     code_vault = []
     
@@ -62,8 +72,9 @@ def process_markdown_images(markdown_content):
                 alt_content = match.group(1).strip()
                 img_url = match.group(2).strip()
                 
-                # ТЕХНИЧЕСКИЙ ЛОГ ВХОДЯЩЕЙ СТРОКИ ДЛЯ АНАЛИЗА СИНТАКСИСА
-                print(f"\n[IMAGES-DBG] ВХОД: {group_line}")
+                # СТРОГИЙ ТЕХНИЧЕСКИЙ ЛОГ С ИМЕНЕМ ФАЙЛА И ПУТЕМ
+                print(f"\n[IMAGES-DBG] ФАЙЛ: {file_rel_path}")
+                print(f"[IMAGES-DBG] ВХОД: {group_line}")
                 
                 # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
                 alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()

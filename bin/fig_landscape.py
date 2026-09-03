@@ -1,15 +1,40 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+@script fig_landscape.py
+@about Построчный стабильный модуль для обработки одиночных журнальных блоков.
+@purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
+         и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
+         Работает строго построчно по аналогии с оригинальным images.py.
+@author TechLab
+@version 1.8
+"""
+
 import re
 
 def process_single_figure_landscape(markdown_content):
+    """
+    Обрабатывает контент строго построчно, исключая видеофайлы
+    по аналогии с оригинальным images.py.
+    """
     lines = markdown_content.split('\n')
     processed_lines = []
     
-    img_pattern = r'!\[(.*?)\]\((.*?)\)'
+    # СТРОГО ОРИГИНАЛЬНЫЙ ПАТТЕРН ИЗ IMAGES.PY (Фильтрация только картинок)
+    img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
     for line in lines:
-        match = re.search(img_pattern, line)
-        if not match or 'fig' not in match.group(1):
+        line_stripped = line.strip()
+        
+        # Если в строке нет маркера fig, пропускаем её без изменений
+        if 'fig' not in line_stripped.lower():
+            processed_lines.append(line)
+            continue
+            
+        # Проверяем строку на соответствие паттерну картинок из images.py
+        match = re.search(img_pattern, line_stripped)
+        if not match:
             processed_lines.append(line)
             continue
             
@@ -17,12 +42,12 @@ def process_single_figure_landscape(markdown_content):
         img_url = match.group(2).strip()
         
         # ЛОГ ВХОДА СТРОКИ ПОСЛЕ PATHLINKS.PY
-        print(f"\n[FIG-CONVERT] ВХОД: {line.strip()}")
+        print(f"\n[FIG-CONVERT] ВХОД: {line_stripped}")
         
         # 1. Очистка хвоста
         alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
         
-        # 2. Разбивка по пайпам с очисткой от скобок {}
+        # 2. Разбивка по пайпам с очисткой от скобок {} и пробелов
         parts = [p.strip('{} ') for p in alt_content.split('|') if p.strip()]
         
         target_class = "img-single-figure-landscape"
@@ -60,8 +85,8 @@ def process_single_figure_landscape(markdown_content):
             f'</div>'
         )
         
-        # ЛОГ ВЫХOДА ГОТОВОГО HTML
-        print(f"[FIG-CONVERT] ВЫХOД:\n{html_output}")
+        # ЛОГ ВЫХОДА ГОТОВОГО HTML
+        print(f"[FIG-CONVERT] ВЫХОД:\n{html_output}")
         
         processed_lines.append(html_output)
         

@@ -2,33 +2,44 @@
 # -*- coding: utf-8 -*-
 """
 @script fig_landscape.py
-@about Полностью облегченный стабильный модуль для обработки одиночных журнальных блоков.
+@about Построчный стабильный модуль для обработки одиночных журнальных блоков.
 @purpose Находит новые ссылки вида ![{fig...}], за один шаг определяет ориентацию 
          и кастомные размеры кадра, дублирует подпись в пустой alt и собирает HTML.
-         Очищен от локальных сейфов, работает в стерильной среде глобального препроцессинга.
+         Работает строго построчно по аналогии с оригинальным images.py.
 @author TechLab
-@version 1.6-final
+@version 1.7-linebyline
 """
 
 import re
 
 def process_single_figure_landscape(markdown_content):
     """
-    Ищет маркдаун-ссылки журнального типа со скобками {fig} 
-    и преобразует их в независимые HTML-блоки figure.
+    Обрабатывает контент строго построчно, исключая жадное склеивание 
+    регулярных выражений между абзацами.
     """
-    # Твой родной, жадный и на 100% рабочий паттерн
-    pattern = r'!\[(.*?)\]\((.*?)\)'
+    lines = markdown_content.split('\n')
+    processed_lines = []
     
+    # Твой родной паттерн для поиска картинки в строке
+    img_pattern = r'!\[(.*?)\]\((.*?)\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
-    def replacer(match):
+    for line in lines:
+        line_stripped = line.strip()
+        
+        # Если в строке нет маркера {fig}, пропускаем её без изменений
+        if '{fig' not in line_stripped:
+            processed_lines.append(line)
+            continue
+            
+        # Проверяем строку на соответствие паттерну маркдаун-ссылки
+        match = re.search(img_pattern, line_stripped)
+        if not match:
+            processed_lines.append(line)
+            continue
+            
         alt_content = match.group(1).strip()
         img_url = match.group(2).strip()
-
-        # Если это не наша новая целевая ссылка со скобками {fig}, возвращаем её без изменений
-        if '{fig' not in alt_content:
-            return match.group(0)
 
         # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА (|400) ---
         alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
@@ -57,25 +68,25 @@ def process_single_figure_landscape(markdown_content):
                 target_class = "img-single-figure-custom-portrait"
             custom_attrs_str = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
 
-        # Если размеров нет, проверяем стандартный флаг вертикали 'v'
+        # Если размеров нет, проверяем стандартный флаг vertical 'v'
         elif '|v' in bracket_clean or 'v|' in bracket_clean or bracket_clean == 'fig|v':
             target_class = "img-single-figure-portrait"
 
-        # Начисто вырезаем служебные маркеры fig, v и размеры из скрытой части для получения clean_alt
+        # Начисто вырезаем служебные маркеры fig, v и размеры из скрытой части
         clean_alt = re.sub(r'\b(fig|v)\b|\d+[xх]\d+', '', inner_bracket, flags=re.IGNORECASE)
         clean_alt = re.sub(r'[\s|]+', ' ', clean_alt).strip()
 
         # --- ШАГ 4: РАЗБОР ЖИВОГО ТЕКСТА ДЛЯ ПОДПИСИ И ЗАЩИТА ALT ---
         outside_text = outside_content if outside_content else ""
 
-        # Если скрытый SEO alt пуст, но есть живая подпись — дублируем её в alt для поисковиков
+        # Если скрытый SEO alt пуст, но есть живая подпись — дублируем её в alt
         if not clean_alt and outside_text:
             clean_alt = outside_text
 
         # --- ШАГ 5: ВЫВОД ОЧИЩЕННЫХ ДАННЫХ В ЛОГ-СИСТЕМУ ---
         print("\n" + "="*70)
         print("[FIG-LANDSCAPE-LOG] Найдена целевая ссылка на обработку:")
-        print(f"  • Исходная строка: {match.group(0)}")
+        print(f"  • Исходная строка: {line_stripped}")
         print(f"  • Выбранный класс:       '{target_class}'")
         print(f"  • Скрытый alt (из {{}}):  '{clean_alt}'")
         print(f"  • Текст для подписи:      '{outside_text}'")
@@ -101,6 +112,7 @@ def process_single_figure_landscape(markdown_content):
         print(html_output)
         print("="*70)
 
-        return html_output
+        # Добавляем собранную структуру вместо исходной маркдаун-строки
+        processed_lines.append(html_output)
 
-    return re.sub(pattern, replacer, markdown_content)
+    return '\n'.join(processed_lines)

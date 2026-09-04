@@ -17,8 +17,9 @@ if current_dir not in sys.path:
 
 # Импортируем все наши изолированные модули конвейера
 from pathlinks import process_markdown_paths
-from fig_landscape import process_single_figure_landscape
 from videos import process_markdown_videos
+from img_figure import process_markdown_images_figure
+from img_base import process_markdown_images_base
 from images import process_markdown_images
 
 def process_single_file(file_path):
@@ -29,17 +30,14 @@ def process_single_file(file_path):
             
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
         markdown_content = process_markdown_paths(markdown_content, file_path)
-
-        # ==================================================================================
-        # ЭТАП 1.5: ИЗОЛИРОВАННЫЙ ТЕСТОВЫЙ БЛОК ДЛЯ ОДИНОЧНЫХ ГОРИЗОНТАЛЬНЫХ ЖУРНАЛЬНЫХ FIG
-        # ==================================================================================
-        markdown_content = process_single_figure_landscape(markdown_content)
             
         # ЭТАП 2: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
         # markdown_content = process_markdown_videos(markdown_content)
             
         # ЭТАП 3: Обработка геометрии оставшихся картинок через images.py
         # markdown_content = process_markdown_images(markdown_content)
+        markdown_content = process_markdown_images_base(markdown_content)
+        markdown_content = process_markdown_images_figure(markdown_content)
         
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(markdown_content)

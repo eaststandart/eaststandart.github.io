@@ -29,7 +29,7 @@
             margin: 0 !important;
         }
 
-        & img.img-single-figure-landscape {
+          img.img-single-figure-landscape {
             &, &[data-src] {
                 display: block;
                 height: var(--media-pc-height);              /* Держит высоту 209px на ПК */

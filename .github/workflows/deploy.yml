@@ -1,4 +1,4 @@
-name: Deploy Jekyll site with Preprocessing 
+name: Deploy Jekyll site with Preprocessing
 
 on:
   push:
@@ -27,6 +27,12 @@ jobs:
 
       - name: Run Markdown Preprocessor
         run: python bin/preprocess.py
+
+      - name: Upload Navigation Tree to GitHub Interface
+        uses: actions/upload-artifact@v4
+        with:
+          name: jekyll-navigation-file
+          path: _data/navigation.yml
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

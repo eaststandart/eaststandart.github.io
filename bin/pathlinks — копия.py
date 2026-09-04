@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module pathlinks
+@script pathlinks.py
 @about Модуль глобальной очистки путей, конвертации Wiki-ссылок и текстовых связей Obsidian.
-@purpose Автоматически нормализует маркдаун-пути контента, делая их абсолютными от корня сайта.
-         Полностью очищен от избыточных локальных сейфов кода, но сохраняет массив исключений.
+@purpose 
 @author TechLab
-@version 1.6-final
+@version 1.0
 """
 
 import re
@@ -15,7 +14,7 @@ import os
 def process_markdown_paths(markdown_content, file_path=None):
     """
     Вычисляет имя папки статьи, чистит любые пути и конвертирует Wiki-ссылки,
-    исключая ложную приставку папок для известных корней и внешних ресурсов.
+    исключая ложную приставку папок для известных корней.
     """
     # 🌟 Утвержденный список глобальных корневых разделов и папок медиа-ресурсов сайта
     known_root_folders = ['faire', 'assets', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
@@ -26,16 +25,28 @@ def process_markdown_paths(markdown_content, file_path=None):
         if folder_name and folder_name not in ['', '.', '..']:
             current_folder_prefix = f"/{folder_name}/"
 
-    # А. МАССИВ ИСКЛЮЧЕНИЙ ДЛЯ ВНЕШНИХ ССЫЛОК (Возвращен на место!)
+    # А. МАССИВ ИСКЛЮЧЕНИЙ ДЛЯ ВНЕШНИХ ССЫЛОК
     ignored_patterns = [
         r'https?://',            
         r'mailto:',              
         r'telegram\.org',        
     ]
 
-    # Б. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
+    # Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф)
+    code_vault = []
+    
+    def code_freezer(match):
+        code_vault.append(match.group(0))
+        return f'==CODE_BLOCK_{len(code_vault)-1}=='
+
+    # 1. Сначала прячем многострочные блоки кода (``` ... ```)
+    temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
+    # 2. Затем прячем любые строчные элементы кода (от 1 до 3 бэктиков подряд: `...`, ``...``)
+    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
+
+    # В. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
     domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
-    temporary_content = re.sub(domain_pattern, '/', markdown_content)
+    temporary_content = re.sub(domain_pattern, '/', temporary_content)
 
     classic_media_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))\)'
     
@@ -43,10 +54,6 @@ def process_markdown_paths(markdown_content, file_path=None):
         alt_text = match.group(1).strip()
         img_url = match.group(2).strip()
         original_url = img_url
-        
-        # Проверяем, не является ли ссылка внешней интернет-ссылкой из массива исключений
-        if any(re.search(pat, img_url, re.IGNORECASE) for pat in ignored_patterns):
-            return match.group(0)
         
         # Вычисляем первое слово в пути (имя корневой папки ссылки)
         first_segment = img_url.split('/')[0].strip()
@@ -79,10 +86,6 @@ def process_markdown_paths(markdown_content, file_path=None):
         img_url = match.group(1).strip()
         alt_content = match.group(2).strip() if match.group(2) else ""
         original_url = img_url
-        
-        # Проверяем внешние ссылки
-        if any(re.search(pat, img_url, re.IGNORECASE) for pat in ignored_patterns):
-            return match.group(0)
         
         # Вычисляем первое слово в пути (имя корневой папки ссылки)
         first_segment = img_url.split('/')[0].strip()
@@ -124,5 +127,9 @@ def process_markdown_paths(markdown_content, file_path=None):
 
     # Страховка от случайных двойных слэшей
     temporary_content = temporary_content.replace('//', '/')
+
+    # Д. РАЗМОРОЗКА БЛОКОВ КОДА: Возвращаем примеры из сейфа в полной целости
+    for idx, original_code in enumerate(code_vault):
+        temporary_content = temporary_content.replace(f'==CODE_BLOCK_{idx}==', original_code)
         
     return temporary_content

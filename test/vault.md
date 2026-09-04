@@ -16,6 +16,8 @@ permalink: test/vault/
 
 1-3 `![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
+![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
 1-4 `![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
 1-5 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`

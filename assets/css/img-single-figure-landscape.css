@@ -10,35 +10,37 @@
     /* ==========================================================================
        🌅 1. БАЗОВЫЕ ГОРИЗОНТАЛЬНЫЕ ЖУРНАЛЬНЫЕ ОДИНОЧКИ (img-single-figure-landscape)
        ========================================================================= */
+    
+    /* [БЛОК] Одиночная коробка figure контента */
     .main-content .img-single-figure {
-        & {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin: 1em 0;           
-        }
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 1em 0;           
+    }
 
-        & figure.img-figure {
-            display: inline-flex !important;
-            flex-direction: column !important;               /* Подпись всегда строго внизу фото */
-            align-items: center !important;
-            justify-content: center !important;
-            width: auto !important;
-            max-width: 100% !important;
-            background-color: transparent !important;        /* Убираем серый фон, защищая от пустых ушей */
-            margin: 0 !important;
-        }
+    /* [ВНЕШНИЙ КОНТЕЙНЕР] Каркас, обжимающий картинку */
+    .main-content .img-single-figure figure.img-figure {
+        display: inline-flex !important;
+        flex-direction: column !important;               /* Подпись всегда строго внизу фото */
+        align-items: center !important;
+        justify-content: center !important;
+        width: auto !important;
+        max-width: 100% !important;
+        background-color: transparent !important;        /* Убираем серый фон, защищая от пустых ушей */
+        margin: 0 !important;
+    }
 
-          img.img-single-figure-landscape {
-            &, &[data-src] {
-                display: block;
-                height: var(--media-pc-height);              /* Держит высоту 209px на ПК */
-                width: auto;                
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                aspect-ratio: var(--ratio-landscape);        /* Намертво запечатываем 16/9 */
-                object-fit: contain; 
-                margin: 0; 
-            }
+    /* [ЭЛЕМЕНТ] Базовые ландшафтные картинки (Прямой селектор по цепочке тегов Хрома) */
+    .main-content .img-single-figure figure.img-figure img.img-single-figure-landscape {
+        &, &[data-src] {
+            display: block;
+            height: var(--media-pc-height);              /* Держит высоту 209px на ПК */
+            width: auto;                
+            max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+            aspect-ratio: var(--ratio-landscape);        /* Намертво запечатываем 16/9 */
+            object-fit: contain; 
+            margin: 0; 
         }
     }
 

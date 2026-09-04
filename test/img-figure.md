@@ -12,7 +12,7 @@ permalink: test/img-figure/
 
 1-2. Запись: ![{fig}|Текст подписи](url) (Закон дублирования подписи в alt)
    
-![{fig} | Человеческий текст подписи одиночного журнального ландшафта](test/folder/test.webp)
+![{fig} | Человеческий текст подписи одиночного журнального ландшафта](/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
 1-3. Запись: ![{fig|v}](url)
    

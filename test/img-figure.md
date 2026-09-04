@@ -8,7 +8,7 @@ permalink: test/img-figure/
 
 1-1. Запись: ![{fig}](url)
    
-![{fig}](test/folder/test.webp)
+![{fig}](/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 
 1-2. Запись: ![{fig}|Текст подписи](url) (Закон дублирования подписи в alt)
    

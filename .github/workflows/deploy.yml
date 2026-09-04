@@ -1,4 +1,4 @@
-name: Deploy Jekyll site with Preprocessing
+name: Deploy Jekyll site with Preprocessing 
 
 on:
   push:

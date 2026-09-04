@@ -12,6 +12,7 @@
 
 /* 🌅 СЛОЙ ВСЕХ ОДИНОЧНЫХ КАРТИНОК */
 @import url("img-single.css");
+@import url("img-single-figure-landscape.css");
 
 /* 👥 СЛОЙ ГРУППОВЫХ ГАЛЕРЕЙ И РЯДОВ */
 @import url("img-row.css");

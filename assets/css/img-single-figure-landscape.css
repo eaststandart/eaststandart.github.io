@@ -1,95 +1,58 @@
 /*
-@about Модуль одиночных горизонтальных журнальных изображений с подписями.
-@purpose Управляет геометрией карточки figure, картинки 16/9 и текстовой подписи. 
-         Обеспечивает синхронизацию высоты с базовой сеткой ПК и адаптивный сброс на мобильных.
+@about Монолитный модуль одиночных журнальных изображений контента (.img-single-figure).
+@purpose Управляет геометрией и пропорциями одиночного ландшафтного кадра в режиме ПК.
 @author TechLab
 @version 1.0
 */
 
 @layer components {
 
-    /* ============================================================
-       📦 КОМПОНЕНТ: ОДИНОЧНЫЙ ГОРИЗОНТАЛЬНЫЙ ЖУРНАЛЬНЫЙ БЛОК (FIGURE)
-       Файл: img-single-figure-landscape.css
-       ============================================================ */
-
-    /* 1. ВНЕШНЯЯ ОБЕРТКА (div) */
-    .img-single-figure {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin: 1em 0;           
-    }
-
-    /* 2. ВНУТРЕННИЙ КОНТЕЙНЕР КАРТОЧКИ (figure) */
-    .img-single-figure .img-figure {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        max-width: 100%;
-        background-color: transparent;
-        margin: 0;
-    }
-
-    /* 3. ГОРИЗОНТАЛЬНАЯ КАРТИНКА (img) - СТИЛИ ДЛЯ ПК */
-    .img-single-figure img.img-single-figure-landscape {
-        &, &[data-src] {
-            height: var(--media-pc-height);       /* Строго 209px в высоту на ПК */
-            width: auto;                          /* Авто-ширина по пропорциям */
-            aspect-ratio: var(--ratio-landscape); /* Намертво запечатываем 16/9 */
-            object-fit: contain;                  /* Вписывание без обрезки */
-            object-position: center;
-        }
-    }
-
-    /* 4. ТЕКСТ ПОДПИСИ (figcaption) - СТИЛИ ДЛЯ ПК */
-    .img-single-figure .img-figcaption {
-        display: block;
-        width: 100%;
-        max-width: 371px;        
-        margin-top: 1rem;        
-        text-align: center;      
-        word-break: break-word;  
-    }
-
-    /* ============================================================
-       📱 ПУЛЬТ УПРАВЛЕНИЯ АДАПТИВНОСТЬЮ ГОРИЗОНТАЛЬНОГО БЛОКА
-       ============================================================ */
-
-    /* --- Смартфоны вертикально (Portrait) --- */
-    @media (max-width: 900px) and (orientation: portrait) {
-        
-        .img-single-figure .img-figure {
+    /* ==========================================================================
+       🌅 1. БАЗОВЫЕ ГОРИЗОНТАЛЬНЫЕ ЖУРНАЛЬНЫЕ ОДИНОЧКИ (img-single-figure-landscape)
+       ========================================================================= */
+    .main-content .img-single-figure {
+        & {
             display: flex;
+            justify-content: center;
             width: 100%;
-            max-width: 100%;
+            margin: 1em 0;           
         }
-        
-        /* Полная синхронизация с логикой img-single-landscape */
-        .img-single-figure img.img-single-figure-landscape {
+
+        & figure.img-figure {
+            display: inline-flex !important;
+            flex-direction: column !important;               /* Подпись всегда строго внизу фото */
+            align-items: center !important;
+            justify-content: center !important;
+            width: auto !important;
+            max-width: 100% !important;
+            background-color: transparent !important;        /* Убираем серый фон, защищая от пустых ушей */
+            margin: 0 !important;
+        }
+
+        & img.img-single-figure-landscape {
             &, &[data-src] {
-                width: var(--mobile-full-width);   /* Раскрываем во всю ширину строки */
-                max-width: none;
-                height: auto;                      /* Высота свободно дышит */
-                max-height: none;   
-                aspect-ratio: var(--ratio-landscape);
+                display: block;
+                height: var(--media-pc-height) !important;   /* Держит высоту 209px на ПК */
+                width: auto;                
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-landscape) !important; /* Намертво запечатываем 16/9 */
+                object-fit: contain; 
+                margin: 0; 
             }
         }
     }
 
-    /* --- Смартфоны горизонтально (Landscape) --- */
-    @media (max-height: 500px) and (orientation: landscape) {
-        
-        /* Сохраняем фиксированную высоту fig-картинок на боку телефона */
-        .img-single-figure img.img-single-figure-landscape {
-            &, &[data-src] {
-                height: var(--media-mobile-landscape-height);
-                width: auto;
-                aspect-ratio: var(--ratio-landscape);
-            }
+    /* ==========================================================================
+       [ОБЩИЙ ЭЛЕМЕНТ] Подпись к картинкам figcaption (.img-figcaption)
+       ========================================================================= */
+    .main-content figure.img-figure figcaption.img-figcaption {
+        & {
+            display: block;
+            width: 100%;
+            max-width: 371px;        
+            margin-top: 1rem;        
+            text-align: center;      
+            word-break: break-word;  
         }
     }
-
 }

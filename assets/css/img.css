@@ -46,7 +46,7 @@ figcaption {
 
 /*  4. ПОДГОТОВКА КУРСОРОВ ДЛЯ ВСЕХ КАРТИНОК КОНТЕНТА */
 .main-content p img:not(.content-img),
-.main-content div img:not(.content-img),
+.main-content figure img:not(.content-img),
 .main-content .figure-img img.img-fig,
  {
     cursor: zoom-in !important;

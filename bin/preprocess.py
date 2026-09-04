@@ -35,7 +35,7 @@ def process_single_file(file_path, root_dir):
         markdown_content, global_vault = global_freeze_content(markdown_content, file_rel_path)
             
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
-        markdown_content = process_markdown_paths(markdown_content, file_path)
+        # markdown_content = process_markdown_paths(markdown_content, file_path)
             
         # ЭТАП 2: Обработка тяжелых журнальных блоков figure
         markdown_content = process_markdown_images_figure(markdown_content)

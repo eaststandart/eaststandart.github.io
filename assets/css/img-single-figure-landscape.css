@@ -1,6 +1,6 @@
 /*
 @about Монолитный модуль одиночных журнальных изображений контента (.img-single-figure).
-@purpose Управляет геометрией и пропорциями одиночного ландшафтного кадра в режиме ПК.
+@purpose Управляет геометрии и пропорциями одиночного ландшафтного кадра в режиме ПК.
 @author TechLab
 @version 1.0
 */
@@ -40,21 +40,6 @@
             max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
             aspect-ratio: var(--ratio-landscape);        /* Намертво запечатываем 16/9 */
             object-fit: contain; 
-            margin: 0; 
-        }
-    }
-
-    /* ==========================================================================
-       [ОБЩИЙ ЭЛЕМЕНТ] Подпись к картинкам figcaption (.img-figcaption)
-       ========================================================================= */
-    .main-content figure.img-figure figcaption.img-figcaption {
-        & {
-            display: block;
-            width: 100%;
-            max-width: 371px;        
-            margin-top: 1rem;        
-            text-align: center;      
-            word-break: break-word;  
         }
     }
 }

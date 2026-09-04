@@ -61,7 +61,6 @@ figcaption {
 /* Применяем скругление, тени и серый щит лези-лоада ко всем картинкам контента */
 .main-content p img:not(.content-img),
 .main-content div img:not(.content-img),
-.main-content figure img:not(.content-img),
 .main-content .figure-img img.img-fig {
     border-radius: 8px;                             /* Мягкие скругленные углы */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */

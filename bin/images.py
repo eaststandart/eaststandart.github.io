@@ -2,99 +2,185 @@
 # -*- coding: utf-8 -*-
 """
 @module images
-@about Модуль предобработки изображений для Obsidian -> Jekyll с поддержкой JS ленивой загрузки.
-@purpose 
+@about Монолитный объединенный модуль предобработки изображений для Obsidian -> Jekyll.
+@purpose За один проход каскадно обрабатывает сначала тяжелую журнальную графику {fig},
+         а затем утилизирует все базовые одиночные картинки и галереи сайта.
 @author TechLab
-@version 1.0
+@version 4.0-monolith
 """
 
 import re
 
 def process_markdown_images(markdown_content):
     """
-    Ищет маркдаун-картинки и собирает их в HTML-блоки с ленивой загрузкой.
-    Использует логику группировки плотных строк из videos.py.
+    Каскадный построчный диспетчер обработки всей графики репозитория.
     """
-    # 🌟 Б. ЗАМОРОЗКА БЛОКОВ КОДА (Железный сейф для картинок)
-    code_vault = []
-    
-    def code_freezer(match):
-        code_vault.append(match.group(0))
-        return f'==CODE_BLOCK_{len(code_vault)-1}=='
-
-    # Прячем код, чтобы этот модуль не лез внутрь бэктиков
-    temporary_content = re.sub(r'```[\s\S]*?```', code_freezer, markdown_content)
-    temporary_content = re.sub(r'`{1,3}[^`\n]+?`{1,3}', code_freezer, temporary_content)
-
+    # Общие константы и паттерны для обоих подмодулей
     img_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg))\)'
     transparent_pixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     
-    # Режем на строки уже ЗАМОРОЖЕННЫЙ контент
-    lines = temporary_content.split('\n')
+    lines = markdown_content.split('\n')
     processed_lines = []
     
+    # =========================================================================
+    # 🌅 ШАГ 1: МОДУЛЬ ТЯЖЕЛОЙ ЖУРНАЛЬНОЙ ГРАФИКИ (БЫВШИЙ img_figure.py)
+    # =========================================================================
     i = 0
     while i < len(lines):
         line = lines[i]
         line_stripped = line.strip()
         
-        if not line_stripped:
+        # Фильтруем и собираем только журнальные блоки, содержащие маркер {fig
+        if not line_stripped or '![{fig' not in line_stripped.lower():
             processed_lines.append(line)
             i += 1
+            continue
+            
+        is_image = re.search(img_pattern, line_stripped)
+        if not is_image:
+            processed_lines.append(line)
+            i += 1
+            continue
+            
+        # Сборщик плотной группы журнальных строк (Галерея блоков)
+        group_lines = []
+        while i < len(lines) and lines[i].strip() and '![{fig' in lines[i].strip().lower() and re.search(img_pattern, lines[i].strip()):
+            group_lines.append(lines[i].strip())
+            i += 1
+            
+        is_row_mode = len(group_lines) > 1
+        div_class = "img-row-figure" if is_row_mode else "img-single-figure"
+        img_prefix = "img-row-figure-" if is_row_mode else "img-single-figure-"
+        
+        figures_html = []
+        
+        for group_line in group_lines:
+            match = re.search(img_pattern, group_line)
+            alt_content = match.group(1).strip()
+            img_url = match.group(2).strip()
+            
+            print(f"\n[FIG-CONVERT] ВХОД ({'РЯД' if is_row_mode else 'ОДИНОЧКА'}): {group_line}")
+            
+            # Очистка обсидианового хвоста ширины
+            alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
+            raw_parts = [p.strip() for p in alt_content.split('|') if p.strip()]
+            
+            geometry_class = "landscape"
+            custom_attrs = ""
+            
+            if raw_parts and raw_parts[0].strip('{} ').lower() == 'fig':
+                raw_parts.pop(0)
+                
+            if raw_parts and raw_parts[0].strip('{} ').lower() == 'v':
+                geometry_class = "portrait"
+                raw_parts.pop(0)
+                
+            elif raw_parts and re.match(r'^\d+[xх]\d+$', raw_parts[0].strip('{} '), re.IGNORECASE):
+                size_clean = raw_parts[0].strip('{} ')
+                size_match = re.split(r'[xх]', size_clean, flags=re.IGNORECASE)
+                width, height = int(size_match[0]), int(size_match[1])
+                
+                if width > height:
+                    geometry_class = "custom-landscape"
+                else:
+                    geometry_class = "custom-portrait"
+                    
+                custom_attrs = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
+                raw_parts.pop(0)
+                
+            target_img_class = f"{img_prefix}{geometry_class}"
+            
+            clean_alt = ""
+            clean_caption = ""
+            for part in raw_parts:
+                if '}' in part:
+                    clean_alt = part.strip('{} ')
+                else:
+                    clean_caption = part.strip('{} ')
+                    
+            if not clean_alt and clean_caption:
+                clean_alt = clean_caption
+                
+            figcaption_html = ""
+            if clean_caption:
+                figcaption_html = f'\n        <figcaption class="img-figcaption">{clean_caption}</figcaption>'
+                
+            item_html = (
+                f'    <figure class="img-figure">\n'
+                f'        <img class="{target_img_class}"{custom_attrs} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
+                f'{figcaption_html}\n'
+                f'    </figure>'
+            )
+            figures_html.append(item_html)
+            
+        figures_joined = "\n".join(figures_html)
+        html_output = f'<div class="{div_class}">\n{figures_joined}\n</div>'
+        
+        print(f"[FIG-CONVERT] ВЫХОД:\n{html_output}")
+        processed_lines.append(html_output)
+
+    # =========================================================================
+    # 🖼️ ШАГ 2: БАЗОВЫЙ УТИЛИЗАТОР ГРАФИКИ (БЫВШИЙ img_base.py)
+    # =========================================================================
+    # Пересобираем промежуточный контент после первого шага обратно в строки
+    intermediate_content = '\n'.join(processed_lines)
+    base_lines = intermediate_content.split('\n')
+    final_processed_lines = []
+    
+    j = 0
+    while j < len(base_lines):
+        line = base_lines[j]
+        line_stripped = line.strip()
+        
+        if not line_stripped:
+            final_processed_lines.append(line)
+            j += 1
             continue
             
         is_image = re.match(img_pattern, line_stripped, re.IGNORECASE)
         
         if is_image:
-            # Запускаем сборщик плотной группы картинок, идущих друг под другом
+            # Сборщик плотной группы базовых картинок, идущих друг под другом (Галереи)
             image_group_lines = []
-            
-            while i < len(lines) and lines[i].strip() and re.match(img_pattern, lines[i].strip(), re.IGNORECASE):
-                image_group_lines.append(lines[i].strip())
-                i += 1
+            while j < len(base_lines) and base_lines[j].strip() and re.match(img_pattern, base_lines[j].strip(), re.IGNORECASE):
+                image_group_lines.append(base_lines[j].strip())
+                j += 1
                 
-            # Переменная флага ряда: если в группе больше одной картинки подряд — это ГАЛЕРЕЯ!
             is_row_mode = len(image_group_lines) > 1
             
-            # Теперь обрабатываем каждую собранную строку внутри этой группы
             for group_line in image_group_lines:
                 match = re.match(img_pattern, group_line, re.IGNORECASE)
                 alt_content = match.group(1).strip()
                 img_url = match.group(2).strip()
                 
-                # --- ШАГ 1: ГЛОБАЛЬНЫЙ ЗАКОН ОЧИСТКИ ХВОСТОВ ОБСИДИАНА ---
+                print(f"\n[IMAGES-BASE] ВХОД: {group_line}")
+                
+                # Очистка обсидианового хвоста ширины
                 alt_content = re.sub(r'\|\s*\d+\s*$', '', alt_content).strip()
                 
                 if not alt_content:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    img_html_simple = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                    print(f"[IMAGES-BASE] ВЫХОД:\n{img_html_simple}")
+                    final_processed_lines.append(img_html_simple)
                     continue
                     
                 parts = [p.strip() for p in alt_content.split('|') if p.strip()]
                 
                 if not parts:
                     final_class = 'img-row-landscape' if is_row_mode else 'img-single-landscape'
-                    processed_lines.append(f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">')
+                    img_html_simple = f'<img class="{final_class}" alt="" src="{transparent_pixel}" data-src="{img_url}">'
+                    print(f"[IMAGES-BASE] ВЫХОД:\n{img_html_simple}")
+                    final_processed_lines.append(img_html_simple)
                     continue
                     
                 classes = []
                 custom_attrs = []
-                is_centered = False
                 
                 first_key = parts[0].strip('{} ')
 
-                # --- ШАГ 2: ЛЕВOСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ ---
-                if first_key.lower() == 'fig':
-                    classes.append('img-fig')
-                    is_centered = True
-                    parts.pop(0) # Удаляем отработанный ключ fig
-                    
-                    if parts and parts[0].strip('{} ').lower() == 'v':
-                        classes.append('img-v')
-                        parts.pop(0)
-                        
-                elif first_key.lower() == 'v':
-                    # Выдаем точный класс формы в зависимости от режима одиночки/галереи
+                # ЛЕВОСТОРОННИЙ РАЗБОР СЛУЖЕБНЫХ КЛЮЧЕЙ БАЗОВЫХ КАРТИНОК
+                if first_key.lower() == 'v':
                     classes.append('img-row-portrait' if is_row_mode else 'img-single-portrait')
                     parts.pop(0)
                     
@@ -102,7 +188,6 @@ def process_markdown_images(markdown_content):
                     dimensions = re.split(r'[xх]', first_key, flags=re.IGNORECASE)
                     width, height = dimensions[0], dimensions[1]
                     
-                    # 🌟 Новая логика: сравниваем ширину и высоту
                     if int(width) > int(height):
                         classes.append('img-single-custom-landscape')
                     else:
@@ -114,32 +199,27 @@ def process_markdown_images(markdown_content):
                     parts.pop(0)
                     
                 if not classes:
-                    # Выдаем точный базовый класс формы
                     classes.append('img-row-landscape' if is_row_mode else 'img-single-landscape')
                     
-                # --- ШАГ 3: СБОРКА ОЧИЩЕННОГО SEO-ТЕКСТА ALT ---
+                # СБОРКА ОЧИЩЕННОГО SEO ALT ТЕКСТА БАЗОВОЙ КАРТИНКИ
                 clean_parts = [p.strip('{} ') for p in parts if p.strip()]
                 clean_alt = " | ".join(clean_parts) if clean_parts else ""
                 
                 class_str = f' class="{" ".join(classes)}"' if classes else ''
                 attr_str = f' {" ".join(custom_attrs)}' if custom_attrs else ''
                 
-                # --- ШАГ 4: СБОРКА ИТОГОВОГО HTML С ЛЕНИВОЙ ЗАГРУЗКОЙ ---
                 img_html = f'<img{class_str}{attr_str} alt="{clean_alt}" src="{transparent_pixel}" data-src="{img_url}">'
                 
-                if is_centered:
-                    figcaption_html = f'<figcaption class="figcaption-img">{clean_alt}</figcaption>' if clean_alt else ''
-                    processed_lines.append(f'<figure class="figure-img">{img_html}{figcaption_html}</figure>')
-                else:
-                    processed_lines.append(img_html)
+                print(f"[IMAGES-BASE] ВЫХОД:\n{img_html}")
+                final_processed_lines.append(img_html)
                     
         else:
-            processed_lines.append(line)
-            i += 1
+            final_processed_lines.append(line)
+            j += 1
             
-    # === ВАША РОДНАЯ СКЛЕЙКА И АВТОМАТИЧЕСКАЯ ГРУППИРОВКА РЯДОВ ДЛЯ JEKYLL ===
-    article_html = '\n'.join(processed_lines)
+    article_html = '\n'.join(final_processed_lines)
     
+    # === ВАША РОДНАЯ СКЛЕЙКА И АВТОМАТИЧЕСКАЯ ГРУППИРОВКА РЯДОВ ДЛЯ JEKYLL ===
     def group_rows(match):
         content = match.group(1)
         if content.count('<figure class="figure-img"') > 1:
@@ -151,9 +231,5 @@ def process_markdown_images(markdown_content):
         group_rows,
         article_html
     )
-        
-    # 🌟 РАЗМОРОЗКА БЛОКОВ КОДА (Возвращаем код на место в целости)
-    for idx, original_code in enumerate(code_vault):
-        article_html = article_html.replace(f'==CODE_BLOCK_{idx}==', original_code)
         
     return article_html

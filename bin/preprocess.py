@@ -20,9 +20,8 @@ if current_dir not in sys.path:
 # Импортируем модули конвейера и функции сейфа кода
 from vault import global_freeze_content, global_unfreeze_content
 from pathlinks import process_markdown_paths
-from img_figure import process_markdown_images_figure
-from img_base import process_markdown_images_base
 from videos import process_markdown_videos
+from images import process_markdown_images
 
 def process_single_file(file_path, root_dir):
     """Открывает, защищает через сейф, обрабатывает через модули и перезаписывает один .md файл."""
@@ -35,15 +34,12 @@ def process_single_file(file_path, root_dir):
         markdown_content, global_vault = global_freeze_content(markdown_content, file_rel_path)
             
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
-        # markdown_content = process_markdown_paths(markdown_content, file_path)
+        markdown_content = process_markdown_paths(markdown_content, file_path)
             
-        # ЭТАП 2: Обработка тяжелых журнальных блоков figure
-        markdown_content = process_markdown_images_figure(markdown_content)
+        # ЭТАП 2: Каскадный модуль картинок через images.py
+        markdown_content = process_markdown_images(markdown_content)
         
-        # ЭТАП 3: Обработка геометрии базовых одиночных картинок и галерей
-        markdown_content = process_markdown_images_base(markdown_content)
-        
-        # ЭТАП 4: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
+        # ЭТАП 3: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
         markdown_content = process_markdown_videos(markdown_content)
         
         # ШАГ Б: Возвращаем все защищенные примеры из сейфа на свои места

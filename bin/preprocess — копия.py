@@ -4,7 +4,9 @@
 @script preprocess.py
 @about Главный менеджер автоматической предобработки контента Obsidian перед сборкой Jekyll.
 @purpose Автоматически находит ВСЕ markdown-файлы в репозитории и последовательно 
-         пропускает их через изолированные модули (пути -> видео -> картинки).
+         пропускает их через изолированные модули, используя автономный сейф vault.py.
+@author TechLab
+@version 3.0
 """
 
 import sys
@@ -15,47 +17,58 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-# Импортируем все наши изолированные модули конвейера
+# Импортируем модули конвейера и функции сейфа кода
+from vault import global_freeze_content, global_unfreeze_content
 from pathlinks import process_markdown_paths
-from videos import process_markdown_videos
 from img_figure import process_markdown_images_figure
 from img_base import process_markdown_images_base
-from images import process_markdown_images
+from videos import process_markdown_videos
 
-def process_single_file(file_path):
-    """Открывает, последовательно обрабатывает через модули и перезаписывает один .md файл."""
+def process_single_file(file_path, root_dir):
+    """Открывает, защищает через сейф, обрабатывает через модули и перезаписывает один .md файл."""
+    file_rel_path = os.path.relpath(file_path, root_dir)
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             markdown_content = f.read()
             
+        # ШАГ А: Включаем сквозную точечную заморозку примеров перед обработкой
+        markdown_content, global_vault = global_freeze_content(markdown_content, file_rel_path)
+            
         # ЭТАП 1: Глобальная очистка путей домена Obsidian через pathlinks.py
         markdown_content = process_markdown_paths(markdown_content, file_path)
             
-        # ЭТАП 2: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
-        # markdown_content = process_markdown_videos(markdown_content)
-            
-        # ЭТАП 3: Обработка геометрии оставшихся картинок через images.py
-        # markdown_content = process_markdown_images(markdown_content)
+        # ЭТАП 2: Обработка тяжелых журнальных блоков figure
         markdown_content = process_markdown_images_figure(markdown_content)
+        
+        # ЭТАП 3: Обработка геометрии базовых одиночных картинок и галерей
         markdown_content = process_markdown_images_base(markdown_content)
+        
+        # ЭТАП 4: Конвертация видео-ссылок (.webm/.mp4) в нативные флекс-ряды через videos.py
+        markdown_content = process_markdown_videos(markdown_content)
+        
+        # ШАГ Б: Возвращаем все защищенные примеры из сейфа на свои места
+        if global_vault:
+            markdown_content = global_unfreeze_content(markdown_content, global_vault, file_rel_path)
 
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(markdown_content)
-        print(f"[SUCCESS] Обработан файл: {file_path}")
+            
+        print(f"[SUCCESS] Успешно обработан файл: {file_rel_path}")
     except Exception as e:
-        print(f"[ERROR] Не удалось обработать файл {file_path}: {e}")
+        print(f"[ERROR] Не удалось обработать файл {file_rel_path}: {e}")
 
 def main():
+    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+    
     if len(sys.argv) > 1:
         file_path = sys.argv
         if os.path.isfile(file_path):
-            process_single_file(file_path)
+            process_single_file(file_path, root_dir)
         else:
             print(f"[ERROR] Указанный файл не найден: {file_path}")
         return
 
     print("[PREPROCESS] Аргументы не переданы. Запускаю полный обход репозитория...")
-    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     exclude_dirs = {'_site', '.sass-cache', '.git', '.github', 'bin'}
     
     md_count = 0
@@ -64,7 +77,7 @@ def main():
         for file in files:
             if file.endswith('.md'):
                 full_path = os.path.join(root, file)
-                process_single_file(full_path)
+                process_single_file(full_path, root_dir)
                 md_count += 1
                 
     print(f"[PREPROCESS] Полный обход завершен. Всего обработано файлов: {md_count}")

@@ -31,7 +31,7 @@
         margin: 0 !important;
     }
 
-    /* [ЭЛЕМЕНТ] Базовые ландшафтные картинки (Прямой селектор по цепочке тегов Хрома) */
+    /* [ЭЛЕМЕНТ] Базовые ландшафтные картинки (ПК-режим строго по шаблону) */
     .main-content .img-single-figure figure.img-figure img.img-single-figure-landscape {
         &, &[data-src] {
             display: block;

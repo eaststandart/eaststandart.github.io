@@ -14,6 +14,12 @@ permalink: /test/img-base/
    
 ![Человеческий текст подписи одиночной базовой картинки](test/folder/test.webp)
 
+![|Человеческий текст подписи одиночной базовой картинки](test/folder/test.webp)
+
+![{alt text}](test/folder/test.webp)
+
+![{alt text}|Человеческий текст подписи одиночной базовой картинки](test/folder/test.webp)
+
 1-3. Запись: ![{v}](url)
    
 ![{v}](test/folder/test.webp)

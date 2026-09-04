@@ -78,7 +78,6 @@ def main():
                 
     print(f"[PREPROCESS] Полный обход завершен. Всего обработано файлов: {md_count}")
 
-
     # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА НАВИГАЦИИ
     try:
         from navigation_tree import build_navigation_tree

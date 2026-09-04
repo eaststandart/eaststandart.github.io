@@ -18,6 +18,10 @@ permalink: test/vault/
 
 ![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
+![](\faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
+![](\/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
+
 1-4 `![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
 
 1-5 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`

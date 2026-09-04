@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Тестирование модуля базовых изображений (img_base.py)
-permalink: /test/img-figure/
+permalink: /test/img-base/
 ---
 
 ## Часть 1: Одиночные базовые картинки (Сборка одиночных кадров в теге p)

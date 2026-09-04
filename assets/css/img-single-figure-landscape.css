@@ -32,10 +32,10 @@
         & img.img-single-figure-landscape {
             &, &[data-src] {
                 display: block;
-                height: var(--media-pc-height) !important;   /* Держит высоту 209px на ПК */
+                height: var(--media-pc-height);              /* Держит высоту 209px на ПК */
                 width: auto;                
                 max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                aspect-ratio: var(--ratio-landscape) !important; /* Намертво запечатываем 16/9 */
+                aspect-ratio: var(--ratio-landscape);        /* Намертво запечатываем 16/9 */
                 object-fit: contain; 
                 margin: 0; 
             }

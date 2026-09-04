@@ -14,6 +14,12 @@ permalink: test/vault/
    
 Пример строчного кода базовой картинки: `![{v}|Вертикальный базовый кадр](/test/folder/test.webp)`
 
+1-3 `![](faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
+
+1-4 `![](/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
+
+1-5 `![](../faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)`
+
 
 ## Группа 2: Исключения многострочных блоков кода (Fenced Code Blocks)
 

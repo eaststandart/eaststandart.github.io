@@ -8,7 +8,7 @@
 @layer components {
 
     /* [БЛОК] Групповой контейнер вертикального журнального ряда */
-    .main-content .img-row-figure {
+    .main-content .img-row-figure.img-row-figure--portrait {
         display: grid;
         grid-template-columns: repeat(auto-fit, var(--media-pc-height)); 
         justify-content: center; /* Центрируем всю Grid-таблицу по центру страницы на ПК */

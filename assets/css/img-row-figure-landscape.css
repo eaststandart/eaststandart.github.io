@@ -8,7 +8,7 @@
 @layer components {
 
     /* [БЛОК] Групповой контейнер журнального ряда (галереи) */
-    .main-content .img-row-figure {
+    .main-content .img-row-figure.img-row-figure--landscape {
         display: grid;
         grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); /* Потолок ~371px */
         justify-content: center; 

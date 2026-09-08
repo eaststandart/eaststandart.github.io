@@ -10,25 +10,19 @@
     /* [БЛОК] Групповой контейнер журнального ряда (галереи) */
     .main-content .img-row-figure {
         display: grid;
-        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); 
-        justify-content: center; /* Центрируем всю Grid-таблицу по центру страницы на ПК */
+        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); /* Потолок ~371px */
+        justify-content: center; 
         align-items: start;      
-        gap: var(--gap-pc);
-        margin: 1em 0;
+        gap: var(--gap-pc);      
+        margin: 1em 0;           
 
         /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
         & figure.img-figure {
             display: inline-flex;
             flex-direction: column;
-            align-items: center; /* Базовое центрирование подписи на ПК и в портрете */
+            align-items: center; 
             width: auto;
             margin: 0;
-
-            /* [Портрет]: Переводим рамку в полный блок во всю ширину строки контента */
-            @media (max-width: 900px) and (orientation: portrait) {
-                display: flex;
-                width: var(--mobile-full-width);
-            }
         }
 
         /* [ЭЛЕМЕНТ] Целевой горизонтальный галерейный кадр */
@@ -37,46 +31,50 @@
                 height: var(--media-pc-height);
                 width: auto;                    
                 aspect-ratio: var(--ratio-landscape);
-                object-fit: contain;
+                object-fit: contain; 
+                object-position: center;   
+                margin: 0;
+            }
+        }
+    }
+
+    /* ============================================================
+       📱 ЕДИНЫЙ МУЛЬТИ-МЕДИЙНЫЙ ПУЛЬТ АДАПТИВНОСТИ РЯДА
+       ============================================================ */
+
+    /* 📱 [Портрет]: Смартфоны вертикально (до 900px) */
+    @media (max-width: 900px) and (orientation: portrait) {
+        .main-content .img-row-figure {
+            grid-template-columns: 1fr;
+
+            & figure.img-figure {
+                display: flex; /* Сброс инлайновости */
+                width: var(--mobile-full-width);
             }
 
-            /* [Портрет]: Кадр заполняет системную рамку и включает расчет высоты антипрыжка */
-            @media (max-width: 900px) and (orientation: portrait) {
+            & img.img-row-figure-landscape {
                 &, &[data-src] {
                     width: var(--mobile-full-width);
                     height: auto;
                     max-height: none;
-                    aspect-ratio: var(--ratio-landscape);
-                }
-            }
-
-            /* [Ландшафт]: Защищаем кадр от вылета за пределы экрана телефона боком */
-            @media (max-height: 500px) and (orientation: landscape) {
-                &, &[data-src] {
-                    width: auto;
-                    height: auto;
-                    max-height: var(--media-pc-height); /* Потолок 209px, чтобы уместить подпись */
-                    aspect-ratio: var(--ratio-landscape);
                 }
             }
         }
     }
 
-    /* 🔥 МУЛЬТИ-МЕДИА ПУЛЬТ УПРАВЛЕНИЯ ГАЛЕРЕЙНОЙ СЕТКОЙ */
-
-    /* [Портрет]: Переводим сетку картинок строго в 1 колонку */
-    @media (max-width: 900px) and (orientation: portrait) {
-        .main-content .img-row-figure {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* [Ландшафт]: Ваша жесткая фиксация в 2 колонки с выравниванием по верхней кромке */
+    /* 📟 [Ландшафт]: Смартфоны горизонтально (высота до 500px) */
     @media (max-height: 500px) and (orientation: landscape) {
         .main-content .img-row-figure {
-            grid-template-columns: repeat(2, 1fr); 
-            gap: var(--gap-pc);
-            align-items: start
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start; 
+
+            & img.img-row-figure-landscape {
+                &, &[data-src] {
+                    height: auto;
+                    width: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));;
+                }
+            }
         }
     }
 

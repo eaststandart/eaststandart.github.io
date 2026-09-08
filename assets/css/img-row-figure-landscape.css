@@ -70,13 +70,9 @@
 
             & img.img-row-figure-landscape {
                 &, &[data-src] {
-                    /*width: auto;
-                    max-height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));*/
-
                     height: auto;
                     width: var(--mobile-base-landscape-width);
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                    max-height:none;
                 }
             }
         }

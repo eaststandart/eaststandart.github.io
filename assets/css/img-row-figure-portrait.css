@@ -1,0 +1,44 @@
+/*
+@about Модуль вертикальных журнальных изображений внутри галерейного ряда.
+@purpose Задает зеркальную геометрию 9/16 для вертикальных кадров и рамок в Grid-сетке на ПК.
+@author TechLab
+@version 1.0
+*/
+
+@layer components {
+
+    /* [БЛОК] Групповой контейнер вертикального журнального ряда */
+    .main-content .img-row-figure {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, var(--media-pc-height)); 
+        justify-content: center; /* Центрируем всю Grid-таблицу по центру страницы на ПК */
+        align-items: start;      
+        gap: var(--gap-pc);      /* Наш системный зазор 15px */
+        margin: 1em 0;           /* Ваш родной вертикальный отступ */
+
+        /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
+        & figure.img-figure {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center; 
+            width: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* [ЭЛЕМЕНТ] Целевой вертикальный галерейный кадр */
+        & img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                width: var(--media-pc-height); /* 🔥 ЗЕРКАЛЬНЫЙ ПЕРЕВОРОТ: 209px записываем в ширину */
+                height: auto;                  /* Отпускаем высоту свободно расти */
+                max-height: none;                     
+                aspect-ratio: 9 / 16;          /* Намертво запечатываем вертикаль */
+                object-fit: contain; 
+                object-position: center;   
+                margin: 0;
+            }
+        }
+    }
+
+}

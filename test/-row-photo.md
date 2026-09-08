@@ -46,9 +46,9 @@ permalink: /test/row-photo/
 ![{v}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 3-4 fig горизонтальные c параметром v
-<!---
+
 ![{fig}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
-![{fig|v}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)-->
+![{fig|v}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 ### Фото групповые fig
 

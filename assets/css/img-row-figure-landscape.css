@@ -71,8 +71,7 @@
             & img.img-row-figure-landscape {
                 &, &[data-src] {
                     width: auto;
-                    height: auto;
-                    max-height: var(--media-pc-height);
+                    max-height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                 }
             }
         }

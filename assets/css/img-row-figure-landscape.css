@@ -49,13 +49,34 @@
                     aspect-ratio: var(--ratio-landscape);
                 }
             }
+
+            /* [Ландшафт]: Защищаем кадр от вылета за пределы экрана телефона боком */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    width: auto;
+                    height: auto;
+                    max-height: var(--media-pc-height); /* Потолок 209px, чтобы уместить подпись */
+                    aspect-ratio: var(--ratio-landscape);
+                }
+            }
         }
     }
 
-    /* Мобильный пульт управления сеткой: переводим в 1 колонку в портрете */
+    /* 🔥 МУЛЬТИ-МЕДИА ПУЛЬТ УПРАВЛЕНИЯ ГАЛЕРЕЙНОЙ СЕТКОЙ */
+
+    /* [Портрет]: Переводим сетку картинок строго в 1 колонку */
     @media (max-width: 900px) and (orientation: portrait) {
         .main-content .img-row-figure {
             grid-template-columns: 1fr;
+        }
+    }
+
+    /* [Ландшафт]: Ваша жесткая фиксация в 2 колонки с выравниванием по верхней кромке */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .main-content .img-row-figure {
+            grid-template-columns: repeat(2, 1fr); 
+            gap: var(--gap-pc);
+            align-items: start
         }
     }
 

@@ -43,7 +43,23 @@
                 &, &[data-src] {
                     width: calc(var(--mobile-full-width) * var(--ratio-portrait));
                     height: auto;
-                    max-height: none;
+                }
+                }
+            }
+        }
+    }
+
+    /* 📟 [Ландшафт]: Смартфоны горизонтально (высота до 500px) */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .main-content .img-row-figure {
+            grid-template-columns: repeat(2, 1fr); /* Сетка переходит в 2 колонки на боку */
+            align-items: start; 
+
+            & img.img-row-figure-portrait {
+                &, &[data-src] {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
                 }
             }
         }

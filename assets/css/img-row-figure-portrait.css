@@ -24,4 +24,29 @@
         }
     }
 
+    /* ============================================================
+       📱 ЕДИНЫЙ МУЛЬТИ-МЕДИЙНЫЙ ПУЛЬТ АДАПТИВНОСТИ РЯДА
+       ============================================================ */
+
+    /* 📱 [Портрет]: Смартфоны вертикально (до 900px) */
+    @media (max-width: 900px) and (orientation: portrait) {
+        .main-content .img-row-figure {
+            /* Единая сетка на смартфоне в портрете переходит в 1 колонку */
+            grid-template-columns: 1fr;
+
+            & figure.img-figure {
+                display: flex; /* Сбрасываем инлайновость для правильного центрирования подписи */
+                width: var(--mobile-full-width);
+            }
+
+            & img.img-row-figure-portrait {
+                &, &[data-src] {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                    max-height: none;
+                }
+            }
+        }
+    }
+
 }

@@ -37,7 +37,7 @@
         }
 
         /* [ЭЛЕМЕНТ] Целевой вертикальный галерейный кадр */
-        & img.img-row-figure-portrait {
+        & figure.img-figure img.img-row-figure-portrait {
             &, &[data-src] {
                 display: inline-block;
                 height: var(--media-pc-height); /* Подстраиваем высоту под соседа — строго 209px */

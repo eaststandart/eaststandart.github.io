@@ -89,6 +89,7 @@
             grid-template-columns: repeat(2, 1fr);
             align-items: start; 
 
+            /* 1. Настройка и закрытие базового контейнера ряда */
             & img.img-row-figure-landscape {
                 &, &[data-src] {
                     height: auto;
@@ -96,13 +97,14 @@
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                 }
             }
+        }
 
+            /* 2.  */
             .main-content .img-row-figure figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: auto;
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
-                }
             }
         }
     }

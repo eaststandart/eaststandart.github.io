@@ -90,11 +90,10 @@ permalink: /test/row-photo/
 
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-18.webp)
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-19.webp)
-![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-20.webp)
 
 4-8 fig горизонтальные кастомные разных размеров и подписью 
 
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-18.webp)
 ![{fig|503x152}|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-19.webp)
-![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-20.webp)
+![{fig|1280x1132}](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-22.webp)

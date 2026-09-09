@@ -94,6 +94,7 @@
             & figure.img-figure img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     width: var(--mobile-base-landscape-width);
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
                 }

@@ -73,6 +73,7 @@
                     /*max-width: var(--mobile-full-width);*/
                     height: auto;
                     max-height: none;
+                    max-width: unset;
                 }
             }
         }

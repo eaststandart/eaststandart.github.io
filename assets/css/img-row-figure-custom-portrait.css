@@ -23,9 +23,7 @@
                 margin: 0;
             }
 
-            /* 🌅 Для загруженного фото: убираем серый фон плашки */
             &:not([data-src]) { background-color: transparent !important; }
-            /* ⏳ Для лези-лоада: держим серый щит лоадера */
             &[data-src] { background-color: var(--media-background-plug); }
         }
     }
@@ -62,7 +60,6 @@
             grid-template-columns: repeat(2, 1fr); /* 2 колонки на боку телефона */
             align-items: start; 
 
-            /* 🔥 ВАША ФОРМУЛА: динамически рассчитываем ширину кастомной вертикалки в ландшафте */
             & img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));

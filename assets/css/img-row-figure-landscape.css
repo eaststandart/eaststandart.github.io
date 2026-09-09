@@ -73,7 +73,6 @@
                 }
             }
 
-            /* 🔥 Вертикальный гость сжимается по вашей формуле внутри портретного пульта */
             & figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: calc(var(--mobile-full-width) * var(--ratio-portrait));

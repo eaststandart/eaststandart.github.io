@@ -68,7 +68,7 @@ permalink: /test/row-photo/
 
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
-![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp) 
+![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 
 4-4 fig горизонтальные c параметром v
 

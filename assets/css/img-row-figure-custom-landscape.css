@@ -69,10 +69,14 @@
 
             & figure.img-figure img.img-row-figure-custom-portrait {
                 &, &[data-src] {
-                    --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
+
+                    /*--current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
                     width: calc(var(--mobile-full-width) * var(--current-ratio));
                     max-width: var(--mobile-full-width);
-                    height: auto;
+                    height: auto; */
+                    width: auto; 
+                    height: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    max-width: var(--mobile-full-width); 
                 }
             }
         }

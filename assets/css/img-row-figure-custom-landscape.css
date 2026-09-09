@@ -55,7 +55,8 @@
 
             & figure.img-figure {
                 display: flex; /* Сброс инлайновости для центрирования */
-                width: var(--mobile-full-width);
+                width: 100%;
+                max-width: 100%;
             }
 
             /* Панорама раскрывается на всю ширину строки */

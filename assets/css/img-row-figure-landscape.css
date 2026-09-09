@@ -62,7 +62,8 @@
 
             & figure.img-figure {
                 display: flex; /* Сброс инлайновости */
-                width: var(--mobile-full-width);
+                width: 100%;
+                max-width: 100%;
             }
 
             & img.img-row-figure-landscape {

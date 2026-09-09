@@ -7,11 +7,11 @@
 
 @layer components {
 
-    /* [БЛОК] 🔥 МАКСИМАЛЬНОЕ УСИЛЕНИЕ: Явно прописываем тег div перед классами контекста */
-    div.main-content div.img-row-figure {
+    /* [БЛОК] Подключаемся к единому контейнеру ряда */
+    .main-content .img-row-figure {
 
-        /* [ЭЛЕМЕНТ] Целевая кастомная картинка внутри рамки figure */
-        & figure.img-figure img.img-row-figure-custom-landscape {
+        /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
+        & img.img-row-figure-custom-landscape {
             &, &[data-src] {
                 height: var(--media-pc-height);
                 max-height: none;

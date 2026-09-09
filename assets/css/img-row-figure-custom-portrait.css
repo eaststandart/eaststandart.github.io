@@ -39,16 +39,15 @@
 
             & figure.img-figure {
                 display: flex; /* Сброс инлайновости для центрирования подписи */
-                width: var(--mobile-full-width);
+                width: 100%;
+                max-width: 100%;
             }
 
-            /* 🔥 ВАША ФОРМУЛА: динамически рассчитываем ширину кастомной вертикалки в портрете */
             & img.img-row-figure-custom-portrait {
                 &, &[data-src] {
-                    --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
-                    width: calc(var(--mobile-full-width) * var(--current-ratio));
-                    max-width: var(--mobile-full-width);
-                    height: auto;
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width); 
                 }
             }
         }

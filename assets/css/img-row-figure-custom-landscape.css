@@ -3,11 +3,8 @@
     /* [БЛОК] Групповой контейнер кастомного журнального ряда */
     .main-content .img-row-figure-custom-landscape {
         display: grid;
-        /* 🔥 ВАША ФОРМУЛА: Умный шаг колонок от ~117px до ~371px на ПК */
-        grid-template-columns: repeat(auto-fit, minmax(
-            calc(var(--media-pc-height) * var(--ratio-portrait)), 
-            calc(var(--media-pc-height) * var(--ratio-landscape))
-        ));
+        /* Упростили: жёсткие границы ячейки от 200px до 371px */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 371px));
         justify-content: center; 
         align-items: start;      
         gap: var(--gap-pc);      
@@ -21,7 +18,7 @@
             width: auto;
             margin: 0;
 
-            /* [ЭЛЕМЕНТ] Подпись: утягивается по ширине Grid-колонки */
+            /* [ЭЛЕМЕНТ] Подпись */
             & figcaption.figcaption-img {
                 display: block;
                 width: 100%;
@@ -34,8 +31,9 @@
         & img.img-row-figure-custom-landscape {
             &, &[data-src] {
                 height: var(--media-pc-height); /* Строго 209px в высоту */
-                width: 100%;                    /* Заполняет «дышащую» ширину ячейки Grid */
-                aspect-ratio: auto;             /* Свободные пропорции из инлайн-стиля HTML */
+                width: 100%;                    /* Картинка заполняет ячейку */
+                max-width: 371px;               /* Железный потолок по ширине */
+                aspect-ratio: auto;             /* Свободные пропорции из HTML */
                 object-fit: contain; 
                 margin: 0;
             }

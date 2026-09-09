@@ -10,7 +10,7 @@
     /* [БЛОК] Групповой контейнер журнального ряда (галереи) */
     .main-content .img-row-figure {
         display: grid;
-        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); /* Потолок ~371px */
+        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape)));
         justify-content: center; 
         align-items: start;      
         gap: var(--gap-pc);      

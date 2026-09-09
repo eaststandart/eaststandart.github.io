@@ -83,7 +83,8 @@
             /* Панорама на боку зажимается по ландшафтному шагу */
             & img.img-row-figure-custom-landscape {
                 &, &[data-src] {
-                    height: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
                     width: var(--mobile-base-landscape-width);
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                 }

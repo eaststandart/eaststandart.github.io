@@ -99,7 +99,7 @@
             }
 
             /* 2.  */
-            & figure.img-figure img.img-row-figure-portrait {
+            div.main-content .img-row-figure figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: auto;
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));

@@ -1,15 +1,23 @@
+/*
+@about Модуль кастомных горизонтальных изображений произвольных пропорций внутри галерейного ряда.
+@purpose Задает фиксированную Grid-сетку на ПК для разноформатных панорамных кадров.
+@author TechLab
+@version 1.0
+*/
+
 @layer components {
 
     /* [БЛОК] Групповой контейнер кастомного журнального ряда */
     .main-content .img-row-figure-custom-landscape {
         display: grid;
-        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); /* ~371px */
-        justify-content: center; 
+        /* Жесткий журнальный шаг ячеек (~371px), удерживающий третью картинку строго под первой */
+        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape))); 
+        justify-content: center; /* Центрируем всю Grid-таблицу по центру страницы на ПК */
         align-items: start;      
-        gap: var(--gap-pc);      
-        margin: 1em 0;           
+        gap: var(--gap-pc);      /* Наш системный зазор 15px */
+        margin: 1em 0;           /* Ваш родной системный отступ контента */
 
-        /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
+        /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка 
         & figure.img-figure {
             display: inline-flex;
             flex-direction: column;
@@ -17,27 +25,26 @@
             width: auto;
             margin: 0;
 
-            /* [ЭЛЕМЕНТ] Подпись */
+            /* [ЭЛЕМЕНТ] Подпись: всегда ровно по центру под кастомным кадром 
             & figcaption.figcaption-img {
                 display: block;
                 width: 100%;
                 text-align: center;      
                 word-break: break-word;  
             }
-        } /* <-- Четко закрыли рамку и подпись */
+        } */
 
-        /* [ЭЛЕМЕНТ] 🔥 ИСПРАВЛЕНО: Добавлен пробел перед амперсандом! Классы больше не слипаются */
+        /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
         & img.img-row-figure-custom-landscape {
             &, &[data-src] {
-                height: var(--media-pc-height); /* Строго 209px в высоту */
-                width: auto;                    /* Утягиваем ширину под пропорции кадра */
-                max-width: 100%;                
-                aspect-ratio: auto;             /* Свободные пропорции из HTML */
-                object-fit: contain; 
+                height: var(--media-pc-height); /* Намертво фиксируем высоту 209px для ровной линии */
+                width: auto;                    /* 🔥 Наше решение: утягиваем ширину строго под пропорции кадра */
+                max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
+                aspect-ratio: auto;             /* Свободные пропорции: подхватываются из инлайн-стилей HTML */
+                object-fit: contain;            
                 margin: 0;
             }
-        } /* <-- Четко закрыли картинку */
+        }
+    }
 
-    } /* <-- Четко закрыли главный контейнер ряда */
-
-} /* <-- Четко закрыли слой @layer components */
+}

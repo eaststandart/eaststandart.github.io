@@ -17,7 +17,8 @@
                 max-height: none;
                 width: var(--mobile-base-landscape-width);
                 max-width: 100%;
-                object-fit: contain;            
+                object-fit: contain;  
+                border: 1px solid var(--primary-bg);          
                 margin: 0;
             }
 

@@ -1,25 +1,29 @@
-/*
-@about Модуль кастомных горизонтальных изображений произвольных пропорций внутри галерейного ряда.
-@purpose Управляет геометрией разноформатных панорамных кадров внутри единой Grid-сетки на ПК.
-@author TechLab
-@version 1.0
-*/
-
 @layer components {
 
     /* [БЛОК] Подключаемся к единому контейнеру ряда */
     .main-content .img-row-figure {
 
-        /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
-        & img.img-row-figure-custom-landscape {
+        /* [ЭЛЕМЕНТ] 🔥 УСИЛИЛИ СЕЛЕКТОР: Добавили явный путь через figure.img-figure */
+        & figure.img-figure img.img-row-figure-custom-landscape {
+            
+            /* Универсальные правила для обоих состояний */
             &, &[data-src] {
                 height: var(--media-pc-height);
                 max-height: none;
-                width: auto;                    /* 🔥 Утягиваем ширину строго под пропорции кадра */
-                max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
+                width: auto;                    
+                max-width: 100%;                
                 object-fit: contain;            
-                background-color: transparent !important;
                 margin: 0;
+            }
+
+            /* 🌅 Когда картинка ЖИВАЯ (JS уже убрал [data-src]) — фон становится чистым без !important */
+            &:not([data-src]) {
+                background-color: transparent;
+            }
+
+            /* ⏳ Пока картинка КУРИРУЕТСЯ лези-лоадом (заглушка) — пускай держит системный серый щит */
+            &[data-src] {
+                background-color: var(--media-background-plug);
             }
         }
     }

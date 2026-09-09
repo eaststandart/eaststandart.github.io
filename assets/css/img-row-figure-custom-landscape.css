@@ -70,7 +70,7 @@
                 &, &[data-src] {
                     --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
                     width: calc(var(--mobile-full-width) * var(--current-ratio));
-                    max-width: var(--mobile-full-width);
+                    max-width: calc(var(--mobile-full-width) * var(--current-ratio));
                     height: auto;
                 }
             }

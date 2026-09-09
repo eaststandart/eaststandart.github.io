@@ -10,7 +10,7 @@
         gap: var(--gap-pc);      
         margin: 1em 0;           
 
-        /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
+        /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка 
         & figure.img-figure {
             display: inline-flex;
             flex-direction: column;
@@ -18,14 +18,14 @@
             width: auto;
             margin: 0;
 
-            /* [ЭЛЕМЕНТ] Подпись */
+            /* [ЭЛЕМЕНТ] Подпись 
             & figcaption.figcaption-img {
                 display: block;
                 width: 100%;
                 text-align: center;      
                 word-break: break-word;  
             }
-        }
+        } */
 
         /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный кадр */
         & img.img-row-figure-custom-landscape {

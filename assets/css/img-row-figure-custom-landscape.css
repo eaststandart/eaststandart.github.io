@@ -15,11 +15,20 @@
             &, &[data-src] {
                 height: var(--media-pc-height);
                 max-height: none;
-                width: auto;                    /* 🔥 Утягиваем ширину строго под пропорции кадра */
-                max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
+                width: auto;
+                max-width: 100%;
                 object-fit: contain;            
-                background-color: transparent !important;
                 margin: 0;
+            }
+
+            /* 🌅 Для загруженного живого фото: перебиваем серый фон без всяких !important */
+            &:not([data-src]) {
+                background-color: transparent;
+            }
+
+            /* ⏳ Для лези-лоада: удерживаем системную заглушку, пока JS не подменит атрибут */
+            &[data-src] {
+                background-color: var(--media-background-plug);
             }
         }
     }

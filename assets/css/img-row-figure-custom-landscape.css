@@ -18,7 +18,7 @@
                 width: auto;                    /* 🔥 Утягиваем ширину строго под пропорции кадра */
                 max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
                 object-fit: contain;            
-                background-color: transparent;
+                background-color: transparent !important;
                 margin: 0;
             }
         }

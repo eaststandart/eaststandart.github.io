@@ -97,10 +97,12 @@ permalink: /test/row-photo/
 ![{fig|503x152}|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-19.webp)
 ![{fig|1280x1132}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-22.webp)
+![{fig|920x1280}](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+![{fig|503x152}|Рис. 3 – Электроны в электрической цепи устремляются|500](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
 
 4-9 fig горизонтальные кастомные разных размеров и подписью 
 
 ![{fig|929x775}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-18.webp)
 ![{fig|1031x720}|Рис. 1 – Схема электрическая принципиальная](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-03.webp)
 ![{fig|543x293}|Рис. 2 – Электроны в замкнутой электрической цепи](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-04.webp)
-![{fig|503x152}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу». Электроника для детей. Собираем простые схемы.|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)
+![{fig|503x152}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу». Электроника для детей.|400](github/eaststandart.github.io/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj-05.webp)

@@ -32,7 +32,6 @@
                 width: auto;                    
                 aspect-ratio: var(--ratio-landscape);
                 object-fit: contain; 
-                object-position: center;   
                 margin: 0;
             }
         }
@@ -46,7 +45,6 @@
                 max-height: none;
                 aspect-ratio: var(--ratio-portrait); /* Запечатываем форму 9/16 */
                 object-fit: contain;
-                object-position: center;
                 margin: 0;
             }
         }

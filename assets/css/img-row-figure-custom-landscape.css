@@ -23,7 +23,7 @@
 
             /* 🌅 Для загруженного живого фото: перебиваем серый фон без всяких !important */
             &:not([data-src]) {
-                background-color: transparent;
+                background-color: transparent !important;
             }
 
             /* ⏳ Для лези-лоада: удерживаем системную заглушку, пока JS не подменит атрибут */

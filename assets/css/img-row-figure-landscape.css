@@ -14,7 +14,8 @@
         justify-content: center; 
         align-items: start;      
         gap: var(--gap-pc);      
-        margin: 1em 0;           
+        margin: 1em 0;
+        width: 100%;           
 
         /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
         & figure.img-figure {

@@ -15,7 +15,7 @@
             &, &[data-src] {
                 height: var(--media-pc-height);
                 max-height: none;
-                width: auto;
+                width: var(--mobile-base-landscape-width);
                 max-width: 100%;
                 object-fit: contain;            
                 margin: 0;
@@ -30,8 +30,9 @@
             &, &[data-src] {
                 display: inline-block;
                 height: var(--media-pc-height);
-                width: auto;
                 max-height: none;
+                width: var(--mobile-base-landscape-width);
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                 object-fit: contain;
                 margin: 0;
             }

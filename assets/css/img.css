@@ -49,11 +49,9 @@ figcaption {
     font-size: 0.85rem;
     color: #6a737d;
     margin-top: 1rem; 
-    line-height: 1.4; 
-
-    /* 🚀 Вынесли общие журнальные правила сюда */
+    line-height: 1.4;
     width: auto;
-    max-width: var(--mobile-base-landscape-width);
+    max-width: var(--mobile-full-width);
     word-break: break-word;
 }
 

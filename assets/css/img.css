@@ -51,7 +51,7 @@ figcaption {
     margin-top: 1rem; 
     line-height: 1.4;
     width: auto;
-    max-width: var(--mobile-full-width);
+    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
     word-break: break-word;
 }
 

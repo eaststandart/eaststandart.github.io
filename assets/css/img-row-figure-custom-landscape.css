@@ -35,15 +35,14 @@
         } */
 
         /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
-        & img.img-row-figure-custom-landscape {
-            &, &[data-src] {
+        & img.img-row-figure-custom-landscape,
+        & img.img-row-figure-custom-landscape[data-src] {
                 height: var(--media-pc-height); /* Намертво фиксируем высоту 209px для ровной линии */
                 width: auto;                    /* 🔥 Наше решение: утягиваем ширину строго под пропорции кадра */
                 max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
                 aspect-ratio: auto;             /* Свободные пропорции: подхватываются из инлайн-стилей HTML */
                 object-fit: contain;            
                 margin: 0;
-            }
         }
     }
 

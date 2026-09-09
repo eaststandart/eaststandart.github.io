@@ -75,7 +75,7 @@
                     max-width: var(--mobile-full-width);
                     height: auto; */
                     width: auto; 
-                    height: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: var(--mobile-full-width);
                     max-width: var(--mobile-full-width); 
                 }
             }

@@ -13,12 +13,12 @@
         /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
         & img.img-row-figure-custom-landscape {
             &, &[data-src] {
-                height: auto; /* Намертво фиксируем высоту 209px для ровной журнальной линии */
-                max-height: var(--media-pc-height);
+                height: var(--media-pc-height);
+                max-height: none;
                 width: auto;                    /* 🔥 Утягиваем ширину строго под пропорции кадра */
                 max-width: 100%;                /* Защита: картинка никогда не разорвет границы ячейки */
-                aspect-ratio: auto;             /* Свободные пропорции: подхватываются из инлайн-стилей HTML */
                 object-fit: contain;            
+                background-color: transparent;
                 margin: 0;
             }
         }

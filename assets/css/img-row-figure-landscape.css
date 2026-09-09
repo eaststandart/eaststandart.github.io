@@ -101,8 +101,8 @@
             & figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: auto;
-                    height: var(--mobile-base-landscape-width);
-                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
                 }
             }
         }

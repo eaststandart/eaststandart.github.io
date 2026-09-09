@@ -1,24 +1,17 @@
-/*
-@about Модуль кастомных горизонтальных изображений произвольных пропорций внутри галерейного ряда.
-@purpose Задает гибкую Grid-сетку на ПК на базе minmax() для разноформатных панорамных кадров.
-@author TechLab
-@version 1.0
-*/
-
 @layer components {
 
-    /* [БЛОК] Групповой контейнер кастомного журнального ряда (галереи) */
+    /* [БЛОК] Групповой контейнер кастомного журнального ряда */
     .main-content .img-row-figure-custom-landscape {
         display: grid;
-        /* 🔥 ВАША ГЕНИАЛЬНАЯ ФОРМУЛА: Умные колонки гибко дышат в диапазоне от ~117px до ~371px */
+        /* 🔥 ВАША ФОРМУЛА: Умный шаг колонок от ~117px до ~371px на ПК */
         grid-template-columns: repeat(auto-fit, minmax(
             calc(var(--media-pc-height) * var(--ratio-portrait)), 
             calc(var(--media-pc-height) * var(--ratio-landscape))
         ));
-        justify-content: center; /* Центрируем всю гибкую таблицу по центру страницы на ПК */
+        justify-content: center; 
         align-items: start;      
-        gap: var(--gap-pc);      /* Наш системный зазор 15px с главного пульта */
-        margin: 1em 0;           /* Ваш родной системный отступ контента */
+        gap: var(--gap-pc);      
+        margin: 1em 0;           
 
         /* [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка */
         & figure.img-figure {
@@ -27,75 +20,24 @@
             align-items: center; 
             width: auto;
             margin: 0;
-            padding: 0;
 
-            /* Динамическая подстройка подписи под «дышащую» ширину ячейки Grid */
+            /* [ЭЛЕМЕНТ] Подпись: утягивается по ширине Grid-колонки */
             & figcaption.figcaption-img {
                 display: block;
                 width: 100%;
-                /* Ограничиваем текст, чтобы он не превращался в узкий столбик букв */
-                min-width: calc(var(--media-pc-height) * var(--ratio-portrait)); /* Не меньше ~117px */
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* Не больше ~371px */
                 text-align: center;      
                 word-break: break-word;  
             }
         }
 
-        /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный галерейный кадр */
+        /* [ЭЛЕМЕНТ] Целевой кастомный горизонтальный кадр */
         & img.img-row-figure-custom-landscape {
             &, &[data-src] {
-                height: var(--media-pc-height); /* Строго 209px в высоту на ПК для ровной линии */
-                width: 100%;                    /* Заполняет «дышащую» ширину своей Grid-колонки */
-                max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); /* Защитный потолок ~371px */
-                aspect-ratio: auto;             /* 🔥 Свободные пропорции: прилетают из инлайн-стилей HTML */
-                object-fit: contain;            /* Вписывание кастомного кадра без деформаций */
-                object-position: center;   
+                height: var(--media-pc-height); /* Строго 209px в высоту */
+                width: 100%;                    /* Заполняет «дышащую» ширину ячейки Grid */
+                aspect-ratio: auto;             /* Свободные пропорции из инлайн-стиля HTML */
+                object-fit: contain; 
                 margin: 0;
-            }
-        }
-    }
-
-    /* ============================================================
-       📱 ЕДИНЫЙ МУЛЬТИ-МЕДИЙНЫЙ ПУЛЬТ АДАПТИВНОСТИ КАСТОМНОГО РЯДА
-       ============================================================ */
-
-    /* 📱 [Портрет]: Смартфоны вертикально (до 900px) */
-    @media (max-width: 900px) and (orientation: portrait) {
-        .main-content .img-row-figure-custom-landscape {
-            grid-template-columns: 1fr; /* Переводим сетку в 1 колонку — кадры падают стопкой */
-
-            & figure.img-figure {
-                display: flex; /* Сброс инлайновости для правильного мобильного потока */
-                width: var(--mobile-full-width);
-
-                & figcaption.figcaption-img {
-                    min-width: 0; /* Полностью сбрасываем ПК-лимиты сжатия для смартфона */
-                    max-width: 100%;
-                }
-            }
-
-            & img.img-row-figure-custom-landscape {
-                &, &[data-src] {
-                    width: var(--mobile-full-width); /* Расширяем кастомный кадр на всю ширину строки */
-                    height: auto;                     /* Отпускаем высоту свободно расти по пропорциям */
-                    max-height: none;
-                }
-            }
-        }
-    }
-
-    /* 📟 [Ландшафт]: Смартфоны горизонтально (высота до 500px) */
-    @media (max-height: 500px) and (orientation: landscape) {
-        .main-content .img-row-figure-custom-landscape {
-            grid-template-columns: repeat(2, 1fr); /* Жесткая фиксация в 2 колонки на боку телефона */
-            align-items: start; 
-
-            & img.img-row-figure-custom-landscape {
-                &, &[data-src] {
-                    height: auto;
-                    width: var(--mobile-base-landscape-width);
-                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
-                }
             }
         }
     }

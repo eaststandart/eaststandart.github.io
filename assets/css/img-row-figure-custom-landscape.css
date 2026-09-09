@@ -21,7 +21,7 @@
                 margin: 0;
             }
 
-            /* 🌅 Для загруженного живого фото: перебиваем серый фон без всяких !important */
+            /* 🌅 Для загруженного фото перебиваем серый фон */
             &:not([data-src]) {
                 background-color: transparent !important;
             }
@@ -31,6 +31,30 @@
                 background-color: var(--media-background-plug);
             }
         }
+
+        /* [ЭЛЕМЕНТ] Кастомный вертикальный кадр, попавший в кастомный ландшафтный ряд */
+        & figure.img-figure img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                height: var(--media-pc-height);
+                max-height: none;
+                width: auto;
+                max-width: 100%;
+                object-fit: contain;
+                margin: 0;
+            }
+
+            /* 🌅 Для загруженного живого фото: перебиваем серый фон */
+            &:not([data-src]) {
+                background-color: transparent !important;
+            }
+
+            /* ⏳ Для лези-лоада: удерживаем системную заглушку */
+            &[data-src] {
+                background-color: var(--media-background-plug);
+            }
+        }
+
     }
 
 }

@@ -77,5 +77,5 @@ permalink: /test/row-photo/
 
 4-5 fig горизонтальные c параметром v и подписью
 
-![{fig}](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
+![{fig}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-19.webp)
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются от «минуса» к «плюсу»](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)

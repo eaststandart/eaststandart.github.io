@@ -63,7 +63,7 @@
                 }
             }
 
-            & img.img-row-figure-custom-portrait {
+            & figure.img-figure img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
                     width: calc(var(--mobile-full-width) * var(--current-ratio));

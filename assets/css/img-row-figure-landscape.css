@@ -37,8 +37,8 @@
         }
 
         /* [ЭЛЕМЕНТ] Целевой вертикальный галерейный кадр */
-        & figure.img-figure img.img-row-figure-portrait {
-            &, &[data-src] {
+        & figure.img-figure img.img-row-figure-portrait,
+        & figure.img-figure img.img-row-figure-portrait[data-src] {
                 display: inline-block;
                 height: var(--media-pc-height); /* Подстраиваем высоту под соседа — строго 209px */
                 width: auto;                    /* Ширина рассчитается автоматически (~117px) */
@@ -47,7 +47,6 @@
                 object-fit: contain;
                 margin: 0;
             }
-        }
 
     }
 

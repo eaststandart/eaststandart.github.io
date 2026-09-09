@@ -34,6 +34,7 @@
                 width: var(--mobile-base-landscape-width);
                 max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                 object-fit: contain;
+                border: 1px solid var(--primary-bg);
                 margin: 0;
             }
 
@@ -88,6 +89,7 @@
                     max-height: var(--media-pc-height);
                     width: var(--mobile-base-landscape-width);
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    border: 1px solid var(--primary-bg);
                 }
             }
 
@@ -98,6 +100,7 @@
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
+                    border: 1px solid var(--primary-bg);
                 }
             }
         }

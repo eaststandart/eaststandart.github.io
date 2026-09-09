@@ -90,12 +90,12 @@
             }
 
             /* Вертикалка на боку рассчитывается через динамический коэффициент */
-            & img.img-row-figure-custom-portrait {
+            & figure.img-figure img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
-                    width: calc(var(--mobile-base-landscape-width) * var(--current-ratio));
-                    max-width: var(--mobile-base-landscape-width);
-                    height: auto;
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--current-ratio));
+                    max-height: var(--media-pc-height);
                 }
             }
         }

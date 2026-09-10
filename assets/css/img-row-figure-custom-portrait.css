@@ -11,7 +11,7 @@
     .main-content .img-row-figure {
 
         /* [ЭЛЕМЕНТ] Целевой кастомный вертикальный галерейный кадр */
-        & img.img-row-figure-custom-portrait {
+        /* & img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
                 height: var(--media-pc-height);
@@ -25,20 +25,20 @@
 
             &:not([data-src]) { background-color: transparent !important; }
             &[data-src] { background-color: var(--media-background-plug); }
-        }
+        } */
 
-        /* & img.img-row-figure-custom-portrait {
+        & img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
                 height: calc(var(--media-pc-height) * var(--ratio-landscape));
                 max-height: none;                     
                 width: auto;
                 max-width: var(--mobile-base-landscape-width);
-                object-fit: contain;   
+                object-fit: unset;   
                 border: 1px solid var(--primary-bg);
                 margin: 0;
             }
-        } */
+        } 
 
         &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
             &, &[data-src] {

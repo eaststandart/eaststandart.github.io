@@ -14,7 +14,7 @@
         & img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
-                height: calc(var(--mobile-base-landscape-width) * var(--ratio-landscape));
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
                 max-height: none;                     
                 width: auto; /* 🔥 Концепция плашек: одинаковая ширина на ПК */
                 max-width: var(--mobile-base-landscape-width);

@@ -85,7 +85,7 @@ def process_markdown_images(markdown_content):
                 else:
                     geometry_class = "custom-portrait"
                     
-                custom_attrs = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important; --my-ratio: calc({width} / {height});"'
+                custom_attrs = f' width="{width}" height="{height}" style="aspect-ratio: {width} / {height} !important;"'
                 raw_parts.pop(0)
                 
             target_img_class = f"{img_prefix}{geometry_class}"
@@ -196,7 +196,7 @@ def process_markdown_images(markdown_content):
                     
                     custom_attrs.append(f'width="{width}"')
                     custom_attrs.append(f'height="{height}"')
-                    custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important; --my-ratio: calc({width} / {height});"')
+                    custom_attrs.append(f'style="aspect-ratio: {width} / {height} !important;"')
                     parts.pop(0)
                     
                 if not classes:

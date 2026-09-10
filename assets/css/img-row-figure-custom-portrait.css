@@ -78,6 +78,18 @@
                 }
             }
 
+         &:has([class*="landscape"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                height: var(--mobile-full-width);                    
+                width: auto;
+                max-width: var(--mobile-full-width);
+                object-fit: unset;   
+            }
+
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
+
             &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     height: var(--mobile-full-width);

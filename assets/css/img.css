@@ -10,25 +10,15 @@
    🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
-/* 🌅 СЛОЙ ВСЕХ ОДИНОЧНЫХ КАРТИНОК */
+/* 🌅 СЛОЙ ОДИНОЧНЫХ КАРТИНОК */
 @import url("img-single.css");
-
-@import url("img-single-figure-landscape.css");
-@import url("img-single-figure-portrait.css");
-@import url("img-single-figure-custom-landscape.css");
-@import url("img-single-figure-custom-portrait.css");
-
-@import url("img-row-figure-landscape.css");
-@import url("img-row-figure-portrait.css");
-@import url("img-row-figure-custom-landscape.css");
-@import url("img-row-figure-custom-portrait.css");
+@import url("img-single-figure.css");
 
 /* 👥 СЛОЙ ГРУППОВЫХ ГАЛЕРЕЙ И РЯДОВ */
 @import url("img-row.css");
 
 /* 📑 СЛОЙ ЖУРНАЛЬНЫХ БЛОКОВ FIGURE */
-@import url("img-figure.css");
-@import url("img-figure-v.css");
+@import url("img-row-figure.css");
 
 /* СЛОЙ ZOOM */
 @import url("zoom.css");

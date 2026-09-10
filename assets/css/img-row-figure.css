@@ -1,0 +1,267 @@
+/*
+@about Модуль галерейных рядов изображений (img-row-figure.css).
+@purpose Объединяет горизонтальные, вертикальные и кастомные галерейные ряды блоков figure 
+         в единую, бесконфликтную систему на нативном Nesting с локальной адаптивностью.
+@author TechLab
+@version 1.0
+*/
+
+@layer components {
+
+    /* ==========================================================================
+       📦 [БЛОК] Групповой контейнер журнального ряда (img-row-figure)
+       ========================================================================= */
+    .main-content .img-row-figure {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape)));
+        justify-content: center; 
+        align-items: start;      
+        gap: var(--gap-pc);      
+        margin: 1em 0;          
+
+        /* [Портрет]: Переводим саму Grid-сетку ряда в 1 колонку */
+        @media (max-width: 900px) and (orientation: portrait) {
+            grid-template-columns: 1fr;
+        }
+
+        /* [Ландшафт]: Переводим саму Grid-сетку в 2 колонки */
+        @media (max-height: 500px) and (orientation: landscape) {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start; 
+        }
+
+        /* ------------------------------------------------------------
+           🖼️ 0. [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка (figure.img-figure)
+           ------------------------------------------------------------ */
+        & figure.img-figure {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center; 
+            width: auto;
+            margin: 0;
+
+            /* [Портрет]: Сброс инлайновости */
+            @media (max-width: 900px) and (orientation: portrait) {
+                display: flex; 
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌅 1. [ЭЛЕМЕНТ] Базовый горизонтальный ряд (img-row-figure-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-landscape {
+            &, &[data-src] {
+                height: var(--media-pc-height);
+                width: auto;                    
+                aspect-ratio: var(--ratio-landscape);
+                object-fit: contain; 
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    height: auto;
+                    max-height: none;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: auto;
+                    width: var(--mobile-base-landscape-width);
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2. [ЭЛЕМЕНТ] Базовый вертикальный ряд (img-row-figure-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                width: var(--media-pc-height);
+                height: auto;
+                max-height: none;                     
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain;   
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2а. [МОДИФИКАТОР] Вертикальная картинка в ландшафтном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="landscape"]) img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                height: var(--media-pc-height);
+                width: auto;
+                max-height: none;
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain;
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 3. [ЭЛЕМЕНТ] Кастомный горизонтальный ряд (img-row-figure-custom-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-custom-landscape {
+            &, &[data-src] {
+                height: var(--media-pc-height);
+                max-height: none;
+                width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;  
+                border: 1px solid var(--primary-bg);          
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                    width: var(--mobile-base-landscape-width);
+                }
+            }
+
+            /* Управление фоновым щитом-заглушкой до и после загрузки */
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4. [ЭЛЕМЕНТ] Кастомный вертикальный ряд (img-row-figure-custom-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;                     
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: unset;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width); 
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+        } 
+
+        /* ------------------------------------------------------------
+           🛠️ 4а. [МОДИФИКАТОР] Кастомная вертикальная картинка в ландшафтном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="landscape"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                height: var(--media-pc-height);
+                max-height: none;                     
+                width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);                    
+                    width: auto;
+                    max-width: var(--mobile-full-width);
+                    object-fit: unset;   
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: var(--mobile-base-landscape-width);
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+
+            /* Управление фоновой заглушкой внутри хака :has */
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4б. [МОДИФИКАТОР] Кастомная вертикальная картинка в портретном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block; 
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: unset;
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width);
+                    border: 1px solid var(--primary-bg);
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+        }
+
+    } /* Конец БЛОКА .img-row-figure */
+
+} /* Конец СЛОЯ components */

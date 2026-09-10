@@ -12,7 +12,6 @@
         
         /* ПК-режим и параметры стабилизации */
         &, &[data-src] {
-            --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
             display: inline-block;
             width: var(--media-pc-height);
             height: auto;
@@ -25,8 +24,8 @@
         /* [Портрет]: Планшеты (Широкие экраны от 501px до 900px) — сжимаем аккуратно */
         @media (max-width: 900px) and (orientation: portrait) {
             &, &[data-src] {
-                width: calc(var(--mobile-full-width) * var(--current-ratio));
-                max-width: var(--mobile-full-width);  
+                height: var(--mobile-full-width);
+                width: auto;
             }
         }
 

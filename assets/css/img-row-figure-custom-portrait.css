@@ -11,7 +11,7 @@
     .main-content .img-row-figure {
 
         /* [ЭЛЕМЕНТ] Целевой кастомный вертикальный галерейный кадр */
-        /*& img.img-row-figure-custom-portrait {
+        & img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
                 height: var(--media-pc-height);
@@ -25,10 +25,10 @@
 
             &:not([data-src]) { background-color: transparent !important; }
             &[data-src] { background-color: var(--media-background-plug); }
-        }*/
+        }
 
         /* [ЭЛЕМЕНТ] Целевой кастомный вертикальный галерейный кадр */
-        & img.img-row-figure-custom-portrait {
+        /*& img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
                 height: calc(var(--media-pc-height)*var(--ratio-landscape));
@@ -39,7 +39,7 @@
                 border: 1px solid var(--primary-bg);
                 margin: 0;
             }
-        }
+        }*/
 
     }
 

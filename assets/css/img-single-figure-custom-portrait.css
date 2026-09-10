@@ -13,8 +13,8 @@
         /* ПК-режим и параметры стабилизации */
         &, &[data-src] {
             display: inline-block;
-            width: var(--media-pc-height);
-            height: auto;
+            width: auto;
+            height: calc(var(--media-pc-height) * var(--ratio-landscape));
             object-fit: unset;
             margin: 0;
             box-sizing: border-box;

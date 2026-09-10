@@ -30,7 +30,14 @@
         /* [ЭЛЕМЕНТ] Целевой кастомный вертикальный галерейный кадр */
         & img.img-row-figure-custom-portrait {
             &, &[data-src] {
-
+                display: inline-block;                
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;                     
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: contain;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
             }
         }
 

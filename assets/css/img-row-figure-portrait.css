@@ -82,6 +82,15 @@
                     max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
                 }
             }
+
+            &:has([class*="landscape"]) img.img-row-figure-portrait {
+                &, &[data-src] {
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                }
+            }
+
         }
     }
 

@@ -61,13 +61,6 @@
                 }
             }
 
-            /*& figure.img-figure img.img-row-figure-portrait {
-                &, &[data-src] {
-                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
-                    height: auto;
-                    max-height: none;
-                }
-            }*/
         }
     }
 
@@ -87,13 +80,13 @@
             }
 
             /* 2.  */
-            & figure.img-figure img.img-row-figure-portrait {
+            /*& figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: auto;
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
                 }
-            }
+            }*/
         }
     }
 

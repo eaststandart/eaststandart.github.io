@@ -34,6 +34,7 @@
                 &, &[data-src] {
                 height: auto;
                 width: calc(var(--media-pc-height) * var(--img-ratio));
+                max-width: var(--media-mobile-width);
             }
         }
     }

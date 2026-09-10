@@ -138,3 +138,8 @@ fig|920x1280 fig|920x1280
 
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+
+fig|v fig|v
+
+![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)

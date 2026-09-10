@@ -15,8 +15,8 @@
             &, &[data-src] {
                 height: var(--media-pc-height);
                 max-height: none;
-                width: var(--mobile-base-landscape-width);
-                max-width: 100%;
+                width: auto;
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                 object-fit: contain;  
                 border: 1px solid var(--primary-bg);          
                 margin: 0;

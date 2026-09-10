@@ -27,7 +27,7 @@
         }
 
         /* [ЭЛЕМЕНТ] Кастомный вертикальный кадр, попавший в кастомный ландшафтный ряд */
-        & figure.img-figure img.img-row-figure-custom-portrait {
+        /*& figure.img-figure img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;
                 height: var(--media-pc-height);
@@ -41,7 +41,7 @@
 
             &:not([data-src]) {background-color: transparent !important;  }
             &[data-src] {background-color: var(--media-background-plug);  }
-        }
+        }*/
     }
 
     /* ============================================================

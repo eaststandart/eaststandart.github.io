@@ -33,7 +33,7 @@
             @media (max-height: 500px) and (orientation: landscape) {
                 &, &[data-src] {
                 height: auto;
-                width: width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                width: calc(var(--media-pc-height) * var(--ratio-landscape));
             }
         }
     }

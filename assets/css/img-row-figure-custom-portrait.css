@@ -10,7 +10,7 @@
     /* [БЛОК] Подключаемся к единому контейнеру ряда */
     .main-content .img-row-figure {
 
-        /* [ЭЛЕМЕНТ] Целевой кастомный вертикальный галерейный кадр */
+        /* [ЭЛЕМЕНТ] Кастомный вертикальный галерейный кадр */
         & img.img-row-figure-custom-portrait {
             &, &[data-src] {
                 display: inline-block;                
@@ -23,6 +23,22 @@
                 margin: 0;
             }
         } 
+
+         &:has([class*="landscape"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                height: var(--media-pc-height);
+                max-height: none;                     
+                width: var(--mobile-base-landscape-width);
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+            }
+
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
 
         &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
             &, &[data-src] {

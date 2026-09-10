@@ -119,14 +119,22 @@ permalink: /test/row-photo/
 ![{fig|405x720}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
 
+fig|v fig|v
+
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+
+fig|405x720 fig|v
 
 ![{fig|405x720}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
 
+fig|v fig|920x1280
+
 ![{fig|v}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-02.webp)
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
+
+fig|920x1280 fig|920x1280
 
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)
 ![{fig|920x1280}|Рис. 3 – Электроны в электрической цепи устремляются](github/eaststandart.github.io/faire/detektor-pereliva/detektor-pereliva-23.webp)

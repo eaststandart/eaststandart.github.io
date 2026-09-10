@@ -58,6 +58,14 @@
                     height: auto;
                 }
             }
+
+            &:has([class*="landscape"]) img.img-row-figure-portrait {
+                &, &[data-src] {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                }
+            }
+
         }
     }
 

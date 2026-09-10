@@ -22,6 +22,19 @@
                 margin: 0;
             }
         }
+
+        &:has([class*="landscape"]) img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                height: var(--media-pc-height);
+                width: auto;
+                max-height: none;
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain;
+                margin: 0;
+            }
+        }
+
     }
 
     /* ============================================================

@@ -77,6 +77,16 @@
                     max-width: var(--mobile-full-width); 
                 }
             }
+
+            &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+                &, &[data-src] {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width);
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+
         }
     }
 
@@ -111,6 +121,14 @@
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+
+            &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+                &, &[data-src] {
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
                     border: 1px solid var(--primary-bg);
                 }
             }

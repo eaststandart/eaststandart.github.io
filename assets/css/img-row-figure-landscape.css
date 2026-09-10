@@ -36,19 +36,6 @@
             }
         }
 
-        /* [ЭЛЕМЕНТ] Целевой вертикальный галерейный кадр */
-         /*& figure.img-figure img.img-row-figure-portrait {
-            &, &[data-src] {
-                display: inline-block;
-                height: var(--media-pc-height);
-                width: auto;
-                max-height: none;
-                aspect-ratio: var(--ratio-portrait);
-                object-fit: contain;
-                margin: 0;
-            }
-        }*/
-
     }
 
     /* ============================================================
@@ -74,13 +61,13 @@
                 }
             }
 
-            & figure.img-figure img.img-row-figure-portrait {
+            /*& figure.img-figure img.img-row-figure-portrait {
                 &, &[data-src] {
                     width: calc(var(--mobile-full-width) * var(--ratio-portrait));
                     height: auto;
                     max-height: none;
                 }
-            }
+            }*/
         }
     }
 

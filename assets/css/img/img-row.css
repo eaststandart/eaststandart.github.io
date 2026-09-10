@@ -7,10 +7,12 @@
 
 @layer components {
 
-    /* 🔥 ВАЖНО: Селектор находит абзац <p>, только если внутри него есть рядные картинки, 
-       и превращает этот абзац в красивый журнальный флекс-контейнер */
+    /* 🔥 ВАЖНО: Селектор превращает абзац <p> во флекс-контейнер, только если внутри 
+       него лежат рядные картинки стандарта v4.5 от нашего Python-парсера */
     .main-content p:has(.img-row-landscape),
-    .main-content p:has(.img-row-portrait) {
+    .main-content p:has(.img-row-portrait),
+    .main-content p:has(.img-row-custom-landscape),
+    .main-content p:has(.img-row-custom-portrait) {
         
         /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
         & {
@@ -20,28 +22,26 @@
             align-items: stretch;
             gap: var(--gap-pc); /* Наш системный зазор 15px с главного пульта */
             width: 100%;
-            margin: 0 0 var(--gap-pc) 0; /* Нижний отступ ряда равен зазору */
+            margin: 0 0 var(--gap-pc) 0;
         }
 
         /* ------------------------------------------------------------
-           👥 ВНУТРЕННИЕ ЭЛЕМЕНТЫ ГАЛЕРЕИ (Ландшафт и Портрет)
+           🌅 А. ГОРИЗОНТАЛЬНЫЕ КАДРЫ ВНУТРИ ГАЛЕРЕИ (img-row-landscape)
            ============================================================ */
-        
-        /* 🌅 Горизонтальный кадр внутри галереи */
         & img.img-row-landscape {
             &, &[data-src] {
                 height: var(--media-pc-height); /* Строго 209px в высоту на ПК */
                 width: auto;                    
-                aspect-ratio: var(--ratio-landscape); 
-                object-fit: contain;
+                aspect-ratio: var(--ratio-landscape); /* Намертво запечатываем 16/9 */
+                object-fit: contain; /* Профессиональное вписывание разноформатных кадров БЕЗ обрезки */
                 object-position: center;   
                 margin: 0;
             }
 
-            /* --- А. Смартфоны вертикально (Portrait) --- */
+            /* [Портрет]: Сбрасываем ряд и раскрываем во всю ширину текстовой строки */
             @media (max-width: 900px) and (orientation: portrait) {
                 &, &[data-src] {
-                    width: var(--mobile-full-width); /* Раскрываем во всю ширину строки */
+                    width: var(--mobile-full-width); 
                     max-width: none;
                     height: auto;       
                     max-height: none;   
@@ -49,30 +49,31 @@
                 }
             }
 
-            /* --- Б. Смартфоны горизонтально (Landscape) --- */
+            /* [Ландшафт]: Раскладываем по ландшафтному шагу сетки пульта */
             @media (max-height: 500px) and (orientation: landscape) {
                 &, &[data-src] {
                     height: auto;
-                    width: var(--mobile-base-landscape-width); /* Ровно половина экрана контента */
+                    width: var(--mobile-base-landscape-width); 
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); 
                     aspect-ratio: var(--ratio-landscape); 
                 }
             }
         }
 
-
-        /* 🌌 Вертикальный кадр внутри галереи (Обложки, плакаты) */
+        /* ------------------------------------------------------------
+           🌌 Б. ВЕРТИКАЛЬНЫЕ КАДРЫ ВНУТРИ ГАЛЕРЕИ (img-row-portrait)
+           ============================================================ */
         & img.img-row-portrait {
             &, &[data-src] {
-                height: var(--media-pc-height); 
+                height: var(--media-pc-height); /* Строго 209px в высоту на ПК, вровень с соседом */
                 width: auto;                    
-                aspect-ratio: var(--ratio-portrait); 
+                aspect-ratio: var(--ratio-portrait); /* Намертво запечатываем вертикальные 9/16 */
                 object-fit: cover;              
                 object-position: center;   
                 margin: 0;
             }
 
-            /* --- А. Смартфоны вертикально (Portrait) --- */
+            /* [Портрет]: Аккуратно сжимаем ширину по коэффициенту 9/16 от строки контента */
             @media (max-width: 900px) and (orientation: portrait) {
                 &, &[data-src] {
                     display: inline-block;
@@ -83,18 +84,66 @@
                 }
             }
 
-            /* --- Б. Смартфоны горизонтально (Landscape) --- */
+            /* [Ландшафт]: Берем идеальную живую высоту ландшафтного соседа */
             @media (max-height: 500px) and (orientation: landscape) {
                 &, &[data-src] {
                     display: inline-block;
                     width: auto;
-                    /* 🔥 ИДЕАЛЬНЫЙ РАСЧЕТ: Берем живую высоту ландшафтного соседа */
                     height: calc(var(--mobile-base-landscape-width) * (9 / 16)); 
-                    max-height: var(--media-pc-height);
+                    max-height: var(--media-pc-height); /* Строгий потолок лимита */
                     aspect-ratio: var(--ratio-portrait);
                 }
             }
         }
 
+
+        /* ------------------------------------------------------------
+           🌅 В. КАСТОМНЫЕ ГОРИЗОНТАЛЬНЫЕ КАДРЫ ВНУТРИ ГАЛЕРЕИ (img-row-custom-landscape)
+           ============================================================ */
+        & img.img-row-custom-landscape {
+            &, &[data-src] {
+                --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
+                height: var(--media-pc-height); /* Жесткие 209px в высоту на ПК, вровень с соседями */
+                width: auto;                    /* Ширина свободно высчитывается по инлайн aspect-ratio */
+                object-fit: contain;            /* Горизонтальное журнальное вписывание без обрезки */
+                object-position: center;   
+                margin: 0;
+            }
+        }
+
+
+        /* ------------------------------------------------------------
+           🌌 Г. КАСТОМНЫЕ ПОРТРЕТНЫЕ КАДРЫ ВНУТРИ ГАЛЕРЕИ (img-row-custom-portrait)
+           ============================================================ */
+        & img.img-row-custom-portrait {
+            &, &[data-src] {
+                --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
+                height: var(--media-pc-height); /* Жесткие 209px в высоту на ПК, вровень с рядом */
+                width: auto;                    /* Ширина свободно высчитывается по инлайн aspect-ratio */
+                object-fit: cover;              /* Профессиональное вписывание */
+                object-position: center;   
+                margin: 0;
+            }
+
+            /* [Портрет]: Аккуратно сжимаем ширину по коэффициенту 9/16 от строки контента */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    display: inline-block;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait)); 
+                    max-height: var(--media-pc-height);
+                }
+            }
+
+            /* [Ландшафт]: Берем идеальную живую высоту ландшафтного соседа */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    display: inline-block;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait)); 
+                    max-height: var(--media-pc-height);
+                }
+            }
+        }
+
     }
+
 }

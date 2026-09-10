@@ -1,0 +1,724 @@
+/*
+@about Модуль геометрической стабилизации, антипрыжка и адаптации изображений.
+@purpose Задаёт фиксированную высоту 209px и серые заглушки для ВСЕХ типов картинок контента,
+         управляя пропорциями галерей, центра и кастомных размеров строго через классы Python.
+@author TechLab
+@version 
+*/
+
+/* СЛОЙ ZOOM */
+@import url("zoom.css");
+
+/* ============================================================
+   🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ
+   ============================================================ */
+
+/* 1. БАЗОВАЯ СТРУКТУРА: Любой текстовый абзац с картинками */
+.main-content p:has(img) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--gap-pc);         
+    margin: 1em 0 !important;   
+    padding: 0 !important;      
+}
+
+/* 2. ОБЩИЙ СТИЛЬ ДЛЯ ПОДПИСЕЙ К МЕДИАФАЙЛАМ КАРТИНОК */
+figcaption {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6a737d;
+    margin-top: 1rem; 
+    line-height: 1.4;
+    width: 100%;
+    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+    word-break: break-word;
+}
+
+/*  3. ПОДГОТОВКА КУРСОРОВ ДЛЯ ВСЕХ КАРТИНОК КОНТЕНТА */
+.main-content p img:not(.content-img),
+.main-content figure.img-figure img
+ {
+    cursor: zoom-in !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* 4. ЕДИНЫЙ ЦЕНТР ДЕКОРАТИВНОГО ОФОРМЛЕНИЯ КАРТИНОК */
+.main-content p img:not(.content-img),
+.main-content figure.img-figure img,
+.main-content .figure-img img.img-fig {
+    border-radius: 8px;                             /* Мягкие скругленные углы */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);     /* Легкая аккуратная тень объема */
+    background-color: var(--media-background-plug); /* Серая заглушка до срабатывания JS */
+}
+
+/* ==========================================================================
+   🗂️ СЛОЙ КОМПОНЕНТОВ СИСТЕМЫ ИЗОБРАЖЕНИЙ
+   ========================================================================= */
+
+@layer components {
+
+    /* ==========================================================================
+       📦 [БЛОК 1] Одиночные изображения в параграфах текста (.main-content p)
+       ========================================================================= */
+    .main-content p {
+
+        /* ------------------------------------------------------------
+           🌅 1. [ЭЛЕМЕНТ] Базовая горизонтальная картинка (img-single-landscape)
+           ------------------------------------------------------------ */
+        & img.img-single-landscape {
+            &, &[data-src] {
+                display: block;
+                height: var(--media-pc-height);              
+                width: auto;                
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-landscape);
+                object-fit: contain; 
+                margin: 0; 
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    max-width: none;
+                    height: auto;       
+                    max-height: none;   
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    display: inline-block;
+                    height: auto;
+                    width: var(--mobile-base-landscape-width);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2. [ЭЛЕМЕНТ] Базовая вертикальная картинка (img-single-portrait)
+           ------------------------------------------------------------ */
+        & img.img-single-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                width: var(--media-pc-height);        
+                height: auto;                         
+                max-height: none;                     
+                aspect-ratio: var(--ratio-portrait);                 
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 3. [ЭЛЕМЕНТ] Кастомная горизонтальная картинка (img-single-custom-landscape)
+           ------------------------------------------------------------ */
+        & img.img-single-custom-landscape {
+            &, &[data-src] {
+                display: block;
+                max-height: var(--media-pc-height);
+                width: auto;
+                max-width: var(--mobile-full-width);
+                object-fit: unset;
+                margin: 0;
+                box-sizing: border-box;
+                border: 1px solid var(--primary-bg);
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    height: auto;       
+                    max-height: none;   
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    display: inline-block;
+                    max-width: none;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4. [ЭЛЕМЕНТ] Кастомная вертикальная картинка (img-single-custom-portrait)
+           ------------------------------------------------------------ */
+        & img.img-single-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                width: var(--media-pc-height);
+                height: auto;  
+                object-fit: unset;
+                margin: 0;
+                box-sizing: border-box;
+                border: 1px solid var(--primary-bg);
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                }
+            }
+        }
+
+    } /* Конец БЛОКА 1 .main-content p */
+
+    /* ==========================================================================
+       📦 [БЛОК 2] Групповые галереи простых изображений в параграфах (.main-content p:has)
+       ========================================================================= */
+    .main-content p:has(.img-row-landscape),
+    .main-content p:has(.img-row-portrait),
+    .main-content p:has(.img-row-custom-landscape),
+    .main-content p:has(.img-row-custom-portrait) {
+        
+        /* 💻 ДЕСКТОП И ПРОМЕЖУТОЧНЫЙ РЕЖИМ (Все экраны выше 900px) */
+        & {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: var(--gap-pc); 
+            width: 100%;
+            margin: 0 0 var(--gap-pc) 0;
+        }
+
+        /* ------------------------------------------------------------
+           🌅 1. [ЭЛЕМЕНТ] Горизонтальный кадр галереи (img-row-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-landscape {
+            &, &[data-src] {
+                height: var(--media-pc-height); 
+                width: auto;                    
+                aspect-ratio: var(--ratio-landscape); 
+                object-fit: contain; 
+                object-position: center;   
+                margin: 0;
+
+                /* [Портрет]: Сбрасываем ряд и раскрываем во всю ширину текстовой строки */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width); 
+                    max-width: none;
+                    height: auto;       
+                    max-height: none;   
+                    aspect-ratio: var(--ratio-landscape);
+                }
+
+                /* [Ландшафт]: Раскладываем по ландшафтному шагу сетки пульта */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: auto;
+                    width: var(--mobile-base-landscape-width); 
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape)); 
+                    aspect-ratio: var(--ratio-landscape); 
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2. [ЭЛЕМЕНТ] Вертикальный кадр галереи (img-row-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-portrait {
+            &, &[data-src] {
+                height: var(--media-pc-height); 
+                width: auto;                    
+                aspect-ratio: var(--ratio-portrait); 
+                object-fit: cover;              
+                object-position: center;   
+                margin: 0;
+
+                /* [Портрет]: Аккуратно сжимаем ширину по коэффициенту 9/16 от строки контента */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    display: inline-block;
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait)); 
+                    height: auto;
+                    max-height: none;
+                    aspect-ratio: var(--ratio-portrait);
+                }
+
+                /* [Ландшафт]: Берем идеальную живую высоту ландшафтного соседа */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    display: inline-block;
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * (9 / 16)); 
+                    max-height: var(--media-pc-height); 
+                    aspect-ratio: var(--ratio-portrait);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌅 3. [ЭЛЕМЕНТ] Кастомный горизонтальный кадр галереи (img-row-custom-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-custom-landscape {
+            &, &[data-src] {
+                --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
+                height: var(--media-pc-height); 
+                width: auto;                    
+                object-fit: contain;            
+                object-position: center;   
+                margin: 0;
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 4. [ЭЛЕМЕНТ] Кастомный портретный кадр галереи (img-row-custom-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-custom-portrait {
+            &, &[data-src] {
+                --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
+                height: var(--media-pc-height); 
+                width: auto;                    
+                object-fit: cover;              
+                object-position: center;   
+                margin: 0;
+
+                /* [Портрет]: Аккуратно сжимаем ширину по коэффициенту 9/16 от строки контента */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    display: inline-block;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait)); 
+                    max-height: var(--media-pc-height);
+                }
+
+                /* [Ландшафт]: Берем идеальную живую высоту ландшафтного соседа */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    display: inline-block;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait)); 
+                    max-height: var(--media-pc-height);
+                }
+            }
+        }
+
+    } /* Конец БЛОКА 2 */
+
+    /* ==========================================================================
+       📦 [БЛОК 3] Одиночные журнальные блоки FIGURE (img-single-figure)
+       ========================================================================= */
+    .main-content .img-single-figure {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 1em 0;           
+
+        /* ------------------------------------------------------------
+           🖼️ 0. [ЭЛЕМЕНТ] Рамка figure, обжимающая картинку по ширине кадра
+           ------------------------------------------------------------ */
+        & figure.img-figure {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* ------------------------------------------------------------
+           🌅 1. [ЭЛЕМЕНТ] Базовая горизонтальная картинка (img-single-figure-landscape)
+           ------------------------------------------------------------ */
+        & img.img-single-figure-landscape {
+            
+            /* ПК-режим и параметры стабилизации */
+            &, &[data-src] {
+                display: block;
+                height: var(--media-pc-height);              
+                width: auto;                
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                aspect-ratio: var(--ratio-landscape);
+                object-fit: contain; 
+                margin: 0; 
+            }
+
+            /* [Портрет]: */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    width: var(--mobile-full-width);
+                    max-width: none;
+                    height: auto;       
+                    max-height: none;   
+                }
+            }
+
+            /* [Ландшафт]: */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    height: auto;
+                    width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2. [ЭЛЕМЕНТ] Базовая вертикальная картинка (img-single-figure-portrait)
+           ------------------------------------------------------------ */
+        & img.img-single-figure-portrait {
+            
+            /* ПК-режим и параметры стабилизации */
+            &, &[data-src] {
+                display: inline-block;
+                width: var(--media-pc-height);              
+                height: auto; 
+                max-height: none;               
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain; 
+                margin: 0; 
+            }
+
+            /* [Портрет]: */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                }
+            }
+
+            /* [Ландшафт]: */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 3. [ЭЛЕМЕНТ] Кастомная горизонтальная картинка (img-single-figure-custom-landscape)
+           ------------------------------------------------------------ */
+        & img.img-single-figure-custom-landscape {
+            
+            /* ПК-режим и параметры стабилизации */
+            &, &[data-src] {
+                display: block;
+                max-height: var(--media-pc-height);
+                width: auto;
+                max-width: var(--mobile-full-width);                    
+                object-fit: unset;
+                margin: 0;
+            }
+
+            /* [Портрет]: */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    width: var(--mobile-full-width);
+                    height: auto;
+                    max-height: none;
+                }
+            }
+
+            /* [Ландшафт]: */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    height: auto;
+                    width: calc(var(--media-pc-height) * var(--img-ratio));
+                    max-width: var(--media-mobile-width);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4. [ЭЛЕМЕНТ] Кастомная вертикальная картинка (img-single-figure-custom-portrait)
+           ------------------------------------------------------------ */
+        & img.img-single-figure-custom-portrait {
+            
+            /* ПК-режим и параметры стабилизации */
+            &, &[data-src] {
+                display: inline-block;
+                width: auto;
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: unset;
+                margin: 0;
+                box-sizing: border-box;
+                border: 1px solid var(--primary-bg);
+            }
+
+            /* [Портрет]: */
+            @media (max-width: 900px) and (orientation: portrait) {
+                &, &[data-src] {
+                    height: var(--mobile-full-width);
+                    width: auto;
+                }
+            }
+
+            /* [Ландшафт]: */
+            @media (max-height: 500px) and (orientation: landscape) {
+                &, &[data-src] {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+    } /* Конец БЛОКА 3 .img-single-figure */
+
+    /* ==========================================================================
+       📦 [БЛОК 4] Групповые журнальные ряды FIGURE (img-row-figure)
+       ========================================================================= */
+    .main-content .img-row-figure {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, calc(var(--media-pc-height) * var(--ratio-landscape)));
+        justify-content: center; 
+        align-items: start;      
+        gap: var(--gap-pc);      
+        margin: 1em 0;          
+
+        /* [Портрет]: Переводим саму Grid-сетку ряда в 1 колонку */
+        @media (max-width: 900px) and (orientation: portrait) {
+            grid-template-columns: 1fr;
+        }
+
+        /* [Ландшафт]: Переводим саму Grid-сетку в 2 колонки */
+        @media (max-height: 500px) and (orientation: landscape) {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start; 
+        }
+
+        /* ------------------------------------------------------------
+           🖼️ 0. [ЭЛЕМЕНТ] Универсальная журнальная рамка-коробка (figure.img-figure)
+           ------------------------------------------------------------ */
+        & figure.img-figure {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center; 
+            width: auto;
+            margin: 0;
+
+            /* [Портрет]: Сброс инлайновости */
+            @media (max-width: 900px) and (orientation: portrait) {
+                display: flex; 
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌅 1. [ЭЛЕМЕНТ] Базовый горизонтальный ряд (img-row-figure-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-landscape {
+            &, &[data-src] {
+                height: var(--media-pc-height);
+                width: auto;                    
+                aspect-ratio: var(--ratio-landscape);
+                object-fit: contain; 
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    height: auto;
+                    max-height: none;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: auto;
+                    width: var(--mobile-base-landscape-width);
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2. [ЭЛЕМЕНТ] Базовый вертикальный ряд (img-row-figure-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                width: var(--media-pc-height);
+                height: auto;
+                max-height: none;                     
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain;   
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🌌 2а. [МОДИФИКАТОР] Вертикальная картинка в ландшафтном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="landscape"]) img.img-row-figure-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                height: var(--media-pc-height);
+                width: auto;
+                max-height: none;
+                aspect-ratio: var(--ratio-portrait);
+                object-fit: contain;
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: calc(var(--mobile-full-width) * var(--ratio-portrait));
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 3. [ЭЛЕМЕНТ] Кастомный горизонтальный ряд (img-row-figure-custom-landscape)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-custom-landscape {
+            &, &[data-src] {
+                height: var(--media-pc-height);
+                max-height: none;
+                width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;  
+                border: 1px solid var(--primary-bg);          
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    width: var(--mobile-full-width);
+                    height: auto;
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                    width: var(--mobile-base-landscape-width);
+                }
+            }
+
+            /* Управление фоновым щитом-заглушкой до и после загрузки */
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4. [ЭЛЕМЕНТ] Кастомный вертикальный ряд (img-row-figure-custom-portrait)
+           ------------------------------------------------------------ */
+        & img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;                     
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: unset;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width); 
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: auto;
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+        } 
+
+        /* ------------------------------------------------------------
+           🛠️ 4а. [МОДИФИКАТОР] Кастомная вертикальная картинка в ландшафтном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="landscape"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;                
+                height: var(--media-pc-height);
+                max-height: none;                     
+                width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;   
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);                    
+                    width: auto;
+                    max-width: var(--mobile-full-width);
+                    object-fit: unset;   
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    width: var(--mobile-base-landscape-width);
+                    max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
+                    max-height: var(--media-pc-height);
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+
+            /* Управление фоновой заглушкой внутри хака :has */
+            &:not([data-src]) { background-color: transparent !important; }
+            &[data-src] { background-color: var(--media-background-plug); }
+        }
+
+        /* ------------------------------------------------------------
+           🛠️ 4б. [МОДИФИКАТОР] Кастомная вертикальная картинка в портретном ряду
+           ------------------------------------------------------------ */
+        &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block; 
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: unset;
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+
+                /* [Портрет]: */
+                @media (max-width: 900px) and (orientation: portrait) {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width);
+                    border: 1px solid var(--primary-bg);
+                }
+
+                /* [Ландшафт]: */
+                @media (max-height: 500px) and (orientation: landscape) {
+                    height: var(--mobile-base-landscape-width);
+                    max-height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+        }
+
+    } /* Конец БЛОКА 4 .img-row-figure */
+
+} /* Конец СЛОЯ components */

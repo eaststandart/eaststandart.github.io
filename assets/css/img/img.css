@@ -10,6 +10,7 @@
    🎛️ ДИСПЕТЧЕР СТИЛЕЙ ИЗОБРАЖЕНИЙ (img.css)
    ============================================================ */
 
+/*
 /* 🌅 СЛОЙ ОДИНОЧНЫХ КАРТИНОК */
 @import url("img-single.css");
 @import url("img-single-figure.css");
@@ -19,6 +20,11 @@
 
 /* 📑 СЛОЙ ЖУРНАЛЬНЫХ БЛОКОВ FIGURE */
 @import url("img-row-figure.css");
+
+*/
+
+/* 🌅 СЛОЙ ИЗОБРАЖЕНИЙ */
+@import url("images.css");
 
 /* СЛОЙ ZOOM */
 @import url("zoom.css");

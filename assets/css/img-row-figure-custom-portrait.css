@@ -78,8 +78,6 @@
                 }
             }
 
-            /* Вертикалка на боку рассчитывается через динамический коэффициент */
-            /*& figure.img-figure img.img-row-figure-custom-portrait {*/
             &:has([class*="landscape"]) img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     width: var(--mobile-base-landscape-width);

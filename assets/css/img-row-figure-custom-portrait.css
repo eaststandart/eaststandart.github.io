@@ -40,6 +40,19 @@
             }
         } */
 
+        &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block; 
+                height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                max-height: none;
+                width: auto;
+                max-width: var(--mobile-base-landscape-width);
+                object-fit: unset;
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+            }
+        }
+
     }
 
     /* ============================================================
@@ -98,15 +111,6 @@
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
                     height: calc(var(--mobile-base-landscape-width) * var(--ratio-portrait));
                     max-height: var(--media-pc-height);
-                    border: 1px solid var(--primary-bg);
-                }
-            }
-
-            &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
-                &, &[data-src] {
-                    width: auto;
-                    height: calc(var(--media-pc-height) * var(--ratio-landscape));
-                    object-fit: unset;
                     border: 1px solid var(--primary-bg);
                 }
             }

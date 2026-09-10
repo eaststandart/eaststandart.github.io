@@ -26,6 +26,22 @@
             &[data-src] {background-color: var(--media-background-plug); }
         }
 
+        /* [ЭЛЕМЕНТ] Кастомный вертикальный кадр, попавший в кастомный ландшафтный ряд */
+        /*& figure.img-figure img.img-row-figure-custom-portrait {
+            &, &[data-src] {
+                display: inline-block;
+                height: var(--media-pc-height);
+                max-height: none;
+                width: var(--mobile-base-landscape-width);
+                max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
+                object-fit: contain;
+                border: 1px solid var(--primary-bg);
+                margin: 0;
+            }
+
+            &:not([data-src]) {background-color: transparent !important;  }
+            &[data-src] {background-color: var(--media-background-plug);  }
+        }*/
     }
 
     /* ============================================================
@@ -51,6 +67,13 @@
                 }
             }
 
+          /*  & figure.img-figure img.img-row-figure-custom-portrait {
+                &, &[data-src] {
+                    height: var(--mobile-full-width);
+                    width: auto; 
+                    max-width: var(--mobile-full-width); 
+                }
+            } */
         }
     }
 
@@ -72,7 +95,7 @@
             }
 
             /* Вертикалка на боку рассчитывается через динамический коэффициент */
-            /*& figure.img-figure img.img-row-figure-custom-portrait {
+            & figure.img-figure img.img-row-figure-custom-portrait {
                 &, &[data-src] {
                     width: var(--mobile-base-landscape-width);
                     max-width: calc(var(--media-pc-height) * var(--ratio-landscape));
@@ -80,7 +103,7 @@
                     max-height: var(--media-pc-height);
                     border: 1px solid var(--primary-bg);
                 }
-            }*/
+            }
         }
     }
 

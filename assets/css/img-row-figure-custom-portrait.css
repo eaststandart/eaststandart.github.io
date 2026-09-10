@@ -102,6 +102,15 @@
                 }
             }
 
+            &:has([class*="img-row-figure-portrait"]) img.img-row-figure-custom-portrait {
+                &, &[data-src] {
+                    width: auto;
+                    height: calc(var(--media-pc-height) * var(--ratio-landscape));
+                    object-fit: unset;
+                    border: 1px solid var(--primary-bg);
+                }
+            }
+
         }
     }
 

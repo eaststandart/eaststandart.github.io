@@ -12,10 +12,6 @@
         
         /* ПК-режим и параметры стабилизации */
         &, &[data-src] {
-
-           /* Локальный пульт управления: вытаскиваем родной коэффициент кадра один раз */
-           --current-ratio: calc(attr(width type(<number>)) / attr(height type(<number>)));
-
             display: block;
             max-height: var(--media-pc-height);
             width: auto;
@@ -37,7 +33,7 @@
             @media (max-height: 500px) and (orientation: landscape) {
                 &, &[data-src] {
                 height: auto;
-                width: calc(var(--media-pc-height) * var(--current-ratio));
+                max-width: var(--media-mobile-wight);
             }
         }
     }

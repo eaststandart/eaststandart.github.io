@@ -195,9 +195,8 @@ def build_navigation_tree():
 
                 # Вычисляем короткий будущий URL-адрес для записи в navigation.yml
                 file_name_clean, _ = os.path.splitext(file)
-                file_name_clean, _ = os.path.splitext(file)
+                file_name_clean = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
-                # Стандартная формула Jekyll: /тип/слаг-проекта/год/месяц/день/имя-файла.html
                 short_url = f"/{post_type}/{post_slug}/{post_date.replace('-', '/')}/{file_name_clean}.html"
 
                 # Сохраняем пост в карту связей проекта

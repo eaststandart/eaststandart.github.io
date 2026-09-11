@@ -295,7 +295,7 @@ def build_navigation_tree():
                 file_path = os.path.join(dir_path, 'index.md')
                 with open(file_path, 'w', encoding='utf-8') as pf:
                     # Вычисляем красивое название в зависимости от типа ленты
-                    type_title = "посты журнала проекта" if post_type == "journal" else "посты галереи проекта"
+                    type_title = "посты журнала" if post_type == "journal" else "посты галереи"
                     
                     pf.write(f"---\n")
                     pf.write(f"layout: page\n")

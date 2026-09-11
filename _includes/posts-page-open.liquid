@@ -20,24 +20,27 @@
 {%- endif -%}
 
 {%- if project_posts and project_posts.size > 0 -%}
-  <div class="posts-open-feed">
-    {%- for post_item in project_posts -%}
-      {%- comment -%} Находим полноценный объект оригинального поста из глобальной коллекции site.posts {%- endcomment -%}
-      {%- assign full_post = site.posts | where: "url", post_item.url | first -%}
-      
-      {%- if full_post -%}
-        <article class="posts-open-item" style="margin-bottom: 50px; border-bottom: 1px dashed #eee; padding-bottom: 30px;">
-          <header class="posts-open-header">
-            <span style="font-family: monospace; color: #6a737d;">{{ full_post.date | date: "%d.%m.%Y" }}</span>
-            <h3 style="margin-top: 5px; margin-bottom: 15px;">{{ full_post.title }}</h3>
-          </header>
-          
-          <div class="posts-open-content">
-            {%- comment -%} Выводим полное тело статьи со всеми картинками, формулами и кодом {%- endcomment -%}
-            {{ full_post.content }}
-          </div>
-        </article>
-      {%- endif -%}
-    {%- endfor -%}
-  </div>
+<ul class="project-list posts-page-list">
+  {%- for post_item in project_posts -%}
+    {%- assign full_post = site.posts | where: "url", post_item.url | first -%}
+    
+    {%- if full_post -%}
+      <li class="local-post-item posts-page-item" data-date="{{ full_post.date }}">
+        <div>
+          <span>{{ full_post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>
+            <a href="{{ full_post.url | relative_url }}" class="item-link posts-page-link">
+              {{ full_post.title }}
+            </a>
+          </span>
+        </div>
+        
+        <!-- Полное развернутое содержимое статьи со всеми картинками и версткой по вашему стандарту -->
+        <div class="posts-page-content-body">
+          {{ full_post.content }}
+        </div>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
 {%- endif -%}

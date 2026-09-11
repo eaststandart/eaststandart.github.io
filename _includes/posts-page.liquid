@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Локальные ленты постов на страницах проектов.
-@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов на основе нативного дерева.
+@purpose Вывод списков журнал, media внутри карточек конкретных проектов на основе нативного дерева.
 @author TechLab
 {%- endcomment -%}
 
@@ -24,17 +24,15 @@
 {%- comment -%} 3. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
 {%- assign loop_id = include.type | append: "-list-" | append: page.githubpages-slug -%}
 
-<!-- ВЫВОД СТАТИЧЕСКОГО СПИСКА СТРОК НА ОСНОВЕ ДАННЫХ ИЗ NAVIGATION.YML -->
+{%- comment -%} 4. ВЫВОД СТАТИЧЕСКОГО СПИСКА СТРОК НА ОСНОВЕ ДАННЫХ ИЗ NAVIGATION.YML {%- endcomment -%}
 {%- if project_posts and project_posts.size > 0 -%}
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {%- for post in project_posts -%}
-    {%- comment -%} Маркируем элемент для раскраски ссылок в CSS (серый цвет для постов) {%- endcomment -%}
     {%- assign is_post = true -%}
     {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
 
     <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji="">
       <div>
-        {%- comment -%} Нативный и 100% безопасный фильтр форматирования даты в ДД.ММ.ГГГГ {%- endcomment -%}
         <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
         <span>
           <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">

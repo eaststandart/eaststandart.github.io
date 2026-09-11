@@ -37,6 +37,12 @@ jobs:
           name: jekyll-navigation-file
           path: _data/navigation.yml
 
+      - name: Upload Processed Front Matter Core for Debugging
+        uses: actions/upload-artifact@v4
+        with:
+          name: jekyll-processed-md-properties
+          path: _processed_files/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

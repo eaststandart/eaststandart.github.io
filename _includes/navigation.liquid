@@ -6,21 +6,12 @@
 
 <div class="navigation-header">
     <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
-
-    {%- comment -%}
-    ВЫВОД ЗВЕНА РАЗДЕЛА (Например, | Поделки)
-    Показывается ТОЛЬКО на главной странице самого проекта
-    {%- endcomment -%}
     {%- if page.githubpages-section and page.githubpages-section != "" -%}
         {%- if page.githubpages-type == nil or page.githubpages-type == "" -%}
             {%- assign section_url = page.githubpages-section | prepend: "/" | append: "/" -%}
             {%- assign section_page = site.pages | where: "url", section_url | first -%}
             {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.githubpages-section -%}
-            
-            {%- if page.url != section_url -%}
-                <span class="nav-separator">|</span>
-                <a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>
-            {%- endif -%}
+            {%- if page.url != section_url -%}<span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>{%- endif -%}
         {%- endif -%}
     {%- endif -%}
 

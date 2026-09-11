@@ -304,8 +304,8 @@ def build_navigation_tree():
                     pf.write(f"githubpages-type: {post_type}\n")
                     pf.write(f"mathjax: true\n")
                     pf.write(f"---\n\n")
-                    # ИСПРАВЛЕНО: Чистая, безопасная запись параметров без обратных слэшей
-                    pf.write(f"{{% include posts-page.liquid type='{post_type}' per_page='' %}}\n")
+                    # Вызываем строго наш новый открытый шаблон
+                    pf.write(f"{{% include posts-page-open.liquid type='{post_type}' %}}\n")
 
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")

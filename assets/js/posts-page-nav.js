@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, projectSlugLast, sectionSlug, navTitle) {
+function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, projectSlugLast) {
     var ul = document.getElementById(containerId);
     var ctrlDiv = document.getElementById(ctrlId);
     if (!ul || !ctrlDiv) return;
@@ -15,6 +15,7 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
     var totalPages = Math.ceil(allItems.length / itemsPerPage);
     var currentPage = 1;
 
+    // Ссылка кнопки » на глобальный архив всей категории (например, /journal/)
     var targetArchiveUrl = archiveUrl;
 
     function showPage(page) {
@@ -46,9 +47,8 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
           if (btnType === 'archive') {
             window.location.href = targetArchiveUrl;
           } else if (btnType === 'full') {
-            window.location.href = '/' + includeType + '-posts-page/?project=' + projectSlugLast +
-                                   '&nav=' + sectionSlug + 
-                                   '&title=' + navTitle;
+            // Кнопка "0" теперь ведет на новую статичную развернутую ленту проекта
+            window.location.href = '/' + includeType + '/' + projectSlugLast + '/';
           }
         });
       } else {
@@ -68,7 +68,7 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      ctrlDiv.appendChild(createBtn('»»', null, false, false, 'archive'));
+      ctrlDiv.appendChild(createBtn('»', null, false, false, 'archive'));
       ctrlDiv.appendChild(createBtn('0', null, false, false, 'full'));
 
       if (totalPages > 1) {

@@ -5,7 +5,7 @@
 {%- endcomment -%}
 
 {%- comment -%} 1. ОПРЕДЕЛЯЕМ СЛАГ ПРОЕКТА ИЗ URL ИЛИ СВОЙСТВ ТЕКУЩЕЙ СТРАНИЦЫ {%- endcomment -%}
-{%- assign project_slug = page.githubpages-slug | default: page.categories[1] -%}
+{%- assign project_slug = page.githubpages-slug | default: page.categories -%}
 
 {%- comment -%} 2. НАХОДИМ НАШ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON {%- endcomment -%}
 {%- assign current_project = nil -%}
@@ -46,3 +46,26 @@
   {%- endfor -%}
 </ul>
 {%- endif -%}
+
+{%- comment -%} Генерируем уникальный ID для блока кнопок управления {%- endcomment -%}
+{%- assign ctrl_id = "ctrl-" | append: loop_id -%}
+
+<!-- Блок кнопок управления локальной пагинацией -->
+<div id="{{ ctrl_id }}" class="posts-page-ctrl"></div>
+
+<!-- Подключаем наш адаптированный внешний скрипт -->
+<script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
+
+<script>
+  (function() {
+    // Запускаем пагинатор строго по вашим оригинальным правилам и классам
+    runPostsPageNav(
+      "{{ loop_id }}", 
+      "{{ ctrl_id }}", 
+      "{{ include.per_page }}", 
+      "/{{ include.type }}/", 
+      "{{ include.type }}", 
+      "{{ project_slug }}"
+    );
+  })();
+</script>

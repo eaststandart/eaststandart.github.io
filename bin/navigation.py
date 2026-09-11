@@ -54,9 +54,24 @@ def parse_yaml_front_matter(file_path):
         return None, None, content
 
 def write_yaml_front_matter(file_path, data, body_content):
-    """Записывает обновленные свойства и тело статьи обратно в .md файл."""
+    """Записывает обновленные свойства в файл и сохраняет копию для Artifacts."""
     try:
         front_text = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        
+        # 📂 СОХРАНЕНИЕ КОПИИ ДЛЯ АРТЕФАКТОВ
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+        debug_dir = os.path.join(root_dir, '_processed_files')
+        os.makedirs(debug_dir, exist_ok=True)
+        
+        file_name = os.path.basename(file_path)
+        debug_file_path = os.path.join(debug_dir, f"processed-{file_name}")
+        
+        # Записываем копию только с блоком свойств Front Matter (без тяжелого тела статьи)
+        with open(debug_file_path, 'w', encoding='utf-8') as df:
+            df.write(f"---\n{front_text}---\n[Тело статьи успешно обработано и скрыто для компактности]")
+
+        # Основная перезапись файла для Jekyll
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(f"---\n{front_text}---\n{body_content}")
     except Exception as e:

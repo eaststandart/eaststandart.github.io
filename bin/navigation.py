@@ -281,6 +281,29 @@ def build_navigation_tree():
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
         print("[NAV-SUCCESS] Карта навигации и связей успешно сохранена в _data/navigation.yml")
 
+        # 📂 АВТОГЕНЕРАЦИЯ СТРАНИЦ-ЛЕНТ ДЛЯ КНОПКИ "0"
+        for project in nav_tree.get('faire', []):
+            slug = project.get('url', '').strip('/').split('/')[-1]
+            if not slug:
+                continue
+            
+            # Создаем физические папки в памяти сервера для Журнала и Галереи
+            for post_type in ['journal', 'media']:
+                dir_path = os.path.join(root_dir, post_type, slug)
+                os.makedirs(dir_path, exist_ok=True)
+                
+                file_path = os.path.join(dir_path, 'index.md')
+                with open(file_path, 'w', encoding='utf-8') as pf:
+                    pf.write(f"---\n")
+                    pf.write(f"layout: page\n")
+                    pf.write(f"title: \"Все записи проекта: {project.get('title')}\"\n")
+                    pf.write(f"githubpages-slug: {slug}\n")
+                    pf.write(f"githubpages-type: {post_type}\n")
+                    pf.write(f"mathjax: true\n")
+                    pf.write(f"---\n\n")
+                    # Подключаем наш будущий открытый шаблон
+                    pf.write(f"{{% include posts-page-open.liquid type=\"{post_type}\" %}}\n")
+
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 

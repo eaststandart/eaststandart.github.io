@@ -3,7 +3,7 @@ layout: page
 title: "Музыкальный карандаш: описание работы"
 description: "Описание работы устройства, взаимодействия его компонентов и функциональных блоков, а также физических процессов, протекающих в них при выполнении устройством заданных функций в различных режимах работы."
 author: ["TechLab"]
-journal-post-page: "N"
+journal-post-page: "Y"
 discus: "questions"
 mathjax: true
 published: true

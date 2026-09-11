@@ -294,9 +294,12 @@ def build_navigation_tree():
                 
                 file_path = os.path.join(dir_path, 'index.md')
                 with open(file_path, 'w', encoding='utf-8') as pf:
+                    # Вычисляем красивое название в зависимости от типа ленты
+                    type_title = "посты журнала проекта" if post_type == "journal" else "посты галереи проекта"
+                    
                     pf.write(f"---\n")
                     pf.write(f"layout: page\n")
-                    pf.write(f"title: \"Все записи проекта: {project.get('title')}\"\n")
+                    pf.write(f"title: \"{project.get('title')}: {type_title}\"\n")
                     pf.write(f"githubpages-slug: {slug}\n")
                     pf.write(f"githubpages-type: {post_type}\n")
                     pf.write(f"mathjax: true\n")

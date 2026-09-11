@@ -80,7 +80,7 @@ def main():
 
     # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА НАВИГАЦИИ
     try:
-        from navigation_tree import build_navigation_tree
+        from navigation import build_navigation_tree
         build_navigation_tree()
     except Exception as e:
         print(f"[ERROR] Не удалось запустить модуль навигации: {e}")

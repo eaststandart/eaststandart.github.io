@@ -2,6 +2,7 @@
 layout: page
 title: Все записи журнала проекта
 permalink: /journal-posts-page/
+mathjax: true
 ---
 
 {% comment %} 

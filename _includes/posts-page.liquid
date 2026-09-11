@@ -17,7 +17,7 @@
 {%- assign project_posts = nil -%}
 {%- if include.type == "journal" -%}
     {%- assign project_posts = current_project.journal_posts -%}
-{%- elif include.type == "media" -%}
+{%- elsif include.type == "media" -%}
     {%- assign project_posts = current_project.media_posts -%}
 {%- endif -%}
 

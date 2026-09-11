@@ -27,8 +27,7 @@
 {%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
 {%- assign loop_id = include.type | append: "-list-" | append: project_slug -%}
 
-{%- comment -%} 5. ВЫВОД СТАТИЧЕСКОГО СПИСКА В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ {%- endcomment -%}
-{%- if project_posts and project_posts.size > 0 -%}
+{%- comment -%} 5. ВЫВОД СТАТИЧЕСКОГО СПИСКА В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ {%- if project_posts and project_posts.size > 0 -%}
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {%- for post in project_posts -%}
     {%- assign is_post = true -%}{%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}

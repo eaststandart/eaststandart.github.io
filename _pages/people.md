@@ -6,7 +6,7 @@ permalink: /people/
 emoji: "🧍‍♂️"
 ---
 
-{% include media-archive.liquid category="people" %}
+
 
 ---
 

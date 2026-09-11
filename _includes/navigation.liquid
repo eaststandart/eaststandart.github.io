@@ -14,15 +14,8 @@
             {%- if page.url != section_url -%}<span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>{%- endif -%}
         {%- endif -%}
     {%- endif -%}
-
-    {%- comment -%}
-    ВЫВОД ЗВЕНА ПРОЕКТА (Например, | Музыкальный к...)
-    Показывается ТОЛЬКО внутри сопутствующих статей из _posts
-    {%- endcomment -%}
     {%- if page.githubpages-slug and page.githubpages-slug != "" -%}
         {%- if page.githubpages-type and page.githubpages-type != "" -%}
-            
-            {%- comment -%} Находим наш проект в сгенерированной Python карте сайта {%- endcomment -%}
             {%- assign current_project = nil -%}
             {%- for project in site.data.navigation.faire -%}
                 {%- if project.url contains page.githubpages-slug -%}
@@ -30,16 +23,7 @@
                     {%- break -%}
                 {%- endif -%}
             {%- endfor -%}
-
-            {%- if current_project -%}
-                <span class="nav-separator">|</span>
-                <a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">
-                    {{ current_project.title }}
-                </a>
-            {%- endif -%}
+            {%- if current_project -%}<span class="nav-separator">|</span><a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ current_project.title }}</a>{%- endif -%}
         {%- endif -%}
-    {%- endif -%}
-
-    <span class="nav-separator">|</span>
-    <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
+    {%- endif -%}<span class="nav-separator">|</span><a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>

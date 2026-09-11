@@ -14,15 +14,12 @@ import re
 import yaml  # Используем стандартный PyYAML, доступный в GitHub Actions
 
 def translit_title(text):
-    """Безопасно переводит русский текст в монолитную строку строчных латинских букв без пробелов."""
-    cyr = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
-    lat = 'abvgdeezzijklmnoprstufhzchshshhyyeuya'
-    trans_map = str.maketrans(cyr, lat)
-    
+    """Очищает заголовок, превращая его в монолитный тег строчными буквами без пробелов и знаков."""
+    if not text:
+        return ""
     text = text.lower().strip()
-    text = text.translate(trans_map)
-    # Удаляем вообще все пробелы, дефисы и спецсимволы
-    text = re.sub(r'[^a-z0-9]', '', text)
+    # Оставляем только буквы (русские и латинские) и цифры, удаляя пробелы и знаки
+    text = re.sub(r'[^a-z0-9а-яё]', '', text)
     return text
 
 def clean_tag(text):

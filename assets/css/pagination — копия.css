@@ -320,7 +320,6 @@
 
 /* 2. СТРОКА ПОСТА */
 .posts-page-item {
-    display: block !important;
     margin-bottom: 3px !important;
 }
 

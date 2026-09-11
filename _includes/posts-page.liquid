@@ -31,14 +31,11 @@
     {%- comment -%} Маркируем элемент для раскраски ссылок в CSS (серый цвет для постов) {%- endcomment -%}
     {%- assign is_post = true -%}
     {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-    
-    {%- comment -%} Превращаем дату строки обратно в читаемый формат ДД.ММ.ГГГГ {%- endcomment -%}
-    {%- assign date_parts = post.date | split: "-" -%}
-    {%- assign formatted_date = date_parts[2] | append: "." | append: date_parts[1] | append: "." | append: date_parts[0] -%}
 
     <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji="">
       <div>
-        <span>{{ formatted_date }}&nbsp;»&nbsp;</span>
+        {%- comment -%} Нативный и 100% безопасный фильтр форматирования даты в ДД.ММ.ГГГГ {%- endcomment -%}
+        <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
         <span>
           <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
             {{ post.title }}

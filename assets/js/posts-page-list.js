@@ -6,56 +6,34 @@
  */
 
 function runMediaArchiveFilter() {
+    // 1. Получаем слаг проекта из адресной строки браузера
     var urlParams = new URLSearchParams(window.location.search);
-    var project = urlParams.get('project'); // Получаем, например, "robot-korova-iz-kartona"
+    var targetProject = urlParams.get('project');
+    
+    if (!targetProject) return;
 
-    // 1. Делаем изолированный снимок всех блоков и вырезаем чужие проекты из памяти устройства
-    var allEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry'));
+    // 2. Находим все блоки публикаций на странице
+    var entries = document.querySelectorAll('#media-container .media-entry');
+    var visibleEntries = [];
 
-    allEntries.forEach(function(item) {
-      var cats = item.getAttribute('data-project') || "";
-      
-      if (project) {
-        // Режим кнопки 0: Оставляем только текущий проект, чужие — полностью стираем
-        if (cats.includes(project)) { 
-          item.style.setProperty('display', 'block', 'important'); // Наш проект — открываем
+    entries.forEach(function(entry) {
+        var projectSlug = entry.getAttribute('data-project');
+        
+        // Если слаг поста совпадает с запрошенным проектом — открываем его
+        if (projectSlug === targetProject) {
+            entry.style.display = 'block';
+            visibleEntries.push(entry);
         } else {
-          item.remove(); // Чужой проект — полностью вырезаем из кода страницы
+            entry.style.display = 'none';
         }
-      } else {
-        // Режим общей страницы (без параметров): показываем все посты сайта
-        item.style.setProperty('display', 'block', 'important');
-      }
     });
 
-    // 2. ЖЕЛЕЗОБЕТОННАЯ ЗАЧИСТКА ХВОСТОВ ДЛЯ ЛЮБОЙ СТРАНИЦЫ САЙТА
-    // Находим финишный видимый элемент списка (на любой странице это самый нижний пост)
-    var visibleEntries = Array.from(document.querySelectorAll('.media-archive-list-wrapper .media-entry, .posts-page-list .posts-page-item, .project-list li'));
-
+    // 3. Зачистка разделительных линий (hr) у последнего поста в ленте
     if (visibleEntries.length > 0) {
-      var lastItem = visibleEntries[visibleEntries.length - 1];
-      
-      // Намертво обнуляем нижний маргин и падинг (пустые отступы) у финишного поста страницы
-      lastItem.style.setProperty('margin-bottom', '0px', 'important');
-      lastItem.style.setProperty('padding-bottom', '0px', 'important');
-      
-      // Находим и полностью скрываем разделительную линию под ним (если она есть)
-      var hr = lastItem.querySelector('.media-entry-hr, hr');
-      if (hr) {
-        hr.style.setProperty('display', 'none', 'important');
-      }
-      
-      // Если линия hr идет как соседний элемент сразу ПОСЛЕ последнего поста, убираем и её
-      if (lastItem.nextElementSibling && lastItem.nextElementSibling.tagName === 'HR') {
-        lastItem.nextElementSibling.style.setProperty('display', 'none', 'important');
-      }
-    }
-
-    // ШАГ 3: Принудительно запускаем оба раздельных скрипта ленивой загрузки для оставшегося на экране поста
-    if (typeof runImageLazyLoad === 'function') {
-        runImageLazyLoad();
-    }
-    if (typeof runVideoLazyLoad === 'function') {
-        runVideoLazyLoad();
+        var lastEntry = visibleEntries[visibleEntries.length - 1];
+        var hr = lastEntry.querySelector('.media-entry-hr');
+        if (hr) {
+            hr.style.display = 'none';
+        }
     }
 }

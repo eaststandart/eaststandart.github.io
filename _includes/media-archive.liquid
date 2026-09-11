@@ -13,7 +13,7 @@
       {%- comment %} Пропускаем post, если задан флаг N {% endcomment -%}
       {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
     
-      <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
+        <div class="media-entry" data-project="{{ post.categories[1] }}" style="display: none;">
         
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">

@@ -280,7 +280,6 @@ def build_navigation_tree():
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
         print("[NAV-SUCCESS] Карта навигации и связей успешно сохранена в _data/navigation.yml")
-
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 

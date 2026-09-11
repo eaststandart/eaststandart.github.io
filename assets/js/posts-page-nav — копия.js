@@ -47,8 +47,8 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
           if (btnType === 'archive') {
             window.location.href = targetArchiveUrl;
           } else if (btnType === 'full') {
-            // Кнопка "0" отправляет на вашу родную страницу-фильтр
-            window.location.href = '/' + includeType + '-posts-page/?project=' + projectSlugLast;
+            // Кнопка "0" теперь ведет на новую статичную развернутую ленту проекта
+            window.location.href = '/' + includeType + '/' + projectSlugLast + '/';
           }
         });
       } else {

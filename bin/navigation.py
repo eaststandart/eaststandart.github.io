@@ -276,11 +276,10 @@ def build_navigation_tree():
     # 4. ЗАПИСЬ СТРУКТУРИРОВАННОГО УМНОГО ДЕРЕВА В _DATA/NAVIGATION.YML
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
-    # Сохраняем итоговое дерево в navigation.yml
-    with open(output_yml, 'w', encoding='utf-8') as f:
-        yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-    print("[NAV-SUCCESS] Карта навигации и связей успешно сохранена in _data/navigation.yml")
-
+        # Сохраняем итоговое дерево в navigation.yml с правильными отступами
+        with open(output_file, 'w', encoding='utf-8') as f:
+            yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        print("[NAV-SUCCESS] Карта навигации и связей успешно сохранена в _data/navigation.yml")
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 

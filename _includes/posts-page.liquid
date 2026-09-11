@@ -27,19 +27,12 @@
 {%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
 {%- assign loop_id = include.type | append: "-list-" | append: project_slug -%}
 
-{%- comment -%} 5. ВЫВОД СТАТИЧЕСКОГО СПИСКА СТРОК В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ {%- endcomment -%}
+{%- comment -%} 5. ВЫВОД СТАТИЧЕСКОГО СПИСКА В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ {%- endcomment -%}
 {%- if project_posts and project_posts.size > 0 -%}
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {%- for post in project_posts -%}
     {%- assign is_post = true -%}{%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-    <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji="">
-      <div>
-        <span>{{ post.date | date: "%d.%m.%Y" }} &raquo; </span>
-        <span>
-          <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">{{ post.title }}</a>
-        </span>
-      </div>
-    </li>
+    <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji=""><div><span>{{ post.date | date: "%d.%m.%Y" }} &raquo; </span><span><a href="{{ post.url | relative_url }}" class="item-link posts-page-link">{{ post.title }}</a></span></div></li>
   {%- endfor -%}
 </ul>
 {%- endif -%}

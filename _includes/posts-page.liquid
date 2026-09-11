@@ -26,8 +26,9 @@
 
 {%- comment -%} 4. ВЫВОД СТАТИЧЕСКОГО СПИСКА СТРОК НА ОСНОВЕ ДАННЫХ ИЗ NAVIGATION.YML {%- endcomment -%}
 {%- if project_posts and project_posts.size > 0 -%}
+{%- assign posts_limit = include.per_page | default: project_posts.size -%}
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in project_posts -%}
+  {%- for post in project_posts limit: posts_limit -%}
     {%- assign is_post = true -%}
     {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
 

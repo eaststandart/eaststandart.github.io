@@ -1,0 +1,43 @@
+{%- comment -%}
+@about Модуль вывода развёрнутой ленты постов (Дневник / Открытая галерея).
+@purpose Отображает статьи проекта целиком, с текстом и картинками, для кнопки "0".
+@author TechLab
+{%- endcomment -%}
+
+{%- assign current_project = nil -%}
+{%- for project in site.data.navigation.faire -%}
+    {%- if project.url contains page.githubpages-slug -%}
+        {%- assign current_project = project -%}
+        {%- break -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{%- assign project_posts = nil -%}
+{%- if include.type == "journal" -%}
+    {%- assign project_posts = current_project.journal_posts -%}
+{%- elsif include.type == "media" -%}
+    {%- assign project_posts = current_project.media_posts -%}
+{%- endif -%}
+
+{%- if project_posts and project_posts.size > 0 -%}
+  <div class="posts-open-feed">
+    {%- for post_item in project_posts -%}
+      {%- comment -%} Находим полноценный объект оригинального поста из глобальной коллекции site.posts {%- endcomment -%}
+      {%- assign full_post = site.posts | where: "url", post_item.url | first -%}
+      
+      {%- if full_post -%}
+        <article class="posts-open-item" style="margin-bottom: 50px; border-bottom: 1px dashed #eee; padding-bottom: 30px;">
+          <header class="posts-open-header">
+            <span style="font-family: monospace; color: #6a737d;">{{ full_post.date | date: "%d.%m.%Y" }}</span>
+            <h3 style="margin-top: 5px; margin-bottom: 15px;">{{ full_post.title }}</h3>
+          </header>
+          
+          <div class="posts-open-content">
+            {%- comment -%} Выводим полное тело статьи со всеми картинками, формулами и кодом {%- endcomment -%}
+            {{ full_post.content }}
+          </div>
+        </article>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

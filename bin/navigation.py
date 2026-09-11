@@ -276,10 +276,32 @@ def build_navigation_tree():
     # 4. ЗАПИСЬ СТРУКТУРИРОВАННОГО УМНОГО ДЕРЕВА В _DATA/NAVIGATION.YML
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
-        with open(output_file, 'w', encoding='utf-8') as yml:
-            yml.write("# Умная автоматическая карта метаданных сайта Jekyll. НЕ ПРАВИТЬ РУКАМИ!\n")
-            yaml.dump(nav_tree, yml, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        print(f"[NAV-SUCCESS] Карта навигации и связей успешно сохранена в _data/navigation.yml")
+    # Сохраняем итоговое дерево в navigation.yml
+    with open(output_yml, 'w', encoding='utf-8') as f:
+        yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+    print("[NAV-SUCCESS] Карта навигации и связей успешно сохранена в _data/navigation.yml")
+
+    # 📂 АВТОГЕНЕРАЦИЯ СТРАНИЦ-ЛЕНТ ДЛЯ КНОПКИ "0"
+    for project in nav_tree.get('faire', []):
+        slug = project.get('slug')
+        if not slug:
+            continue
+        
+        # Создаем развернутые ленты для Журнала (journal) и Галереи (media)
+        for t in ['journal', 'media']:
+            dir_path = os.path.join(root_dir, t, slug)
+            os.makedirs(dir_path, exist_ok=True)
+            
+            file_path = os.path.join(dir_path, 'index.md')
+            with open(file_path, 'w', encoding='utf-8') as pf:
+                pf.write(f"---\n")
+                pf.write(f"layout: page\n")
+                pf.write(f"title: \"Все записи проекта: {project.get('title')}\"\n")
+                pf.write(f"githubpages-slug: {slug}\n")
+                pf.write(f"---\n\n")
+                # Вызываем наш инклуд, но БЕЗ лимита per_page, чтобы развернуть все посты открытой лентой!
+                pf.write(f"{{% include posts-page-open.liquid type=\"{t}\" %}}\n")
+
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 

@@ -4,7 +4,6 @@
 @author TechLab
 {%- endcomment -%}
 
-{%- comment -%} 1. НАХОДИМ ТЕКУЩИЙ ПРОЕКТ В НАШЕЙ КАРТЕ СЛОВАРЯ ПО СЛАГУ {%- endcomment -%}
 {%- assign current_project = nil -%}
 {%- for project in site.data.navigation.faire -%}
     {%- if project.url contains page.githubpages-slug -%}
@@ -13,7 +12,6 @@
     {%- endif -%}
 {%- endfor -%}
 
-{%- comment -%} 2. ОПРЕДЕЛЯЕМ ЦЕЛЕВОЙ МАССИВ В ЗАВИСИМОСТИ ОТ ТИПА ИНКЛУДА {%- endcomment -%}
 {%- assign project_posts = nil -%}
 {%- if include.type == "journal" -%}
     {%- assign project_posts = current_project.journal_posts -%}
@@ -21,12 +19,12 @@
     {%- assign project_posts = current_project.media_posts -%}
 {%- endif -%}
 
-{%- comment -%} 3. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
 {%- assign loop_id = include.type | append: "-list-" | append: page.githubpages-slug -%}
 
-{%- comment -%} 4. ВЫВОД СТАТИЧЕСКОГО СПИСКА СТРОК НА ОСНОВЕ ДАННЫХ ИЗ NAVIGATION.YML {%- endcomment -%}
 {%- if project_posts and project_posts.size > 0 -%}
-{%- assign posts_limit = include.per_page | default: project_posts.size -%}
+{%- assign posts_limit = include.per_page | default: project_posts.size | plus: 0 -%}
+{%- if posts_limit == 0 -%}{%- assign posts_limit = project_posts.size -%}{%- endif -%}
+
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
   {%- for post in project_posts limit: posts_limit -%}
     {%- assign is_post = true -%}
@@ -45,3 +43,8 @@
   {%- endfor -%}
 </ul>
 {%- endif -%}
+
+<div class="posts-page-ctrl">
+  <a href="/{{ include.type }}/" class="posts-page-btn posts-page-all-btn"> » </a>
+  <a href="/{{ include.type }}/{{ page.githubpages-slug }}/" class="posts-page-btn"> 0 </a>
+</div>

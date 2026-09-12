@@ -6,30 +6,44 @@
 
 <div class="navigation-header">
     <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
-    {%- if page.section and page.section != "" -%}
-        {%- if page.post-page == nil or page.post-page == "" -%}
-            {%- assign section_url = page.section | prepend: "/" | append: "/" -%}
-            {%- assign section_page = site.pages | where: "url", section_url | first -%}
-            {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.section -%}
-            {%- if page.url != section_url -%}<span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>{%- endif -%}
-        {%- else -%}
-            {%- comment -%} 🔥 НАДЁЖНЫЙ ВЫВОД ДЛЯ ПОСТОВ: Берём тип из post-page (journal/media), находим вывеску в _pages {%- endcomment -%}
-            {%- assign section_url = page.post-page | prepend: "/" | append: "/" -%}
-            {%- assign section_page = site.pages | where: "url", section_url | first -%}
-            {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.post-page -%}
-            <span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>
-        {%- endif -%}
+    {%- comment -%} А. СНАЧАЛА ВЫЧИСЛЯЕМ СЛАГ РОДИТЕЛЬСКОГО ПРОЕКТА {%- endcomment -%}
+    {%- assign target_slug = page.slug -%}
+    {%- if target_slug == nil or target_slug == "" -%}
+        {%- for cat in page.categories -%}
+            {%- if cat != "journal" and cat != "media" and cat != "diary" -%}
+                {%- assign target_slug = cat -%}
+            {%- endif -%}
+        {%- endfor -%}
     {%- endif -%}
-    {%- if page.slug and page.slug != "" -%}
-        {%- if page.post-page and page.post-page != "" -%}
-            {%- assign current_project = nil -%}
-            {%- for project in site.data.navigation.sections[page.section] -%}
-                {%- if project.slug == page.slug -%}
+
+    {%- if target_slug and target_slug != "" -%}
+        {%- comment -%} Б. ЕСЛИ ЭТО ПОСТ ИЛИ КНОПКА "0" — ВЫВОДИМ ТОЛЬКО ССЫЛКУ НА ПРОЕКТ {%- endcomment -%}
+        {%- assign current_project = nil -%}
+        {%- for section_entry in site.data.navigation.sections -%}
+            {%- assign project_list = section_entry[1] -%}
+            {%- for project in project_list -%}
+                {%- assign check_slug = project.slug | join: "" | default: project.slug -%}
+                {%- if check_slug == target_slug -%}
                     {%- assign current_project = project -%}
                     {%- break -%}
                 {%- endif -%}
             {%- endfor -%}
-            {%- if current_project -%}<span class="nav-separator">|</span><a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ current_project.title }}</a>{%- endif -%}
+            {%- if current_project -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+
+        {%- if current_project -%}
+            <span class="nav-separator">|</span><a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ current_project.title }}</a>
         {%- endif -%}
-    {%- endif -%}<span class="nav-separator">|</span><a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
+    {%- else -%}
+        {%- comment -%} В. ЕСЛИ ПРОЕКТА НЕТ (ГЛАВНАЯ РАЗДЕЛА, ЛЮДИ) — ВЫВОДИМ ССЫЛКУ НА РАЗДЕЛ {%- endcomment -%}
+        {%- if page.section and page.section != "" -%}
+            {%- assign section_url = page.section | prepend: "/" | append: "/" -%}
+            {%- assign section_page = site.pages | where: "url", section_url | first -%}
+            {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.section -%}
+            {%- if page.url != section_url -%}
+                <span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>
+            {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+    <span class="nav-separator">|</span><a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>

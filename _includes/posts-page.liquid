@@ -6,7 +6,7 @@
 
 {%- comment -%} 1. АВТОМАТИЧЕСКИ ВЫЧИСЛЯЕМ ИМЯ РАЗДЕЛА ИЗ URL СТРАНИЦЫ (faire, projects и т.д.) {%- endcomment -%}
 {%- assign url_parts = page.url | split: "/" -%}
-{%- assign current_section = url_parts<1> -%}
+{%- assign current_section = url_parts[1] -%}
 
 {%- comment -%} 2. НАХОДИМ ТЕКУЩИЙ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON ПО СЛАГУ {%- endcomment -%}
 {%- assign current_project = nil -%}

@@ -1,71 +1,82 @@
 {%- comment -%}
 @about Локальные ленты постов на страницах проектов.
-@purpose Вывод списков журнал, media внутри карточек конкретных проектов на основе нативного дерева.
+@purpose Вывод списков журнал, media внутри карточек конкретных проектов.
 @author TechLab
 {%- endcomment -%}
 
-{%- comment -%} 1. ОПРЕДЕЛЯЕМ СЛАГ ПРОЕКТА ИЗ URL ИЛИ СВОЙСТВ ТЕКУЩЕЙ СТРАНИЦЫ {%- endcomment -%}
-{%- assign project_slug = page.githubpages-slug | default: page.categories -%}
+{% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
+{% assign url_parts = page.url | split: "/" %}
+{% assign section_slug = url_parts[1] %}
+{% assign project_slug = url_parts[2] %}
+{% assign section_url = section_slug | prepend: "/" | append: "/" %}
+{% assign section_page = site.pages | where: "url", section_url | first %}
 
-{%- comment -%} 2. НАХОДИМ НАШ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON {%- endcomment -%}
-{%- assign current_project = nil -%}
-{%- for project in site.data.navigation.faire -%}
-    {%- if project.url contains project_slug -%}
-        {%- assign current_project = project -%}
-        {%- break -%}
-    {%- endif -%}
-{%- endfor -%}
+{% comment %} 🔥 БЕЗОПАСНЫЙ СБОР СЛАГА ПРОЕКТА: Игнорируем косую черту на конце URL {% endcomment %}
+{% assign project_slug_last = url_parts[2] %}
 
-{%- comment -%} 3. ОПРЕДЕЛЯЕМ ЦЕЛЕВОЙ МАССИВ В ЗАВИСИМОСТИ ОТ ТИПА ИНКЛУДА {%- endcomment -%}
-{%- assign project_posts = nil -%}
-{%- if include.type == "journal" -%}
-    {%- assign project_posts = current_project.journal_posts -%}
-{%- elsif include.type == "media" -%}
-    {%- assign project_posts = current_project.media_posts -%}
-{%- endif -%}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
+{% assign has_posts = false %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
+    {% assign has_posts = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
 
-{%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
-{%- assign loop_id = include.type | append: "-list-" | append: project_slug -%}
+{% if has_posts %}
+{% comment %} Генерируем уникальные ID для контейнеров списка и кнопок под этот цикл {% endcomment %}
+{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ БЕЗ ИЗМЕНЕНИЙ -->
-{%- if project_posts and project_posts.size > 0 -%}
+{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
+{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+
+<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
+
+<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in project_posts -%}
-    {%- assign is_post = true -%}
-    {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-    <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji="">
-      <div>
-        <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
-            {{ post.title }}
-          </a>
-        </span>
-      </div>
-    </li>
+  {%- for post in site.categories[project_slug_last] -%}
+    {%- if post.categories contains include.type -%}
+      {%- assign is_post = true -%}
+      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+        <div>
+          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>
+            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
+              {{ post.title }}
+            </a>
+          </span>
+        </div>
+      </li>
+    {%- endif -%}
   {%- endfor -%}
 </ul>
-{%- endif -%}
 
-{%- comment -%} Генерируем уникальный ID для блока кнопок управления {%- endcomment -%}
-{%- assign ctrl_id = "ctrl-" | append: loop_id -%}
+<!-- Изолированный блок кнопок управления локальной пагинацией -->
+<div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
-<!-- Блок кнопок управления локальной пагинацией -->
-<div id="{{ ctrl_id }}" class="posts-page-ctrl"></div>
+<!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
 
-<!-- Подключаем наш адаптированный внешний скрипт -->
+<!-- Подключаем наш внешний изолированный файл скрипта локальной пагинации -->
 <script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
 
 <script>
   (function() {
-    // Запускаем пагинатор строго по вашим оригинальным правилам и классам
+    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
+    var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
+
+    // Запускаем пагинатор на месте с его родными изолированными параметрами
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 
       "{{ include.per_page }}", 
-      "/{{ include.type }}/", 
+      "{{ archive_url }}", 
       "{{ include.type }}", 
-      "{{ project_slug }}"
+      "{{ project_slug_last }}", 
+      "{{ section_slug }}", 
+      navTitleClean
     );
   })();
 </script>
+{% endif %}

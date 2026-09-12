@@ -12,7 +12,7 @@
   </span>
   
   {%- if page.slug and page.slug != "" -%}
-    {%- comment -%} Если мы находимся на странице открытого дневника (кнопка "0") или странице поста {%- endcomment -%}
+    {%- comment -%} А. Если мы находимся на странице открытого дневника (кнопка "0") или странице поста {%- endcomment -%}
     {%- if page.post-page and page.post-page != "" or page.url contains "/journal/" or page.url contains "/media/" -%}
       {%- assign project_found = nil -%}
       {%- for project in site.data.navigation.sections[current_section] -%}
@@ -31,7 +31,15 @@
         </span>
       {%- endif -%}
     {%- else -%}
-      {%- comment -%} Если мы находимся на главной странице самого проекта {%- endcomment -%}
+      {%- comment -%} Б. Если мы находимся на главной странице самого проекта {%- endcomment -%}
+      <span class="nav-separator">|</span>
+      <span class="nav-crumb current-crumb">
+        <span class="nav-text nav-ellipsis-link" title="{{ page.title }}">{{ page.title }}</span>
+      </span>
+    {%- endif -%}
+  {%- else -%}
+    {%- comment -%} В. Для всех остальных страниц сайта (где слага нет вообще), выводим просто заголовок {%- endcomment -%}
+    {%- if page.title and page.url != "/" -%}
       <span class="nav-separator">|</span>
       <span class="nav-crumb current-crumb">
         <span class="nav-text nav-ellipsis-link" title="{{ page.title }}">{{ page.title }}</span>

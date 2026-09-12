@@ -1,49 +1,29 @@
 {%- comment -%}
-@about Универсальный модуль навигации ("Хлебные крошки") в шапке сайта.
-@purpose Автоматический вывод цепочки ссылок "Назад" для любого раздела сайта на основе чистых свойств.
+@about Модуль навигация сайта.
+@purpose Вывод хлебных крошек, умных ссылок «Назад» и кнопки тегов на статьях.
 @author TechLab
 {%- endcomment -%}
 
-{%- assign current_section = page.section -%}
-
 <div class="navigation-header">
-  <span class="nav-crumb">
-    <a href="{{ '/' | relative_url }}" class="nav-link">← Главная</a>
-  </span>
-  
-  {%- if page.slug and page.slug != "" -%}
-    {%- comment -%} А. Если мы находимся на странице открытого дневника (кнопка "0") или странице поста {%- endcomment -%}
-    {%- if page.post-page and page.post-page != "" or page.url contains "/journal/" or page.url contains "/media/" -%}
-      {%- assign project_found = nil -%}
-      {%- for project in site.data.navigation.sections[current_section] -%}
-        {%- if project.slug == page.slug -%}
-          {%- assign project_found = project -%}
-          {%- break -%}
+    <a href="/" class="back-link nav-header-link nav-blue-link">← Главная</a>
+    {%- if page.section and page.section != "" -%}
+        {%- if page.post-page == nil or page.post-page == "" -%}
+            {%- assign section_url = page.section | prepend: "/" | append: "/" -%}
+            {%- assign section_page = site.pages | where: "url", section_url | first -%}
+            {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.section -%}
+            {%- if page.url != section_url -%}<span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>{%- endif -%}
         {%- endif -%}
-      {%- endfor -%}
-      
-      {%- if project_found -%}
-        <span class="nav-separator">|</span>
-        <span class="nav-crumb">
-          <a href="{{ project_found.url | relative_url }}" class="nav-link nav-ellipsis-link" title="{{ project_found.title }}">
-            {{ project_found.title }}
-          </a>
-        </span>
-      {%- endif -%}
-    {%- else -%}
-      {%- comment -%} Б. Если мы находимся на главной странице самого проекта {%- endcomment -%}
-      <span class="nav-separator">|</span>
-      <span class="nav-crumb current-crumb">
-        <span class="nav-text nav-ellipsis-link" title="{{ page.title }}">{{ page.title }}</span>
-      </span>
     {%- endif -%}
-  {%- else -%}
-    {%- comment -%} В. Для всех остальных страниц сайта (где слага нет вообще), выводим просто заголовок {%- endcomment -%}
-    {%- if page.title and page.url != "/" -%}
-      <span class="nav-separator">|</span>
-      <span class="nav-crumb current-crumb">
-        <span class="nav-text nav-ellipsis-link" title="{{ page.title }}">{{ page.title }}</span>
-      </span>
-    {%- endif -%}
-  {%- endif -%}
+    {%- if page.slug and page.slug != "" -%}
+        {%- if page.post-page and page.post-page != "" -%}
+            {%- assign current_project = nil -%}
+            {%- for project in site.data.navigation.sections[page.section] -%}
+                {%- if project.slug == page.slug -%}
+                    {%- assign current_project = project -%}
+                    {%- break -%}
+                {%- endif -%}
+            {%- endfor -%}
+            {%- if current_project -%}<span class="nav-separator">|</span><a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ current_project.title }}</a>{%- endif -%}
+        {%- endif -%}
+    {%- endif -%}<span class="nav-separator">|</span><a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>

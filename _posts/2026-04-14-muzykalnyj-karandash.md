@@ -6,7 +6,7 @@ description: "Демонстрация (фото, видео) выполненн
 published: true
 date: 2026-04-14
 post-page: media
-media-post-page: "Y"
+media-post-page: "N"
 keywords: [фотографии]
 discus: "gallery"
 ---

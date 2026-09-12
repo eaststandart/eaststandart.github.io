@@ -260,8 +260,8 @@ def build_navigation_tree():
                         pf.write(f"layout: page\n")
                         pf.write(f"title: \"{project['title']}: {type_title}\"\n")
                         pf.write(f"slug: {slug}\n")
-                        pf.write(f"section: {section}\n")  # 🔥 ДОБАВЛЕНО: передаём раздел!
-                        pf.write(f"type: {post_type}\n")
+                        pf.write(f"section: {section}\n")
+                        pf.write(f"post-page: {post_type}\n")  # 🔥 ИСПРАВЛЕНО: теперь пишется 'post-page'
                         pf.write(f"mathjax: true\n")
                         pf.write(f"---\n\n")
                         pf.write(f"{{% include posts-page-open.liquid type='{post_type}' %}}\n")

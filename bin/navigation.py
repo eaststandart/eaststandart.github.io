@@ -307,8 +307,8 @@ def build_navigation_tree():
                     file_path = os.path.join(dir_path, 'index.md')
                     with open(file_path, 'w', encoding='utf-8') as pf:
                         type_title = f"публикации типа {post_type}"
-                        if post_type == "journal": type_title = "посты журнала проекта"
-                        elif post_type == "media": type_title = "посты галереи проекта"
+                        if post_type == "journal": type_title = "посты журнала"
+                        elif post_type == "media": type_title = "посты галереи"
                         
                         pf.write(f"---\n")
                         pf.write(f"layout: page\n")

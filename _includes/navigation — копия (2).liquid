@@ -35,59 +35,47 @@
         {%- for cat in page.categories -%}
             {%- if cat != "journal" and cat != "media" and cat != "diary" -%}
                 {%- assign target_slug = cat -%}
-            {%- endif -%}
+            {%- endif -%}\
         {%- endfor -%}
     {%- endif -%}
 
     {%- if target_slug and target_slug != "" -%}
+        {%- comment -%} Находим наш проект в новой универсальной Python карте сайта sections {%- endcomment -%}
         {%- assign current_project = nil -%}
         
-        {%- comment -%} Напрямую перебираем все разделы в карте сайта Питона {%- endcomment -%}
-        {%- assign sections_dict = site.data.navigation.sections -%}
-        {%- for section_kv in sections_dict -%}
-            {%- assign project_list = section_kv[1] -%}
-            {%- for project in project_list -%}
+        {%- comment -%} Безопасно определяем имя папки раздела {%- endcomment -%}
+        {%- assign nav_section = page.section -%}
+        {%- if nav_section == "journal" or nav_section == "media" -%}
+            {%- comment -%} Для кнопки "0" или постов ищем проект по всем разделам карты {%- endcomment -%}
+            {%- for section_entry in site.data.navigation.sections -%}
+                {%- for project in section_entry[1] -%}
+                    {%- assign check_slug = project.slug | join: "" | default: project.slug -%}
+                    {%- if check_slug == target_slug -%}
+                        {%- assign current_project = project -%}
+                        {%- break -%}
+                    {%- endif -%}
+                {%- endfor -%}
+                {%- if current_project -%}{%- break -%}{%- endif -%}
+            {%- endfor -%}
+        {%- else -%}
+            {%- comment -%} Для обычных страниц проектов ищем строго в своем разделе {%- endcomment -%}
+            {%- for project in site.data.navigation.sections[nav_section] -%}
                 {%- assign check_slug = project.slug | join: "" | default: project.slug -%}
                 {%- if check_slug == target_slug -%}
                     {%- assign current_project = project -%}
                     {%- break -%}
                 {%- endif -%}
             {%- endfor -%}
-            {%- if current_project -%}{%- break -%}{%- endif -%}
-        {%- endfor -%}
+        {%- endif -%}
 
         {%- if current_project -%}
             <span class="nav-separator">|</span>
             <a href="{{ current_project.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">
                 {{ current_project.title }}
             </a>
-        {%- else -%}
-            {%- comment -%} Резервная ветка: если это обычный пост без проекта (например, новости) {%- endcomment -%}
-            {%- if page.section and page.section != "" -%}
-                {%- assign parent_url = page.section | prepend: "/" | append: "/" -%}
-                {%- assign parent_page = site.pages | where: "url", parent_url | first -%}
-                <span class="nav-separator">|</span>
-                <a href="{{ parent_url | relative_url }}" class="back-link nav-header-link">{{ parent_page.navtitle | default: parent_page.title | default: page.section }}</a>
-            {%- endif -%}
         {%- endif -%}
     {%- endif -%}
 
     <span class="nav-separator">|</span>
     <a href="/tags.html" class="back-link nav-header-link nav-blue-link"># Поиск</a>
 </div>
-
-<!-- ПОДКЛЮЧАЕМ ВНЕШНИЙ ИЗОЛИРОВАННЫЙ ФАЙЛ СКРИПТА НАВИГАЦИИ С КЭШИРОВАНИЕМ -->
-<script src="{{ '/assets/js/navigation-crumbs.js' | relative_url }}"></script>
-
-<script>
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    var prj = params.get('project');
-    var navDir = params.get('nav');
-    
-    var projectTitleClean = decodeURIComponent("{{ current_project.title | default: 'Назад' | cgi_escape }}");
-
-    // Запускаем движок хлебных крошек
-    runNavigationCrumbs(navDir, prj, projectTitleClean);
-  })();
-</script>

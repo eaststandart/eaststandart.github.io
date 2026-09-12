@@ -254,12 +254,14 @@ def build_navigation_tree():
                     
                     file_path = os.path.join(dir_path, 'index.md')
                     with open(file_path, 'w', encoding='utf-8') as pf:
+                    with open(file_path, 'w', encoding='utf-8') as pf:
                         type_title = "посты журнала проекта" if post_type == "journal" else "посты галереи проекта"
                         
                         pf.write(f"---\n")
                         pf.write(f"layout: page\n")
                         pf.write(f"title: \"{project['title']}: {type_title}\"\n")
                         pf.write(f"slug: {slug}\n")
+                        pf.write(f"section: {section}\n")  # 🔥 ДОБАВЛЕНО: передаём раздел!
                         pf.write(f"type: {post_type}\n")
                         pf.write(f"mathjax: true\n")
                         pf.write(f"---\n\n")

@@ -1,46 +1,82 @@
-{{%- comment -%}}
-@about Шаблон вкладок ("Журнал" и "Галерея работы") внутри главной страницы проекта.
-@purpose Автоматический вывод связанных постов с JS-пагинацией по 5 штук.
+{%- comment -%}
+@about Локальные ленты постов на страницах проектов.
+@purpose Вывод списков журнал, media внутри карточек конкретных проектов.
 @author TechLab
-{{%- endcomment -%}}
+{%- endcomment -%}
 
-{{%- assign current_section = page.section -%}}
-{{%- assign current_project = nil -%}}
+{% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
+{% assign url_parts = page.url | split: "/" %}
+{% assign section_slug = url_parts[1] %}
+{% assign project_slug = url_parts[2] %}
+{% assign section_url = section_slug | prepend: "/" | append: "/" %}
+{% assign section_page = site.pages | where: "url", section_url | first %}
 
-{{%- comment -%}} Находим текущий проект в карте sections по его слагу {{%- endcomment -%}}
-{{%- for project in site.data.navigation.sections[current_section] -%}}
-  {{%- if project.url == page.permalink -%}}
-    {{%- assign current_project = project -%}}
-    {{%- break -%}}
-  {{%- endif -%}}
-{{%- endfor -%}}
+{% comment %} 🔥 БЕЗОПАСНЫЙ СБОР СЛАГА ПРОЕКТА: Игнорируем косую черту на конце URL {% endcomment %}
+{% assign project_slug_last = url_parts[2] %}
 
-{{%- assign post_type = include.type | append: "_posts" -%}}
-{{%- assign posts_list = current_project[post_type] -%}}
-{{%- assign per_page = include.per_page | default: 5 | plus: 0 -%}}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
+{% assign has_posts = false %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
+    {% assign has_posts = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
 
-<div id="{{ include.type }}-container" class="posts-archive-list-wrapper" data-per-page="{{ per_page }}">
-  {{%- if posts_list and posts_list.size > 0 -%}}
-    <ul class="posts-vector-list" style="list-style-type: none; padding-left: 0;">
-      {{%- for post in posts_list -%}}
-        <li class="post-vector-item" style="display: none; margin-bottom: 8px;">
-          <span class="post-vector-date" style="color: #555; margin-right: 10px; font-family: monospace;">
-            {{ post.date | date: "%Y.%m.%d" }}
+{% if has_posts %}
+{% comment %} Генерируем уникальные ID для контейнеров списка и кнопок под этот цикл {% endcomment %}
+{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
+
+{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
+{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+
+<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
+
+<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
+<ul id="{{ loop_id }}" class="project-list posts-page-list">
+  {%- for post in site.categories[project_slug_last] -%}
+    {%- if post.categories contains include.type -%}
+      {%- assign is_post = true -%}
+      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+        <div>
+          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>
+            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
+              {{ post.title }}
+            </a>
           </span>
-          <a href="{{ post.url | relative_url }}" class="post-vector-link" style="text-decoration: none;">
-            » {{ post.title }}
-          </a>
-        </li>
-      {{%- endfor -%}}
-    </ul>
-    
-    <div class="posts-pagination-controls" style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
-      <button class="posts-page-prev" style="padding: 4px 8px; cursor: pointer;" disabled>« Новее</button>
-      <span class="posts-page-indicator" style="font-size: 14px; font-family: monospace;">Страница 1 из 1</span>
-      <button class="posts-page-next" style="padding: 4px 8px; cursor: pointer;">Старее »</button>
-      <button class="posts-page-all-open" onclick="location.href='{{ '/' | relative_url }}{{ include.type }}/{{ page.slug }}/'" style="padding: 4px 8px; cursor: pointer; margin-left: auto; color: #0056b3; font-weight: bold;">0</button>
-    </div>
-  {{%- else -%}}
-    <p class="posts-empty-message" style="color: #666; font-style: italic;">Записей пока нет.</p>
-  {{%- endif -%}}
-</div>
+        </div>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
+
+<!-- Изолированный блок кнопок управления локальной пагинацией -->
+<div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
+
+<!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
+
+<!-- Подключаем наш внешний изолированный файл скрипта локальной пагинации -->
+<script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
+
+<script>
+  (function() {
+    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
+    var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
+
+    // Запускаем пагинатор на месте с его родными изолированными параметрами
+    runPostsPageNav(
+      "{{ loop_id }}", 
+      "{{ ctrl_id }}", 
+      "{{ include.per_page }}", 
+      "{{ archive_url }}", 
+      "{{ include.type }}", 
+      "{{ project_slug_last }}", 
+      "{{ section_slug }}", 
+      navTitleClean
+    );
+  })();
+</script>
+{% endif %}

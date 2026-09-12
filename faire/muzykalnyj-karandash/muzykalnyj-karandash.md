@@ -52,7 +52,7 @@ keywords: [электроникаисхемотехника, схемаэлек�
 {% include posts-page.liquid type="media" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-04-14-muzykalnyj-karandash|2026-04-14-muzykalnyj-karandash]]
+[[../../_posts/2026-04-14-muzykalnyj-karandash-media|2026-04-14-muzykalnyj-karandash-media]]
 [[../../_posts/2026-04-15-muzykalnyj-karandash|2026-04-15-muzykalnyj-karandash]]
 [[../../_posts/2026-04-16-muzykalnyj-karandash|2026-04-16-muzykalnyj-karandash]]
 [[../../_posts/2026-04-17-muzykalnyj-karandash|2026-04-17-muzykalnyj-karandash]]

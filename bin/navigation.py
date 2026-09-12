@@ -254,7 +254,6 @@ def build_navigation_tree():
                     
                     file_path = os.path.join(dir_path, 'index.md')
                     with open(file_path, 'w', encoding='utf-8') as pf:
-                    with open(file_path, 'w', encoding='utf-8') as pf:
                         type_title = "посты журнала проекта" if post_type == "journal" else "посты галереи проекта"
                         
                         pf.write(f"---\n")

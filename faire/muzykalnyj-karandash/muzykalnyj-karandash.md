@@ -1,18 +1,15 @@
 ---
 layout: page
 title: Музыкальный карандаш
+slug: muzykalnyj-karandash
 description: "Развитие базовых навыков конструирования, монтажа и настройки электронных устройств. Изучение основ схемотехники и чтение принципиальных электрических схем для понимания функционирования устройств. Принципы построения аналоговых звуковых синтезаторов на базе интегральной микросхемы-таймера 555. Освоение практической работы с транзисторами из кремния и германия для глубокого изучения физики процессов."
 author: ["TechLab"]
 sources: "[“Drawdio” Musical Pencil](https://makezine.com/projects/drawdio-musical-pencil/)"
-permalink: /faire/muzykalnyj-karandash/
 published: true
 date: 2026-04-13
-githubpages-repo: eaststandart.github.io
-githubpages-section: faire
-githubpages-direction: электронное конструирование
-githubpages-entity: проекты
-githubpages-level: 4
-githubpages-slug: muzykalnyj-karandash
+direction: электронное конструирование
+entity: проекты
+level: 4
 keywords: [электроникаисхемотехника, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
 ---
 

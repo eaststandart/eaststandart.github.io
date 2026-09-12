@@ -1,17 +1,16 @@
 {%- comment -%}
-@about Универсальные локальные ленты постов на страницах проектов.
-@purpose Автоматический вывод списков "Журнал" и "Галерея" для любого раздела сайта.
+@about Локальные ленты постов на страницах проектов.
+@purpose Вывод списков журнал, media внутри карточек конкретных проектов на основе нативного дерева.
 @author TechLab
 {%- endcomment -%}
 
-{%- comment -%} 1. АВТОМАТИЧЕСКИ ВЫЧИСЛЯЕМ ИМЯ РАЗДЕЛА ИЗ URL СТРАНИЦЫ (faire, projects и т.д.) {%- endcomment -%}
-{%- assign url_parts = page.url | split: "/" -%}
-{%- assign current_section = url_parts<1> -%}
+{%- comment -%} 1. ОПРЕДЕЛЯЕМ СЛАГ ПРОЕКТА ИЗ URL ИЛИ СВОЙСТВ ТЕКУЩЕЙ СТРАНИЦЫ {%- endcomment -%}
+{%- assign project_slug = page.githubpages-slug | default: page.categories -%}
 
-{%- comment -%} 2. НАХОДИМ ТЕКУЩИЙ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON ПО СЛАГУ {%- endcomment -%}
+{%- comment -%} 2. НАХОДИМ НАШ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON {%- endcomment -%}
 {%- assign current_project = nil -%}
-{%- for project in site.data.navigation.sections<current_section> -%}
-    {%- if project.slug == page.slug -%}
+{%- for project in site.data.navigation.faire -%}
+    {%- if project.url contains project_slug -%}
         {%- assign current_project = project -%}
         {%- break -%}
     {%- endif -%}
@@ -26,7 +25,7 @@
 {%- endif -%}
 
 {%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
-{%- assign loop_id = include.type | append: "-list-" | append: page.slug -%}
+{%- assign loop_id = include.type | append: "-list-" | append: project_slug -%}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ БЕЗ ИЗМЕНЕНИЙ -->
 {%- if project_posts and project_posts.size > 0 -%}
@@ -66,7 +65,7 @@
       "{{ include.per_page }}", 
       "/{{ include.type }}/", 
       "{{ include.type }}", 
-      "{{ page.slug }}"
+      "{{ project_slug }}"
     );
   })();
 </script>

@@ -1,18 +1,16 @@
 ---
 layout: page
 title: "Музыкальный карандаш: описание работы"
+slug: muzykalnyj-karandash
 description: "Описание работы устройства, взаимодействия его компонентов и функциональных блоков, а также физических процессов, протекающих в них при выполнении устройством заданных функций в различных режимах работы."
 author: ["TechLab"]
-journal-post-page: "Y"
-discus: "questions"
-mathjax: true
 published: true
 date: 2026-04-18
-githubpages-repo: eaststandart.github.io
-githubpages-section: faire
-githubpages-type: journal
-githubpages-slug: muzykalnyj-karandash
+post-page: journal
+journal-post-page: "Y"
+mathjax: true
 keywords: [схема, теория]
+discus: "questions"
 ---
 
 ### Описание работы устройства

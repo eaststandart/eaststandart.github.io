@@ -7,7 +7,6 @@ emoji: "🧍‍♂️"
 ---
 
 
-
 ---
 
 {% for person in site.people %}

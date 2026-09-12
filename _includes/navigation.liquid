@@ -13,7 +13,7 @@
   
   {%- if page.slug and page.slug != "" -%}
     {%- comment -%} Если мы находимся на странице открытого дневника (кнопка "0") или странице поста {%- endcomment -%}
-    {%- if page.type and page.type != "" or page.url contains "/journal/" or page.url contains "/media/" -%}
+    {%- if page.post-page and page.post-page != "" or page.url contains "/journal/" or page.url contains "/media/" -%}
       {%- assign project_found = nil -%}
       {%- for project in site.data.navigation.sections[current_section] -%}
         {%- if project.slug == page.slug -%}

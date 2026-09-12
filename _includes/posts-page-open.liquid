@@ -5,13 +5,14 @@
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- assign current_project = nil -%}
-  {%- for project in site.data.navigation.faire -%}
-    {%- if project.url contains page.githubpages-slug -%}
-        {%- assign current_project = project -%}
-        {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
+{%- assign current_section = page.section -%}
+{%- assign current_project = nil -%}
+{%- for project in site.data.navigation.sections[current_section] -%}
+  {%- if project.slug == page.slug -%}
+      {%- assign current_project = project -%}
+      {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
 
   {%- assign project_posts = nil -%}
   {%- if include.type == "journal" -%}

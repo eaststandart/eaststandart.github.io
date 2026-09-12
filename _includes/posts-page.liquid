@@ -24,7 +24,7 @@
 {%- endif -%}
 
 {%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
-{%- assign loop_id = include.type | append: "-list-" | append: project_slug -%}
+{%- assign loop_id = include.type | append: "-list-" | append: page.slug -%}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ БЕЗ ИЗМЕНЕНИЙ -->
 {%- if project_posts and project_posts.size > 0 -%}
@@ -64,7 +64,7 @@
       "{{ include.per_page }}", 
       "/{{ include.type }}/", 
       "{{ include.type }}", 
-      "{{ project_slug }}"
+      "{{ page.slug }}"
     );
   })();
 </script>

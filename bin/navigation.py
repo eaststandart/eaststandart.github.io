@@ -78,22 +78,42 @@ def build_navigation_tree():
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    # 1. АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ РАЗДЕЛОВ И СБОР БЕЛОГО СПИСКА ПРОЕКТОВ
-    supported_sections = ['faire', 'projects', 'diary']
+    # 1. АВТОМАТИЧЕСКИЙ СБОР РАЗДЕЛОВ И СЛАГОВ ПРОЕКТОВ (Без жестких списков папок)
+    # Список системных папок-исключений, которые Python должен пропустить
+    EXCLUDED_FOLDERS = {'_posts', '_includes', '_data', '_layouts', '_people', '_processed_files', 'assets', 'bin', '.git', '.github'}
+    
+    supported_sections = []
     valid_slugs = set()
     slug_to_section_map = {}
-    
+
+    # А. Автоматически находим все папки разделов в корне сайта
+    for name in os.listdir(root_dir):
+        if os.path.isdir(os.path.join(root_dir, name)):
+            if not name.startswith('.') and not name.startswith('_') and name not in EXCLUDED_FOLDERS:
+                supported_sections.append(name)
+                
+    print(f"[NAV-INFO] Автоматически обнаружены разделы сайта: {supported_sections}")
+
+    # Б. Заходим в каждую найденную папку и собираем слаги ИЗНУТРИ файлов (по свойству slug)
     for section in supported_sections:
         section_dir = os.path.join(root_dir, section)
-        if os.path.exists(section_dir):
-            for entry in os.scandir(section_dir):
-                if entry.is_dir() and not entry.name.startswith('.'):
-                    valid_slugs.add(entry.name)
-                    slug_to_section_map[entry.name] = section
+        for root, _, files in os.walk(section_dir):
+            for file in files:
+                if not file.endswith('.md'):
+                    continue
                 
-    print(f"[NAV-INFO] Белый список слагов успешно собран: {list(valid_slugs)}")
+                full_path = os.path.join(root, file)
+                data, _, _ = parse_yaml_front_matter(full_path)
+                
+                if data and data.get('published') is not False:
+                    file_slug = data.get('slug')
+                    if file_slug:
+                        valid_slugs.add(file_slug)
+                        slug_to_section_map[file_slug] = section
+                
+    print(f"[NAV-INFO] Белый список слагов успешно собран из Front Matter: {list(valid_slugs)}")
 
-    # Инициализируем чистую древовидную структуру разделов
+    # Инициализируем древовидную структуру разделов под новые найденные папки
     nav_tree = {
         'sections': {section: [] for section in supported_sections}
     }

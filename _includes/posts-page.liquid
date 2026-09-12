@@ -10,7 +10,7 @@
 
 {%- comment -%} 2. НАХОДИМ ТЕКУЩИЙ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON ПО СЛАГУ {%- endcomment -%}
 {%- assign current_project = nil -%}
-{%- for project in site.data.navigation.sections<current_section> -%}
+{%- for project in site.data.navigation.sections[current_section] -%}
     {%- if project.slug == page.slug -%}
         {%- assign current_project = project -%}
         {%- break -%}

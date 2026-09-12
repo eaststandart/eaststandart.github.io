@@ -9,7 +9,7 @@
 
 {{%- comment -%}} Находим текущий проект в карте sections по его слагу {{%- endcomment -%}}
 {{%- for project in site.data.navigation.sections[current_section] -%}}
-  {{%- if project.slug == page.slug -%}}
+  {{%- if project.url == page.permalink -%}}
     {{%- assign current_project = project -%}}
     {{%- break -%}}
   {{%- endif -%}}

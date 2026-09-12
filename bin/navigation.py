@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 @module navigation
-@about Универсальный статический препроцессор метаданных и карты разделов.
-@purpose Автоматически вычисляет разделы по имени папок, убирает избыточность Front Matter
-         и генерирует умное дерево sections в _data/navigation.yml.
+@about Универсальный менеджер метаданных, валидатор связей и сборщик дерева навигации сайта.
+@purpose Автоматизирует генерацию тегов, категорий и permalink на основе чистых свойств Obsidian,
+         вычисляя разделы по имени физических папок.
 @author TechLab
-@version 1.0.0
+@version 4.0.0-smart
 """
 
 import os
@@ -14,7 +14,7 @@ import re
 import yaml
 
 def translit_title(text):
-    """Очищает заголовок, превращая его в монолитный тег строчными буквами без пробелов."""
+    """Очищает заголовок, превращая его в монолитный тег строчными буквами без пробелов и знаков."""
     if not text: return ""
     text = text.lower().strip()
     text = re.sub(r'[^a-z0-9а-яё]', '', text)
@@ -49,11 +49,10 @@ def parse_yaml_front_matter(file_path):
         return None, None, content
 
 def write_yaml_front_matter(file_path, data, body_content):
-    """Записывает обновленные свойства обратно в файл и создает отладочные логи для Artifacts."""
+    """Записывает обновленные свойства в файл и сохраняет копию для Artifacts."""
     try:
         front_text = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
         
-        # 📂 ВОЗВРАЩАЕМ ГЕНЕРАЦИЮ ЛОГОВ ДЛЯ ARTIFACTS
         current_dir = os.path.dirname(os.path.abspath(__file__))
         root_dir = os.path.abspath(os.path.join(current_dir, '..'))
         debug_dir = os.path.join(root_dir, '_processed_files')
@@ -65,28 +64,26 @@ def write_yaml_front_matter(file_path, data, body_content):
         with open(debug_file_path, 'w', encoding='utf-8') as df:
             df.write(f"---\n{front_text}---\n[Тело статьи успешно обработано и скрыто для компактности]")
 
-        # Запись в основной рабочий файл
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(f"---\n{front_text}---\n{body_content}")
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
 def build_navigation_tree():
-    """Главный конвейер сборки дерева навигации сайта."""
+    """Главный конвейер сборки дерева навигации и точечной обработки свойств."""
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    # 1. АВТОМАТИЧЕСКИЙ СБОР РАЗДЕЛОВ И СЛАГОВ ПРОЕКТОВ (Без жестких списков папок)
-    # Список системных папок-исключений, которые Python должен пропустить
+    # 1. АВТОМАТИЧЕСКИЙ СБОР РАЗДЕЛОВ И СЛАГОВ ПРОЕКТОВ (Полный автомат по папкам)
     EXCLUDED_FOLDERS = {'_posts', '_includes', '_data', '_layouts', '_people', '_processed_files', 'assets', 'bin', '.git', '.github'}
     
     supported_sections = []
     valid_slugs = set()
     slug_to_section_map = {}
 
-    # А. Автоматически находим все папки разделов в корне сайта
+    # Находим живые папки разделов в корнях сайта
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)):
             if not name.startswith('.') and not name.startswith('_') and name not in EXCLUDED_FOLDERS:
@@ -94,13 +91,12 @@ def build_navigation_tree():
                 
     print(f"[NAV-INFO] Автоматически обнаружены разделы сайта: {supported_sections}")
 
-    # Б. Заходим в каждую найденную папку и собираем слаги ИЗНУТРИ файлов (по свойству slug)
+    # Заглядываем внутрь файлов разделов и собираем эталонные слаги по свойству 'slug'
     for section in supported_sections:
         section_dir = os.path.join(root_dir, section)
         for root, _, files in os.walk(section_dir):
             for file in files:
-                if not file.endswith('.md'):
-                    continue
+                if not file.endswith('.md'): continue
                 
                 full_path = os.path.join(root, file)
                 data, _, _ = parse_yaml_front_matter(full_path)
@@ -111,9 +107,9 @@ def build_navigation_tree():
                         valid_slugs.add(file_slug)
                         slug_to_section_map[file_slug] = section
                 
-    print(f"[NAV-INFO] Белый список слагов успешно собран из Front Matter: {list(valid_slugs)}")
+    print(f"[NAV-INFO] Белый список слагов успешно собран: {list(valid_slugs)}")
 
-    # Инициализируем древовидную структуру разделов под новые найденные папки
+    # Универсальная древовидная карта данных под кодовым именем 'sections'
     nav_tree = {
         'sections': {section: [] for section in supported_sections}
     }
@@ -121,7 +117,7 @@ def build_navigation_tree():
     posts_registry = {}
     related_posts_map = {slug: {'journal': [], 'media': []} for slug in valid_slugs}
 
-    # 2. АНАЛИЗ И ОБРАБОТКА ПАПКИ _POSTS (Маленькие заметки)
+    # 2. ЭТАП СБОРКИ И АНАЛИЗА ПАПКИ _POSTS (Маленькие заметки по новому стандарту)
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -131,27 +127,22 @@ def build_navigation_tree():
                 full_path = os.path.join(root, file)
                 data, front_text, body = parse_yaml_front_matter(full_path)
                 if data is None or data.get('published') is False: continue
-
-                # Читаем чистые свойства по новому стандарту
+                
+                # Извлекаем имя раздела по слагу проекта из нашей карты
                 post_slug = data.get('slug')
+                if not post_slug or post_slug not in valid_slugs: continue
+                
                 post_date = str(data.get('date', ''))
-                post_page_type = data.get('post-page') # Ваше новое имя свойства
+                post_page_type = data.get('post-page') # Новое свойство 'post-page' вместо 'type'
 
-                if not post_slug: continue
-
-                # Защита от опечаток в слагах
-                if post_slug not in valid_slugs:
-                    print(f"\n[❌ ОШИБКА] В посте {file} указан неизвестный slug: '{post_slug}'.")
-                    exit(1)
-
-                # Защита от конфликтов дат
+                # Защита от дубликатов дат
                 registry_key = (post_slug, post_date, post_page_type)
                 if registry_key in posts_registry:
-                    print(f"\n[❌ ОШИБКА] Конфликт дат в '{file}' и '{posts_registry[registry_key]}'.")
+                    print(f"\n[❌ КРИТИЧЕСКАЯ ОШИБКА] Конфликт дат в '{file}' и '{posts_registry[registry_key]}'.")
                     exit(1)
                 posts_registry[registry_key] = file
 
-                # Генерация тегов
+                # Автоматическая генерация тегов по новым чистым свойствам
                 calculated_tags = []
                 if data.get('direction'): calculated_tags.append(clean_tag(data['direction']))
                 if data.get('entity'): calculated_tags.append(clean_tag(data['entity']))
@@ -169,7 +160,7 @@ def build_navigation_tree():
                 data['tags'] = final_tags
                 if 'keywords' in data: del data['keywords']
 
-                # Автоматически прописываем Jekyll категории: [тип, слаг_проекта]
+                # Автоматические Jekyll категории
                 data['categories'] = [post_page_type, post_slug]
                 write_yaml_front_matter(full_path, data, body)
 
@@ -184,7 +175,7 @@ def build_navigation_tree():
                         'date': post_date
                     })
 
-    # 3. СБОРКА И ПЕРЕЗАПИСЬ ГЛАВНЫХ СТРАНИЦ ПРОЕКТОВ ИЗ ПАПОК
+    # 3. ЭТАП СБОРКИ И АВТОМАТИЧЕСКОЙ ДОПИСИ PROPERTIES ГЛАВНЫХ СТРАНИЦ
     for section in supported_sections:
         section_dir = os.path.join(root_dir, section)
         if os.path.exists(section_dir):
@@ -199,7 +190,7 @@ def build_navigation_tree():
                     project_slug = data.get('slug')
                     if not project_slug: continue
 
-                    # Генерация тегов для главной страницы
+                    # Прогоняем формулу автоматических тегов для главной страницы
                     proj_tags = []
                     if data.get('direction'): proj_tags.append(clean_tag(data['direction']))
                     if data.get('entity'): proj_tags.append(clean_tag(data['entity']))
@@ -217,15 +208,19 @@ def build_navigation_tree():
                     data['tags'] = final_proj_tags
                     if 'keywords' in data: del data['keywords']
 
+                    # 🔥 ГЕНИАЛЬНОЕ УПРОЩЕНИЕ: Автоматически формируем и вшиваем permalink!
+                    # Берем section (имя папки раздела) и project_slug (свойство slug из файла)
+                    final_url = f"/{section}/{project_slug}/"
+                    data['permalink'] = final_url
+
+                    # Перезаписываем md-файл проекта со всеми сгенерированными полями
                     write_yaml_front_matter(full_path, data, body)
 
-                    # Автоматически вычисляем permalink на основе физической папки раздела
-                    final_url = f"/{section}/{project_slug}/"
-
+                    # Сортируем связанные посты проекта по дате (от новых к старым)
                     journal_sorted = sorted(related_posts_map.get(project_slug, {}).get('journal', []), key=lambda x: x['date'], reverse=True)
                     media_sorted = sorted(related_posts_map.get(project_slug, {}).get('media', []), key=lambda x: x['date'], reverse=True)
 
-                    # Складываем проект строго на полочку его родного раздела внутри sections
+                    # Упаковываем проект со всеми его внутренними списками в дерево навигации
                     nav_tree['sections'][section].append({
                         'title': data.get('title', project_slug),
                         'slug': project_slug,
@@ -236,17 +231,17 @@ def build_navigation_tree():
                         'media_posts': media_sorted
                     })
 
-        # Сортируем проекты на полочке по алфавиту
+        # Сортируем список самих проектов на этой полочке раздела по алфавиту
         nav_tree['sections'][section] = sorted(nav_tree['sections'][section], key=lambda x: x['title'].lower())
 
-    # 4. ЗАПИСЬ ОБЩЕЙ КАРТЫ СЛУЖЕБНЫХ ДАННЫХ И СТРАНИЦ КНОПКИ "0"
+    # 4. ЗАПИСЬ СТРУКТУРИРОВАННОГО УМНОГО ДЕРЕВА В _DATA/NAVIGATION.YML
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        print("[NAV-SUCCESS] Карта разделов 'sections' успешно сохранена.")
+        print("[NAV-SUCCESS] Карта навигации и связей 'sections' успешно сохранена в _data/navigation.yml")
 
-        # Автогенерация страниц-лент для кнопки "0" для ВСЕХ проектов всех разделов
+        # 📂 АВТОГЕНЕРАЦИЯ СТРАНИЦ-ЛЕНТ ДЛЯ КНОПКИ "0" (Для всех найденных проектов)
         for section in supported_sections:
             for project in nav_tree['sections'][section]:
                 slug = project['slug']
@@ -266,10 +261,10 @@ def build_navigation_tree():
                         pf.write(f"type: {post_type}\n")
                         pf.write(f"mathjax: true\n")
                         pf.write(f"---\n\n")
-                        pf.write(f"[% include posts-page-open.liquid type='{post_type}' %]\n")
+                        pf.write(f"{{% include posts-page-open.liquid type='{post_type}' %}}\n")
 
     except Exception as e:
-        print(f"[NAV-ERROR] Ошибка записи: {e}")
+        print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
 if __name__ == '__main__':
     build_navigation_tree()

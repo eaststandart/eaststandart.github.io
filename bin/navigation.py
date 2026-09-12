@@ -174,9 +174,8 @@ def build_navigation_tree():
                 # 🔥 СОХРАНЯЕМ ДВОЙНЫЕ КАТЕГОРИИ ДЛЯ ВНУТРЕННИХ СКРИПТОВ JEKYLL
                 data['categories'] = [post_page_type, post_slug]
                 
-                # Записываем section во Front Matter поста для работы нашей идеальной шапки сайта
-                current_clean_section = slug_to_section_map.get(post_slug, '')
-                data['section'] = current_clean_section
+                # Записываем служебный тип в поле section, чтобы шапка нашла вывеску архива
+                data['section'] = post_page_type
                 
                 # Перезаписываем файл со всеми системными свойствами
                 write_yaml_front_matter(full_path, data, body)

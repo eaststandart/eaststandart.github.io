@@ -160,8 +160,9 @@ def build_navigation_tree():
                 data['tags'] = final_tags
                 if 'keywords' in data: del data['keywords']
 
-                # Автоматические Jekyll категории
+                # Автоматически прописываем Jekyll категории и раздел
                 data['categories'] = [post_page_type, post_slug]
+                data['section'] = slug_to_section_map.get(post_slug, '')
                 write_yaml_front_matter(full_path, data, body)
 
                 file_name_clean, _ = os.path.splitext(file)
@@ -212,6 +213,7 @@ def build_navigation_tree():
                     # Берем section (имя папки раздела) и project_slug (свойство slug из файла)
                     final_url = f"/{section}/{project_slug}/"
                     data['permalink'] = final_url
+                    data['section'] = section
 
                     # Перезаписываем md-файл проекта со всеми сгенерированными полями
                     write_yaml_front_matter(full_path, data, body)

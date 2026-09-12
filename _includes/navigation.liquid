@@ -4,9 +4,7 @@
 @author TechLab
 {%- endcomment -%}
 
-{%- comment -%} Автоматически вычисляем имя раздела из URL страницы {%- endcomment -%}
-{%- assign url_parts = page.url | split: "/" -%}
-{%- assign current_section = url_parts[1] -%}
+{%- assign current_section = page.section -%}
 
 <div class="navigation-header">
   <span class="nav-crumb">

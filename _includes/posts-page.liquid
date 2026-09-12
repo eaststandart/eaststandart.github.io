@@ -1,70 +1,46 @@
-{%- comment -%}
-@about Универсальные локальные ленты постов на страницах проектов.
-@purpose Автоматический вывод списков "Журнал" и "Галерея" для любого раздела сайта.
+{{%- comment -%}}
+@about Шаблон вкладок ("Журнал" и "Галерея работы") внутри главной страницы проекта.
+@purpose Автоматический вывод связанных постов с JS-пагинацией по 5 штук.
 @author TechLab
-{%- endcomment -%}
+{{%- endcomment -%}}
 
-{%- assign current_section = page.section -%}
+{{%- assign current_section = page.section -%}}
+{{%- assign current_project = nil -%}}
 
-{%- comment -%} 2. НАХОДИМ ТЕКУЩИЙ ПРОЕКТ В СГЕНЕРИРОВАННОЙ КАРТЕ PYTHON ПО СЛАГУ {%- endcomment -%}
-{%- assign current_project = nil -%}
-{%- for project in site.data.navigation.sections[current_section] -%}
-    {%- if project.slug == page.slug -%}
-        {%- assign current_project = project -%}
-        {%- break -%}
-    {%- endif -%}
-{%- endfor -%}
+{{%- comment -%}} Находим текущий проект в карте sections по его слагу {{%- endcomment -%}}
+{{%- for project in site.data.navigation.sections[current_section] -%}}
+  {{%- if project.slug == page.slug -%}}
+    {{%- assign current_project = project -%}}
+    {{%- break -%}}
+  {{%- endif -%}}
+{{%- endfor -%}}
 
-{%- comment -%} 3. ОПРЕДЕЛЯЕМ ЦЕЛЕВОЙ МАССИВ В ЗАВИСИМОСТИ ОТ ТИПА ИНКЛУДА {%- endcomment -%}
-{%- assign project_posts = nil -%}
-{%- if include.type == "journal" -%}
-    {%- assign project_posts = current_project.journal_posts -%}
-{%- elsif include.type == "media" -%}
-    {%- assign project_posts = current_project.media_posts -%}
-{%- endif -%}
+{{%- assign post_type = include.type | append: "_posts" -%}}
+{{%- assign posts_list = current_project[post_type] -%}}
+{{%- assign per_page = include.per_page | default: 5 | plus: 0 -%}}
 
-{%- comment -%} 4. ГЕНЕРИРУЕМ УНИКАЛЬНЫЙ ID ДЛЯ КОНТЕЙНЕРА СПИСКА {%- endcomment -%}
-{%- assign loop_id = include.type | append: "-list-" | append: page.slug -%}
-
-<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК В ВАШЕМ ОРИГИНАЛЬНОМ ДИЗАЙНЕ БЕЗ ИЗМЕНЕНИЙ -->
-{%- if project_posts and project_posts.size > 0 -%}
-<ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in project_posts -%}
-    {%- assign is_post = true -%}
-    {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-    <li class="local-post-item posts-page-item" data-date="{{ post.date }}" data-is-post="{{ is_post }}" data-emoji="">
-      <div>
-        <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
-            {{ post.title }}
+<div id="{{ include.type }}-container" class="posts-archive-list-wrapper" data-per-page="{{ per_page }}">
+  {{%- if posts_list and posts_list.size > 0 -%}}
+    <ul class="posts-vector-list" style="list-style-type: none; padding-left: 0;">
+      {{%- for post in posts_list -%}}
+        <li class="post-vector-item" style="display: none; margin-bottom: 8px;">
+          <span class="post-vector-date" style="color: #555; margin-right: 10px; font-family: monospace;">
+            {{ post.date | date: "%Y.%m.%d" }}
+          </span>
+          <a href="{{ post.url | relative_url }}" class="post-vector-link" style="text-decoration: none;">
+            » {{ post.title }}
           </a>
-        </span>
-      </div>
-    </li>
-  {%- endfor -%}
-</ul>
-{%- endif -%}
-
-{%- comment -%} Генерируем уникальный ID для блока кнопок управления {%- endcomment -%}
-{%- assign ctrl_id = "ctrl-" | append: loop_id -%}
-
-<!-- Блок кнопок управления локальной пагинацией -->
-<div id="{{ ctrl_id }}" class="posts-page-ctrl"></div>
-
-<!-- Подключаем наш адаптированный внешний скрипт -->
-<script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
-
-<script>
-  (function() {
-    // Запускаем пагинатор строго по вашим оригинальным правилам и классам
-    runPostsPageNav(
-      "{{ loop_id }}", 
-      "{{ ctrl_id }}", 
-      "{{ include.per_page }}", 
-      "/{{ include.type }}/", 
-      "{{ include.type }}", 
-      "{{ page.slug }}"
-    );
-  })();
-</script>
+        </li>
+      {{%- endfor -%}}
+    </ul>
+    
+    <div class="posts-pagination-controls" style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
+      <button class="posts-page-prev" style="padding: 4px 8px; cursor: pointer;" disabled>« Новее</button>
+      <span class="posts-page-indicator" style="font-size: 14px; font-family: monospace;">Страница 1 из 1</span>
+      <button class="posts-page-next" style="padding: 4px 8px; cursor: pointer;">Старее »</button>
+      <button class="posts-page-all-open" onclick="location.href='{{ '/' | relative_url }}{{ include.type }}/{{ page.slug }}/'" style="padding: 4px 8px; cursor: pointer; margin-left: auto; color: #0056b3; font-weight: bold;">0</button>
+    </div>
+  {{%- else -%}}
+    <p class="posts-empty-message" style="color: #666; font-style: italic;">Записей пока нет.</p>
+  {{%- endif -%}}
+</div>

@@ -12,6 +12,12 @@
             {%- assign section_page = site.pages | where: "url", section_url | first -%}
             {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.section -%}
             {%- if page.url != section_url -%}<span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>{%- endif -%}
+        {%- else -%}
+            {%- comment -%} 🔥 НАДЁЖНЫЙ ВЫВОД ДЛЯ ПОСТОВ: Берём тип из post-page (journal/media), находим вывеску в _pages {%- endcomment -%}
+            {%- assign section_url = page.post-page | prepend: "/" | append: "/" -%}
+            {%- assign section_page = site.pages | where: "url", section_url | first -%}
+            {%- assign section_text = section_page.navtitle | default: section_page.title | default: page.post-page -%}
+            <span class="nav-separator">|</span><a href="{{ section_url | relative_url }}" class="back-link nav-header-link">{{ section_text }}</a>
         {%- endif -%}
     {%- endif -%}
     {%- if page.slug and page.slug != "" -%}

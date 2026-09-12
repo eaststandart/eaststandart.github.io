@@ -11,6 +11,7 @@ journal-post-page: "Y"
 mathjax: true
 keywords: [схема, теория]
 discus: "questions"
+permalink: /journal/muzykalnyj-karandash/2026/04/18/muzykalnyj-karandash.html
 ---
 
 ### Описание работы устройства 

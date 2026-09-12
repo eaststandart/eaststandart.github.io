@@ -56,7 +56,7 @@ keywords: [электроникаисхемотехника, схемаэлек�
 [[../../_posts/2026-04-15-muzykalnyj-karandash|2026-04-15-muzykalnyj-karandash]]
 [[../../_posts/2026-04-16-muzykalnyj-karandash|2026-04-16-muzykalnyj-karandash]]
 [[../../_posts/2026-04-17-muzykalnyj-karandash|2026-04-17-muzykalnyj-karandash]]
-[[../../_posts/2026-04-18-muzykalnyj-karandash|2026-04-18-muzykalnyj-karandash]]
+[[../../_posts/2026-04-18-muzykalnyj-karandash123|2026-04-18-muzykalnyj-karandash123]]
 [[../../_posts/2026-04-19-muzykalnyj-karandash|2026-04-19-muzykalnyj-karandash]]
 [[../../_posts/2026-04-20-muzykalnyj-karandash|2026-04-20-muzykalnyj-karandash]]
 {% endcomment %}

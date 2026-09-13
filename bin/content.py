@@ -110,17 +110,44 @@ def build_pinned_news_list():
     
     # 3. ТОЧЕЧНАЯ ЗАПИСЬ МАССИВА В СТРАНИЦУ НОВОСТЕЙ
     news_page_path = os.path.join(root_dir, '_pages', 'news.md')
+    content_log_buffer = []
+    
+    def log_content_action(text):
+        print(text)
+        content_log_buffer.append(text)
+
+    # СОЗДАЕМ ОТДЕЛЬНУЮ СЕРВЕРНУЮ ПАПКУ ДЛЯ НОВОГО АРХИВА CONTENT
+    content_debug_dir = os.path.join(root_dir, '_content_files')
+    os.makedirs(content_debug_dir, exist_ok=True)
+
     if os.path.exists(news_page_path):
         news_data, n_front, n_body = parse_yaml_front_matter(news_page_path)
         if news_data is not None:
-            # Переводим свойство на работу с массивом pinned_urls
             news_data['pinned_urls'] = final_urls
-            # Безжалостно стираем старую одиночную текстовую строку, если она осталась
             if 'pinned_url' in news_data:
                 del news_data['pinned_url']
                 
             write_yaml_front_matter(news_page_path, news_data, n_body)
-            print(f"[CON-SUCCESS] В _pages/news.md успешно прописан массив из {len(final_urls)} закреплённых URL.")
+            log_content_action(f"[CON-SUCCESS] В _pages/news.md успешно прописан массив из {len(final_urls)} закреплённых URL.")
+            for idx, url in enumerate(final_urls, 1):
+                log_content_action(f"  [{idx}] Закреплен адрес: {url}")
+                
+            # Дублируем обработанную страницу новостей в новый архив для контроля
+            processed_news_path = os.path.join(content_debug_dir, 'processed-news.md')
+            with open(processed_news_path, 'w', encoding='utf-8') as pnf:
+                processed_news_front = yaml.dump(news_data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+                pnf.write(f"---\n{processed_news_front}---\n[Контент страницы новостей подготовлен]")
+    else:
+        log_content_action(f"[CON-ERROR] Файл _pages/news.md не найден на диске!")
+
+    # Физически записываем отладочный лог в изолированную папку нового архива
+    try:
+        log_file_path = os.path.join(content_debug_dir, 'content_debug.log')
+        with open(log_file_path, 'w', encoding='utf-8') as lf:
+            lf.write("\n".join(content_log_buffer))
+        print(f"[CON-SUCCESS] Файлы модуля успешно направлены в новый архив: _content_files/content_debug.log")
+    except Exception as e:
+        print(f"[CON-ERROR] Не удалось сохранить файл лога в папку нового архива: {e}")
 
 if __name__ == '__main__':
     build_pinned_news_list()

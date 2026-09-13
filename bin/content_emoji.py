@@ -47,7 +47,7 @@ def calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_y
 
     # Очередь 1: Посты хроники — берут эмодзи из вывесок типов в _pages/ (👀 или ✍🏻)
     if first_folder == '_posts':
-        post_type = data.get('post-page', 'journal')
+        post_type = data.get('post-page')
         return page_types_emoji.get(post_type, "")
 
     # Очередь 2 и 3: Проверяем наличие файла index.md в корне папки контента на диске

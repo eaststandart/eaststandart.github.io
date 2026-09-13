@@ -1,8 +1,8 @@
 /**
- * @about Модуль пагинации (ОЧИЩЕННЫЙ ОТ СТАРОЙ БРАУЗЕРНОЙ СОРТИРОВКИ).
- * @purpose Разбивает готовый, идеально отсортированный сервером список на страницы.
+ * @about Модуль пагинации (С ВЕЧНЫМ ЗАКРЕПЛЕНИЕМ НА ВСЕХ СТРАНИЦАХ).
+ * @purpose Разбивает список на страницы, удерживая закрепленные посты на самом верху.
  * @author TechLab
- * @version 2.0.0-pure-backend
+ * @version 2.1.0-multi-page-pin
  */
 
 function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
@@ -12,20 +12,47 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Просто забираем элементы ровно в том порядке, в котором их разложил сервер
-  var items = Array.from(list.children);
-  var currentPage = 1;
-  var totalPages = Math.ceil(items.length / itemsPerPage);
+  var allElements = Array.from(list.children);
+  
+  # ➔ РАЗДЕЛЯЕМ ГОТОВЫЙ СПИСОК НА ДВЕ ОЧЕРЕДИ СРАЗУ ПРИ ЗАГРУЗКЕ
+  var pinnedItems = allElements.filter(function(el) {
+    return el.classList.contains('pinned-item');
+  });
+  
+  var regularItems = allElements.filter(function(el) {
+    return !el.classList.contains('pinned-item');
+  });
 
-  // 1. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ
+  var currentPage = 1;
+  
+  # Динамический расчет лимита страниц: если есть закрепленный пост, обычных выводим на 1 меньше (9 вместо 10)
+  var dynamicLimit = pinnedItems.length > 0 ? (itemsPerPage - pinnedItems.length) : itemsPerPage;
+  if (dynamicLimit < 1) dynamicLimit = 1; # Предохранитель от деления на ноль
+  
+  var totalPages = Math.ceil(regularItems.length / dynamicLimit);
+
+  # 1. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ
   function renderPage(page) {
     list.innerHTML = '';
     var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
 
-    var start = (page - 1) * itemsPerPage;
-    var end = start + itemsPerPage;
+    # Шаг А: Первыми ВСЕГДА выводим закрепленные посты на абсолютно любой странице
+    pinnedItems.forEach(function(pinnedEl) {
+      # Принудительно обрабатываем эмодзи для закрепленного поста
+      var pEmoji = pinnedEl.getAttribute('data-emoji');
+      var pLink = pinnedEl.querySelector('.item-link');
+      if (showEmoji === 'Y' && pLink && pEmoji && !pLink.innerHTML.includes(pEmoji)) {
+        pLink.innerHTML += ' ' + pEmoji;
+      }
+      pinnedEl.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
+      list.appendChild(pinnedItems);
+    });
+
+    # Шаг Б: Ниже дописываем порцию обычных постов для текущей страницы
+    var start = (page - 1) * dynamicLimit;
+    var end = start + dynamicLimit;
     
-    items.slice(start, end).forEach(function(el) {
+    regularItems.slice(start, end).forEach(function(el) {
       var emoji = el.getAttribute('data-emoji');
       var link = el.querySelector('.item-link');
       if (showEmoji === 'Y' && link && emoji && !link.innerHTML.includes(emoji)) {
@@ -38,7 +65,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     renderControls();
   }
 
-  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
+  # 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -71,7 +98,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     return span;
   }
 
-  // 3. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
+  # 3. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
   function renderControls() {
     controls.innerHTML = '';
     

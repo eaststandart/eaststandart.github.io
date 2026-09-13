@@ -3,10 +3,10 @@
 """
 @module content
 @about Главный изолированный конвейер предобработки и оформления контента.
-@purpose Автоматически собирает маркеры pinnednews, сортирует контент по дате
-         и генерирует готовую ленту данных в файл _data/news_feed.yml.
+@purpose Автоматически собирает маркеры pinnednews, рассчитывает эмодзи разделов,
+         сортирует контент по дате и генерирует готовую ленту в _data/news_feed.yml.
 @author TechLab
-@version 1.4.0-pure-backend-fixed
+@version 1.5.0-emoji-fixed
 """
 
 import os
@@ -37,7 +37,7 @@ def parse_yaml_front_matter(file_path):
         return None, None, content
 
 def build_pinned_news_list():
-    """Главная функция: сканирует сайт, сортирует по дате и пишет готовую ленту в yml-данные."""
+    """Главная функция: сканирует сайт, вычисляет эмодзи, сортирует и пишет news_feed.yml."""
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
@@ -47,7 +47,19 @@ def build_pinned_news_list():
     regular_posts = []
     log_buffer = []
 
-    # 1. СКАНИРОВАНИЕ И СБОР ВСЕХ ЗАМЕТОК
+    # Предварительно собираем карту эмодзи всех страниц разделов сайта для мгновенного поиска
+    emoji_map = {}
+    pages_dir = os.path.join(root_dir)
+    for root, _, files in os.walk(pages_dir):
+        for file in files:
+            if file.endswith('.md'):
+                f_path = os.path.join(root, file)
+                f_data, _, _ = parse_yaml_front_matter(f_path)
+                if f_data and f_data.get('permalink') and f_data.get('emoji'):
+                    clean_perm = "/" + f_data['permalink'].strip("/") + "/"
+                    emoji_map[clean_perm] = f_data['emoji']
+
+    # 1. СКАНИРОВАНИЕ И СБОР ВСЕХ ЗАМЕТК
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
         for file in files:
@@ -79,12 +91,24 @@ def build_pinned_news_list():
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if '_posts' in full_path else "false"
 
+            # 🔥 НАЙТИ РОДИТЕЛЬСКИЙ ЭМОДЗИ РАЗДЕЛА (Нативная логика Tracy на Питоне)
+            url_parts = item_url.split("/")
+            first_folder = url_parts[1] if len(url_parts) > 1 else ""
+            item_section = f"/{first_folder}/"
+            
+            if '_posts' in full_path and data.get('categories'):
+                first_cat = data['categories'][0]
+                item_section = f"/{first_cat}/"
+
+            section_emoji = emoji_map.get(item_section, "")
+
             news_node = {
                 'title': data.get('title', file),
                 'url': item_url,
                 'date': item_date,
                 'is_post': is_post_flag,
                 'path': rel_path,
+                'emoji': section_emoji, # Вшиваем рассчитанный значок прямо в базу!
                 'pinned': False
             }
 
@@ -100,23 +124,14 @@ def build_pinned_news_list():
     
     final_feed = pinned_posts + regular_posts
     
-    # Сборка красивого текстового лога для артефактов
+    # Сборка текстового лога для артефактов
     log_buffer.append("[CON-SUCCESS] Сборка ленты _data/news_feed.yml завершена успешно.")
     log_buffer.append(f"Всего обработано и отсортировано публикаций: {len(final_feed)}")
     log_buffer.append("\n==========================================================================")
     log_buffer.append(f"ЭТАП 1: ЗАКРЕПЛЕННЫЕ ПОСТЫ ПО МАРКЕРУ pinnednews (Всего: {len(pinned_posts)}):")
     log_buffer.append("==========================================================================")
     for idx, item in enumerate(pinned_posts, 1):
-        log_buffer.append(f"  [{idx}] Дата: {item['date']} | Заголовок: {item['title']} | Путь: {item['path']}")
-        
-    log_buffer.append("\n==========================================================================")
-    log_buffer.append(f"ЭТАП 2: ОБЫЧНЫЕ ПОСТЫ ХРОНИКИ И ОБНОВЛЕНИЙ (Всего: {len(regular_posts)}):")
-    log_buffer.append("==========================================================================")
-    for idx, item in enumerate(regular_posts, 1):
-        if idx <= 15:
-            log_buffer.append(f"  [{idx}] Дата: {item['date']} | Заголовок: {item['title']} | Путь: {item['path']}")
-    if len(regular_posts) > 15:
-        log_buffer.append(f"  ... и остальные {len(regular_posts) - 15} обычных заметок списка.")
+        log_buffer.append(f"  [{idx}] Дата: {item['date']} | Эмодзи: {item['emoji']} | Заголовок: {item['title']} | Путь: {item['path']}")
 
     # 3. ЗАПИСЬ ГОТОВОЙ СТРУКТУРЫ В _DATA/NEWS_FEED.YML
     data_dir = os.path.join(root_dir, '_data')
@@ -132,7 +147,6 @@ def build_pinned_news_list():
     content_debug_dir = os.path.join(root_dir, '_content_files')
     os.makedirs(content_debug_dir, exist_ok=True)
 
-    # Записываем контрольный yml в папку нового архива
     processed_news_path = os.path.join(content_debug_dir, 'processed-news_feed.yml')
     with open(processed_news_path, 'w', encoding='utf-8') as pnf:
         yaml.dump({'feed': final_feed}, pnf, allow_unicode=True, default_flow_style=False, sort_keys=False)

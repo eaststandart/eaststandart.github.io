@@ -78,17 +78,20 @@ def build_pinned_news_list():
             file_name_clean, _ = os.path.splitext(file)
             file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
             
-            if folder_parts == '_posts':
+            first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
+
+            if first_folder == '_posts':
                 project_slug = file_name_clean_no_date
                 current_folder_type = '_posts'
             else:
                 project_slug = file_name_clean
-                current_folder_type = folder_parts
+                current_folder_type = first_folder # Передаем чистую строку вместо списка
 
             # 🔥 БЕРЕМ ГОТОВЫЙ АДРЕС ИЗ КАРТЫ НАВИГАЦИИ (МОДУЛЬ 1)
             item_url = find_url_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
             if not item_url:
-                item_url = f"/{folder_parts.lstrip('_')}/{project_slug}.html"
+                # Очищаем от подписей именно текстовую переменную first_folder
+                item_url = f"/{first_folder.lstrip('_')}/{project_slug}.html"
 
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if folder_parts == '_posts' else "false"

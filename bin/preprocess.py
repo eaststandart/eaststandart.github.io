@@ -86,11 +86,11 @@ def main():
         print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
 
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
-    try:
-        from content import build_pinned_news_list
-        build_pinned_news_list()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить модуль контента: {e}")
+    #try:
+    #    from content import build_pinned_news_list
+    #    build_pinned_news_list()
+    #except Exception as e:
+    #    print(f"[ERROR] Не удалось запустить модуль контента: {e}")
 
 if __name__ == '__main__':
     main()

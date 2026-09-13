@@ -6,7 +6,6 @@ bibliography: ["Черненко Г.Т. Путешествие в страну �
 tags: [черненко, инженерноемышление, автоматика, робототехника, младшийвозраст, среднийвозраст, книга]
 sources: "[Публичная библиотека](http://publ.lib.ru/ARCHIVES/CH/CHERNENKO_Gennadiy_Trofimovich/_Chernenko_G.T..html)"
 parent_name: "Литература"
-parent_url: "/biblio/"
 ---
 
 ![320x405](img/chernenko-g-t-puteshestvie-v-stranu-robotov-1977.webp)

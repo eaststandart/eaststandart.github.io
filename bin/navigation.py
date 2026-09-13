@@ -282,17 +282,20 @@ def build_navigation_tree():
                         data['tags'] = final_proj_tags
                         if 'keywords' in data: del data['keywords']
 
-                        # 🔥 ШАГ 4: СИНХРОНИЗАЦИЯ С УЧЕТОМ ВАШЕГО ГИБРИДНОГО ПРАВИЛА TRACY
+                        # 🔥 ШАГ 4: ИСПРАВЛЕННАЯ СИНХРОНИЗАЦИЯ ПО ВАШЕЙ СТРОГОЙ ЛОГИКЕ ПО УМОЛЧАНИЮ
                         if clean_section_name in sections_with_index:
-                            # Режим А (Стандартный Jekyll): Если это index.md — пермалинк НЕ ставим, он нативный!
+                            # Режим А (Стандартный Jekyll): ПОЛНОСТЬЮ убираем пермалинки из всех файлов папки!
+                            if 'permalink' in data: 
+                                del data['permalink']
+                            
                             if project_slug == 'index':
+                                # Вывеска в карте навигации получает нативный короткий адрес папки
                                 final_url = f"/{clean_section_name}/"
-                                if 'permalink' in data: del data['permalink'] 
                             else:
-                                final_url = f"/{clean_section_name}/{project_slug}/"
-                                data['permalink'] = final_url
+                                # Обычные карточки контента (книги, статьи) в карте навигации получают нативный .html!
+                                final_url = f"/{clean_section_name}/{project_slug}.html"
                         else:
-                            # Режим Б (Новая логика из _pages): Подхватываем эталонный короткий пермалинк раздела
+                            # Режим Б (Новая логика из _pages): Оставляем красивые пермалинки со слэшами
                             base_parent_url = custom_permalinks_map.get(clean_section_name, f"/{clean_section_name}/")
                             if project_slug == 'index':
                                 final_url = base_parent_url
@@ -365,7 +368,7 @@ def build_navigation_tree():
             lf.write("\n".join(artifacts_log_buffer))
         print(f"[NAV-SUCCESS] Файл отладочных логов успешно направлен в zip-архив: _processed_files/navigation_debug.log")
     except Exception as e:
-        print(f"[NAV-ERROR] Не удалось сохранить файл отладочного лога в артефакты: {e}")
+        print(f"[NAV-ERROR] Не удалось сохранить файл отладочного лога in артефакты: {e}")
 
 if __name__ == '__main__':
     build_navigation_tree()

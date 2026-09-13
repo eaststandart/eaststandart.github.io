@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Модуль пагинации страниц.
-@purpose ДОБАВИТЬ ОПИСАНИЕ.
+@purpose Изолированный запуск нативного постраничного разбиения списков.
 @author TechLab
 {%- endcomment -%}
 
@@ -10,17 +10,15 @@
 <script src="{{ '/assets/js/pagination-logic.js' | relative_url }}"></script>
 
 <script>
-  // Запускаем пагинацию изолированно для каждого вызова с его родными параметрами
+  // Запускаем пагинацию мгновенно на месте без искусственных задержек времени
   (function() {
     var itemsPerPage = parseInt("{{ include.per_page | default: 10 }}", 10);
-    
-    // На Главной странице даем микро-запуск, на остальных — включаем мгновенно на месте
-    if ("{{ include.controls_id }}" === "home-news-pagination") {
-      setTimeout(function() {
-        runPagination("{{ include.list_id }}", "{{ include.controls_id }}", itemsPerPage, "{{ include.pinned_url | default: '' }}", "{{ include.emoji | default: 'Y' }}");
-      }, 50);
-    } else {
-      runPagination("{{ include.list_id }}", "{{ include.controls_id }}", itemsPerPage, "{{ include.pinned_url | default: '' }}", "{{ include.emoji | default: 'Y' }}");
-    }
+    runPagination(
+      "{{ include.list_id }}", 
+      "{{ include.controls_id }}", 
+      itemsPerPage, 
+      "", 
+      "{{ include.emoji | default: 'Y' }}"
+    );
   })();
 </script>

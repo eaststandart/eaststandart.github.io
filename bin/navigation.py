@@ -383,25 +383,28 @@ def build_navigation_tree():
 
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
+        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ВОССТАНОВЛЕНО)
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
         log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена по канонам Tracy.")
 
+        # 2. ГЕНЕРАЦИЯ ФИЗИЧЕСКИХ ПАПОК ВКЛАДОК НА СЕРВЕРЕ
         for section_name, projects in nav_tree['sections'].items():
             for project in projects:
                 slug = project['slug']
                 
-                # Пропускаем общие вывески разделов
+                # Пропускаем общие вивески разделов
                 if slug == 'index': continue
                 
+                # Физические папки создаем строго при наличии связанных постов хроники
                 if slug not in related_posts_map or not related_posts_map[slug]:
                     continue
                 
+                # Собираем динамический список типов
                 detected_types = sorted(list(detected_post_types))
-
-                    for found_type in related_posts_map[slug].keys():
-                        if found_type not in detected_types:
-                            detected_types.append(found_type)
+                for found_type in related_posts_map[slug].keys():
+                    if found_type not in detected_types:
+                        detected_types.append(found_type)
 
                 for post_type in detected_types:
                     dir_path = os.path.join(root_dir, post_type, slug)
@@ -419,6 +422,7 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи дерева или страниц лент: {e}")
 
+    # 3. ВЫГРУЗКА ДЕТАЛЬНЫХ ЛОГОВ В АРХИВ АРТЕФАКТОВ (ВОССТАНОВЛЕНО)
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

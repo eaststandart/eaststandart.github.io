@@ -6,7 +6,7 @@
 @purpose Автоматически собирает маркеры pinnednews, рассчитывает эмодзи разделов,
          сортирует контент по дате и генерирует готовую ленту в _data/news_feed.yml.
 @author TechLab
-@version 1.6.0-final-backend
+@version 1.5.0-emoji-fixed
 """
 
 import os
@@ -47,9 +47,10 @@ def build_pinned_news_list():
     regular_posts = []
     log_buffer = []
 
-    # Шаг А: Предварительно собираем карту эмодзи всех главных страниц разделов сайта
+    # Предварительно собираем карту эмодзи всех страниц разделов сайта для мгновенного поиска
     emoji_map = {}
-    for root, _, files in os.walk(root_dir):
+    pages_dir = os.path.join(root_dir)
+    for root, _, files in os.walk(pages_dir):
         for file in files:
             if file.endswith('.md'):
                 f_path = os.path.join(root, file)
@@ -58,7 +59,7 @@ def build_pinned_news_list():
                     clean_perm = "/" + f_data['permalink'].strip("/") + "/"
                     emoji_map[clean_perm] = f_data['emoji']
 
-    # Шаг Б: Сканирование и сбор абсолютно всех заметок
+    # 1. СКАНИРОВАНИЕ И СБОР ВСЕХ ЗАМЕТК
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
         for file in files:
@@ -71,7 +72,7 @@ def build_pinned_news_list():
             rel_path = os.path.relpath(full_path, root_dir)
             folder_parts = rel_path.split(os.sep)
             
-            # Вычисляем URL страницы
+            # Вычисляем URL
             item_url = data.get('permalink')
             if not item_url:
                 if folder_parts[0].startswith('_'):
@@ -90,14 +91,14 @@ def build_pinned_news_list():
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if '_posts' in full_path else "false"
 
-            # Находим родительский эмодзи раздела (Строго по вашей оригинальной логике Tracy)
-            url_parts = item_url.strip("/").split("/")
-            first_folder = url_parts[0] if url_parts else ""
+            # 🔥 НАЙТИ РОДИТЕЛЬСКИЙ ЭМОДЗИ РАЗДЕЛА (Нативная логика Tracy на Питоне)
+            url_parts = item_url.split("/")
+            first_folder = url_parts[1] if len(url_parts) > 1 else ""
             item_section = f"/{first_folder}/"
             
             if '_posts' in full_path and data.get('categories'):
-                if isinstance(data['categories'], list) and len(data['categories']) > 0:
-                    item_section = f"/{data['categories'][0]}/"
+                first_cat = data['categories'][0]
+                item_section = f"/{first_cat}/"
 
             section_emoji = emoji_map.get(item_section, "")
 
@@ -107,7 +108,7 @@ def build_pinned_news_list():
                 'date': item_date,
                 'is_post': is_post_flag,
                 'path': rel_path,
-                'emoji': section_emoji, # Вшиваем рассчитанный эмодзи для каждой строки!
+                'emoji': section_emoji, # Вшиваем рассчитанный значок прямо в базу!
                 'pinned': False
             }
 
@@ -117,18 +118,20 @@ def build_pinned_news_list():
             else:
                 regular_posts.append(news_node)
 
-    # 2. АВТОМАТИЧЕСКАЯ СОРТИРОВКА (Закрепленные вверху, обычные ниже — всё по дате!)
+    # 2. АВТОМАТИЧЕСКАЯ СОРТИРОВКА ПО ХРОНОЛОГИИ (ОТ СВЕЖИХ К СТАРЫМ)
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
     
     final_feed = pinned_posts + regular_posts
     
-    # Сборка текстового лога для нового архива content
+    # Сборка текстового лога для артефактов
     log_buffer.append("[CON-SUCCESS] Сборка ленты _data/news_feed.yml завершена успешно.")
-    log_buffer.append(f"Всего отсортировано публикаций: {len(final_feed)}")
-    log_buffer.append(f"  [➔] Из них закреплено вверху списка: {len(pinned_posts)}")
+    log_buffer.append(f"Всего обработано и отсортировано публикаций: {len(final_feed)}")
+    log_buffer.append("\n==========================================================================")
+    log_buffer.append(f"ЭТАП 1: ЗАКРЕПЛЕННЫЕ ПОСТЫ ПО МАРКЕРУ pinnednews (Всего: {len(pinned_posts)}):")
+    log_buffer.append("==========================================================================")
     for idx, item in enumerate(pinned_posts, 1):
-        log_buffer.append(f"  [{idx}] ЗАКРЕПЛЕН ПО ДАТЕ -> {item['date']} | Эмодзи: {item['emoji']} | {item['title']}")
+        log_buffer.append(f"  [{idx}] Дата: {item['date']} | Эмодзи: {item['emoji']} | Заголовок: {item['title']} | Путь: {item['path']}")
 
     # 3. ЗАПИСЬ ГОТОВОЙ СТРУКТУРЫ В _DATA/NEWS_FEED.YML
     data_dir = os.path.join(root_dir, '_data')
@@ -140,7 +143,7 @@ def build_pinned_news_list():
     except Exception as e:
         log_buffer.append(f"[CON-ERROR] Не удалось записать файл данных ленты news_feed.yml: {e}")
 
-    # 4. ВЫВОД ОТЧЕТОВ В НОВЫЙ АРХИВ CONTENT
+    # 4. ФИЗИЧЕСКИЙ ВЫВОД И КУПИРОВАНИЕ ЛОГОВ В АРХИВ CONTENT
     content_debug_dir = os.path.join(root_dir, '_content_files')
     os.makedirs(content_debug_dir, exist_ok=True)
 
@@ -155,8 +158,9 @@ def build_pinned_news_list():
         log_file_path = os.path.join(content_debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
+        print(f"[CON-SUCCESS] Лог-отчет успешно упакован в архив content.")
     except Exception as e:
-        print(f"[CON-ERROR] Не удалось сохранить файл лога: {e}")
+        print(f"[CON-ERROR] Не удалось сохранить итоговый файл лога: {e}")
 
 if __name__ == '__main__':
     build_pinned_news_list()

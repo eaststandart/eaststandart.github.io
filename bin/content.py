@@ -128,12 +128,8 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
         log_buffer.append(f"  [➔] Из них закреплено и отсортировано вверху: {len(pinned_posts)}")
     except Exception as e:
         log_buffer.append(f"[CON-ERROR] Не удалось записать файл данных ленты news_feed.yml: {e}")
-
-    # Дублируем для контроля в наш новый архив контента
-    processed_news_path = os.path.join(content_debug_dir, 'processed-news_feed.yml')
-    with open(processed_news_path, 'w', encoding='utf-8') as pnf:
-        yaml.dump({'feed': final_feed}, pnf, allow_unicode=True, default_flow_style=False, sort_keys=False)
-
+        
+    return final_feed
 
 # ==========================================================================
 # ГЛАВНАЯ ТОЧКА ВХОДА И УПРАВЛЕНИЯ КОНВЕЙЕРОМ
@@ -148,8 +144,17 @@ def main():
     
     global_content_log = []
     
-    # Запуск изолированного модуля А
-    build_pinned_news_list(root_dir, content_debug_dir, global_content_log)
+    # Запускаем модуль и забираем сформированную ленту
+    final_feed = build_pinned_news_list(root_dir, content_debug_dir, global_content_log)
+    
+    # Сами записываем контрольный файл в папку нового архива content
+    if final_feed:
+        try:
+            processed_news_path = os.path.join(content_debug_dir, 'processed-news_feed.yml')
+            with open(processed_news_path, 'w', encoding='utf-8') as pnf:
+                yaml.dump({'feed': final_feed}, pnf, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        except Exception as e:
+            global_content_log.append(f"[CON-ERROR] Не удалось записать проверочный news_feed в артефакты: {e}")
     
     for line in global_content_log:
         print(line)

@@ -390,14 +390,10 @@ def build_navigation_tree():
         for section_name, projects in nav_tree['sections'].items():
             for project in projects:
                 slug = project['slug']
-                
-                # Пропускаем общие вывески разделов
-                if slug == 'index': continue
-                
-                if slug not in related_posts_map or not related_posts_map[slug]:
-                    continue
+                if section_name == 'people' or slug == 'index': continue
                 
                 detected_types = sorted(list(detected_post_types))
+                if slug in related_posts_map:
 
                     for found_type in related_posts_map[slug].keys():
                         if found_type not in detected_types:

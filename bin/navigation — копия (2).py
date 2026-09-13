@@ -130,11 +130,8 @@ def build_navigation_tree():
     posts_registry = {}
     related_posts_map = {slug: {} for slug in valid_slugs} # Динамические полочки типов постов
 
-    # 2. ЭТАП УМНОГО АНАЛИЗА ПАПКИ _POSTS (Динамический автомат суффиксов)
+    # 2. ЭТАП УМНОГО АНАЛИЗА ПАПКИ _POSTS (Автомат по суффиксу *-post-page)
     posts_dir = os.path.join(root_dir, '_posts')
-    # Сюда Питон будет автоматически складывать все уникальные типы постов, найденные на диске
-    detected_post_types = set(['journal', 'media']) # базовые дефолтные типы
-
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
             for file in files:
@@ -144,44 +141,31 @@ def build_navigation_tree():
                 data, front_text, body = parse_yaml_front_matter(full_path)
                 if data is None or data.get('published') is False: continue
 
+                # Очищаем имя файла от даты для вычисления слага по умолчанию
                 file_name_clean, _ = os.path.splitext(file)
                 file_name_clean = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
                 post_slug = None
                 post_page_type = None
 
-                # ШАГ А: Динамический радар суффиксов *-post-page (новые файлы)
-                # Сканируем Front Matter на наличие суффикса и динамически обучаем систему новому типу!
-                for key in list(data.keys()):
-                    if str(key).endswith('-post-page'):
-                        possible_type = str(key).split('-')[0]
-                        detected_post_types.add(possible_type) # Система сама запомнила новый тип!
-                        
-                        # Если имя файла совпадает с проектом на диске — связь установлена
-                        if file_name_clean in valid_slugs:
-                            post_slug = file_name_clean
-                            post_page_type = possible_type
-                        break
+                # РУБЕЖ А: Если категории уже прописаны вручную (старые файлы)
+                if data.get('categories') and isinstance(data['categories'], list) and len(data['categories']) >= 2:
+                    post_page_type = data['categories'][0]
+                    post_slug = data['categories'][1]
 
-                # ШАГ Б: Если суффикса нет, проверяем имя файла целиком по белому списку
-                if not post_slug and file_name_clean in valid_slugs:
-                    post_slug = file_name_clean
-                    post_page_type = data.get('post-page', 'journal')
-
-                # ШАГ В: Резервная страховка по готовым категориям (старые файлы)
-                if not post_slug and data.get('categories') and isinstance(data['categories'], list) and len(data['categories']) >= 2:
-                    # Ищем, какое из слов в категориях является живым проектом на диске
-                    for cat in data['categories']:
-                        if cat in valid_slugs:
-                            post_slug = cat
-                            # Второе слово автоматически признаём типом поста
-                            for c_type in data['categories']:
-                                if c_type != post_slug:
-                                    post_page_type = c_type
-                                    detected_post_types.add(c_type)
+                # РУБЕЖ Б: Умный радар суффиксов *-post-page (новые файлы)
+                if not post_slug:
+                    for key in list(data.keys()):
+                        if str(key).endswith('-post-page'):
+                            # Отсекаем суффикс и забираем первое служебное слово (journal, media и т.д.)
+                            post_page_type = str(key).split('-')[0]
+                            # Имя файла целиком становится латинским слагом проекта
+                            if file_name_clean in valid_slugs:
+                                post_slug = file_name_clean
                             break
 
-                if not post_slug:
+                # Если файл не прошёл ни один рубеж, значит это автономная новость
+                if not post_slug or post_slug not in valid_slugs:
                     log_artifact(f"[NAV-NOTE] Файл '{file}' не привязан к проектам, пропускаем интеграцию во вкладки.")
                     continue
 
@@ -193,7 +177,7 @@ def build_navigation_tree():
                     exit(1)
                 posts_registry[registry_key] = file
 
-                # Тегирование
+                # Генерация тегов
                 calculated_tags = []
                 if data.get('direction'): calculated_tags.append(clean_tag(data['direction']))
                 if data.get('entity'): calculated_tags.append(clean_tag(data['entity']))
@@ -211,9 +195,11 @@ def build_navigation_tree():
                 data['tags'] = final_tags
                 if 'keywords' in data: del data['keywords']
 
-                # Запись очищенных и стандартизированных свойств
+                # АВТОМАТИЧЕСКАЯ ЗАПИСЬ НАТИВНЫХ СВОЙСТВ ДЛЯ JEKYLL
                 data['categories'] = [post_page_type, post_slug]
                 data['post-page'] = post_page_type
+                
+                # Записываем строго родительскую контентную папку с диска (faire, projects и т.д.)
                 current_clean_section = slug_to_section_map.get(post_slug, '')
                 data['section'] = current_clean_section
 
@@ -221,6 +207,7 @@ def build_navigation_tree():
 
                 short_url = f"/{post_page_type}/{post_slug}/{post_date.replace('-', '/')}/{file_name_clean}.html"
 
+                # Направляем запись на динамическую полочку проекта для дерева navigation.yml
                 if post_page_type not in related_posts_map[post_slug]:
                     related_posts_map[post_slug][post_page_type] = []
                 related_posts_map[post_slug][post_page_type].append({
@@ -295,15 +282,12 @@ def build_navigation_tree():
                 key=lambda x: x['title'].lower()
             )
 
-    # 🔥 ИНТЕГРАЦИЯ ДИНАМИЧЕСКОЙ БАЗЫ СВОЙСТВ В КОРЕНЬ КАРТЫ NAVIGATION.YML
-    nav_tree['post_types'] = sorted(list(detected_post_types))
-
     # 4. ЗАПИСЬ СТРУКТУРИРОВАННОГО УМНОГО ДЕРЕВА В _DATA/NAVIGATION.YML
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' и база свойств 'post_types' успешно сохранены в _data/navigation.yml")
+        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно сохранена в _data/navigation.yml")
 
         # АВТОГЕНЕРАЦИЯ СТРАНИЦ-ЛЕНТ ДЛЯ КНОПКИ "0"
         for section_name, projects_list in nav_tree['sections'].items():

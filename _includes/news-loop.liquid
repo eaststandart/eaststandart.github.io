@@ -5,20 +5,15 @@
 {%- endcomment -%}
 
 {%- assign news_feed = site.data.news_feed.feed -%}
-
 {%- for item in news_feed -%}
-  {%- comment -%} ==========================================================================
-     ШАБЛОНЫ РЕНДЕРИНГА ДИЗАЙНА СТРОК (1 В 1 ВАШ ОРИГИНАЛЬНЫЙ СТИЛЬ И ЦВЕТА)
-     ========================================================================== {%- endcomment -%}
-     
   {%- if include.type == "home" -%}
-  
+
     <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-    <li class="news-item news-item-compact" 
+    <li class="news-item news-item-compact{% if item.pinned %} pinned-item{% endif %}" 
         data-date="{{ item.date }}" 
         data-is-post="{{ item.is_post }}" 
         data-emoji="{{ item.emoji }}" 
-        style="display: none;{% if item.pinned %} background-color: #fffdf0; border-left: 3px solid #ffdb58;{% endif %}">
+        style="display: none;">
       <div>
         <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
         <span>
@@ -32,11 +27,11 @@
   {%- elsif include.type == "news" -%}
   
     <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-    <li class="news-item" 
+    <li class="news-item{% if item.pinned %} pinned-item{% endif %}" 
         data-date="{{ item.date }}" 
         data-is-post="{{ item.is_post }}" 
         data-emoji="{{ item.emoji }}" 
-        style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;{% if item.pinned %} background-color: #fffdf0; border-left: 3px solid #ffdb58; padding-left: 6px;{% endif %}">
+        style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
       <div>
         <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
         <span>

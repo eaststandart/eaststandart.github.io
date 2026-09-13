@@ -53,6 +53,13 @@ def write_yaml_front_matter(file_path, data, body_content):
     try:
         front_text = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
         
+        # 🔥 ОТЛАДОЧНЫЙ ЛОГ: Выводим в консоль Actions реальное состояние метаданных
+        f_name = os.path.basename(file_path)
+        p_link = data.get('permalink', 'НЕТ (нативный путь Jekyll)')
+        cats = data.get('categories', 'НЕТ')
+        sect = data.get('section', 'НЕТ')
+        print(f"[NAV-DEBUG] Файл: {f_name} | Раздел (section): {sect} | Категории: {cats} | URL (permalink): {p_link}")
+
         current_dir = os.path.dirname(os.path.abspath(__file__))
         root_dir = os.path.abspath(os.path.join(current_dir, '..'))
         debug_dir = os.path.join(root_dir, '_processed_files')

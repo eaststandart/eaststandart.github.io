@@ -2,16 +2,20 @@
 # -*- coding: utf-8 -*-
 """
 @module content
-@about Изолированный препроцессор для автоматического управления свойствами контента.
-@purpose Находит маркеры pinnednews: true в файлах, сортирует их по дате и автоматически
-         прописывает отсортированный массив pinned_urls в _pages/news.md.
+@about Главный изолированный конвейер предобработки и оформления контента.
+@purpose Автоматически собирает маркеры оформления из Obsidian, сортирует контент
+         и генерирует идеальные готовые ленты данных в _data/news_feed.yml.
 @author TechLab
-@version 1.0.0-multi-pin
+@version 1.2.0-pure-backend
 """
 
 import os
 import re
 import yaml
+
+# ==========================================================================
+# СЕРВИСНЫЙ БЛОК: ИНСТРУМЕНТЫ РАБОТЫ С ДАННЫМИ (НЕ ИЗМЕНЯЮТСЯ)
+# ==========================================================================
 
 def parse_yaml_front_matter(file_path):
     """Извлекает и безопасно парсит блок Front Matter из markdown-файла."""
@@ -45,109 +49,118 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[CON-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
-def build_pinned_news_list():
-    """Сканирует сайт на наличие pinnednews: true, формирует отсортированный список URL."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
-    
+
+# ==========================================================================
+# МОДУЛЬ А: СБОРКА И ЗАКРЕПЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ (ПОЛНОСТЬЮ НА СЕРВЕРЕ)
+# ==========================================================================
+
+def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
+    """Сканирует весь сайт, формирует готовую отсортированную ленту с закреплениями вверху."""
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     
-    pinned_items = []
+    pinned_posts = []
+    regular_posts = []
 
-    # 1. СКАНИРОВАНИЕ ВСЕХ ФАЙЛОВ КОНТЕНТА НА САЙТЕ
+    # 1. СБОР И КЛАССИФИКАЦИЯ АБСОЛЮТНО ВСЕХ ЗАМЕТОК НА САЙТЕ
     for root, dirs, files in os.walk(root_dir):
-        # Исключаем системные каталоги на лету
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
-        
         for file in files:
-            if not file.endswith('.md'):
-                continue
+            if not file.endswith('.md'): continue
                 
             full_path = os.path.join(root, file)
             data, front_text, body = parse_yaml_front_matter(full_path)
-            if data is None:
-                continue
+            if data is None or not data.get('date'): continue
 
-            # Находим маркер, который вы прописали в Obsidian
-            if data.get('pinnednews') is True:
-                rel_path = os.path.relpath(full_path, root_dir)
-                folder_parts = rel_path.split(os.sep)
-                
-                # Забираем пермалинк, если он уже прописан жестко
-                item_url = data.get('permalink')
-                
-                if not item_url:
-                    # Если файл лежит в коллекции (например, _people/fran-blanche.md)
-                    if folder_parts[0].startswith('_'):
-                        coll_name = folder_parts[0].lstrip('_')
-                        file_clean, _ = os.path.splitext(file)
-                        item_url = f"/{coll_name}/{file_clean}/"
+            rel_path = os.path.relpath(full_path, root_dir)
+            folder_parts = rel_path.split(os.sep)
+            
+            # Вычисляем URL
+            item_url = data.get('permalink')
+            if not item_url:
+                if folder_parts[0].startswith('_'):
+                    coll_name = folder_parts[0].lstrip('_')
+                    file_clean, _ = os.path.splitext(file)
+                    item_url = f"/{coll_name}/{file_clean}/"
+                else:
+                    dir_url = "/".join(folder_parts[:-1])
+                    file_clean, _ = os.path.splitext(file)
+                    if file_clean == 'index':
+                        item_url = f"/{dir_url}/" if dir_url else "/"
                     else:
-                        # Если это обычная статичная страница
-                        dir_url = "/".join(folder_parts[:-1])
-                        file_clean, _ = os.path.splitext(file)
-                        if file_clean == 'index':
-                            item_url = f"/{dir_url}/" if dir_url else "/"
-                        else:
-                            item_url = f"/{dir_url}/{file_clean}/" if dir_url else f"/{file_clean}/"
-                
-                # Приводим URL к единому чистому стандарту Jekyll
-                item_url = "/" + item_url.strip("/") + "/"
-                
-                # Забираем дату для сортировки (если даты нет, ставим дефолтную)
-                item_date = str(data.get('date', '1970-01-01'))
-                
-                pinned_items.append({
-                    'url': item_url,
-                    'date': item_date
-                })
+                        item_url = f"/{dir_url}/{file_clean}/" if dir_url else f"/{file_clean}/"
+            
+            item_url = "/" + item_url.strip("/") + "/"
+            item_date = str(data.get('date', '1970-01-01'))
+            is_post_flag = "true" if '_posts' in full_path else "false"
 
-    # 2. АВТОМАТИЧЕСКАЯ СОРТИРОВКА МАССИВА ПО ДАТЕ (ОТ СВЕЖИХ К СТАРЫМ)
-    pinned_items.sort(key=lambda x: x['date'], reverse=True)
-    
-    # Собираем чистый список отсортированных URL-адресов
-    final_urls = [item['url'] for item in pinned_items]
-    
-    # 3. ТОЧЕЧНАЯ ЗАПИСЬ МАССИВА В СТРАНИЦУ НОВОСТЕЙ
-    news_page_path = os.path.join(root_dir, '_pages', 'news.md')
-    content_log_buffer = []
-    
-    def log_content_action(text):
-        print(text)
-        content_log_buffer.append(text)
+            # Формируем чистый узел новости для вывода
+            news_node = {
+                'title': data.get('title', file),
+                'url': item_url,
+                'date': item_date,
+                'is_post': is_post_flag,
+                'path': rel_path,
+                'pinned': False
+            }
 
-    # СОЗДАЕМ ОТДЕЛЬНУЮ СЕРВЕРНУЮ ПАПКУ ДЛЯ НОВОГО АРХИВА CONTENT
+            # Фильтруем на закрепленные и обычные
+            if data.get('pinnednews') is True:
+                news_node['pinned'] = True
+                pinned_posts.append(news_node)
+            else:
+                regular_posts.append(news_node)
+
+    # 2. ОДНОВРЕМЕННАЯ СОРТИРОВКА ПО ДАТЕ ВНУТРИ КАЖДОЙ ГРУППЫ
+    pinned_posts.sort(key=lambda x: x['date'], reverse=True)
+    regular_posts.sort(key=lambda x: x['date'], reverse=True)
+    
+    # Склеиваем монолит: сначала все закрепленные по дате, затем все обычные по дате!
+    final_feed = pinned_posts + regular_posts
+    
+    # 3. ФИЗИЧЕСКАЯ ЗАПИСЬ ИДЕАЛЬНОЙ ГОТОВОЙ ЛЕНТЫ В _DATA/NEWS_FEED.YML
+    data_dir = os.path.join(root_dir, '_data')
+    output_feed_path = os.path.join(data_dir, 'news_feed.yml')
+    
+    try:
+        with open(output_feed_path, 'w', encoding='utf-8') as f:
+            yaml.dump({'feed': final_feed}, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        log_buffer.append(f"[CON-SUCCESS] Готовая серверная лента успешно сохранена в _data/news_feed.yml. Всего постов: {len(final_feed)}")
+        log_buffer.append(f"  [➔] Из них закреплено и отсортировано вверху: {len(pinned_posts)}")
+    except Exception as e:
+        log_buffer.append(f"[CON-ERROR] Не удалось записать файл данных ленты news_feed.yml: {e}")
+
+    # Дублируем для контроля в наш новый архив контента
+    processed_news_path = os.path.join(content_debug_dir, 'processed-news_feed.yml')
+    with open(processed_news_path, 'w', encoding='utf-8') as pnf:
+        yaml.dump({'feed': final_feed}, pnf, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
+
+# ==========================================================================
+# ГЛАВНАЯ ТОЧКА ВХОДА И УПРАВЛЕНИЯ КОНВЕЙЕРОМ
+# ==========================================================================
+
+def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+    
     content_debug_dir = os.path.join(root_dir, '_content_files')
     os.makedirs(content_debug_dir, exist_ok=True)
-
-    if os.path.exists(news_page_path):
-        news_data, n_front, n_body = parse_yaml_front_matter(news_page_path)
-        if news_data is not None:
-            news_data['pinned_urls'] = final_urls
-            if 'pinned_url' in news_data:
-                del news_data['pinned_url']
-                
-            write_yaml_front_matter(news_page_path, news_data, n_body)
-            log_content_action(f"[CON-SUCCESS] В _pages/news.md успешно прописан массив из {len(final_urls)} закреплённых URL.")
-            for idx, url in enumerate(final_urls, 1):
-                log_content_action(f"  [{idx}] Закреплен адрес: {url}")
-                
-            # Дублируем обработанную страницу новостей в новый архив для контроля
-            processed_news_path = os.path.join(content_debug_dir, 'processed-news.md')
-            with open(processed_news_path, 'w', encoding='utf-8') as pnf:
-                processed_news_front = yaml.dump(news_data, allow_unicode=True, default_flow_style=False, sort_keys=False)
-                pnf.write(f"---\n{processed_news_front}---\n[Контент страницы новостей подготовлен]")
-    else:
-        log_content_action(f"[CON-ERROR] Файл _pages/news.md не найден на диске!")
-
-    # Физически записываем отладочный лог в изолированную папку нового архива
+    
+    global_content_log = []
+    
+    # Запуск изолированного модуля А
+    build_pinned_news_list(root_dir, content_debug_dir, global_content_log)
+    
+    for line in global_content_log:
+        print(line)
+        
     try:
         log_file_path = os.path.join(content_debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
-            lf.write("\n".join(content_log_buffer))
-        print(f"[CON-SUCCESS] Файлы модуля успешно направлены в новый архив: _content_files/content_debug.log")
+            lf.write("\n".join(global_content_log))
+        print(f"[CON-SUCCESS] Лог-отчет успешно упакован в архив content.")
     except Exception as e:
-        print(f"[CON-ERROR] Не удалось сохранить файл лога в папку нового архива: {e}")
+        print(f"[CON-ERROR] Не удалось сохранить итоговый файл лога: {e}")
 
 if __name__ == '__main__':
-    build_pinned_news_list()
+    main()

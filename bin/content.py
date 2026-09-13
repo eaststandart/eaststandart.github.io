@@ -99,8 +99,8 @@ def build_pinned_news_list():
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if folder_parts[0] == '_posts' else "false"
 
-            # 🔥 РАССЧИТЫВАЕМ ЭМОДЗИ СТРОГО ИЗ ПЕРВОИСТОЧНИКОВ ВЫВЕСОК (ШАГ 2)
-            section_emoji = calculate_item_emoji(data, folder_parts[0], page_types_emoji, section_index_emoji)
+            # 🔥 БЕРЕМ АВТОМАТИЧЕСКИЙ ЭМОДЗИ ИЗ ВЫВЕСОК _PAGES (МОДУЛЬ 2)
+            section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 
             news_node = {
                 'title': data.get('title', file),

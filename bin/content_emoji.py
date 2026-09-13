@@ -5,7 +5,7 @@
 @about Подмодуль контента №2: Автомат значков по первоисточникам.
 @purpose Собирает эмодзи строго из файлов-вывесок _pages/ и родительских index.md.
 @author TechLab
-@version 1.0.0-pure-emoji
+@version 2.1.0-perfect-match
 """
 
 import os
@@ -18,7 +18,7 @@ def load_emoji_sources(root_dir, parse_yaml_fn):
     page_types_emoji = {}
     section_index_emoji = {}
 
-    # Сбор эмодзи типов постов из _pages/
+    # 1. Сбор эмодзи абсолютно всех вывесок из _pages/
     if os.path.exists(pages_dir):
         for file in os.listdir(pages_dir):
             if file.endswith('.md'):
@@ -27,7 +27,7 @@ def load_emoji_sources(root_dir, parse_yaml_fn):
                     p_slug, _ = os.path.splitext(file)
                     page_types_emoji[p_slug] = p_data['emoji']
 
-    # Сбор родительских эмодзи из index.md корневых папок контента
+    # 2. Сбор родительских эмодзи из index.md корневых папок контента
     EXCLUDED = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and name not in EXCLUDED and not name.startswith('.'):
@@ -39,19 +39,34 @@ def load_emoji_sources(root_dir, parse_yaml_fn):
 
     return page_types_emoji, section_index_emoji
 
-def calculate_item_emoji(data, folder_parts, page_types_emoji, section_index_emoji):
-    """Определяет идеальный эмодзи строки ленты строго по закону Tracy."""
-    section_name = data.get('section', folder_parts.lstrip('_'))
-    
-    if folder_parts == '_posts':
-        # Очередь 1: Посты хроники — берут эмодзи из вывесок типов в _pages/ (👀 или ✍🏻)
+def calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_fn):
+    """Определяет эмодзи строки ленты строго по вашему правилу folder_parts[0]."""
+    # Извлекаем чистую строку первой папки, как это сделано в вашем content.py
+    first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
+    clean_folder_name = first_folder.lstrip('_')
+
+    # Очередь 1: Посты хроники — берут эмодзи из вывесок типов в _pages/ (👀 или ✍🏻)
+    if first_folder == '_posts':
         post_type = data.get('post-page', 'journal')
         return page_types_emoji.get(post_type, "")
+
+    # Очередь 2 и 3: Проверяем наличие файла index.md в корне папки контента на диске
+    section_dir = os.path.join(root_dir, first_folder)
+    has_index = os.path.exists(os.path.join(section_dir, 'index.md')) or os.path.exists(os.path.join(section_dir, 'index.html'))
+
+    if has_index:
+        # Режим А: Индекс есть (как в biblio) — нативно считываем эмодзи прямо из этого файла index.md
+        idx_path = os.path.join(section_dir, 'index.md')
+        if not os.path.exists(idx_path):
+            idx_path = os.path.join(section_dir, 'index.html')
         
-    elif section_name in section_index_emoji:
-        # Очередь 3: Книги/статьи Режима А — нативно наследуют эмодзи родительской вывески раздела (📚)
-        return section_index_emoji.get(section_name, "")
-        
+        try:
+            i_data, _, _ = parse_yaml_fn(idx_path)
+            if i_data and i_data.get('emoji'):
+                return i_data['emoji']
+        except:
+            pass
+        return ""
     else:
-        # Очередь 2: Карточки проектов Режима Б — берут свой родной эмодзи из Front Matter страницы
-        return data.get('emoji', "")
+        # Режим Б: Индекса нет (как в faire или people) — берем эмодзи из файла-вывески в _pages/
+        return page_types_emoji.get(clean_folder_name, "")

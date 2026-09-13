@@ -3,10 +3,10 @@
 """
 @module content
 @about Главный изолированный конвейер предобработки и оформления контента.
-@purpose Автоматически собирает маркеры оформления из Obsidian, сортирует контент,
-         пишет подробный лог сортировки и генерирует ленту данных в _data/news_feed.yml.
+@purpose Автоматически собирает маркеры pinnednews, сортирует контент по дате
+         и генерирует готовую ленту данных в файл _data/news_feed.yml.
 @author TechLab
-@version 1.3.0-detailed-logs
+@version 1.4.0-pure-backend-fixed
 """
 
 import os
@@ -36,14 +36,18 @@ def parse_yaml_front_matter(file_path):
         print(f"[CON-ERROR] Сбой синтаксиса YAML во Front Matter {file_path}: {e}")
         return None, None, content
 
-def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
-    """Сканирует сайт, формирует готовую ленту с закреплениями и пишет детальный лог хронологии."""
+def build_pinned_news_list():
+    """Главная функция: сканирует сайт, сортирует по дате и пишет готовую ленту в yml-данные."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+    
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     
     pinned_posts = []
     regular_posts = []
+    log_buffer = []
 
-    # 1. СБОР И КЛАССИФИКАЦИЯ АБСОЛЮТНО ВСЕХ ЗАМЕТОК НА САЙТЕ
+    # 1. СКАНИРОВАНИЕ И СБОР ВСЕХ ЗАМЕТОК
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
         for file in files:
@@ -56,7 +60,7 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
             rel_path = os.path.relpath(full_path, root_dir)
             folder_parts = rel_path.split(os.sep)
             
-            # Вычисляем URL страницы
+            # Вычисляем URL
             item_url = data.get('permalink')
             if not item_url:
                 if folder_parts[0].startswith('_'):
@@ -75,7 +79,6 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if '_posts' in full_path else "false"
 
-            # Формируем узел новости
             news_node = {
                 'title': data.get('title', file),
                 'url': item_url,
@@ -91,14 +94,13 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
             else:
                 regular_posts.append(news_node)
 
-    # 2. ОДНОВРЕМЕННАЯ СОРТИРОВКА ПО ДАТЕ (ОТ СВЕЖИХ К СТАРЫМ)
+    # 2. АВТОМАТИЧЕСКАЯ СОРТИРОВКА ПО ХРОНОЛОГИИ (ОТ СВЕЖИХ К СТАРЫМ)
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
     
-    # Склеиваем итоговый массив
     final_feed = pinned_posts + regular_posts
     
-    # 3. ДЕТАЛЬНОЕ ТЕКСТОВОЕ ЛОГИРОВАНИЕ СОРТИРОВКИ ДЛЯ АРТЕФАКТОВ
+    # Сборка красивого текстового лога для артефактов
     log_buffer.append("[CON-SUCCESS] Сборка ленты _data/news_feed.yml завершена успешно.")
     log_buffer.append(f"Всего обработано и отсортировано публикаций: {len(final_feed)}")
     log_buffer.append("\n==========================================================================")
@@ -111,14 +113,14 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
     log_buffer.append(f"ЭТАП 2: ОБЫЧНЫЕ ПОСТЫ ХРОНИКИ И ОБНОВЛЕНИЙ (Всего: {len(regular_posts)}):")
     log_buffer.append("==========================================================================")
     for idx, item in enumerate(regular_posts, 1):
-        # Выводим в текстовый лог первые 15 обычных постов, чтобы не раздувать файл
         if idx <= 15:
             log_buffer.append(f"  [{idx}] Дата: {item['date']} | Заголовок: {item['title']} | Путь: {item['path']}")
     if len(regular_posts) > 15:
         log_buffer.append(f"  ... и остальные {len(regular_posts) - 15} обычных заметок списка.")
 
-    # 4. ФИЗИЧЕСКАЯ ЗАПИСЬ ГОТОВОЙ ЛЕНТЫ В _DATA/NEWS_FEED.YML
+    # 3. ЗАПИСЬ ГОТОВОЙ СТРУКТУРЫ В _DATA/NEWS_FEED.YML
     data_dir = os.path.join(root_dir, '_data')
+    os.makedirs(data_dir, exist_ok=True)
     output_feed_path = os.path.join(data_dir, 'news_feed.yml')
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:
@@ -126,33 +128,25 @@ def build_pinned_news_list(root_dir, content_debug_dir, log_buffer):
     except Exception as e:
         log_buffer.append(f"[CON-ERROR] Не удалось записать файл данных ленты news_feed.yml: {e}")
 
-    # Копируем yml-файл в папку нового архива для ручного контроля свойств
+    # 4. ФИЗИЧЕСКИЙ ВЫВОД И КУПИРОВАНИЕ ЛОГОВ В АРХИВ CONTENT
+    content_debug_dir = os.path.join(root_dir, '_content_files')
+    os.makedirs(content_debug_dir, exist_ok=True)
+
+    # Записываем контрольный yml в папку нового архива
     processed_news_path = os.path.join(content_debug_dir, 'processed-news_feed.yml')
     with open(processed_news_path, 'w', encoding='utf-8') as pnf:
         yaml.dump({'feed': final_feed}, pnf, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
-def main():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.abspath(os.path.join(current_dir, '..'))
-    
-    content_debug_dir = os.path.join(root_dir, '_content_files')
-    os.makedirs(content_debug_dir, exist_ok=True)
-    
-    global_content_log = []
-    
-    # Запуск изолированного модуля А
-    build_pinned_news_list(root_dir, content_debug_dir, global_content_log)
-    
-    for line in global_content_log:
+    for line in log_buffer:
         print(line)
-        
+
     try:
         log_file_path = os.path.join(content_debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
-            lf.write("\n".join(global_content_log))
+            lf.write("\n".join(log_buffer))
         print(f"[CON-SUCCESS] Лог-отчет успешно упакован в архив content.")
     except Exception as e:
         print(f"[CON-ERROR] Не удалось сохранить итоговый файл лога: {e}")
 
 if __name__ == '__main__':
-    main()
+    build_pinned_news_list()

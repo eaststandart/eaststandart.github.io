@@ -92,22 +92,8 @@ def build_pinned_news_list():
                 fallback_section = data.get('section', folder_parts[0].lstrip('_'))
                 item_url = f"/{fallback_section}/{project_slug}.html"
 
+            item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if folder_parts[0] == '_posts' else "false"
-
-            # 🔥 АВТОМАТ ИЗВЛЕЧЕНИЯ ДАТЫ
-            if data and data.get('date'):
-                item_date = str(data['date'])
-            elif folder_parts[0] == '_posts':
-                # Вырезаем первые 10 символов (ГГГГ-ММ-ДД) из оригинального имени файла
-                match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
-                item_date = match_date.group(1) if match_date else "2026-01-01"
-                log_buffer.append(f"[CON-WARNING] У поста извлечена дата из имени файла: {file} | Дата: {item_date}")
-            else:
-                # Для книг и страниц без даты берем системное время изменения файла на диске
-                import datetime
-                mtime = os.path.getmtime(full_path)
-                item_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                log_buffer.append(f"[CON-WARNING] У страницы взята системная дата изменения диска: {file} | Дата: {item_date}")
 
             section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 

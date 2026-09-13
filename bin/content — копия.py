@@ -2,16 +2,26 @@
 # -*- coding: utf-8 -*-
 """
 @module content
-@about Главный изолированный конвейер предобработки и оформления контента.
-@purpose Автоматически собирает маркеры pinnednews, рассчитывает эмодзи разделов,
-         сортирует контент по дате и генерирует готовую ленту в _data/news_feed.yml.
+@about Главный изолированный диспетчер конвейера предобработки контента.
+@purpose Связывает Модуль 1 (навигация) и Модуль 2 (эмодзи), выполняет сортировку
+         закреплений по дате и выгружает лог-отчеты в артефакты Actions.
 @author TechLab
-@version 1.5.0-emoji-fixed
+@version 4.1.0-pure-modular
 """
 
 import os
+import sys
 import re
 import yaml
+
+# 🔥 СИСТЕМНАЯ КОРРЕКЦИЯ ПУТЕЙ ИМПОРТА ДЛЯ СЕРВЕРА ACTIONS
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+# Импортируем наши чистые изолированные модули Шага 1 и Шага 2
+from content_nav import find_url_in_navigation
+from content_emoji import load_emoji_sources, calculate_item_emoji
 
 def parse_yaml_front_matter(file_path):
     """Извлекает и безопасно парсит блок Front Matter из markdown-файла."""
@@ -37,33 +47,31 @@ def parse_yaml_front_matter(file_path):
         return None, None, content
 
 def build_pinned_news_list():
-    """Главная функция: сканирует сайт, вычисляет эмодзи, сортирует и пишет news_feed.yml."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    """Главная функция-диспетчер: собирает ленту новостей строго по вашей рабочей логике."""
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
+    # 1. ОТКРЫВАЕМ ВЕРХОВНУЮ КАРТУ НАВИГАЦИИ САЙТА
+    nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
+    if not os.path.exists(nav_file_path):
+        print("[CON-ERROR] Карта навигации _data/navigation.yml не найдена! Сначала запустите navigation.py.")
+        return
+
+    with open(nav_file_path, 'r', encoding='utf-8') as nf:
+        nav_data = yaml.safe_load(nf)
+
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
-    
     pinned_posts = []
     regular_posts = []
     log_buffer = []
 
-    # Предварительно собираем карту эмодзи всех страниц разделов сайта для мгновенного поиска
-    emoji_map = {}
-    pages_dir = os.path.join(root_dir)
-    for root, _, files in os.walk(pages_dir):
-        for file in files:
-            if file.endswith('.md'):
-                f_path = os.path.join(root, file)
-                f_data, _, _ = parse_yaml_front_matter(f_path)
-                if f_data and f_data.get('permalink') and f_data.get('emoji'):
-                    clean_perm = "/" + f_data['permalink'].strip("/") + "/"
-                    emoji_map[clean_perm] = f_data['emoji']
+    # 2. ИНИЦИАЛИЗИРУЕМ АВТОМАТ ЭМОДЗИ ПО ПЕРВОИСТОЧНИКАМ (ШАГ 2)
+    page_types_emoji, section_index_emoji = load_emoji_sources(root_dir, parse_yaml_front_matter)
 
-    # 1. СКАНИРОВАНИЕ И СБОР ВСЕХ ЗАМЕТК
+    # 3. СКАНИРОВАНИЕ РЕПОЗИТОРИЯ СТРОГО ПО ВАШИМ ОРИГИНАЛЬНЫМ ИНДЕКСАМ
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
         for file in files:
-            if not file.endswith('.md'): continue
+            if not file.endswith('.md') or file == 'index.md': continue
                 
             full_path = os.path.join(root, file)
             data, front_text, body = parse_yaml_front_matter(full_path)
@@ -72,35 +80,29 @@ def build_pinned_news_list():
             rel_path = os.path.relpath(full_path, root_dir)
             folder_parts = rel_path.split(os.sep)
             
-            # Вычисляем URL
-            item_url = data.get('permalink')
+            # Наш оригинальный, стопроцентно рабочий разбор имен и папок контента
+            file_name_clean, _ = os.path.splitext(file)
+            file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
+            
+            if folder_parts[0] == '_posts':
+                project_slug = file_name_clean_no_date
+                current_folder_type = '_posts'
+            else:
+                project_slug = file_name_clean
+                current_folder_type = folder_parts[0]
+
+            # 🔥 БЕРЕМ ГОТОВЫЙ ИДЕАЛЬНЫЙ АДРЕС ИЗ КАРТЫ НАВИГАЦИИ (ШАГ 1)
+            item_url = find_url_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
             if not item_url:
-                if folder_parts[0].startswith('_'):
-                    coll_name = folder_parts[0].lstrip('_')
-                    file_clean, _ = os.path.splitext(file)
-                    item_url = f"/{coll_name}/{file_clean}/"
-                else:
-                    dir_url = "/".join(folder_parts[:-1])
-                    file_clean, _ = os.path.splitext(file)
-                    if file_clean == 'index':
-                        item_url = f"/{dir_url}/" if dir_url else "/"
-                    else:
-                        item_url = f"/{dir_url}/{file_clean}/" if dir_url else f"/{file_clean}/"
-            
-            item_url = "/" + item_url.strip("/") + "/"
+                # ШАГ 3: Фабричный резерв Jekyll — берем реальное имя секции со стандартом .html
+                fallback_section = data.get('section', folder_parts[0].lstrip('_'))
+                item_url = f"/{fallback_section}/{project_slug}.html"
+
             item_date = str(data.get('date', '1970-01-01'))
-            is_post_flag = "true" if '_posts' in full_path else "false"
+            is_post_flag = "true" if folder_parts[0] == '_posts' else "false"
 
-            # 🔥 НАЙТИ РОДИТЕЛЬСКИЙ ЭМОДЗИ РАЗДЕЛА (Нативная логика Tracy на Питоне)
-            url_parts = item_url.split("/")
-            first_folder = url_parts[1] if len(url_parts) > 1 else ""
-            item_section = f"/{first_folder}/"
-            
-            if '_posts' in full_path and data.get('categories'):
-                first_cat = data['categories'][0]
-                item_section = f"/{first_cat}/"
-
-            section_emoji = emoji_map.get(item_section, "")
+            # 🔥 БЕРЕМ АВТОМАТИЧЕСКИЙ ЭМОДЗИ ИЗ ВЫВЕСОК _PAGES (МОДУЛЬ 2)
+            section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 
             news_node = {
                 'title': data.get('title', file),
@@ -108,7 +110,7 @@ def build_pinned_news_list():
                 'date': item_date,
                 'is_post': is_post_flag,
                 'path': rel_path,
-                'emoji': section_emoji, # Вшиваем рассчитанный значок прямо в базу!
+                'emoji': section_emoji,
                 'pinned': False
             }
 
@@ -118,32 +120,26 @@ def build_pinned_news_list():
             else:
                 regular_posts.append(news_node)
 
-    # 2. АВТОМАТИЧЕСКАЯ СОРТИРОВКА ПО ХРОНОЛОГИИ (ОТ СВЕЖИХ К СТАРЫМ)
+    # 4. АВТОМАТИЧЕСКАЯ СОРТИРОВКА ЗАКРЕПЛЕНИЙ ПО ДАТЕ
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
-    
     final_feed = pinned_posts + regular_posts
     
-    # Сборка текстового лога для артефактов
-    log_buffer.append("[CON-SUCCESS] Сборка ленты _data/news_feed.yml завершена успешно.")
-    log_buffer.append(f"Всего обработано и отсортировано публикаций: {len(final_feed)}")
-    log_buffer.append("\n==========================================================================")
-    log_buffer.append(f"ЭТАП 1: ЗАКРЕПЛЕННЫЕ ПОСТЫ ПО МАРКЕРУ pinnednews (Всего: {len(pinned_posts)}):")
-    log_buffer.append("==========================================================================")
+    log_buffer.append("[CON-SUCCESS] Модульный серверный конвейер новостей успешно выполнен.")
+    log_buffer.append(f"Всего собрано публикаций в ленту: {len(final_feed)}")
     for idx, item in enumerate(pinned_posts, 1):
-        log_buffer.append(f"  [{idx}] Дата: {item['date']} | Эмодзи: {item['emoji']} | Заголовок: {item['title']} | Путь: {item['path']}")
+        log_buffer.append(f"  [{idx}] ВЕЧНОЕ ЗАКРЕПЛЕНИЕ -> {item['date']} | {item['title']} | URL: {item['url']}")
 
-    # 3. ЗАПИСЬ ГОТОВОЙ СТРУКТУРЫ В _DATA/NEWS_FEED.YML
+    # 5. ЗАПИСЬ ГОТОВОЙ ЛЕНТЫ В СИСТЕМУ JEKYLL
     data_dir = os.path.join(root_dir, '_data')
-    os.makedirs(data_dir, exist_ok=True)
     output_feed_path = os.path.join(data_dir, 'news_feed.yml')
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:
             yaml.dump({'feed': final_feed}, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
     except Exception as e:
-        log_buffer.append(f"[CON-ERROR] Не удалось записать файл данных ленты news_feed.yml: {e}")
+        log_buffer.append(f"[CON-ERROR] Не удалось записать файл news_feed.yml: {e}")
 
-    # 4. ФИЗИЧЕСКИЙ ВЫВОД И КУПИРОВАНИЕ ЛОГОВ В АРХИВ CONTENT
+    # 📂 ВЫГРУЗКА ОТЧЕТОВ СТРОГО В ПАПКУ ВАШИХ АРТЕФАКТОВ CONTENT
     content_debug_dir = os.path.join(root_dir, '_content_files')
     os.makedirs(content_debug_dir, exist_ok=True)
 
@@ -158,9 +154,8 @@ def build_pinned_news_list():
         log_file_path = os.path.join(content_debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
-        print(f"[CON-SUCCESS] Лог-отчет успешно упакован в архив content.")
     except Exception as e:
-        print(f"[CON-ERROR] Не удалось сохранить итоговый файл лога: {e}")
+        print(f"[CON-ERROR] Не удалось сохранить файл лога контента: {e}")
 
 if __name__ == '__main__':
     build_pinned_news_list()

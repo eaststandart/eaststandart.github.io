@@ -6,7 +6,7 @@
 @purpose Связывает Модуль 1 (навигация) и Модуль 2 (эмодзи), выполняет сортировку
          закреплений по дате и выгружает лог-отчеты в артефакты Actions.
 @author TechLab
-@version 4.1.0-pure-modular
+@version 1.0.0
 """
 
 import os
@@ -14,12 +14,11 @@ import sys
 import re
 import yaml
 
-# 🔥 СИСТЕМНАЯ КОРРЕКЦИЯ ПУТЕЙ ИМПОРТА ДЛЯ СЕРВЕРА ACTIONS
+# Фиксация системных путей импорта для сервера Actions
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-# Импортируем наши чистые изолированные модули Шага 1 и Шага 2
 from content_nav import find_url_in_navigation
 from content_emoji import load_emoji_sources, calculate_item_emoji
 
@@ -50,10 +49,9 @@ def build_pinned_news_list():
     """Главная функция-диспетчер: собирает ленту новостей строго по вашей рабочей логике."""
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
-    # 1. ОТКРЫВАЕМ ВЕРХОВНУЮ КАРТУ НАВИГАЦИИ САЙТА
     nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
     if not os.path.exists(nav_file_path):
-        print("[CON-ERROR] Карта навигации _data/navigation.yml не найдена! Сначала запустите navigation.py.")
+        print("[CON-ERROR] Карта навигации _data/navigation.yml не найдена!")
         return
 
     with open(nav_file_path, 'r', encoding='utf-8') as nf:
@@ -64,10 +62,9 @@ def build_pinned_news_list():
     regular_posts = []
     log_buffer = []
 
-    # 2. ИНИЦИАЛИЗИРУЕМ АВТОМАТ ЭМОДЗИ ПО ПЕРВОИСТОЧНИКАМ (ШАГ 2)
     page_types_emoji, section_index_emoji = load_emoji_sources(root_dir, parse_yaml_front_matter)
 
-    # 3. СКАНИРОВАНИЕ РЕПОЗИТОРИЯ СТРОГО ПО ВАШИМ ОРИГИНАЛЬНЫМ ИНДЕКСАМ
+    # Сканирование репозитория
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
         for file in files:
@@ -80,7 +77,6 @@ def build_pinned_news_list():
             rel_path = os.path.relpath(full_path, root_dir)
             folder_parts = rel_path.split(os.sep)
             
-            # Наш оригинальный, стопроцентно рабочий разбор имен и папок контента
             file_name_clean, _ = os.path.splitext(file)
             file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
             
@@ -91,17 +87,14 @@ def build_pinned_news_list():
                 project_slug = file_name_clean
                 current_folder_type = folder_parts[0]
 
-            # 🔥 БЕРЕМ ГОТОВЫЙ ИДЕАЛЬНЫЙ АДРЕС ИЗ КАРТЫ НАВИГАЦИИ (ШАГ 1)
             item_url = find_url_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
             if not item_url:
-                # ШАГ 3: Фабричный резерв Jekyll — берем реальное имя секции со стандартом .html
                 fallback_section = data.get('section', folder_parts[0].lstrip('_'))
                 item_url = f"/{fallback_section}/{project_slug}.html"
 
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if folder_parts[0] == '_posts' else "false"
 
-            # 🔥 БЕРЕМ АВТОМАТИЧЕСКИЙ ЭМОДЗИ ИЗ ВЫВЕСОК _PAGES (МОДУЛЬ 2)
             section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 
             news_node = {
@@ -120,17 +113,14 @@ def build_pinned_news_list():
             else:
                 regular_posts.append(news_node)
 
-    # 4. АВТОМАТИЧЕСКАЯ СОРТИРОВКА ЗАКРЕПЛЕНИЙ ПО ДАТЕ
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
     final_feed = pinned_posts + regular_posts
     
     log_buffer.append("[CON-SUCCESS] Модульный серверный конвейер новостей успешно выполнен.")
     log_buffer.append(f"Всего собрано публикаций в ленту: {len(final_feed)}")
-    for idx, item in enumerate(pinned_posts, 1):
-        log_buffer.append(f"  [{idx}] ВЕЧНОЕ ЗАКРЕПЛЕНИЕ -> {item['date']} | {item['title']} | URL: {item['url']}")
 
-    # 5. ЗАПИСЬ ГОТОВОЙ ЛЕНТЫ В СИСТЕМУ JEKYLL
+    # Запись готовой ленты в систему Jekyll
     data_dir = os.path.join(root_dir, '_data')
     output_feed_path = os.path.join(data_dir, 'news_feed.yml')
     try:
@@ -139,7 +129,7 @@ def build_pinned_news_list():
     except Exception as e:
         log_buffer.append(f"[CON-ERROR] Не удалось записать файл news_feed.yml: {e}")
 
-    # 📂 ВЫГРУЗКА ОТЧЕТОВ СТРОГО В ПАПКУ ВАШИХ АРТЕФАКТОВ CONTENT
+    # Выгрузка отчетов в папку артефактов content
     content_debug_dir = os.path.join(root_dir, '_content_files')
     os.makedirs(content_debug_dir, exist_ok=True)
 

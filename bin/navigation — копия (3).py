@@ -387,14 +387,13 @@ def build_navigation_tree():
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
         log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена по канонам Tracy.")
 
-        for section_name, projects in nav_tree['sections'].items():
-            for project in projects:
+        for section_name, projects_list in nav_tree['sections'].items():
+            for project in projects_list:
                 slug = project['slug']
                 if section_name == 'people' or slug == 'index': continue
                 
-                detected_types = sorted(list(detected_post_types))
+                detected_types = ['journal', 'media']
                 if slug in related_posts_map:
-
                     for found_type in related_posts_map[slug].keys():
                         if found_type not in detected_types:
                             detected_types.append(found_type)

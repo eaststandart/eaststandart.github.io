@@ -1,52 +1,71 @@
 {%- comment -%}
-@about Сборка и вывод ленты обновлений на чистом Liquid (БЕЗ JAVASCRIPT РОКИРОВОК).
-@purpose Выводит готовую отсортированную Питоном ленту из _data/news_feed.yml с сохранением стилей.
+@about Сборка и фильтрация ленты обновлений.
+@purpose Сбор постов, страниц и людей, вывод закрепленных НАВЕРХ, а остальных по дате.
 @author TechLab 
 {%- endcomment -%}
 
-{%- assign news_feed = site.data.news_feed.feed -%}
+{% assign all_content = site.posts | concat: site.pages | concat: site.people %}
+{% assign target_folders = include.folder | split: "," %}
+{% assign pinned_list = page.pinned_urls %}
 
-{%- for item in news_feed -%}
-  {%- comment -%} 
-  Поскольку Питон уже отфильтровал контент по папкам на сервере,
-  мы просто выводим элементы один за другим в их родной верстке
-  {%- endcomment -%}
-  
-  {%- if include.type == "home" -%}
-  
-    <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-    <li class="news-item news-item-compact{% if item.pinned %} pinned-item{% endif %}" 
-        data-date="{{ item.date }}" 
-        data-is-post="{{ item.is_post }}" 
-        data-emoji="{{ item.emoji }}" 
-        style="display: none;{% if item.pinned %} background-color: #fffdf0; border-left: 3px solid #ffdb58;{% endif %}">
-      <div>
-        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ item.url | relative_url }}" class="item-link">
-            {% if item.pinned %}<strong>[Закреплено]</strong> {% endif %}{{ item.title }}
-          </a>
-        </span>
-      </div>
-    </li>
-    
-  {%- elsif include.type == "news" -%}
-  
-    <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-    <li class="news-item{% if item.pinned %} pinned-item{% endif %}" 
-        data-date="{{ item.date }}" 
-        data-is-post="{{ item.is_post }}" 
-        data-emoji="{{ item.emoji }}" 
-        style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;{% if item.pinned %} background-color: #fffdf0; border-left: 3px solid #ffdb58; padding-left: 6px;{% endif %}">
-      <div>
-        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-            {% if item.pinned %}<strong>[Закреплено]</strong> {% endif %}{{ item.title }}
-          </a>
-        </span>
-      </div>
-    </li>
-    
+{%- comment -%} ==========================================================================
+   ЭТАП 1: ВЫВОД ТОЛЬКО ЗАКРЕПЛЕННЫХ СООБЩЕНИЙ НА САМЫЙ ВЕРХ ЛЕНТЫ (1 В 1 ОРИГИНАЛ)
+   ========================================================================== {%- endcomment -%}
+{%- for item in all_content -%}
+  {%- if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" -%}
+    {%- if pinned_list contains item.url -%}
+      {%- assign is_allowed = true -%}
+      {%- if include.folder and include.folder != "" -%}
+        {%- assign is_allowed = false -%}
+        {%- for folder_name in target_folders -%}{%- assign clean_folder = folder_name | strip -%}{%- if item.path contains clean_folder or item.url contains clean_folder -%}{%- assign is_allowed = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
+      {%- endif -%}
+      {%- if is_allowed -%}
+        {%- assign is_post = false -%}{% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
+        {%- assign url_parts = item.url | split: "/" -%}{%- assign first_folder = url_parts[1] -%}{%- assign item_section = "/" | append: first_folder | append: "/" -%}
+        {%- if item.path contains '_posts' -%}{%- assign first_cat = item.categories | first -%}{%- assign item_section = "/" | append: first_cat | append: "/" -%}{%- endif -%}
+        {%- assign parent_page = site.pages | where: "permalink", item_section | first -%}{%- assign section_emoji = parent_page.emoji | default: "" -%}
+        
+        {%- if include.type == "home" -%}
+          <li class="news-item news-item-compact pinned-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; background-color: #fffdf0; border-left: 3px solid #ffdb58;">
+            <div><span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span><span><a href="{{ item.url | relative_url }}" class="item-link">{{ item.title }}</a></span></div>
+          </li>
+        {%- elsif include.type == "news" -%}
+          <li class="news-item pinned-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; background-color: #fffdf0; border-left: 3px solid #ffdb58; padding-left: 6px;">
+            <div><span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span><span><a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">{{ item.title }}</a></span></div>
+          </li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} ==========================================================================
+   ЭТАП 2: ВЫВОД ВСЕХ ОСТАЛЬНЫХ ОБЫЧНЫХ СООБЩЕНИЙ ПО ДАТЕ (1 В 1 ОРИГИНАЛ)
+   ========================================================================== {%- endcomment -%}
+{%- for item in all_content -%}
+  {%- if item.date and item.url != "/" and item.url != "/tags.html" and item.url != "/news/" -%}
+    {%- unless pinned_list contains item.url -%}
+      {%- assign is_allowed = true -%}
+      {%- if include.folder and include.folder != "" -%}
+        {%- assign is_allowed = false -%}
+        {%- for folder_name in target_folders -%}{%- assign clean_folder = folder_name | strip -%}{%- if item.path contains clean_folder or item.url contains clean_folder -%}{%- assign is_allowed = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
+      {%- endif -%}
+      {%- if is_allowed -%}
+        {%- assign is_post = false -%}{% if item.path contains '_posts' %}{% assign is_post = true %}{% endif %}
+        {%- assign url_parts = item.url | split: "/" -%}{%- assign first_folder = url_parts[1] -%}{%- assign item_section = "/" | append: first_folder | append: "/" -%}
+        {%- if item.path contains '_posts' -%}{%- assign first_cat = item.categories | first -%}{%- assign item_section = "/" | append: first_cat | append: "/" -%}{%- endif -%}
+        {%- assign parent_page = site.pages | where: "permalink", item_section | first -%}{%- assign section_emoji = parent_page.emoji | default: "" -%}
+        
+        {%- if include.type == "home" -%}
+          <li class="news-item news-item-compact" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none;">
+            <div><span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span><span><a href="{{ item.url | relative_url }}" class="item-link">{{ item.title }}</a></span></div>
+          </li>
+        {%- elsif include.type == "news" -%}
+          <li class="news-item" data-date="{{ item.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="{{ section_emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+            <div><span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span><span><a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">{{ item.title }}</a></span></div>
+          </li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endunless -%}
   {%- endif -%}
 {%- endfor -%}

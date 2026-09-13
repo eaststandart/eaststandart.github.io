@@ -4,7 +4,7 @@ purpose: Автоматически строит каркас ленты и вы
 layout: default
 ---
 {{ content }}
-
+ 
 <!-- ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ И ЖУРНАЛА -->
 <div class="news-feed">
   <ul id="posts-list" style="list-style: none; padding: 0;">

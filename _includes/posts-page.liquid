@@ -63,19 +63,14 @@
 
 <script>
   (function() {
-    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
-    var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
-
-    // Запускаем пагинатор на месте с его родными изолированными параметрами
+    // Запускаем пагинатор на месте строго со связанными рабочими параметрами
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 
       "{{ include.per_page }}", 
       "{{ archive_url }}", 
       "{{ include.type }}", 
-      "{{ project_slug_last }}", 
-      "{{ section_slug }}", 
-      navTitleClean
+      "{{ project_slug_last }}"
     );
   })();
 </script>

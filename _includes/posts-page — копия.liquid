@@ -29,7 +29,7 @@
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
 {% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
-{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+{% assign archive_url = "/" | append: include.type | append: "/" %}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
 

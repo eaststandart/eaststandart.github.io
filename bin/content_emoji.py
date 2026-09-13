@@ -2,46 +2,56 @@
 # -*- coding: utf-8 -*-
 """
 @module content_emoji
-@about Подмодуль контента №2: Автомат значков.
-@purpose Собирает эмодзи строго из первоисточников папки _pages/ и файлов-вывесок.
+@about Подмодуль контента №2: Автомат значков по первоисточникам.
+@purpose Собирает эмодзи строго из файлов-вывесок _pages/ и родительских index.md.
 @author TechLab
+@version 1.0.0-pure-emoji
 """
 
 import os
 import re
 import yaml
 
-def load_pages_emoji_map(root_dir):
-    """Сканирует папку _pages/ и собирает карту эмодзи для разделов и типов постов."""
+def load_emoji_sources(root_dir, parse_yaml_fn):
+    """Сканирует вывески _pages и заглавные файлы разделов для сбора эталонных эмодзи."""
     pages_dir = os.path.join(root_dir, '_pages')
-    emoji_map = {}
-    
+    page_types_emoji = {}
+    section_index_emoji = {}
+
+    # Сбор эмодзи типов постов из _pages/
     if os.path.exists(pages_dir):
         for file in os.listdir(pages_dir):
-            if not file.endswith('.md'): continue
-            
-            full_path = os.path.join(pages_dir, file)
-            try:
-                with open(full_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-                if match:
-                    data = yaml.safe_load(match.group(1))
-                    if data and data.get('emoji'):
-                        p_slug, _ = os.path.splitext(file)
-                        emoji_map[p_slug] = data['emoji']
-            except Exception as e:
-                print(f"[CON-ERROR] Не удалось прочитать эмодзи из вывески {file}: {e}")
-                
-    return emoji_map
+            if file.endswith('.md'):
+                p_data, _, _ = parse_yaml_fn(os.path.join(pages_dir, file))
+                if p_data and p_data.get('emoji'):
+                    p_slug, _ = os.path.splitext(file)
+                    page_types_emoji[p_slug] = p_data['emoji']
 
-def calculate_item_emoji(data, folder_parts, pages_emoji_map):
-    """Определяет идеальный эмодзи для строки ленты новостей по вашему жесткому закону."""
-    # Очередь 1: Посты хроники из папки _posts — берут эмодзи строго из вывесок journal.md или media.md
-    if folder_parts == '_posts':
-        post_type = data.get('post-page', 'journal')
-        return pages_emoji_map.get(post_type, "")
-        
-    # Очередь 2 и 3: Любые другие страницы разделов — нативно берут эмодзи из файла своего раздела в _pages/
+    # Сбор родительских эмодзи из index.md корневых папок контента
+    EXCLUDED = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
+    for name in os.listdir(root_dir):
+        if os.path.isdir(os.path.join(root_dir, name)) and name not in EXCLUDED and not name.startswith('.'):
+            idx_path = os.path.join(root_dir, name, 'index.md')
+            if os.path.exists(idx_path):
+                i_data, _, _ = parse_yaml_fn(idx_path)
+                if i_data and i_data.get('emoji'):
+                    section_index_emoji[name.lstrip('_')] = i_data['emoji']
+
+    return page_types_emoji, section_index_emoji
+
+def calculate_item_emoji(data, folder_parts, page_types_emoji, section_index_emoji):
+    """Определяет идеальный эмодзи строки ленты строго по закону Tracy."""
     section_name = data.get('section', folder_parts.lstrip('_'))
-    return pages_emoji_map.get(section_name, "")
+    
+    if folder_parts == '_posts':
+        # Очередь 1: Посты хроники — берут эмодзи из вывесок типов в _pages/ (👀 или ✍🏻)
+        post_type = data.get('post-page', 'journal')
+        return page_types_emoji.get(post_type, "")
+        
+    elif section_name in section_index_emoji:
+        # Очередь 3: Книги/статьи Режима А — нативно наследуют эмодзи родительской вывески раздела (📚)
+        return section_index_emoji.get(section_name, "")
+        
+    else:
+        # Очередь 2: Карточки проектов Режима Б — берут свой родной эмодзи из Front Matter страницы
+        return data.get('emoji', "")

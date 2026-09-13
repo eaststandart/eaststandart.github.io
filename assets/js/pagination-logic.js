@@ -1,8 +1,8 @@
 /**
- * @about Модуль пагинации (С ВЕЧНЫМ ЗАКРЕПЛЕНИЕМ НА ВСЕХ СТРАНИЦАХ).
- * @purpose Разбивает список на страницы, удерживая закрепленные посты на самом верху.
+ * @about Модуль пагинации (ИСПРАВЛЕННЫЙ).
+ * @purpose Разбивает список на страницы, удерживая закрепленные посты на самом верху каждой страницы.
  * @author TechLab
- * @version 2.1.0-multi-page-pin
+ * @version 2.1.1-fixed
  */
 
 function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
@@ -14,7 +14,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
 
   var allElements = Array.from(list.children);
   
-  # ➔ РАЗДЕЛЯЕМ ГОТОВЫЙ СПИСОК НА ДВЕ ОЧЕРЕДИ СРАЗУ ПРИ ЗАГРУЗКЕ
+  // Разделяем элементы на две изолированные очереди прямо при загрузке
   var pinnedItems = allElements.filter(function(el) {
     return el.classList.contains('pinned-item');
   });
@@ -25,30 +25,30 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
 
   var currentPage = 1;
   
-  # Динамический расчет лимита страниц: если есть закрепленный пост, обычных выводим на 1 меньше (9 вместо 10)
+  // Расчет лимита: если есть закрепленные посты, обычных выводим на их количество меньше
   var dynamicLimit = pinnedItems.length > 0 ? (itemsPerPage - pinnedItems.length) : itemsPerPage;
-  if (dynamicLimit < 1) dynamicLimit = 1; # Предохранитель от деления на ноль
+  if (dynamicLimit < 1) dynamicLimit = 1; 
   
   var totalPages = Math.ceil(regularItems.length / dynamicLimit);
 
-  # 1. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ
+  // 1. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ
   function renderPage(page) {
     list.innerHTML = '';
     var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
 
-    # Шаг А: Первыми ВСЕГДА выводим закрепленные посты на абсолютно любой странице
+    // Шаг А: Первыми выводим закрепленные посты на абсолютно любой странице
     pinnedItems.forEach(function(pinnedEl) {
-      # Принудительно обрабатываем эмодзи для закрепленного поста
       var pEmoji = pinnedEl.getAttribute('data-emoji');
       var pLink = pinnedEl.querySelector('.item-link');
       if (showEmoji === 'Y' && pLink && pEmoji && !pLink.innerHTML.includes(pEmoji)) {
         pLink.innerHTML += ' ' + pEmoji;
       }
       pinnedEl.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
-      list.appendChild(pinnedItems);
+      // 🔥 ТОЧНОЕ ИСПРАВЛЕНИЕ: Передаем конкретный элемент pinnedEl вместо массива pinnedItems!
+      list.appendChild(pinnedEl);
     });
 
-    # Шаг Б: Ниже дописываем порцию обычных постов для текущей страницы
+    // Шаг Б: Ниже дописываем порцию обычных постов для текущей страницы
     var start = (page - 1) * dynamicLimit;
     var end = start + dynamicLimit;
     
@@ -65,7 +65,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     renderControls();
   }
 
-  # 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
+  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -98,7 +98,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     return span;
   }
 
-  # 3. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
+  // 3. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
   function renderControls() {
     controls.innerHTML = '';
     

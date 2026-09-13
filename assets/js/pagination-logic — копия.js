@@ -1,8 +1,8 @@
 /**
- * @about Модуль пагинации (ОЧИЩЕННЫЙ ОТ СТАРОЙ БРАУЗЕРНОЙ СОРТИРОВКИ).
- * @purpose Разбивает готовый, идеально отсортированный сервером список на страницы.
+ * @about Модуль пагинации.
+ * @purpose Отвечает за разбиение длинных списков публикаций на страницы.
  * @author TechLab
- * @version 2.0.0-pure-backend
+ * @version 1.0.0
  */
 
 function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
@@ -12,18 +12,60 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Просто забираем элементы ровно в том порядке, в котором их разложил сервер
   var items = Array.from(list.children);
   var currentPage = 1;
-  var totalPages = Math.ceil(items.length / itemsPerPage);
+  var pinnedItem = null;
 
-  // 1. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ
+  // 1. СОРТИРОВКА
+  items.sort(function(a, b) {
+    var dateA = a.getAttribute('data-date');
+    var dateB = b.getAttribute('data-date');
+    if (dateA && dateB) {
+      return new Date(dateB) - new Date(dateA);
+    }
+    return 0; 
+  });
+
+  // 2. РОКИРОВКА PINNED
+  if (pinnedUrl !== "") {
+    var targetIndex = -1;
+    for (var i = 0; i < items.length; i++) {
+      var aTag = items[i].querySelector('.item-link');
+      if (aTag && aTag.getAttribute('href') && aTag.getAttribute('href').includes(pinnedUrl)) {
+        targetIndex = i;
+        break;
+      }
+    }
+    if (targetIndex > -1) {
+      pinnedItem = items[targetIndex];
+      pinnedItem.classList.add('pinned-item');
+      items.splice(targetIndex, 1); 
+    }
+  }
+
+  // ТОЧНОЕ ИСПРАВЛЕНИЕ: считаем страницы исходя из реального уменьшенного лимита (9 вместо 10)
+  var dynamicLimit = pinnedItem ? (itemsPerPage - 1) : itemsPerPage;
+  var totalPages = Math.ceil(items.length / dynamicLimit);
+
+  // 3. ОТРИСОВКА СТРАНИЦЫ
   function renderPage(page) {
     list.innerHTML = '';
     var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
+    var currentLimit = itemsPerPage;
 
-    var start = (page - 1) * itemsPerPage;
-    var end = start + itemsPerPage;
+    if (pinnedItem) {
+      pinnedItem.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
+      var pinnedLink = pinnedItem.querySelector('.item-link');
+      var pinnedEmoji = pinnedItem.getAttribute('data-emoji');
+      if (showEmoji === 'Y' && pinnedLink && pinnedEmoji && !pinnedLink.innerHTML.includes(pinnedEmoji)) {
+        pinnedLink.innerHTML += ' ' + pinnedEmoji;
+      }
+      list.appendChild(pinnedItem);
+      currentLimit = itemsPerPage - 1;
+    }
+
+    var start = (page - 1) * currentLimit;
+    var end = start + currentLimit;
     
     items.slice(start, end).forEach(function(el) {
       var emoji = el.getAttribute('data-emoji');
@@ -38,7 +80,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     renderControls();
   }
 
-  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
+  // 4. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -71,7 +113,7 @@ function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
     return span;
   }
 
-  // 3. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
+  // 5. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА
   function renderControls() {
     controls.innerHTML = '';
     

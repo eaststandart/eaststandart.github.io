@@ -94,7 +94,9 @@ def build_pinned_news_list():
             # 🔥 БЕРЕМ ГОТОВЫЙ ИДЕАЛЬНЫЙ АДРЕС ИЗ КАРТЫ НАВИГАЦИИ (ШАГ 1)
             item_url = find_url_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
             if not item_url:
-                item_url = f"/{folder_parts[0].lstrip('_')}/{project_slug}.html"
+                # ШАГ 3: Фабричный резерв Jekyll — берем реальное имя секции со стандартом .html
+                fallback_section = data.get('section', folder_parts[0].lstrip('_'))
+                item_url = f"/{fallback_section}/{project_slug}.html"
 
             item_date = str(data.get('date', '1970-01-01'))
             is_post_flag = "true" if folder_parts[0] == '_posts' else "false"

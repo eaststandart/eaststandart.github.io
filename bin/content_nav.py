@@ -2,16 +2,21 @@
 # -*- coding: utf-8 -*-
 """
 @module content_nav
-@about Подмодуль контента №1: Навигационный сопоставитель.
-@purpose Ищет идеальные интернет-адреса страниц внутри карты navigation.yml.
+@about Подмодуль контента №1: Универсальный навигационный сопоставитель.
+@purpose Забирает адреса строго по сквозному закону приоритетов: permalink -> карта сайта -> .html
 @author TechLab
-@version 1.0.0-pure-navigation
+@version 2.0.0-universal-law
 """
 
 def find_url_in_navigation(nav_data, project_slug, file_name_clean, folder_parts, data):
-    """Ищет идеальный, готовый интернет-адрес страницы внутри карты navigation.yml."""
-    # Если это пост хроники из папки _posts
-    if folder_parts[0] == '_posts':
+    """Вычисляет идеальный интернет-адрес по общему сквозному правилу приоритетов."""
+    
+    # 🔥 ШАГ 1 (АБСОЛЮТНЫЙ ПРИОРИТЕТ): Если в самом файле руками прописан permalink — берем его!
+    if data and data.get('permalink'):
+        return data['permalink']
+
+    # ШАГ 2 (ПОИСК ПО КАРТЕ): Если ручного пермалинка нет, ищем совпадение в navigation.yml
+    if folder_parts == '_posts':
         post_date = str(data.get('date', ''))
         # Проверяем все разделы карты навигации
         for section_name, projects in nav_data.get('sections', {}).items():

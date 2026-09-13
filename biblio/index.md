@@ -4,7 +4,6 @@ description: "Рекомендуемые книги и учебники, про�
 title: Список литературы
 navtitle: "Литература"
 custom_css: ["/assets/css/biblio.css"]
-permalink: "/biblio/"
 ---
 
 <div class="biblio-list">

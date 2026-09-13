@@ -268,13 +268,7 @@ def build_navigation_tree():
                         data['tags'] = final_proj_tags
                         if 'keywords' in data: del data['keywords']
 
-                        if project_slug == 'index':
-                            # Если это заглавная вывеска раздела, убираем "index/" и делаем нативный URL
-                            final_url = f"/{clean_section_name}/"
-                        else:
-                            # Для всех остальных обычных карточек контента оставляем стандартный путь
-                            final_url = f"/{clean_section_name}/{project_slug}/"
-                            
+                        final_url = f"/{clean_section_name}/{project_slug}/"
                         data['permalink'] = final_url
                         data['section'] = clean_section_name
 

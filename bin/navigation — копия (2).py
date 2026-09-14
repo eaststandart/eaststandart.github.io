@@ -107,6 +107,7 @@ def build_navigation_tree():
                 for file in files:
                     if not (file.endswith('.md') or file.endswith('.html')): continue
                     
+                    # 🔥 ИГНОРИРУЕМ ИНДЕКСНЫЕ ФАЙЛЫ: их адреса и вывески разделов созданы на Шаге 1
                     file_slug, _ = os.path.splitext(file)
                     if file_slug == 'index': continue
                     
@@ -120,25 +121,27 @@ def build_navigation_tree():
                     node = {}
                     node['title'] = data.get('title', file_slug)
 
-                    # 1. Если у файла ЕСТЬ permalink
+                    # 1. Если у файла ЕСТЬ permalink (Шаг 2)
                     if ready_permalink:
                         node['url'] = ready_permalink
                         
+                        # Вырезаем первое слово структуры пермалинка контента сайта
                         permalink_clean = ready_permalink.strip('/')
-                        # 🔥 ФИКС: Извлекаем строго первое текстовое слово-строку из структуры URL
                         first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                         
+                        # Проверка корня диска на дубли и коллизии папок по вашему правилу
                         has_clean_dir = first_word in root_dirs_present
                         has_under_dir = f"_{first_word}" in root_dirs_present
                         
                         if has_clean_dir and has_under_dir:
+                            # Коллизия: в корне есть обе папки -> свойства связи вообще НЕ пишем
                             pass
                         elif has_under_dir:
                             node['relatedcollection'] = first_word
                         elif has_clean_dir:
                             node['relatedsection'] = first_word
 
-                    # 2. Если у файла НЕТ permalink
+                    # 2. Если у файла НЕТ permalink (Шаг 3 - Усовершенствованный автомат по вашей логике)
                     else:
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')
@@ -149,12 +152,13 @@ def build_navigation_tree():
                         else:
                             node['relatedsection'] = clean_section_name
 
+                    # Синхронизируем Front Matter самого md-файла на диске
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 
                     flat_map[relative_file_key] = [node]
 
-    # 🔥 ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/
+    # 🔥 ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ СТРОГО ПО ВАШИМ ПРАВИЛАМ
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -170,23 +174,21 @@ def build_navigation_tree():
                 ready_permalink = data.get('permalink', '').strip()
                 relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
 
-                match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
-                post_date = match_date.group(1) if match_date else "2026-01-01"
+                # Синхронизация Front Matter самого поста хроники
+                post_page_type = data.get('post-page', 'journal')
+                for key in list(data.keys()):
+                    if str(key).endswith('-post-page'):
+                        # 🔥 ИСПРАВЛЕНО НАВСЕГДА: Строгий индекс [0] исключает массивы заметок
+                        post_page_type = str(key).split('-')[0]
+                        break
 
-                # Извлечение типа post-page без дублирования массивов
-                has_post_page_property = False
-                post_page_type = ""
-                if 'post-page' in data:
-                    has_post_page_property = True
-                    post_page_type = str(data['post-page'])
+                if data and data.get('date'):
+                    post_date = str(data['date'])
                 else:
-                    for key in list(data.keys()):
-                        if str(key).endswith('-post-page'):
-                            has_post_page_property = True
-                            post_page_type = str(key).split('-')[0]
-                            break
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Вычисляем полный физический путь к родителю
+                # Вычисляем полный физический путь к родителю по очищенному имени файла
                 calculated_parent_path = ""
                 parent_file_name = f"{file_slug_no_date}.md"
                 for key_path in flat_map.keys():
@@ -201,7 +203,6 @@ def build_navigation_tree():
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
-                    # 🔥 ФИКС: Извлекаем строго текстовое слово папки по индексу 0
                     first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                     
                     has_clean_dir = first_word in root_dirs_present
@@ -214,35 +215,32 @@ def build_navigation_tree():
                     elif has_under_dir:
                         node['relatedcollection'] = first_word
                     elif has_clean_dir:
-                        if not calculated_parent_path:
-                            node['relatedsection'] = first_word
+                        node['relatedsection'] = first_word
 
-                # Б. Пост хроники БЕЗ пермалинка
+                # Б. Пост хроники БЕЗ пермалинка (Вычисляем канонически по родителю)
                 else:
-                    fallback_type = post_page_type if post_page_type else "journal"
-                    node['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+                    node['url'] = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
+                        # Копируем свойства связи у найденного родителя
+                        parent_node = flat_map[calculated_parent_path][0]
+                        if 'relatedsection' in parent_node:
+                            node['relatedsection'] = parent_node['relatedsection']
+                        if 'relatedcollection' in parent_node:
+                            node['relatedcollection'] = parent_node['relatedcollection']
 
-                # 🔥 СТРОГО ПО ВАШЕМУ ПРАВИЛУ: пишем posttype только если свойство было в исходнике
-                if has_post_page_property and post_page_type:
-                    node['posttype'] = post_page_type
-
-                # Синхронизация Front Matter самого файла
-                if has_post_page_property and post_page_type:
-                    data['categories'] = [post_page_type, file_slug_no_date]
-                    data['post-page'] = post_page_type
+                # Записываем вычисленные свойства обратно в исходный файл поста хроники
+                data['categories'] = [post_page_type, file_slug_no_date]
+                data['post-page'] = post_page_type
                 if calculated_parent_path:
-                    parent_node_list = flat_map[calculated_parent_path]
-                    if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        p_node = parent_node_list[0]
-                        data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                    parent_node = flat_map[calculated_parent_path][0]
+                    data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
                 write_yaml_front_matter(file_path, data, body)
 
                 flat_map[relative_file_key] = [node]
-                log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
+                log_artifact(f"[NAV-DEBUG] Обработан файл: {relative_file_key} | parent: {calculated_parent_path}")
 
-    # Запись карты на диск
+    # ФИНИШНАЯ НАЧИСТАЯ ЗАПИСЬ ПЛОСКОЙ КАРТЫ НА ДИСК БЕЗ ЗНАЧКОВ *ID
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True

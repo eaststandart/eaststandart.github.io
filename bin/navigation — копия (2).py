@@ -279,8 +279,7 @@ def build_navigation_tree():
                 related_posts_map[post_slug][post_page_type].append({
                     'title': data.get('title', file_name_clean_no_date),
                     'url': short_url,
-                    'date': post_date,
-                    'pinnednews': data.get('pinnednews', False)
+                    'date': post_date
                 })
 
     # 3. ЭТАП СВЯЗЫВАНИЯ ГЛАВНЫХ СТРАНИЦ ПРОЕКТОВ И ПАПОК-КОЛЛЕКЦИЙ

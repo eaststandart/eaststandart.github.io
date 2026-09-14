@@ -105,11 +105,11 @@ def process_all_markdown_files():
     log_content_artifact("[CON-SUCCESS] Модульный серверный конвейер оформления контента успешно выполнен.")
     log_content_artifact(f"Всего успешно оформлено markdown-файлов на диске: {len(content_log_buffer) - 1}")
 
-    # 🔥 ЗАПИСЬ ИЗ ГЛОБАЛЬНОГО БУФЕРА ПО ОБРАЗУ NAVIGATION.PY
     try:
-        debug_dir = os.path.join(root_dir, '_processed_files')
+        debug_dir = os.path.join(root_dir, '_content_files')
         os.makedirs(debug_dir, exist_ok=True)
         log_file_path = os.path.join(debug_dir, 'content_debug.log')
+
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(content_log_buffer))
         print("[CON-SUCCESS] Лог контента успешно зафиксирован в артефактах.")

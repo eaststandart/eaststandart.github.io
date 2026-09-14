@@ -96,9 +96,10 @@ def build_news_feed():
 
     # Направляем лог новостей в отслеживаемую папку артефактов
     try:
-        debug_dir = os.path.join(root_dir, '_processed_files')
+        debug_dir = os.path.join(root_dir, '_content_files')
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, 'contentnews_debug.log'), 'w', encoding='utf-8') as lf:
+
             lf.write(f"[NEWS-SUCCESS] Сборка завершена. Всего элементов в ленте: {len(flat_news)}")
     except Exception as e:
         print(f"[NEWS-ERROR] Не удалось сохранить лог новостей: {e}")

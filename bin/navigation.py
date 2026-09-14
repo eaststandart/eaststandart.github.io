@@ -125,7 +125,6 @@ def build_navigation_tree():
                         node['url'] = ready_permalink
                         
                         permalink_clean = ready_permalink.strip('/')
-                        # 🔥 ФИКС: Извлекаем строго первое текстовое слово-строку из структуры URL
                         first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                         
                         has_clean_dir = first_word in root_dirs_present
@@ -201,7 +200,6 @@ def build_navigation_tree():
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
-                    # 🔥 ФИКС: Извлекаем строго текстовое слово папки по индексу 0
                     first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                     
                     has_clean_dir = first_word in root_dirs_present
@@ -209,13 +207,14 @@ def build_navigation_tree():
                     
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
+                    
+                    # 🔥 ИСПРАВЛЕНО: Прямая, сквозная проверка связи для автономного и связанного поста
                     if has_clean_dir and has_under_dir:
                         pass
                     elif has_under_dir:
                         node['relatedcollection'] = first_word
                     elif has_clean_dir:
-                        if not calculated_parent_path:
-                            node['relatedsection'] = first_word
+                        node['relatedsection'] = first_word
 
                 # Б. Пост хроники БЕЗ пермалинка
                 else:
@@ -224,7 +223,7 @@ def build_navigation_tree():
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # 🔥 СТРОГО ПО ВАШЕМУ ПРАВИЛУ: пишем posttype только если свойство было в исходнике
+                # Пишем posttype только если свойство было в исходнике
                 if has_post_page_property and post_page_type:
                     node['posttype'] = post_page_type
 
@@ -242,12 +241,18 @@ def build_navigation_tree():
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
 
+    # 🔥 СОБИРАЕМ ИТОГОВЫЙ СЛОВАРЬ С СЕРВЕРНЫМ СПИСКОМ ПАПОК НА ПЕРВОЙ СТРОКЕ
+    final_output_map = {}
+    final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))
+    for k, v in flat_map.items():
+        final_output_map[k] = v
+
     # Запись карты на диск
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
         with open(output_file, 'w', encoding='utf-8') as f:
-            yaml.dump(flat_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            yaml.dump(final_output_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
         log_artifact("[NAV-SUCCESS] Плоская универсальная навигационная карта успешно записана.")
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")

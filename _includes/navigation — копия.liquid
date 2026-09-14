@@ -29,8 +29,6 @@
         {%- else -%}
             {%- for section_entry in site.data.navigation.sections -%}
                 {%- for project in section_entry -%}
-            {%- for section_entry in site.data.navigation.sections -%}
-                {%- for project in section_entry[1] -%}
                     {%- if project.slug == target_slug -%}
                         {%- assign project_url = project.url -%}
                         {%- break -%}

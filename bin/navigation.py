@@ -123,7 +123,7 @@ def build_navigation_tree():
                     else:
                         node['relatedsection'] = clean_section_name
 
-                    # 🔥 ИСПРАВЛЕНО: Ключом становится относительный путь файла контента от корня диска
+                    # Ключом становится относительный путь файла контента от корня диска
                     relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
                     flat_map[relative_file_key] = [node]
 
@@ -158,11 +158,11 @@ def build_navigation_tree():
                 calculated_parent_section = "faire"
                 parent_file_key = f"{file_slug_no_date}.md"
                 
-                # Поиск родительской секции по базовой структуре flat_map
+                # 🔥 ИСПРАВЛЕНО: Безопасный поиск родительской секции с извлечением словаря из списка [0]
                 for key_path, nodes_list in flat_map.items():
                     if key_path.endswith(f"/{parent_file_key}") or key_path == parent_file_key:
                         if isinstance(nodes_list, list) and len(nodes_list) > 0:
-                            p_node = nodes_list
+                            p_node = nodes_list[0]
                             calculated_parent_section = p_node.get('relatedsection', p_node.get('relatedcollection', 'faire'))
                             break
 
@@ -177,7 +177,7 @@ def build_navigation_tree():
                 node['url'] = short_url
                 node['relatedpages'] = file_slug_no_date
 
-                # 🔥 Ключом становится относительный путь файла поста от корня диска
+                # Ключом становится относительный путь файла поста от корня диска
                 relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Обработан файл: {relative_file_key} | relatedpages: {file_slug_no_date}")

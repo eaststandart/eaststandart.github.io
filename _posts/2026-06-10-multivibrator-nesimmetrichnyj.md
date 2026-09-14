@@ -2,6 +2,7 @@
 layout: page
 title: "Мультивибратор несимметричный"
 description: "Принцип работы."
+date: 2026-06-10
 tags: ["несимметричныймультивибратор", "мультивибраторнесимметричный"]
 permalink: /reference/multivibrator-nesimmetrichnyj/
 ---

@@ -6,7 +6,7 @@
 @purpose Связывает Модуль 1 (навигация) и Модуль 2 (эмодзи), выполняет сортировку
          закреплений по дате и выгружает лог-отчеты в артефакты Actions.
 @author TechLab
-@version 1.0.0
+@version 5.1.0-final-clean
 """
 
 import os
@@ -46,7 +46,7 @@ def parse_yaml_front_matter(file_path):
         return None, None, content
 
 def build_pinned_news_list():
-    """Главная функция-диспетчер: собирает ленту новостей строго по вашей рабочей логике."""
+    """Главная функция-диспетчер: собирает ленту новостей на основе карты навигации."""
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
     nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
@@ -81,23 +81,22 @@ def build_pinned_news_list():
             file_name_clean, _ = os.path.splitext(file)
             file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
             
-            first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
+            # 🔥 ИСПРАВЛЕНО: Строго и нативно берем имя первой папки из списка
+            first_folder = folder_parts[0] if (isinstance(folder_parts, list) and len(folder_parts) > 0) else str(folder_parts)
             
-            is_posts_dir = rel_path.startswith('_posts' + os.path.join('_', '_')[1]) or '_posts' in folder_parts
-            
-            if is_posts_dir:
+            if first_folder == '_posts':
                 project_slug = file_name_clean_no_date
                 current_folder_type = '_posts'
             else:
                 project_slug = file_name_clean
-                current_folder_type = folder_parts[0] if folder_parts else ""
+                current_folder_type = first_folder
 
             # 🔥 ЧИТАЕМ ДАННЫЕ СТРОГО ИЗ ЕДИНОГО ИСТОЧНИКА КАРТЫ
             item_url, item_date = find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
 
             # Резервные правила, если файла по какой-то причине не оказалось в карте навигации
             if not item_url:
-                fallback_section = data.get('section', folder_parts.lstrip('_'))
+                fallback_section = data.get('section', first_folder.lstrip('_'))
                 item_url = f"/{fallback_section}/{project_slug}.html"
             
             if not item_date:
@@ -107,7 +106,8 @@ def build_pinned_news_list():
                     # Если даты нет вообще нигде, пропускаем узел во избежание 1970 года
                     continue
 
-            is_post_flag = "true" if folder_parts == '_posts' else "false"
+            # 🔥 ИСПРАВЛЕНО: Безопасная проверка строкового флага
+            is_post_flag = "true" if current_folder_type == '_posts' else "false"
             section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 
             news_node = {

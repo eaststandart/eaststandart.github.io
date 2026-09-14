@@ -84,7 +84,12 @@ def load_emoji_sources(root_dir):
     return page_types_emoji, section_index_emoji
 
 def calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir):
-    first_folder = folder_parts if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
+    # 🔥 ИСПРАВЛЕНО: Корректно извлекаем чистую строку папки из списка, защищая от list attribute error
+    if isinstance(folder_parts, list) and len(folder_parts) > 0:
+        first_folder = str(folder_parts[0])
+    else:
+        first_folder = str(folder_parts)
+        
     clean_folder_name = first_folder.lstrip('_')
 
     if first_folder == '_posts':

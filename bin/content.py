@@ -19,7 +19,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-from content_nav import find_url_in_navigation
+from content_nav import find_url_and_date_in_navigation
 from content_emoji import load_emoji_sources, calculate_item_emoji
 
 def parse_yaml_front_matter(file_path):
@@ -72,7 +72,8 @@ def build_pinned_news_list():
                 
             full_path = os.path.join(root, file)
             data, front_text, body = parse_yaml_front_matter(full_path)
-            if data is None or not data.get('date'): continue
+
+            if data is None: continue
 
             rel_path = os.path.relpath(full_path, root_dir)
             folder_parts = rel_path.split(os.sep)
@@ -80,35 +81,29 @@ def build_pinned_news_list():
             file_name_clean, _ = os.path.splitext(file)
             file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
             
-            if folder_parts[0] == '_posts':
+            if folder_parts == '_posts':
                 project_slug = file_name_clean_no_date
                 current_folder_type = '_posts'
             else:
                 project_slug = file_name_clean
-                current_folder_type = folder_parts[0]
+                current_folder_type = folder_parts
 
-            item_url = find_url_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
+            # 🔥 ЧИТАЕМ ДАННЫЕ СТРОГО ИЗ ЕДИНОГО ИСТОЧНИКА ПРАВДЫ (КАРТЫ)
+            item_url, item_date = find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
+
+            # Резервные правила, если файла по какой-то причине не оказалось в карте навигации
             if not item_url:
-                fallback_section = data.get('section', folder_parts[0].lstrip('_'))
+                fallback_section = data.get('section', folder_parts.lstrip('_'))
                 item_url = f"/{fallback_section}/{project_slug}.html"
+            
+            if not item_date:
+                if data.get('date'):
+                    item_date = str(data['date'])
+                else:
+                    # Если даты нет вообще нигде, пропускаем узел во избежание 1970 года
+                    continue
 
-            is_post_flag = "true" if folder_parts[0] == '_posts' else "false"
-
-            # 🔥 АВТОМАТ ИЗВЛЕЧЕНИЯ ДАТЫ
-            if data and data.get('date'):
-                item_date = str(data['date'])
-            elif folder_parts[0] == '_posts':
-                # Вырезаем первые 10 символов (ГГГГ-ММ-ДД) из оригинального имени файла
-                match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
-                item_date = match_date.group(1) if match_date else "2026-01-01"
-                log_buffer.append(f"[CON-WARNING] У поста извлечена дата из имени файла: {file} | Дата: {item_date}")
-            else:
-                # Для книг и страниц без даты берем системное время изменения файла на диске
-                import datetime
-                mtime = os.path.getmtime(full_path)
-                item_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                log_buffer.append(f"[CON-WARNING] У страницы взята системная дата изменения диска: {file} | Дата: {item_date}")
-
+            is_post_flag = "true" if folder_parts == '_posts' else "false"
             section_emoji = calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir, parse_yaml_front_matter)
 
             news_node = {

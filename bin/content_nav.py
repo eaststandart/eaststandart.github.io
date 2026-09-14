@@ -8,32 +8,31 @@
 @version 2.0.0-universal-law
 """
 
-def find_url_in_navigation(nav_data, project_slug, file_name_clean, folder_parts, data):
-    """Вычисляет идеальный интернет-адрес по общему сквозному правилу приоритетов."""
+def find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean, folder_parts, data):
+    """Возвращает кортеж (url, date) напрямую из глобальной карты навигации."""
     
-    # 🔥 ШАГ 1 (АБСОЛЮТНЫЙ ПРИОРИТЕТ): Если в самом файле руками прописан permalink — берем его!
+    # Шаг 1: Если в самом файле руками прописан жесткий пермалинк
     if data and data.get('permalink'):
-        return data['permalink']
+        return data['permalink'], str(data.get('date', ''))
 
-    # ШАГ 2 (ПОИСК ПО КАРТЕ): Если ручного пермалинка нет, ищем совпадение в navigation.yml
+    # Шаг 2: Поиск постов хроники в navigation.yml
     if folder_parts == '_posts':
-        post_date = str(data.get('date', ''))
-        # Проверяем все разделы карты навигации
         for section_name, projects in nav_data.get('sections', {}).items():
             for proj in projects:
                 if proj.get('slug') == project_slug:
-                    # Ищем пост во вкладках journal или media данного проекта
                     for key in ['journal_posts', 'media_posts']:
                         if key in proj:
                             for post in proj[key]:
-                                if post.get('date') == post_date and file_name_clean in post.get('url', ''):
-                                    return post.get('url')
+                                # Сопоставляем по очищенному имени файла в URL
+                                if file_name_clean in post.get('url', ''):
+                                    # Возвращаем URL и эталонную дату, которую зафиксировал navigation.py
+                                    return post.get('url'), post.get('date', '')
 
-    # Если это обычная карточка контента внутри разделов
+    # Шаг 3: Поиск обычных карточек контента внутри разделов
     else:
         for section_name, projects in nav_data.get('sections', {}).items():
             for proj in projects:
                 if proj.get('slug') == project_slug:
-                    return proj.get('url')
+                    return proj.get('url'), str(data.get('date', ''))
                     
-    return None
+    return None, None

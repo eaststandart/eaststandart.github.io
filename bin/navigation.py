@@ -3,9 +3,9 @@
 """
 @module navigation (Часть 1 из 2)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Собирает строго 3 базовых параметра для работы хлебных крошек по полным путям.
+@purpose Шаг 1: Инициализация корневых папок и разделов строго по вашей логике.
 @author TechLab
-@version 13.0.0-flat-pure-paths
+@version 14.0.0-pure-step1
 """
 
 import os
@@ -14,7 +14,7 @@ import sys
 import yaml
 
 def parse_yaml_front_matter(file_path):
-    """Извлекает блок Front Matter из markdown-файла контента."""
+    """Извлекает блок Front Matter из markdown-файла контента сайта."""
     content = ""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -39,7 +39,7 @@ def parse_yaml_front_matter(file_path):
 artifacts_log_buffer = []
 
 def log_artifact(text):
-    """Выводит лог в консоль сервера Actions и буферизирует его для артефактов."""
+    """Выводит строку лога в консоль Actions и буферизирует её для архива артефактов."""
     print(text)
     artifacts_log_buffer.append(text)
 
@@ -64,27 +64,41 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # Классический лаконичный набор исключений корневых папок диска
+    # Жесткий лаконичный набор исключений корневых папок диска контента
     EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github'}
     
     flat_map = {}
-    folders_with_index = set()
-    
-    # Сначала собираем имена всех физических папок в корне диска для фильтра коллизий
     root_dirs_present = set()
+    
+    # Собираем имена всех физических папок в корне диска контента для фильтра коллизий
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.'):
             root_dirs_present.add(name)
-    
-    # Шаг 1: Автоматическое определение Режима А по наличию index.md внутри папок
+
+    # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕМУ ПРАВИЛУ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
-        if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.'):
-            if name != '_posts':
-                if os.path.exists(os.path.join(full_path, 'index.md')) or os.path.exists(os.path.join(full_path, 'index.html')):
-                    folders_with_index.add(name)
+        if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
+            
+            clean_section_name = name.lstrip('_')
+            is_under_dir = name.startswith('_')
+            
+            node = {}
+            # Делаем красивое имя заголовка по умолчанию из названия папки
+            node['title'] = clean_section_name.capitalize()
+            node['url'] = f"/{clean_section_name}/"
+            
+            # Присваиваем свойства строго в зависимости от наличия подчёркивания _
+            if is_under_dir:
+                node['collection'] = clean_section_name
+            else:
+                node['section'] = clean_section_name
+                
+            # Ключом в карте на Шаге 1 становится чистое имя самой корневой папки
+            flat_map[clean_section_name] = [node]
+            log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Зафиксирован узел корневой папки '{name}' -> {node['url']}")
 
-    # Шаг 2: Плоский сбор файлов страниц контента и коллекций
+    # 🔥 ШАГ 2 И ШАГ 3: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -93,54 +107,58 @@ def build_navigation_tree():
                 for file in files:
                     if not (file.endswith('.md') or file.endswith('.html')): continue
                     
+                    # 🔥 ИГНОРИРУЕМ ИНДЕКСНЫЕ ФАЙЛЫ: их адреса и вывески разделов созданы на Шаге 1
+                    file_slug, _ = os.path.splitext(file)
+                    if file_slug == 'index': continue
+                    
                     file_path = os.path.join(root_walk, file)
                     data, front_text, body = parse_yaml_front_matter(file_path)
                     if data is None or data.get('published') is False: continue
 
-                    file_slug, _ = os.path.splitext(file)
-                    ready_permalink = data.get('permalink', '')
-                    if not ready_permalink: continue
+                    ready_permalink = data.get('permalink', '').strip()
+                    relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
 
-                    # Универсальный разбор первого слова структуры permalink
-                    permalink_clean = ready_permalink.strip('/')
-                    first_word = permalink_clean.split('/')[0] if permalink_clean else ''
-                    
-                    # Проверка коллизий корня диска по вашему правилу
-                    has_clean_dir = first_word in root_dirs_present
-                    has_under_dir = f"_{first_word}" in root_dirs_present
-                    
-                    # Записываем секцию в сам md-файл
+                    node = {}
+                    node['title'] = data.get('title', file_slug)
+
+                    # 1. Если у файла ЕСТЬ permalink (Шаг 2)
+                    if ready_permalink:
+                        node['url'] = ready_permalink
+                        
+                        # Вырезаем первое слово структуры пермалинка контента сайта
+                        permalink_clean = ready_permalink.strip('/')
+                        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                        
+                        # Проверка корня диска на дубли и коллизии папок по вашему правилу
+                        has_clean_dir = first_word in root_dirs_present
+                        has_under_dir = f"_{first_word}" in root_dirs_present
+                        
+                        if has_clean_dir and has_under_dir:
+                            # Коллизия: в корне есть обе папки -> свойства связи вообще НЕ пишем
+                            pass
+                        elif has_under_dir:
+                            node['relatedcollection'] = first_word
+                        elif has_clean_dir:
+                            node['relatedsection'] = first_word
+
+                    # 2. Если у файла НЕТ permalink (Шаг 3 - Усовершенствованный автомат по вашей логике)
+                    else:
+                        clean_section_name = name.lstrip('_')
+                        is_under_dir = name.startswith('_')
+                        
+                        node['url'] = f"/{clean_section_name}/{file_slug}/"
+                        if is_under_dir:
+                            node['relatedcollection'] = clean_section_name
+                        else:
+                            node['relatedsection'] = clean_section_name
+
+                    # Синхронизируем Front Matter самого md-файла на диске
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 
-                    # Сбор паспорта страницы контента заметок
-                    node = {}
-                    node['title'] = data.get('title', file_slug)
-                    node['url'] = ready_permalink
-                    
-                    # Расстановка свойств по правилам Режимов А/Б и коллекций
-                    if has_clean_dir and has_under_dir:
-                        # Коллизия: папки дублируются в корне диска -> ничего не пишем
-                        pass
-                    elif has_under_dir:
-                        if file_slug == 'index':
-                            node['collection'] = first_word
-                        else:
-                            node['relatedcollection'] = first_word
-                    elif has_clean_dir:
-                        if name in folders_with_index:
-                            if file_slug == 'index':
-                                node['section'] = first_word
-                            else:
-                                node['relatedsection'] = first_word
-                        else:
-                            # Режим Б (нет индекса, например faire) -> сами формируют раздел!
-                            node['section'] = first_word
-
-                    relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
                     flat_map[relative_file_key] = [node]
 
-    # Шаг 3: Тотальный обход папки связанных постов хроники _posts/
+    # 🔥 ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ СТРОГО ПО ВАШИМ ПРАВИЛАМ
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -153,59 +171,76 @@ def build_navigation_tree():
 
                 file_name_clean, _ = os.path.splitext(file)
                 file_slug_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
-
-                ready_permalink = data.get('permalink', '')
-                if not ready_permalink: continue
-
-                # Разбор первого слова структуры permalink поста хроники
-                permalink_clean = ready_permalink.strip('/')
-                first_word = permalink_clean.split('/')[0] if permalink_clean else ''
-                
-                has_clean_dir = first_word in root_dirs_present
-                has_under_dir = f"_{first_word}" in root_dirs_present
-
-                # 🔥 ИСПРАВЛЕНО: Поиск физического файла-родителя и запись полного пути в relatedpages
-                calculated_parent_path = ""
-                parent_file_name = f"{file_slug_no_date}.md"
-                
-                for key_path in flat_map.keys():
-                    if key_path.endswith(f"/{parent_file_name}") or key_path == parent_file_name:
-                        calculated_parent_path = key_path
-                        break
+                ready_permalink = data.get('permalink', '').strip()
+                relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
 
                 # Синхронизация Front Matter самого поста хроники
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
+                        # 🔥 ИСПРАВЛЕНО НАВСЕГДА: Строгий индекс [0] исключает массивы заметок
                         post_page_type = str(key).split('-')[0]
                         break
 
-                data['categories'] = [post_page_type, file_slug_no_date]
-                data['post-page'] = post_page_type
-                write_yaml_front_matter(file_path, data, body)
+                if data and data.get('date'):
+                    post_date = str(data['date'])
+                else:
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Сбор паспорта связанного или автономного поста
+                # Вычисляем полный физический путь к родителю по очищенному имени файла
+                calculated_parent_path = ""
+                parent_file_name = f"{file_slug_no_date}.md"
+                for key_path in flat_map.keys():
+                    if key_path.endswith(f"/{parent_file_name}") or key_path == parent_file_name:
+                        calculated_parent_path = key_path
+                        break
+
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
-                node['url'] = ready_permalink
-                
-                # Записываем relatedpages только если физический родитель реально найден на диске
-                if calculated_parent_path:
-                    node['relatedpages'] = calculated_parent_path
-                
-                # Расстановка связей с корневыми разделами
-                if has_clean_dir and has_under_dir:
-                    pass
-                elif has_under_dir:
-                    node['relatedcollection'] = first_word
-                elif has_clean_dir:
-                    node['relatedsection'] = first_word
 
-                relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+                # А. Пост хроники С пермалинком
+                if ready_permalink:
+                    node['url'] = ready_permalink
+                    permalink_clean = ready_permalink.strip('/')
+                    first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                    
+                    has_clean_dir = first_word in root_dirs_present
+                    has_under_dir = f"_{first_word}" in root_dirs_present
+                    
+                    if calculated_parent_path:
+                        node['relatedpages'] = calculated_parent_path
+                    if has_clean_dir and has_under_dir:
+                        pass
+                    elif has_under_dir:
+                        node['relatedcollection'] = first_word
+                    elif has_clean_dir:
+                        node['relatedsection'] = first_word
+
+                # Б. Пост хроники БЕЗ пермалинка (Вычисляем канонически по родителю)
+                else:
+                    node['url'] = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+                    if calculated_parent_path:
+                        node['relatedpages'] = calculated_parent_path
+                        # Копируем свойства связи у найденного родителя
+                        parent_node = flat_map[calculated_parent_path][0]
+                        if 'relatedsection' in parent_node:
+                            node['relatedsection'] = parent_node['relatedsection']
+                        if 'relatedcollection' in parent_node:
+                            node['relatedcollection'] = parent_node['relatedcollection']
+
+                # Записываем вычисленные свойства обратно в исходный файл поста хроники
+                data['categories'] = [post_page_type, file_slug_no_date]
+                data['post-page'] = post_page_type
+                if calculated_parent_path:
+                    parent_node = flat_map[calculated_parent_path][0]
+                    data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
+                write_yaml_front_matter(file_path, data, body)
+
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Обработан файл: {relative_file_key} | parent: {calculated_parent_path}")
 
-    # Запись чистой плоской карты контента заметок без значков *id
+    # ФИНИШНАЯ НАЧИСТАЯ ЗАПИСЬ ПЛОСКОЙ КАРТЫ НА ДИСК БЕЗ ЗНАЧКОВ *ID
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
@@ -219,7 +254,7 @@ def build_navigation_tree():
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(artifacts_log_buffer))
-        print("[NAV-SUCCESS] Отчёт успешно выгружен в артефакты.")
+        print("[NAV-SUCCESS] Технический отчёт успешно сохранен.")
     except:
         pass
 

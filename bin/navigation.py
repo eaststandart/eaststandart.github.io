@@ -144,7 +144,7 @@ def build_navigation_tree():
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
-                        post_page_type = str(key).split('-')
+                        post_page_type = str(key).split('-')[0]
                         break
 
                 if data and data.get('date'):

@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module navigation (Часть 1 из 3)
-@about Универсальный статический препроцессор метаданных и карт.
-@purpose Инициализирует буферы логов и вшивает автомат эмодзи Tracy.
+@about Универсальный плоский препроцессор однотипной карты метаданных контента.
+@purpose Подготавливает базовый парсер и изолированные буферы выгрузки серверных логов.
 @author TechLab
-@version 10.1.0-flat-registry-part1
+@version 11.1.0-flat-pure-part1
 """
 
 import os
@@ -13,17 +13,8 @@ import re
 import sys
 import yaml
 
-def translit_title(text):
-    if not text: return ""
-    text = text.lower().strip()
-    text = re.sub(r'[^a-z0-9а-яё]', '', text)
-    return text
-
-def clean_tag(text):
-    if not text: return ""
-    return re.sub(r'\s+', '', str(text).lower().strip())
-
 def parse_yaml_front_matter(file_path):
+    """Извлекает блок Front Matter из markdown-файла контента сайта."""
     content = ""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -48,70 +39,18 @@ def parse_yaml_front_matter(file_path):
 artifacts_log_buffer = []
 
 def log_artifact(text):
+    """Выводит строку лога в консоль Actions и буферизирует её для архива артефактов."""
     print(text)
     artifacts_log_buffer.append(text)
 
 def write_yaml_front_matter(file_path, data, body_content):
+    """Записывает обновленные свойства обратно в md-файл на диске."""
     try:
         front_text = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(f"---\n{front_text}---\n{body_content}")
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
-
-def load_emoji_sources(root_dir):
-    pages_dir = os.path.join(root_dir, '_pages')
-    page_types_emoji = {}
-    section_index_emoji = {}
-
-    if os.path.exists(pages_dir):
-        for file in os.listdir(pages_dir):
-            if file.endswith('.md'):
-                p_data, _, _ = parse_yaml_front_matter(os.path.join(pages_dir, file))
-                if p_data and p_data.get('emoji'):
-                    p_slug, _ = os.path.splitext(file)
-                    page_types_emoji[p_slug] = p_data['emoji']
-
-    EXCLUDED = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
-    for name in os.listdir(root_dir):
-        if os.path.isdir(os.path.join(root_dir, name)) and name not in EXCLUDED and not name.startswith('.'):
-            idx_path = os.path.join(root_dir, name, 'index.md')
-            if os.path.exists(idx_path):
-                i_data, _, _ = parse_yaml_front_matter(idx_path)
-                if i_data and i_data.get('emoji'):
-                    section_index_emoji[name.lstrip('_')] = i_data['emoji']
-
-    return page_types_emoji, section_index_emoji
-
-def calculate_item_emoji(data, folder_parts, page_types_emoji, root_dir):
-    # Извлекаем строго текстовую строку из массива папок, полностью убирая ошибку 'unhashable list'
-    if isinstance(folder_parts, list) and len(folder_parts) > 0:
-        first_folder = str(folder_parts[0])
-    else:
-        first_folder = str(folder_parts)
-        
-    clean_folder_name = first_folder.lstrip('_')
-
-    if first_folder == '_posts':
-        post_type = data.get('post-page')
-        return page_types_emoji.get(post_type, "")
-
-    section_dir = os.path.join(root_dir, first_folder)
-    has_index = os.path.exists(os.path.join(section_dir, 'index.md')) or os.path.exists(os.path.join(section_dir, 'index.html'))
-
-    if has_index:
-        idx_path = os.path.join(section_dir, 'index.md')
-        if not os.path.exists(idx_path):
-            idx_path = os.path.join(section_dir, 'index.html')
-        try:
-            i_data, _, _ = parse_yaml_front_matter(idx_path)
-            if i_data and i_data.get('emoji'):
-                return i_data['emoji']
-        except:
-            pass
-        return ""
-    else:
-        return page_types_emoji.get(clean_folder_name, "")
 
 def build_navigation_tree():
     global artifacts_log_buffer
@@ -128,218 +67,186 @@ def build_navigation_tree():
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     RESOURCE_FOLDERS = {'img', 'images', 'files', 'res', 'resources', 'video', 'photo'}
     
-    supported_sections = []
-    valid_slugs = set()
-    slug_to_section_map = {}
-    sections_with_index = set()
-    parent_properties_map = {}
+    # Результирующая плоская однотипная база метаданных контента заметок
+    flat_map = {}
     
-    page_types_emoji, section_index_emoji = load_emoji_sources(root_dir)
-
-    # 1. Анализ корневой структуры папок
+    # Буфер для выявления Режима А (наличие физического index.md внутри папки)
+    folders_with_index = set()
+    
+    # Шаг 1: Автоматическое определение разделов, коллекций и выявление Режима А
     for name in os.listdir(root_dir):
-        if os.path.isdir(os.path.join(root_dir, name)):
-            if not name.startswith('.') and name != '_posts' and name not in EXCLUDED_FOLDERS:
-                clean_section_name = name.lstrip('_')
-                supported_sections.append(clean_section_name)
-                
-                section_dir = os.path.join(root_dir, name)
-                if os.path.exists(os.path.join(section_dir, 'index.md')) or os.path.exists(os.path.join(section_dir, 'index.html')):
-                    sections_with_index.add(clean_section_name)
-                
-                for entry in os.scandir(section_dir):
-                    if entry.is_dir() and not entry.name.startswith('.') and entry.name not in RESOURCE_FOLDERS:
-                        valid_slugs.add(entry.name)
-                        slug_to_section_map[entry.name] = clean_section_name
+        full_path = os.path.join(root_dir, name)
+        if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.'):
+            if name != '_posts':
+                if os.path.exists(os.path.join(full_path, 'index.md')) or os.path.exists(os.path.join(full_path, 'index.html')):
+                    folders_with_index.add(name)
 
-    nav_tree = {
-        'sections': {section: [] for section in supported_sections}
-    }
-    chronicle_registry = []
-    seen_urls = set()
-
-    # 2. Обход физических директорий контента
+    # Шаг 2: Обход всех физических markdown-файлов репозитория контента без исключений
     for name in os.listdir(root_dir):
-        if os.path.isdir(os.path.join(root_dir, name)):
-            if not name.startswith('.') and name != '_posts' and name not in EXCLUDED_FOLDERS:
-                clean_section_name = name.lstrip('_')
-                section_dir = os.path.join(root_dir, name)
-                
-                for root_walk, _, files in os.walk(section_dir):
-                    for file in files:
-                        if not file.endswith('.md'): continue
-                        if os.path.basename(root_walk) in RESOURCE_FOLDERS: continue
-                        
-                        full_path = os.path.join(root_walk, file)
-                        data, front_text, body = parse_yaml_front_matter(full_path)
-                        if data is None or data.get('published') is False: continue
+        full_path = os.path.join(root_dir, name)
+        if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
+            
+            clean_section_name = name.lstrip('_') # Для _people -> people, для tools -> tools
+            is_jekyll_collection = name.startswith('_') # Проверка: это встроенная коллекция?
+            
+            for root_walk, _, files in os.walk(full_path):
+                for file in files:
+                    if not file.endswith('.md'): continue
+                    if os.path.basename(root_walk) in RESOURCE_FOLDERS: continue
+                    
+                    file_path = os.path.join(root_walk, file)
+                    data, front_text, body = parse_yaml_front_matter(file_path)
+                    if data is None or data.get('published') is False: continue
 
-                        relative_path = os.path.relpath(root_walk, section_dir)
-                        if relative_path == '.':
-                            project_slug, _ = os.path.splitext(file)
+                    # Вычисляем слаг (имя файла без расширения)
+                    file_slug, _ = os.path.splitext(file)
+                    
+                    # 🔥 УНИВЕРСАЛЬНЫЙ РАСЧЁТ URL РЕЖИМОВ А И Б (БЕЗ КОНСТАНТ И ПРИВЯЗОК)
+                    ready_permalink = data.get('permalink')
+                    if ready_permalink:
+                        final_url = ready_permalink
+                    elif name in folders_with_index:
+                        # Режим А (index.md есть в папке) -> файлы с расширением .html
+                        if file_slug == 'index':
+                            final_url = f"/{clean_section_name}/"
                         else:
-                            project_slug = relative_path.replace(os.sep, '-')
-
-                        ready_permalink = data.get('permalink')
-                        if ready_permalink:
-                            final_url = ready_permalink
-                        elif clean_section_name in sections_with_index:
-                            if project_slug == 'index':
-                                final_url = f"/{clean_section_name}/"
-                            else:
-                                final_url = f"/{clean_section_name}/{project_slug}.html"
+                            final_url = f"/{clean_section_name}/{file_slug}.html"
+                    else:
+                        # Режим Б и Коллекции (индекса нет) -> усовершенствованное плоское правило
+                        if file_slug == 'index':
+                            final_url = f"/{clean_section_name}/"
                         else:
-                            base_parent_url = f"/{clean_section_name}/"
-                            if project_slug == 'index':
-                                final_url = base_parent_url
-                            else:
-                                final_url = f"{base_parent_url}{project_slug}/"
+                            final_url = f"/{clean_section_name}/{file_slug}/"
 
-                        data['section'] = clean_section_name
-                        write_yaml_front_matter(full_path, data, body)
+                    # Записываем очищенное имя секции в Front Matter самого md-файла
+                    data['section'] = clean_section_name
+                    write_yaml_front_matter(file_path, data, body)
 
-                        if project_slug != 'index':
-                            parent_properties_map[project_slug] = {
-                                'direction': data.get('direction', ''),
-                                'level': data.get('level', ''),
-                                'section': clean_section_name
-                            }
-
-                        # Чистая карточка витрины БЕЗ вложенных постов хроники
-                        project_node = {
-                            'title': data.get('title', project_slug),
-                            'slug': project_slug,
-                            'url': final_url,
-                            'direction': data.get('direction', ''),
-                            'level': data.get('level', ''),
-                            'date': str(data.get('date', '')) if data.get('date') else ''
-                        }
+                    # 🔥 СБОР ПАСПОРТА СТРОГО В ВАШЕМ ПОРЯДКЕ СВОЙСТВ (БЕЗ ССЫЛОК И МУСОРА)
+                    node = {}
+                    node['title'] = data.get('title', file_slug)
+                    node['url'] = final_url
+                    if data.get('navtitle'):
+                        node['navtitle'] = data['navtitle']
                         
-                        if data.get('pinnednews') is True:
-                            project_node['pinnednews'] = True
+                    # 🔥 РАЗДЕЛЕНИЕ НА СЕКЦИИ И КОЛЛЕКЦИИ НА БУДУЩЕЕ ПО ВАШЕЙ СТРАТЕГИИ
+                    if is_jekyll_collection:
+                        node['relatedcollection'] = clean_section_name
+                    else:
+                        node['relatedsection'] = clean_section_name
+                        
+                    node['slug'] = file_slug
 
-                        if clean_section_name not in nav_tree['sections']:
-                            nav_tree['sections'][clean_section_name] = []
-                        nav_tree['sections'][clean_section_name].append(project_node)
+                    # Служебные свойства пишем строго при наличии в самом md-файле
+                    if data.get('direction'):
+                        node['direction'] = data['direction']
+                    if data.get('level'):
+                        node['level'] = str(data['level']).strip()
 
-                        # Набиваем плоский реестр chronicle_registry самостоятельными страницами
-                        item_date = str(data.get('date', '')).strip()
-                        if item_date and final_url not in seen_urls and project_slug != 'index':
-                            seen_urls.add(final_url)
-                            item_emoji = calculate_item_emoji({}, [clean_section_name], page_types_emoji, root_dir)
-                            
-                            # 🔥 ПАСПОРТ СТРОГО В ВАШЕМ ПОРЯДКЕ СВОЙСТВ
-                            node = {}
-                            node['title'] = data.get('title', project_slug)
-                            node['url'] = final_url
-                            if data.get('navtitle'):
-                                node['navtitle'] = data['navtitle']
-                            node['section'] = clean_section_name
-                            node['parentslug'] = ""
-                            node['posttype'] = "page"
-                            node['pinnednews'] = data.get('pinnednews', False)
-                            node['emoji'] = item_emoji
-                            node['date'] = item_date
-                            node['direction'] = data.get('direction', '')
-                            node['level'] = str(data.get('level', '')) if data.get('level') else ''
-                            chronicle_registry.append(node)
+                    # Ключом плоской карты становится точное имя файла на диске репозитория
+                    flat_map[file] = node
 
-    # 3. Обход папки связанных постов хроники проекта _posts/
+    # Шаг 3: Тотальный обход папки _posts по вашему правилу №4
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
             for file in files:
                 if not file.endswith('.md'): continue
                 
-                full_path = os.path.join(root, file)
-                data, front_text, body = parse_yaml_front_matter(full_path)
+                file_path = os.path.join(root, file)
+                data, front_text, body = parse_yaml_front_matter(file_path)
                 if data is None or data.get('published') is False: continue
 
                 file_name_clean, _ = os.path.splitext(file)
-                file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
+                # Очищаем имя файла от даты, получая чистый слаг проекта
+                file_slug_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
-                post_slug = None
-                post_page_type = None
-
+                # Выделяем тип поста (journal или media)
+                post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
-                        post_slug = file_name_clean_no_date if file_name_clean_no_date in valid_slugs else None
-                        # 🔥 ИСПРАВЛЕНО: Берем строго первый элемент как строку, убирая list dict key error
                         post_page_type = str(key).split('-')[0]
                         break
 
-                if not post_slug and file_name_clean_no_date in valid_slugs:
-                    post_slug = file_name_clean_no_date
-                    post_page_type = data.get('post-page', 'journal')
-
+                # Автомат дат для постов хроники
                 if data and data.get('date'):
                     post_date = str(data['date'])
                 else:
                     match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                     post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                short_url = f"/{post_page_type}/{post_slug}/{post_date.replace('-', '/')}/{file_name_clean_no_date}.html"
+                # Вычисляем каноничный URL поста по стандарту Tracy Hybrid
+                short_url = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean_no_date}.html"
 
-                if post_slug and short_url not in seen_urls:
-                    seen_urls.add(short_url)
-                    
-                    parent_meta = parent_properties_map.get(post_slug, {'direction': '', 'level': '', 'section': 'faire'})
-                    item_emoji = calculate_item_emoji({'post-page': post_page_type}, ['_posts'], page_types_emoji, root_dir)
+                # На этапе сборки ищем родительскую карточку, чтобы вычислить parent-раздел
+                calculated_parent_section = ""
+                parent_file_key = f"{file_slug_no_date}.md"
+                if parent_file_key in flat_map:
+                    # Извлекаем родной раздел или коллекцию родительской страницы контента
+                    parent_node = flat_map[parent_file_key]
+                    calculated_parent_section = parent_node.get('relatedsection', parent_node.get('relatedcollection', ''))
 
-                    data['categories'] = [post_page_type, post_slug]
-                    data['post-page'] = post_page_type
-                    data['section'] = parent_meta['section']
-                    write_yaml_front_matter(full_path, data, body)
+                # Записываем вычисленные свойства обратно во Front Matter md-файла поста
+                data['categories'] = [post_page_type, file_slug_no_date]
+                data['post-page'] = post_page_type
+                if calculated_parent_section:
+                    data['section'] = calculated_parent_section
+                write_yaml_front_matter(file_path, data, body)
 
-                    # 🔥 ПАСПОРТ СВЯЗАННОГО ПОСТА СТРОГО В ВАШЕМ ПОРЯДКЕ СВОЙСТВ
-                    node = {}
-                    node['title'] = data.get('title', file_name_clean_no_date)
-                    node['url'] = short_url
-                    if data.get('navtitle'):
-                        node['navtitle'] = data['navtitle']
-                    node['section'] = parent_meta['section']
-                    node['parentslug'] = post_slug
-                    node['posttype'] = post_page_type
-                    node['pinnednews'] = data.get('pinnednews', False)
-                    node['emoji'] = item_emoji
-                    node['date'] = post_date
-                    node['direction'] = parent_meta['direction']
-                    node['level'] = str(parent_meta['level']) if parent_meta['level'] else ''
-                    chronicle_registry.append(node)
+                # 🔥 СБОР ПАСПОРТА ПОСТА СТРОГО В ВАШЕМ ПОРЯДКЕ СВОЙСТВ (БЕЗ ССЫЛОК И МУСОРА)
+                node = {}
+                node['title'] = data.get('title', file_slug_no_date)
+                node['url'] = short_url
+                if data.get('navtitle'):
+                    node['navtitle'] = data['navtitle']
+                
+                # 🔥 Нативно прописываем принадлежность к странице по вашему правилу
+                node['relatedpages'] = file_slug_no_date
+                node['slug'] = file_slug_no_date
+                node['posttype'] = post_page_type
 
-    chronicle_registry.sort(key=lambda x: x['date'], reverse=True)
-    nav_tree['chronicle_registry'] = chronicle_registry
+                # Служебные свойства пишем строго при наличии в самом файле поста
+                if data.get('pinnednews') is True:
+                    node['pinnednews'] = True
+                if data.get('direction'):
+                    node['direction'] = data['direction']
+                if data.get('level'):
+                    node['level'] = str(data['level']).strip()
 
-    for section_name in list(nav_tree['sections'].keys()):
-        nav_tree['sections'][section_name] = sorted(
-            nav_tree['sections'][section_name], 
-            key=lambda x: x['title'].lower()
-        )
+                # Ключом в карте становится точное имя файла поста на диске
+                flat_map[file] = node
+                
+                log_artifact(f"[NAV-DEBUG] Добавлен пост: {file} | relatedpages: {file_slug_no_date}")
 
-    nav_tree['post_types'] = ['journal', 'media']
-
-    # 🔥 ЧИСТАЯ ПЛОСКАЯ ВЫГРУЗКА БЕЗ ЗНАЧКОВ *ID И &ID ЧЕРЕЗ SAFEDUMPER
+    # 🔥 ЧИСТАЯ ВЫГРУЗКА БЕЗ ЗНАЧКОВ *ID И &ID ЧЕРЕЗ SAFEDUMPER
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
         with open(output_file, 'w', encoding='utf-8') as f:
-            yaml.dump(nav_tree, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Плоская база метаданных 'navigation.yml' успешно обновлена.")
+            yaml.dump(flat_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        log_artifact("[NAV-SUCCESS] Однотипная плоская карта метаданных заметок контента успешно сохранена.")
     except Exception as e:
-        print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
+        print(f"[NAV-ERROR] Ошибка записи итоговой карты навигации: {e}")
 
-    for p_slug, p_meta in parent_properties_map.items():
-        for p_type in ['journal', 'media']:
-            dir_path = os.path.join(root_dir, p_type, p_slug)
-            os.makedirs(dir_path, exist_ok=True)
-            with open(os.path.join(dir_path, 'index.md'), 'w', encoding='utf-8') as pf:
-                pf.write(f"---\nlayout: page\ntitle: \"Публикации проекта {p_slug}\"\nslug: {p_slug}\nsection: {p_meta['section']}\npost-page: {p_type}\nmathjax: true\n---\n\n{{% include posts-page-open.liquid type='{p_type}' %}}\n")
+    # Создание физических папок-вкладок для Jekyll на сервере из собранной базы
+    for file_key, node in flat_map.items():
+        if node.get('posttype') is None and file_key != 'index.md':
+            slug = node['slug']
+            sect = node.get('relatedsection', node.get('relatedcollection', 'faire'))
+            for p_type in ['journal', 'media']:
+                dir_path = os.path.join(root_dir, p_type, slug)
+                os.makedirs(dir_path, exist_ok=True)
+                with open(os.path.join(dir_path, 'index.md'), 'w', encoding='utf-8') as pf:
+                    pf.write(f"---\nlayout: page\ntitle: \"Публикации проекта {slug}\"\nslug: {slug}\nsection: {sect}\npost-page: {p_type}\nmathjax: true\n---\n\n{{% include posts-page-open.liquid type='{p_type}' %}}\n")
 
+    # Выгрузка отчёта буфера логов в артефакты сервера Actions
     try:
-        with open(os.path.join(debug_dir, 'navigation_debug.log'), 'w', encoding='utf-8') as lf:
+        log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
+        with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(artifacts_log_buffer))
-    except:
-        pass
+        print("[NAV-SUCCESS] Технический отчёт успешно выгружен в артефакты _processed_files.")
+    except Exception as e:
+        print(f"[NAV-ERROR] Не удалось сохранить отладочный лог: {e}")
 
 if __name__ == '__main__':
     build_navigation_tree()

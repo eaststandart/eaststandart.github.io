@@ -10,6 +10,8 @@
 import os
 import re
 import yaml
+from navigation import build_navigation_tree
+from contentnews import build_news_feed
 
 def translit_title(text):
     if not text: return ""
@@ -98,7 +100,21 @@ def process_all_markdown_files():
             lf.write("\n".join(log_buffer))
         print("[CON-SUCCESS] Лог контента успешно зафиксирован в артефактах.")
     except Exception as e:
-        print(f"[CON-ERROR] Ошибка записи лога: {e}")
+        print(f"[CON-ERROR] Не удалось сохранить файл лога: {e}")
+
+    # 🔥 СКВОЗНОЙ КАСКАДНЫЙ ЗАПУСК КОНВЕЙЕРА: Карта сайта -> Лента новостей
+    try:
+        print("[CON-CONVEYER] Запуск автоматического дерева навигации...")
+        build_navigation_tree()
+    except Exception as e:
+        print(f"[CON-CONVEYER-ERROR] Ошибка вызова navigation.py: {e}")
+
+    try:
+        print("[CON-CONVEYER] Запуск изолированного сборщика ленты новостей...")
+        build_news_feed()
+    except Exception as e:
+        print(f"[CON-CONVEYER-ERROR] Ошибка вызова contentnews.py: {e}")
+
 
 if __name__ == '__main__':
     process_all_markdown_files()

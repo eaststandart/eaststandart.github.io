@@ -4,7 +4,7 @@
 @module contentnews
 @about Изолированный целевой сборщик ленты "Что нового?" из Единого Источника Правды.
 @purpose Собирает новости строго из navigation.yml по прямым ключам массивов.
-@version 2.0.0-pure-arrays-verified
+@version 2.1.0-final-stable
 """
 
 import os
@@ -21,12 +21,16 @@ def build_news_feed():
         sys.exit(1)
 
     with open(nav_file_path, 'r', encoding='utf-8') as nf:
-        nav_data = yaml.safe_load(nf) or {}
+        try:
+            nav_data = yaml.safe_load(nf) or {}
+        except Exception as e:
+            print(f"[NEWS-ERROR] Сбой YAML при чтении карты сайта: {e}")
+            sys.exit(1)
 
     flat_news = []
     sections = nav_data.get('sections', {})
 
-    # 🔥 ПРЯМОЙ СТРОГИЙ ОБХОД КАРТЫ НАВИГАЦИИ БЕЗ ВЛОЖЕННЫХ ЦИКЛОВ КЛЮЧЕЙ
+    # ПРЯМОЙ СТРОГИЙ ОБХОД КАРТЫ НАВИГАЦИИ БЕЗ ВЛОЖЕННЫХ ЦИКЛОВ КЛЮЧЕЙ
     for section_name, items_list in sections.items():
         if not isinstance(items_list, list): continue
         for item in items_list:
@@ -84,7 +88,7 @@ def build_news_feed():
     
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
-            yaml.dump({'feed': final_feed if 'final_feed' in locals() else flat_news}, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            yaml.dump({'feed': flat_news}, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
         print(f"[NEWS-SUCCESS] Лента успешно собрана! Обработано событий: {len(flat_news)}")
     except Exception as e:
         print(f"[NEWS-ERROR] Ошибка записи news_feed.yml: {e}")
@@ -96,8 +100,8 @@ def build_news_feed():
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, 'contentnews_debug.log'), 'w', encoding='utf-8') as lf:
             lf.write(f"[NEWS-SUCCESS] Сборка завершена. Всего элементов в ленте: {len(flat_news)}")
-    except:
-        pass
+    except Exception as e:
+        print(f"[NEWS-ERROR] Не удалось сохранить лог новостей: {e}")
 
 if __name__ == '__main__':
     build_news_feed()

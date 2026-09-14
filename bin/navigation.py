@@ -64,7 +64,6 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # 🔥 ИСПРАВЛЕНО: Ваш лаконичный набор исключений корневых папок
     EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github'}
     
     flat_map = {}
@@ -88,7 +87,6 @@ def build_navigation_tree():
             
             for root_walk, _, files in os.walk(full_path):
                 for file in files:
-                    # 🔥 ИСПРАВЛЕНО: Универсальный фильтр строго по md и html файлам заметок
                     if not (file.endswith('.md') or file.endswith('.html')): continue
                     
                     file_path = os.path.join(root_walk, file)
@@ -125,7 +123,9 @@ def build_navigation_tree():
                     else:
                         node['relatedsection'] = clean_section_name
 
-                    flat_map[file] = [node]
+                    # 🔥 ИСПРАВЛЕНО: Ключом становится относительный путь файла контента от корня диска
+                    relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+                    flat_map[relative_file_key] = [node]
 
     # Шаг 3: Тотальный обход папки связанных постов хроники _posts/
     posts_dir = os.path.join(root_dir, '_posts')
@@ -144,7 +144,7 @@ def build_navigation_tree():
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
-                        post_page_type = str(key).split('-')[0]
+                        post_page_type = str(key).split('-')
                         break
 
                 if data and data.get('date'):
@@ -157,11 +157,14 @@ def build_navigation_tree():
 
                 calculated_parent_section = "faire"
                 parent_file_key = f"{file_slug_no_date}.md"
-                if parent_file_key in flat_map:
-                    parent_node_list = flat_map[parent_file_key]
-                    if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        p_node = parent_node_list[0]
-                        calculated_parent_section = p_node.get('relatedsection', p_node.get('relatedcollection', 'faire'))
+                
+                # Поиск родительской секции по базовой структуре flat_map
+                for key_path, nodes_list in flat_map.items():
+                    if key_path.endswith(f"/{parent_file_key}") or key_path == parent_file_key:
+                        if isinstance(nodes_list, list) and len(nodes_list) > 0:
+                            p_node = nodes_list
+                            calculated_parent_section = p_node.get('relatedsection', p_node.get('relatedcollection', 'faire'))
+                            break
 
                 data['categories'] = [post_page_type, file_slug_no_date]
                 data['post-page'] = post_page_type
@@ -174,8 +177,10 @@ def build_navigation_tree():
                 node['url'] = short_url
                 node['relatedpages'] = file_slug_no_date
 
-                flat_map[file] = [node]
-                log_artifact(f"[NAV-DEBUG] Обработан файл: {file} | relatedpages: {file_slug_no_date}")
+                # 🔥 Ключом становится относительный путь файла поста от корня диска
+                relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+                flat_map[relative_file_key] = [node]
+                log_artifact(f"[NAV-DEBUG] Обработан файл: {relative_file_key} | relatedpages: {file_slug_no_date}")
 
     # Финишная запись чистой плоской карты на диск
     output_file = os.path.join(data_dir, 'navigation.yml')
@@ -187,7 +192,7 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
-    # Выгрузка отчёта буфера логов в артефакты
+    # Выгрузка технического отчёта строго в артефакты
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

@@ -85,10 +85,8 @@ def build_navigation_tree():
             clean_section_name = name.lstrip('_')
             is_jekyll_collection = name.startswith('_')
             
-            for root_walk, _, files in os.scandir(full_path) if hasattr(os, 'scandir') else os.walk(full_path):
-                # Поддержка обхода для os.walk
-                if not isinstance(files, list):
-                    continue
+            # 🔥 ВОССТАНОВЛЕНО: Стабильный, классический os.walk без ломающих scandir-экспериментов
+            for root_walk, _, files in os.walk(full_path):
                 for file in files:
                     if not (file.endswith('.md') or file.endswith('.html')): continue
                     
@@ -121,7 +119,7 @@ def build_navigation_tree():
                     node['title'] = data.get('title', file_slug)
                     node['url'] = final_url
                     
-                    # 🔥 НОВАЯ СИНТАКСИЧЕСКАЯ ЛОГИКА РАЗДЕЛОВ И КОЛЛЕКЦИЙ ПО ВАШИМ ПРАВИЛАМ
+                    # Жесткая синтаксическая логика разделов и коллекций по вашим правилам
                     if is_jekyll_collection:
                         node['collection'] = clean_section_name
                     elif name in folders_with_index:
@@ -150,7 +148,7 @@ def build_navigation_tree():
                 file_name_clean, _ = os.path.splitext(file)
                 file_slug_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
-                # 🔥 ИСПРАВЛЕНО НАВСЕГДА: Извлекаем строго первое строковое слово из сплита суффикса
+                # 🔥 ИСПРАВЛЕНО: Извлекаем строго первое строковое слово из сплита суффикса
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
@@ -210,3 +208,4 @@ def build_navigation_tree():
 
 if __name__ == '__main__':
     build_navigation_tree()
+

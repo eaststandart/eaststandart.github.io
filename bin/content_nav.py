@@ -16,7 +16,9 @@ def find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean, fol
         return data['permalink'], str(data.get('date', ''))
 
     # Шаг 2: Поиск постов хроники в navigation.yml
-    if folder_parts == '_posts':
+    first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
+    
+    if first_folder == '_posts':
         for section_name, projects in nav_data.get('sections', {}).items():
             for proj in projects:
                 if proj.get('slug') == project_slug:

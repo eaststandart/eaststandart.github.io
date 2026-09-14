@@ -394,10 +394,13 @@ def build_navigation_tree():
 
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
-        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ВОССТАНОВЛЕНО)
+        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ИСПРАВЛЕНО: БЕЗ ЗНАЧКОВ *ID)
+        # Отключаем оптимизацию ссылок, чтобы писать чистый плоский текст
+        yaml.SafeDumper.ignore_aliases = lambda self, data: True
+        
         with open(output_file, 'w', encoding='utf-8') as f:
-            yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена по канонам Tracy.")
+            yaml.dump(nav_tree, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена без системных указателей.")
 
         # 2. ГЕНЕРАЦИЯ ФИЗИЧЕСКИХ ПАПОК ВКЛАДОК НА СЕРВЕРЕ
         for section_name, projects in nav_tree['sections'].items():

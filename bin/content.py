@@ -81,17 +81,18 @@ def build_pinned_news_list():
             file_name_clean, _ = os.path.splitext(file)
             file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
             
-            # 🔥 ИСПРАВЛЕНО: Извлекаем чистую строку имени папки из списка путей
             first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
             
-            if first_folder == '_posts':
+            is_posts_dir = rel_path.startswith('_posts' + os.path.join('_', '_')[1]) or '_posts' in folder_parts
+            
+            if is_posts_dir:
                 project_slug = file_name_clean_no_date
                 current_folder_type = '_posts'
             else:
                 project_slug = file_name_clean
-                current_folder_type = first_folder
+                current_folder_type = folder_parts[0] if folder_parts else ""
 
-            # 🔥 ЧИТАЕМ ДАННЫЕ СТРОГО ИЗ ЕДИНОГО ИСТОЧНИКА ПРАВДЫ (КАРТЫ)
+            # 🔥 ЧИТАЕМ ДАННЫЕ СТРОГО ИЗ ЕДИНОГО ИСТОЧНИКА КАРТЫ
             item_url, item_date = find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean_no_date, current_folder_type, data)
 
             # Резервные правила, если файла по какой-то причине не оказалось в карте навигации

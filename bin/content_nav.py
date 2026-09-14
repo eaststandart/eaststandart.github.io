@@ -3,9 +3,9 @@
 """
 @module content_nav
 @about Подмодуль контента №1: Универсальный навигационный сопоставитель.
-@purpose Забирает адреса строго по сквозному закону приоритетов: permalink -> карта сайта -> .html
+@purpose Забирает адреса и эталонные даты строго из Единого Источника Правды — карты navigation.yml.
 @author TechLab
-@version 2.0.0-universal-law
+@version 3.1.0-pure-strings
 """
 
 def find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean, folder_parts, data):
@@ -15,10 +15,14 @@ def find_url_and_date_in_navigation(nav_data, project_slug, file_name_clean, fol
     if data and data.get('permalink'):
         return data['permalink'], str(data.get('date', ''))
 
+    # 🔥 ИСПРАВЛЕНО: Безопасное приведение к чистой строке папки (гарантия от list-коллизий)
+    if isinstance(folder_parts, list) and len(folder_parts) > 0:
+        folder_str = str(folder_parts[0])
+    else:
+        folder_str = str(folder_parts)
+
     # Шаг 2: Поиск постов хроники в navigation.yml
-    first_folder = folder_parts[0] if isinstance(folder_parts, list) and len(folder_parts) > 0 else str(folder_parts)
-    
-    if first_folder == '_posts':
+    if folder_str == '_posts':
         for section_name, projects in nav_data.get('sections', {}).items():
             for proj in projects:
                 if proj.get('slug') == project_slug:

@@ -90,9 +90,11 @@ def build_news_feed():
         print(f"[NEWS-ERROR] Ошибка записи news_feed.yml: {e}")
         sys.exit(1)
 
-    # ВЫГРУЗКА ЛОГА В КОРЕНЬ РЕПОЗИТОРИЯ БЕЗ КОНФЛИКТОВ ПРАВ ДОСТУПА
+    # Направляем лог новостей в отслеживаемую папку артефактов
     try:
-        with open(os.path.join(root_dir, 'contentnews_debug.log'), 'w', encoding='utf-8') as lf:
+        debug_dir = os.path.join(root_dir, '_processed_files')
+        os.makedirs(debug_dir, exist_ok=True)
+        with open(os.path.join(debug_dir, 'contentnews_debug.log'), 'w', encoding='utf-8') as lf:
             lf.write(f"[NEWS-SUCCESS] Сборка завершена. Всего элементов в ленте: {len(flat_news)}")
     except:
         pass

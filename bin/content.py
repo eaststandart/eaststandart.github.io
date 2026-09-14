@@ -89,9 +89,11 @@ def process_all_markdown_files():
 
     log_buffer.append("[CON-SUCCESS] Модульный серверный конвейер оформления контента успешно выполнен.")
     
-    # 🔥 БЕЗОПАСНАЯ ВЫГРУЗКА ЛОГА В КОРЕНЬ АРТЕФАКТОВ
+    # 🔥 Записываем лог в папку, которую GitHub Actions гарантированно пакует в ZIP
     try:
-        log_file_path = os.path.join(root_dir, 'content_debug.log')
+        debug_dir = os.path.join(root_dir, '_processed_files')
+        os.makedirs(debug_dir, exist_ok=True)
+        log_file_path = os.path.join(debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
         print("[CON-SUCCESS] Лог контента успешно зафиксирован в артефактах.")

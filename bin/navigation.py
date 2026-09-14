@@ -64,13 +64,13 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # Набор исключений папок в корне
+    # 🔥 ИСПРАВЛЕНО: Ваш лаконичный набор исключений корневых папок
     EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github'}
     
     flat_map = {}
     folders_with_index = set()
     
-    # Шаг 1: Сканирование строго по корневым папкам контента и выявление Режима А
+    # Шаг 1: Определение Режима А по наличию index.md внутри папок
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.'):
@@ -78,7 +78,7 @@ def build_navigation_tree():
                 if os.path.exists(os.path.join(full_path, 'index.md')) or os.path.exists(os.path.join(full_path, 'index.html')):
                     folders_with_index.add(name)
 
-    # Шаг 2: Обход физических .md файлов внутри разрешенных корневых папок контента
+    # Шаг 2: Плоский сбор файлов страниц контента и коллекций
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -88,8 +88,8 @@ def build_navigation_tree():
             
             for root_walk, _, files in os.walk(full_path):
                 for file in files:
+                    # 🔥 ИСПРАВЛЕНО: Универсальный фильтр строго по md и html файлам заметок
                     if not (file.endswith('.md') or file.endswith('.html')): continue
-                    if os.path.basename(root_walk) in RESOURCE_FOLDERS: continue
                     
                     file_path = os.path.join(root_walk, file)
                     data, front_text, body = parse_yaml_front_matter(file_path)
@@ -97,7 +97,7 @@ def build_navigation_tree():
 
                     file_slug, _ = os.path.splitext(file)
                     
-                    # Универсальный расчёт URL Режимов А и Б
+                    # Расчёт URL Режимов А и Б
                     ready_permalink = data.get('permalink')
                     if ready_permalink:
                         final_url = ready_permalink
@@ -115,7 +115,7 @@ def build_navigation_tree():
                     data['section'] = clean_section_name
                     write_yaml_front_matter(file_path, data, body)
 
-                    # Сбор чистого трехпольного паспорта страницы контента
+                    # Формируем плоский паспорт страницы заметок
                     node = {}
                     node['title'] = data.get('title', file_slug)
                     node['url'] = final_url
@@ -132,7 +132,7 @@ def build_navigation_tree():
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
             for file in files:
-                if not file.endswith('.md'): continue
+                if not (file.endswith('.md') or file.endswith('.html')): continue
                 
                 file_path = os.path.join(root, file)
                 data, front_text, body = parse_yaml_front_matter(file_path)
@@ -144,7 +144,7 @@ def build_navigation_tree():
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
-                        post_page_type = str(key).split('-')[0]
+                        post_page_type = str(key).split('-')
                         break
 
                 if data and data.get('date'):
@@ -168,7 +168,7 @@ def build_navigation_tree():
                 data['section'] = calculated_parent_section
                 write_yaml_front_matter(file_path, data, body)
 
-                # Сбор чистого трехпольного паспорта связанного поста хроники
+                # Формируем плоский паспорт связанного поста
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
                 node['url'] = short_url
@@ -177,7 +177,7 @@ def build_navigation_tree():
                 flat_map[file] = [node]
                 log_artifact(f"[NAV-DEBUG] Обработан файл: {file} | relatedpages: {file_slug_no_date}")
 
-    # Запись чистой плоской карты контента заметок без значков *id
+    # Финишная запись чистой плоской карты на диск
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
@@ -187,7 +187,7 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
-    # Выгрузка технического отчёта строго в артефакты
+    # Выгрузка отчёта буфера логов в артефакты
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

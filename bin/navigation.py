@@ -357,8 +357,10 @@ def build_navigation_tree():
                             'slug': project_slug,
                             'url': final_url,
                             'direction': data.get('direction', ''),
-                            'level': data.get('level', '')
+                            'level': data.get('level', ''),
+                            'date': str(data.get('date', '')) if data.get('date') else ''
                         }
+
                         project_node.update(project_posts_data)
                         
                         if clean_section_name not in nav_tree['sections']:

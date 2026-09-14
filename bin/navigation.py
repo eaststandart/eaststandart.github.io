@@ -193,25 +193,23 @@ def build_navigation_tree():
                     post_slug = file_name_clean_no_date
                     post_page_type = data.get('post-page', 'journal')
 
-                if not post_slug and data.get('categories') and isinstance(data['categories'], list) and len(data['categories']) >= 2:
-                    for cat in data['categories']:
-                        if cat in valid_slugs:
-                            post_slug = cat
-                            for c_type in data['categories']:
-                                if c_type != post_slug:
-                                    post_page_type = c_type
-                                    detected_post_types.add(c_type)
-                            break
-
-                post_date = str(data.get('date', ''))
+                # 🔥 УНИВЕРСАЛЬНЫЙ АВТОМАТ ДАТ ДЛЯ ВСЕХ ПОСТОВ (НЕЗАВИСИМО ОТ ПЕРМАЛИНКА)
+                if data and data.get('date'):
+                    post_date = str(data['date'])
+                else:
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    if match_date:
+                        post_date = match_date.group(1)
+                    else:
+                        import datetime
+                        mtime = os.path.getmtime(full_path)
+                        post_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                    log_artifact(f"[NAV-WARNING] Извлечена дата для поста: {file} | Назначено: {post_date}")
 
                 # ВЕТКА 2.2: АВТОНОМНЫЕ ПОСТЫ (Без привязки к Ярмарке — как Мультивибратор)
                 if not post_slug:
                     ready_permalink = data.get('permalink')
                     if ready_permalink:
-                        # Шаг A: У автономного поста не режем имя, берем дату из Front Matter
-                        post_date = str(data.get('date', '2026-01-01'))
-                        
                         path_parts = [p for p in ready_permalink.split('/') if p]
                         if path_parts:
                             detected_section = path_parts[0]
@@ -223,12 +221,14 @@ def build_navigation_tree():
                             short_url = ready_permalink
                             write_yaml_front_matter(full_path, data, body)
                             
+                            # 🔥 ИСПРАВЛЕНО: Записываем дату автономного поста в карту сайта
                             nav_tree['sections'][detected_section].append({
                                 'title': data.get('title', file_name_clean_no_date),
                                 'slug': file_name_clean_no_date,
                                 'url': short_url,
                                 'direction': data.get('direction', ''),
-                                'level': data.get('level', '')
+                                'level': data.get('level', ''),
+                                'date': post_date
                             })
                     continue
 

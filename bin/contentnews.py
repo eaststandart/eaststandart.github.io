@@ -6,7 +6,7 @@
 @purpose Полностью исключает повторное сканирование диска и коллизии дат/пермалинков,
          собирая новости напрямую из готовой глобальной карты navigation.yml.
 @author TechLab
-@version 1.0.0-pure-source
+@version 1.1.0-fixed-clean
 """
 
 import os
@@ -43,33 +43,29 @@ def extract_flat_feed_from_navigation():
             for key, val in item.items():
                 if isinstance(val, list) and key.endswith('_posts'):
                     for post in val:
-                        # Динамически вычисляем тип публикации по имени массива
-                        post_type = key.replace('_posts', '')
+                        post_date = str(post.get('date', '')).strip()
+                        # 🔥 ИСПРАВЛЕНО: Пропускаем посты без даты, чтобы не ломать хронологию ленты
+                        if not post_date: continue
                         
-                        # Автомат значков: подтягиваем эмодзи строго из вывески типа в _pages/
-                        # (Например, если post_type == 'journal', то рука ✍🏻, если 'media' — глаза 👀)
-                        # Так как они уже обработаны navigation.py, мы можем безопасно доверять структуре
+                        post_type = key.replace('_posts', '')
                         flat_news.append({
                             'title': post.get('title', ''),
                             'url': post.get('url', ''),
-                            'date': str(post.get('date', '')),
+                            'date': post_date,
                             'is_post': 'true',
                             'section': section_name,
                             'type': post_type
                         })
 
             # 2. Сбор самостоятельных карточек контента (книги, проекты, автономные посты вроде Мультивибратора)
-            # Если у узла есть дата, значит это самостоятельное событие для ленты новостей
-            if item.get('date') or (section_name == 'reference' and not item.get('date')):
-                # Восстанавливаем дату автономного поста, если она была извлечена navigation.py
-                item_date = str(item.get('date', ''))
-                if not item_date and 'date' in item:
-                    item_date = str(item['date'])
-                
+            item_date = str(item.get('date', '')).strip()
+            
+            # 🔥 ИСПРАВЛЕНО: Если даты нет (или она пустая ''), полностью игнорируем узел контента
+            if item_date:
                 flat_news.append({
                     'title': item.get('title', ''),
                     'url': item.get('url', ''),
-                    'date': item_date if item_date else '2026-01-01',
+                    'date': item_date,
                     'is_post': 'false',
                     'section': section_name,
                     'type': 'page'
@@ -110,8 +106,6 @@ def build_news_feed():
     # Шаг 3: Навешиваем эмодзи на каждую новость строго по первоисточникам
     final_feed = []
     for item in flat_items:
-        # По умолчанию берем эмодзи по типу поста (journal -> ✍🏻, media -> 👀)
-        # Если это самостоятельная карточка (page) — берем эмодзи по имени её секции (biblio -> 📚, people -> 🧍‍♂️)
         lookup_key = item['type'] if item['is_post'] == 'true' else item['section']
         detected_emoji = emoji_map.get(lookup_key, "")
         
@@ -121,7 +115,7 @@ def build_news_feed():
             'date': item['date'],
             'is_post': item['is_post'],
             'emoji': detected_emoji,
-            'pinned': False # Базовый флаг закрепления новостей
+            'pinned': False
         })
         
     # Шаг 4: Железная хронологическая сортировка от самых свежих к самым старым

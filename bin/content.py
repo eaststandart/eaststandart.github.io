@@ -6,7 +6,7 @@
 @purpose Автоматически генерирует теги (tags) и категории (categories) для markdown-файлов
          внутри Obsidian и выгружает дубликаты логов в артефакты Actions.
 @author TechLab
-@version 6.0.0-pure-formatter
+@version 6.1.0-with-full-logs
 """
 
 import os
@@ -56,7 +56,7 @@ def write_yaml_front_matter(file_path, data, body_content, log_buffer, root_dir)
         f_name = os.path.basename(file_path)
         log_buffer.append(f"[CON-DEBUG] Оформлен файл: {f_name} | Теги: {data.get('tags', [])}")
 
-        # ЗЕРКАЛЬНОЕ ДУБЛИРОВАНИЕ В АРТЕФАКТЫ (СОХРАНЕНО)
+        # ЗЕРКАЛЬНОЕ ДУБЛИРОВАНИЕ В АРТЕФАКТЫ
         debug_dir = os.path.join(root_dir, '_content_files')
         os.makedirs(debug_dir, exist_ok=True)
         
@@ -118,15 +118,17 @@ def process_all_markdown_files():
             write_yaml_front_matter(full_path, data, body, log_buffer, root_dir)
 
     log_buffer.append("[CON-SUCCESS] Модульный серверный конвейер оформления контента успешно выполнен.")
+    log_buffer.append(f"Всего успешно оформлено markdown-файлов на диске: {len(log_buffer) - 1}")
     
     for line in log_buffer:
         print(line)
 
-    # Выгрузка общего отладочного лога в ZIP-архив
+    # 🔥 ВЫГРУЗКА ДЕТАЛЬНОГО ОТЧЕТА АУДИТА ФАЙЛОВ В АРТЕФАКТЫ
     try:
         log_file_path = os.path.join(debug_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
+        print(f"[CON-SUCCESS] Детальный лог оформления успешно записан в архив: _content_files/content_debug.log")
     except Exception as e:
         print(f"[CON-ERROR] Не удалось сохранить файл лога контента: {e}")
 

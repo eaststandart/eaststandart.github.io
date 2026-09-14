@@ -193,45 +193,53 @@ def build_navigation_tree():
                     post_slug = file_name_clean_no_date
                     post_page_type = data.get('post-page', 'journal')
 
-                if not post_slug and data.get('categories') and isinstance(data['categories'], list) and len(data['categories']) >= 2:
-                    for cat in data['categories']:
-                        if cat in valid_slugs:
-                            post_slug = cat
-                            for c_type in data['categories']:
-                                if c_type != post_slug:
-                                    post_page_type = c_type
-                                    detected_post_types.add(c_type)
-                            break
-
-                post_date = str(data.get('date', ''))
+                # 🔥 УНИВЕРСАЛЬНЫЙ АВТОМАТ ДАТ ДЛЯ ВСЕХ ПОСТОВ (НЕЗАВИСИМО ОТ ПЕРМАЛИНКА)
+                if data and data.get('date'):
+                    post_date = str(data['date'])
+                else:
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    if match_date:
+                        post_date = match_date.group(1)
+                    else:
+                        import datetime
+                        mtime = os.path.getmtime(full_path)
+                        post_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                    log_artifact(f"[NAV-WARNING] Извлечена дата для поста: {file} | Назначено: {post_date}")
 
                 # ВЕТКА 2.2: АВТОНОМНЫЕ ПОСТЫ (Без привязки к Ярмарке — как Мультивибратор)
                 if not post_slug:
                     ready_permalink = data.get('permalink')
                     if ready_permalink:
-                        # Вырезаем первый сегмент пути из ручного пермалинка
                         path_parts = [p for p in ready_permalink.split('/') if p]
                         if path_parts:
                             detected_section = path_parts[0]
                             data['section'] = detected_section
                             
-                            # Проверяем наличие вывески в _pages/ для добавления в дерево
                             if detected_section not in nav_tree['sections']:
                                 nav_tree['sections'][detected_section] = []
                             
-                            # Формируем нативный короткий URL раздела, если его нет в списке
                             short_url = ready_permalink
                             write_yaml_front_matter(full_path, data, body)
                             
-                            # Добавляем автономный пост как самостоятельный элемент секции
+                            # 🔥 ИСПРАВЛЕНО: Записываем дату автономного поста в карту сайта
                             nav_tree['sections'][detected_section].append({
                                 'title': data.get('title', file_name_clean_no_date),
                                 'slug': file_name_clean_no_date,
                                 'url': short_url,
                                 'direction': data.get('direction', ''),
-                                'level': data.get('level', '')
+                                'level': data.get('level', ''),
+                                'date': post_date
                             })
                     continue
+
+                # 🔥 ШАГ Б: ДЛЯ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ ИЗ _POSTS (Где нет ручного пермалинка)
+                # Автомат извлечения даты из имени файла, если она стерта в Front Matter
+                if data and data.get('date'):
+                    post_date = str(data['date'])
+                else:
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    post_date = match_date.group(1) if match_date else "2026-01-01"
+                    log_artifact(f"[NAV-WARNING] У связанного поста извлечена дата из имени файла: {file} | Назначено: {post_date}")
 
                 # Контроль уникальности дат для связанных постов хроники
                 registry_key = (post_slug, post_date, post_page_type)
@@ -271,7 +279,8 @@ def build_navigation_tree():
                 related_posts_map[post_slug][post_page_type].append({
                     'title': data.get('title', file_name_clean_no_date),
                     'url': short_url,
-                    'date': post_date
+                    'date': post_date,
+                    'pinnednews': data.get('pinnednews', False)
                 })
 
     # 3. ЭТАП СВЯЗЫВАНИЯ ГЛАВНЫХ СТРАНИЦ ПРОЕКТОВ И ПАПОК-КОЛЛЕКЦИЙ
@@ -349,8 +358,10 @@ def build_navigation_tree():
                             'slug': project_slug,
                             'url': final_url,
                             'direction': data.get('direction', ''),
-                            'level': data.get('level', '')
+                            'level': data.get('level', ''),
+                            'date': str(data.get('date', '')) if data.get('date') else ''
                         }
+
                         project_node.update(project_posts_data)
                         
                         if clean_section_name not in nav_tree['sections']:
@@ -383,10 +394,13 @@ def build_navigation_tree():
 
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
-        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ВОССТАНОВЛЕНО)
+        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ИСПРАВЛЕНО: БЕЗ ЗНАЧКОВ *ID)
+        # Отключаем оптимизацию ссылок, чтобы писать чистый плоский текст
+        yaml.SafeDumper.ignore_aliases = lambda self, data: True
+        
         with open(output_file, 'w', encoding='utf-8') as f:
-            yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена по канонам Tracy.")
+            yaml.dump(nav_tree, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена без системных указателей.")
 
         # 2. ГЕНЕРАЦИЯ ФИЗИЧЕСКИХ ПАПОК ВКЛАДОК НА СЕРВЕРЕ
         for section_name, projects in nav_tree['sections'].items():

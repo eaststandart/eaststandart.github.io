@@ -69,7 +69,7 @@ def build_navigation_tree():
     flat_map = {}
     folders_with_index = set()
     
-    # Шаг 1: Определение Режима А по наличию index.md внутри папок
+    # Шаг 1: Автоматическое определение Режима А по наличию index.md внутри папок
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.'):
@@ -85,7 +85,10 @@ def build_navigation_tree():
             clean_section_name = name.lstrip('_')
             is_jekyll_collection = name.startswith('_')
             
-            for root_walk, _, files in os.walk(full_path):
+            for root_walk, _, files in os.scandir(full_path) if hasattr(os, 'scandir') else os.walk(full_path):
+                # Поддержка обхода для os.walk
+                if not isinstance(files, list):
+                    continue
                 for file in files:
                     if not (file.endswith('.md') or file.endswith('.html')): continue
                     
@@ -113,17 +116,23 @@ def build_navigation_tree():
                     data['section'] = clean_section_name
                     write_yaml_front_matter(file_path, data, body)
 
-                    # Формируем плоский паспорт страницы заметок
+                    # Формируем плоский паспорт страницы контента заметок
                     node = {}
                     node['title'] = data.get('title', file_slug)
                     node['url'] = final_url
                     
+                    # 🔥 НОВАЯ СИНТАКСИЧЕСКАЯ ЛОГИКА РАЗДЕЛОВ И КОЛЛЕКЦИЙ ПО ВАШИМ ПРАВИЛАМ
                     if is_jekyll_collection:
-                        node['relatedcollection'] = clean_section_name
+                        node['collection'] = clean_section_name
+                    elif name in folders_with_index:
+                        if file_slug == 'index':
+                            node['section'] = clean_section_name
+                        else:
+                            node['relatedsection'] = clean_section_name
                     else:
-                        node['relatedsection'] = clean_section_name
+                        # Режим Б (нет индекса, например faire) -> они сами формируют раздел!
+                        node['section'] = clean_section_name
 
-                    # Ключом становится относительный путь файла контента от корня диска
                     relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
                     flat_map[relative_file_key] = [node]
 
@@ -141,10 +150,11 @@ def build_navigation_tree():
                 file_name_clean, _ = os.path.splitext(file)
                 file_slug_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
+                # 🔥 ИСПРАВЛЕНО НАВСЕГДА: Извлекаем строго первое строковое слово из сплита суффикса
                 post_page_type = data.get('post-page', 'journal')
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
-                        post_page_type = str(key).split('-')
+                        post_page_type = str(key).split('-')[0]
                         break
 
                 if data and data.get('date'):
@@ -158,12 +168,11 @@ def build_navigation_tree():
                 calculated_parent_section = "faire"
                 parent_file_key = f"{file_slug_no_date}.md"
                 
-                # 🔥 ИСПРАВЛЕНО: Безопасный поиск родительской секции с извлечением словаря из списка [0]
                 for key_path, nodes_list in flat_map.items():
                     if key_path.endswith(f"/{parent_file_key}") or key_path == parent_file_key:
                         if isinstance(nodes_list, list) and len(nodes_list) > 0:
                             p_node = nodes_list[0]
-                            calculated_parent_section = p_node.get('relatedsection', p_node.get('relatedcollection', 'faire'))
+                            calculated_parent_section = p_node.get('section', p_node.get('relatedsection', p_node.get('collection', 'faire')))
                             break
 
                 data['categories'] = [post_page_type, file_slug_no_date]
@@ -177,12 +186,11 @@ def build_navigation_tree():
                 node['url'] = short_url
                 node['relatedpages'] = file_slug_no_date
 
-                # Ключом становится относительный путь файла поста от корня диска
                 relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Обработан файл: {relative_file_key} | relatedpages: {file_slug_no_date}")
 
-    # Финишная запись чистой плоской карты на диск
+    # Финишная запись чистой плоской карты на диск заметок без значков *id
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
@@ -192,7 +200,6 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
-    # Выгрузка технического отчёта строго в артефакты
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

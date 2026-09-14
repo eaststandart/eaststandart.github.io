@@ -264,7 +264,8 @@ def build_navigation_tree():
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
                         post_slug = file_name_clean_no_date if file_name_clean_no_date in valid_slugs else None
-                        post_page_type = str(key).split('-')
+                        # 🔥 ИСПРАВЛЕНО: Берем строго первый элемент как строку, убирая list dict key error
+                        post_page_type = str(key).split('-')[0]
                         break
 
                 if not post_slug and file_name_clean_no_date in valid_slugs:

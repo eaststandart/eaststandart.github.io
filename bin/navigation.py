@@ -64,9 +64,8 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # Классический, старый набор исключений папок в корне
-    EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
-    RESOURCE_FOLDERS = {'img', 'images', 'files', 'res', 'resources', 'video', 'photo'}
+    # Набор исключений папок в корне
+    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github'}
     
     flat_map = {}
     folders_with_index = set()
@@ -89,7 +88,7 @@ def build_navigation_tree():
             
             for root_walk, _, files in os.walk(full_path):
                 for file in files:
-                    if not file.endswith('.md'): continue
+                    if not (file.endswith('.md') or file.endswith('.html')): continue
                     if os.path.basename(root_walk) in RESOURCE_FOLDERS: continue
                     
                     file_path = os.path.join(root_walk, file)

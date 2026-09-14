@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+@module content
+@about Главный изолированный диспетчер сквозного оформления свойств файлов сайта.
+@purpose Автоматически генерирует теги (tags) для markdown-файлов репозитория.
+@version 7.0.0-stable-verified
+"""
 
 import os
 import re
@@ -21,7 +27,6 @@ def parse_yaml_front_matter(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
     except Exception as e:
-        print(f"[CON-ERROR] Не удалось прочитать файл {file_path}: {e}")
         return None, None, content
 
     match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
@@ -34,22 +39,13 @@ def parse_yaml_front_matter(file_path):
         data = yaml.safe_load(front_text)
         return data if data else {}, front_text, body_content
     except Exception as e:
-        print(f"[CON-ERROR] Сбой во Front Matter {file_path}: {e}")
         return None, None, content
 
-def write_yaml_front_matter(file_path, data, body_content, log_buffer, root_dir):
+def write_yaml_front_matter(file_path, data, body_content, log_buffer):
     try:
         front_text = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
         f_name = os.path.basename(file_path)
         log_buffer.append(f"[CON-DEBUG] Оформлен файл: {f_name} | Теги: {data.get('tags', [])}")
-
-        # СТРОГО В РОДНУЮ РАБОЧУЮ ПАПКУ АРТЕФАКТОВ
-        debug_dir = os.path.join(root_dir, '_processed_files')
-        os.makedirs(debug_dir, exist_ok=True)
-        
-        debug_file_path = os.path.join(debug_dir, f"processed-{f_name}")
-        with open(debug_file_path, 'w', encoding='utf-8') as df:
-            df.write(f"---\n{front_text}---\n[Тело статьи успешно обработано]")
 
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(f"---\n{front_text}---\n{body_content}")
@@ -62,9 +58,6 @@ def process_all_markdown_files():
     
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     log_buffer = []
-
-    debug_dir = os.path.join(root_dir, '_processed_files')
-    os.makedirs(debug_dir, exist_ok=True)
 
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in EXCLUDED_FOLDERS and not d.startswith('.')]
@@ -92,18 +85,18 @@ def process_all_markdown_files():
             data['tags'] = final_tags
             if 'keywords' in data: del data['keywords']
 
-            write_yaml_front_matter(full_path, data, body, log_buffer, root_dir)
+            write_yaml_front_matter(full_path, data, body, log_buffer)
 
     log_buffer.append("[CON-SUCCESS] Модульный серверный конвейер оформления контента успешно выполнен.")
-    for line in log_buffer:
-        print(line)
-
+    
+    # 🔥 БЕЗОПАСНАЯ ВЫГРУЗКА ЛОГА В КОРЕНЬ АРТЕФАКТОВ
     try:
-        log_file_path = os.path.join(debug_dir, 'content_debug.log')
+        log_file_path = os.path.join(root_dir, 'content_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
+        print("[CON-SUCCESS] Лог контента успешно зафиксирован в артефактах.")
     except Exception as e:
-        print(f"[CON-ERROR] Не удалось сохранить файл лога: {e}")
+        print(f"[CON-ERROR] Ошибка записи лога: {e}")
 
 if __name__ == '__main__':
     process_all_markdown_files()

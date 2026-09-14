@@ -5,7 +5,7 @@
 @about Универсальный плоский препроцессор метаданных контента.
 @purpose Собирает строго 3 базовых параметра для работы хлебных крошек.
 @author TechLab
-@version 12.0.0-pure-three-fields
+@version 12.1.0-clean-monolith-part1
 """
 
 import os
@@ -64,13 +64,14 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
+    # Классический, старый набор исключений папок в корне
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     RESOURCE_FOLDERS = {'img', 'images', 'files', 'res', 'resources', 'video', 'photo'}
     
     flat_map = {}
     folders_with_index = set()
     
-    # 1. Автоматическое определение Режима А по наличию index.md
+    # Шаг 1: Сканирование строго по корневым папкам контента и выявление Режима А
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.'):
@@ -78,7 +79,7 @@ def build_navigation_tree():
                 if os.path.exists(os.path.join(full_path, 'index.md')) or os.path.exists(os.path.join(full_path, 'index.html')):
                     folders_with_index.add(name)
 
-    # 2. Обход физических страниц контента и коллекций
+    # Шаг 2: Обход физических .md файлов внутри разрешенных корневых папок контента
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -97,7 +98,7 @@ def build_navigation_tree():
 
                     file_slug, _ = os.path.splitext(file)
                     
-                    # Расчёт URL Режимов А и Б
+                    # Универсальный расчёт URL Режимов А и Б
                     ready_permalink = data.get('permalink')
                     if ready_permalink:
                         final_url = ready_permalink
@@ -115,7 +116,7 @@ def build_navigation_tree():
                     data['section'] = clean_section_name
                     write_yaml_front_matter(file_path, data, body)
 
-                    # Сбор паспорта страницы контента контура навигации
+                    # Сбор чистого трехпольного паспорта страницы контента
                     node = {}
                     node['title'] = data.get('title', file_slug)
                     node['url'] = final_url
@@ -124,12 +125,10 @@ def build_navigation_tree():
                         node['relatedcollection'] = clean_section_name
                     else:
                         node['relatedsection'] = clean_section_name
-                        
-                    node['slug'] = file_slug
 
                     flat_map[file] = [node]
 
-    # 3. Обход папки связанных постов хроники _posts/
+    # Шаг 3: Тотальный обход папки связанных постов хроники _posts/
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -155,10 +154,8 @@ def build_navigation_tree():
                     match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                     post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Фикс переменной: собираем точный URL поста хроники
                 short_url = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
 
-                # Копируем раздел для Front Matter самого файла
                 calculated_parent_section = "faire"
                 parent_file_key = f"{file_slug_no_date}.md"
                 if parent_file_key in flat_map:
@@ -172,17 +169,16 @@ def build_navigation_tree():
                 data['section'] = calculated_parent_section
                 write_yaml_front_matter(file_path, data, body)
 
-                # Сбор паспорта поста контура навигации
+                # Сбор чистого трехпольного паспорта связанного поста хроники
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
                 node['url'] = short_url
                 node['relatedpages'] = file_slug_no_date
-                node['slug'] = file_slug_no_date
 
                 flat_map[file] = [node]
-                log_artifact(f"[NAV-DEBUG] Обработан файл: {file} | slug: {file_slug_no_date}")
+                log_artifact(f"[NAV-DEBUG] Обработан файл: {file} | relatedpages: {file_slug_no_date}")
 
-    # Запись чистой плоской карты контента
+    # Запись чистой плоской карты контента заметок без значков *id
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
@@ -192,20 +188,7 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
-    # Физические папки-вкладки для Jekyll на сервере
-    for file_key, nodes_list in flat_map.items():
-        if isinstance(nodes_list, list) and len(nodes_list) > 0:
-            node = nodes_list[0]
-            if node.get('relatedpages') is None and file_key != 'index.md':
-                slug = node['slug']
-                sect = node.get('relatedsection', node.get('relatedcollection', 'faire'))
-                for p_type in ['journal', 'media']:
-                    dir_path = os.path.join(root_dir, p_type, slug)
-                    os.makedirs(dir_path, exist_ok=True)
-                    with open(os.path.join(dir_path, 'index.md'), 'w', encoding='utf-8') as pf:
-                        pf.write(f"---\nlayout: page\ntitle: \"Публикации проекта {slug}\"\nslug: {slug}\nsection: {sect}\npost-page: {p_type}\nmathjax: true\n---\n\n{{% include posts-page-open.liquid type='{p_type}' %}}\n")
-
-    # Выгрузка отчёта буфера логов строго в артефакты
+    # Выгрузка технического отчёта строго в артефакты
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

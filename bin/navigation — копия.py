@@ -3,10 +3,9 @@
 """
 @module navigation
 @about Универсальный статический препроцессор метаданных и карт на чистом автомате суффиксов.
-@purpose Автоматически вычисляет типы постов по ключам *-post-page, вшивает нативные
-         категории Jekyll и генерирует карты навигации в артефакты Actions.
+@purpose Реализует сквозной закон сбора полной карты сайта без "белых пятен".
 @author TechLab
-@version 7.0.0-suffix-automaton
+@version 9.0.0-tracy-complete-map
 """
 
 import os
@@ -48,7 +47,6 @@ def parse_yaml_front_matter(file_path):
         print(f"[NAV-ERROR] Сбой синтаксиса YAML во Front Matter в {file_path}: {e}")
         return None, None, content
 
-# Глобальный буфер для отладочного лога, который полетит в zip-архив Actions
 artifacts_log_buffer = []
 
 def log_artifact(text):
@@ -66,18 +64,15 @@ def write_yaml_front_matter(file_path, data, body_content):
         sect = data.get('section', 'НЕТ')
         log_artifact(f"[NAV-DEBUG] Файл: {f_name} | Раздел (section): {sect} | Категории: {cats}")
 
-        # Создаем или проверяем серверную папку артефактов _processed_files/
         current_dir = os.path.dirname(os.path.abspath(__file__))
         root_dir = os.path.abspath(os.path.join(current_dir, '..'))
         debug_dir = os.path.join(root_dir, '_processed_files')
         os.makedirs(debug_dir, exist_ok=True)
         
-        # Штампуем файл отладки свойств jekyll-processed-md-properties
         debug_file_path = os.path.join(debug_dir, f"processed-{f_name}")
         with open(debug_file_path, 'w', encoding='utf-8') as df:
             df.write(f"---\n{front_text}---\n[Тело статьи успешно обработано]")
 
-        # Перезаписываем сам рабочий md-файл
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(f"---\n{front_text}---\n{body_content}")
     except Exception as e:
@@ -92,7 +87,6 @@ def build_navigation_tree():
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    # Очищаем или создаем целевую папку _processed_files перед стартом сборки
     debug_dir = os.path.join(root_dir, '_processed_files')
     if os.path.exists(debug_dir):
         for f in os.listdir(debug_dir):
@@ -100,41 +94,76 @@ def build_navigation_tree():
             except: pass
     os.makedirs(debug_dir, exist_ok=True)
 
-    # 1. АВТОМАТИЧЕСКИЙ СБОР РАЗДЕЛОВ И КОЛЛЕКЦИЙ С ДИСКА
     EXCLUDED_FOLDERS = {'_includes', '_data', '_layouts', '_processed_files', '_pages', 'assets', 'bin', '.git', '.github'}
     RESOURCE_FOLDERS = {'img', 'images', 'files', 'res', 'resources', 'video', 'photo'}
     
     supported_sections = []
     valid_slugs = set()
     slug_to_section_map = {}
-
+    sections_with_index = set()
+    collections_folders = set()
+    
+    # Сбор корневых папок контента (Категория 1) и коллекций (Категория 3)
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)):
+            # Обычные корневые папки контента
             if not name.startswith('.') and name != '_posts' and name not in EXCLUDED_FOLDERS:
                 clean_section_name = name.lstrip('_')
                 supported_sections.append(clean_section_name)
                 
+                if name.startswith('_'):
+                    collections_folders.add(clean_section_name)
+                
                 section_dir = os.path.join(root_dir, name)
+                if os.path.exists(os.path.join(section_dir, 'index.md')) or os.path.exists(os.path.join(section_dir, 'index.html')):
+                    sections_with_index.add(clean_section_name)
+                
                 for entry in os.scandir(section_dir):
                     if entry.is_dir() and not entry.name.startswith('.') and entry.name not in RESOURCE_FOLDERS:
                         valid_slugs.add(entry.name)
                         slug_to_section_map[entry.name] = clean_section_name
 
-    log_artifact(f"[NAV-INFO] Автоматически обнаружены разделы сайта: {supported_sections}")
-    log_artifact(f"[NAV-INFO] Белый список слагов проектов собран с диска (без мусора ресурсов): {list(valid_slugs)}")
+    log_artifact(f"[NAV-INFO] Обнаружены разделы контента: {supported_sections}")
+    log_artifact(f"[NAV-INFO] Разделы со стандартными index-вывесками (Режим А): {list(sections_with_index)}")
+
+    # Анализ папки _pages/ и вывесок разделов
+    pages_dir = os.path.join(root_dir, '_pages')
+    custom_permalinks_map = {}
+    pages_navtitle_map = {}
+
+    if os.path.exists(pages_dir):
+        for file in os.listdir(pages_dir):
+            if file.endswith('.md'):
+                p_path = os.path.join(pages_dir, file)
+                p_data, p_front, p_body = parse_yaml_front_matter(p_path)
+                if p_data is None: continue
+                
+                p_slug, _ = os.path.splitext(file)
+                if p_data.get('navtitle'):
+                    pages_navtitle_map[p_slug] = p_data['navtitle']
+                elif p_data.get('title'):
+                    pages_navtitle_map[p_slug] = p_data['title']
+                
+                if p_slug in supported_sections and p_slug not in sections_with_index:
+                    ready_permalink = p_data.get('permalink')
+                    if ready_permalink:
+                        custom_permalinks_map[p_slug] = "/" + ready_permalink.strip("/") + "/"
+                    else:
+                        calculated_url = f"/{p_slug}/"
+                        p_data['permalink'] = calculated_url
+                        custom_permalinks_map[p_slug] = calculated_url
+                        write_yaml_front_matter(p_path, p_data, p_body)
 
     nav_tree = {
         'sections': {section: [] for section in supported_sections}
     }
     
     posts_registry = {}
-    related_posts_map = {slug: {} for slug in valid_slugs} # Динамические полочки типов постов
+    related_posts_map = {slug: {} for slug in valid_slugs} 
+    detected_post_types = set(['journal', 'media']) 
 
-    # 2. ЭТАП УМНОГО АНАЛИЗА ПАПКИ _POSTS (Динамический автомат суффиксов)
+    # 2. КАТЕГОРИЯ 2: ТОТАЛЬНЫЙ АНАЛИЗ ПАПКИ _POSTS
     posts_dir = os.path.join(root_dir, '_posts')
-    # Сюда Питон будет автоматически складывать все уникальные типы постов, найденные на диске
-    detected_post_types = set(['journal', 'media']) # базовые дефолтные типы
-
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
             for file in files:
@@ -145,55 +174,72 @@ def build_navigation_tree():
                 if data is None or data.get('published') is False: continue
 
                 file_name_clean, _ = os.path.splitext(file)
-                file_name_clean = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
+                file_name_clean_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
 
                 post_slug = None
                 post_page_type = None
 
-                # ШАГ А: Динамический радар суффиксов *-post-page (новые файлы)
-                # Сканируем Front Matter на наличие суффикса и динамически обучаем систему новому типу!
+                # Динамический автомат суффиксов (Первое слово перед дефисом может быть любым)
                 for key in list(data.keys()):
                     if str(key).endswith('-post-page'):
                         possible_type = str(key).split('-')[0]
-                        detected_post_types.add(possible_type) # Система сама запомнила новый тип!
-                        
-                        # Если имя файла совпадает с проектом на диске — связь установлена
-                        if file_name_clean in valid_slugs:
-                            post_slug = file_name_clean
+                        detected_post_types.add(possible_type)
+                        if file_name_clean_no_date in valid_slugs:
+                            post_slug = file_name_clean_no_date
                             post_page_type = possible_type
                         break
 
-                # ШАГ Б: Если суффикса нет, проверяем имя файла целиком по белому списку
-                if not post_slug and file_name_clean in valid_slugs:
-                    post_slug = file_name_clean
+                if not post_slug and file_name_clean_no_date in valid_slugs:
+                    post_slug = file_name_clean_no_date
                     post_page_type = data.get('post-page', 'journal')
 
-                # ШАГ В: Резервная страховка по готовым категориям (старые файлы)
                 if not post_slug and data.get('categories') and isinstance(data['categories'], list) and len(data['categories']) >= 2:
-                    # Ищем, какое из слов в категориях является живым проектом на диске
                     for cat in data['categories']:
                         if cat in valid_slugs:
                             post_slug = cat
-                            # Второе слово автоматически признаём типом поста
                             for c_type in data['categories']:
                                 if c_type != post_slug:
                                     post_page_type = c_type
                                     detected_post_types.add(c_type)
                             break
 
-                if not post_slug:
-                    log_artifact(f"[NAV-NOTE] Файл '{file}' не привязан к проектам, пропускаем интеграцию во вкладки.")
-                    continue
-
                 post_date = str(data.get('date', ''))
 
+                # ВЕТКА 2.2: АВТОНОМНЫЕ ПОСТЫ (Без привязки к Ярмарке — как Мультивибратор)
+                if not post_slug:
+                    ready_permalink = data.get('permalink')
+                    if ready_permalink:
+                        # Вырезаем первый сегмент пути из ручного пермалинка
+                        path_parts = [p for p in ready_permalink.split('/') if p]
+                        if path_parts:
+                            detected_section = path_parts[0]
+                            data['section'] = detected_section
+                            
+                            # Проверяем наличие вывески в _pages/ для добавления в дерево
+                            if detected_section not in nav_tree['sections']:
+                                nav_tree['sections'][detected_section] = []
+                            
+                            # Формируем нативный короткий URL раздела, если его нет в списке
+                            short_url = ready_permalink
+                            write_yaml_front_matter(full_path, data, body)
+                            
+                            # Добавляем автономный пост как самостоятельный элемент секции
+                            nav_tree['sections'][detected_section].append({
+                                'title': data.get('title', file_name_clean_no_date),
+                                'slug': file_name_clean_no_date,
+                                'url': short_url,
+                                'direction': data.get('direction', ''),
+                                'level': data.get('level', '')
+                            })
+                    continue
+
+                # Контроль уникальности дат для связанных постов хроники
                 registry_key = (post_slug, post_date, post_page_type)
                 if registry_key in posts_registry:
-                    log_artifact(f"\n[❌ КРИТИЧЕСКАЯ ОШИБКА] Конфликт дат в '{file}' и '{posts_registry[registry_key]}'.")
+                    print(f"\n[❌ КРИТИЧЕСКАЯ ОШИБКА] Конфликт дат в '{file}' и '{posts_registry[registry_key]}'.")
                     exit(1)
                 posts_registry[registry_key] = file
 
-                # Тегирование
                 calculated_tags = []
                 if data.get('direction'): calculated_tags.append(clean_tag(data['direction']))
                 if data.get('entity'): calculated_tags.append(clean_tag(data['entity']))
@@ -211,7 +257,6 @@ def build_navigation_tree():
                 data['tags'] = final_tags
                 if 'keywords' in data: del data['keywords']
 
-                # Запись очищенных и стандартизированных свойств
                 data['categories'] = [post_page_type, post_slug]
                 data['post-page'] = post_page_type
                 current_clean_section = slug_to_section_map.get(post_slug, '')
@@ -219,17 +264,17 @@ def build_navigation_tree():
 
                 write_yaml_front_matter(full_path, data, body)
 
-                short_url = f"/{post_page_type}/{post_slug}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+                short_url = f"/{post_page_type}/{post_slug}/{post_date.replace('-', '/')}/{file_name_clean_no_date}.html"
 
                 if post_page_type not in related_posts_map[post_slug]:
                     related_posts_map[post_slug][post_page_type] = []
                 related_posts_map[post_slug][post_page_type].append({
-                    'title': data.get('title', file_name_clean),
+                    'title': data.get('title', file_name_clean_no_date),
                     'url': short_url,
                     'date': post_date
                 })
 
-    # 3. ЭТАП СВЯЗЫВАНИЯ ГЛАВНЫХ СТРАНИЦ ПРОЕКТОВ И СВОЙСТВ КОЛЛЕКЦИЙ
+    # 3. ЭТАП СВЯЗЫВАНИЯ ГЛАВНЫХ СТРАНИЦ ПРОЕКТОВ И ПАПОК-КОЛЛЕКЦИЙ
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)):
             if not name.startswith('.') and name != '_posts' and name not in EXCLUDED_FOLDERS:
@@ -268,10 +313,30 @@ def build_navigation_tree():
                         data['tags'] = final_proj_tags
                         if 'keywords' in data: del data['keywords']
 
-                        final_url = f"/{clean_section_name}/{project_slug}/"
-                        data['permalink'] = final_url
-                        data['section'] = clean_section_name
+                        # 🔥 УНИВЕРСАЛЬНЫЙ ЗАКОН АДРЕСОВ (TRACY HYBRID)
+                        ready_permalink = data.get('permalink')
+                        
+                        if ready_permalink:
+                            # Шаг 1: Если в самом файле руками прописан permalink — берем его намертво!
+                            final_url = ready_permalink
+                        elif clean_section_name in sections_with_index:
+                            # Режим А (Стандартный Jekyll с index.md): Удаляем пермалинки карточек контента
+                            if project_slug == 'index':
+                                final_url = f"/{clean_section_name}/"
+                            else:
+                                final_url = f"/{clean_section_name}/{project_slug}.html"
+                            if 'permalink' in data: del data['permalink']
+                        else:
+                            # Режим Б и Категория 3 (Без index.md / Специальные коллекции)
+                            base_parent_url = custom_permalinks_map.get(clean_section_name, f"/{clean_section_name}/")
+                            if project_slug == 'index':
+                                final_url = base_parent_url
+                            else:
+                                final_url = f"{base_parent_url}{project_slug}/"
+                            data['permalink'] = final_url
 
+                        # Вшиваем строгое, очищенное имя раздела контента
+                        data['section'] = clean_section_name
                         write_yaml_front_matter(full_path, data, body)
 
                         project_posts_data = {}
@@ -287,35 +352,59 @@ def build_navigation_tree():
                             'level': data.get('level', '')
                         }
                         project_node.update(project_posts_data)
+                        
+                        if clean_section_name not in nav_tree['sections']:
+                            nav_tree['sections'][clean_section_name] = []
                         nav_tree['sections'][clean_section_name].append(project_node)
 
-        if clean_section_name in nav_tree['sections']:
-            nav_tree['sections'][clean_section_name] = sorted(
-                nav_tree['sections'][clean_section_name], 
-                key=lambda x: x['title'].lower()
-            )
+    # Добавление нативных index-вывесок для автономных категорий из _pages/
+    for section_key, title_text in pages_navtitle_map.items():
+        if section_key in nav_tree['sections']:
+            # Проверяем, нет ли уже узла index в этой секции
+            has_index_node = any(node.get('slug') == 'index' for node in nav_tree['sections'][section_key])
+            if not has_index_node and section_key not in sections_with_index:
+                base_url = custom_permalinks_map.get(section_key, f"/{section_key}/")
+                nav_tree['sections'][section_key].append({
+                    'title': title_text,
+                    'slug': 'index',
+                    'url': base_url,
+                    'direction': '',
+                    'level': ''
+                })
 
-    # 🔥 ИНТЕГРАЦИЯ ДИНАМИЧЕСКОЙ БАЗЫ СВОЙСТВ В КОРЕНЬ КАРТЫ NAVIGATION.YML
+    # Сортировка всех элементов дерева по алфавиту
+    for section_name in list(nav_tree['sections'].keys()):
+        nav_tree['sections'][section_name] = sorted(
+            nav_tree['sections'][section_name], 
+            key=lambda x: x['title'].lower()
+        )
+
     nav_tree['post_types'] = sorted(list(detected_post_types))
 
-    # 4. ЗАПИСЬ СТРУКТУРИРОВАННОГО УМНОГО ДЕРЕВА В _DATA/NAVIGATION.YML
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
+        # 1. ЗАПИСЬ ГОТОВОЙ КАРТЫ НА ДИСК (ВОССТАНОВЛЕНО)
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(nav_tree, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' и база свойств 'post_types' успешно сохранены в _data/navigation.yml")
+        log_artifact("[NAV-SUCCESS] Карта навигации 'sections' успешно обновлена по канонам Tracy.")
 
-        # АВТОГЕНЕРАЦИЯ СТРАНИЦ-ЛЕНТ ДЛЯ КНОПКИ "0"
-        for section_name, projects_list in nav_tree['sections'].items():
-            for project in projects_list:
+        # 2. ГЕНЕРАЦИЯ ФИЗИЧЕСКИХ ПАПОК ВКЛАДОК НА СЕРВЕРЕ
+        for section_name, projects in nav_tree['sections'].items():
+            for project in projects:
                 slug = project['slug']
-                if section_name == 'people': continue
                 
-                detected_types = ['journal', 'media']
-                if slug in related_posts_map:
-                    for found_type in related_posts_map[slug].keys():
-                        if found_type not in detected_types:
-                            detected_types.append(found_type)
+                # Пропускаем общие вивески разделов
+                if slug == 'index': continue
+                
+                # Физические папки создаем строго при наличии связанных постов хроники
+                if slug not in related_posts_map or not related_posts_map[slug]:
+                    continue
+                
+                # Собираем динамический список типов
+                detected_types = sorted(list(detected_post_types))
+                for found_type in related_posts_map[slug].keys():
+                    if found_type not in detected_types:
+                        detected_types.append(found_type)
 
                 for post_type in detected_types:
                     dir_path = os.path.join(root_dir, post_type, slug)
@@ -333,7 +422,7 @@ def build_navigation_tree():
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи дерева или страниц лент: {e}")
 
-    # 📂 ФИЗИЧЕСКАЯ ЗАПИСЬ ЛОГОВ-АРТЕФАКТОВ СТРОГО В ПАПКУ СЕРВЕРНОГО АРХИВА
+    # 3. ВЫГРУЗКА ДЕТАЛЬНЫХ ЛОГОВ В АРХИВ АРТЕФАКТОВ (ВОССТАНОВЛЕНО)
     try:
         log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:

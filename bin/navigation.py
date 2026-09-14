@@ -209,21 +209,20 @@ def build_navigation_tree():
                 if not post_slug:
                     ready_permalink = data.get('permalink')
                     if ready_permalink:
-                        # Вырезаем первый сегмент пути из ручного пермалинка
+                        # Шаг A: У автономного поста не режем имя, берем дату из Front Matter
+                        post_date = str(data.get('date', '2026-01-01'))
+                        
                         path_parts = [p for p in ready_permalink.split('/') if p]
                         if path_parts:
                             detected_section = path_parts[0]
                             data['section'] = detected_section
                             
-                            # Проверяем наличие вывески в _pages/ для добавления в дерево
                             if detected_section not in nav_tree['sections']:
                                 nav_tree['sections'][detected_section] = []
                             
-                            # Формируем нативный короткий URL раздела, если его нет в списке
                             short_url = ready_permalink
                             write_yaml_front_matter(full_path, data, body)
                             
-                            # Добавляем автономный пост как самостоятельный элемент секции
                             nav_tree['sections'][detected_section].append({
                                 'title': data.get('title', file_name_clean_no_date),
                                 'slug': file_name_clean_no_date,
@@ -232,6 +231,15 @@ def build_navigation_tree():
                                 'level': data.get('level', '')
                             })
                     continue
+
+                # 🔥 ШАГ Б: ДЛЯ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ ИЗ _POSTS (Где нет ручного пермалинка)
+                # Автомат извлечения даты из имени файла, если она стерта в Front Matter
+                if data and data.get('date'):
+                    post_date = str(data['date'])
+                else:
+                    match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                    post_date = match_date.group(1) if match_date else "2026-01-01"
+                    log_artifact(f"[NAV-WARNING] У связанного поста извлечена дата из имени файла: {file} | Назначено: {post_date}")
 
                 # Контроль уникальности дат для связанных постов хроники
                 registry_key = (post_slug, post_date, post_page_type)

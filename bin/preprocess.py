@@ -87,8 +87,8 @@ def main():
 
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     try:
-        from content import build_pinned_news_list
-        build_pinned_news_list()
+        from content import process_all_markdown_files
+        process_all_markdown_files()
     except Exception as e:
         print(f"[ERROR] Не удалось запустить модуль контента: {e}")
 

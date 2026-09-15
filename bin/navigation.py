@@ -211,7 +211,7 @@ def build_navigation_tree():
                         
                         node['url'] = f"/{clean_section_name}/{file_slug}/"
 
-                        if name not in folders_with_index:                        
+                        if name not in folders_with_index and not name.startswith('_'):                        
                             data['permalink'] = node['url']
                             log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
 

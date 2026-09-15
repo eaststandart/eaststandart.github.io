@@ -259,7 +259,7 @@ def build_navigation_tree():
                 write_yaml_front_matter(file_path, data, body)
 
                 # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в памяти
-                # node = navigation_news_properties(data, node)
+                node = navigation_news_properties(data, node)
 
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")

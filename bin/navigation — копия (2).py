@@ -59,24 +59,26 @@ def write_yaml_front_matter(file_path, data, body_content):
 # =====================================================================
 # ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
 # =====================================================================
-def navigation_news_properties(data, passport, file_path=None, project_slug=None):
-    """Новостной module Этажа 2. Рассчитывает даты, типы и принудительно 
-    вшивает массив нативных категорий Jekyll во Front Matter на диск."""
+def navigation_news_properties(data, passport, file_path=None):
+    """Новостной модуль Этажа 2. Рассчитывает, записывает даты на диск 
+    и выводит факты изменений в лог контура контроля."""
     import datetime
     
     date_was_written = False
-    categories_were_written = False
     
     if not data.get('date'):
         file_name = os.path.basename(file_path) if file_path else ""
         match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name)
         
         if match_date:
+            # А. Если это папка _posts/ — вырезаем из имени файла
             data['date'] = match_date.group(1)
             date_was_written = True
         else:
+            # 🟢 Б. Для обычных файлов — вытаскиваем ЧЕСТНУЮ историческую дату первого коммита из Git!
             if file_path and os.path.exists(file_path):
                 try:
+                    # Запускаем системную команду Git, которая находит дату создания файла в репозитории
                     cmd = ['git', 'log', '--diff-filter=A', '--format=%as', '--', file_path]
                     git_date = subprocess.check_output(cmd, text=True).strip().split('\n')[-1]
                     
@@ -84,10 +86,12 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
                         data['date'] = git_date
                         date_was_written = True
                     else:
+                        # Резервный подстраховщик, если файл абсолютно новый и ещё ни разу не отправлялся в Git
                         mtime = os.path.getmtime(file_path)
                         data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
                         date_was_written = True
-                except Exception:
+                except Exception as e:
+                    # Если Git на сервере выдал сбой, страхуемся системной датой
                     mtime = os.path.getmtime(file_path)
                     data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
                     date_was_written = True
@@ -96,7 +100,24 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
                 
     passport['date'] = str(data['date'])
 
-    # Автоматический расчет типа posttype
+    # Если дата была рассчитана, записываем её в файл на диск и пишем лог!
+    if date_was_written and file_path and os.path.exists(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+            body_content = content[match.end():] if match else content
+            
+            # Физически перезаписываем .md файл на диске сервера Actions, фиксируя дату
+            write_yaml_front_matter(file_path, data, body_content)
+            
+            # Выводим строгий scannable факт в лог
+            root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+            relative_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+            log_artifact(f"[NAV-DEBUG] Файл: {relative_key} | Записано date: {data['date']}")
+        except Exception as e:
+            print(f"[NAV-ERROR] Не удалось дописать дату в файл {file_path}: {e}")
+
     has_post_page_property = False
     post_page_type = ""
     if 'post-page' in data:
@@ -106,36 +127,10 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
         for key in list(data.keys()):
             if str(key).endswith('-post-page'):
                 has_post_page_property = True
-                post_page_type = str(key).split('-')[0]
+                post_page_type = str(key).split('-')
                 break
     if has_post_page_property and post_page_type:
         passport['posttype'] = post_page_type
-
-    # Вшиваем категории на основе URL родительской страницы
-    if passport.get('posttype') and project_slug:
-        if not data.get('categories'):
-            data['categories'] = [passport['posttype'], project_slug]
-            data['post-page'] = passport['posttype']
-            categories_were_written = True
-
-    if (date_was_written or categories_were_written) and file_path and os.path.exists(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-            body_content = content[match.end():] if match else content
-            
-            write_yaml_front_matter(file_path, data, body_content)
-            
-            root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-            relative_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
-            
-            if date_was_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {relative_key} | Записано date: {data['date']}")
-            if categories_were_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {relative_key} | Записано categories: {data['categories']}")
-        except Exception as e:
-            print(f"[NAV-ERROR] Не удалось обновить свойства в файле {file_path}: {e}")
         
     return passport
 
@@ -370,17 +365,8 @@ def build_navigation_tree():
 
                 write_yaml_front_matter(file_path, data, body)
 
-                # Вырезаем слаг родителя из его готового интернет-адреса URL
-                calculated_slug = ""
-                if calculated_parent_path and calculated_parent_path in flat_map:
-                    parent_nodes = flat_map[calculated_parent_path]
-                    if parent_nodes and len(parent_nodes) > 0:
-                        parent_url = parent_nodes[0].get('url', '').strip('/')
-                        if parent_url:
-                            calculated_slug = parent_url.split('/')[-1]
-
-                # Передаем вычисленный слаг на Этаж 2 для штамповки категорий на диск
-                node = navigation_news_properties(data, node, file_path, calculated_slug)
+                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
+                node = navigation_news_properties(data, node, file_path)
 
                 flat_map[relative_file_key] = [node]
 

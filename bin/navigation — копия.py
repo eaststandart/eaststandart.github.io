@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module navigation (Часть 1 из 2)
+@module navigation (Часть 1 из 3)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Разделение контура: утилиты (Этаж 1) и изолированный модуль новостей (Этаж 2).
+@purpose Этаж 1, 2 и подготовка Диспетчера к каскадному Шагу 1.
 @author TechLab
-@version 18.1.0-clean-floors
+@version 19.0.0-split-cascade
 """
 
 import os
@@ -71,18 +71,16 @@ def navigation_news_properties(data, passport):
         for key in list(data.keys()):
             if str(key).endswith('-post-page'):
                 has_post_page_property = True
-                # Строго ваш оригинальный рабочий сплит по дефису с индексом 0
                 post_page_type = str(key).split('-')[0]
                 break
 
-    # Пишем posttype в паспорт только если свойство реально было в исходнике
     if has_post_page_property and post_page_type:
         passport['posttype'] = post_page_type
         
     return passport
 
 # =====================================================================
-# ЭТАЖ 3: ГЛАВНЫЙ УПРАВЛЯЮЩИЙ КОНВЕЙЕР (Диспетчер обхода - Начало)
+# ЭТАЖ 3: ГЛАВНЫЙ УПРАВЛЯЮЩИЙ КОНВЕЙЕР (Диспетчер обхода)
 # =====================================================================
 def build_navigation_tree():
     global artifacts_log_buffer
@@ -93,21 +91,22 @@ def build_navigation_tree():
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    debug_dir = os.path.join(root_dir, '_processed_files')
+    debug_dir = os.path.join(root_dir, '_navigation_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # Жесткий лаконичный набор исключений корневых папок диска контента
-    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_processed_files', '_content_files'}
+    # Список жестких технических исключений корневых папок диска
+    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_navigation_files'}
     
     flat_map = {}
     root_dirs_present = set()
+    folders_with_index = set()
     
     # Собираем имена всех физических папок в корне диска строго с фильтром исключений
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.') and name not in EXCLUDED_FOLDERS:
             root_dirs_present.add(name)
 
-    # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕМУ ПРАВИЛУ
+    # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕЙ КАСКАДНОЙ ТАБЛИЦЕ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -115,19 +114,59 @@ def build_navigation_tree():
             clean_section_name = name.lstrip('_')
             is_under_dir = name.startswith('_')
             
-            node = {}
-            node['title'] = clean_section_name.capitalize()
-            node['url'] = f"/{clean_section_name}/"
+            # Локальные буферы каскада
+            front_data = None
+            index_file_path = ""
             
+            # --- ПРИОРИТЕТ 1: Поиск физического индекса прямо внутри папки ---
+            possible_index_md = os.path.join(full_path, 'index.md')
+            possible_index_html = os.path.join(full_path, 'index.html')
+            
+            if os.path.exists(possible_index_md):
+                index_file_path = possible_index_md
+            elif os.path.exists(possible_index_html):
+                index_file_path = possible_index_html
+                
+            if index_file_path:
+                front_data, _, _ = parse_yaml_front_matter(index_file_path)
+                folders_with_index.add(name)
+                
+            # --- ПРИОРИТЕТ 2: Поиск совпадения в папке _pages/ ---
+            if not front_data:
+                possible_page = os.path.join(root_dir, '_pages', f"{clean_section_name}.md")
+                if os.path.exists(possible_page):
+                    front_data, _, _ = parse_yaml_front_matter(possible_page)
+
+            # Собираем паспорт раздела
+            node = {}
+            
+            # Вычисление заголовков и crumbtitle (Приоритет 1 и 2)
+            if front_data:
+                node['title'] = front_data.get('title', clean_section_name.capitalize())
+                if 'crumbtitle' in front_data:
+                    node['crumbtitle'] = front_data['crumbtitle']
+                
+                # Вычисление URL по пермалинку
+                if front_data.get('permalink'):
+                    node['url'] = front_data['permalink'].strip()
+                else:
+                    # --- ПРИОРИТЕТ 3 (Сброс URL на автомат папки, если пермалинка в шапке не было) ---
+                    node['url'] = f"/{clean_section_name}/"
+            
+            # --- ПРИОРИТЕТ 3: Полный автомат, если файлов на диске вообще не найдено ---
+            else:
+                node['title'] = clean_section_name.capitalize()
+                node['url'] = f"/{clean_section_name}/"
+
+            # Назначение прямых свойств связи в зависимости от наличия подчёркивания папки на диске
             if is_under_dir:
                 node['collection'] = clean_section_name
             else:
                 node['section'] = clean_section_name
                 
             flat_map[clean_section_name] = [node]
-            log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Зафиксирован узел корневой папки '{name}' -> {node['url']}")
 
-    # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
+    # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ) - 1 В 1 ВАШ ФАЙЛ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -149,6 +188,7 @@ def build_navigation_tree():
                     node = {}
                     node['title'] = data.get('title', file_slug)
 
+                    # 1. Если у файла ЕСТЬ permalink
                     if ready_permalink:
                         node['url'] = ready_permalink
                         permalink_clean = ready_permalink.strip('/')
@@ -163,11 +203,18 @@ def build_navigation_tree():
                             node['relatedcollection'] = first_word
                         elif has_clean_dir:
                             node['relatedsection'] = first_word
+
+                    # 2. Если у файла НЕТ permalink
                     else:
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')
                         
                         node['url'] = f"/{clean_section_name}/{file_slug}/"
+
+                        if name not in folders_with_index and not name.startswith('_'):                        
+                            data['permalink'] = node['url']
+                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
+
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:
@@ -178,7 +225,7 @@ def build_navigation_tree():
 
                     flat_map[relative_file_key] = [node]
 
-    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ СТРОГО ПО ВАШЕМУ РАБОЧЕМУ КОДУ
+    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (СТРОГО 1 В 1 ВАШ ФАЙЛ)
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -197,7 +244,7 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Извлечение типа для автомата URL строго по вашему коду 1 в 1
+                # Извлечение типа post-page без дублирования массивов строго по вашему коду
                 has_post_page_property = False
                 post_page_type = ""
                 if 'post-page' in data:
@@ -251,42 +298,43 @@ def build_navigation_tree():
                 if has_post_page_property and post_page_type:
                     data['categories'] = [post_page_type, file_slug_no_date]
                     data['post-page'] = post_page_type
-                if calculated_parent_path:
-                    parent_node_list = flat_map[calculated_parent_path]
-                    if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        p_node = parent_node_list[0]
-                        data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
+                # if calculated_parent_path:
+                #     parent_node_list = flat_map[calculated_parent_path]
+                #     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
+                #         p_node = parent_node_list[0]
+                #         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                #         log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
+
                 write_yaml_front_matter(file_path, data, body)
 
-                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в памяти
+                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
                 node = navigation_news_properties(data, node)
 
                 flat_map[relative_file_key] = [node]
-                log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
 
-    # 🔥 СОБИРАЕМ ИТОГОВЫЙ СЛОВАРЬ С СЕРВЕРНЫМ СПИСКОМ ПАПОК НА ПЕРВОЙ СТРОКЕ
+    # СОБИРАЕМ ИТОГОВЫЙ СЛОВАРЬ С СЕРВЕРНЫМ СПИСКОМ ПАПОК НА ПЕРВОЙ СТРОКЕ
     final_output_map = {}
     final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))
     for k, v in flat_map.items():
         final_output_map[k] = v
 
-    # Запись карты на диск
+    # Запись плоской карты на диск без значков *id
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(final_output_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        log_artifact("[NAV-SUCCESS] Плоская универсальная навигационная карта успешно записана.")
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
     try:
-        log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
+        log_file_path = os.path.join(debug_dir, 'navigation-md-properties.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(artifacts_log_buffer))
-        print("[NAV-SUCCESS] Технический отчёт успешно сохранен.")
-    except:
-        pass
+        print("[NAV-SUCCESS] Лог изменений свойств успешно сохранен.")
+    except Exception as e:
+        print(f"[NAV-ERROR] Не удалось сохранить лог: {e}")
 
 if __name__ == '__main__':
     build_navigation_tree()

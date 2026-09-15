@@ -91,7 +91,7 @@ def build_navigation_tree():
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    debug_dir = os.path.join(root_dir, '_navigation_files')
+    debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
     # Список жестких технических исключений корневых папок диска
@@ -163,6 +163,7 @@ def build_navigation_tree():
                 node['section'] = clean_section_name
                 
             flat_map[clean_section_name] = [node]
+            log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Успешный каскад для '{name}' -> {node['url']}")
 
     # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ) - 1 В 1 ВАШ ФАЙЛ
     for name in os.listdir(root_dir):
@@ -304,6 +305,7 @@ def build_navigation_tree():
                 node = navigation_news_properties(data, node)
 
                 flat_map[relative_file_key] = [node]
+                log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
 
     # СОБИРАЕМ ИТОГОВЫЙ СЛОВАРЬ С СЕРВЕРНЫМ СПИСКОМ ПАПОК НА ПЕРВОЙ СТРОКЕ
     final_output_map = {}
@@ -317,16 +319,17 @@ def build_navigation_tree():
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
         with open(output_file, 'w', encoding='utf-8') as f:
             yaml.dump(final_output_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        log_artifact("[NAV-SUCCESS] Плоская универсальная навигационная карта успешно записана.")
     except Exception as e:
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
     try:
-        log_file_path = os.path.join(debug_dir, 'navigation-md-properties.log')
+        log_file_path = os.path.join(debug_dir, 'navigation_debug.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(artifacts_log_buffer))
-        print("[NAV-SUCCESS] Лог изменений свойств успешно сохранен.")
-    except Exception as e:
-        print(f"[NAV-ERROR] Не удалось сохранить лог: {e}")
+        print("[NAV-SUCCESS] Технический отчёт успешно сохранен.")
+    except:
+        pass
 
 if __name__ == '__main__':
     build_navigation_tree()

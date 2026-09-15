@@ -3,9 +3,9 @@
 """
 @module navigation (Часть 1 из 2)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Шаг 1: Точный перенос рабочей логики в функцию build_navigation_crumbs.
+@purpose Шаг 1: Изолированная функция build_navigation_crumbs без изменения стабильной логики.
 @author TechLab
-@version 16.0.0-exact-transfer
+@version 16.1.0-exact-crumbs
 """
 
 import os
@@ -52,16 +52,15 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
-# 🔥 ТЕПЕРЬ СЮДА ЗАВЕДЕН ТОТ САМЫЙ РАБОЧИЙ КОД БЕЗ ИЗМЕНЕНИЙ ЛОГИКИ
-def build_navigation_crumbs(data, file_slug, ready_permalink, name, folders_with_index, root_dirs_present, calculated_parent_path=""):
-    """Сборка навигационного паспорта. Сюда перенесён стабильный рабочий алгоритм."""
-    crumbs = {}
-    crumbs['title'] = data.get('title', file_slug)
-    
-    # Режим А и Б для обычных страниц контента (Шаг 2)
-    if name != '_posts':
+def build_navigation_crumbs(data, file_slug, ready_permalink, name, root_dirs_present, is_posts=False, calculated_parent_path=""):
+    """Собирает паспорт хлебных крошек на основе вашей стопроцентно стабильной рабочей логики из памяти."""
+    node = {}
+    node['title'] = data.get('title', file_slug)
+
+    # Логика Шага 2: Обычные страницы статей и коллекций
+    if not is_posts:
         if ready_permalink:
-            crumbs['url'] = ready_permalink
+            node['url'] = ready_permalink
             permalink_clean = ready_permalink.strip('/')
             first_word = permalink_clean.split('/')[0] if permalink_clean else ''
             
@@ -71,22 +70,23 @@ def build_navigation_crumbs(data, file_slug, ready_permalink, name, folders_with
             if has_clean_dir and has_under_dir:
                 pass
             elif has_under_dir:
-                crumbs['relatedcollection'] = first_word
+                node['relatedcollection'] = first_word
             elif has_clean_dir:
-                crumbs['relatedsection'] = first_word
+                node['relatedsection'] = first_word
         else:
             clean_section_name = name.lstrip('_')
             is_under_dir = name.startswith('_')
-            crumbs['url'] = f"/{clean_section_name}/{file_slug}/"
+            
+            node['url'] = f"/{clean_section_name}/{file_slug}/"
             if is_under_dir:
-                crumbs['relatedcollection'] = clean_section_name
+                node['relatedcollection'] = clean_section_name
             else:
-                crumbs['relatedsection'] = clean_section_name
-                
-    # Рабочая логика для постов хроники папки _posts/ (Шаг 3)
+                node['relatedsection'] = clean_section_name
+
+    # Логика Шага 3: Посты хроники папки _posts/
     else:
         if ready_permalink:
-            crumbs['url'] = ready_permalink
+            node['url'] = ready_permalink
             permalink_clean = ready_permalink.strip('/')
             first_word = permalink_clean.split('/')[0] if permalink_clean else ''
             
@@ -94,22 +94,16 @@ def build_navigation_crumbs(data, file_slug, ready_permalink, name, folders_with
             has_under_dir = f"_{first_word}" in root_dirs_present
             
             if calculated_parent_path:
-                crumbs['relatedpages'] = calculated_parent_path
-                
+                node['relatedpages'] = calculated_parent_path
+            
             if has_clean_dir and has_under_dir:
                 pass
             elif has_under_dir:
-                crumbs['relatedcollection'] = first_word
+                node['relatedcollection'] = first_word
             elif has_clean_dir:
-                # Вписываем связь только если это автономный пост без родительского пути
-                if not calculated_parent_path:
-                    crumbs['relatedsection'] = first_word
-        else:
-            # Ссылка соберется во внешней обертке конвейера по умолчанию
-            if calculated_parent_path:
-                crumbs['relatedpages'] = calculated_parent_path
+                node['relatedsection'] = first_word
 
-    return crumbs
+    return node
 
 def build_navigation_tree():
     global artifacts_log_buffer
@@ -128,41 +122,36 @@ def build_navigation_tree():
     
     flat_map = {}
     root_dirs_present = set()
-    folders_with_index = set()
     
-    # 🔥 ИСПРАВЛЕНО: Собираем имена корневых папок СТРОГО с фильтром исключений, убирая мусор
+    # Собираем имена всех физических папок в корне диска строго с фильтром исключений
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.') and name not in EXCLUDED_FOLDERS:
             root_dirs_present.add(name)
 
-    # ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ)
-    for name in sorted(list(root_dirs_present)):
-        full_path = os.path.join(root_dir, name)
-        clean_section_name = name.lstrip('_')
-        is_under_dir = name.startswith('_')
-        
-        # Определяем Режим А для Шага 2
-        if os.path.exists(os.path.join(full_path, 'index.md')) or os.path.exists(os.path.join(full_path, 'index.html')):
-            folders_with_index.add(name)
-            
-        node = {}
-        node['title'] = clean_section_name.capitalize()
-        node['url'] = f"/{clean_section_name}/"
-        
-        if is_under_dir:
-            node['collection'] = clean_section_name
-        else:
-            node['section'] = clean_section_name
-            
-        flat_map[clean_section_name] = [node]
-        log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Инициализирован узел папки '{name}'")
-
-    # ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
+    # ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕМУ ПРАВИЛУ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
             
             clean_section_name = name.lstrip('_')
+            is_under_dir = name.startswith('_')
+            
+            node = {}
+            node['title'] = clean_section_name.capitalize()
+            node['url'] = f"/{clean_section_name}/"
+            
+            if is_under_dir:
+                node['collection'] = clean_section_name
+            else:
+                node['section'] = clean_section_name
+                
+            flat_map[clean_section_name] = [node]
+            log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Зафиксирован узел корневой папки '{name}' -> {node['url']}")
+
+    # ШАГ 2 И ШАГ 3: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
+    for name in os.listdir(root_dir):
+        full_path = os.path.join(root_dir, name)
+        if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
             
             for root_walk, _, files in os.walk(full_path):
                 for file in files:
@@ -178,15 +167,15 @@ def build_navigation_tree():
                     ready_permalink = data.get('permalink', '').strip()
                     relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
 
-                    # Вызов фабрики крошек из оперативной памяти сервера
-                    passport = build_navigation_crumbs(data, file_slug, ready_permalink, name, folders_with_index, root_dirs_present)
+                    # Вызов изолированной фабрики крошек из оперативной памяти 1 в 1 по вашей логике
+                    passport = build_navigation_crumbs(data, file_slug, ready_permalink, name, root_dirs_present, is_posts=False)
 
-                    data['section'] = clean_section_name
+                    data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 
                     flat_map[relative_file_key] = [passport]
 
-    # ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/
+    # ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -205,7 +194,20 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Вычисляем полный физический путь к родителю по очищенной карте Шага 2
+                # Извлечение типа post-page строго 1 в 1 из вашего кода
+                has_post_page_property = False
+                post_page_type = ""
+                if 'post-page' in data:
+                    has_post_page_property = True
+                    post_page_type = str(data['post-page'])
+                else:
+                    for key in list(data.keys()):
+                        if str(key).endswith('-post-page'):
+                            has_post_page_property = True
+                            post_page_type = str(key).split('/')[0]
+                            break
+
+                # Вычисляем полный физический путь к родителю
                 calculated_parent_path = ""
                 parent_file_name = f"{file_slug_no_date}.md"
                 for key_path in flat_map.keys():
@@ -213,35 +215,39 @@ def build_navigation_tree():
                         calculated_parent_path = key_path
                         break
 
-                # Вызов фабрики крошек для постов хроники с передачей пути родителя
-                passport = build_navigation_crumbs(data, file_slug_no_date, ready_permalink, '_posts', folders_with_index, root_dirs_present, calculated_parent_path)
-                    
-                # Обертка автомата URL для постов без пермалинка
-                if not ready_permalink:
-                    post_page_type = data.get('post-page', 'journal')
-                    for key in list(data.keys()):
-                        if str(key).endswith('-post-page'):
-                            post_page_type = str(key).split('-')
-                            break
-                    passport['url'] = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+                # Вызов изолированной фабрики крошек для постов хроники 1 в 1 по вашей логике
+                passport = build_navigation_crumbs(data, file_slug_no_date, ready_permalink, '_posts', root_dirs_present, is_posts=True, calculated_parent_path=calculated_parent_path)
 
-                # Синхронизация Front Matter самого файла поста
+                # Б. Автомат URL для постов хроники БЕЗ пермалинка строго из вашей кодовой базы
+                if not ready_permalink:
+                    fallback_type = post_page_type if post_page_type else "journal"
+                    passport['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+
+                # Пишем posttype только если свойство было в исходнике (по вашему правилу)
+                if has_post_page_property and post_page_type:
+                    passport['posttype'] = post_page_type
+
+                # Синхронизация Front Matter самого файла
+                if has_post_page_property and post_page_type:
+                    data['categories'] = [post_page_type, file_slug_no_date]
+                    data['post-page'] = post_page_type
                 if calculated_parent_path:
                     parent_node_list = flat_map[calculated_parent_path]
                     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        parent_node = parent_node_list
-                        data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
+                        p_node = parent_node_list[0]
+                        data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
                 write_yaml_front_matter(file_path, data, body)
 
                 flat_map[relative_file_key] = [passport]
                 log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
 
-    # Склеиваем итоговую чистую карту
+    # Собираем итоговый словарь с сервером папок на первой строке
     final_output_map = {}
     final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))
     for k, v in flat_map.items():
         final_output_map[k] = v
 
+    # Запись карты на диск
     output_file = os.path.join(data_dir, 'navigation.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True

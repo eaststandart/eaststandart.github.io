@@ -58,37 +58,52 @@ def write_yaml_front_matter(file_path, data, body_content):
 # =====================================================================
 # ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
 # =====================================================================
-import datetime
-
-def navigation_news_properties(data, passport):
-    """Работает строго в оперативной памяти с готовым словарем 'data'.
-    Рассчитывает даты и типы постов строго в одном месте контура."""
+def navigation_news_properties(data, passport, file_path=None):
+    """Новостной модуль Этажа 2. Рассчитывает, записывает даты на диск 
+    и выводит факты изменений в лог контура контроля."""
+    import datetime
     
     date_was_written = False
-
+    
     if not data.get('date'):
-        # Проверяем, передан ли пост хроники (у него имя файла содержит 10 знаков даты YYYY-MM-DD)
-        file_name = os.path.basename(passport.get('url', ''))
+        file_name = os.path.basename(file_path) if file_path else ""
         match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name)
         
         if match_date:
-            # А. Если это _posts/ — вырезаем дату из имени
+            # А. Если это папка _posts/ — вырезаем из имени файла
             data['date'] = match_date.group(1)
+            date_was_written = True
         else:
-            # Б. Если это обычный файл — берём системную дату изменения с диска
-            # Путь к файлу временно вычисляем из ключа карты (он всегда уникален)
-            # Но для простоты: если у нас есть инфа о текущем обходе, берём системное время
-            data['date'] = datetime.datetime.now().strftime('%Y-%m-%d')
-            
-    # Всегда отдаём чистую дату в итоговую карту navigation.yml для сортировок Питона
+            # Б. Для обычных файлов (tools, biblio и др.) — берём системную дату диска
+            if file_path and os.path.exists(file_path):
+                mtime = os.path.getmtime(file_path)
+                data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                date_was_written = True
+            else:
+                data['date'] = datetime.datetime.now().strftime('%Y-%m-%d')
+                
     passport['date'] = str(data['date'])
 
-    if date_was_written:
-        log_artifact(f"[NAV-DEBUG] Файл: {passport.get('url', '')} | Записано date: {data['date']}")
+    # Если дата была рассчитана, записываем её в файл на диск и пишем лог!
+    if date_was_written and file_path and os.path.exists(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+            body_content = content[match.end():] if match else content
+            
+            # Физически перезаписываем .md файл на диске сервера Actions, фиксируя дату
+            write_yaml_front_matter(file_path, data, body_content)
+            
+            # Выводим строгий scannable факт в лог
+            root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+            relative_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+            log_artifact(f"[NAV-DEBUG] Файл: {relative_key} | Записано date: {data['date']}")
+        except Exception as e:
+            print(f"[NAV-ERROR] Не удалось дописать дату в файл {file_path}: {e}")
 
     has_post_page_property = False
     post_page_type = ""
-    
     if 'post-page' in data:
         has_post_page_property = True
         post_page_type = str(data['post-page'])
@@ -96,9 +111,8 @@ def navigation_news_properties(data, passport):
         for key in list(data.keys()):
             if str(key).endswith('-post-page'):
                 has_post_page_property = True
-                post_page_type = str(key).split('-')[0]
+                post_page_type = str(key).split('-')
                 break
-
     if has_post_page_property and post_page_type:
         passport['posttype'] = post_page_type
         
@@ -248,7 +262,7 @@ def build_navigation_tree():
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 
-                    node = navigation_news_properties(data, node)
+                    node = navigation_news_properties(data, node, file_path)
 
                     flat_map[relative_file_key] = [node]
 
@@ -336,7 +350,7 @@ def build_navigation_tree():
                 write_yaml_front_matter(file_path, data, body)
 
                 # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
-                node = navigation_news_properties(data, node)
+                node = navigation_news_properties(data, node, file_path)
 
                 flat_map[relative_file_key] = [node]
 

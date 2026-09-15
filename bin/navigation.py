@@ -298,13 +298,13 @@ def build_navigation_tree():
                 if has_post_page_property and post_page_type:
                     data['categories'] = [post_page_type, file_slug_no_date]
                     data['post-page'] = post_page_type
-                if calculated_parent_path:
-                    parent_node_list = flat_map[calculated_parent_path]
-                    if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        p_node = parent_node_list[0]
-                        data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
-
-                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
+                # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
+                # if calculated_parent_path:
+                #     parent_node_list = flat_map[calculated_parent_path]
+                #     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
+                #         p_node = parent_node_list[0]
+                #         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                #         log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
 
                 write_yaml_front_matter(file_path, data, body)
 

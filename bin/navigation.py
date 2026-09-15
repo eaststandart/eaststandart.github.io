@@ -52,46 +52,7 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
-# 🔥 ИЗОЛИРОВАННЫЙ МОДУЛЬ НАВИГАЦИИ С ИСПРАВЛЕННЫМ ПОНЯТНЫМ ИМЕНЕМ
-def build_navigation_crumbs(data, file_slug, ready_permalink, name, is_under_dir, root_dirs_present):
-    """Принимает сырые данные из памяти и собирает строго базовый паспорт хлебных крошек.
-    Никаких повторных открытий файлов с диска!"""
-    crumbs = {}
-    
-    # 1. Свойство title
-    crumbs['title'] = data.get('title', file_slug)
-    
-    # 2. Свойство url (Строго нативный permalink из файла или плоский автомат папки)
-    if ready_permalink:
-        crumbs['url'] = ready_permalink
-    else:
-        clean_section_name = name.lstrip('_')
-        crumbs['url'] = f"/{clean_section_name}/{file_slug}/"
-
-    # 3. Вычисление свойств связей по пермалинком и проверке корня диска контента
-    if ready_permalink:
-        permalink_clean = ready_permalink.strip('/')
-        first_word = permalink_clean.split('/') if permalink_clean else ''
-        
-        has_clean_dir = first_word in root_dirs_present
-        has_under_dir = f"_{first_word}" in root_dirs_present
-        
-        # Защита от коллизий: если папки дублируются или их нет — свойства связей отсутствуют
-        if not (has_clean_dir and has_under_dir):
-            if has_under_dir:
-                crumbs['relatedcollection'] = first_word
-            elif has_clean_dir:
-                crumbs['relatedsection'] = first_word
-    else:
-        # Автоматический плоский расчёт связей по физической папке
-        clean_section_name = name.lstrip('_')
-        if is_under_dir:
-            crumbs['relatedcollection'] = clean_section_name
-        else:
-            crumbs['relatedsection'] = clean_section_name
-            
-    return crumbs
-
+# 🔥 ИЗОЛИРОВАННЫЙ МОДУЛЬ НАВИГАЦИИ
 def build_navigation_tree():
     global artifacts_log_buffer
     artifacts_log_buffer.clear()
@@ -104,18 +65,17 @@ def build_navigation_tree():
     debug_dir = os.path.join(root_dir, '_processed_files')
     os.makedirs(debug_dir, exist_ok=True)
 
-    # 🔥 ИСПРАВЛЕНО: Служебные технические директории внесены в список жестких исключений
     EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_processed_files', '_content_files'}
     
     flat_map = {}
     root_dirs_present = set()
     
-    # Собираем имена всех физических папок в корне диска для фильтра коллизий
+    # Собираем имена всех физических папок в книге для фильтра коллизий
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.'):
             root_dirs_present.add(name)
 
-    # ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) ПО НАШЕМУ ПРАВИЛУ
+    # ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ)
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -151,17 +111,14 @@ def build_navigation_tree():
                     if file_slug == 'index': continue
                     
                     file_path = os.path.join(root_walk, file)
-                    # 🔥 Файл открывается с диска СТРОГО один раз!
                     data, front_text, body = parse_yaml_front_matter(file_path)
                     if data is None or data.get('published') is False: continue
 
                     ready_permalink = data.get('permalink', '').strip()
                     relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
 
-                    # 🔥 ВЫЗОВ ИЗОЛИРОВАННОЙ ФАБРИКИ КРОШЕК ИЗ ОПЕРАТИВНОЙ ПАМЯТИ
                     passport = build_navigation_crumbs(data, file_slug, ready_permalink, name, is_under_dir, root_dirs_present)
 
-                    # Синхронизируем Front Matter самого md-файла на диске
                     data['section'] = clean_section_name
                     write_yaml_front_matter(file_path, data, body)
 
@@ -175,7 +132,6 @@ def build_navigation_tree():
                 if not (file.endswith('.md') or file.endswith('.html')): continue
                 
                 file_path = os.path.join(root, file)
-                # 🔥 Пост открывается с диска СТРОГО один раз!
                 data, front_text, body = parse_yaml_front_matter(file_path)
                 if data is None or data.get('published') is False: continue
 
@@ -187,7 +143,6 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Вычисляем полный физический путь к родителю контента
                 calculated_parent_path = ""
                 parent_file_name = f"{file_slug_no_date}.md"
                 for key_path in flat_map.keys():
@@ -195,32 +150,31 @@ def build_navigation_tree():
                         calculated_parent_path = key_path
                         break
 
-                # 🔥 ВЫЗОВ ИЗОЛИРОВАННОЙ ФАБРИКИ КРОШЕК ИЗ ОПЕРАТИВНОЙ ПАМЯТИ ДЛЯ ПОСТА ХРОНИКИ
                 passport = build_navigation_crumbs(data, file_slug_no_date, ready_permalink, '_posts', False, root_dirs_present)
 
-                # Дописываем к паспорту поста relatedpages по вашему правилу полных путей
                 if calculated_parent_path:
                     passport['relatedpages'] = calculated_parent_path
                     
-                # Доработка автомата URL для постов без пермалинка
                 if not ready_permalink:
                     post_page_type = data.get('post-page', 'journal')
                     for key in list(data.keys()):
                         if str(key).endswith('-post-page'):
-                            post_page_type = str(key).split('-')[0]
+                            post_page_type = str(key).split('-')
                             break
                     passport['url'] = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
 
-                # Синхронизация Front Matter самого файла поста
+                # 🔥 ИСПРАВЛЕНО: Безопасное извлечение словаря из списка по индексу [0] перед вызовом .get()
                 if calculated_parent_path:
-                    parent_node = flat_map[calculated_parent_path]
-                    data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
+                    parent_node_list = flat_map[calculated_parent_path]
+                    if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
+                        parent_node = parent_node_list
+                        data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
                 write_yaml_front_matter(file_path, data, body)
 
                 flat_map[relative_file_key] = [passport]
                 log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")
 
-    # ФИНИШНАЯ НАЧИСТАЯ ЗАПИСЬ ПЛОСКОЙ КАРТЫ НА ДИСК
+    # ФИНИШНАЯ ЗАПИСЬ
     final_output_map = {}
     final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))
     for k, v in flat_map.items():

@@ -79,8 +79,8 @@ def navigation_news_properties(data, passport, file_path=None):
             if file_path and os.path.exists(file_path):
                 try:
                     # Запускаем системную команду Git, которая находит дату создания файла в репозитории
-                    cmd = f'git log --follow --format=%as -- "{file_path}" | tail -1'
-                    git_date = subprocess.check_output(cmd, shell=True, text=True).strip()
+                    cmd = ['git', 'log', '--diff-filter=A', '--format=%as', '--', file_path]
+                    git_date = subprocess.check_output(cmd, text=True).strip().split('\n')[-1]
                     
                     if git_date and re.match(r'^\d{4}-\d{2}-\d{2}$', git_date):
                         data['date'] = git_date

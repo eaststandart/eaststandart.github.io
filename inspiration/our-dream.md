@@ -3,8 +3,6 @@ layout: page
 title: Наша мечта ...
 tags: [творческийпотенциалэлектроники, музыка, нашамечта]
 sources: "[«Наша мечта»](https://youtu.be/DMoCM_FgLP8)"
-parent_name: "Вдохновение"
-parent_url: "/inspiration/"
 ---
 
 ![Наша мечта ...](img/our-dream.webp)

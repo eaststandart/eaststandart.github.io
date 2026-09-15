@@ -1,52 +1,63 @@
 {%- comment -%}
-@about Локальные ленты постов на страницах проектов под плоскую карту.
+@about Локальные ленты постов на страницах проектов. Спасённая рабочая версия.
 @purpose Вывод списков журнал, media внутри карточек конкретных проектов.
 @author TechLab
 {%- endcomment -%}
 
-{%- assign current_project_path = page.path -%}
-{%- assign loop_id = include.type | append: "-test-" | append: page.slug -%}
-{%- assign ctrl_id = "ctrl-" | append: loop_id -%}
-{%- assign archive_url = "/" | append: include.type | append: "/" -%}
+{% assign url_parts = page.url | split: "/" %}
+{% assign project_slug_last = url_parts[2] %}
 
-<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
+{% assign has_posts = false %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
+    {% assign has_posts = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if has_posts %}
+{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
+{% assign ctrl_id = "ctrl-" | append: loop_id %}
+{% assign archive_url = "/" | append: include.type | append: "/" %}
+
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in site.posts -%}
-    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-    {%- if post_passport -%}
-      {%- if post_passport.relatedpages == current_project_path and post_passport.posttype == include.type -%}
-        {%- assign is_post = true -%}
-        {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-        <li class="local-post-item posts-page-item" data-date="{{ post_passport.date }}" data-is-post="{{ is_post }}" data-emoji="">
-          <div>
-            <span>{{ post_passport.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-            <span>
-              <a href="{{ post_passport.url | relative_url }}" class="item-link posts-page-link">
-                {{ post.title }}
-              </a>
-            </span>
-          </div>
-        </li>
-      {%- endif -%}
+  {%- for post in site.categories[project_slug_last] -%}
+    {%- if post.categories contains include.type -%}
+      {%- assign is_post = true -%}
+      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+      
+      <!-- Проверяем сквозную дату из плоской карты Питона для вывода строк -->
+      {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
+      {%- assign display_date = post_passport.date | default: post.date | date: "%Y-%m-%d" -%}
+
+      <li class="local-post-item posts-page-item" data-date="{{ display_date }}" data-is-post="{{ is_post }}" data-emoji="">
+        <div>
+          <span>{{ display_date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>
+            <!-- Используем канонический post.url вашего старого рабочего сайта! -->
+            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
+              {{ post.title }}
+            </a>
+          </span>
+        </div>
+      </li>
     {%- endif -%}
   {%- endfor -%}
 </ul>
 
-<!-- Изолированный блок кнопок управления локальной пагинацией -->
 <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
-<!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
 <script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
-
 <script>
   (function() {
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 
-      "{{ include.per_page | default: 5 }}", 
+      "{{ include.per_page }}", 
       "{{ archive_url }}", 
       "{{ include.type }}", 
-      "{{ page.slug }}"
+      "{{ project_slug_last }}"
     );
   })();
 </script>
+{% endif %}

@@ -1,67 +1,65 @@
 {%- comment -%}
-@about Генерация развёрнутой ленты постов проекта под плоскую карту.
-@purpose Автоматический вывод полноценных публикаций для кнопки "0" на основе данных Python.
+@about Сборка развёрнутой ленты постов проекта. Спасённая рабочая версия.
+@purpose Автоматический вывод полноценных публикаций для кнопки "0".
 @author TechLab
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- assign current_project_path = page.path -%}
-  
+  {% assign url_parts = page.url | split: "/" %}
+  {% assign project_slug_last = url_parts[2] %}
+
   {%- for post in site.posts -%}
-    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-    {%- if post_passport -%}
-      {%- if post_passport.relatedpages == current_project_path and post_passport.posttype == include.type -%}
-        
-        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
-          {%- continue -%}
-        {%- endif -%}
-        
-        <div class="media-entry">
-          <!-- Контейнер строки даты и заголовка -->
-          <div class="media-entry-title-row">
-            <span class="media-entry-date">{{ post_passport.date | date: "%d.%m.%Y" }}</span>
-            <h3 class="media-entry-title">{{ post.title }}</h3>
-          </div>
-          
-          <!-- Оболочка основного контента статьи -->
-          <div class="media-content main-content">
-            {%- if post.description and post.description != "" -%}
-              <p class="page-description">{{ post.description }}</p>
-            {%- endif -%}
+    {%- if post.categories contains project_slug_last and post.categories contains include.type -%}
+      {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
+        {%- continue -%}
+      {%- endif -%}
+      
+      {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
+      {%- assign display_date = post_passport.date | default: post.date -%}
 
-            {{ post.content }}
-           
-            {%- if post.author and post.author != "" -%}
-            <!-- А. БЛОК ВЫВОДА АВТОРА -->
-            <div class="author-inline">
-                <strong>Автор:</strong> 
-                <div class="sources-content">{{ post.author }}</div>
-            </div>
-            {%- endif -%}
-
-            {%- if post.sources and post.sources != "" -%}
-            <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
-            <div class="sources-inline">
-                <strong>Источники:</strong>
-                <div class="sources-content">{{ post.sources | markdownify }}</div>
-            </div>
-            {%- endif -%}
-
-            {%- if post.tags.size > 0 -%}
-            <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
-            <div class="tag-container">
-                {%- for tag in post.tags -%}
-                    {%- assign tag_clean = tag | replace: '#', '' | strip -%}
-                    <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-                {%- endfor -%}
-            </div>
-            {%- endif -%}
-          </div>
-          
-          <hr class="media-entry-hr">
+      <div class="media-entry">
+        <!-- Контейнер строки даты и заголовка -->
+        <div class="media-entry-title-row">
+          <span class="media-entry-date">{{ display_date | date: "%d.%m.%Y" }}</span>
+          <h3 class="media-entry-title">{{ post.title }}</h3>
         </div>
         
-      {%- endif -%}
+        <!-- Оболочка основного контента статьи -->
+        <div class="media-content main-content">
+          {%- if post.description and post.description != "" -%}
+            <p class="page-description">{{ post.description }}</p>
+          {%- endif -%}
+
+          {{ post.content }}
+         
+          {%- if post.author and post.author != "" -%}
+          <div class="author-inline">
+              <strong>Автор:</strong> 
+              <div class="sources-content">{{ post.author }}</div>
+          </div>
+          {%- endif -%}
+
+          {%- if post.sources and post.sources != "" -%}
+          <div class="sources-inline">
+              <strong>Источники:</strong>
+              <div class="sources-content">{{ post.sources | markdownify }}</div>
+          </div>
+          {%- endif -%}
+
+          {%- if post.tags.size > 0 -%}
+          <div class="tag-container">
+              {%- for tag in post.tags -%}
+                  {%- assign tag_clean = tag | replace: '#', '' | strip -%}
+                  <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+              {%- endfor -%}
+          </div>
+          {%- endif -%}
+        </div>
+        
+        {%- unless forloop.last -%}
+          <hr class="media-entry-hr">
+        {%- endunless -%}
+      </div>
     {%- endif -%}
   {%- endfor -%}
 </div>

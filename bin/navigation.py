@@ -58,16 +58,14 @@ def write_yaml_front_matter(file_path, data, body_content):
 # =====================================================================
 # ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
 # =====================================================================
-# =====================================================================
-# ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
-# =====================================================================
 import datetime
 
 def navigation_news_properties(data, passport):
     """Работает строго в оперативной памяти с готовым словарем 'data'.
     Рассчитывает даты и типы постов строго в одном месте контура."""
     
-    # 🔥 НАШ ЕДИНЫЙ ЗАКОН ДАТ СТРОГО ПО ВАШЕМУ ПРАВИЛУ:
+    date_was_written = False
+
     if not data.get('date'):
         # Проверяем, передан ли пост хроники (у него имя файла содержит 10 знаков даты YYYY-MM-DD)
         file_name = os.path.basename(passport.get('url', ''))
@@ -84,6 +82,9 @@ def navigation_news_properties(data, passport):
             
     # Всегда отдаём чистую дату в итоговую карту navigation.yml для сортировок Питона
     passport['date'] = str(data['date'])
+
+    if date_was_written:
+        log_artifact(f"[NAV-DEBUG] Файл: {passport.get('url', '')} | Записано date: {data['date']}")
 
     has_post_page_property = False
     post_page_type = ""
@@ -246,6 +247,8 @@ def build_navigation_tree():
 
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
+
+                    node = navigation_news_properties(data, node)
 
                     flat_map[relative_file_key] = [node]
 

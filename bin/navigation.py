@@ -210,6 +210,8 @@ def build_navigation_tree():
                         node['url'] = f"/{clean_section_name}/{file_slug}/"
                         data['permalink'] = node['url']
 
+                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
+
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:

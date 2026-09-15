@@ -209,8 +209,6 @@ def build_navigation_tree():
                         is_under_dir = name.startswith('_')
                         
                         node['url'] = f"/{clean_section_name}/{file_slug}/"
-                        data['permalink'] = node['url']
-
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:

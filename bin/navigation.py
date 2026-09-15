@@ -368,19 +368,22 @@ def build_navigation_tree():
                 #         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
                 #         log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
 
-                write_yaml_front_matter(file_path, data, body)
-
-                # Вырезаем слаг родителя из его готового интернет-адреса URL
+                # 1. Сначала вычисляем честный слаг родителя по его URL в памяти flat_map
                 calculated_slug = ""
                 if calculated_parent_path and calculated_parent_path in flat_map:
-                    parent_nodes = flat_map[calculated_parent_path]
-                    if parent_nodes and len(parent_nodes) > 0:
-                        parent_url = parent_nodes[0].get('url', '').strip('/')
-                        if parent_url:
-                            calculated_slug = parent_url.split('/')[-1]
+                    parent_card = flat_map[calculated_parent_path]
+                    # Если структура - список словарей, достаем первый элемент безопасно
+                    if isinstance(parent_card, list) and len(parent_card) > 0:
+                        parent_card = parent_card[0]
+                    parent_url = parent_card.get('url', '').strip('/')
+                    if parent_url:
+                        calculated_slug = parent_url.split('/')[-1]
 
-                # Передаем вычисленный слаг на Этаж 2 для штамповки категорий на диск
+                # 2. Передаем вычисленный слаг на Этаж 2 ДО физического сохранения, чтобы он успел вшить categories!
                 node = navigation_news_properties(data, node, file_path, calculated_slug)
+
+                # 3. Финальный сброс базовых постов на диск
+                write_yaml_front_matter(file_path, data, body)
 
                 flat_map[relative_file_key] = [node]
 

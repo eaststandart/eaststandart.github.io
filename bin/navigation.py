@@ -5,7 +5,7 @@
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
 @purpose Шаг 1: Изолированная функция build_navigation_crumbs для хлебных крошек.
 @author TechLab
-@version 15.1.0-clean-names
+@version 15.3.0-split-safe
 """
 
 import os
@@ -52,7 +52,41 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
-# 🔥 ИЗОЛИРОВАННЫЙ МОДУЛЬ НАВИГАЦИИ
+# 🔥 ИЗОЛИРОВАННЫЙ МОДУЛЬ НАВИГАЦИИ (ХЛЕБНЫХ КРОШЕК) ИЗ ОПЕРАТИВНОЙ ПАМЯТИ
+def build_navigation_crumbs(data, file_slug, ready_permalink, name, is_under_dir, root_dirs_present):
+    """Принимает сырые данные из памяти и собирает строго базовый паспорт хлебных крошек.
+    Никаких повторных открытий файлов с диска!"""
+    crumbs = {}
+    
+    crumbs['title'] = data.get('title', file_slug)
+    
+    if ready_permalink:
+        crumbs['url'] = ready_permalink
+    else:
+        clean_section_name = name.lstrip('_')
+        crumbs['url'] = f"/{clean_section_name}/{file_slug}/"
+
+    if ready_permalink:
+        permalink_clean = ready_permalink.strip('/')
+        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+        
+        has_clean_dir = first_word in root_dirs_present
+        has_under_dir = f"_{first_word}" in root_dirs_present
+        
+        if not (has_clean_dir and has_under_dir):
+            if has_under_dir:
+                crumbs['relatedcollection'] = first_word
+            elif has_clean_dir:
+                crumbs['relatedsection'] = first_word
+    else:
+        clean_section_name = name.lstrip('_')
+        if is_under_dir:
+            crumbs['relatedcollection'] = clean_section_name
+        else:
+            crumbs['relatedsection'] = clean_section_name
+            
+    return crumbs
+
 def build_navigation_tree():
     global artifacts_log_buffer
     artifacts_log_buffer.clear()
@@ -70,7 +104,6 @@ def build_navigation_tree():
     flat_map = {}
     root_dirs_present = set()
     
-    # Собираем имена всех физических папок в книге для фильтра коллизий
     for name in os.listdir(root_dir):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.'):
             root_dirs_present.add(name)
@@ -159,15 +192,14 @@ def build_navigation_tree():
                     post_page_type = data.get('post-page', 'journal')
                     for key in list(data.keys()):
                         if str(key).endswith('-post-page'):
-                            post_page_type = str(key).split('-')
+                            post_page_type = str(key).split('-')[0]
                             break
                     passport['url'] = f"/{post_page_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
 
-                # 🔥 ИСПРАВЛЕНО: Безопасное извлечение словаря из списка по индексу [0] перед вызовом .get()
                 if calculated_parent_path:
                     parent_node_list = flat_map[calculated_parent_path]
                     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
-                        parent_node = parent_node_list
+                        parent_node = parent_node_list[0]
                         data['section'] = parent_node.get('relatedsection', parent_node.get('section', 'faire'))
                 write_yaml_front_matter(file_path, data, body)
 

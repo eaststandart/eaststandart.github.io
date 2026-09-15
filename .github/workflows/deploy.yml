@@ -37,17 +37,11 @@ jobs:
           name: jekyll-navigation-file
           path: _data/navigation.yml
 
-      - name: Upload Processed Front Matter Core for Debugging
+      - name: Upload Preprocessor Changes for Debugging
         uses: actions/upload-artifact@v4
         with:
-          name: jekyll-processed-md-properties
-          path: _processed_files/
-
-      - name: Upload Content Processor Debug Logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: content
-          path: _content_files/
+          name: jekyll-navigation-log
+          path: _navigation_files/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

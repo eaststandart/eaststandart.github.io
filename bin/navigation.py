@@ -3,9 +3,9 @@
 """
 @module navigation (Часть 1 из 2)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Шаг 1: Изолированная функция build_navigation_crumbs без изменения стабильной логики.
+@purpose Шаг 1: Изолированная функция build_navigation_crumbs строго 1 в 1 по вашему файлу.
 @author TechLab
-@version 16.1.0-exact-crumbs
+@version 16.2.0-exact-split0
 """
 
 import os
@@ -53,7 +53,7 @@ def write_yaml_front_matter(file_path, data, body_content):
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
 def build_navigation_crumbs(data, file_slug, ready_permalink, name, root_dirs_present, is_posts=False, calculated_parent_path=""):
-    """Собирает паспорт хлебных крошек на основе вашей стопроцентно стабильной рабочей логики из памяти."""
+    """Собирает паспорт хлебных крошек строго на основе условий вашего рабочего файла из оперативной памяти."""
     node = {}
     node['title'] = data.get('title', file_slug)
 
@@ -62,6 +62,7 @@ def build_navigation_crumbs(data, file_slug, ready_permalink, name, root_dirs_pr
         if ready_permalink:
             node['url'] = ready_permalink
             permalink_clean = ready_permalink.strip('/')
+            # Строго ваш рабочий сплит по индексу 0
             first_word = permalink_clean.split('/')[0] if permalink_clean else ''
             
             has_clean_dir = first_word in root_dirs_present
@@ -88,6 +89,7 @@ def build_navigation_crumbs(data, file_slug, ready_permalink, name, root_dirs_pr
         if ready_permalink:
             node['url'] = ready_permalink
             permalink_clean = ready_permalink.strip('/')
+            # Строго ваш рабочий сплит по индексу 0
             first_word = permalink_clean.split('/')[0] if permalink_clean else ''
             
             has_clean_dir = first_word in root_dirs_present
@@ -153,6 +155,8 @@ def build_navigation_tree():
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
             
+            clean_section_name = name.lstrip('_')
+            
             for root_walk, _, files in os.walk(full_path):
                 for file in files:
                     if not (file.endswith('.md') or file.endswith('.html')): continue
@@ -194,7 +198,7 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Извлечение типа post-page строго 1 в 1 из вашего кода
+                # Извлечение типа post-page строго 1 в 1 из вашего оригинального кода
                 has_post_page_property = False
                 post_page_type = ""
                 if 'post-page' in data:
@@ -204,7 +208,7 @@ def build_navigation_tree():
                     for key in list(data.keys()):
                         if str(key).endswith('-post-page'):
                             has_post_page_property = True
-                            post_page_type = str(key).split('/')[0]
+                            post_page_type = str(key).split('-')[0]
                             break
 
                 # Вычисляем полный физический путь к родителю
@@ -222,6 +226,10 @@ def build_navigation_tree():
                 if not ready_permalink:
                     fallback_type = post_page_type if post_page_type else "journal"
                     passport['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+
+                # Записываем relatedpages строго если физический родитель найден
+                if calculated_parent_path:
+                    passport['relatedpages'] = calculated_parent_path
 
                 # Пишем posttype только если свойство было в исходнике (по вашему правилу)
                 if has_post_page_property and post_page_type:

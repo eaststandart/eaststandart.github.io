@@ -3,9 +3,9 @@
 """
 @module navigation (Часть 1 из 2)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Шаг 1: Инициализация корневых папок и разделов строго по вашей логике.
+@purpose Разделение контура: утилиты (Этаж 1) и изолированный модуль новостей (Этаж 2).
 @author TechLab
-@version 14.0.0-pure-step1
+@version 18.1.0-clean-floors
 """
 
 import os
@@ -13,6 +13,9 @@ import re
 import sys
 import yaml
 
+# =====================================================================
+# ЭТАЖ 1: СИСТЕМНЫЕ УТИЛИТЫ (Парсер Front Matter и перезапись на диск)
+# =====================================================================
 def parse_yaml_front_matter(file_path):
     """Извлекает блок Front Matter из markdown-файла контента сайта."""
     content = ""
@@ -52,6 +55,35 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
+# =====================================================================
+# ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
+# =====================================================================
+def navigation_news_properties(data, passport):
+    """Работает строго в оперативной памяти с готовым словарем 'data'.
+    Тут живёт ВАШ ОРИГИНАЛЬНЫЙ РАБОЧИЙ КОД сплита типов постов хроники 1 в 1!"""
+    has_post_page_property = False
+    post_page_type = ""
+    
+    if 'post-page' in data:
+        has_post_page_property = True
+        post_page_type = str(data['post-page'])
+    else:
+        for key in list(data.keys()):
+            if str(key).endswith('-post-page'):
+                has_post_page_property = True
+                # Строго ваш оригинальный рабочий сплит по дефису с индексом 0
+                post_page_type = str(key).split('-')[0]
+                break
+
+    # Пишем posttype в паспорт только если свойство реально было в исходнике
+    if has_post_page_property and post_page_type:
+        passport['posttype'] = post_page_type
+        
+    return passport
+
+# =====================================================================
+# ЭТАЖ 3: ГЛАВНЫЙ УПРАВЛЯЮЩИЙ КОНВЕЙЕР (Диспетчер обхода - Начало)
+# =====================================================================
 def build_navigation_tree():
     global artifacts_log_buffer
     artifacts_log_buffer.clear()
@@ -70,9 +102,9 @@ def build_navigation_tree():
     flat_map = {}
     root_dirs_present = set()
     
-    # Собираем имена всех физических папок в корне диска контента для фильтра коллизий
+    # Собираем имена всех физических папок в корне диска строго с фильтром исключений
     for name in os.listdir(root_dir):
-        if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.'):
+        if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.') and name not in EXCLUDED_FOLDERS:
             root_dirs_present.add(name)
 
     # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕМУ ПРАВИЛУ
@@ -84,21 +116,18 @@ def build_navigation_tree():
             is_under_dir = name.startswith('_')
             
             node = {}
-            # Делаем красивое имя заголовка по умолчанию из названия папки
             node['title'] = clean_section_name.capitalize()
             node['url'] = f"/{clean_section_name}/"
             
-            # Присваиваем свойства строго в зависимости от наличия подчёркивания _
             if is_under_dir:
                 node['collection'] = clean_section_name
             else:
                 node['section'] = clean_section_name
                 
-            # Ключом в карте на Шаге 1 становится чистое имя самой корневой папки
             flat_map[clean_section_name] = [node]
             log_artifact(f"[NAV-DEBUG] Шаг 1 (Папки): Зафиксирован узел корневой папки '{name}' -> {node['url']}")
 
-    # 🔥 ШАГ 2 И ШАГ 3: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
+    # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -120,10 +149,8 @@ def build_navigation_tree():
                     node = {}
                     node['title'] = data.get('title', file_slug)
 
-                    # 1. Если у файла ЕСТЬ permalink
                     if ready_permalink:
                         node['url'] = ready_permalink
-                        
                         permalink_clean = ready_permalink.strip('/')
                         first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                         
@@ -136,8 +163,6 @@ def build_navigation_tree():
                             node['relatedcollection'] = first_word
                         elif has_clean_dir:
                             node['relatedsection'] = first_word
-
-                    # 2. Если у файла НЕТ permalink
                     else:
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')
@@ -153,7 +178,7 @@ def build_navigation_tree():
 
                     flat_map[relative_file_key] = [node]
 
-    # 🔥 ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/
+    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ СТРОГО ПО ВАШЕМУ РАБОЧЕМУ КОДУ
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -172,7 +197,7 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Извлечение типа post-page без дублирования массивов
+                # Извлечение типа для автомата URL строго по вашему коду 1 в 1
                 has_post_page_property = False
                 post_page_type = ""
                 if 'post-page' in data:
@@ -208,7 +233,6 @@ def build_navigation_tree():
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
                     
-                    # 🔥 ИСПРАВЛЕНО: Прямая, сквозная проверка связи для автономного и связанного поста
                     if has_clean_dir and has_under_dir:
                         pass
                     elif has_under_dir:
@@ -223,10 +247,6 @@ def build_navigation_tree():
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # Пишем posttype только если свойство было в исходнике
-                if has_post_page_property and post_page_type:
-                    node['posttype'] = post_page_type
-
                 # Синхронизация Front Matter самого файла
                 if has_post_page_property and post_page_type:
                     data['categories'] = [post_page_type, file_slug_no_date]
@@ -237,6 +257,9 @@ def build_navigation_tree():
                         p_node = parent_node_list[0]
                         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
                 write_yaml_front_matter(file_path, data, body)
+
+                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в памяти
+                node = navigation_news_properties(data, node)
 
                 flat_map[relative_file_key] = [node]
                 log_artifact(f"[NAV-DEBUG] Пост хроники: {relative_file_key} | parent: {calculated_parent_path}")

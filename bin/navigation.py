@@ -12,6 +12,7 @@ import os
 import re
 import sys
 import yaml
+import subprocess
 
 # =====================================================================
 # ЭТАЖ 1: СИСТЕМНЫЕ УТИЛИТЫ (Парсер Front Matter и перезапись на диск)
@@ -74,11 +75,26 @@ def navigation_news_properties(data, passport, file_path=None):
             data['date'] = match_date.group(1)
             date_was_written = True
         else:
-            # Б. Для обычных файлов (tools, biblio и др.) — берём системную дату диска
+            # 🟢 Б. Для обычных файлов — вытаскиваем ЧЕСТНУЮ историческую дату первого коммита из Git!
             if file_path and os.path.exists(file_path):
-                mtime = os.path.getmtime(file_path)
-                data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                date_was_written = True
+                try:
+                    # Запускаем системную команду Git, которая находит дату создания файла в репозитории
+                    cmd = f'git log --follow --format=%as -- "{file_path}" | tail -1'
+                    git_date = subprocess.check_output(cmd, shell=True, text=True).strip()
+                    
+                    if git_date and re.match(r'^\d{4}-\d{2}-\d{2}$', git_date):
+                        data['date'] = git_date
+                        date_was_written = True
+                    else:
+                        # Резервный подстраховщик, если файл абсолютно новый и ещё ни разу не отправлялся в Git
+                        mtime = os.path.getmtime(file_path)
+                        data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                        date_was_written = True
+                except Exception as e:
+                    # Если Git на сервере выдал сбой, страхуемся системной датой
+                    mtime = os.path.getmtime(file_path)
+                    data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                    date_was_written = True
             else:
                 data['date'] = datetime.datetime.now().strftime('%Y-%m-%d')
                 

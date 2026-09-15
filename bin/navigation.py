@@ -99,6 +99,7 @@ def build_navigation_tree():
     
     flat_map = {}
     root_dirs_present = set()
+    folders_with_index = set()
     
     # Собираем имена всех физических папок в корне диска строго с фильтром исключений
     for name in os.listdir(root_dir):
@@ -128,6 +129,7 @@ def build_navigation_tree():
                 
             if index_file_path:
                 front_data, _, _ = parse_yaml_front_matter(index_file_path)
+                folders_with_index.add(name)
                 
             # --- ПРИОРИТЕТ 2: Поиск совпадения в папке _pages/ ---
             if not front_data:
@@ -208,9 +210,10 @@ def build_navigation_tree():
                         is_under_dir = name.startswith('_')
                         
                         node['url'] = f"/{clean_section_name}/{file_slug}/"
-                        data['permalink'] = node['url']
 
-                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
+                        if name not in folders_with_index:                        
+                            data['permalink'] = node['url']
+                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
 
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name

@@ -15,7 +15,10 @@
             {%- assign root_passport = site.data.navigation[root_key][0] -%}
             {%- if root_passport -%}
                 {%- assign root_text = root_passport.crumbtitle | default: root_passport.title -%}
-                {%- if root_text and root_text != "" -%}<span class="nav-separator">|</span><a href="{{ root_passport.url | relative_url }}" class="back-link nav-header-link">{{ root_text }}</a>{%- endif -%}
+                {%- if root_text and root_text != "" -%}
+                    <span class="nav-separator">|</span>
+                    <a href="{{ root_passport.url | relative_url }}" class="back-link nav-header-link">{{ root_text }}</a>
+                {%- endif -%}
             {%- endif -%}
         {%- endif -%}
         {%- comment -%} 🧭 КОНТУР РОДИТЕЛЬСКИХ ПРОЕКТОВ (Для постов хроники из _posts/) {%- endcomment -%}
@@ -24,7 +27,10 @@
             {%- assign parent_passport = site.data.navigation[parent_path][0] -%}
             {%- if parent_passport -%}
                 {%- assign parent_text = parent_passport.crumbtitle | default: parent_passport.title -%}
-                {%- if parent_text and parent_text != "" -%}<span class="nav-separator">|</span><a href="{{ parent_passport.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ parent_text }}</a>{%- endif -%}
+                {%- if parent_text and parent_text != "" -%}
+                    <span class="nav-separator">|</span>
+                    <a href="{{ parent_passport.url | relative_url }}" class="back-link nav-header-link nav-ellipsis-link">{{ parent_text }}</a>
+                {%- endif -%}
             {%- endif -%}
         {%- endif -%}
     {%- endif -%}

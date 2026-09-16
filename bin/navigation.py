@@ -75,7 +75,7 @@ def navigation_news_properties(data, passport, file_path=None):
         if not text: return ""
         return re.sub(r'[^a-z0-9а-яё]', '', str(text).lower().strip())
 
-    # А. БЛОК ОБРАБОТКИ ДАТЫ (Ваш канонический алгоритм)
+    # А. БЛОК ОБРАБОТКИ ДАТЫ
     date_was_written = False
     if not data.get('date'):
         file_name = os.path.basename(file_path) if file_path else ""
@@ -97,14 +97,20 @@ def navigation_news_properties(data, passport, file_path=None):
                     mtime = os.path.getmtime(file_path)
                     data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
                 date_was_written = True
-    passport['date'] = str(data['date'])
 
-    # Б. СБОР СВОЙСТВ И ЗНАЧКОВ ДЛЯ КАРТЫ НАВИГАЦИИ (keywords не идёт!)
-    for prop in ['direction', 'entity', 'level', 'emoji']:
-        if data.get(prop):
-            passport[prop] = data[prop]
+    # Безопасно распаковываем паспорт: если это массив, берем его внутренний словарь
+    target_dict = passport[0] if isinstance(passport, list) and len(passport) > 0 else passport
 
-    # В. АВТОМАТИЧЕСКАЯ СБОРКА И ЖЕСТКАЯ ШТАМПОВКА ТЕГОВ НА ДИСК
+    if isinstance(target_dict, dict):
+        # Записываем дату в карту навигации
+        target_dict['date'] = str(data.get('date', ''))
+        
+        # 🟢 НАШ КАН दोषियों ЗАКОН: Жестко вшиваем эмодзи и свойства прямо в карту навигации!
+        for prop in ['direction', 'entity', 'level', 'emoji']:
+            if data.get(prop):
+                target_dict[prop] = data[prop]
+
+    # Б. АВТОМАТИЧЕСКАЯ СБОРКА И ЖЕСТКАЯ ШТАМПОВКА ТЕГОВ НА ДИСК
     tags_were_written = False
     calculated_tags = []
     if data.get('direction'): calculated_tags.append(clean_tag_local(data['direction']))
@@ -112,26 +118,23 @@ def navigation_news_properties(data, passport, file_path=None):
     if data.get('level'): calculated_tags.append(f"{str(data['level']).strip()}класс")
     if data.get('title'): calculated_tags.append(translit_title_local(data['title']))
     
-    # Обрабатываем keywords (используются строго для генерации тегов на диск)
     if data.get('keywords'):
         if isinstance(data['keywords'], list):
             for kw in data['keywords']: calculated_tags.append(clean_tag_local(kw))
         else:
             calculated_tags.append(clean_tag_local(data['keywords']))
 
-    # Очищаем массив от дубликатов строк
     final_tags = []
     for t in calculated_tags:
         if t and t not in final_tags: final_tags.append(t)
 
-    # Запись тегов во Front Matter: если их нет на диске или они изменились
     if final_tags and data.get('tags') != final_tags:
         data['tags'] = final_tags
         if 'keywords' in data: 
             del data['keywords']
         tags_were_written = True
 
-    # Г. ЕДИНАЯ ФИЗИЧЕСКАЯ ПЕРЕЗАПИСЬ ФАЙЛА С ФИКСАЦИЕЙ ЧИСТОГО ЛОГА
+    # В. ЕДИНАЯ ФИЗИЧЕСКАЯ ПЕРЕЗАПИСЬ ФАЙЛА С ФИКСАЦИЕЙ ЧИСТОГО ЛОГА
     if (date_was_written or tags_were_written) and file_path and os.path.exists(file_path):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -144,45 +147,14 @@ def navigation_news_properties(data, passport, file_path=None):
             root_dir_local = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
             f_rel = os.path.relpath(file_path, root_dir_local).replace(os.sep, '/')
             
+            # Печатаем логи изменений строго по факту первой физической записи на диск
             if date_was_written:
                 log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано date: {data['date']}")
             if tags_were_written:
                 log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано tags: {data['tags']}")
         except Exception as e:
             print(f"[NAV-ERROR] Не удалось перезаписать свойства контента в {file_path}: {e}")
-
-    # Если дата была рассчитана, записываем её в файл на диск и пишем лог!
-    if date_was_written and file_path and os.path.exists(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-            body_content = content[match.end():] if match else content
             
-            # Физически перезаписываем .md файл на диске сервера Actions, фиксируя дату
-            write_yaml_front_matter(file_path, data, body_content)
-            
-            # Выводим строгий scannable факт в лог
-            root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-            relative_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
-            log_artifact(f"[NAV-DEBUG] Файл: {relative_key} | Записано date: {data['date']}")
-        except Exception as e:
-            print(f"[NAV-ERROR] Не удалось дописать дату в файл {file_path}: {e}")
-
-    has_post_page_property = False
-    post_page_type = ""
-    if 'post-page' in data:
-        has_post_page_property = True
-        post_page_type = str(data['post-page'])
-    else:
-        for key in list(data.keys()):
-            if str(key).endswith('-post-page'):
-                has_post_page_property = True
-                post_page_type = str(key).split('-')
-                break
-    if has_post_page_property and post_page_type:
-        passport['posttype'] = post_page_type
-        
     return passport
 
 # =====================================================================

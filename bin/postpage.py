@@ -104,7 +104,7 @@ def generate_project_posts_pages():
                 
                 # Записываем строгий scannable-факт изменения свойств в буфер лога
                 relative_log_path = f"{post_type}/{parent_slug}.md"
-                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}"
+                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}\n--- ТЕКСТ ФАЙЛА НА ДИСКЕ ---\n{file_content}----------------------------"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 

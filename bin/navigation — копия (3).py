@@ -66,90 +66,39 @@ def navigation_news_properties(data, passport, file_path=None):
     
     date_was_written = False
     
-    # Вспомогательные функции очистки текстовых свойств по вашему эталону
-    def clean_tag_local(text):
-        if not text: return ""
-        return re.sub(r'\s+', '', str(text).lower().strip())
-        
-    def translit_title_local(text):
-        if not text: return ""
-        return re.sub(r'[^a-z0-9а-яё]', '', str(text).lower().strip())
-
-    # А. БЛОК ОБРАБОТКИ ДАТЫ (Ваш канонический алгоритм)
-    date_was_written = False
     if not data.get('date'):
         file_name = os.path.basename(file_path) if file_path else ""
         match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name)
+        
         if match_date:
+            # А. Если это папка _posts/ — вырезаем из имени файла
             data['date'] = match_date.group(1)
             date_was_written = True
         else:
+            # 🟢 Б. Для обычных файлов — вытаскиваем ЧЕСТНУЮ историческую дату первого коммита из Git!
             if file_path and os.path.exists(file_path):
                 try:
+                    # Запускаем системную команду Git, которая находит дату создания файла в репозитории
                     cmd = ['git', 'log', '--diff-filter=A', '--format=%as', '--', file_path]
                     git_date = subprocess.check_output(cmd, text=True).strip().split('\n')[-1]
+                    
                     if git_date and re.match(r'^\d{4}-\d{2}-\d{2}$', git_date):
                         data['date'] = git_date
+                        date_was_written = True
                     else:
+                        # Резервный подстраховщик, если файл абсолютно новый и ещё ни разу не отправлялся в Git
                         mtime = os.path.getmtime(file_path)
                         data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                except Exception:
+                        date_was_written = True
+                except Exception as e:
+                    # Если Git на сервере выдал сбой, страхуемся системной датой
                     mtime = os.path.getmtime(file_path)
                     data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                date_was_written = True
+                    date_was_written = True
+            else:
+                data['date'] = datetime.datetime.now().strftime('%Y-%m-%d')
+                
     passport['date'] = str(data['date'])
-
-    # Б. СБОР СВОЙСТВ И ЗНАЧКОВ ДЛЯ КАРТЫ НАВИГАЦИИ (keywords не идёт!)
-    for prop in ['direction', 'entity', 'level', 'emoji']:
-        if data.get(prop):
-            passport[prop] = data[prop]
-
-    # В. АВТОМАТИЧЕСКАЯ СБОРКА И ЖЕСТКАЯ ШТАМПОВКА ТЕГОВ НА ДИСК
-    tags_were_written = False
-    calculated_tags = []
-    if data.get('direction'): calculated_tags.append(clean_tag_local(data['direction']))
-    if data.get('entity'): calculated_tags.append(clean_tag_local(data['entity']))
-    if data.get('level'): calculated_tags.append(f"{str(data['level']).strip()}класс")
-    if data.get('title'): calculated_tags.append(translit_title_local(data['title']))
-    
-    # Обрабатываем keywords (используются строго для генерации тегов на диск)
-    if data.get('keywords'):
-        if isinstance(data['keywords'], list):
-            for kw in data['keywords']: calculated_tags.append(clean_tag_local(kw))
-        else:
-            calculated_tags.append(clean_tag_local(data['keywords']))
-
-    # Очищаем массив от дубликатов строк
-    final_tags = []
-    for t in calculated_tags:
-        if t and t not in final_tags: final_tags.append(t)
-
-    # Запись тегов во Front Matter: если их нет на диске или они изменились
-    if final_tags and data.get('tags') != final_tags:
-        data['tags'] = final_tags
-        if 'keywords' in data: 
-            del data['keywords']
-        tags_were_written = True
-
-    # Г. ЕДИНАЯ ФИЗИЧЕСКАЯ ПЕРЕЗАПИСЬ ФАЙЛА С ФИКСАЦИЕЙ ЧИСТОГО ЛОГА
-    if (date_was_written or tags_were_written) and file_path and os.path.exists(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-            body_content = content[match.end():] if match else content
-            
-            write_yaml_front_matter(file_path, data, body_content)
-            
-            root_dir_local = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-            f_rel = os.path.relpath(file_path, root_dir_local).replace(os.sep, '/')
-            
-            if date_was_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано date: {data['date']}")
-            if tags_were_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано tags: {data['tags']}")
-        except Exception as e:
-            print(f"[NAV-ERROR] Не удалось перезаписать свойства контента в {file_path}: {e}")
 
     # Если дата была рассчитана, записываем её в файл на диск и пишем лог!
     if date_was_written and file_path and os.path.exists(file_path):

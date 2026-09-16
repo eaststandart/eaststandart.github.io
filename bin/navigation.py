@@ -367,6 +367,8 @@ def build_navigation_tree():
                 if has_post_page_property and post_page_type:
                     data['categories'] = [post_page_type, file_slug_no_date]
                     data['post-page'] = post_page_type
+                    node['posttype'] = post_page_type
+
                 # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
                 # if calculated_parent_path:
                 #     parent_node_list = flat_map[calculated_parent_path]

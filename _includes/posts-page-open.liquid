@@ -1,28 +1,38 @@
 {%- comment -%}
-@about Сборка развёрнутой ленты постов проекта под плоскую карту.
-@purpose Автоматический вывод полноценных публикаций для кнопки "0".
+@about Генерация развёрнутой ленты постов проекта.
+@purpose Автоматический вывод полноценных публикаций для кнопки "0" на основе данных Python.
 @author TechLab
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- assign target_project_slug = page.project -%}
-  {%- assign target_posttype = page.posttype | default: include.type -%}
-  
-  {%- for post in site.posts -%}
-    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-    {%- if post_passport and post_passport.posttype == target_posttype -%}
-      {%- assign rel_parts = post_passport.relatedpages | split: "/" -%}
-      {%- assign rel_slug = rel_parts | last -%}
-      {%- if rel_slug == target_project_slug -%}
-        
-        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
-          {%- continue -%}
-        {%- endif -%}
+{%- assign current_section = page.section -%}
+{%- assign current_project = nil -%}
+{%- for project in site.data.navigation.sections[current_section] -%}
+  {%- if project.slug == page.slug -%}
+      {%- assign current_project = project -%}
+      {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+  {%- assign project_posts = nil -%}
+  {%- if include.type == "journal" -%}
+    {%- assign project_posts = current_project.journal_posts -%}
+  {%- elsif include.type == "media" -%}
+    {%- assign project_posts = current_project.media_posts -%}
+  {%- endif -%}
+
+  {%- if project_posts and project_posts.size > 0 -%}
+    {%- for post_item in project_posts -%}
+      {%- assign post = site.posts | where: "url", post_item.url | first -%}
+      
+      {%- if post -%}
+        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
         
         <div class="media-entry">
+          
           <!-- Контейнер строки даты и заголовка -->
           <div class="media-entry-title-row">
-            <span class="media-entry-date">{{ post_passport.date | date: "%d.%m.%Y" }}</span>
+            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
             <h3 class="media-entry-title">{{ post.title }}</h3>
           </div>
           
@@ -61,12 +71,12 @@
             {%- endif -%}
           </div>
           
+          {%- comment -%} Линию hr рисуем только если это не последний пост в массиве {%- endcomment -%}
           {%- unless forloop.last -%}
             <hr class="media-entry-hr">
           {%- endunless -%}
         </div>
-        
       {%- endif -%}
-    {%- endif -%}
-  {%- endfor -%}
+    {%- endfor -%}
+  {%- endif -%}
 </div>

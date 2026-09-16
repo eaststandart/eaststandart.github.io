@@ -45,6 +45,12 @@ jobs:
           name: jekyll-navigation-log
           path: _navigation_files/
 
+      - name: Upload Post Page Generator Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: jekyll-post-page
+          path: _post_page_files/posts-page-generator.log
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

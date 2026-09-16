@@ -98,7 +98,7 @@ def build_universal_feed():
             'url': passport.get('url', ''),
             'date': item_date,
             'posttype': post_type,
-            'project': project_slug,
+            'related': project_slug,
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
             'pinned': False

@@ -85,17 +85,13 @@ def build_universal_feed():
             if item_url:
                 project_slug = item_url.split('/')[-1]
 
-        # Вычисляем имя родителя строго по полям связи карты
-        target_section = post_type
-        if not target_section:
-            target_section = passport.get('relatedsection', '')
-        if not target_section:
-            target_section = passport.get('relatedcollection', '')
-
-        # Нативно наследуем эмодзи из кэша разделов по вычисленному родителю
+        # Наследуем эмодзи из кэша разделов карты
         calculated_emoji = passport.get('emoji', '')
-        if not calculated_emoji and target_section:
-            calculated_emoji = section_emojis.get(target_section, "")
+        if not calculated_emoji and post_type:
+            calculated_emoji = section_emojis.get(post_type, "")
+            
+        if not calculated_emoji and (passport.get('collection') == 'people' or passport.get('relatedcollection') == 'people'):
+            calculated_emoji = "🧍‍♂️"
 
         node = {
             'title': passport.get('title', 'Без названия'),
@@ -105,10 +101,10 @@ def build_universal_feed():
             'related': project_slug,
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
-            'pinnedfeed': passport.get('pinnedfeed', False)
+            'pinned': False
         }
 
-        if passport.get('pinnedfeed') is True:
+        if passport.get('pinnednews') is True:
             node['pinned'] = True
             pinned_posts.append(node)
         else:
@@ -126,8 +122,7 @@ def build_universal_feed():
     
     for idx, f_item in enumerate(final_feed, 1):
         p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
-        pin_marker = "PIN" if f_item.get('pinnedfeed') is True else "   "
-        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {pin_marker} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
+        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
 
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:

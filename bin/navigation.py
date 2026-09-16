@@ -155,7 +155,7 @@ def navigation_feed_properties(data, passport, file_path=None):
         except Exception as e:
             print(f"[NAV-ERROR] Не удалось перезаписать свойства контента в {file_path}: {e}")
 
-    # Г. БЛОК ОБРАБОТКИ PINNEDFEED
+    # Г. БЛОК ОБРАБОТКИ PINNEDFEED (Если во Front Matter заметки обнаружен флаг pinnedfeed, записываем его в карту.)
     if data and data.get('pinnedfeed') is True:
         passport['pinnedfeed'] = True
             

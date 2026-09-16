@@ -5,22 +5,11 @@
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-{%- assign current_section = page.section -%}
-{%- assign current_project = nil -%}
-{%- for project in site.data.navigation.sections[current_section] -%}
-  {%- if project.slug == page.slug -%}
-      {%- assign current_project = project -%}
-      {%- break -%}
-  {%- endif -%}
-{%- endfor -%}
-
-{%- assign current_project_path = page.path -%}
-{%- assign has_any_posts = false -%}
-
-{%- for post in site.posts -%}
-  {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-  {%- if post_passport and post_passport.relatedpages == current_project_path and post_passport.posttype == include.type -%}
-    {%- assign has_any_posts = true -%}
+  {%- assign current_project_path = page.path -%}
+  
+  {%- for post in site.posts -%}
+    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
+    {%- if post_passport and post_passport.relatedpages == current_project_path and post_passport.posttype == include.type -%}
       
       {%- if post -%}
         {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}

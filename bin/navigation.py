@@ -57,10 +57,10 @@ def write_yaml_front_matter(file_path, data, body_content):
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
 # =====================================================================
-# ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
+# ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ FEED
 # =====================================================================
-def navigation_news_properties(data, passport, file_path=None):
-    """Новостной модуль Этажа 2. Рассчитывает, записывает даты на диск 
+def navigation_feed_properties(data, passport, file_path=None):
+    """Модуль ленты feed на Этаже 2. Рассчитывает, записывает свойства на диск 
     и выводит факты изменений в лог контура контроля."""
     import datetime
     
@@ -331,7 +331,7 @@ def build_navigation_tree():
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 
-                    node = navigation_news_properties(data, node, file_path)
+                    node = navigation_feed_properties(data, node, file_path)
 
                     flat_map[relative_file_key] = [node]
 
@@ -438,7 +438,7 @@ def build_navigation_tree():
                 write_yaml_front_matter(file_path, data, body)
 
                 # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
-                node = navigation_news_properties(data, node, file_path)
+                node = navigation_feed_properties(data, node, file_path)
 
                 flat_map[relative_file_key] = [node]
 

@@ -6,24 +6,11 @@
 
 <div id="media-container" class="media-archive-list-wrapper">
 {%- assign current_section = page.section -%}
-{%- assign current_project = nil -%}
-{%- for project in site.data.navigation.sections[current_section] -%}
-  {%- if project.slug == page.slug -%}
-      {%- assign current_project = project -%}
-      {%- break -%}
-  {%- endif -%}
-{%- endfor -%}
-
-  {%- assign project_posts = nil -%}
-  {%- if include.type == "journal" -%}
-    {%- assign project_posts = current_project.journal_posts -%}
-  {%- elsif include.type == "media" -%}
-    {%- assign project_posts = current_project.media_posts -%}
-  {%- endif -%}
-
-  {%- if project_posts and project_posts.size > 0 -%}
-    {%- for post_item in project_posts -%}
-      {%- assign post = site.posts | where: "url", post_item.url | first -%}
+  {% comment %} Проходим по единой базе Питона и отбираем посты этого проекта {% endcomment %}
+  {%- assign news_feed = site.data.feed.feed -%}
+  {%- for item in news_feed -%}
+    {%- if item.related == page.project and item.posttype == include.type -%}
+      {%- assign post = site.posts | where: "url", item.url | first -%}
       
       {%- if post -%}
         {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}

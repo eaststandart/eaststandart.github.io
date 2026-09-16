@@ -110,7 +110,7 @@ def navigation_feed_properties(data, passport, file_path=None):
             if data.get(prop):
                 target_dict[prop] = data[prop]
 
-    # Б. АВТОМАТИЧЕСКАЯ СБОРКА И ЗАПИСИ ТЕГОВ НА ДИСК
+    # Б. АВТОМАТИЧЕСКАЯ СБОРКА И ЖЕСТКАЯ ШТАМПОВКА ТЕГОВ НА ДИСК
     tags_were_written = False
     calculated_tags = []
     if data.get('direction'): calculated_tags.append(clean_tag_local(data['direction']))
@@ -154,10 +154,6 @@ def navigation_feed_properties(data, passport, file_path=None):
                 log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано tags: {data['tags']}")
         except Exception as e:
             print(f"[NAV-ERROR] Не удалось перезаписать свойства контента в {file_path}: {e}")
-
-    # Г. БЛОК ОБРАБОТКИ PINNEDFEED
-    if data and data.get('pinnedfeed') is True:
-        passport['pinnedfeed'] = True
             
     return passport
 

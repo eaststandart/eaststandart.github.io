@@ -89,6 +89,9 @@ def build_universal_feed():
         calculated_emoji = passport.get('emoji', '')
         if not calculated_emoji and post_type:
             calculated_emoji = section_emojis.get(post_type, "")
+            
+        if not calculated_emoji and (passport.get('collection') == 'people' or passport.get('relatedcollection') == 'people'):
+            calculated_emoji = "🧍‍♂️"
 
         node = {
             'title': passport.get('title', 'Без названия'),
@@ -118,8 +121,8 @@ def build_universal_feed():
     log_buffer.append("-------------------------------------------------------------------------")
     
     for idx, f_item in enumerate(final_feed, 1):
-        p_status = "ПОСТ  " if f_item['is_post'] == 'true' else "КРТОЧКА"
-        log_buffer.append(f"{idx:03d}. [{p_status}] Дата: {f_item['date']} | Значок: {f_item['emoji']:2} | Тип: {f_item['posttype']:8} | Проект: {f_item['project']:20} | Заголовок: {f_item['title']}")
+        p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
+        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
 
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:

@@ -102,9 +102,9 @@ def generate_project_posts_pages():
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
                 
-                # Записываем строгий scannable-факт изменения свойств в буфер лога
+                # Выводим шапку и первые 5 строк тела файла
                 relative_log_path = f"{post_type}/{parent_slug}.md"
-                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}\n--- ТЕКСТ ФАЙЛА НА ДИСКЕ ---\n{file_content}----------------------------"
+                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}\n--- ШАПКА НА ДИСКЕ ---\n{file_content}----------------------------"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 

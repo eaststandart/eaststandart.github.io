@@ -12,9 +12,9 @@
     {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
     {%- if post_passport and post_passport.posttype == target_posttype -%}
       {%- assign rel_parts = post_passport.relatedpages | split: "/" -%}
-      {%- assign rel_slug = rel_parts[1] -%}
+      {%- assign rel_slug = rel_parts[2] -%}
       {%- if rel_slug == target_project_slug -%}
-      
+        
         {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
           {%- continue -%}
         {%- endif -%}

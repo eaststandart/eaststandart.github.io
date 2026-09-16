@@ -6,10 +6,9 @@
 
 <div id="media-container" class="media-archive-list-wrapper">
 {%- assign current_section = page.section -%}
-  {% comment %} Проходим по единой базе Питона и отбираем посты этого проекта {% endcomment %}
   {%- assign news_feed = site.data.feed.feed -%}
   {%- for item in news_feed -%}
-    {%- if item.related == page.project and item.posttype == include.type -%}
+    {%- if item.related == page.project and item.posttype == page.posttype -%}
       {%- assign post = site.posts | where: "url", item.url | first -%}
       
       {%- if post -%}

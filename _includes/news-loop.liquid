@@ -1,12 +1,18 @@
 {%- comment -%}
-@about Сборка и вывод ленты обновлений на чистом Liquid (БЕЗ JAVASCRIPT РОКИРОВОК).
+@about Сборка и вывод ленты обновлений на Liquid.
 @purpose Выводит готовую отсортированную Питоном ленту из _data/news_feed.yml 1 в 1 в ваших стилях.
 @author TechLab 
 {%- endcomment -%}
 
 {%- assign news_feed = site.data.feed.feed -%}
 {%- for item in news_feed -%}
+  {% comment %} Если у страницы задан фильтр folder, отсекаем чужой контент {% endcomment %}
+  {%- if page.folder and page.folder != "" and item.posttype != page.folder -%}
+    {%- continue -%}
+  {%- endif -%}
+
   {%- if include.type == "home" -%}
+
 
     <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
     <li class="news-item news-item-compact{% if item.pinned %} pinned-item{% endif %}" 

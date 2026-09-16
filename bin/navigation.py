@@ -351,10 +351,29 @@ def build_navigation_tree():
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # Синхронизация Front Matter самого файла
+                # Финал модуля вычисления post-page: Авто-категории строго по вашему правилу
                 if has_post_page_property and post_page_type:
-                    data['categories'] = [post_page_type, file_slug_no_date]
                     data['post-page'] = post_page_type
+                    
+                    # Жесткая проверка: если текстового свойства categories в файле ИЗНАЧАЛЬНО НЕТ
+                    if not data.get('categories'):
+                        # Извлекаем слаг родительского проекта по его готовому URL из flat_map
+                        calculated_slug = ""
+                        if calculated_parent_path and calculated_parent_path in flat_map:
+                            parent_card = flat_map[calculated_parent_path]
+                            if isinstance(parent_card, list) and len(parent_card) > 0:
+                                parent_card = parent_card[0]
+                            parent_url = parent_card.get('url', '').strip('/')
+                            if parent_url:
+                                calculated_slug = parent_url.split('/')[-1]
+
+                        # Если слаг родителя успешно найден — намертво штампуем массив категорий
+                        if calculated_slug:
+                            data['categories'] = [post_page_type, calculated_slug]
+                            
+                            # Тут же выдаем чистую scannable-строку изменения контента в лог
+                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано categories: {data['categories']}")
+
                 # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
                 # if calculated_parent_path:
                 #     parent_node_list = flat_map[calculated_parent_path]

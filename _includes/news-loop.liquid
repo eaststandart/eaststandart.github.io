@@ -1,20 +1,28 @@
 {%- comment -%}
-@about Сборка и вывод ленты обновлений на Liquid.
-@purpose Выводит готовую отсортированную Питоном ленту из _data/news_feed.yml 1 в 1 в ваших стилях.
-@author TechLab 
+@about Сборка, фильтрация и развёрнутый вывод открытой ленты постов проекта на Liquid.
+@purpose Автоматически выводит полноценные публикации с текстом для страниц проектов 
+         и компактные строки для Главной/Архивов на основе плоской базы feed.yml.
+@author TechLab
 {%- endcomment -%}
 
 {%- assign news_feed = site.data.feed.feed -%}
 {%- for item in news_feed -%}
-  {% comment %} Если у страницы задан фильтр folder, отсекаем чужой контент {% endcomment %}
+
+  {% comment %} 🟢 СЛУЧАЙ А: Фильтр для общих крупных архивов (Журнал, Медиа) по свойству folder {% endcomment %}
   {%- if page.folder and page.folder != "" and item.posttype != page.folder -%}
     {%- continue -%}
   {%- endif -%}
 
+  {% comment %} 🟢 СЛУЧАЙ Б: Фильтр для изолированных лент проектов (кнопка "0") по project и posttype {% endcomment %}
+  {%- if page.project and page.project != "" -%}
+    {%- if item.related != page.project or item.posttype != page.posttype -%}
+      {%- continue -%}
+    {%- endif -%}
+  {%- endif -%}
+
   {%- if include.type == "home" -%}
 
-
-    <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
+    <!-- ВАРИАНТ А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
     <li class="news-item news-item-compact{% if item.pinned %} pinned-item{% endif %}" 
         data-date="{{ item.date }}" 
         data-is-post="{{ item.is_post }}" 
@@ -32,21 +40,78 @@
     
   {%- elsif include.type == "news" -%}
   
-    <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-    <li class="news-item{% if item.pinned %} pinned-item{% endif %}" 
-        data-date="{{ item.date }}" 
-        data-is-post="{{ item.is_post }}" 
-        data-emoji="{{ item.emoji }}" 
-        style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-      <div>
-        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-            {{ item.title }}
-          </a>
-        </span>
-      </div>
-    </li>
+    {%- if page.project and page.project != "" -%}
+      
+      <!-- 🏛️ ВАРИАНТ Б-1: ОТКРЫТЫЙ СВИТОК СТАТЕЙ С ТЕКСТОМ (Для страниц конкретных проектов по кнопке "0") -->
+      {%- assign post = site.posts | where: "url", item.url | first -%}
+      {%- if post -%}
+        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
+          {%- continue -%}
+        {%- endif -%}
+        
+        <div class="media-entry" style="margin-bottom: 30px;">
+          
+          <!-- Контейнер строки даты и заголовка -->
+          <div class="media-entry-title-row">
+            <span class="media-entry-date" style="font-weight: bold; color: #555;">{{ post.date | date: "%d.%m.%Y" }}</span>
+            <h3 class="media-entry-title" style="margin: 0 0 0 10px; display: inline-block;">{{ post.title }}</h3>
+          </div>
+          
+          <!-- Оболочка основного развёрнутого контента заметки из Obsidian -->
+          <div class="media-content main-content" style="margin-top: 12px; line-height: 1.6;">
+            {%- if post.description and post.description != "" -%}
+              <p class="page-description" style="font-style: italic; color: #666;">{{ post.description }}</p>
+            {%- endif -%}
+
+            {{ post.content }}
+           
+            {%- if post.author and post.author != "" -%}
+            <div class="author-inline" style="margin-top: 12px; font-size: 0.95em;">
+                <strong>Автор:</strong> <span class="sources-content">{{ post.author }}</span>
+            </div>
+            {%- endif -%}
+
+            {%- if post.sources and post.sources != "" -%}
+            <div class="sources-inline" style="margin-top: 8px; font-size: 0.95em;">
+                <strong>Источники:</strong> <span class="sources-content">{{ post.sources | markdownify }}</span>
+            </div>
+            {%- endif -%}
+
+            {%- if post.tags.size > 0 -%}
+            <div class="tag-container" style="margin-top: 12px;">
+                {%- for tag in post.tags -%}
+                    {%- assign tag_clean = tag | replace: '#', '' | strip -%}
+                    <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item" style="margin-right: 8px; text-decoration: none;">#{{ tag_clean }}</a>
+                {%- endfor -%}
+            </div>
+            {%- endif -%}
+          </div>
+          
+          {%- unless forloop.last -%}
+            <hr class="media-entry-hr" style="margin: 25px 0; border: 0; border-top: 1px solid #e0e0e0;">
+          {%- endunless -%}
+        </div>
+      {%- endif -%}
+
+    {%- else -%}
+
+      <!-- 🏛️ ВАРИАНТ Б-2: КОМПАКТНЫЕ СТРОКИ ССЫЛОК (Для страниц Общих крупных архивов Журнала/Медиа) -->
+      <li class="news-item{% if item.pinned %} pinned-item{% endif %}" 
+          data-date="{{ item.date }}" 
+          data-is-post="{{ item.is_post }}" 
+          data-emoji="{{ item.emoji }}" 
+          style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+        <div>
+          <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>
+            <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
+              {{ item.title }}
+            </a>
+          </span>
+        </div>
+      </li>
+
+    {%- endif -%}
     
   {%- endif -%}
 {%- endfor -%}

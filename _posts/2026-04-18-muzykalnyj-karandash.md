@@ -9,6 +9,7 @@ journal-post-page: "Y"
 mathjax: true
 keywords: [схема, теория]
 discus: "questions"
+emoji: "❗"
 ---
 
 ### Описание работы устройства 

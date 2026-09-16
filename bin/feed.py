@@ -139,7 +139,7 @@ def build_universal_feed():
             if len(emoji_col) < 2:
                 emoji_col += " "
 
-        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {emoji_col} | {pin_marker} | {f_item['posttype']:8} | {f_item['project']:20} | {f_item['title']}")
+        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {emoji_col} | {pin_marker} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
 
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:

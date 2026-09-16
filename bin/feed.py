@@ -56,13 +56,15 @@ def build_universal_feed():
     # 🟢 ШАГ 2: СКВОЗНОЙ СБОР ПОСТОВ ХРОНИКИ ИЗ ПЛОСКОЙ КАРТЫ НАВИГАЦИИ
     for file_key, nodes in nav_data.items():
         # Игнорируем технические служебные заголовки карты
-        if file_key == 'detected_root_folders':
+        if file_key == 'detected_root_folders' or file_key.endswith('.html'):
             continue
             
         if not isinstance(nodes, list) or len(nodes) == 0:
             continue
             
-        passport = nodes[0]
+        # 🟢 НАШ ЗАКОН: Безопасно распаковываем плоский словарь метаданных из массива карты
+        passport = nodes[0] if isinstance(nodes, list) and len(nodes) > 0 else nodes
+        
         if not isinstance(passport, dict):
             continue
 

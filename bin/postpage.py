@@ -88,9 +88,9 @@ def generate_project_posts_pages():
             front_matter_lines = [
                 "---",
                 "layout: news",
-                f'title: {parent_title}: "лента проекта"',
-                f'project: {parent_slug}',
-                f'posttype: {post_type}',
+                f'title: "{parent_title}: лента проекта"',
+                f'project: "{parent_slug}"',
+                f'posttype: "{post_type}"',
                 f"permalink: /{post_type}/{parent_slug}/",
                 "---",
                 "" # Оставляем файл пустым ниже шапки, контент развернёт Liquid

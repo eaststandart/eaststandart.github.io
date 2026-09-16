@@ -13,9 +13,12 @@
     {%- continue -%}
   {%- endif -%}
 
-  {% comment %} 🟢 СЛУЧАЙ Б: Фильтр для изолированных лент проектов (кнопка "0") по project и posttype {% endcomment %}
-  {%- if page.project and page.project != "" -%}
-    {%- if item.related != page.project or item.posttype != page.posttype -%}
+  {% comment %} 🟢 СЛУЧАЙ Б: Фильтр для изолированных лент проектов (кнопка "0") с очисткой кавычек {% endcomment %}
+  {%- assign clean_page_project = page.project | remove: '"' | strip -%}
+  {%- assign clean_page_posttype = page.posttype | remove: '"' | strip -%}
+
+  {%- if clean_page_project and clean_page_project != "" -%}
+    {%- if item.related != clean_page_project or item.posttype != clean_page_posttype -%}
       {%- continue -%}
     {%- endif -%}
   {%- endif -%}
@@ -40,7 +43,7 @@
     
   {%- elsif include.type == "news" -%}
   
-    {%- if page.project and page.project != "" -%}
+    {%- if clean_page_project and clean_page_project != "" -%}
       
       <!-- 🏛️ ВАРИАНТ Б-1: ОТКРЫТЫЙ СВИТОК СТАТЕЙ С ТЕКСТОМ (Для страниц конкретных проектов по кнопке "0") -->
       {%- assign post = site.posts | where: "url", item.url | first -%}

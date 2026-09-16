@@ -85,6 +85,13 @@ def main():
     except Exception as e:
         print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
 
+    # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
+    try:
+        from post_page import generate_project_posts_pages
+        generate_project_posts_pages()
+    except Exception as e:
+        print(f"[ERROR] Не удалось запустить генератор страниц проектов post-page: {e}")
+
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     # try:
     #    from content import process_all_markdown_files

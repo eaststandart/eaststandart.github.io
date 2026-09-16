@@ -223,6 +223,8 @@ def build_navigation_tree():
                 node['title'] = front_data.get('title', clean_section_name.capitalize())
                 if 'crumbtitle' in front_data:
                     node['crumbtitle'] = front_data['crumbtitle']
+                if front_data.get('emoji'):
+                    node['emoji'] = front_data['emoji']
                 
                 # Вычисление URL по пермалинку
                 if front_data.get('permalink'):

@@ -105,7 +105,7 @@ def navigation_news_properties(data, passport, file_path=None):
         # Записываем дату в карту навигации
         target_dict['date'] = str(data.get('date', ''))
         
-        # 🟢 НАШ КАН दोषियों ЗАКОН: Жестко вшиваем эмодзи и свойства прямо в карту навигации!
+        # Записываем эмодзи и свойства в карту навигации
         for prop in ['direction', 'entity', 'level', 'emoji']:
             if data.get(prop):
                 target_dict[prop] = data[prop]

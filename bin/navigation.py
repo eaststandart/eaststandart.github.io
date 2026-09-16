@@ -111,6 +111,10 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
     if has_post_page_property and post_page_type:
         passport['posttype'] = post_page_type
 
+    file_slug_log = os.path.basename(file_path) if file_path else "unknown"
+        if "muzykalnyj-karandash" in file_slug_log:
+            log_artifact(f"[NAV-DEB-PROP] Пост: {file_slug_log} | posttype: {passport.get('posttype')} | slug: {project_slug} | categories_in_file: {data.get('categories')}")
+
     # Вшиваем категории на основе URL родительской страницы
     if passport.get('posttype') and project_slug:
         if not data.get('categories'):

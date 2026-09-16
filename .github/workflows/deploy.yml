@@ -48,7 +48,7 @@ jobs:
       - name: Upload Post Page Generator Log
         uses: actions/upload-artifact@v4
         with:
-          name: jekyll-post-page
+          name: jekyll-post-page-log
           path: _post_page_files/posts-page-generator.log
 
       - name: Setup Pages

@@ -1,26 +1,28 @@
 {%- comment -%}
-@about Генерация развёрнутой ленты постов проекта.
-@purpose Автоматический вывод полноценных публикаций для кнопки "0" на основе данных Python.
+@about Сборка развёрнутой ленты постов проекта под плоскую карту.
+@purpose Автоматический вывод полноценных публикаций для кнопки "0".
 @author TechLab
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- comment -%} Находим имя типа контента и слаг проекта напрямую из шапки созданного Питоном файла {%- endcomment -%}
   {%- assign target_project_slug = page.project -%}
   {%- assign target_posttype = page.posttype | default: include.type -%}
-
+  
   {%- for post in site.posts -%}
     {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-    {%- if post_passport and post_passport.relatedpages contains target_project_slug and post_passport.posttype == target_posttype -%}
+    {%- if post_passport and post_passport.posttype == target_posttype -%}
+      {%- assign rel_parts = post_passport.relatedpages | split: "/" -%}
+      {%- assign rel_slug = rel_parts[1] -%}
+      {%- if rel_slug == target_project_slug -%}
       
-      {%- if post -%}
-        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
+        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
+          {%- continue -%}
+        {%- endif -%}
         
         <div class="media-entry">
-          
           <!-- Контейнер строки даты и заголовка -->
           <div class="media-entry-title-row">
-            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
+            <span class="media-entry-date">{{ post_passport.date | date: "%d.%m.%Y" }}</span>
             <h3 class="media-entry-title">{{ post.title }}</h3>
           </div>
           
@@ -59,12 +61,12 @@
             {%- endif -%}
           </div>
           
-          {%- comment -%} Линию hr рисуем только если это не последний пост в массиве {%- endcomment -%}
           {%- unless forloop.last -%}
             <hr class="media-entry-hr">
           {%- endunless -%}
         </div>
+        
       {%- endif -%}
-    {%- endfor -%}
-  {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
 </div>

@@ -87,8 +87,8 @@ def main():
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
     try:
-        from post_page import generate_project_posts_pages
-        generate_project_posts_pages()
+        import subprocess
+        subprocess.run([sys.executable, os.path.join(current_dir, 'post-page.py')], check=True)
     except Exception as e:
         print(f"[ERROR] Не удалось запустить генератор страниц проектов post-page: {e}")
 

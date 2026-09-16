@@ -5,13 +5,25 @@
 {%- endcomment -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- comment -%} Находим имя типа контента и слаг проекта напрямую из шапки созданного Питоном файла {%- endcomment -%}
-  {%- assign target_project_slug = page.project -%}
-  {%- assign target_posttype = page.posttype | default: include.type -%}
+{%- assign current_section = page.section -%}
+{%- assign current_project = nil -%}
+{%- for project in site.data.navigation.sections[current_section] -%}
+  {%- if project.slug == page.slug -%}
+      {%- assign current_project = project -%}
+      {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
 
-  {%- for post in site.posts -%}
-    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
-    {%- if post_passport and post_passport.relatedpages contains target_project_slug and post_passport.posttype == target_posttype -%}
+  {%- assign project_posts = nil -%}
+  {%- if include.type == "journal" -%}
+    {%- assign project_posts = current_project.journal_posts -%}
+  {%- elsif include.type == "media" -%}
+    {%- assign project_posts = current_project.media_posts -%}
+  {%- endif -%}
+
+  {%- if project_posts and project_posts.size > 0 -%}
+    {%- for post_item in project_posts -%}
+      {%- assign post = site.posts | where: "url", post_item.url | first -%}
       
       {%- if post -%}
         {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}

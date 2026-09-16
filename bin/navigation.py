@@ -112,9 +112,9 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
         passport['posttype'] = post_page_type
 
     # ВЫВОДИМ ДЕБАГ В КОНСОЛЬ ДО ВСЕХ ПРОВЕРОК ДЛЯ ЖЕСТКОГО КОНТРОЛЯ
-    file_slug_log = os.path.basename(file_path) if file_path else "unknown"
-    if "muzykalnyj-karandash" in file_slug_log:
-        log_artifact(f"[NAV-DEB-PROP] Пост: {file_slug_log} | posttype: {passport.get('posttype')} | slug: {project_slug} | current_categories: {data.get('categories')}")
+    # file_slug_log = os.path.basename(file_path) if file_path else "unknown"
+    # if "muzykalnyj-karandash" in file_slug_log:
+    #     log_artifact(f"[NAV-DEB-PROP] Пост: {file_slug_log} | posttype: {passport.get('posttype')} | slug: {project_slug} | current_categories: {data.get('categories')}")
 
     # Вшиваем категории принудительно (если вычислен тип и слаг родителя)
     if passport.get('posttype') and project_slug:

@@ -8,8 +8,10 @@
   {% assign url_parts = page.url | split: "/" %}
   {% assign project_slug_last = url_parts[2] %}
 
+  {%- assign current_project_path = page.path -%}
   {%- for post in site.posts -%}
-    {%- if post.categories contains project_slug_last and post.categories contains include.type -%}
+    {%- assign post_passport = site.data.navigation[post.relative_path] | first -%}
+    {%- if post_passport and post_passport.relatedpages == current_project_path and post_passport.posttype == include.type -%}
       {%- if post.media-post-page == "N" or post["media-post-page"] == "N" or post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}
         {%- continue -%}
       {%- endif -%}

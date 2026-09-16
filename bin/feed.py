@@ -127,7 +127,19 @@ def build_universal_feed():
     for idx, f_item in enumerate(final_feed, 1):
         p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
         pin_marker = "PIN" if f_item.get('pinnedfeed') is True else "   "
-        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {pin_marker} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
+
+        # Выравниваем составные эмодзи (типа 🧍‍♂️), делая столбец строго моноширинным!
+        raw_emoji = f_item.get('emoji', '')
+        if not raw_emoji or raw_emoji.strip() == "":
+            emoji_col = "  "
+        elif "🧍" in raw_emoji:
+            emoji_col = f"{raw_emoji.strip()}" # Сложный эмодзи уже визуально шире в консоли
+        else:
+            emoji_col = f"{raw_emoji.strip()}"
+            if len(emoji_col) < 2:
+                emoji_col += " "
+
+        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {emoji_col} | {pin_marker} | {f_item['posttype']:8} | {f_item['project']:20} | {f_item['title']}")
 
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:

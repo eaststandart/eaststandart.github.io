@@ -60,7 +60,7 @@ def write_yaml_front_matter(file_path, data, body_content):
 # ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ НОВОСТЕЙ (Чистый калькулятор памяти)
 # =====================================================================
 def navigation_news_properties(data, passport, file_path=None, project_slug=None):
-    """Новостной module Этажа 2. Рассчитывает даты, типы и принудительно 
+    """Новостной модуль Этажа 2. Рассчитывает даты, типы и принудительно 
     вшивает массив нативных категорий Jekyll во Front Matter на диск."""
     import datetime
     
@@ -111,17 +111,20 @@ def navigation_news_properties(data, passport, file_path=None, project_slug=None
     if has_post_page_property and post_page_type:
         passport['posttype'] = post_page_type
 
+    # ВЫВОДИМ ДЕБАГ В КОНСОЛЬ ДО ВСЕХ ПРОВЕРОК ДЛЯ ЖЕСТКОГО КОНТРОЛЯ
     file_slug_log = os.path.basename(file_path) if file_path else "unknown"
-        if "muzykalnyj-karandash" in file_slug_log:
-            log_artifact(f"[NAV-DEB-PROP] Пост: {file_slug_log} | posttype: {passport.get('posttype')} | slug: {project_slug} | categories_in_file: {data.get('categories')}")
+    if "muzykalnyj-karandash" in file_slug_log:
+        log_artifact(f"[NAV-DEB-PROP] Пост: {file_slug_log} | posttype: {passport.get('posttype')} | slug: {project_slug} | current_categories: {data.get('categories')}")
 
-    # Вшиваем категории на основе URL родительской страницы
+    # Вшиваем категории принудительно (если вычислен тип и слаг родителя)
     if passport.get('posttype') and project_slug:
-        if not data.get('categories'):
-            data['categories'] = [passport['posttype'], project_slug]
+        target_categories = [passport['posttype'], project_slug]
+        if data.get('categories') != target_categories:
+            data['categories'] = target_categories
             data['post-page'] = passport['posttype']
             categories_were_written = True
 
+    # БЛОК ЗАПИСИ НА ДИСК И ВЫВОДА ЛОГОВ (Строго выверенные плоские отступы)
     if (date_was_written or categories_were_written) and file_path and os.path.exists(file_path):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:

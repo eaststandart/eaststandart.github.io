@@ -87,10 +87,10 @@ def main():
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
     try:
-        import subprocess
-        subprocess.run([sys.executable, os.path.join(current_dir, 'post-page.py')], check=True)
+        from postpage import generate_project_posts_pages
+        generate_project_posts_pages()
     except Exception as e:
-        print(f"[ERROR] Не удалось запустить генератор страниц проектов post-page: {e}")
+        print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
 
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     # try:

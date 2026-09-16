@@ -92,6 +92,13 @@ def main():
     except Exception as e:
         print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
 
+    # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ЕДИНАЯ ЛЕНТА НОВОСТЕЙ FEED.YML
+    try:
+        from feed import build_universal_feed
+        build_universal_feed()
+    except Exception as e:
+        print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
+
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     # try:
     #    from content import process_all_markdown_files

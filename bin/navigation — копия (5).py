@@ -246,34 +246,6 @@ def build_navigation_tree():
                 
             flat_map[clean_section_name] = [node]
 
-            flat_map[clean_section_name] = [node]
-
-    # ФИНАЛЬНАЯ ПРОВЕРКА: Добор автономных файлов из папки _pages/
-    pages_dir = os.path.join(root_dir, '_pages')
-    if os.path.exists(pages_dir):
-        for file in os.listdir(pages_dir):
-            if file.endswith('.md') and file != 'index.md':
-                slug, _ = os.path.splitext(file)
-                
-                # Если файлу из _pages не сопоставлено ни одно корневое имя папки в flat_map
-                if slug not in flat_map:
-                    p_data, _, _ = parse_yaml_front_matter(os.path.join(pages_dir, file))
-                    if p_data:
-                        node = {
-                            'title': p_data.get('title', slug.capitalize()),
-                            'url': p_data.get('permalink', f"/{slug}/").strip()
-                        }
-                        if p_data.get('crumbtitle'):
-                            node['crumbtitle'] = p_data['crumbtitle']
-                        # Нативно забираем эмодзи для автономного раздела (Журнал, Медиа)
-                        if p_data.get('emoji'):
-                            node['emoji'] = p_data['emoji']
-                            
-                        # Прописываем системное свойство раздела Jekyll
-                        node['section'] = slug
-                        
-                        flat_map[slug] = [node]
-
     # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ) - 1 В 1 ВАШ ФАЙЛ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)

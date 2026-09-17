@@ -3,9 +3,10 @@
 """
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose Автоматическая штамповка лент под кнопку "0" на основе плоской карты Питона.
+@purpose Автоматическая штамповка лент под кнопку "0" на основе плоской карты Питона 
+         с автоматической санитарной зачисткой папок от устаревшего контента.
 @author TechLab
-@version 1.0.0
+@version 2.0.0
 """
 
 import os
@@ -34,6 +35,21 @@ def generate_project_posts_pages():
     except Exception as e:
         print(f"[POST-ERROR] Сбой чтения файла карты навигации: {e}")
         return
+
+    # 🧼 ЭТАП САНИТАРНОЙ ЗАЧИСТКИ: Удаляем старые сгенерированные файлы, чтобы избежать страниц-призраков
+    print("[POST-CLEAN] Запуск санитарной зачистки целевых папок контура...")
+    for target_folder in ['journal', 'media']:
+        folder_path = os.path.join(root_dir, target_folder)
+        if os.path.exists(folder_path):
+            for file_name in os.listdir(folder_path):
+                # Удаляем только .md файлы проектов, не трогая главные индексы папок
+                if file_name.endswith('.md') and 'index' not in file_name:
+                    file_to_remove = os.path.join(folder_path, file_name)
+                    try:
+                        os.remove(file_to_remove)
+                        log_buffer.append(f"[CLEAN] Удален устаревший файл: {target_folder}/{file_name}")
+                    except Exception as e:
+                        print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
     # Буфер в оперативной памяти для защиты от дублирования одинаковых страниц
     created_pages_registry = set()
@@ -77,17 +93,16 @@ def generate_project_posts_pages():
                 continue
 
             # Шаг 4: Разметка жёсткого диска сервера Actions
-            # По вашему закону: имя папки берётся строго из posttype контента
             target_folder_path = os.path.join(root_dir, post_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
             # Строим точный физический путь к .md файлу страницы проекта
             target_md_file = os.path.join(target_folder_path, f"{parent_slug}.md")
             
-            # Шаг 5: Сборка текстового содержимого строго по вашему паспорту контура
+            # Шаг 5: Сборка текстового содержимого строго по вашему паспорту контура (layout: news)
             front_matter_lines = [
                 "---",
-                "layout: page",
+                "layout: news",
                 f'title: "{parent_title}: лента проекта"',
                 f'project: "{parent_slug}"',
                 f'posttype: "{post_type}"',
@@ -103,9 +118,8 @@ def generate_project_posts_pages():
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
                 
-                # Выводим шапку и первые 5 строк тела файла
                 relative_log_path = f"{post_type}/{parent_slug}.md"
-                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}\n--- ШАПКА НА ДИСКЕ ---\n{file_content}----------------------------"
+                log_msg = f"[POST-GENERATOR] Файл: {relative_log_path} | Записана лента проекта: {parent_title}\n--- ШАПКА НА ДИСКЕ ---\n{file_content}\n----------------------------"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 

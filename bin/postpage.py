@@ -4,9 +4,9 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
-         свойством mathjax: true и каноничными русскими заголовками проектов.
+         свойством mathjax: true, каноничными русскими заголовками проектов и защитой YAML.
 @author TechLab
-@version 5.1.0-fixed-names
+@version 5.2.0-protected-yaml
 """
 
 import os
@@ -76,18 +76,20 @@ def generate_project_posts_pages():
             for file_key, nodes in navigation_map.items():
                 if isinstance(nodes, list) and len(nodes) > 0:
                     card = nodes[0]
-                    card_url = card.get('url', '').strip('/')
-                    if card_url and card_url.split('/')[-1] == p_related:
-                        if card.get('title'):
-                            parent_title = card['title'].strip()
-                            break
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: Проверяем, что элемент действительно словарь, а не строка корневых папок
+                    if isinstance(card, dict):
+                        card_url = card.get('url', '').strip('/')
+                        if card_url and card_url.split('/')[-1] == p_related:
+                            if card.get('title'):
+                                parent_title = card['title'].strip()
+                                break
 
             target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Шаг 3: Штампуем Front Matter 1 в 1 с каноничным русским заголовком и mathjax: true
+            # Шаг 3: Штампуем Front Matter 1 в 1 с каноничным русским заголовком и внедряем Liquid-код
             front_matter_lines = [
                 "---",
                 "layout: page",

@@ -404,7 +404,7 @@ def build_navigation_tree():
                 # Б. Пост хроники БЕЗ пермалинка
                 else:
                     fallback_type = post_page_type if post_page_type else "journal"
-                    node['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_slug_no_date}.html"
+                    node['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
                     node['posttype'] = fallback_type
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path

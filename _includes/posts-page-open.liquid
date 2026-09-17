@@ -1,6 +1,7 @@
 {%- comment -%}
-@about Отладочная версия модуля развернутого вывода постов проекта.
-@purpose Сбор логов компиляции контента и блокировка ошибочных отступов Kramdown.
+@about Модуль развернутого вывода постов проекта.
+@purpose Генерирует открытую хронологическую ленту публикаций (текст, фото, видео) 
+         для конкретного проекта на основе данных из feed.yml со стилями 1 в 1.
 @author TechLab
 {%- endcomment -%}
 
@@ -13,22 +14,18 @@
 {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
 {%- assign original_post = site.posts | where: "url", item.url | first -%}
 {%- if original_post == nil -%}{%- assign original_post = site.pages | where: "url", item.url | first -%}{%- endif -%}
-<article class="media-entry posts-page-item" style="margin-bottom: 40px; border-bottom: 2px solid #e1e4e8; padding-bottom: 20px;">
+<article class="media-entry posts-page-item" style="margin-bottom: 40px; border-bottom: 1px solid #e1e4e8; padding-bottom: 30px;">
 <header class="media-entry-header">
-<span class="media-entry-date" style="color: #6a737d;">{{ item.date | date: "%d.%m.%Y" }}</span>
-<h2 class="media-entry-title" style="margin: 8px 0 16px 0;">
-<a href="{{ item.url | relative_url }}" style="color: #0366d6; text-decoration: none; font-weight: bold;">
+<span class="media-entry-date" style="color: #6a737d; font-size: 0.9rem;">{{ item.date | date: "%d.%m.%Y" }}</span>
+<h2 class="media-entry-title" style="margin-top: 4px; margin-bottom: 16px;">
+<a href="{{ item.url | relative_url }}" style="text-decoration: none; color: #0366d6; font-weight: bold;">
 {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ item.title }}
 </a>
 </h2>
 </header>
-<!-- СЛУЖЕБНЫЙ ЛОГ ДЛЯ РАЗРАБОТЧИКА (ВИДЕН НА СТРАНИЦЕ ПРИ ОТЛАДКЕ) -->
-<div class="debug-log-block" style="background: #fff5b8; border: 1px solid #e2b13c; padding: 8px; font-family: monospace; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px;">
-[DEBUG-LOG] Пост: "{{ item.title }}" | Найдено на сервере: {% if original_post %}ДА (Макет: {{ original_post.layout }}, Символов: {{ original_post.content | size }}){% else %}НЕТ{% endif %}
-</div>
 <div class="media-entry-content">
 {% if original_post %}
-{{ original_post.content }}
+{{ original_post.content | markdownify }}
 {% else %}
 <p>{{ item.title }}</p>
 {% endif %}
@@ -38,6 +35,7 @@
 {%- endfor -%}
 </div>
 
+{%- comment -%} Запускаем ваш оригинальный скрипт зачистки отступов и ленивой загрузки медиа {%- endcomment -%}
 <script src="{{ '/assets/js/media-archive-filter.js' | relative_url }}"></script>
 <script>
   (function() {

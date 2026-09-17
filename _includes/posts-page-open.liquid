@@ -9,9 +9,11 @@
 {%- assign target_type = include.type -%}
 {%- assign feed_source = site.data.feed.feed -%}
 
-<div class="media-archive-list-wrapper posts-page-list">
+{%- comment -%} Главный контейнер темы markdown-body возвращает эталонное форматирование старого сайта 1 в 1 {%- endcomment -%}
+<div class="media-archive-list-wrapper posts-page-list markdown-body">
   {%- for item in feed_source -%}
-    {%- if item.related == target_project and item.posttype == target_type -%}
+    {%- comment -%} Фильтрация строго по логике старого сайта: совпадение проекта, типа ленты и флага валидности постов {%- endcomment -%}
+    {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
       
       {%- comment -%} Находим оригинальный объект поста в Jekyll, чтобы забрать его живое содержимое content {%- endcomment -%}
       {%- assign original_post = site.posts | where: "url", item.url | first -%}
@@ -29,7 +31,7 @@
           </h2>
         </header>
 
-        <div class="media-entry-content markdown-body">
+        <div class="media-entry-content">
           {%- if original_post -%}
             {{ original_post.content }}
           {%- else -%}
@@ -37,7 +39,7 @@
           {%- endif -%}
         </div>
 
-        {%- comment -%} Рендерим разделительную линию. JS-скрипт зачистки автоматом скроет её у самого нижнего поста {%- endcomment -%}
+        {%- comment -%} Разделительная линия между постами ленты контура {%- endcomment -%}
         <hr class="media-entry-hr" style="margin-top: 24px; margin-bottom: 24px; border: 0; border-top: 1px solid #e1e4e8;">
       </article>
 

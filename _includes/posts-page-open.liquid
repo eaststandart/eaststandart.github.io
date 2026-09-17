@@ -1,7 +1,6 @@
 {%- comment -%}
-@about Модуль развернутого вывода постов проекта.
-@purpose Генерирует открытую хронологическую ленту публикаций (текст, фото, видео) 
-         для конкретного проекта на основе данных из feed.yml со стилями 1 в 1.
+@about Отладочная версия модуля развернутого вывода постов проекта.
+@purpose Сбор логов компиляции контента и блокировка ошибочных отступов Kramdown.
 @author TechLab
 {%- endcomment -%}
 
@@ -10,41 +9,35 @@
 {%- assign feed_source = site.data.feed.feed -%}
 
 <div class="media-archive-list-wrapper posts-page-list markdown-body">
-  {%- for item in feed_source -%}
-    {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
-      
-      {%- comment -%} Находим оригинальный объект поста в Jekyll, чтобы забрать его живое содержимое {%- endcomment -%}
-      {%- assign original_post = site.posts | where: "url", item.url | first -%}
-      {%- if original_post == nil -%}
-        {%- assign original_post = site.pages | where: "url", item.url | first -%}
-      {%- endif -%}
-
-      <article class="media-entry posts-page-item">
-        <header class="media-entry-header">
-          <span class="media-entry-date">{{ item.date | date: "%d.%m.%Y" }}</span>
-          <h2 class="media-entry-title">
-            <a href="{{ item.url | relative_url }}">
-              {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ item.title }}
-            </a>
-          </h2>
-        </header>
-
-        <div class="media-entry-content">
-          {%- if original_post -%}
-            {{ original_post.content | markdownify }}
-          {%- else -%}
-            <p>{{ item.title }}</p>
-          {%- endif -%}
-        </div>
-
-        <hr class="media-entry-hr">
-      </article>
-
-    {%- endif -%}
-  {%- endfor -%}
+{%- for item in feed_source -%}
+{%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
+{%- assign original_post = site.posts | where: "url", item.url | first -%}
+{%- if original_post == nil -%}{%- assign original_post = site.pages | where: "url", item.url | first -%}{%- endif -%}
+<article class="media-entry posts-page-item" style="margin-bottom: 40px; border-bottom: 2px solid #e1e4e8; padding-bottom: 20px;">
+<header class="media-entry-header">
+<span class="media-entry-date" style="color: #6a737d;">{{ item.date | date: "%d.%m.%Y" }}</span>
+<h2 class="media-entry-title" style="margin: 8px 0 16px 0;">
+<a href="{{ item.url | relative_url }}" style="color: #0366d6; text-decoration: none; font-weight: bold;">
+{% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ item.title }}
+</a>
+</h2>
+</header>
+<!-- СЛУЖЕБНЫЙ ЛОГ ДЛЯ РАЗРАБОТЧИКА (ВИДЕН НА СТРАНИЦЕ ПРИ ОТЛАДКЕ) -->
+<div class="debug-log-block" style="background: #fff5b8; border: 1px solid #e2b13c; padding: 8px; font-family: monospace; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px;">
+[DEBUG-LOG] Пост: "{{ item.title }}" | Найдено на сервере: {% if original_post %}ДА (Макет: {{ original_post.layout }}, Символов: {{ original_post.content | size }}){% else %}НЕТ{% endif %}
+</div>
+<div class="media-entry-content">
+{% if original_post %}
+{{ original_post.content }}
+{% else %}
+<p>{{ item.title }}</p>
+{% endif %}
+</div>
+</article>
+{%- endif -%}
+{%- endfor -%}
 </div>
 
-{%- comment -%} Запускаем ваш оригинальный скрипт зачистки отступов и ленивой загрузки медиа {%- endcomment -%}
 <script src="{{ '/assets/js/media-archive-filter.js' | relative_url }}"></script>
 <script>
   (function() {

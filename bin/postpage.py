@@ -5,9 +5,9 @@
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
          свойств во Front Matter (включая mathjax: true), каноничными русскими заголовками 
-         проектов напрямую из navigation.yml и вызовом внешнего инклуда с параметрами.
+         проектов на основе связанных путей relatedpages и вызовом внешнего инклуда.
 @author TechLab
-@version 11.0.0-exact-keys-match
+@version 12.0.0-relatedpages-exact
 """
 
 import os
@@ -57,68 +57,72 @@ def generate_project_posts_pages():
                     except Exception as e:
                         print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
-    created_pages_registry = set()
-
-    # Шаг 2: Сканирование универсальной ленты и генерация изолированных страниц
+    # Шаг 2: Группируем элементы фида по уникальным путям связанных проектов (relatedpages)
+    # Нам нужно вытащить relatedpages из навигационной карты для каждого элемента фида
+    projects_data = {}
+    
     for item in feed_source:
-        p_related = item.get('related')
-        p_type = item.get('posttype')
         p_url = item.get('url', '')
+        p_type = item.get('posttype')
         is_post_valid = item.get('is_post') == 'true' or item.get('is_post') is True
         
-        if p_related and p_type and is_post_valid:
-            page_uid = f"{p_type}::{p_related}"
-            if page_uid in created_pages_registry:
-                continue
-                
-            # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта по точному совпадению ключа relatedpages
-            parent_title = p_related.replace('-', ' ').capitalize() # Резервный транслит
-            
-            # 🎯 ТОЧНЫЙ ПОИСК ПО КАРТЕ НАВИГАЦИИ: Ищем оригинальный md-путь поста в _posts
-            # Чтобы узнать значение relatedpages, находим паспорт этого поста в navigation.yml
+        if p_url and p_type and is_post_valid:
+            # Ищем паспорт этого поста в navigation.yml, чтобы вытащить точный relatedpages
+            related_page_path = None
             for nav_key, nav_nodes in navigation_map.items():
                 if nav_key.startswith('_posts/') and isinstance(nav_nodes, list) and len(nav_nodes) > 0:
-                    post_passport = nav_nodes[0]
-                    # Сверяем по каноническому URL из фида
-                    if post_passport.get('url') == p_url:
-                        related_page_path = post_passport.get('relatedpages')
-                        if related_page_path:
-                            # Теперь напрямую прыгаем по этому пути к карточке родительского проекта
-                            parent_nodes = navigation_map.get(related_page_path)
-                            if parent_nodes and isinstance(parent_nodes, list) and len(parent_nodes) > 0:
-                                if parent_nodes[0].get('title'):
-                                    parent_title = parent_nodes[0]['title'].strip()
-                                    break
+                    if nav_nodes[0].get('url') == p_url:
+                        related_page_path = nav_nodes[0].get('relatedpages')
+                        break
             
-            target_folder_path = os.path.join(root_dir, p_type)
-            os.makedirs(target_folder_path, exist_ok=True)
+            if not related_page_path:
+                continue
+                
+            if related_page_path not in projects_data:
+                projects_data[related_page_path] = {
+                    'project_file': related_page_path,
+                    'type': p_type,
+                    'slug': related_page_path.split('/')[-2] if '/' in related_page_path else related_page_path.replace('.md', '')
+                }
             
-            target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
-            
-            # Чистый, расширяемый словарь свойств индивидуальной страницы (ВЕРНУЛИ mathjax: true)
-            base_front_matter = {
-                "layout": "page",
-                "title": f"{parent_title}: лента постов",
-                "permalink": f"/{p_type}/{p_related}/",
-                "mathjax": True
-            }
-            
-            # Превращаем структурированный словарь свойств в YAML-шапку
-            front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
-            
-            # Шаг 3: Формируем тело маркдаун-страницы - чистый профессиональный вызов инклуда с параметрами
-            body_content_string = f'{{% include posts-page-open.liquid category="{p_type}" project="{p_related}" %}}'
-            file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
-            
-            try:
-                with open(target_md_file, 'w', encoding='utf-8') as f:
-                    f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Заголовок: {parent_title}: лента постов | Свойства объединены."
-                print(log_msg)
-                log_buffer.append(log_msg)
-                created_pages_registry.add(page_uid)
-            except Exception as e:
-                print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")
+    # Шаг 3: Генерация файлов страниц
+    for rel_path, proj_info in projects_data.items():
+        p_file = proj_info['project_file']
+        p_type = proj_info['type']
+        p_slug = proj_info['slug']
+        
+        # Находим чистокровный русский заголовок родительского проекта по прямому ключу
+        parent_title = p_slug.replace('-', ' ').capitalize()
+        parent_nodes = navigation_map.get(rel_path)
+        if parent_nodes and isinstance(parent_nodes, list) and len(parent_nodes) > 0:
+            if parent_nodes[0].get('title'):
+                parent_title = parent_nodes[0]['title'].strip()
+
+        target_folder_path = os.path.join(root_dir, p_type)
+        os.makedirs(target_folder_path, exist_ok=True)
+        target_md_file = os.path.join(target_folder_path, f"{p_slug}.md")
+        
+        # Базовый расширяемый словарь свойств индивидуальной страницы
+        base_front_matter = {
+            "layout": "page",
+            "title": f"{parent_title}: лента постов",
+            "permalink": f"/{p_type}/{p_slug}/",
+            "mathjax": True
+        }
+        front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        
+        # Формируем тело маркдаун-страницы с передачей точного пути к файлу проекта
+        body_content_string = f'{{% include posts-page-open.liquid category="{p_type}" project_file="{p_file}" %}}'
+        file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
+        
+        try:
+            with open(target_md_file, 'w', encoding='utf-8') as f:
+                f.write(file_content)
+            log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_slug}.md | Заголовок: {parent_title}: лента постов | Параметр project_file: {p_file}"
+            print(log_msg)
+            log_buffer.append(log_msg)
+        except Exception as e:
+            print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")
 
     try:
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)

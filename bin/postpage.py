@@ -3,11 +3,11 @@
 """
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
-         свойством mathjax: true, каноничными русскими заголовками проектов 
-         и чистокровной серверной фильтрацией постов без использования JavaScript.
+@purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
+         свойств во Front Matter, mathjax, чистокровной серверной фильтрацией 
+         и автоматической зачисткой пустых строк бэкенда.
 @author TechLab
-@version 7.0.0-pure-backend-optimized
+@version 8.0.0-dynamic-frontmatter
 """
 
 import os
@@ -76,6 +76,7 @@ def generate_project_posts_pages():
             for file_key, nodes in navigation_map.items():
                 if isinstance(nodes, list) and len(nodes) > 0:
                     card = nodes
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов, отсекая root-строки
                     if isinstance(card, dict):
                         card_url = card.get('url', '').strip('/')
                         if card_url and card_url.split('/')[-1] == p_related:
@@ -88,15 +89,20 @@ def generate_project_posts_pages():
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Шаг 3: Штампуем монолитный независимый маркдаун-файл страницы проекта
-            front_matter_lines = [
-                "---",
-                "layout: page",
-                f'title: "{parent_title}: лента постов"',
-                f"permalink: /{p_type}/{p_related}/",
-                "mathjax: true",
-                "---",
-                "",
+            # 🔥 ОБЩИЕ ПРАВИЛА: Базовый расширяемый словарь свойств индивидуальной страницы
+            base_front_matter = {
+                "layout": "page",
+                "title": f"{parent_title}: лента постов",
+                "permalink": f"/{p_type}/{p_related}/",
+                "mathjax": True
+                # Сюда в будущем можно добавлять любые свойства в один клик: "comments": True, и т.д.
+            }
+            
+            # Превращаем структурированный словарь свойств в чистокровную YAML-шапку контура
+            front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            
+            # Шаг 3: Формируем тело маркдаун-страницы с нативной фильтрацией
+            body_lines = [
                 '<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ FEED.YML -->',
                 '<div id="media-container" class="media-archive-list-wrapper">',
                 '  {%- comment -%} Серверная фильтрация массива строго под текущий проект контура {%- endcomment -%}',
@@ -158,13 +164,18 @@ def generate_project_posts_pages():
                 '      </div>',
                 '    {%- endif -%}',
                 '  {%- endfor -%}',
-                '</div>'
+                '</div>' # 🧼 Закрывающий тег прижат вплотную, предотвращая пустые строки Kramdown!
             ]
+            
+            body_content_string = "\n".join(body_lines)
+            
+            # Собираем файл воедино, зачищая концевые переносы методом .strip()
+            file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
-                    f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Применена чистая серверная фильтрация."
+                    f.write(file_content)
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Свойства объединены динамически."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

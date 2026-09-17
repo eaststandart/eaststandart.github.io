@@ -4,10 +4,10 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
-         свойств во Front Matter, mathjax, чистокровной серверной фильтрацией 
-         и серверным обнулением отступа финального поста без использования JavaScript.
+         свойств во Front Matter, каноничными русскими заголовками проектов и вызовом
+         изолированного внешнего инклуда posts-page-open.liquid с параметрами.
 @author TechLab
-@version 8.1.0-final-backend-styles
+@version 10.0.0-architecture-split
 """
 
 import os
@@ -100,80 +100,14 @@ def generate_project_posts_pages():
             # Превращаем структурированный словарь свойств в YAML-шапку
             front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
             
-            # Шаг 3: Формируем тело маркдаун-страницы с нативной фильтрацией
-            body_lines = [
-                '<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ FEED.YML -->',
-                '<div id="media-container" class="media-archive-list-wrapper">',
-                '  {%- comment -%} Серверная фильтрация массива строго под текущий проект контура {%- endcomment -%}',
-               f'  {{%- assign project_posts = site.data.feed.feed | where: "related", "{p_related}" | where: "posttype", "{p_type}" | where: "is_post", "true" -%}}',
-                '  ',
-                '  {%- for feed_item in project_posts -%}',
-                '    {%- assign post = site.posts | where: "url", feed_item.url | first -%}',
-                '    {%- if post == nil -%}',
-                '      {%- assign post = site.pages | where: "url", feed_item.url | first -%}',
-                '    {%- endif -%}',
-                '    ',
-                '    {%- if post -%}',
-                '      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -%}',
-                '      <div class="media-entry"{% if forloop.last %} style="margin-bottom: 0px !important;"{% endif %}>',
-                '        <!-- Контейнер строки даты и заголовка -->',
-                '        <div class="media-entry-title-row">',
-                '          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>',
-                '          <h3 class="media-entry-title">{{ post.title }}</h3>',
-                '        </div>',
-                '        ',
-                '        <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->',
-                '        <div class="media-content main-content">',
-                '          {%- if post.description and post.description != "" -%}',
-                '            <p class="page-description">{{ post.description }}</p>',
-                '          {%- endif -%}',
-                '          ',
-                '          {{ post.content }}',
-                '          ',
-                '          {%- if post.author and post.author != "" -%}',
-                '          <!-- А. БЛОК ВЫВОДА АВТОРА -->',
-                '          <div class="author-inline">',
-                '              <strong>Автор:</strong> ',
-                '              <div class="sources-content">{{ post.author }}</div>',
-                '          </div>',
-                '          {%- endif -%}',
-                '          ',
-                '          {%- if post.sources and post.sources != "" -%}',
-                '          <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->',
-                '          <div class="sources-inline">',
-                '              <strong>Источники:</strong>',
-                '              <div class="sources-content">{{ post.sources | markdownify }}</div>',
-                '          </div>',
-                '          {%- endif -%}',
-                '          ',
-                '          {%- if post.tags.size > 0 -%}',
-                '          <!-- В. БЛОК ВЫВОДА ТЕГОВ -->',
-                '          <div class="tag-container">',
-                '              {%- for tag in post.tags -%}',
-                '                  {%- assign tag_clean = tag | replace: "#", "" | strip -%}',
-                '                  <a href="{{ \'/tags.html\' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>',
-                '              {%- endfor -%}',
-                '          </div>',
-                '          {%- endif -%}',
-                '        </div>',
-                '        ',
-                '        {%- comment -%} НАСТОЯЩАЯ СЕРВЕРНАЯ ЗАЧИСТКА: Линия создаётся только если впереди есть посты {%- endcomment -%}',
-                '        {%- unless forloop.last -%}',
-                '          <hr class="media-entry-hr">',
-                '        {%- endunless -%}',
-                '      </div>',
-                '    {%- endif -%}',
-                '  {%- endfor -%}',
-                '</div>'
-            ]
-            
-            body_content_string = "\n".join(body_lines)
+            # Шаг 3: Формируем тело маркдаун-страницы - чистый профессиональный вызов инклуда с параметрами
+            body_content_string = f'{{% include posts-page-open.liquid category="{p_type}" project="{p_related}" %}}'
             file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Отступ последнего поста обнулен на сервере."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Свойства объединены динамически, подключен инклуд."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

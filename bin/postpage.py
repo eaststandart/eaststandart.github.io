@@ -4,10 +4,10 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
-         свойств во Front Matter, каноничными русскими заголовками проектов и вызовом
-         изолированного внешнего инклуда posts-page-open.liquid с параметрами.
+         минимальных свойств во Front Matter, каноничными русскими заголовками проектов 
+         и вызовом внешнего инклуда posts-page-open.liquid с параметрами.
 @author TechLab
-@version 10.0.0-architecture-split
+@version 10.1.0-pure-clean
 """
 
 import os
@@ -81,20 +81,19 @@ def generate_project_posts_pages():
                         card_url = card.get('url', '').strip('/')
                         if card_url and card_url.split('/')[-1] == p_related:
                             if card.get('title'):
-                                parent_title = card['title'].strip()
-                                break
+                                            parent_title = card['title'].strip()
+                                            break
 
             target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # ОБЩИЕ ПРАВИЛА: Базовый расширяемый словарь свойств индивидуальной страницы
+            # Чистый, расширяемый словарь свойств индивидуальной страницы (БЕЗ mathjax)
             base_front_matter = {
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
-                "permalink": f"/{p_type}/{p_related}/",
-                "mathjax": True
+                "permalink": f"/{p_type}/{p_related}/"
             }
             
             # Превращаем структурированный словарь свойств в YAML-шапку

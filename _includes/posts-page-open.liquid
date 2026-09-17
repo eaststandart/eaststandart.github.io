@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Монолитный изолированный модуль развернутого вывода постов проекта на основе параметров из Python.
-@purpose Чистокровная серверная фильтрация постов и нативное обнуление отступов финального элемента без JS.
+@purpose Чистокровная серверная фильтрация постов по флагам Y/N и нативное обнуление отступов финального элемента.
 @author TechLab
 {%- endcomment -%}
 
@@ -16,7 +16,15 @@
     {%- endif -%}
     
     {%- if post -%}
-      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -%}
+      {%- comment -%} ЖЕСТКИЙ ПРЕДОХРАНИТЕЛЬ: Проверяем ваши оригинальные флаги со значением N и отсекаем лишние страницы {%- endcomment -%}
+      {%- if include.category == "journal" -%}
+        {%- if post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
+      {%- idif -%}
+      {%- if include.category == "media" -%}
+        {%- if post.media-post-page == "N" or post["media-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
+      {%- endif -%}
+      
+      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -% }
       <div class="media-entry"{% if forloop.last %} style="margin-bottom: 0px !important;"{% endif %}>
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">

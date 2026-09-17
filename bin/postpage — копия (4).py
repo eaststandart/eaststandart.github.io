@@ -4,10 +4,10 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
-         свойств во Front Matter (включая mathjax: true), каноничными русскими заголовками 
-         проектов напрямую из navigation.yml и вызовом внешнего инклуда с параметрами.
+         минимальных свойств во Front Matter, каноничными русскими заголовками проектов 
+         и вызовом внешнего инклуда posts-page-open.liquid с параметрами.
 @author TechLab
-@version 11.0.0-exact-keys-match
+@version 10.1.0-pure-clean
 """
 
 import os
@@ -63,7 +63,6 @@ def generate_project_posts_pages():
     for item in feed_source:
         p_related = item.get('related')
         p_type = item.get('posttype')
-        p_url = item.get('url', '')
         is_post_valid = item.get('is_post') == 'true' or item.get('is_post') is True
         
         if p_related and p_type and is_post_valid:
@@ -71,36 +70,30 @@ def generate_project_posts_pages():
             if page_uid in created_pages_registry:
                 continue
                 
-            # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта по точному совпадению ключа relatedpages
-            parent_title = p_related.replace('-', ' ').capitalize() # Резервный транслит
+            # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта в navigation.yml
+            parent_title = p_related.replace('-', ' ').capitalize() # Резервный вариант
             
-            # 🎯 ТОЧНЫЙ ПОИСК ПО КАРТЕ НАВИГАЦИИ: Ищем оригинальный md-путь поста в _posts
-            # Чтобы узнать значение relatedpages, находим паспорт этого поста в navigation.yml
-            for nav_key, nav_nodes in navigation_map.items():
-                if nav_key.startswith('_posts/') and isinstance(nav_nodes, list) and len(nav_nodes) > 0:
-                    post_passport = nav_nodes[0]
-                    # Сверяем по каноническому URL из фида
-                    if post_passport.get('url') == p_url:
-                        related_page_path = post_passport.get('relatedpages')
-                        if related_page_path:
-                            # Теперь напрямую прыгаем по этому пути к карточке родительского проекта
-                            parent_nodes = navigation_map.get(related_page_path)
-                            if parent_nodes and isinstance(parent_nodes, list) and len(parent_nodes) > 0:
-                                if parent_nodes[0].get('title'):
-                                    parent_title = parent_nodes[0]['title'].strip()
-                                    break
-            
+            for file_key, nodes in navigation_map.items():
+                if isinstance(nodes, list) and len(nodes) > 0:
+                    card = nodes
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов
+                    if isinstance(card, dict):
+                        card_url = card.get('url', '').strip('/')
+                        if card_url and card_url.split('/')[-1] == p_related:
+                            if card.get('title'):
+                                            parent_title = card['title'].strip()
+                                            break
+
             target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Чистый, расширяемый словарь свойств индивидуальной страницы (ВЕРНУЛИ mathjax: true)
+            # Чистый, расширяемый словарь свойств индивидуальной страницы (БЕЗ mathjax)
             base_front_matter = {
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
-                "permalink": f"/{p_type}/{p_related}/",
-                "mathjax": True
+                "permalink": f"/{p_type}/{p_related}/"
             }
             
             # Превращаем структурированный словарь свойств в YAML-шапку
@@ -113,7 +106,7 @@ def generate_project_posts_pages():
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Заголовок: {parent_title}: лента постов | Свойства объединены."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Свойства объединены динамически, подключен инклуд."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

@@ -19,12 +19,12 @@
       {%- comment -%} ЖЕСТКИЙ ПРЕДОХРАНИТЕЛЬ: Проверяем ваши оригинальные флаги со значением N и отсекаем лишние страницы {%- endcomment -%}
       {%- if include.category == "journal" -%}
         {%- if post.journal-post-page == "N" or post["journal-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
-      {%- idif -%}
+      {%- endif -%}
       {%- if include.category == "media" -%}
         {%- if post.media-post-page == "N" or post["media-post-page"] == "N" -%}{%- continue -%}{%- endif -%}
       {%- endif -%}
       
-      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -% }
+      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -%}
       <div class="media-entry"{% if forloop.last %} style="margin-bottom: 0px !important;"{% endif %}>
         <!-- Контейнер строки даты и заголовка -->
         <div class="media-entry-title-row">

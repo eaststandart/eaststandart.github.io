@@ -3,11 +3,11 @@
 """
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose 100% бэкенд-фильтрация постов по карте навигации navigation.yml. 
-         Python на Шаге 0 находит проекты, на Шаге 1 собирает посты по relatedpages, 
-         проверяет наличие posttype и передаёт в Jekyll готовый массив URL-адресов.
+@purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
+         минимальных свойств во Front Matter, каноничными русскими заголовками проектов 
+         и вызовом внешнего инклуда posts-page-open.liquid с параметрами.
 @author TechLab
-@version 15.0.0-pure-url-backend
+@version 10.1.0-pure-clean
 """
 
 import os
@@ -17,22 +17,30 @@ import yaml
 def generate_project_posts_pages():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+    feed_file = os.path.join(root_dir, '_data', 'feed.yml')
     navigation_file = os.path.join(root_dir, '_data', 'navigation.yml')
-    # 🧼 ЗАЧИСТКА ВАРНИНГОВ: Переносим лог в каноничную папку артефактов контента
-    log_file_path = os.path.join(root_dir, '_content_files', 'posts-page-generator.log')
+    log_file_path = os.path.join(root_dir, '_post_page_files', 'posts-page-generator.log')
     
     log_buffer = []
     
+    # Проверяем наличие Источников Правды контура
+    if not os.path.exists(feed_file):
+        print(f"[POST-ERROR] Источник Правды feed.yml не найден по пути: {feed_file}")
+        return
     if not os.path.exists(navigation_file):
         print(f"[POST-ERROR] Карта навигации navigation.yml не найдена: {navigation_file}")
         return
 
-    # Загружаем Единственный Источник Правды в оперативную память
+    # Шаг 1: Загружаем данные в оперативную память
     try:
+        with open(feed_file, 'r', encoding='utf-8') as f:
+            feed_data = yaml.safe_load(f) or {}
+        feed_source = feed_data.get('feed', [])
+        
         with open(navigation_file, 'r', encoding='utf-8') as f:
             navigation_map = yaml.safe_load(f) or {}
     except Exception as e:
-        print(f"[POST-ERROR] Сбой чтения конфигурационного файла YAML: {e}")
+        print(f"[POST-ERROR] Сбой чтения конфигурационных файлов YAML: {e}")
         return
 
     # 🧼 САНИТАРНАЯ ЗАЧИСТКА ПАПОК ОТ СТРАНИЦ-ПРИЗРАКОВ
@@ -49,92 +57,59 @@ def generate_project_posts_pages():
                     except Exception as e:
                         print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
-    # ➡️ ШАГ 0: Находим все живые родительские проекты в карте сайта
-    parent_projects = {}
-    for nav_key, nav_nodes in navigation_map.items():
-        if (not nav_key.startswith('_posts/') and 
-            nav_key != 'detected_root_folders' and 
-            isinstance(nav_nodes, list) and len(nav_nodes) > 0):
-            
-            project_passport = nav_nodes[0]
-            if isinstance(project_passport, dict) and 'title' in project_passport:
-                p_slug = nav_key.split('/')[-2] if '/' in nav_key else nav_key.replace('.md', '')
-                parent_projects[nav_key] = {
-                    'project_file': nav_key,
-                    'title': project_passport['title'].strip(),
-                    'slug': p_slug,
-                    'journal_urls': [],
-                    'media_urls': []
-                }
+    created_pages_registry = set()
 
-    # ➡️ ШАГ 1: Сбор и фильтрация связанных постов строго по URL на основе связанных проектов
-    for nav_key, nav_nodes in navigation_map.items():
-        if nav_key.startswith('_posts/') and isinstance(nav_nodes, list) and len(nav_nodes) > 0:
-            post_passport = nav_nodes[0]
-            if isinstance(post_passport, dict):
-                related_page_path = post_passport.get('relatedpages')
-                
-                if related_page_path in parent_projects:
-                    # ЖЕСТКИЙ ПРОПУСК ПИТОНА: Проверяем физическое наличие свойства 'posttype'
-                    p_type = post_passport.get('posttype')
-                    post_url = post_passport.get('url')
-                    
-                    if not p_type or not post_url:
-                        continue
-                        
-                    post_data = {
-                        'url': post_url,
-                        'date': str(post_passport.get('date', '0000-00-00'))
-                    }
-                    
-                    if p_type == 'journal':
-                        parent_projects[related_page_path]['journal_urls'].append(post_data)
-                    elif p_type == 'media':
-                        parent_projects[related_page_path]['media_urls'].append(post_data)
-
-    # ➡️ ШАГ 2: Сортировка хронологии и штамповка индивидуальных страниц контура
-    for rel_path, proj in parent_projects.items():
-        for loop_type in ['journal', 'media']:
-            urls_list = proj['journal_urls'] if loop_type == 'journal' else proj['media_urls']
-            
-            if not urls_list:
+    # Шаг 2: Сканирование универсальной ленты и генерация изолированных страниц
+    for item in feed_source:
+        p_related = item.get('related')
+        p_type = item.get('posttype')
+        is_post_valid = item.get('is_post') == 'true' or item.get('is_post') is True
+        
+        if p_related and p_type and is_post_valid:
+            page_uid = f"{p_type}::{p_related}"
+            if page_uid in created_pages_registry:
                 continue
                 
-            # Сортируем по дате от свежих к старым
-            urls_list.sort(key=lambda x: x['date'], reverse=True)
-            sorted_urls = [u['url'] for u in urls_list]
+            # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта в navigation.yml
+            parent_title = p_related.replace('-', ' ').capitalize() # Резервный вариант
             
-            p_slug = proj['slug']
-            parent_title = proj['title']
-            
-            target_folder_path = os.path.join(root_dir, loop_type)
+            for file_key, nodes in navigation_map.items():
+                if isinstance(nodes, list) and len(nodes) > 0:
+                    card = nodes
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов
+                    if isinstance(card, dict):
+                        card_url = card.get('url', '').strip('/')
+                        if card_url and card_url.split('/')[-1] == p_related:
+                            if card.get('title'):
+                                            parent_title = card['title'].strip()
+                                            break
+
+            target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
-            target_md_file = os.path.join(target_folder_path, f"{p_slug}.md")
             
+            target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
+            
+            # Чистый, расширяемый словарь свойств индивидуальной страницы (БЕЗ mathjax)
             base_front_matter = {
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
-                "permalink": f"/{loop_type}/{p_slug}/",
-                "mathjax": True
+                "permalink": f"/{p_type}/{p_related}/"
             }
+            
+            # Превращаем структурированный словарь свойств в YAML-шапку
             front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
             
-            urls_string = ", ".join(sorted_urls)
-            
-            body_lines = [
-                '<!--1. ПОЛНОСТЬЮ ОТФИЛЬТРОВАННЫЙ НА БЭКЕНДЕ МАССИВ URL-АДРЕСОВ ПРОЕКТА -->',
-               f'{{%- assign project_post_urls = "{urls_string}" | split: ", " -%}}',
-                '',
-                '{% include posts-page-open.liquid urls=project_post_urls %}'
-            ]
-            file_content = f"---\n{front_matter_string}---\n\n" + "\n".join(body_lines).strip()
+            # Шаг 3: Формируем тело маркдаун-страницы - чистый профессиональный вызов инклуда с параметрами
+            body_content_string = f'{{% include posts-page-open.liquid category="{p_type}" project="{p_related}" %}}'
+            file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {loop_type}/{p_slug}.md | Заголовок: {parent_title}: лента постов | Передано URL: {len(sorted_urls)}"
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Свойства объединены динамически, подключен инклуд."
                 print(log_msg)
                 log_buffer.append(log_msg)
+                created_pages_registry.add(page_uid)
             except Exception as e:
                 print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")
 
@@ -142,7 +117,7 @@ def generate_project_posts_pages():
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
-        print("[POST-SUCCESS] Лог генератора страниц успешно зафиксирован в артефактах.")
+        print("[POST-SUCCESS] Изолированный лог генератора страниц успешно сохранён.")
     except Exception as e:
         print(f"[POST-ERROR] Не удалось сохранить файл лога: {e}")
 

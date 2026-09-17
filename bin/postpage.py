@@ -3,10 +3,10 @@
 """
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page
-         и вызовом инклуда развёрнутой ленты, включая санитарную зачистку диска.
+@purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
+         свойством mathjax: true и вызовом оригинального инклуда media-archive.liquid.
 @author TechLab
-@version 4.0.0-pure-jekyll-render
+@version 5.0.0-final-kanon
 """
 
 import os
@@ -33,7 +33,7 @@ def generate_project_posts_pages():
         print(f"[POST-ERROR] Сбой чтения файла универсальной ленты: {e}")
         return
 
-    # 🧼 САНИТАРНАЯ ЗАЧИСТКА ПАПОК
+    # 🧼 САНИТАРНАЯ ЗАЧИСТКА ПАПОК ОТ СТРАНИЦ-ПРИЗРАКОВ
     print("[POST-CLEAN] Запуск санитарной зачистки целевых папок контура...")
     for target_folder in ['journal', 'media']:
         folder_path = os.path.join(root_dir, target_folder)
@@ -66,23 +66,22 @@ def generate_project_posts_pages():
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Штампуем чистый Front Matter с layout: page и вызовом нашего инклуда
+            # Штампуем Front Matter 1 в 1 как на старом сайте, включая mathjax: true
             front_matter_lines = [
                 "---",
                 "layout: page",
                 f'title: "{parent_title}: лента проекта"',
-                f'project: "{p_related}"',
-                f'posttype: "{p_type}"',
                 f"permalink: /{p_type}/{p_related}/",
+                "mathjax: true",
                 "---",
                 "",
-                f'{{% include posts-page-open.liquid project="{p_related}" type="{p_type}" %}}'
+                f'{{% include media-archive.liquid category="{p_type}" project="{p_related}" %}}'
             ]
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md под вызов posts-page-open.liquid."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md с вызовом media-archive.liquid."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

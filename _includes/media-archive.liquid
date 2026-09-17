@@ -1,26 +1,23 @@
 {%- comment -%}
-@about Модуль развернутого вывода постов проекта.
-@purpose Генерирует открытую хронологическую ленту публикаций (текст, фото, видео) 
-         для конкретного проекта на основе данных из feed.yml со стилями старого сайта 1 в 1.
+@about Модернизированный каноничный модуль генерации и фильтрации общей ленты публикаций на основе feed.yml.
+@purpose Автоматический вывод полноценных публикаций для кнопки "0" без тяжелых циклов.
 @author TechLab
 {%- endcomment -%}
 
-{%- assign target_project = include.project -%}
-{%- assign target_type = include.type -%}
-{%- assign feed_source = site.data.feed.feed -%}
+<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ НА ОСНОВЕ FEED.YML -->
 
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- for item in feed_source -%}
-    {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
+  {%- for item in site.data.feed.feed -%}
+    {%- comment -%} Подаем нужные данные проекта и категории в цикл фильтрации {%- endcomment -%}
+    {%- if item.related == include.project and item.posttype == include.category and item.is_post == "true" -%}
       
-      {%- comment -%} Находим оригинальный скомпилированный объект Jekyll-поста по его каноническому URL {%- endcomment -%}
       {%- assign post = site.posts | where: "url", item.url | first -%}
       {%- if post == nil -%}
         {%- assign post = site.pages | where: "url", item.url | first -%}
       {%- endif -%}
 
       {%- if post -%}
-        <div class="media-entry">
+        <div class="media-entry" data-project="{{ post.categories | join: ' ' }}" style="display: none;">
           
           <!-- Контейнер строки даты и заголовка -->
           <div class="media-entry-title-row">
@@ -65,9 +62,7 @@
             {%- endif -%}
           </div>
           
-          {%- unless forloop.last -%}
-            <hr class="media-entry-hr">
-          {%- endunless -%}
+          <hr class="media-entry-hr">
         </div>
       {%- endif -%}
 
@@ -75,12 +70,16 @@
   {%- endfor -%}
 </div>
 
-{%- comment -%} Подключаем ваш оригинальный JS-скрипт зачистки отступов {%- endcomment -%}
+<!-- 2. JAVASCRIPT-ЛОГИКА ФИЛЬТРАЦИИ И ЗАЧИСТКИ (ПОДКЛЮЧЕНИЕ ВНЕШНЕГО JS) -->
+
+<!-- Подключаем оригинальный внешний изолированный файл скрипта раскрытой ленты -->
 <script src="{{ '/assets/js/posts-page-list.js' | relative_url }}"></script>
+
 <script>
-  (function() {
+  // Безопасно запускаем фильтрацию и зачистку линий строго после сборки страницы браузером
+  document.addEventListener("DOMContentLoaded", function() {
     if (typeof runMediaArchiveFilter === 'function') {
       runMediaArchiveFilter();
     }
-  })();
+  });
 </script>

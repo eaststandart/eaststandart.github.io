@@ -5,9 +5,9 @@
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с динамическим объединением
          свойств во Front Matter, mathjax, чистокровной серверной фильтрацией 
-         и автоматической зачисткой пустых строк бэкенда.
+         и серверным обнулением отступа финального поста без использования JavaScript.
 @author TechLab
-@version 8.0.0-dynamic-frontmatter
+@version 8.1.0-final-backend-styles
 """
 
 import os
@@ -76,7 +76,7 @@ def generate_project_posts_pages():
             for file_key, nodes in navigation_map.items():
                 if isinstance(nodes, list) and len(nodes) > 0:
                     card = nodes
-                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов, отсекая root-строки
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов
                     if isinstance(card, dict):
                         card_url = card.get('url', '').strip('/')
                         if card_url and card_url.split('/')[-1] == p_related:
@@ -89,16 +89,15 @@ def generate_project_posts_pages():
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # 🔥 ОБЩИЕ ПРАВИЛА: Базовый расширяемый словарь свойств индивидуальной страницы
+            # ОБЩИЕ ПРАВИЛА: Базовый расширяемый словарь свойств индивидуальной страницы
             base_front_matter = {
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
                 "permalink": f"/{p_type}/{p_related}/",
                 "mathjax": True
-                # Сюда в будущем можно добавлять любые свойства в один клик: "comments": True, и т.д.
             }
             
-            # Превращаем структурированный словарь свойств в чистокровную YAML-шапку контура
+            # Превращаем структурированный словарь свойств в YAML-шапку
             front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
             
             # Шаг 3: Формируем тело маркдаун-страницы с нативной фильтрацией
@@ -115,7 +114,8 @@ def generate_project_posts_pages():
                 '    {%- endif -%}',
                 '    ',
                 '    {%- if post -%}',
-                '      <div class="media-entry">',
+                '      {%- comment -%} ВШИВАНИЕ СТИЛЕЙ НА БЭКЕНДЕ: Обнуляем отступ строго для последнего поста проекта {%- endcomment -%}',
+                '      <div class="media-entry"{% if forloop.last %} style="margin-bottom: 0px !important;"{% endif %}>',
                 '        <!-- Контейнер строки даты и заголовка -->',
                 '        <div class="media-entry-title-row">',
                 '          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>',
@@ -164,18 +164,16 @@ def generate_project_posts_pages():
                 '      </div>',
                 '    {%- endif -%}',
                 '  {%- endfor -%}',
-                '</div>' # 🧼 Закрывающий тег прижат вплотную, предотвращая пустые строки Kramdown!
+                '</div>'
             ]
             
             body_content_string = "\n".join(body_lines)
-            
-            # Собираем файл воедино, зачищая концевые переносы методом .strip()
             file_content = f"---\n{front_matter_string}---\n\n{body_content_string}".strip()
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Свойства объединены динамически."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Отступ последнего поста обнулен на сервере."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

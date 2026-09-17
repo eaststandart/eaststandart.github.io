@@ -61,6 +61,12 @@ def generate_project_posts_pages():
                 continue
                 
             parent_title = p_related.replace('-', ' ').capitalize()
+            first_item_title = p_items[0].get('title', '')
+            if ":" in first_item_title:
+                parent_title = first_item_title.split(':')[0].strip()
+            else:
+                parent_title = first_item_title.strip()
+
             target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
@@ -70,7 +76,7 @@ def generate_project_posts_pages():
             front_matter_lines = [
                 "---",
                 "layout: page",
-                f'title: "{parent_title}: лента проекта"',
+                f'title: "{parent_title}: лента постов"',
                 f"permalink: /{p_type}/{p_related}/",
                 "mathjax: true",
                 "---",

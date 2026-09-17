@@ -5,9 +5,9 @@
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
          свойством mathjax: true, каноничными русскими заголовками проектов,
-         прямым внедрением Liquid-цикла вывода постов и автозачисткой хвостов.
+         прямым внедрением Liquid-цикла и встроенной JS-зачисткой финальных хвостов.
 @author TechLab
-@version 6.0.0-final-monolith
+@version 6.2.0-js-index-fixed
 """
 
 import os
@@ -53,7 +53,7 @@ def generate_project_posts_pages():
                     file_to_remove = os.path.join(folder_path, file_name)
                     try:
                         os.remove(file_to_remove)
-                        log_buffer.append(f"[CLEAN] Удален устаревший... {target_folder}/{file_name}")
+                        log_buffer.append(f"[CLEAN] Удален устаревший файл: {target_folder}/{file_name}")
                     except Exception as e:
                         print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
@@ -73,11 +73,9 @@ def generate_project_posts_pages():
             # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта в navigation.yml
             parent_title = p_related.replace('-', ' ').capitalize() # Резервный вариант
             
-            # Сканируем карту навигации в поиске карточки родительского проекта
             for file_key, nodes in navigation_map.items():
                 if isinstance(nodes, list) and len(nodes) > 0:
-                    card = nodes[0]
-                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов, отсекая root-строки
+                    card = nodes
                     if isinstance(card, dict):
                         card_url = card.get('url', '').strip('/')
                         if card_url and card_url.split('/')[-1] == p_related:
@@ -101,7 +99,6 @@ def generate_project_posts_pages():
                 "",
                 '<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ FEED.YML -->',
                 '<div id="media-container" class="media-archive-list-wrapper">',
-                '  {%- assign has_rendered_any = false -%}',
                 '  {%- for feed_item in site.data.feed.feed -%}',
                f'    {{%- if feed_item.related == "{p_related}" and feed_item.posttype == "{p_type}" and feed_item.is_post == "true" -%}}',
                 '      ',
@@ -111,7 +108,6 @@ def generate_project_posts_pages():
                 '      {%- endif -%}',
                 '      ',
                 '      {%- if post -%}',
-                '        {%- assign has_rendered_any = true -%}',
                 '        <div class="media-entry">',
                 '          <!-- Контейнер строки даты и заголовка -->',
                 '          <div class="media-entry-title-row">',
@@ -153,22 +149,37 @@ def generate_project_posts_pages():
                 '            </div>',
                 '            {%- endif -%}',
                 '          </div>',
-                '          ',
-                '          {%- comment -%} АВТОЗАЧИСТКА ХВОСТОВ: Линия НЕ напечатается на последнем элементе контура {%- endcomment -%}',
-                '          {%- unless forloop.last -%}',
-                '            <hr class="media-entry-hr">',
-                '          {%- endunless -%}',
+                '          <hr class="media-entry-hr">',
                 '        </div>',
                 '      {%- endif -%}',
                 '    {%- endif -%}',
                 '  {%- endfor -%}',
-                '</div>'
+                '</div>',
+                "",
+                '<!-- 2. ВСТРОЕННАЯ АВТОМАТИЧЕСКАЯ JS-ЗАЧИСТКА ХВОСТОВ ЛИНЕЙКИ И ОТСТУПОВ -->',
+                '<script>',
+                '  document.addEventListener("DOMContentLoaded", function() {',
+                '    var container = document.getElementById("media-container");',
+                '    if (container) {',
+                '      var entries = container.getElementsByClassName("media-entry");',
+                '      if (entries.length > 0) {',
+                '        var lastEntry = entries[entries.length - 1];',
+                '        lastEntry.style.setProperty("margin-bottom", "0px", "important");',
+                '        lastEntry.style.setProperty("padding-bottom", "0px", "important");',
+                '        var lines = lastEntry.getElementsByClassName("media-entry-hr");',
+                '        if (lines.length > 0) {',
+                '          lines[0].style.setProperty("display", "none", "important");',
+                '        }',
+                '      }',
+                '    }',
+                '  });',
+                '</script>'
             ]
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Прямой шаблон встроен успешно."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Скрипт зачистки встроен."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)
@@ -179,7 +190,7 @@ def generate_project_posts_pages():
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
-        print("[POST-SUCCESS] Изолированный лог генератора страниц успешно сохранён.")
+        print("[POST-SUCCESS] Изолированный лог generator страниц успешно сохранён.")
     except Exception as e:
         print(f"[POST-ERROR] Не удалось сохранить файл лога: {e}")
 

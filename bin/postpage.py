@@ -4,10 +4,10 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
-         свойством mathjax: true, каноничными русскими заголовками проектов,
-         прямым внедрением Liquid-цикла и встроенной JS-зачисткой финальных хвостов.
+         свойством mathjax: true, каноничными русскими заголовками проектов 
+         и чистокровной серверной фильтрацией постов без использования JavaScript.
 @author TechLab
-@version 6.2.0-js-index-fixed
+@version 7.0.0-pure-backend-optimized
 """
 
 import os
@@ -99,87 +99,72 @@ def generate_project_posts_pages():
                 "",
                 '<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ FEED.YML -->',
                 '<div id="media-container" class="media-archive-list-wrapper">',
-                '  {%- for feed_item in site.data.feed.feed -%}',
-               f'    {{%- if feed_item.related == "{p_related}" and feed_item.posttype == "{p_type}" and feed_item.is_post == "true" -%}}',
-                '      ',
-                '      {%- assign post = site.posts | where: "url", feed_item.url | first -%}',
-                '      {%- if post == nil -%}',
-                '        {%- assign post = site.pages | where: "url", feed_item.url | first -%}',
-                '      {%- endif -%}',
-                '      ',
-                '      {%- if post -%}',
-                '        <div class="media-entry">',
-                '          <!-- Контейнер строки даты и заголовка -->',
-                '          <div class="media-entry-title-row">',
-                '            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>',
-                '            <h3 class="media-entry-title">{{ post.title }}</h3>',
-                '          </div>',
-                '          ',
-                '          <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->',
-                '          <div class="media-content main-content">',
-                '            {%- if post.description and post.description != "" -%}',
-                '              <p class="page-description">{{ post.description }}</p>',
-                '            {%- endif -%}',
-                '            ',
-                '            {{ post.content }}',
-                '            ',
-                '            {%- if post.author and post.author != "" -%}',
-                '            <!-- А. БЛОК ВЫВОДА АВТОРА -->',
-                '            <div class="author-inline">',
-                '                <strong>Автор:</strong> ',
-                '                <div class="sources-content">{{ post.author }}</div>',
-                '            </div>',
-                '            {%- endif -%}',
-                '            ',
-                '            {%- if post.sources and post.sources != "" -%}',
-                '            <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->',
-                '            <div class="sources-inline">',
-                '                <strong>Источники:</strong>',
-                '                <div class="sources-content">{{ post.sources | markdownify }}</div>',
-                '            </div>',
-                '            {%- endif -%}',
-                '            ',
-                '            {%- if post.tags.size > 0 -%}',
-                '            <!-- В. БЛОК ВЫВОДА ТЕГОВ -->',
-                '            <div class="tag-container">',
-                '                {%- for tag in post.tags -%}',
-                '                    {%- assign tag_clean = tag | replace: "#", "" | strip -%}',
-                '                    <a href="{{ \'/tags.html\' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>',
-                '                {%- endfor -%}',
-                '            </div>',
-                '            {%- endif -%}',
-                '          </div>',
-                '          <hr class="media-entry-hr">',
+                '  {%- comment -%} Серверная фильтрация массива строго под текущий проект контура {%- endcomment -%}',
+               f'  {{%- assign project_posts = site.data.feed.feed | where: "related", "{p_related}" | where: "posttype", "{p_type}" | where: "is_post", "true" -%}}',
+                '  ',
+                '  {%- for feed_item in project_posts -%}',
+                '    {%- assign post = site.posts | where: "url", feed_item.url | first -%}',
+                '    {%- if post == nil -%}',
+                '      {%- assign post = site.pages | where: "url", feed_item.url | first -%}',
+                '    {%- endif -%}',
+                '    ',
+                '    {%- if post -%}',
+                '      <div class="media-entry">',
+                '        <!-- Контейнер строки даты и заголовка -->',
+                '        <div class="media-entry-title-row">',
+                '          <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>',
+                '          <h3 class="media-entry-title">{{ post.title }}</h3>',
                 '        </div>',
-                '      {%- endif -%}',
+                '        ',
+                '        <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->',
+                '        <div class="media-content main-content">',
+                '          {%- if post.description and post.description != "" -%}',
+                '            <p class="page-description">{{ post.description }}</p>',
+                '          {%- endif -%}',
+                '          ',
+                '          {{ post.content }}',
+                '          ',
+                '          {%- if post.author and post.author != "" -%}',
+                '          <!-- А. БЛОК ВЫВОДА АВТОРА -->',
+                '          <div class="author-inline">',
+                '              <strong>Автор:</strong> ',
+                '              <div class="sources-content">{{ post.author }}</div>',
+                '          </div>',
+                '          {%- endif -%}',
+                '          ',
+                '          {%- if post.sources and post.sources != "" -%}',
+                '          <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->',
+                '          <div class="sources-inline">',
+                '              <strong>Источники:</strong>',
+                '              <div class="sources-content">{{ post.sources | markdownify }}</div>',
+                '          </div>',
+                '          {%- endif -%}',
+                '          ',
+                '          {%- if post.tags.size > 0 -%}',
+                '          <!-- В. БЛОК ВЫВОДА ТЕГОВ -->',
+                '          <div class="tag-container">',
+                '              {%- for tag in post.tags -%}',
+                '                  {%- assign tag_clean = tag | replace: "#", "" | strip -%}',
+                '                  <a href="{{ \'/tags.html\' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>',
+                '              {%- endfor -%}',
+                '          </div>',
+                '          {%- endif -%}',
+                '        </div>',
+                '        ',
+                '        {%- comment -%} НАСТОЯЩАЯ СЕРВЕРНАЯ ЗАЧИСТКА: Линия создаётся только если впереди есть посты {%- endcomment -%}',
+                '        {%- unless forloop.last -%}',
+                '          <hr class="media-entry-hr">',
+                '        {%- endunless -%}',
+                '      </div>',
                 '    {%- endif -%}',
                 '  {%- endfor -%}',
-                '</div>',
-                "",
-                '<!-- 2. ВСТРОЕННАЯ АВТОМАТИЧЕСКАЯ JS-ЗАЧИСТКА ХВОСТОВ ЛИНЕЙКИ И ОТСТУПОВ -->',
-                '<script>',
-                '  document.addEventListener("DOMContentLoaded", function() {',
-                '    var container = document.getElementById("media-container");',
-                '    if (container) {',
-                '      var entries = container.getElementsByClassName("media-entry");',
-                '      if (entries.length > 0) {',
-                '        var lastEntry = entries[entries.length - 1];',
-                '        lastEntry.style.setProperty("margin-bottom", "0px", "important");',
-                '        lastEntry.style.setProperty("padding-bottom", "0px", "important");',
-                '        var lines = lastEntry.getElementsByClassName("media-entry-hr");',
-                '        if (lines.length > 0) {',
-                '          lines[0].style.setProperty("display", "none", "important");',
-                '        }',
-                '      }',
-                '    }',
-                '  });',
-                '</script>'
+                '</div>'
             ]
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Скрипт зачистки встроен."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Применена чистая серверная фильтрация."
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)
@@ -190,7 +175,7 @@ def generate_project_posts_pages():
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(log_buffer))
-        print("[POST-SUCCESS] Изолированный лог generator страниц успешно сохранён.")
+        print("[POST-SUCCESS] Изолированный лог генератора страниц успешно сохранён.")
     except Exception as e:
         print(f"[POST-ERROR] Не удалось сохранить файл лога: {e}")
 

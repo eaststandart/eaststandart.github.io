@@ -4,10 +4,9 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
-         свойством mathjax: true, каноничными русскими заголовками проектов,
-         прямым внедрением Liquid-цикла вывода постов и автозачисткой хвостов.
+         свойством mathjax: true, каноничными русскими заголовками проектов и защитой YAML.
 @author TechLab
-@version 6.0.0-final-monolith
+@version 5.2.0-protected-yaml
 """
 
 import os
@@ -53,7 +52,7 @@ def generate_project_posts_pages():
                     file_to_remove = os.path.join(folder_path, file_name)
                     try:
                         os.remove(file_to_remove)
-                        log_buffer.append(f"[CLEAN] Удален устаревший... {target_folder}/{file_name}")
+                        log_buffer.append(f"[CLEAN] Удален устаревший файл: {target_folder}/{file_name}")
                     except Exception as e:
                         print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
@@ -73,11 +72,11 @@ def generate_project_posts_pages():
             # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта в navigation.yml
             parent_title = p_related.replace('-', ' ').capitalize() # Резервный вариант
             
-            # Сканируем карту навигации в поиске карточки родительского проекта
+            # Сканируем карту навигации в поиске карточки проекта с совпадающим слагом контура
             for file_key, nodes in navigation_map.items():
                 if isinstance(nodes, list) and len(nodes) > 0:
                     card = nodes[0]
-                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: обрабатываем только словари паспортов проектов, отсекая root-строки
+                    # ЖЁСТКИЙ ПРЕДОХРАНИТЕЛЬ: Проверяем, что элемент действительно словарь, а не строка корневых папок
                     if isinstance(card, dict):
                         card_url = card.get('url', '').strip('/')
                         if card_url and card_url.split('/')[-1] == p_related:
@@ -90,7 +89,7 @@ def generate_project_posts_pages():
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Шаг 3: Штампуем монолитный независимый маркдаун-файл страницы проекта
+            # Шаг 3: Штампуем Front Matter 1 в 1 с каноничным русским заголовком и внедряем Liquid-код
             front_matter_lines = [
                 "---",
                 "layout: page",
@@ -99,76 +98,13 @@ def generate_project_posts_pages():
                 "mathjax: true",
                 "---",
                 "",
-                '<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ FEED.YML -->',
-                '<div id="media-container" class="media-archive-list-wrapper">',
-                '  {%- assign has_rendered_any = false -%}',
-                '  {%- for feed_item in site.data.feed.feed -%}',
-               f'    {{%- if feed_item.related == "{p_related}" and feed_item.posttype == "{p_type}" and feed_item.is_post == "true" -%}}',
-                '      ',
-                '      {%- assign post = site.posts | where: "url", feed_item.url | first -%}',
-                '      {%- if post == nil -%}',
-                '        {%- assign post = site.pages | where: "url", feed_item.url | first -%}',
-                '      {%- endif -%}',
-                '      ',
-                '      {%- if post -%}',
-                '        {%- assign has_rendered_any = true -%}',
-                '        <div class="media-entry">',
-                '          <!-- Контейнер строки даты и заголовка -->',
-                '          <div class="media-entry-title-row">',
-                '            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>',
-                '            <h3 class="media-entry-title">{{ post.title }}</h3>',
-                '          </div>',
-                '          ',
-                '          <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->',
-                '          <div class="media-content main-content">',
-                '            {%- if post.description and post.description != "" -%}',
-                '              <p class="page-description">{{ post.description }}</p>',
-                '            {%- endif -%}',
-                '            ',
-                '            {{ post.content }}',
-                '            ',
-                '            {%- if post.author and post.author != "" -%}',
-                '            <!-- А. БЛОК ВЫВОДА АВТОРА -->',
-                '            <div class="author-inline">',
-                '                <strong>Автор:</strong> ',
-                '                <div class="sources-content">{{ post.author }}</div>',
-                '            </div>',
-                '            {%- endif -%}',
-                '            ',
-                '            {%- if post.sources and post.sources != "" -%}',
-                '            <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->',
-                '            <div class="sources-inline">',
-                '                <strong>Источники:</strong>',
-                '                <div class="sources-content">{{ post.sources | markdownify }}</div>',
-                '            </div>',
-                '            {%- endif -%}',
-                '            ',
-                '            {%- if post.tags.size > 0 -%}',
-                '            <!-- В. БЛОК ВЫВОДА ТЕГОВ -->',
-                '            <div class="tag-container">',
-                '                {%- for tag in post.tags -%}',
-                '                    {%- assign tag_clean = tag | replace: "#", "" | strip -%}',
-                '                    <a href="{{ \'/tags.html\' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>',
-                '                {%- endfor -%}',
-                '            </div>',
-                '            {%- endif -%}',
-                '          </div>',
-                '          ',
-                '          {%- comment -%} АВТОЗАЧИСТКА ХВОСТОВ: Линия НЕ напечатается на последнем элементе контура {%- endcomment -%}',
-                '          {%- unless forloop.last -%}',
-                '            <hr class="media-entry-hr">',
-                '          {%- endunless -%}',
-                '        </div>',
-                '      {%- endif -%}',
-                '    {%- endif -%}',
-                '  {%- endfor -%}',
-                '</div>'
+                f'{{% include media-archive.liquid category="{p_type}" project="{p_related}" %}}'
             ]
             
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Прямой шаблон встроен успешно."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Заголовок: {parent_title}: лента постов"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

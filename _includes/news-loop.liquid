@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Сборка и фильтрация ленты обновлений на основе единой ленты feed.yml.
-@purpose Заменяет тяжелый сквозной поиск Jekyll быстрым чтением готовой базы данных.
+@purpose Заменяет тяжелый сквозной поиск Jekyll быстрым чтением готовой базы данных, сохраняя стили закрепов.
 @author TechLab 
 {%- endcomment -%}
 
@@ -19,9 +19,15 @@
   {%- endif -%}
 
   {%- if is_allowed -%}
+    {%- comment -%} Вычисляем класс закрепа на основе данных из feed.yml {%- endcomment -%}
+    {%- assign pinned_class = "" -%}
+    {%- if item.pinnedfeed == true or item.pinnedfeed == "true" -%}
+      {%- assign pinned_class = " pinned-item" -%}
+    {%- endif -%}
+
     {%- if include.type == "home" -%}
       <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-      <li class="news-item news-item-compact" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none;">
+      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
@@ -32,9 +38,9 @@
         </div>
       </li>
       
-    {%- elsif include.type == "news" -%}
+    {%- elif include.type == "news" -%}
       <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-      <li class="news-item" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>

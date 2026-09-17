@@ -1,6 +1,7 @@
 {%- comment -%}
-@about Генерация развёрнутой ленты постов проекта на основе feed.yml.
-@purpose Автоматический вывод полноценных публикаций для кнопки "0" с адаптацией под новые правила.
+@about Модуль развернутого вывода постов проекта.
+@purpose Генерирует открытую хронологическую ленту публикаций (текст, фото, видео) 
+         для конкретного проекта на основе данных из feed.yml со стилями старого сайта 1 в 1.
 @author TechLab
 {%- endcomment -%}
 
@@ -9,63 +10,69 @@
 {%- assign feed_source = site.data.feed.feed -%}
 
 <div id="media-container" class="media-archive-list-wrapper">
-{%- for item in feed_source -%}
-{%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
-{%- assign post = site.posts | where: "url", item.url | first -%}
-{%- if post == nil -%}{%- assign post = site.pages | where: "url", item.url | first -%}{%- endif -%}
-{%- if post -%}
-<div class="media-entry">
-  
-  <!-- Контейнер строки даты и заголовка -->
-  <div class="media-entry-title-row">
-    <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
-    <h3 class="media-entry-title">
-      {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ post.title }}
-    </h3>
-  </div>
-  
-  <!-- Оболочка основного контента статьи (возвращает эталонные стили) -->
-  <div class="media-content main-content">
-    {%- if post.description and post.description != "" -%}
-      <p class="page-description">{{ post.description }}</p>
-    {%- endif -%}
+  {%- for item in feed_source -%}
+    {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
+      
+      {%- comment -%} Находим оригинальный скомпилированный объект Jekyll-поста по его каноническому URL {%- endcomment -%}
+      {%- assign post = site.posts | where: "url", item.url | first -%}
+      {%- if post == nil -%}
+        {%- assign post = site.pages | where: "url", item.url | first -%}
+      {%- endif -%}
 
-{{ post.content }}
-   
-    {%- if post.author and post.author != "" -%}
-    <!-- А. БЛОК ВЫВОДА АВТОРА -->
-    <div class="author-inline">
-        <strong>Автор:</strong> 
-        <div class="sources-content">{{ post.author }}</div>
-    </div>
-    {%- endif -%}
+      {%- if post -%}
+        <div class="media-entry">
+          
+          <!-- Контейнер строки даты и заголовка -->
+          <div class="media-entry-title-row">
+            <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
+            <h3 class="media-entry-title">
+              {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ post.title }}
+            </h3>
+          </div>
+          
+          <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->
+          <div class="media-content main-content">
+            {%- if post.description and post.description != "" -%}
+              <p class="page-description">{{ post.description }}</p>
+            {%- endif -%}
 
-    {%- if post.sources and post.sources != "" -%}
-    <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
-    <div class="sources-inline">
-        <strong>Источники:</strong>
-        <div class="sources-content">{{ post.sources | markdownify }}</div>
-    </div>
-    {%- endif -%}
+            {{ post.content }}
+           
+            {%- if post.author and post.author != "" -%}
+            <!-- А. БЛОК ВЫВОДА АВТОРА -->
+            <div class="author-inline">
+                <strong>Автор:</strong> 
+                <div class="sources-content">{{ post.author }}</div>
+            </div>
+            {%- endif -%}
 
-    {%- if post.tags.size > 0 -%}
-    <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
-    <div class="tag-container">
-        {%- for tag in post.tags -%}
-            {%- assign tag_clean = tag | replace: '#', '' | strip -%}
-            <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
-        {%- endfor -%}
-    </div>
+            {%- if post.sources and post.sources != "" -%}
+            <!-- Б. БЛОК ВЫВОДА ИСТОЧНИКОВ -->
+            <div class="sources-inline">
+                <strong>Источники:</strong>
+                <div class="sources-content">{{ post.sources | markdownify }}</div>
+            </div>
+            {%- endif -%}
+
+            {%- if post.tags.size > 0 -%}
+            <!-- В. БЛОК ВЫВОДА ТЕГОВ -->
+            <div class="tag-container">
+                {%- for tag in post.tags -%}
+                    {%- assign tag_clean = tag | replace: '#', '' | strip -%}
+                    <a href="{{ '/tags.html' | relative_url }}#{{ tag_clean | slugify }}" class="tag-item">{{ tag_clean }}</a>
+                {%- endfor -%}
+            </div>
+            {%- endif -%}
+          </div>
+          
+          {%- unless forloop.last -%}
+            <hr class="media-entry-hr">
+          {%- endunless -%}
+        </div>
+      {%- endif -%}
+
     {%- endif -%}
-  </div>
-  
-  {%- unless forloop.last -%}
-    <hr class="media-entry-hr">
-  {%- endunless -%}
-</div>
-{%- endif -%}
-{%- endif -%}
-{%- endfor -%}
+  {%- endfor -%}
 </div>
 
 {%- comment -%} Подключаем ваш оригинальный JS-скрипт зачистки отступов {%- endcomment -%}

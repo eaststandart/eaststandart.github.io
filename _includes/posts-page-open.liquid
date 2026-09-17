@@ -9,23 +9,21 @@
 {%- assign target_type = include.type -%}
 {%- assign feed_source = site.data.feed.feed -%}
 
-{%- comment -%} Главный контейнер темы markdown-body возвращает эталонное форматирование старого сайта 1 в 1 {%- endcomment -%}
 <div class="media-archive-list-wrapper posts-page-list markdown-body">
   {%- for item in feed_source -%}
-    {%- comment -%} Фильтрация строго по логике старого сайта: совпадение проекта, типа ленты и флага валидности постов {%- endcomment -%}
     {%- if item.related == target_project and item.posttype == target_type and item.is_post == "true" -%}
       
-      {%- comment -%} Находим оригинальный объект поста в Jekyll, чтобы забрать его живое содержимое content {%- endcomment -%}
+      {%- comment -%} Находим оригинальный объект поста в Jekyll, чтобы забрать его живое содержимое {%- endcomment -%}
       {%- assign original_post = site.posts | where: "url", item.url | first -%}
       {%- if original_post == nil -%}
         {%- assign original_post = site.pages | where: "url", item.url | first -%}
       {%- endif -%}
 
-      <article class="media-entry posts-page-item" style="margin-bottom: 24px;">
+      <article class="media-entry posts-page-item">
         <header class="media-entry-header">
-          <span class="media-entry-date" style="color: #6a737d; font-size: 0.9rem;">{{ item.date | date: "%d.%m.%Y" }}</span>
-          <h2 class="media-entry-title" style="margin-top: 4px; margin-bottom: 12px;">
-            <a href="{{ item.url | relative_url }}" style="text-decoration: none; color: inherit;">
+          <span class="media-entry-date">{{ item.date | date: "%d.%m.%Y" }}</span>
+          <h2 class="media-entry-title">
+            <a href="{{ item.url | relative_url }}">
               {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ item.title }}
             </a>
           </h2>
@@ -33,14 +31,13 @@
 
         <div class="media-entry-content">
           {%- if original_post -%}
-            {{ original_post.content }}
+            {{ original_post.content | markdownify }}
           {%- else -%}
             <p>{{ item.title }}</p>
           {%- endif -%}
         </div>
 
-        {%- comment -%} Разделительная линия между постами ленты контура {%- endcomment -%}
-        <hr class="media-entry-hr" style="margin-top: 24px; margin-bottom: 24px; border: 0; border-top: 1px solid #e1e4e8;">
+        <hr class="media-entry-hr">
       </article>
 
     {%- endif -%}

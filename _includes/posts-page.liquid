@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Локальные ленты постов на страницах проектов из единого источника feed.yml.
-@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов с красивыми ссылками без GET-параметров.
+@purpose Вывод списков журнал, media внутри карточек конкретных проектов с красивыми ссылками без двойных слэшей.
 @author TechLab
 {%- endcomment -%}
 
@@ -24,9 +24,9 @@
 {% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-{% comment %} НОВЫЕ КРАСИВЫЕ АДРЕСА: Корень раздела для ёлочек и канонический путь проекта для кнопки "0" {% endcomment %}
+{% comment %} ИСПРАВЛЕНИЕ СЛЭШЕЙ: Собираем чистые адреса без дублирования символов / {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/" %}
-{% assign project_archive_url = "/" | append: include.type | append: "/" | append: project_slug_last | append: "/" %}
+{% assign project_archive_url = "/" | append: include.type | append: "/" | append: project_slug_last %}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
 
@@ -60,7 +60,7 @@
     // Вычисляем заголовок раздела для совместимости со старыми аргументами функции
     var navTitleClean = decodeURIComponent("{{ section_slug | capitalize | cgi_escape }}");
 
-    // Запускаем пагинатор. Вместо дублирования archive_url на место кнопки '0' передан project_archive_url!
+    // Запускаем пагинатор. Передаем project_archive_url без финального слэша, его подставит JS-скрипт
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 

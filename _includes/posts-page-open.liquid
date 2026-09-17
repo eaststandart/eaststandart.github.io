@@ -1,15 +1,15 @@
 {%- comment -%}
 @about Изолированный модуль развернутого вывода постов проекта.
-@purpose Рендерит готовый массив физических путей, переданный из Python, с нативным обнулением отступов.
+@purpose Рендерит готовый массив URL-адресов, переданный из Python, с нативным обнулением отступов.
 @author TechLab
 {%- endcomment -%}
 
-<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ ПЕРЕДАННОГО МАССИВА -->
+<!--1. HTML-СКЕЛЕТ ВЫВОДА ПОЛНОЦЕННЫХ ПУБЛИКАЦИЙ ПРОЕКТА ИЗ ПЕРЕДАННОГО МАССИВА URL -->
 <div id="media-container" class="media-archive-list-wrapper">
-  {%- for file_path in include.paths -%}
-    {%- assign post = site.posts | where: "path", file_path | first -%}
+  {%- for feed_url in include.urls -%}
+    {%- assign post = site.posts | where: "url", feed_url | first -%}
     {%- if post == nil -%}
-      {%- assign post = site.pages | where: "path", file_path | first -%}
+      {%- assign post = site.pages | where: "url", feed_url | first -%}
     {%- endif -%}
     
     {%- if post -%}

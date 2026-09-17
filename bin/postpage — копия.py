@@ -87,14 +87,13 @@ def generate_project_posts_pages():
             # Шаг 5: Сборка текстового содержимого строго по вашему паспорту контура
             front_matter_lines = [
                 "---",
-                "layout: page",
+                "layout: news",
                 f'title: "{parent_title}: лента проекта"',
                 f'project: "{parent_slug}"',
                 f'posttype: "{post_type}"',
                 f"permalink: /{post_type}/{parent_slug}/",
                 "---",
-                "",
-                f'{{% include posts-page-open.liquid project="{parent_slug}" type="{post_type}" %}}'
+                "" # Оставляем файл пустым ниже шапки, контент развернёт Liquid
             ]
             file_content = "\n".join(front_matter_lines)
             

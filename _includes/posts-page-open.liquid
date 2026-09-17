@@ -1,0 +1,56 @@
+{%- comment -%}
+@about Модуль развернутого вывода постов проекта.
+@purpose Генерирует открытую хронологическую ленту публикаций (текст, фото, видео) 
+         для конкретного проекта на основе данных из feed.yml со стилями 1 в 1.
+@author TechLab
+{%- endcomment -%}
+
+{%- assign target_project = include.project -%}
+{%- assign target_type = include.type -%}
+{%- assign feed_source = site.data.feed.feed -%}
+
+<div class="media-archive-list-wrapper posts-page-list">
+  {%- for item in feed_source -%}
+    {%- if item.related == target_project and item.posttype == target_type -%}
+      
+      {%- comment -%} Находим оригинальный объект поста в Jekyll, чтобы забрать его живое содержимое content {%- endcomment -%}
+      {%- assign original_post = site.posts | where: "url", item.url | first -%}
+      {%- if original_post == nil -%}
+        {%- assign original_post = site.pages | where: "url", item.url | first -%}
+      {%- endif -%}
+
+      <article class="media-entry posts-page-item" style="margin-bottom: 24px;">
+        <header class="media-entry-header">
+          <span class="media-entry-date" style="color: #6a737d; font-size: 0.9rem;">{{ item.date | date: "%d.%m.%Y" }}</span>
+          <h2 class="media-entry-title" style="margin-top: 4px; margin-bottom: 12px;">
+            <a href="{{ item.url | relative_url }}" style="text-decoration: none; color: inherit;">
+              {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ item.title }}
+            </a>
+          </h2>
+        </header>
+
+        <div class="media-entry-content markdown-body">
+          {%- if original_post -%}
+            {{ original_post.content }}
+          {%- else -%}
+            <p>{{ item.title }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Рендерим разделительную линию. JS-скрипт зачистки автоматом скроет её у самого нижнего поста {%- endcomment -%}
+        <hr class="media-entry-hr" style="margin-top: 24px; margin-bottom: 24px; border: 0; border-top: 1px solid #e1e4e8;">
+      </article>
+
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{%- comment -%} Запускаем ваш оригинальный скрипт зачистки отступов и ленивой загрузки медиа {%- endcomment -%}
+<script src="{{ '/assets/js/media-archive-filter.js' | relative_url }}"></script>
+<script>
+  (function() {
+    if (typeof runMediaArchiveFilter === 'function') {
+      runMediaArchiveFilter();
+    }
+  })();
+</script>

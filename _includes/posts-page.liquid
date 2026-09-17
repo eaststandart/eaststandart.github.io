@@ -1,22 +1,19 @@
 {%- comment -%}
-@about Локальные ленты постов на страницах проектов.
-@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов.
+@about Локальные ленты постов на страницах проектов из единого источника feed.yml.
+@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов с красивыми ссылками без GET-параметров.
 @author TechLab
 {%- endcomment -%}
 
 {% comment %} Разбираем URL страницы на части для вычисления разделов и слагов проекта {% endcomment %}
 {% assign url_parts = page.url | split: "/" %}
 {% assign section_slug = url_parts[1] %}
-{% assign project_slug = url_parts[2] %}
-{% assign section_url = section_slug | prepend: "/" | append: "/" %}
-{% assign section_page = site.pages | where: "url", section_url | first %}
-
 {% assign project_slug_last = page.url | split: "/" | last %}
+{% assign feed_source = site.data.feed.feed %}
 
-{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли публикации для этого проекта в feed.yml {% endcomment %}
 {% assign has_posts = false %}
-{% for post in site.categories[project_slug_last] %}
-  {% if post.categories contains include.type %}
+{% for item in feed_source %}
+  {% if item.related == project_slug_last and item.posttype == include.type %}
     {% assign has_posts = true %}
     {% break %}
   {% endif %}
@@ -27,23 +24,21 @@
 {% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-{% comment %} Автоматически вычисляем и собираем адрес перехода в большой архив проекта {% endcomment %}
-{% assign archive_url = "/" | append: include.type | append: "/?project=" | append: project_slug | append: "&nav=" | append: section_slug | append: "&title=" | append: section_page.navtitle | default: section_slug %}
+{% comment %} НОВЫЕ КРАСИВЫЕ АДРЕСА: Корень раздела для ёлочек и канонический путь проекта для кнопки "0" {% endcomment %}
+{% assign archive_url = "/" | append: include.type | append: "/" %}
+{% assign project_archive_url = "/" | append: include.type | append: "/" | append: project_slug_last | append: "/" %}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
 
-<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in site.categories[project_slug_last] -%}
-    {%- if post.categories contains include.type -%}
-      {%- assign is_post = true -%}
-      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+  {%- for item in feed_source -%}
+    {%- if item.related == project_slug_last and item.posttype == include.type -%}
+      <li class="local-post-item posts-page-item" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}">
         <div>
-          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
-            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
-              {{ post.title }}
+            <a href="{{ item.url | relative_url }}" class="item-link posts-page-link">
+              {{ item.title }}
             </a>
           </span>
         </div>
@@ -62,16 +57,16 @@
 
 <script>
   (function() {
-    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
-    var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
+    // Вычисляем заголовок раздела для совместимости со старыми аргументами функции
+    var navTitleClean = decodeURIComponent("{{ section_slug | capitalize | cgi_escape }}");
 
-    // Запускаем пагинатор на месте с его родными изолированными параметрами
+    // Запускаем пагинатор. Вместо дублирования archive_url на место кнопки '0' передан project_archive_url!
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 
-      "{{ include.per_page }}", 
+      "{{ include.per_page | default: 5 }}", 
       "{{ archive_url }}", 
-      "{{ include.type }}", 
+      "{{ project_archive_url }}", 
       "{{ project_slug_last }}", 
       "{{ section_slug }}", 
       navTitleClean

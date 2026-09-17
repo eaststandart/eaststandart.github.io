@@ -22,9 +22,7 @@
           <!-- Контейнер строки даты и заголовка -->
           <div class="media-entry-title-row">
             <span class="media-entry-date">{{ post.date | date: "%d.%m.%Y" }}</span>
-            <h3 class="media-entry-title">
-              {% if item.emoji and item.emoji != "" %}{{ item.emoji }} {% endif %}{{ post.title }}
-            </h3>
+            <h3 class="media-entry-title">{{ post.title }}</h3>
           </div>
           
           <!-- Оболочка основного контента статьи (1 в 1 как на старом сайте) -->

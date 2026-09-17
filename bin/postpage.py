@@ -4,9 +4,9 @@
 @module post-page
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose Автоматическая штамповка страниц под кнопку "0" с макетом layout: page,
-         свойством mathjax: true и вызовом оригинального инклуда media-archive.liquid.
+         свойством mathjax: true и каноничными русскими заголовками проектов.
 @author TechLab
-@version 5.0.0-final-kanon
+@version 5.1.0-fixed-names
 """
 
 import os
@@ -17,20 +17,29 @@ def generate_project_posts_pages():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     feed_file = os.path.join(root_dir, '_data', 'feed.yml')
+    navigation_file = os.path.join(root_dir, '_data', 'navigation.yml')
     log_file_path = os.path.join(root_dir, '_post_page_files', 'posts-page-generator.log')
     
     log_buffer = []
     
+    # Проверяем наличие Источников Правды контура
     if not os.path.exists(feed_file):
         print(f"[POST-ERROR] Источник Правды feed.yml не найден по пути: {feed_file}")
         return
+    if not os.path.exists(navigation_file):
+        print(f"[POST-ERROR] Карта навигации navigation.yml не найдена: {navigation_file}")
+        return
 
+    # Шаг 1: Загружаем данные в оперативную память
     try:
         with open(feed_file, 'r', encoding='utf-8') as f:
             feed_data = yaml.safe_load(f) or {}
         feed_source = feed_data.get('feed', [])
+        
+        with open(navigation_file, 'r', encoding='utf-8') as f:
+            navigation_map = yaml.safe_load(f) or {}
     except Exception as e:
-        print(f"[POST-ERROR] Сбой чтения файла универсальной ленты: {e}")
+        print(f"[POST-ERROR] Сбой чтения конфигурационных файлов YAML: {e}")
         return
 
     # 🧼 САНИТАРНАЯ ЗАЧИСТКА ПАПОК ОТ СТРАНИЦ-ПРИЗРАКОВ
@@ -49,7 +58,7 @@ def generate_project_posts_pages():
 
     created_pages_registry = set()
 
-    # Сбор уникальных страниц проектов на основе feed.yml
+    # Шаг 2: Сканирование универсальной ленты и генерация изолированных страниц
     for item in feed_source:
         p_related = item.get('related')
         p_type = item.get('posttype')
@@ -60,19 +69,25 @@ def generate_project_posts_pages():
             if page_uid in created_pages_registry:
                 continue
                 
-            parent_title = p_related.replace('-', ' ').capitalize()
-            first_item_title = p_items[0].get('title', '')
-            if ":" in first_item_title:
-                parent_title = first_item_title.split(':')[0].strip()
-            else:
-                parent_title = first_item_title.strip()
+            # ИСПРАВЛЕНИЕ ТРАНСЛИТА: Ищем красивое русское имя родительского проекта в navigation.yml
+            parent_title = p_related.replace('-', ' ').capitalize() # Резервный вариант
+            
+            # Сканируем карту навигации в поиске карточки проекта с совпадающим слагом контура
+            for file_key, nodes in navigation_map.items():
+                if isinstance(nodes, list) and len(nodes) > 0:
+                    card = nodes[0]
+                    card_url = card.get('url', '').strip('/')
+                    if card_url and card_url.split('/')[-1] == p_related:
+                        if card.get('title'):
+                            parent_title = card['title'].strip()
+                            break
 
             target_folder_path = os.path.join(root_dir, p_type)
             os.makedirs(target_folder_path, exist_ok=True)
             
             target_md_file = os.path.join(target_folder_path, f"{p_related}.md")
             
-            # Штампуем Front Matter 1 в 1 как на старом сайте, включая mathjax: true
+            # Шаг 3: Штампуем Front Matter 1 в 1 с каноничным русским заголовком и mathjax: true
             front_matter_lines = [
                 "---",
                 "layout: page",
@@ -87,7 +102,7 @@ def generate_project_posts_pages():
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write("\n".join(front_matter_lines))
-                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md с вызовом media-archive.liquid."
+                log_msg = f"[POST-GENERATOR] Создан файл: {p_type}/{p_related}.md | Заголовок: {parent_title}: лента постов"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 created_pages_registry.add(page_uid)

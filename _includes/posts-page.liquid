@@ -1,6 +1,6 @@
 {%- comment -%}
-@about Локальные ленты постов на страницах проектов из единого источника feed.yml.
-@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов без привязки к категориям Jekyll.
+@about Локальные ленты постов на страницах проектов.
+@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов.
 @author TechLab
 {%- endcomment -%}
 
@@ -12,12 +12,11 @@
 {% assign section_page = site.pages | where: "url", section_url | first %}
 
 {% assign project_slug_last = page.url | split: "/" | last %}
-{% assign feed_source = site.data.feed.feed %}
 
-{% comment %} Счётчик-предохранитель: проверяем, есть ли публикации для этого проекта в feed.yml {% endcomment %}
+{% comment %} Счётчик-предохранитель: проверяем, есть ли вообще публикации в этой категории {% endcomment %}
 {% assign has_posts = false %}
-{% for item in feed_source %}
-  {% if item.related == project_slug_last and item.posttype == include.type %}
+{% for post in site.categories[project_slug_last] %}
+  {% if post.categories contains include.type %}
     {% assign has_posts = true %}
     {% break %}
   {% endif %}
@@ -33,15 +32,18 @@
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
 
+<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for item in feed_source -%}
-    {%- if item.related == project_slug_last and item.posttype == include.type -%}
-      <li class="local-post-item posts-page-item" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}">
+  {%- for post in site.categories[project_slug_last] -%}
+    {%- if post.categories contains include.type -%}
+      {%- assign is_post = true -%}
+      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
         <div>
-          <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
-            <a href="{{ item.url | relative_url }}" class="item-link posts-page-link">
-              {{ item.title }}
+            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
+              {{ post.title }}
             </a>
           </span>
         </div>

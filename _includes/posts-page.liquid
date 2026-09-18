@@ -9,9 +9,6 @@
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 {% assign archive_url = "/" | append: include.type | append: "/" | append: project_slug_last | append: "/" %}
 
-{% assign section_slug = "" %}
-{% assign section_page = nil %}
-
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
 
 <!-- Список строк публикаций с новыми говорящими двойными именами классов -->
@@ -54,9 +51,7 @@
       "{{ include.per_page }}", 
       "{{ archive_url }}", 
       "{{ include.type }}", 
-      "{{ project_slug_last }}", 
-      "{{ section_slug }}", 
-      navTitleClean
+      "{{ project_slug_last }}"
     );
   })();
 </script>

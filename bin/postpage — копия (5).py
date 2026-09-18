@@ -92,9 +92,7 @@ def generate_project_posts_pages():
                     elif p_type == 'media':
                         parent_projects[related_page_path]['media_urls'].append(post_data)
 
-    # ➡️ ШАГ 2: Сортировка хронологии, штамповка вложенных страниц и сбор паспортов навигации
-    append_nodes = {}
-
+    # ➡️ ШАГ 2: Сортировка хронологии и штамповка индивидуальных страниц контура
     for rel_path, proj in parent_projects.items():
         for loop_type in ['journal', 'media']:
             urls_list = proj['journal_urls'] if loop_type == 'journal' else proj['media_urls']
@@ -102,28 +100,21 @@ def generate_project_posts_pages():
             if not urls_list:
                 continue
                 
+            # Сортируем по дате от свежих к старым
             urls_list.sort(key=lambda x: x['date'], reverse=True)
             sorted_urls = [u['url'] for u in urls_list]
             
             p_slug = proj['slug']
             parent_title = proj['title']
             
-            # Универсально вычисляем имя родительской папки (раздела) на основе пути ключа проекта
-            p_section = rel_path.split('/')[0] if '/' in rel_path else 'faire'
-            
-            # ЗЕРКАЛЬНАЯ ЗАЩИТА: создаем вложенную структуру папок разделов контура
-            target_folder_path = os.path.join(root_dir, loop_type, p_section)
+            target_folder_path = os.path.join(root_dir, loop_type)
             os.makedirs(target_folder_path, exist_ok=True)
             target_md_file = os.path.join(target_folder_path, f"{p_slug}.md")
-            
-            # Глубокие физические и виртуальные интернет-адреса для Jekyll
-            jekyll_page_path = f"{loop_type}/{p_section}/{p_slug}.md"
-            jekyll_permalink = f"/{loop_type}/{p_section}/{p_slug}/"
             
             base_front_matter = {
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
-                "permalink": jekyll_permalink,
+                "permalink": f"/{loop_type}/{p_slug}/",
                 "mathjax": True
             }
             front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)
@@ -141,44 +132,11 @@ def generate_project_posts_pages():
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {jekyll_page_path} | Передано URL: {len(sorted_urls)}"
+                log_msg = f"[POST-GENERATOR] Создан файл: {loop_type}/{p_slug}.md | Заголовок: {parent_title}: лента постов | Передано URL: {len(sorted_urls)}"
                 print(log_msg)
                 log_buffer.append(log_msg)
-                
-                # Запоминаем паспорт для последующей дозаписи в navigation.yml
-                append_nodes[jekyll_page_path] = [{
-                    'title': f"{parent_title}: лента постов",
-                    'url': jekyll_permalink,
-                    'posttype': 'post-page-open',
-                    'relatedpages': rel_path
-                }]
             except Exception as e:
                 print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")
-
-    # ➡️ ШАГ 3: ДОЗАПИСЬ ПАСПОРТОВ В НАВИГАЦИЮ И ВЫВОД КАРТЫ В ЛОГ АУДИТА
-    if append_nodes:
-        try:
-            # Обновляем навигационную карту в памяти для полного лога
-            navigation_map.update(append_nodes)
-            
-            # Физически дописываем паспорта в самый конец файла navigation.yml
-            with open(navigation_file, 'a', encoding='utf-8') as f:
-                f.write("\n# =========================================================================\n")
-                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ-АРХИВЫ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
-                f.write("# =========================================================================\n")
-                yaml.dump(append_nodes, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-            log_buffer.append(f"[APPEND-SUCCESS] В хвост navigation.yml добавлено паспортов: {len(append_nodes)}")
-        except Exception as e:
-            print(f"[POST-ERROR] Не удалось дозаписать паспорта в navigation.yml: {e}")
-
-    # Сохраняем изолированный слепок полной карты навигации в отдельный файл лога для ручного аудита
-    try:
-        nav_log_file_path = os.path.join(root_dir, '_post_page_files', 'navigation_after_postpage.log')
-        os.makedirs(os.path.dirname(nav_log_file_path), exist_ok=True)
-        with open(nav_log_file_path, 'w', encoding='utf-8') as nlf:
-            yaml.dump(navigation_map, nlf, allow_unicode=True, default_flow_style=False, sort_keys=False)
-    except:
-        pass
 
     try:
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)

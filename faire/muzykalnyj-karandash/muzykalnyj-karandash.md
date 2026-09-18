@@ -49,7 +49,7 @@ emoji: "❗"
 
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
-{% include posts-page.liquid type="media" %}
+{% include posts-page.liquid type="media" %} 
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 [[../../_posts/2026-04-14-muzykalnyj-karandash|2026-04-14-muzykalnyj-karandash]]

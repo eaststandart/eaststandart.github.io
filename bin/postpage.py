@@ -19,7 +19,7 @@ def generate_project_posts_pages():
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     navigation_file = os.path.join(root_dir, '_data', 'navigation.yml')
     # 🧼 ЗАЧИСТКА ВАРНИНГОВ: Переносим лог в каноничную папку артефактов контента
-    log_file_path = os.path.join(root_dir, '_content_files', 'posts-page-generator.log')
+    log_file_path = os.path.join(root_dir, '_post_files', 'posts-page-generator.log')
     
     log_buffer = []
     

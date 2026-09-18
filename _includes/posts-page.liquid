@@ -21,7 +21,7 @@
 
 <!-- Список строк публикаций с новыми говорящими двойными именами классов -->
 <ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in site.categories[project_slug_last] -%}
+  {%- for post in site.categories[real_project_slug] -%}
     {%- if post.categories contains include.type -%}
       {%- assign is_post = true -%}
       {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}

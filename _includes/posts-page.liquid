@@ -31,7 +31,7 @@
   {%- endfor -%}
 </ul>
 
-<!-- Изолированный帝国 блок кнопок управления локальной пагинацией -->
+<!-- Изолированный блок кнопок управления локальной пагинацией -->
 <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
 <!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
@@ -41,10 +41,6 @@
 
 <script>
   (function() {
-    // Безопасно экранируем текстовые переменные через Liquid, защищая сборщик от сбоев кавычек
-    var navTitleClean = decodeURIComponent("{{ section_page.navtitle | default: section_slug | cgi_escape }}");
-
-    // Запускаем пагинатор на месте с его родными изолированными параметрами
     runPostsPageNav(
       "{{ loop_id }}", 
       "{{ ctrl_id }}", 

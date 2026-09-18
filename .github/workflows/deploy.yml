@@ -48,7 +48,7 @@ jobs:
       - name: Upload Universal Feed Generator Log
         uses: actions/upload-artifact@v4
         with:
-          name: jekyll-feed
+          name: jekyll-feed-log
           path: _feed_files/feed_debug.log
 
       - name: Upload Post Page Generator Log

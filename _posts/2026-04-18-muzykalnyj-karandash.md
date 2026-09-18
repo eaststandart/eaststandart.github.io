@@ -6,8 +6,7 @@ author: ["TechLab"]
 published: true
 date: 2026-04-18
 journal-post-page: "Y"
-feedjournal-post-page: true
-posttype: journal
+posttype: journal-open
 mathjax: true
 keywords: [схема, теория]
 discus: "questions"

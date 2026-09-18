@@ -339,7 +339,7 @@ def build_navigation_tree():
 
                     flat_map[relative_file_key] = [node]
 
-    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (УНИВЕРСАЛЬНАЯ ЛОГИКА POSTTYPE)
+    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (СТРОГО 1 В 1 ВАШ ФАЙЛ)
     posts_dir = os.path.join(root_dir, '_posts')
     if os.path.exists(posts_dir):
         for root, _, files in os.walk(posts_dir):
@@ -358,17 +358,20 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Нативно извлекаем наше новое универсальное свойство posttype из Front Matter заметки
-                raw_post_type = str(data.get('posttype', '')).strip().lower()
-                
-                # Базовый тип для сборщика фидов feed.py (извлекает чистое слово journal или media из составного маркера)
-                clean_type_for_feed = ""
-                if 'journal' in raw_post_type:
-                    clean_type_for_feed = 'journal'
-                elif 'media' in raw_post_type:
-                    clean_type_for_feed = 'media'
+                # Извлечение типа post-page без дублирования массивов строго по вашему коду
+                has_post_page_property = False
+                post_page_type = ""
+                if 'post-page' in data:
+                    has_post_page_property = True
+                    post_page_type = str(data['post-page'])
+                else:
+                    for key in list(data.keys()):
+                        if str(key).endswith('-post-page'):
+                            has_post_page_property = True
+                            post_page_type = str(key).split('-')[0]
+                            break
 
-                # Вычисляем полный физический путь к родительской карточке проекта
+                # Вычисляем полный физический путь к родителю
                 calculated_parent_path = ""
                 parent_file_name = f"{file_slug_no_date}.md"
                 for key_path in flat_map.keys():
@@ -378,12 +381,8 @@ def build_navigation_tree():
 
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
-                
-                # Записываем вычисленное свойство posttype в карту навигации для нужд скриптов
-                if raw_post_type and raw_post_type != 'none':
-                    node['posttype'] = raw_post_type
 
-                # А. Пост хроники С пермалинком (Адрес полностью в приоритете автора)
+                # А. Пост хроники С пермалинком
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
@@ -402,39 +401,48 @@ def build_navigation_tree():
                     elif has_clean_dir:
                         node['relatedsection'] = first_word
 
-                # Б. Пост хроники БЕЗ пермалинка (Автоматическая сборка адреса без хардкода journal)
+                # Б. Пост хроники БЕЗ пермалинка
                 else:
-                    # ИСПРАВЛЕНИЕ: Если пост автономный и свойства нет — отдаём каноничный префикс /post/
-                    url_prefix = clean_type_for_feed if clean_type_for_feed else "post"
-                    node['url'] = f"/{url_prefix}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_slug_no_date}.html"
+                    fallback_type = post_page_type if post_page_type else "journal"
+                    node['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_slug_no_date}.html"
+                    node['posttype'] = fallback_type
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # АВТО-КАТЕГОРИИ ДЛЯ JEKYLL СТРОГО ПО НАШЕМУ НОВОМУ УНИВЕРСАЛЬНОМУ СТАНДАРТУ
-                if clean_type_for_feed:
-                    # Извлекаем слаг родительского проекта по его готовому URL из flat_map
-                    calculated_slug = ""
-                    if calculated_parent_path and calculated_parent_path in flat_map:
-                        parent_card = flat_map[calculated_parent_path]
-                        if isinstance(parent_card, list) and len(parent_card) > 0:
-                            parent_card = parent_card[0]
-                        parent_url = parent_card.get('url', '').strip('/')
-                        if parent_url:
-                            calculated_slug = parent_url.split('/')[-1]
+                # Финал модуля вычисления post-page: Авто-категории строго по вашему правилу
+                if has_post_page_property and post_page_type:
+                    data['post-page'] = post_page_type
+                    
+                    # Жесткая проверка: если текстового свойства categories в файле ИЗНАЧАЛЬНО НЕТ
+                    if not data.get('categories'):
+                        # Извлекаем слаг родительского проекта по его готовому URL из flat_map
+                        calculated_slug = ""
+                        if calculated_parent_path and calculated_parent_path in flat_map:
+                            parent_card = flat_map[calculated_parent_path]
+                            if isinstance(parent_card, list) and len(parent_card) > 0:
+                                parent_card = parent_card[0]
+                            parent_url = parent_card.get('url', '').strip('/')
+                            if parent_url:
+                                calculated_slug = parent_url.split('/')[-1]
 
-                    # Автоматически генерируем плоский массив категорий для работы локальных стрелочек
-                    # (Пример: ['journal', 'muzykalnyj-karandash'])
-                    generated_categories = [clean_type_for_feed]
-                    if calculated_slug:
-                        generated_categories.append(calculated_slug)
-                        
-                    if data.get('categories') != generated_categories:
-                        data['categories'] = generated_categories
-                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано categories: {data['categories']}")
+                        # Если слаг родителя успешно найден — намертво штампуем массив категорий
+                        if calculated_slug:
+                            data['categories'] = [post_page_type, calculated_slug]
+                            
+                            # Тут же выдаем чистую scannable-строку изменения контента в лог
+                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано categories: {data['categories']}")
+
+                # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
+                # if calculated_parent_path:
+                #     parent_node_list = flat_map[calculated_parent_path]
+                #     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
+                #         p_node = parent_node_list[0]
+                #         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                #         log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
 
                 write_yaml_front_matter(file_path, data, body)
 
-                # ПОДКЛЮЧЕНИЕ МОДУЛЯ ОБНОВЛЕНИЙ FEED
+                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
                 node = navigation_feed_properties(data, node, file_path)
 
                 flat_map[relative_file_key] = [node]

@@ -94,8 +94,8 @@ def main():
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
     try:
-        from postpage import generate_project_posts_pages
-        generate_project_posts_pages()
+        from postpage import generate_posts_pages
+        generate_posts_pages()
     except Exception as e:
         print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
 

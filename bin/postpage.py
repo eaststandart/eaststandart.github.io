@@ -14,7 +14,7 @@ import os
 import sys
 import yaml
 
-def generate_project_posts_pages():
+def generate_posts_pages():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     navigation_file = os.path.join(root_dir, '_data', 'navigation.yml')
@@ -141,7 +141,7 @@ def generate_project_posts_pages():
             try:
                 with open(target_md_file, 'w', encoding='utf-8') as f:
                     f.write(file_content)
-                log_msg = f"[POST-GENERATOR] Создан файл: {jekyll_page_path} | Передано URL: {len(sorted_urls)}"
+                log_msg = f"[POST-GENERATOR] Создан файл: {jekyll_page_path} | Заголовок: {parent_title}: лента постов | Передано URL: {len(sorted_urls)}"
                 print(log_msg)
                 log_buffer.append(log_msg)
                 
@@ -164,7 +164,7 @@ def generate_project_posts_pages():
             # Физически дописываем паспорта в самый конец файла navigation.yml
             with open(navigation_file, 'a', encoding='utf-8') as f:
                 f.write("\n# =========================================================================\n")
-                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ-АРХИВЫ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
+                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
                 f.write("# =========================================================================\n")
                 yaml.dump(append_nodes, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
             log_buffer.append(f"[APPEND-SUCCESS] В хвост navigation.yml добавлено паспортов: {len(append_nodes)}")
@@ -189,4 +189,4 @@ def generate_project_posts_pages():
         print(f"[POST-ERROR] Не удалось сохранить файл лога: {e}")
 
 if __name__ == '__main__':
-    generate_project_posts_pages()
+    generate_posts_pages()

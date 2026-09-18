@@ -5,13 +5,15 @@
 {%- endcomment -%}
 
 {% assign url_parts = page.url | split: "/" %}
-{% assign section_slug = url_parts[1] %}
-{% assign project_slug_last = url_parts[2] %}
+{% assign section_slug = url_parts %}
 
-{% assign loop_id = include.type | append: "-test-" | append: project_slug_last %}
+{% comment %} Склеиваем раздел и слаг проекта для умного обхода жесткой логики кнопки 0 в JS {% endcomment %}
+{% assign project_slug_last = url_parts | append: "/" | append: url_parts %}
+
+{% assign loop_id = include.type | append: "-test-" | append: url_parts %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-{% comment %} «Ёлочки» (»») универсально ведут на корень всего журнала или медиа {% endcomment %}
+{% comment %} «Ёлочки» (») универсально ведут на корень всего журнала или медиа {% endcomment %}
 {% assign archive_url = "/" | append: include.type | append: "/" %}
 
 <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->

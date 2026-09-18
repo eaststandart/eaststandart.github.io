@@ -5,12 +5,13 @@
 {%- endcomment -%}
 
 {% assign url_parts = page.url | split: "/" %}
-{% assign section_slug = url_parts %}
+{% assign section_slug = url_parts[1] %}
+{% assign real_project_slug = url_parts[2] %}
 
-{% comment %} Склеиваем раздел и слаг проекта для умного обхода жесткой логики кнопки 0 в JS {% endcomment %}
-{% assign project_slug_last = url_parts | append: "/" | append: url_parts %}
+{% comment %} Обманываем жесткий JS: передаем в параметр слага сразу комбинацию раздел/проект {% endcomment %}
+{% assign project_slug_last = section_slug | append: "/" | append: real_project_slug %}
 
-{% assign loop_id = include.type | append: "-test-" | append: url_parts %}
+{% assign loop_id = include.type | append: "-test-" | append: real_project_slug %}
 {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
 {% comment %} «Ёлочки» (») универсально ведут на корень всего журнала или медиа {% endcomment %}

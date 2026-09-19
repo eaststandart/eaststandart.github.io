@@ -9,7 +9,6 @@ posttype: journal
 mathjax: true
 keywords: [схема, теория]
 discus: "questions"
-emoji: "❗"
 ---
 
 ### Описание работы устройства 

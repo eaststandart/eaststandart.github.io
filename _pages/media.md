@@ -7,8 +7,8 @@ per_page: 10
 folder: "media"
 pinned_url: ""
 emoji: "👀"
-emoji_display: "N"
 ---
+
 {% comment %} 
 emoji: "👀📷🎬"
 СТРАНИЦА: ГЛАВНЫЙ МЕДИА-АРХИВ САЙТА (\_pages/media.md)

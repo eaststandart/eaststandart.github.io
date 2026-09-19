@@ -1,10 +1,10 @@
 ---
 layout: news
-title: Посты
-description: Посты без типа
-permalink: /post/
+title: Вопросы
+description: Посты вопросов
+permalink: /questions/
 per_page: 10
-folder: "post"
+folder: "questions"
 pinned_url: ""
 emoji: ""
 emoji_display: "N"

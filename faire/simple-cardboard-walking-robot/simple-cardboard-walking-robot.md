@@ -6,7 +6,7 @@ title: Робот двуногий шагающий из картона
 tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot](https://blackfishspace.com/product/walking-robot-templates-pdf/)"
 date: 2025-10-25
-permalink: /faire/simple-cardboard-walking-robot/
+discus: "questions"
 ---
 
 ### Описание проекта

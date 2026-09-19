@@ -2,6 +2,7 @@
 layout: page
 title: Тестирование модуля одиночных журнальных блоков (fig)
 permalink: /test/figure-single/
+published: false
 ---
 
 #### 🌅 Группа 1: Базовые горизонтальные одиночки (Landscape)

@@ -2,6 +2,7 @@
 layout: page
 title: Тестирование модуля базовых изображений (img_base.py)
 permalink: /test/img-base/
+published: false
 ---
 
 ## Часть 1: Одиночные базовые картинки (Сборка одиночных кадров в теге p)

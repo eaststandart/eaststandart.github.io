@@ -6,7 +6,7 @@ permalink: /post/
 per_page: 10
 folder: "post"
 pinned_url: ""
-emoji: "❗"
+emoji: "📝"
 ---
 
 {% comment %} 

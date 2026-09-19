@@ -2,6 +2,7 @@
 layout: page
 title: Tесты с одиночными фото
 permalink: /test/single-photo/
+published: false
 ---
 
 1-1 Одиночная простая картинка (! меньше чем у fig размеры !)

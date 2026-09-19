@@ -2,6 +2,7 @@
 layout: page
 title: Тестирование модуля групповых журнальных блоков (img_figure.py)
 permalink: test/img-figure/
+published: false
 ---
 
 ## Часть 1: Одиночные журнальные картинки (Сборка одиночных кадров в блоки figure)

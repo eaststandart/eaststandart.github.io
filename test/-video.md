@@ -2,6 +2,7 @@
 layout: page
 title: Tест с видео
 permalink: /test/video/
+published: false
 ---
 
 Одиночное видео

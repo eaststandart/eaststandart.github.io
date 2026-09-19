@@ -2,6 +2,7 @@
 layout: page
 title: Тестирование изолированных зон безопасности (vault.py)
 permalink: test/vault/
+published: false
 ---
 
 ## Группа 1: Исключения строчного кода (Inline Code)

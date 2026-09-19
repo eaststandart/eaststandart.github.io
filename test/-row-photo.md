@@ -2,6 +2,7 @@
 layout: page
 title: Tесты с групповыми фото
 permalink: /test/row-photo/
+published: false
 ---
 
 ### Фото групповые простые

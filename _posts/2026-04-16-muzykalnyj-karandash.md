@@ -4,8 +4,7 @@ title: "Музыкальный карандаш: общий вид"
 description: "Дополнительные медиаматериалы вида конструкции."
 author: ["TechLab"]
 date: 2026-04-16
-categories: [media, muzykalnyj-karandash]
-posttype: media-close
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

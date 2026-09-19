@@ -3,7 +3,7 @@ layout: page
 title: "Электронный орган: паразитная генерация"
 description: "Паразитный слышимый шум из динамика при ненажатых клавишах устройства."
 date: 2026-02-14
-categories: [journal, elektronnyj-organ]
+posttype: journal
 discus: "journal"
 ---
 

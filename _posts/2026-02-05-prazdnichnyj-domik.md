@@ -5,7 +5,7 @@ description: "Вариант конструкции праздничного д�
 author: ["Кирилл К."]
 tags: [kirill-k]
 date: 2026-02-05
-categories: [media, prazdnichnyj-domik]
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

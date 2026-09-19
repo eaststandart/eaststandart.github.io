@@ -4,7 +4,7 @@ title: "Метроном сигнальный: изделие №1"
 description: "Модель первого созданного устройства."
 author: ["TechLab"]
 date: 2026-05-13
-categories: [media, metronom-signalnyj]
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

@@ -5,7 +5,7 @@ description: "Вариант конструкции праздничного д�
 author: ["Лиза Б."]
 tags: ["eastemitting"]
 date: 2026-02-04
-categories: [media, prazdnichnyj-domik]
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

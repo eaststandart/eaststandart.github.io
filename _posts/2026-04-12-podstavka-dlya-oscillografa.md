@@ -4,8 +4,7 @@ title: "Подставка для осциллографа: общий вид"
 description: "Дополнительные медиаматериалы вида конструкции."
 author: ["TechLab"]
 date: 2026-04-12
-categories: [media, podstavka-dlya-oscillografa]
-posttype: media-close
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

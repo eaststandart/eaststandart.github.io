@@ -4,7 +4,7 @@ title: "Робот зубочист: вариант конструкции"
 description: "Варианты конструкций роботов зубочистов без и с балансирвочными усиками от опрокидывания."
 author: ["TechLab"]
 date: 2025-11-23
-categories: [media, vibrohod-iz-zubnoj-shchetki]
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

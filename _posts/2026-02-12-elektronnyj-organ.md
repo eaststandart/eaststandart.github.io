@@ -5,7 +5,7 @@ description: "Вариант конструкции электронного о�
 author: ["Лиза Б."]
 tags: ["eastemitting"]
 date: 2026-02-12
-categories: [media, elektronnyj-organ]
+posttype: media
 ---
 
 📷 Общий вид конструкции

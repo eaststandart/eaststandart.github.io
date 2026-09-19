@@ -4,8 +4,7 @@ title: "Метроном сигнальный: общий вид"
 description: "Дополнительные медиаматериалы вида конструкции."
 author: ["TechLab"]
 date: 2026-05-15
-categories: [media, metronom-signalnyj]
-posttype: media-close
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

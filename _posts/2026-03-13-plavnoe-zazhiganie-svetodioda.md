@@ -3,7 +3,6 @@ layout: page
 title: "Эффект плавного зажигания светодиода: галерея"
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2026-03-13
-categories: [media, plavnoe-zazhiganie-svetodioda]
 posttype: media-close
 discus: "gallery"
 ---

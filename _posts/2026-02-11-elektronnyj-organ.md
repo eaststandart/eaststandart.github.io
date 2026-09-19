@@ -3,7 +3,6 @@ layout: page
 title: "Электронный орган: вопросы"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2026-02-11
-categories: [journal, elektronnyj-organ]
 posttype: journal-close
 discus: "questions"
 ---

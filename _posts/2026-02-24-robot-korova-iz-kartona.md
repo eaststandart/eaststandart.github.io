@@ -4,8 +4,7 @@ title: "Робот корова из картона: вид и движение"
 description:  "Вид конструкции робота и демонстрация движения модели."
 author: ["TechLab"]
 date: 2026-02-24
-categories: [media, robot-korova-iz-kartona]
-posttype: media-close
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

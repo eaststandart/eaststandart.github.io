@@ -4,8 +4,7 @@ title: "Робот кролик из картона: самодельный ре
 description: "Вид конструкции робота, приводимого в движение с помощью электромотора и самодельного редуктора, и демонстрация движения модели."
 author: ["TechLab"]
 date: 2026-03-11
-categories: [media, robot-krolik-iz-kartona]
-posttype: media-close
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

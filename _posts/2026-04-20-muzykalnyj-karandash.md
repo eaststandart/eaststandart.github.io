@@ -4,8 +4,7 @@ title: "Музыкальный карандаш: применение"
 description: "Представлены медиаматериалы некоторых вариантов использования устройства."
 author: ["TechLab"]
 date: 2026-04-20
-categories: [journal, muzykalnyj-karandash]
-posttype: journal-close
+posttype: journal
 discus: "questions"
 ---
 

@@ -4,7 +4,7 @@ title: "Робот странник: модель №1"
 description:  "Модель первого созданного робота."
 author: ["TechLab"]
 date: 2025-11-28
-categories: [media, robot-strannik]
+posttype: media
 ---
 
 📷 **Общий вид конструкции**

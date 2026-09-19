@@ -4,8 +4,7 @@ title: "Метроном сигнальный: этапы создания"
 description: "Некоторые медиаматериалы этапов процесса создания устройства."
 author: ["TechLab"]
 date: 2026-05-14
-categories: [journal, metronom-signalnyj]
-posttype: journal-close
+posttype: journal
 discus: "questions"
 ---
 

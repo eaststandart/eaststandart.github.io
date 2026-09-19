@@ -20,6 +20,18 @@ def process_markdown_paths(markdown_content, file_path=None):
     # 🌟 Утвержденный список глобальных корневых разделов и папок медиа-ресурсов сайта
     known_root_folders = ['faire', 'assets', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
 
+    # =========================================================================
+    # 🔥 ЗАЩИТНЫЙ СЕЙФ: КОНСЕРВАЦИЯ ВНЕШНИХ ИНТЕРНЕТ-ССЫЛОК
+    # =========================================================================
+    external_links_vault = []
+    def pack_to_vault(match):
+        link = match.group(0)
+        external_links_vault.append(link)
+        return f"==EXTERNAL_LINK_{len(external_links_vault) - 1}=="
+
+    # Намертво изолируем все внешние ссылки из текста на время чистки путей
+    markdown_content = re.sub(r'https?://[^\s)\]]+', pack_to_vault, markdown_content)
+
     current_folder_prefix = "/"
     if file_path:
         folder_name = os.path.basename(os.path.dirname(file_path))
@@ -34,8 +46,7 @@ def process_markdown_paths(markdown_content, file_path=None):
     ]
 
     # Б. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
-    domain_pattern = r'(?<!https://)(?<!http://)github/eaststandart\.github\.io/'
-
+    domain_pattern = r'(https?://)?github/eaststandart\.github\.io/'
     temporary_content = re.sub(domain_pattern, '/', markdown_content)
 
     classic_media_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))\)'
@@ -123,7 +134,10 @@ def process_markdown_paths(markdown_content, file_path=None):
     # Превращаем обсидиановые текстовые связи в чистые слова контента
     temporary_content = re.sub(wiki_text_pattern, wiki_text_replacer, temporary_content)
 
-    # Страховка от случайных двойных слэшей
-    temporary_content = re.sub(r'(?<!http:)(?<!https:)(?<!:)\/\/+', '/', temporary_content)
+    # =========================================================================
+    # 🔥 РАСКОНСЕРВАЦИЯ: ОТКРЫВАЕМ СЕЙФ И ВОЗВРАЩАЕМ ВНЕШНИЕ ССЫЛКИ НА МЕСТО
+    # =========================================================================
+    for idx, original_link in enumerate(external_links_vault):
+        temporary_content = temporary_content.replace(f"==EXTERNAL_LINK_{idx}==", original_link)
         
     return temporary_content

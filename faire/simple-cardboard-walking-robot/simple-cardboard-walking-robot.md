@@ -44,6 +44,7 @@ discus: "questions"
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 [[../../_posts/2025-10-26-simple-cardboard-walking-robot|2025-10-26-simple-cardboard-walking-robot]]
+[[../../_posts/2025-10-27-simple-cardboard-walking-robot|2025-10-27-simple-cardboard-walking-robot]]
 [[../../_posts/2025-10-28-simple-cardboard-walking-robot|2025-10-28-simple-cardboard-walking-robot]]
 {% endcomment %}
 

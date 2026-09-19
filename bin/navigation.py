@@ -358,13 +358,20 @@ def build_navigation_tree():
                 match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
                 post_date = match_date.group(1) if match_date else "2026-01-01"
 
-                # Нативно извлекаем новое универсальное свойство posttype из Front Matter заметки
-                raw_post_type = str(data.get('posttype', '')).strip().lower() if data.get('posttype') else ""
-                
-                # ОБЩЕЕ УНИВЕРСАЛЬНОЕ ПРАВИЛО: Выделяем базовый тип (первое слово до дефиса контура)
-                base_type_clean = raw_post_type.split('-')[0] if '-' in raw_post_type else raw_post_type
+                # Извлечение типа post-page без дублирования массивов строго по вашему коду
+                has_post_page_property = False
+                post_page_type = ""
+                if 'post-page' in data:
+                    has_post_page_property = True
+                    post_page_type = str(data['post-page'])
+                else:
+                    for key in list(data.keys()):
+                        if str(key).endswith('-post-page'):
+                            has_post_page_property = True
+                            post_page_type = str(key).split('-')[0]
+                            break
 
-                # Вычисляем полный физический путь к родителю (СТАРАЯ ЛОГИКА 1 в 1)
+                # Вычисляем полный физический путь к родителю
                 calculated_parent_path = ""
                 parent_file_name = f"{file_slug_no_date}.md"
                 for key_path in flat_map.keys():
@@ -374,12 +381,8 @@ def build_navigation_tree():
 
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
-                
-                # Записываем точное свойство posttype в карту навигации, только если оно физически есть в Obsidian
-                if raw_post_type:
-                    node['posttype'] = raw_post_type
 
-                # А. Пост хроники С пермалинком (Адрес полностью в приоритете автора — СТАРАЯ ЛОГИКА)
+                # А. Пост хроники С пермалинком
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
@@ -398,41 +401,44 @@ def build_navigation_tree():
                     elif has_clean_dir:
                         node['relatedsection'] = first_word
 
-                # Б. Пост хроники БЕЗ пермалинка (Динамическая сборка URL на основе вычисленного базового типа)
+                # Б. Пост хроники БЕЗ пермалинка
                 else:
-                    # Если свойства posttype в Obsidian нет — префиксом нативно становится универсальное слово "post"
-                    url_prefix = base_type_clean if base_type_clean else "post"
-                    node['url'] = f"/{url_prefix}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_slug_no_date}.html"
+                    fallback_type = post_page_type if post_page_type else "journal"
+                    node['url'] = f"/{fallback_type}/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_slug_no_date}.html"
+                    node['posttype'] = fallback_type
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # В. ЕДИНАЯ СКВОЗНАЯ ШТАМПОВКА КАТЕГОРИЙ [ТИП, ИМЯ] С ПРОВЕРКОЙ НАЛИЧИЯ СВОЙСТВА
-                if raw_post_type:
-                    # Извлекаем слаг родительского проекта по его готовому URL из flat_map (СТАРАЯ ЛОГИКА 1 в 1)
-                    calculated_slug = ""
-                    if calculated_parent_path and calculated_parent_path in flat_map:
-                        parent_card = flat_map[calculated_parent_path]
-                        if isinstance(parent_card, list) and len(parent_card) > 0:
-                            parent_card = parent_card[0]
-                        parent_url = parent_card.get('url', '').strip('/')
-                        if parent_url:
-                            calculated_slug = parent_url.split('/')[-1]
+                # Финал модуля вычисления post-page: Авто-категории строго по вашему правилу
+                if has_post_page_property and post_page_type:
+                    data['post-page'] = post_page_type
+                    
+                    # Жесткая проверка: если текстового свойства categories в файле ИЗНАЧАЛЬНО НЕТ
+                    if not data.get('categories'):
+                        # Извлекаем слаг родительского проекта по его готовому URL из flat_map
+                        calculated_slug = ""
+                        if calculated_parent_path and calculated_parent_path in flat_map:
+                            parent_card = flat_map[calculated_parent_path]
+                            if isinstance(parent_card, list) and len(parent_card) > 0:
+                                parent_card = parent_card[0]
+                            parent_url = parent_card.get('url', '').strip('/')
+                            if parent_url:
+                                calculated_slug = parent_url.split('/')[-1]
 
-                    # Если есть родитель — берем его слаг, если пост автономный — слаг самого файла постов
-                    final_topic_slug = calculated_slug if calculated_slug else file_slug_no_date
+                        # Если слаг родителя успешно найден — намертво штампуем массив категорий
+                        if calculated_slug:
+                            data['categories'] = [post_page_type, calculated_slug]
+                            
+                            # Тут же выдаем чистую scannable-строку изменения контента в лог
+                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано categories: {data['categories']}")
 
-                    generated_categories = [base_type_clean]
-                    if final_topic_slug:
-                        generated_categories.append(final_topic_slug)
-                        
-                    # Впечатываем массив категорий на диск строго при изменении контента
-                    if data.get('categories') != generated_categories:
-                        data['categories'] = generated_categories
-                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано универсальные categories: {data['categories']}")
-
-                # Сохраняем имя свойства для совместимости со старым Jekyll-рендером, если это journal/media
-                if base_type_clean in ['journal', 'media']:
-                    data['post-page'] = base_type_clean
+                # 🔥 ВРЕМЕННО КОММЕНТИРУЕМ
+                # if calculated_parent_path:
+                #     parent_node_list = flat_map[calculated_parent_path]
+                #     if isinstance(parent_node_list, list) and len(parent_node_list) > 0:
+                #         p_node = parent_node_list[0]
+                #         data['section'] = p_node.get('relatedsection', p_node.get('section', 'faire'))
+                #         log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано section: {data['section']}")
 
                 write_yaml_front_matter(file_path, data, body)
 

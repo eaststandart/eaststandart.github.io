@@ -49,5 +49,5 @@ discus: "questions"
 {% endcomment %}
 
 🗣️ Задать вопрос по проекту можно в комментариях ниже. Спроси – не стесняйся … 👇
-(Перед комментированием обязательно ознакомьтесь с: [📜 Правила нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начни обсуждать!
-](https://github.com/eaststandart/eaststandart.github.io/discussions/29))
+>  **Перед комментированием обязательно ознакомьтесь с: [📜 Правила нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начни обсуждать!
+](https://github.com/eaststandart/eaststandart.github.io/discussions/29) **

@@ -5,10 +5,10 @@ description: "Дополнительные медиаматериалы проц
 author: ["TechLab"]
 date: 2026-04-17
 categories: [journal, muzykalnyj-karandash]
-journal-post-page: "N"
+posttype: journal
 discus: "questions"
 ---
-
+journal-post-page: "N"
 📷 **Конструкция в собранном виде**
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)

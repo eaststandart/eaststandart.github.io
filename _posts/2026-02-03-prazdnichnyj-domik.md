@@ -3,7 +3,7 @@ layout: page
 title: "Праздничный домик: вопросы"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2026-02-03
-posttype: journal-close
+posttype: question-close
 discus: "questions"
 ---
 

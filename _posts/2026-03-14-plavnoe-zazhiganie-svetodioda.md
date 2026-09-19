@@ -3,7 +3,7 @@ layout: page
 title: "Эффект плавного зажигания светодиода: вопросы"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2026-03-14
-posttype: journal-close
+posttype: question-close
 discus: "questions"
 ---
 

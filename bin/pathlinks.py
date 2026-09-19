@@ -123,6 +123,7 @@ def process_markdown_paths(markdown_content, file_path=None):
     temporary_content = re.sub(wiki_text_pattern, wiki_text_replacer, temporary_content)
 
     # Страховка от случайных двойных слэшей
-    temporary_content = temporary_content.replace('//', '/')
+    temporary_content = re.sub(r'(?<!http:)(?<!https:)(?<!:)\/\/+', '/', temporary_content)
+
         
     return temporary_content

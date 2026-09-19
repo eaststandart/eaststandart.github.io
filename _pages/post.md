@@ -1,7 +1,7 @@
 ---
 layout: news
 title: Посты
-description: Посты без типа
+description: Лента постов без типа (дополнительные и справочные посты).
 permalink: /post/
 per_page: 10
 folder: "post"

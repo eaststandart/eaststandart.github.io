@@ -1,12 +1,12 @@
 ---
 layout: news
 title: Вопросы
-description: Посты вопросов
-permalink: /questions/
+description: Лента постов с вопросами по проектам.
+permalink: /question/
 per_page: 10
-folder: "questions"
+folder: "question"
 pinned_url: ""
-emoji: ""
+emoji: "❓"
 emoji_display: "N"
 ---
 {% comment %} 

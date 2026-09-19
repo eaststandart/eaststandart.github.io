@@ -1,7 +1,7 @@
 ---
 layout: news
 title: Журнал проектов
-description: Журнал, дневник, блог и прочие записи
+description: Лента постов журнальных записей по проектам.
 permalink: /journal/
 per_page: 10
 folder: "journal"

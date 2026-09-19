@@ -1,7 +1,7 @@
 ---
 layout: news
 title: Медиа-материалы
-description: Архив фото, видео и аудио по выполненным проектам
+description: Лента постов с медиа материалами по выполненным проектам.
 permalink: /media/
 per_page: 10
 folder: "media"

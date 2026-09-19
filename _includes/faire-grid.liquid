@@ -6,7 +6,7 @@
 
 <div class="faire-list">
   {% assign current_section = page.url %}
-  {% assign projects = site.pages | where_exp: "item", "item.url contains current_section and item.posttype != 'post-page-open'" | sort: "date" | reverse %}
+  {% assign projects = site.pages | where_exp: "item", "item.url startswith current_section" | sort: "date" | reverse %}
   
   {% for project in projects %}
     {% unless project.url == current_section %}

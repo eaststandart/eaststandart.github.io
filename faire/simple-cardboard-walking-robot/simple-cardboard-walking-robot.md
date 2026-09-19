@@ -48,6 +48,6 @@ discus: "questions"
 [[../../_posts/2025-10-28-simple-cardboard-walking-robot|2025-10-28-simple-cardboard-walking-robot]]
 {% endcomment %}
 
-🗣️ Задать вопрос по проекту можно в комментариях ниже [^1]. Спроси – не стесняйся … 👇
+🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
 
-[^1]: Прежде чем комментировать обязательно ознакомьтесь с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
+[^comment-rules]: Прежде чем комментировать обязательно ознакомьтесь с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).

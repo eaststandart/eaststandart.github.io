@@ -87,10 +87,9 @@ def generate_posts_pages():
                         'date': str(post_passport.get('date', '0000-00-00'))
                     }
                     
-                    # УНИВЕРСАЛЬНЫЙ АВТОМАТ: В большую ленту кнопки 0 летит всё, кроме маркеров-запретов *-close
-                    if 'journal' in p_type and p_type != 'journal-close':
+                    if p_type == 'journal':
                         parent_projects[related_page_path]['journal_urls'].append(post_data)
-                    elif 'media' in p_type and p_type != 'media-close':
+                    elif p_type == 'media':
                         parent_projects[related_page_path]['media_urls'].append(post_data)
 
     # ➡️ ШАГ 2: Сортировка хронологии, штамповка вложенных страниц и сбор паспортов навигации

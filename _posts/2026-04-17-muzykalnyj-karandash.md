@@ -8,7 +8,7 @@ categories: [journal, muzykalnyj-karandash]
 posttype: journal-close
 discus: "questions"
 ---
-journal-post-page: "N"
+
 📷 **Конструкция в собранном виде**
 
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-22.webp)

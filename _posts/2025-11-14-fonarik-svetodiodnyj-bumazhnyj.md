@@ -5,7 +5,7 @@ description: "На слабоосвещённой лестничной площ�
 sources: "📄[Описание проекта, PDF](/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj.pdf)"
 date: 2025-11-14
 categories: [journal, fonarik-svetodiodnyj-bumazhnyj]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

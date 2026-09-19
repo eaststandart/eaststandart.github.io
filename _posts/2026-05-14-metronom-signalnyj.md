@@ -5,7 +5,7 @@ description: "Некоторые медиаматериалы этапов пр�
 author: ["TechLab"]
 date: 2026-05-14
 categories: [journal, metronom-signalnyj]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

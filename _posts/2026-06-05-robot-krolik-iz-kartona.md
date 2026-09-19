@@ -7,6 +7,7 @@ tags: ["eastemitting"]
 sources: "[6 Lego Vehicles vs 6 Obstacles (2nd edit)](https://youtu.be/j-NEOrWxcdY)"
 date: 2026-06-05
 categories: [journal, robot-krolik-iz-kartona]
+posttype: journal-close
 discus: "journal"
 ---
 

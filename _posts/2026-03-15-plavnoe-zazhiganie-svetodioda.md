@@ -5,7 +5,7 @@ description: "Макет эксперимента к проекту для де�
 author: ["TechLab"]
 date: 2026-03-15
 categories: [journal, plavnoe-zazhiganie-svetodioda]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

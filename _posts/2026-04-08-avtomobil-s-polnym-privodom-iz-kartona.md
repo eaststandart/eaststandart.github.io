@@ -5,7 +5,7 @@ description: "Вид конструкции автомобиля, демонст
 author: ["TechLab"]
 date: 2026-04-08
 categories: [media, avtomobil-s-polnym-privodom-iz-kartona]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

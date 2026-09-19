@@ -5,7 +5,7 @@ description: "При негерметичности системы водосн�
 sources: "📄[Описание проекта, PDF](/faire/detektor-pereliva/detektor-pereliva-esd.pdf)"
 date: 2026-02-01
 categories: [journal, detektor-pereliva]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

@@ -4,7 +4,7 @@ title: "Эффект плавного зажигания светодиода: �
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2026-03-14
 categories: [journal, plavnoe-zazhiganie-svetodioda]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

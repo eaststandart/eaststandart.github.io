@@ -5,7 +5,7 @@ description: "Дополнительные медиаматериалы вида
 author: ["TechLab"]
 date: 2026-05-15
 categories: [media, metronom-signalnyj]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

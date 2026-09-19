@@ -5,7 +5,7 @@ description: "Вид конструкции робота, приводимого
 author: ["TechLab"]
 date: 2026-03-11
 categories: [media, robot-krolik-iz-kartona]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

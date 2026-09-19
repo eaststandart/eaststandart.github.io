@@ -5,7 +5,7 @@ description: "Соревнования роботов зубочистов по 
 author: ["TechLab"]
 date: 2025-11-24
 categories: [journal, vibrohod-iz-zubnoj-shchetki]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

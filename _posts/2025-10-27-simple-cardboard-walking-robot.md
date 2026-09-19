@@ -3,8 +3,7 @@ layout: page
 title: "Робот двуногий шагающий из картона: вопросы"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2025-10-27
-categories: [journal, simple-cardboard-walking-robot]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

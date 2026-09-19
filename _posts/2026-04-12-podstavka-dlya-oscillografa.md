@@ -5,7 +5,7 @@ description: "Дополнительные медиаматериалы вида
 author: ["TechLab"]
 date: 2026-04-12
 categories: [media, podstavka-dlya-oscillografa]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

@@ -5,7 +5,7 @@ description:  "Вид конструкции робота и демонстра�
 author: ["TechLab"]
 date: 2026-02-24
 categories: [media, robot-korova-iz-kartona]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

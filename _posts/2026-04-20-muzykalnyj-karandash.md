@@ -5,7 +5,7 @@ description: "Представлены медиаматериалы некото
 author: ["TechLab"]
 date: 2026-04-20
 categories: [journal, muzykalnyj-karandash]
-journal-post-page: "N"
+posttype: journal-close
 discus: "questions"
 ---
 

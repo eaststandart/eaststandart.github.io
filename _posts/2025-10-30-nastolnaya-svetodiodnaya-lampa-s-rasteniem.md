@@ -4,7 +4,7 @@ title: "Настольная светодиодная лампа с растен
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
 date: 2025-10-30
 categories: [media, nastolnaya-svetodiodnaya-lampa-s-rasteniem]
-media-post-page: "N"
+posttype: media-close
 discus: "gallery"
 ---
 

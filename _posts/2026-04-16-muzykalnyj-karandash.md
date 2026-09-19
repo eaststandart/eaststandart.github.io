@@ -5,7 +5,7 @@ description: "Дополнительные медиаматериалы вида
 author: ["TechLab"]
 date: 2026-04-16
 categories: [media, muzykalnyj-karandash]
-media-post-page: "N"
+posttype: media-close
 ---
 
 📷 **Общий вид конструкции**

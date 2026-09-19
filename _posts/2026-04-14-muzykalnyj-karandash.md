@@ -8,5 +8,5 @@ posttype: media
 keywords: [фотографии]
 discus: "gallery"
 ---
-media-post-page: "N"
+
 Покажи как выглядит созданный тобой проект ...

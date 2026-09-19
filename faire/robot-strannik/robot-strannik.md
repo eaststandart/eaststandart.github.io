@@ -6,7 +6,7 @@ title: Робот странник
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, роботстранник]
 sources: "[How To Make An Adorable Walking Robot with Big Shoes](https://youtu.be/0SofESg-mLc)"
 date: 2025-11-25
-permalink: /faire/robot-strannik/
+discus: "questions"
 ---
 
 ### Описание проекта

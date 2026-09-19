@@ -6,7 +6,7 @@ title: Условные обозначения
 tags: [электроникаисхемотехника, столярноедело, проектучебный, 4класс, проект, условныеобозначения, электрическоеискусство, electronicsart, панно, языксхем, eastemitting]
 sources: "[TechLab](https://github.com/eaststandart)"
 date: 2026-04-02
-permalink: /faire/pano-uslovnye-oboznacheniya/
+discus: "questions"
 ---
 
 ### Описание проекта

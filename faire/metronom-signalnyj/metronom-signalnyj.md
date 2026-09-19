@@ -6,7 +6,7 @@ author: ["TechLab"]
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, метрономсигнальный, электрическоеискусство, electronicsart]
 sources: 
 date: 2026-05-10
-permalink: /faire/metronom-signalnyj/
+discus: "questions"
 ---
 
 ### Описание проекта

@@ -6,7 +6,7 @@ title: Яблоневое дерево
 tags: [электроникаисхемотехника, проектучебный, 1класс, проект, яблоневоедерево, kirill-k, eastemitting]
 sources: "[TechLab](https://github.com/eaststandart)"
 date: 2025-12-21
-permalink: /faire/yablonevoe-derevo/
+discus: "questions"
 ---
 
 ### Описание проекта

@@ -6,7 +6,7 @@ author: ["TechLab"]
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, роботкроликизкартона]
 sources: "[How to make a Frog Robot](https://youtu.be/BPihbds45Tk)"
 date: 2026-03-07
-permalink: /faire/robot-krolik-iz-kartona/
+discus: "questions"
 ---
 
 ### Описание проекта

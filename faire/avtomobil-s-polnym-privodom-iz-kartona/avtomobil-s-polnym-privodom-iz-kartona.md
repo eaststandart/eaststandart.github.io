@@ -6,7 +6,7 @@ author: ["TechLab"]
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, автомобильсполнымприводомизкартона]
 sources: "[Вездеход 4-WD из картона](https://youtu.be/5y7W3MgE9nk)"
 date: 2026-04-05
-permalink: /faire/avtomobil-s-polnym-privodom-iz-kartona/
+discus: "questions"
 ---
 
 ### Описание проекта

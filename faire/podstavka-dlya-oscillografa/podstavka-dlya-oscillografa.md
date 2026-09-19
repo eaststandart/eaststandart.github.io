@@ -6,7 +6,7 @@ author: ["TechLab"]
 tags: [электроникаисхемотехника, столярноедело, проектучебный, 2класс, проект, подставкадляосциллографа]
 sources: 
 date: 2026-04-09
-permalink: /faire/podstavka-dlya-oscillografa/
+discus: "questions"
 ---
 
 ### Описание проекта

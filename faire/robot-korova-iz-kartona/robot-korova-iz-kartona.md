@@ -6,7 +6,7 @@ title: Робот корова из картона
 tags: [конструированиеимоделирование, проектучебный, 4класс, проект, роботкороваизкартона, механизмчебышева]
 sources: "[How to make an animal walking robot](https://youtu.be/IpwZKaRav4c)"
 date: 2026-02-21
-permalink: /faire/robot-korova-iz-kartona/
+discus: "questions"
 ---
 
 ### Описание проекта

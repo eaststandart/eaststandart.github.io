@@ -6,7 +6,7 @@ title: Праздничный домик
 tags: [электроникаисхемотехника, проектучебный, 3класс, проект, праздничныйдомик, геркон, kirill-k]
 sources: "[TechLab](https://github.com/eaststandart)"
 date: 2026-02-01
-permalink: /faire/prazdnichnyj-domik/
+discus: "questions"
 ---
 
 ### Описание проекта

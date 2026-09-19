@@ -6,7 +6,7 @@ author: ["TechLab"]
 tags: [электроникаисхемотехника, проектучебный, 3класс, проект, эффектплавногозажиганиясветодиода, макетэксперимента, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
 sources: "[Beginner Concepts: Analog Circuits](https://hackaday.com/2010/08/28/beginner-concepts-analog-circuits/)"
 date: 2026-03-12
-permalink: /faire/plavnoe-zazhiganie-svetodioda/
+discus: "questions"
 ---
 
 ### Описание проекта

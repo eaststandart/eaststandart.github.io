@@ -6,7 +6,7 @@ title: Электронный орган
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, электронныйорган, электрическоеискусство, electronicsart, таймер555, eastemitting]
 sources: "Mims F. Engineer's Mini-Notebook: 555 Timer IC Circuits, 1996, p. 19; [TechLab](https://github.com/eaststandart)"
 date: 2026-02-09
-permalink: /faire/elektronnyj-organ/
+discus: "questions"
 ---
 
 ### Описание проекта

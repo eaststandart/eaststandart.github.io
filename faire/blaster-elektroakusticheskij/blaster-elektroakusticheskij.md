@@ -6,7 +6,7 @@ title: Бластер электроакустический
 tags: [электроникаисхемотехника, проектучебный, 4класс, проект, бластерэлектроакустический, electroacousticblaster, мультивибраторнесимметричный]
 sources: 
 date: 2026-01-24
-permalink: /faire/blaster-elektroakusticheskij/
+discus: "questions"
 ---
 
 ### Описание проекта

@@ -6,7 +6,7 @@ title: Фонарик светодиодный бумажный
 tags: [электроникаисхемотехника, проектучебный, 0класс, проект, фонариксветодиодныйбумажный]
 sources: "[Robot Paper LED Flashlight](https://www.instructables.com/Instructables-Robot-Paper-LED-Flashlight/)"
 date: 2025-11-11
-permalink: /faire/fonarik-svetodiodnyj-bumazhnyj/
+discus: "questions"
 ---
 
 ### Описание проекта

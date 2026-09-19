@@ -17,6 +17,8 @@ def process_markdown_paths(markdown_content, file_path=None):
     Вычисляет имя папки статьи, чистит любые пути и конвертирует Wiki-ссылки,
     исключая ложную приставку папок для известных корней и внешних ресурсов.
     """
+    # 🌟 Утвержденный список глобальных корневых разделов и папок медиа-ресурсов сайта
+    known_root_folders = ['faire', 'assets', 'biblio', 'diary', 'inspiration', 'projects', 'tools']
 
     # =========================================================================
     # 🔥 ЗАЩИТНЫЙ СЕЙФ: КОНСЕРВАЦИЯ ВНЕШНИХ ИНТЕРНЕТ-ССЫЛОК
@@ -32,14 +34,8 @@ def process_markdown_paths(markdown_content, file_path=None):
 
     current_folder_prefix = "/"
     if file_path:
-        # Извлекаем имя физической папки, в которой лежит обрабатываемый файл
-        dir_name = os.path.dirname(file_path)
-        folder_name = os.path.basename(dir_name)
-        
-        # УНИВЕРСАЛЬНАЯ ЗАЩИТА: Если файл лежит в системной коллекции (_posts, _people) — локальный префикс равен корню /
-        if folder_name.startswith('_') or 'posts' in dir_name.lower() or 'people' in dir_name.lower():
-            current_folder_prefix = "/"
-        elif folder_name and folder_name not in ['', '.', '..']:
+        folder_name = os.path.basename(os.path.dirname(file_path))
+        if folder_name and folder_name not in ['', '.', '..']:
             current_folder_prefix = f"/{folder_name}/"
 
     # А. МАССИВ ИСКЛЮЧЕНИЙ ДЛЯ ВНЕШНИХ ССЫЛОК (Возвращен на место!)
@@ -75,8 +71,8 @@ def process_markdown_paths(markdown_content, file_path=None):
             img_url = re.sub(r'^[\s./]+', '', img_url)
             if not img_url.startswith('/'):
                 img_url = '/' + img_url
-        # 3. Если папка физически существует в корне репозитория — просто ставим слэш /
-        elif os.path.isdir(first_segment):
+        # 3. Если путь начинается с известной контентной папки — просто ставим слэш /
+        elif first_segment in known_root_folders:
             img_url = '/' + img_url
         # 4. Во всех остальных случаях (локальные папки статей) — дописываем префикс папки статьи
         else:
@@ -111,8 +107,8 @@ def process_markdown_paths(markdown_content, file_path=None):
             img_url = re.sub(r'^[\s./]+', '', img_url)
             if not img_url.startswith('/'):
                 img_url = '/' + img_url
-        # 3. Если папка физически существует в корне репозитория — просто ставим слэш /
-        elif os.path.isdir(first_segment):
+        # 3. Если Wiki-путь начинается с известной контентной папки — просто ставим слэш /
+        elif first_segment in known_root_folders:
             img_url = '/' + img_url
         # 4. Во всех остальных случаях — дописываем префикс текущей папки статьи
         else:

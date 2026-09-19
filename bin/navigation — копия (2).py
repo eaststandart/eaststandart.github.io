@@ -116,18 +116,7 @@ def navigation_feed_properties(data, passport, file_path=None):
     if data.get('direction'): calculated_tags.append(clean_tag_local(data['direction']))
     if data.get('entity'): calculated_tags.append(clean_tag_local(data['entity']))
     if data.get('level'): calculated_tags.append(f"{str(data['level']).strip()}класс")
-    if data.get('title'):
-        title_text = str(data['title']).strip()
-        # Если в заголовке есть двоеточие — делим его на тему и рубрику контура
-        if ':' in title_text:
-            parts = title_text.split(':', 1)
-            tag_before = translit_title_local(parts[0])
-            tag_after = translit_title_local(parts[1])
-            if tag_before: calculated_tags.append(tag_before)
-            if tag_after: calculated_tags.append(tag_after)
-        else:
-            # Если двоеточия нет — обрабатываем заголовок монолитно (СТАРАЯ ЛОГИКА)
-            calculated_tags.append(translit_title_local(title_text))
+    if data.get('title'): calculated_tags.append(translit_title_local(data['title']))
     
     if data.get('keywords'):
         if isinstance(data['keywords'], list):

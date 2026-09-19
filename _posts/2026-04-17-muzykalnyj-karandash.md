@@ -5,7 +5,7 @@ description: "Дополнительные медиаматериалы проц
 author: ["TechLab"]
 date: 2026-04-17
 categories: [journal, muzykalnyj-karandash]
-posttype: journal
+posttype: journal-close
 discus: "questions"
 ---
 journal-post-page: "N"

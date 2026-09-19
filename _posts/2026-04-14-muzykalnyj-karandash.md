@@ -4,9 +4,9 @@ title: "Музыкальный карандаш: галерея"
 description: "Демонстрация (фото, видео) выполненного проекта от участников."
 published: true
 date: 2026-04-14
-media-post-page: "N"
+posttype: media
 keywords: [фотографии]
 discus: "gallery"
 ---
-
+media-post-page: "N"
 Покажи как выглядит созданный тобой проект ...

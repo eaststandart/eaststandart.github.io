@@ -47,3 +47,6 @@ discus: "questions"
 [[../../_posts/2025-10-27-simple-cardboard-walking-robot|2025-10-27-simple-cardboard-walking-robot]]
 [[../../_posts/2025-10-28-simple-cardboard-walking-robot|2025-10-28-simple-cardboard-walking-robot]]
 {% endcomment %}
+
+🗣️ Задать вопрос по проекту можно в комментариях ниже. Спроси – не стесняйся … 👇
+(Чтобы Ваш вопрос не удалили обязательно ознакомьтесь с правилами комментирования ССЫЛКА)

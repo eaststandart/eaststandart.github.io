@@ -34,7 +34,8 @@ def process_markdown_paths(markdown_content, file_path=None):
     ]
 
     # Б. УЛЬТИМАТИВНАЯ ЧИСТКА КЛАССИЧЕСКИХ МАРКДАУН-ПУТЕЙ
-    domain_pattern = r'(?:^|(?<=\s))github/eaststandart\.github\.io/'
+    domain_pattern = r'(?<!https://)(?<!http://)github/eaststandart\.github\.io/'
+
     temporary_content = re.sub(domain_pattern, '/', markdown_content)
 
     classic_media_pattern = r'!\[(.*?)\]\((.*?\.(?:webp|jpg|jpeg|png|gif|svg|webm|mp4))\)'
@@ -124,6 +125,5 @@ def process_markdown_paths(markdown_content, file_path=None):
 
     # Страховка от случайных двойных слэшей
     temporary_content = re.sub(r'(?<!http:)(?<!https:)(?<!:)\/\/+', '/', temporary_content)
-
         
     return temporary_content

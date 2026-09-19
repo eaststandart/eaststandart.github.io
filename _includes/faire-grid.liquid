@@ -1,23 +1,17 @@
 {%- comment -%}
-@about Модуль автоматической генерации сетки как на главной странице раздела «Ярмарка поделок».
-@purpose Собирает все страницы, которые содержат в себе подстроку faire/, но выводит СТРОГО те,
-         чей URL физически начинается с этого раздела, полностью отсекая технические архивы.
+@about Универсальный модуль автоматической генерации сеток разделов сайта.
+@purpose Собирает все страницы текущего раздела и выводит их в виде карточек,
+         полностью отсекая технические архивы по общему системному маркеру posttype.
 @author TechLab
 {%- endcomment -%}
 
 <div class="faire-list">
   {% assign current_section = page.url %}
-  {% assign section_size = current_section | size %}
-  
-  {% comment %} Забираем базовый массив страниц, содержащих слэш раздела {% endcomment %}
   {% assign raw_projects = site.pages | where_exp: "item", "item.url contains current_section" | sort: "date" | reverse %}
   
   {% for project in raw_projects %}
-    {% comment %} Математически точный срез первых символов URL для проверки начала строки {% endcomment %}
-    {% assign start_chunk = project.url | slice: 0, section_size %}
-    
-    {% comment %} Жесткий барьер: выводим карточку только если начало URL совпадает с текущим разделом {% endcomment %}
-    {% if start_chunk == current_section %}
+    {% comment %} УНИВЕРСАЛЬНЫЙ БАРЬЕР: Пропускаем технические архивные страницы под кнопку 0 {% endcomment %}
+    {% if project.posttype != 'post-page-open' %}
       {% unless project.url == current_section %}
         <a href="{{ project.url | relative_url }}" class="faire-card">
           {% assign folder = project.url | split: "/" | last %}

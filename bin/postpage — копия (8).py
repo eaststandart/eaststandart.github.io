@@ -125,7 +125,6 @@ def generate_posts_pages():
                 "layout": "page",
                 "title": f"{parent_title}: лента постов",
                 "permalink": jekyll_permalink,
-                "posttype": "post-page-open", 
                 "mathjax": True
             }
             front_matter_string = yaml.dump(base_front_matter, allow_unicode=True, default_flow_style=False, sort_keys=False)

@@ -7,4 +7,6 @@ posttype: question-close
 discus: "questions"
 ---
 
-Спроси – не стесняйся ... 👇 *Прежде чем комментировать обязательно ознакомься с: [📜 правилами нашего сообщества](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)*
+
+
+Спроси – не стесняйся ... 👇 (<small>Прежде чем комментировать обязательно ознакомься с: [📜 правилами нашего сообщества](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)</small>)

@@ -68,7 +68,7 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
 
     function renderButtons() {
       ctrlDiv.innerHTML = '';
-      ctrlDiv.appendChild(createBtn('»', null, false, false, 'archive'));
+      ctrlDiv.appendChild(createBtn('»»', null, false, false, 'archive'));
       ctrlDiv.appendChild(createBtn('0', null, false, false, 'full'));
 
       if (totalPages > 1) {

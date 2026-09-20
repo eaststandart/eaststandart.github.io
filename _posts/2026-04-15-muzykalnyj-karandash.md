@@ -3,7 +3,7 @@ layout: page
 title: "Музыкальный карандаш: вопросы по проекту"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2026-04-15
-posttype: question
+posttype: question-close
 discus: "questions"
 ---
 

@@ -7,7 +7,7 @@ date: 2026-05-14
 posttype: journal
 discus: "questions"
 ---
- 
+
 📷 **Процесс создания**
 
 ![](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-13.webp)

@@ -6,9 +6,9 @@ author: ["TechLab"]
 published: true
 date: 2026-04-18
 posttype: journal
+discus: "questions"
 mathjax: true
 keywords: [схема, теория]
-discus: "questions"
 ---
 
 ### Описание работы устройства 

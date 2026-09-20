@@ -4,7 +4,7 @@ title: "Музыкальный карандаш: сборка"
 description: "Дополнительные медиаматериалы процесса окончательной сборки конструкции."
 author: ["TechLab"]
 date: 2026-04-17
-posttype: journal
+posttype: question
 discus: "questions"
 ---
 

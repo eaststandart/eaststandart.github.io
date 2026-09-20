@@ -4,7 +4,7 @@ title: "Фонарик светодиодный бумажный: описани
 description: "На слабоосвещённой лестничной площадке для открытии замка двери квартиры требуется подсветка замочной скважины. Устройство помогает точно вставить ключ и открыть замок."
 sources: "📄[Описание проекта, PDF](/faire/fonarik-svetodiodnyj-bumazhnyj/fonarik-svetodiodnyj-bumazhnyj.pdf)"
 date: 2025-11-14
-posttype: journal
+posttype: question
 discus: "questions"
 ---
 

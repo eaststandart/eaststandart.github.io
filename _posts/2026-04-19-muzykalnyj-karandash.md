@@ -4,7 +4,7 @@ title: "Музыкальный карандаш: тестирование"
 description: "Тестирование работы устройства и исследование его функционирования с применением осциллографа."
 author: ["TechLab"]
 date: 2026-04-19
-posttype: journal
+posttype: question
 discus: "questions"
 ---
 

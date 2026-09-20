@@ -5,7 +5,7 @@ description: "Описание работы устройства, взаимод
 author: ["TechLab"]
 published: true
 date: 2026-04-18
-posttype: journal
+posttype: question
 discus: "questions"
 mathjax: true
 keywords: [схема, теория]

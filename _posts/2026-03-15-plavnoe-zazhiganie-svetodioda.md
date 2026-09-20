@@ -4,7 +4,7 @@ title: "Эффект плавного зажигания светодиода: �
 description: "Макет эксперимента к проекту для демонстрации включения транзистора в обычном и инверсном режиме."
 author: ["TechLab"]
 date: 2026-03-15
-posttype: journal
+posttype: question
 discus: "questions"
 ---
 

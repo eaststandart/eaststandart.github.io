@@ -56,8 +56,8 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
             if (btnType === 'archive') {
               window.location.href = targetArchiveUrl;
             } else if (btnType === 'full') {
-              // Восстанавливаем оригинальную историческую склейку путей Ярмарки контура
-              window.location.href = '/' + includeType + '/' + projectSlugLast + '/';
+              // Нативный и безошибочный переход по выверенному адресу бэкенда
+              window.location.href = projectSlugLast;
             }
           });
         }

@@ -36,9 +36,9 @@
   {% comment %} ИСТОРИЧЕСКИЙ АДРЕС ЕЛОЧЕК: Четвертый параметр для JS (Строго корень раздела) {% endcomment %}
   {% assign archive_root_url = "/" | append: include.posttype | append: "/" %}
 
-  {% comment %} ИСТОРИЧЕСКИЙ ХВОСТ КНОПКИ 0: Передаем СТРОГО чистый слаг изделия для корректной склейки в JS {% endcomment %}
+  {% comment %} УНИВЕРСАЛЬНЫЙ АДРЕС КНОПКИ 0: Передаем полностью готовый путь или маркер блокировки {% endcomment %}
   {% if open_posts_count > 0 %}
-    {% assign js_project_param = real_project_slug %}
+    {% assign js_project_param = "/" | append: include.posttype | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
   {% else %}
     {% assign js_project_param = "disabled" %}
   {% endif %}

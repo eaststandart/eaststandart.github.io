@@ -22,7 +22,8 @@
 
   {% comment %} ДИНАМИЧЕСКИЙ ВЫВОД ЗАГЛОВОКА: рендерим только если параметр title был передан в инклуд {% endcomment %}
   {% if include.title and include.title != "" %}
-    ### {{ include.title }}
+    {% capture heading %}### {{ include.title }}{% endcapture %}
+    {{ heading | markdownify }}
   {% endif %}
 
   {% comment %} Сборка чистых промышленных ID без тестового мусора -test- {% endcomment %}

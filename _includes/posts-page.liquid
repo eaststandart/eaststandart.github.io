@@ -1,7 +1,7 @@
 {%- comment -%}
 @about Модуль автоматического вывода локальных лент постов на страницах проектов.
-@purpose Выводит список строк, рассчитывает количество открытых постов, передает в JS
-         адрес корня для кнопок-ёлочек и маркер блокировки кнопки 0.
+@purpose Считает количество открытых постов контура, возвращает канонический порядок 
+         параметров для JS-пагинатора и передает маркер disabled для кнопки 0.
 @author TechLab
 {%- endcomment -%}
 
@@ -26,21 +26,21 @@
 {% comment %} БАРЬЕР ПУСТОТЫ: запускаем рендер только если в данной категории есть хотя бы один пост {% endcomment %}
 {% if posts_count > 0 %}
 
-  {% comment %} ЖЕЛЕЗНЫЙ СТРОЧНЫЙ ВЫВОД: чистый HTML-заголовок без переносов строк {% endcomment %}
+  {% comment %} ЖЕЛЕЗНЫЙ СТРОЧНЫЙ ВЫВОД: чистый HTML-заголовок строго в одну строку {% endcomment %}
   {% if include.header-h3 and include.header-h3 != "" %}<h3>{{ include.header-h3 }}</h3>{% endif %}
 
   {% comment %} Сборка чистых промышленных ID без тестового мусора {% endcomment %}
   {% assign loop_id = include.posttype | append: "-" | append: real_project_slug %}
   {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-  {% comment %} ВЫЧИСЛЕНИЕ АДРЕСОВ: Глобальный корень для елочек и вложенный архив для кнопки 0 {% endcomment %}
-  {% assign root_archive_url = "/" | append: include.posttype | append: "/" %}
-  
+  {% comment %} ИСТОРИЧЕСКИЙ АДРЕС ЕЛОЧЕК: Четвертый параметр для JS (Строго корень раздела) {% endcomment %}
+  {% assign archive_root_url = "/" | append: include.posttype | append: "/" %}
+
+  {% comment %} ИСТОРИЧЕСКИЙ ХВОСТ КНОПКИ 0: Шестой параметр для JS (Слаг проекта или блокировка) {% endcomment %}
   {% if open_posts_count > 0 %}
-    {% assign archive_url = "/" | append: include.posttype | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
+    {% assign js_project_param = section_slug | append: "/" | append: real_project_slug %}
   {% else %}
-    {% comment %} СИГНАЛ БЛОКИРОВКИ: Передаем в JS маркер отключения кнопки 0 {% endcomment %}
-    {% assign archive_url = "disabled" %}
+    {% assign js_project_param = "disabled" %}
   {% endif %}
 
   <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
@@ -63,7 +63,7 @@
     {%- endfor -%}
   </ul>
 
-  <!-- Контейнер панели управления, куда JS будет встраивать кнопки <<, <, 0, >, >> -->
+  <!-- Изолированный блок кнопок управления локальной пагинацией -->
   <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
   <!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
@@ -76,9 +76,9 @@
           "{{ loop_id }}", 
           "{{ ctrl_id }}", 
           "{{ include.per_page }}", 
-          "{{ archive_url }}", 
+          "{{ archive_root_url }}", 
           "{{ include.posttype }}", 
-          "{{ root_archive_url }}"  // 🌟 ПЕРЕДАЕМ КОРЕНЬ РАЗДЕЛА ДЛЯ КНОПОК-ЁЛОЧЕК ШЕСТЫМ ПАРАМЕТРОМ
+          "{{ js_project_param }}"
         );
       }
     })();

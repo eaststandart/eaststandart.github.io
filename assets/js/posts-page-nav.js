@@ -43,15 +43,25 @@ function runPostsPageNav(containerId, ctrlId, perPage, archiveUrl, includeType, 
 
       if (btnType === 'archive' || btnType === 'full') {
         btn.classList.add('posts-page-all-btn');
-        btn.addEventListener('click', function() {
-          if (btnType === 'archive') {
-            window.location.href = targetArchiveUrl;
-          } else if (btnType === 'full') {
-            // Кнопка "0" переводит на персональную статичную страницу-ленту проекта
-            window.location.href = '/' + includeType + '/' + projectSlugLast + '/';
-          }
-        });
-      } else {
+        
+        // Проверяем: если кнопка "0" прилетела в режиме блокировки disabled
+        if (btnType === 'full' && projectSlugLast === 'disabled') {
+          btn.style.backgroundColor = 'var(--primary-bg, #f4f7f6)'; // Цвет фона из вашей переменной
+          btn.style.color = '#a0a0a0';                              // Делаем текст бледно-серым
+          btn.style.cursor = 'default';                             // Отключаем указательный палец
+        } else {
+          // Если кнопка активна — вешаем живой обработчик клика
+          btn.addEventListener('click', function() {
+            if (btnType === 'archive') {
+              window.location.href = targetArchiveUrl;
+            } else if (btnType === 'full') {
+              // Чистый нативный адрес без старого мусора склейки слэшей
+              window.location.href = projectSlugLast;
+            }
+          });
+        }
+      }
+        else {
         if (isCurrent) {
           btn.classList.add('active'); 
         } else if (isDisabled) {

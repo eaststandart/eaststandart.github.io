@@ -4,7 +4,7 @@ title: "Робот зубочист: скорость движения"
 description: "Соревнования роботов зубочистов по прохождению препятствий."
 author: ["TechLab"]
 date: 2025-11-24
-posttype: journal
+posttype: questions
 discus: "questions"
 ---
 

@@ -5,7 +5,7 @@ description: "Некоторые медиаматериалы этапов пр�
 author: ["TechLab"]
 date: 2026-05-14
 posttype: journal
-discus: "questions"
+discus: "journal"
 ---
 
 📷 **Процесс создания**

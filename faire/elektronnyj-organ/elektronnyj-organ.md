@@ -29,14 +29,14 @@ date: 2026-02-09
 1\. 🔌[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, sPlan](../../../../files/attachments/бластер%20электроакустический%20–%20проект%20учебный.spl8)
 
-{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}
 
-{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+{%- comment -%}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]
-{% endcomment %}
+{%- endcomment -%}
 
 [^1]: Мацкевич В.В. Занимательная радиоэлектроника в пионерлагере / Рец.: В.Г. Борисов, В.Т. Поляков. — М.: ДОСААФ СССР, 1986. — 141. с.: ил. — ББК 32.884.19.
 [^2]: Отряшенков Ю.М. Азбука теле-автоматики. — М.: Детская литература, 1967. — 258 с.: ил. — (Библиотечка пионера «Знай и умей»).

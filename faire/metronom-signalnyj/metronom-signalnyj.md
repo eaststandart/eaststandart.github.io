@@ -32,14 +32,14 @@ date: 2026-05-10
 1\. 🔌[Схема электрическая принципиальная, PDF](metronom-signalnyj-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, sPlan](metronom-signalnyj-esd.spl8)
 
-{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}
 
-{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+{%- comment -%}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]
-{% endcomment %}
+{%- endcomment -%}
 
 [^1]:  [Петер Фогель](https://fr.wikipedia.org/wiki/Peter_Vogel_(artiste)) — немецкий физик и художник-кибернетик. Известен своей междисциплинарной художественной практикой, включающей скульптуру, электронику и акустику.
 [^2]: Forrest M. Mims III Getting Started in Electronics. — Radio Shack, 1994. — 128 p. — (Cat. No. 276-5003).

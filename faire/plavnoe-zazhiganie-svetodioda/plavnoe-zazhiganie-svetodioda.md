@@ -39,14 +39,14 @@ date: 2026-03-12
 
 ![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
 
-{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}
 
-{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+{%- comment -%}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]
-{% endcomment %}
+{%- endcomment -%}
 
 [^1]: Слово «редкий» означает, что такие транзисторы больше не выпускаются в виде отдельных старых деталей, но сам материал активно развивается. Самые современные высокоскоростные микросхемы внутри себя содержат не только кремниевые, но и германиевые транзисторы [^3]. Это связано с тем, что германий обладает огромной подвижностью электронов. Такое полезное свойство значительно увеличивает быстродействие чипов и позволяет устройствам обрабатывать данные на сверхвысоких частотах с минимальными потерями энергии [^4].
 [^2]: [Бочаров Л.Н. Инверсное включение транзистора (МРБ №887, 1975 г.)](http://publ.lib.ru/ARCHIVES/M/%27%27Massovaya_radiobiblioteka%27%27_\(seriya\)/_MRB_0800-0899_.html).

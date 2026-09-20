@@ -29,11 +29,11 @@ date: 2025-11-05
 > 1\. [The Soviet Sputnik Model Project](https://youtu.be/yNuD6N6IBck), [Updates, More 45's, DSKY Project, Sputnik, Viewer Mail, And Missy! - YouTube](https://youtu.be/hiqibWP2WNA), [FranLab DIY: Sputnik Beeper Kit Pt1](https://youtu.be/7bx2uC89ObY), [FranLab - 1957 Soviet Sputnik Model Reborn](https://youtu.be/b8KduFyLevk) от [Fran Blanche](/people/fran-blanche/).\
 > 2\. [Схема электрическая модуля звукового](https://images.squarespace-cdn.com/content/548b5b70e4b0b57ba182907d/1439892567207-H2ZLG0SPJOTJA8E82TOX) от [Fran Blanche](/people/fran-blanche/).
 
-{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}
 
-{% comment %}  Ссылки на статьи в /\_posts по этому проекту
+{%- comment -%}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]
-{% endcomment %}
+{%- endcomment -%}

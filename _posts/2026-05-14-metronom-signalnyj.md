@@ -22,4 +22,4 @@ discus: "journal"
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-02.webm)
 ![video](github/eaststandart.github.io/faire/metronom-signalnyj/metronom-signalnyj-03.webm)
 
-🗣️ Обсудить проект по теме данной статьи можно в комментариях ниже 👇
+🗣️ [Обсудить проект](https://github.com/eaststandart/eaststandart.github.io/discussions/29) по теме данной статьи можно в комментариях ниже 👇

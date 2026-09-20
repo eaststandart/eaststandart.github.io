@@ -1,7 +1,7 @@
 {%- comment -%}
 @about Модуль автоматического вывода локальных лент постов на страницах проектов.
-@purpose Считает количество публикаций заданного posttype. Если они есть, выводит переданный заголовок header-h3
-         и формирует список. Если постов нет — полностью скрывает блок вместе с заголовком.
+@purpose Рендерит списки постов, возвращает канонические елочки со ссылками на корни разделов
+         и блокирует кнопку 0, если все посты помечены как закрытые.
 @author TechLab
 {%- endcomment -%}
 
@@ -9,26 +9,39 @@
 {% assign section_slug = url_parts[1] %}
 {% assign real_project_slug = url_parts[2] %}
 
-{% comment %} Считаем количество живых постов, реально подходящих под заданный тип контура {% endcomment %}
+{% comment %} Считаем общее количество постов и отдельно количество открытых для архива {% endcomment %}
 {% assign posts_count = 0 %}
+{% assign open_posts_count = 0 %}
+
 {%- for post in site.categories[real_project_slug] -%}
   {%- if post.categories contains include.posttype -%}
     {% assign posts_count = posts_count | plus: 1 %}
+    {%- assign p_type_str = post.posttype |相对_url | downcase | strip -%}
+    {%- unless p_type_str contains "-close" -%}
+      {% assign open_posts_count = open_posts_count | plus: 1 %}
+    {%- endunless -%}
   {%- endif -%}
 {%- endfor -%}
 
 {% comment %} БАРЬЕР ПУСТОТЫ: запускаем рендер только если в данной категории есть хотя бы один пост {% endcomment %}
 {% if posts_count > 0 %}
 
-  {% comment %} ЖЕЛЕЗНЫЙ СТРОЧНЫЙ ВЫВОД: рендерим чистый HTML-заголовок без переносов строк и лишних ID {% endcomment %}
+  {% comment %} ЖЕЛЕЗНЫЙ СТРОЧНЫЙ ВЫВОД: чистый HTML-заголовок без переносов строк {% endcomment %}
   {% if include.header-h3 and include.header-h3 != "" %}<h3>{{ include.header-h3 }}</h3>{% endif %}
 
-  {% comment %} Сборка чистых промышленных ID без тестового мусора -test- {% endcomment %}
+  {% comment %} Сборка чистых промышленных ID без тестового мусора {% endcomment %}
   {% assign loop_id = include.posttype | append: "-" | append: real_project_slug %}
   {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-  {% comment %} Вычисляем глубокий вложенный адрес архивной страницы под кнопку «0» {% endcomment %}
-  {% assign archive_url = "/" | append: include.posttype | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
+  {% comment %} ВЫЧИСЛЕНИЕ АДРЕСОВ: Глобальный корень для елочек и вложенный архив для кнопки 0 {% endcomment %}
+  {% assign root_archive_url = "/" | append: include.posttype | append: "/" %}
+  
+  {% if open_posts_count > 0 %}
+    {% assign archive_url = "/" | append: include.posttype | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
+  {% else %}
+    {% comment %} СИГНАЛ БЛОКИРОВКИ: Передаем в JS маркер отключения кнопки 0 {% endcomment %}
+    {% assign archive_url = "disabled" %}
+  {% endif %}
 
   <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
   <ul id="{{ loop_id }}" class="project-list posts-page-list">
@@ -38,7 +51,7 @@
         {%- if include.posttype == "media" -%}{%- assign is_post = false -%}{%- endif -%}
         <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
           <div>
-            <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;<a href="{{ root_archive_url | relative_url }}" class="archive-root-link">»»</a>&nbsp;</span>
             <span>
               <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
                 {{ post.title }}

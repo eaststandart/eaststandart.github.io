@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Робот странник: вопросы"
+title: "Робот странник: вопросы по проекту"
 description: "Здесь можно задать любые вопросы по проекту."
 date: 2025-11-27
 posttype: question-close

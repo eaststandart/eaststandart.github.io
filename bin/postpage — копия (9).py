@@ -22,10 +22,6 @@ def generate_posts_pages():
     log_file_path = os.path.join(root_dir, '_post_page_files', 'posts-page-generator.log')
     
     log_buffer = []
-
-    # 🌟 ЕДИНСТВЕННЫЙ КОНТРОЛИРУЕМЫЙ СПИСОК РАЗРЕШЕННЫХ ТИПОВ ПОСТОВ
-    # Допишите сюда любое имя (например, 'ref'), и весь скрипт каскадом заработает под него!
-    ALLOWED_POST_TYPES = ['journal', 'media', 'question']
     
     if not os.path.exists(navigation_file):
         print(f"[POST-ERROR] Карта навигации navigation.yml не найдена: {navigation_file}")
@@ -41,7 +37,7 @@ def generate_posts_pages():
 
     # 🧼 САНИТАРНАЯ ЗАЧИСТКА ПАПОК ОТ СТРАНИЦ-ПРИЗРАКОВ
     print("[POST-CLEAN] Запуск санитарной зачистки целевых папок контура...")
-    for target_folder in ALLOWED_POST_TYPES:
+    for target_folder in ['journal', 'media']:
         folder_path = os.path.join(root_dir, target_folder)
         if os.path.exists(folder_path):
             for file_name in os.listdir(folder_path):
@@ -66,11 +62,10 @@ def generate_posts_pages():
                 parent_projects[nav_key] = {
                     'project_file': nav_key,
                     'title': project_passport['title'].strip(),
-                    'slug': p_slug
+                    'slug': p_slug,
+                    'journal_urls': [],
+                    'media_urls': []
                 }
-                # Автоматически создаем пустые корзины для каждого типа из нашего списка вверху
-                for t_name in ALLOWED_POST_TYPES:
-                    parent_projects[nav_key][f"{t_name}_urls"] = []
 
     # ➡️ ШАГ 1: Сбор и фильтрация связанных постов строго по URL на основе связанных проектов
     for nav_key, nav_nodes in navigation_map.items():
@@ -92,19 +87,18 @@ def generate_posts_pages():
                         'date': str(post_passport.get('date', '0000-00-00'))
                     }
                     
-                    # УНИВЕРСАЛЬНЫЙ РАСПРЕДЕЛИТЕЛЬ: Сортирует посты по нашему единому списку
-                    p_type_clean = p_type.split('-')[0] if '-' in p_type else p_type
-                    
-                    if p_type_clean in ALLOWED_POST_TYPES and p_type != f"{p_type_clean}-close":
-                        parent_projects[related_page_path][f"{p_type_clean}_urls"].append(post_data)
+                    # УНИВЕРСАЛЬНЫЙ АВТОМАТ: В большую ленту кнопки 0 летит всё, кроме маркеров-запретов *-close
+                    if 'journal' in p_type and p_type != 'journal-close':
+                        parent_projects[related_page_path]['journal_urls'].append(post_data)
+                    elif 'media' in p_type and p_type != 'media-close':
+                        parent_projects[related_page_path]['media_urls'].append(post_data)
 
     # ➡️ ШАГ 2: Сортировка хронологии, штамповка вложенных страниц и сбор паспортов навигации
     append_nodes = {}
 
     for rel_path, proj in parent_projects.items():
-        # Генератор штампует папки и страницы строго по нашему единому списку типов контура
-        for loop_type in ALLOWED_POST_TYPES:
-            urls_list = proj.get(f"{loop_type}_urls", [])
+        for loop_type in ['journal', 'media']:
+            urls_list = proj['journal_urls'] if loop_type == 'journal' else proj['media_urls']
             
             if not urls_list:
                 continue

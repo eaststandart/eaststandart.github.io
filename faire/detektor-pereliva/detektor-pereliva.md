@@ -58,5 +58,5 @@ discus: "questions"
 [^4]: Иванов Б. Всего один транзистор (Юный техник, 1975, №1, с. 70-74).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-![[../../../../templates/bases/посты jekyll по проекту – github.base]]
+![[../../../../templates/bases/страницы постов проекта – github.base]]
 {% endcomment %}

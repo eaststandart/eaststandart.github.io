@@ -17,5 +17,5 @@ emoji: "🔥"
 {% include faire-grid.liquid %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-![[../../../../templates/bases/проекты раздела – github.base]]
+![[../../../templates/bases/страницы раздела – github.base]]
 {% endcomment %}

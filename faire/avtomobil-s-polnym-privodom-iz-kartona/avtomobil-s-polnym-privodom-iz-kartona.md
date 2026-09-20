@@ -44,5 +44,5 @@ discus: "questions"
 [^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-![[../../../../templates/bases/посты jekyll по проекту – github.base]]
+![[../../../../templates/bases/страницы постов проекта – github.base]]
 {% endcomment %}

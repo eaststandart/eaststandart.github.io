@@ -36,8 +36,10 @@ discus: "questions"
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
+🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
+
+[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
+
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2025-11-12-fonarik-svetodiodnyj-bumazhnyj|2025-11-12-fonarik-svetodiodnyj-bumazhnyj]]
-[[../../_posts/2025-11-13-fonarik-svetodiodnyj-bumazhnyj|2025-11-13-fonarik-svetodiodnyj-bumazhnyj]]
-[[../../_posts/2025-11-14-fonarik-svetodiodnyj-bumazhnyj|2025-11-14-fonarik-svetodiodnyj-bumazhnyj]]
+![[../../../../templates/bases/страницы постов проекта – github.base]]
 {% endcomment %}

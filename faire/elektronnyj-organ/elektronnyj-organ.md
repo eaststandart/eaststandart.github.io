@@ -38,14 +38,13 @@ discus: "questions"
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
+🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
+
+[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
 [^1]: Мацкевич В.В. Занимательная радиоэлектроника в пионерлагере / Рец.: В.Г. Борисов, В.Т. Поляков. — М.: ДОСААФ СССР, 1986. — 141. с.: ил. — ББК 32.884.19.
 [^2]: Отряшенков Ю.М. Азбука теле-автоматики. — М.: Детская литература, 1967. — 258 с.: ил. — (Библиотечка пионера «Знай и умей»).
 [^3]: Борисов В.Г. Энциклопедия юного радиолюбителя-конструктора / В. Г. Борисов. — 9. изд., перераб. и доп. — М.: Солон-Р, 2001. — 526 с.: ил. — ISBN 5-93455-100-0, ББК 32.84.
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-02-10-elektronnyj-organ|2026-02-10-elektronnyj-organ]]
-[[../../_posts/2026-02-11-elektronnyj-organ|2026-02-11-elektronnyj-organ]]
-[[../../_posts/2026-02-12-elektronnyj-organ|2026-02-12-elektronnyj-organ]]
-[[../../_posts/2026-02-13-elektronnyj-organ|2026-02-13-elektronnyj-organ]]
-[[../../_posts/2026-02-14-elektronnyj-organ|2026-02-14-elektronnyj-organ]]
+![[../../../../templates/bases/страницы постов проекта – github.base]]
 {% endcomment %}

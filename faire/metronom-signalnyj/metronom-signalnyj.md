@@ -41,13 +41,12 @@ discus: "questions"
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
+🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
+
+[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
 [^1]:  [Петер Фогель](https://fr.wikipedia.org/wiki/Peter_Vogel_(artiste)) — немецкий физик и художник-кибернетик. Известен своей междисциплинарной художественной практикой, включающей скульптуру, электронику и акустику.
 [^2]: Forrest M. Mims III Getting Started in Electronics. — Radio Shack, 1994. — 128 p. — (Cat. No. 276-5003).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-05-11-metronom-signalnyj|2026-05-11-metronom-signalnyj]]
-[[../../_posts/2026-05-12-metronom-signalnyj|2026-05-12-metronom-signalnyj]]
-[[../../_posts/2026-05-13-metronom-signalnyj|2026-05-13-metronom-signalnyj]]
-[[../../_posts/2026-05-14-metronom-signalnyj|2026-05-14-metronom-signalnyj]]
-[[../../_posts/2026-05-15-metronom-signalnyj|2026-05-15-metronom-signalnyj]]
+![[../../../../templates/bases/страницы постов проекта – github.base]]
 {% endcomment %}

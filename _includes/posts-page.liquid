@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Модуль автоматического вывода локальных лент постов на страницах проектов.
-@purpose Считает количество публикаций заданного типа. Если посты есть, выводит переданный заголовок
+@purpose Считает количество публикаций заданного posttype. Если они есть, выводит переданный заголовок header-h3
          и формирует список. Если постов нет — полностью скрывает блок вместе с заголовком.
 @author TechLab
 {%- endcomment -%}
@@ -12,7 +12,7 @@
 {% comment %} Считаем количество живых постов, реально подходящих под заданный тип контура {% endcomment %}
 {% assign posts_count = 0 %}
 {%- for post in site.categories[real_project_slug] -%}
-  {%- if post.categories contains include.type -%}
+  {%- if post.categories contains include.posttype -%}
     {% assign posts_count = posts_count | plus: 1 %}
   {%- endif -%}
 {%- endfor -%}
@@ -20,22 +20,22 @@
 {% comment %} БАРЬЕР ПУСТОТЫ: запускаем рендер только если в данной категории есть хотя бы один пост {% endcomment %}
 {% if posts_count > 0 %}
 
-  {% comment %} ДИНАМИЧЕСКИЙ ВЫВОД ЗАГЛОВОКА: рендерим только если параметр title был передан в инклуд {% endcomment %}
-  {% if include.title and include.title != "" %}<h3>{{ include.title }}</h3>{% endif %}
+  {% comment %} ЖЕЛЕЗНЫЙ СТРОЧНЫЙ ВЫВОД: рендерим чистый HTML-заголовок без переносов строк и лишних ID {% endcomment %}
+  {% if include.header-h3 and include.header-h3 != "" %}<h3>{{ include.header-h3 }}</h3>{% endif %}
 
   {% comment %} Сборка чистых промышленных ID без тестового мусора -test- {% endcomment %}
-  {% assign loop_id = include.type | append: "-" | append: real_project_slug %}
+  {% assign loop_id = include.posttype | append: "-" | append: real_project_slug %}
   {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
   {% comment %} Вычисляем глубокий вложенный адрес архивной страницы под кнопку «0» {% endcomment %}
-  {% assign archive_url = "/" | append: include.type | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
+  {% assign archive_url = "/" | append: include.posttype | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
 
   <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
   <ul id="{{ loop_id }}" class="project-list posts-page-list">
     {%- for post in site.categories[real_project_slug] -%}
-      {%- if post.categories contains include.type -%}
+      {%- if post.categories contains include.posttype -%}
         {%- assign is_post = true -%}
-        {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+        {%- if include.posttype == "media" -%}{%- assign is_post = false -%}{%- endif -%}
         <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
           <div>
             <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
@@ -64,7 +64,7 @@
           "{{ ctrl_id }}", 
           "{{ include.per_page }}", 
           "{{ archive_url }}", 
-          "{{ include.type }}", 
+          "{{ include.posttype }}", 
           "{{ section_slug | append: '/' | append: real_project_slug }}"
         );
       }

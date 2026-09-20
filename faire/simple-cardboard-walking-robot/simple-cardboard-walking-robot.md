@@ -33,17 +33,9 @@ date: 2025-10-25
 1\. 📐[Сборочный чертеж, PDF](simple-cardboard-walking-robot.pdf)\
 2\. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
 
-### Журнал проекта
-<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
-{% include posts-page.liquid type="journal" per_page="" %}
-
-### Вопросы проекта
-<!-- *Назначение: вопросы по текущему (или выполненным  участниками) проекту, а также его этапам.* -->
-{% include posts-page.liquid type="question" %}
-
-### Галерея работ
-<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
-{% include posts-page.liquid type="media" %}
+{% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
+{% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
+{% include posts-page.liquid posttype="media" header-h3="Галерея работ" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

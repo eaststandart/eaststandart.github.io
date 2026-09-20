@@ -29,17 +29,9 @@ date: 2025-11-20
 2\. Провести соревнования: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).\
 3\. Выполнить научный проект: изучить движение роботов [Science Project: Bristlebot Motion Tracking](https://youtu.be/NmMflaqzJXQ).
 
-### Журнал проекта
-<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
-{% include posts-page.liquid type="journal" per_page="" %}
-
-### Вопросы проекта
-<!-- *Назначение: вопросы по текущему (или выполненным  участниками) проекту, а также его этапам.* -->
-{% include posts-page.liquid type="question" %}
-
-### Галерея работ
-<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
-{% include posts-page.liquid type="media" %}
+{% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
+{% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
+{% include posts-page.liquid posttype="media" header-h3="Галерея работ" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

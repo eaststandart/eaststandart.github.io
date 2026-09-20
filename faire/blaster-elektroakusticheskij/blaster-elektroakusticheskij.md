@@ -33,17 +33,9 @@ date: 2026-01-24
 3\. 🔌[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
 4\. 🔌[Схема электрическая принципиальная, sPlan](blaster-elektroakusticheskij-esd.spl8)
 
-### Журнал проекта
-<!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
-{% include posts-page.liquid type="journal" per_page="" %}
-
-### Вопросы проекта
-<!-- *Назначение: вопросы по текущему (или выполненным  участниками) проекту, а также его этапам.* -->
-{% include posts-page.liquid type="question" %}
-
-### Галерея работ
-<!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
-{% include posts-page.liquid type="media" %}
+{% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
+{% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
+{% include posts-page.liquid posttype="media" header-h3="Галерея работ" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

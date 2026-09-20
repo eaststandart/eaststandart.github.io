@@ -7,7 +7,6 @@ per_page: 10
 folder: "question"
 pinned_url: ""
 emoji: "❓"
-emoji_display: "N"
 ---
 
 {% comment %} 

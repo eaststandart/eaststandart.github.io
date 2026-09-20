@@ -7,7 +7,6 @@ per_page: 10
 folder: "media"
 pinned_url: ""
 emoji: "👀"
-emoji_display: "N"
 ---
 
 {% comment %} 

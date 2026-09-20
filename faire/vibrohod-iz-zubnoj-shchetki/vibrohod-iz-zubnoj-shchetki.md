@@ -6,7 +6,6 @@ title: Виброход из зубной щетки
 tags: [электроникаисхемотехника, конструированиеимоделирование, проектучебный, 1класс, проект, виброход, виброходиззубнойщетки]
 sources: "[Build a Bristlebot, a Tiny Toothbrush Robot](https://www.sciencebuddies.org/stem-activities/toothbrush-bristlebot), [Building Bristlebots: Basic Toothbrush Robotics](https://www.sciencebuddies.org/blog/building-bristlebots-basic-toothbrush-robotics)"
 date: 2025-11-20
-discus: "questions"
 ---
 
 ### Описание проекта
@@ -34,13 +33,13 @@ discus: "questions"
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
 {% include posts-page.liquid type="journal" per_page="" %}
 
+### Вопросы по проекту
+<!-- *Назначение: вопросы по текущему (или выполненным  участниками) проекту, а также его этапам.* -->
+{% include posts-page.liquid type="question" %}
+
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
-
-🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
-
-[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

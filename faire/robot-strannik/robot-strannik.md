@@ -6,7 +6,6 @@ title: Робот странник
 tags: [конструированиеимоделирование, проектучебный, 3класс, проект, роботстранник]
 sources: "[How To Make An Adorable Walking Robot with Big Shoes](https://youtu.be/0SofESg-mLc)"
 date: 2025-11-25
-discus: "questions"
 ---
 
 ### Описание проекта
@@ -31,13 +30,13 @@ discus: "questions"
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
 {% include posts-page.liquid type="journal" per_page="" %}
 
+### Вопросы по проекту
+<!-- *Назначение: вопросы по текущему (или выполненным  участниками) проекту, а также его этапам.* -->
+{% include posts-page.liquid type="question" %}
+
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
-
-🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
-
-[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

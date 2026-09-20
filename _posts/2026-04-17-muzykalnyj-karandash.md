@@ -21,4 +21,4 @@ discus: "journal"
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-20.webp)
 ![](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-21.webp)
 
-🗣️ Задать вопрос по теме данной статьи можно в комментариях ниже 👇
+🗣️ Обсудить проект по теме данной статьи можно в комментариях ниже 👇

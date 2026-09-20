@@ -1,12 +1,12 @@
 ---
 layout: news
-title: Посты
-description: Лента постов без типа (дополнительные и справочные посты).
-permalink: /post/
+title: Журнал проектов
+description: Лента постов журнальных записей по проектам.
+permalink: /journal/
 per_page: 10
-folder: "post"
+folder: "journal"
 pinned_url: ""
-emoji: "📝"
+emoji: "✍🏻"
 emoji_display: "N"
 ---
 

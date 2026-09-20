@@ -1,12 +1,13 @@
 ---
 layout: news
-title: Журнал проектов
-description: Лента постов журнальных записей по проектам.
-permalink: /journal/
+title: Справочник
+description: Лента постов справочных материалов.
+permalink: /reference/
 per_page: 10
-folder: "journal"
+folder: "reference"
 pinned_url: ""
-emoji: "✍🏻"
+emoji: "📝"
+emoji_display: "N"
 ---
 
 {% comment %} 

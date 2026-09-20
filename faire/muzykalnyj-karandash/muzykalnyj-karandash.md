@@ -42,6 +42,8 @@ keywords: [электроника и схемотехника, схема эле
 
 ![720х1018](github/eaststandart.github.io/faire/muzykalnyj-karandash/muzykalnyj-karandash-03.webp)
 
+<!--
+
 ### Журнал проекта
 <!-- *Назначение: этапы создания, отладка и усовершенствование.* -->
 {% include posts-page.liquid type="journal" per_page="" %}
@@ -53,6 +55,12 @@ keywords: [электроника и схемотехника, схема эле
 ### Галерея работ
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
+
+-->
+
+{% include posts-page.liquid type="journal" title="Журнал проекта" per_page="2" %}
+{% include posts-page.liquid type="question" title="Вопросы проекта" per_page="2" %}
+{% include posts-page.liquid type="media" title="Галерея работ" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
 ![[../../../../templates/bases/страницы постов проекта – github.base]]

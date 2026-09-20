@@ -1,6 +1,7 @@
 {%- comment -%}
-@about Локальные ленты постов на страницах проектов.
-@purpose Вывод списков журнал, медиа внутри карточек конкретных проектов на основе нативной логики категорий.
+@about Модуль автоматического вывода локальных лент постов на страницах проектов.
+@purpose Считает количество публикаций заданного типа. Если посты есть, выводит переданный заголовок
+         и формирует список. Если постов нет — полностью скрывает блок вместе с заголовком.
 @author TechLab
 {%- endcomment -%}
 
@@ -8,54 +9,68 @@
 {% assign section_slug = url_parts[1] %}
 {% assign real_project_slug = url_parts[2] %}
 
-{% comment %} Обманываем жесткий JS: передаем в параметр слага сразу комбинацию раздел/проект {% endcomment %}
-{% assign project_slug_last = section_slug | append: "/" | append: real_project_slug %}
+{% comment %} Считаем количество живых постов, реально подходящих под заданный тип контура {% endcomment %}
+{% assign posts_count = 0 %}
+{%- for post in site.categories[real_project_slug] -%}
+  {%- if post.categories contains include.type -%}
+    {% assign posts_count = posts_count | plus: 1 %}
+  {%- endif -%}
+{%- endfor -%}
 
-{% assign loop_id = include.type | append: "-test-" | append: real_project_slug %}
-{% assign ctrl_id = "ctrl-" | append: loop_id %}
+{% comment %} БАРЬЕР ПУСТОТЫ: запускаем рендер только если в данной категории есть хотя бы один пост {% endcomment %}
+{% if posts_count > 0 %}
 
-{% comment %} «Ёлочки» (») универсально ведут на корень всего журнала или медиа {% endcomment %}
-{% assign archive_url = "/" | append: include.type | append: "/" %}
+  {% comment %} ДИНАМИЧЕСКИЙ ВЫВОД ЗАГЛОВОКА: рендерим только если параметр title был передан в инклуд {% endcomment %}
+  {% if include.title and include.title != "" %}
+    <h3 class="posts-page-section-title">{{ include.title }}</h3>
+  {% endif %}
 
-<!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
+  {% comment %} Сборка чистых промышленных ID без тестового мусора -test- {% endcomment %}
+  {% assign loop_id = include.type | append: "-" | append: real_project_slug %}
+  {% assign ctrl_id = "ctrl-" | append: loop_id %}
 
-<!-- Список строк публикаций с новыми говорящими двойными именами классов -->
-<ul id="{{ loop_id }}" class="project-list posts-page-list">
-  {%- for post in site.categories[real_project_slug] -%}
-    {%- if post.categories contains include.type -%}
-      {%- assign is_post = true -%}
-      {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
-      <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
-        <div>
-          <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-          <span>
-            <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
-              {{ post.title }}
-            </a>
-          </span>
-        </div>
-      </li>
-    {%- endif -%}
-  {%- endfor -%}
-</ul>
+  {% comment %} Вычисляем глубокий вложенный адрес архивной страницы под кнопку «0» {% endcomment %}
+  {% assign archive_url = "/" | append: include.type | append: "/" | append: section_slug | append: "/" | append: real_project_slug | append: "/" %}
 
-<!-- Изолированный блок кнопок управления локальной пагинацией -->
-<div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
+  <!-- 1. HTML-РАЗМЕТКА СПИСКА СТРОК И КОНТЕЙНЕРА ПАГИНАЦИИ -->
+  <ul id="{{ loop_id }}" class="project-list posts-page-list">
+    {%- for post in site.categories[real_project_slug] -%}
+      {%- if post.categories contains include.type -%}
+        {%- assign is_post = true -%}
+        {%- if include.type == "media" -%}{%- assign is_post = false -%}{%- endif -%}
+        <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
+          <div>
+            <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>
+              <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
+                {{ post.title }}
+              </a>
+            </span>
+          </div>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
 
-<!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
+  <!-- Изолированный блок кнопок управления локальной пагинацией -->
+  <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
-<!-- Подключаем наш внешний изолированный файл скрипта локальной пагинации -->
-<script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
+  <!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
+  <script src="{{ '/assets/js/posts-page-nav.js' | relative_url }}"></script>
 
-<script>
-  (function() {
-    runPostsPageNav(
-      "{{ loop_id }}", 
-      "{{ ctrl_id }}", 
-      "{{ include.per_page }}", 
-      "{{ archive_url }}", 
-      "{{ include.type }}", 
-      "{{ project_slug_last }}"
-    );
-  })();
-</script>
+  <script>
+    (function() {
+      if (typeof runPostsPageNav === 'function') {
+        runPostsPageNav(
+          "{{ loop_id }}", 
+          "{{ ctrl_id }}", 
+          "{{ include.per_page }}", 
+          "{{ archive_url }}", 
+          "{{ include.type }}", 
+          "{{ section_slug | append: '/' | append: real_project_slug }}"
+        );
+      }
+    })();
+  </script>
+
+{% endif %}

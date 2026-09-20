@@ -9,7 +9,7 @@ date: 2026-04-13
 direction: электронное конструирование
 entity: проекты
 level: 4
-keywords: [электроникаисхемотехника, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
+keywords: [электроника и схемотехника, схемаэлектрическаяпринципиальная, электрическоеискусство, electronicsart]
 discus: "questions"
 ---
 
@@ -52,11 +52,5 @@ discus: "questions"
 {% include posts-page.liquid type="media" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-04-14-muzykalnyj-karandash|2026-04-14-muzykalnyj-karandash]]
-[[../../_posts/2026-04-15-muzykalnyj-karandash|2026-04-15-muzykalnyj-karandash]]
-[[../../_posts/2026-04-16-muzykalnyj-karandash|2026-04-16-muzykalnyj-karandash]]
-[[../../_posts/2026-04-17-muzykalnyj-karandash|2026-04-17-muzykalnyj-karandash]]
-[[../../_posts/2026-04-18-muzykalnyj-karandash|2026-04-18-muzykalnyj-karandash]]
-[[../../_posts/2026-04-19-muzykalnyj-karandash|2026-04-19-muzykalnyj-karandash]]
-[[../../_posts/2026-04-20-muzykalnyj-karandash|2026-04-20-muzykalnyj-karandash]]
+![[../../../../templates/bases/посты jekyll по проекту – github.base]]
 {% endcomment %}

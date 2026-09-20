@@ -42,8 +42,10 @@ discus: "questions"
 <!-- *Назначение: демонстрация (фото, видео) выполненного проекта от участников.* -->
 {% include posts-page.liquid type="media" %}
 
+🗣️ Задать вопрос по проекту можно в комментариях ниже [^comment-rules]. Спроси – не стесняйся … 👇
+
+[^comment-rules]: Прежде чем комментировать обязательно ознакомься с: [📜 Правилами нашего сообщества!](https://github.com/eaststandart/eaststandart.github.io/discussions/30) и [🗣️ Начинай обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29).
+
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту
-[[../../_posts/2026-01-25-blaster-elektroakusticheskij|2026-01-25-blaster-elektroakusticheskij]]
-[[../../_posts/2026-01-26-blaster-elektroakusticheskij|2026-01-26-blaster-elektroakusticheskij]]
-[[../../_posts/2026-01-27-blaster-elektroakusticheskij|2026-01-27-blaster-elektroakusticheskij]]
+![[../../../../templates/bases/посты jekyll по проекту – github.base]]
 {% endcomment %}

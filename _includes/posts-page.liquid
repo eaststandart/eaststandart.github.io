@@ -1,7 +1,7 @@
 {%- comment -%}
 @about Модуль автоматического вывода локальных лент постов на страницах проектов.
-@purpose Рендерит списки постов, возвращает канонические елочки со ссылками на корни разделов
-         и блокирует кнопку 0, если все посты помечены как закрытые.
+@purpose Выводит список строк, рассчитывает количество открытых постов, передает в JS
+         адрес корня для кнопок-ёлочек и маркер блокировки кнопки 0.
 @author TechLab
 {%- endcomment -%}
 
@@ -16,7 +16,7 @@
 {%- for post in site.categories[real_project_slug] -%}
   {%- if post.categories contains include.posttype -%}
     {% assign posts_count = posts_count | plus: 1 %}
-    {%- assign p_type_str = post.posttype |相对_url | downcase | strip -%}
+    {%- assign p_type_str = post.posttype | downcase | strip -%}
     {%- unless p_type_str contains "-close" -%}
       {% assign open_posts_count = open_posts_count | plus: 1 %}
     {%- endunless -%}
@@ -51,7 +51,7 @@
         {%- if include.posttype == "media" -%}{%- assign is_post = false -%}{%- endif -%}
         <li class="local-post-item posts-page-item" data-date="{{ post.date | date: '%Y-%m-%d' }}" data-is-post="{{ is_post }}" data-emoji="">
           <div>
-            <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;<a href="{{ root_archive_url | relative_url }}" class="archive-root-link">»»</a>&nbsp;</span>
+            <span>{{ post.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
             <span>
               <a href="{{ post.url | relative_url }}" class="item-link posts-page-link">
                 {{ post.title }}
@@ -63,7 +63,7 @@
     {%- endfor -%}
   </ul>
 
-  <!-- Изолированный блок кнопок управления локальной пагинацией -->
+  <!-- Контейнер панели управления, куда JS будет встраивать кнопки <<, <, 0, >, >> -->
   <div id="{{ ctrl_id }}" class="posts-page-ctrl" style=""></div>
 
   <!-- 2. JAVASCRIPT-ЛОГИКА КЛИЕНТСКОЙ ПАГИНАЦИИ ДЛЯ ПРОЕКТОВ (ВНЕШНИЙ СКРИПТ) -->
@@ -78,7 +78,7 @@
           "{{ include.per_page }}", 
           "{{ archive_url }}", 
           "{{ include.posttype }}", 
-          "{{ section_slug | append: '/' | append: real_project_slug }}"
+          "{{ root_archive_url }}"  // 🌟 ПЕРЕДАЕМ КОРЕНЬ РАЗДЕЛА ДЛЯ КНОПОК-ЁЛОЧЕК ШЕСТЫМ ПАРАМЕТРОМ
         );
       }
     })();

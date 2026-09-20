@@ -22,7 +22,7 @@
 
   {% comment %} ДИНАМИЧЕСКИЙ ВЫВОД ЗАГЛОВОКА: рендерим только если параметр title был передан в инклуд {% endcomment %}
   {% if include.title and include.title != "" %}
-    <h3 class="posts-page-section-title">{{ include.title }}</h3>
+    ### {{ include.title }}
   {% endif %}
 
   {% comment %} Сборка чистых промышленных ID без тестового мусора -test- {% endcomment %}

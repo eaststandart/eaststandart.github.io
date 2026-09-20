@@ -40,6 +40,7 @@ date: 2026-01-28
 3\. 🔌[Схема электрическая принципиальная, PDF](detektor-pereliva-esd.pdf)\
 4\. 🔌[Схема электрическая принципиальная, sPlan](detektor-pereliva-esd.spl8)
 
+{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

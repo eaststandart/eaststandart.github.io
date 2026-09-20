@@ -32,6 +32,7 @@ date: 2025-12-21
 3\. 📐Сборочный чертеж устройства такой же как и в проекте «[Новогодняя ёлочка](https://t.me/RadiotekhnikaClub/2/931)»\
 4\. 🔌Схема электрическая принципиальная такая же как и в проекте «[Новогодняя ёлочка](https://t.me/RadiotekhnikaClub/2/931)»
 
+{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

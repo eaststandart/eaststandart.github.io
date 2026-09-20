@@ -28,6 +28,7 @@ date: 2026-02-21
 2\. Дополнение робота датчиками для автоматического обхода препятствий движением назад.\
 3\. Разработка электронной автоматики поиска световых маяков для перехода между базовыми станциями в условиях темноты планеты.
 
+{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

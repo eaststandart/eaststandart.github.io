@@ -29,6 +29,7 @@ date: 2026-02-09
 1\. 🔌[Схема электрическая принципиальная, PDF](blaster-elektroakusticheskij-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, sPlan](../../../../files/attachments/бластер%20электроакустический%20–%20проект%20учебный.spl8)
 
+{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

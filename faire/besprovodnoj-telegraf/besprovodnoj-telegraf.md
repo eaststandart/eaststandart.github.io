@@ -21,6 +21,7 @@ date: 2025-11-01
 ### Развитие проекта
 Можно применить как модуль управления или связи для установки на [шагающего робота](/faire/simple-cardboard-walking-robot/). Это позволит превратить его в разведывательный зонд, способный передавать отчеты о маршруте и автоматически отправлять сигнал SOS при поломке или столкновении с непреодолимым препятствием.
 
+{%- comment %}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{% endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

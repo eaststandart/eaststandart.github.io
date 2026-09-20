@@ -59,7 +59,9 @@ keywords: [электроника и схемотехника, схема эле
 -->
 
 {% include posts-page.liquid type="journal" title="Журнал проекта" per_page="2" %}
+
 {% include posts-page.liquid type="question" title="Вопросы проекта" per_page="2" %}
+
 {% include posts-page.liquid type="media" title="Галерея работ" %}
 
 {% comment %}  Ссылки на статьи в /\_posts по этому проекту

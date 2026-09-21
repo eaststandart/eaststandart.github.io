@@ -1,24 +1,20 @@
 /**
- * @about Модуль пагинации (БАЗОВЫЙ ЭКСПЕРИМЕНТАЛЬНЫЙ КОНТУР).
- * @purpose Гарантированно выводит новости порциями по 10 штук с бэкенда Питона,
- *          полностью исключая сложные условия переключения дизайнов.
+ * @about Модуль пагинации (ЖЕЛЕЗОБЕТОННЫЙ КОНТУР).
+ * @purpose Физически выводит строго по 10 постов с сервера из базы feed.yml,
+ *          принимая точное имя корзины (basketName) напрямую из вызова Liquid.
  * @author TechLab
- * @version 7.0.0-experimental-pure
+ * @version 7.0.0-monolith-fixed
  */
 
-function runPagination(listId, controlsId, itemsPerPage) {
+function runPagination(listId, controlsId, itemsPerPage, basketName) {
   var list = document.getElementById(listId);
   if (!list) return;
 
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Автоматически определяем имя текущей ленты по интернет-адресу страницы
-  var pathClean = window.location.pathname.replace(/^\/|\/$/g, '');
-  var currentSection = pathClean.split('/').pop() || 'news';
-  if (window.location.pathname === '/' || currentSection === '') {
-    currentSection = 'news';
-  }
+  // 🌟 ЖЕЛЕЗНЫЙ АВТОМАТ: Берем имя корзины строго из переданного параметра
+  var currentSection = (basketName || 'news').trim().toLowerCase();
 
   var currentPage = 1;
   var feedData = null;
@@ -28,43 +24,56 @@ function runPagination(listId, controlsId, itemsPerPage) {
     feedData = window.site_feed_data[currentSection];
     renderPage(currentPage);
   } else {
-    console.error("Ожидание проброса глобального объекта site_feed_data...");
+    console.error("Ожидание проброса глобального объекта site_feed_data для секции: " + currentSection);
     return;
   }
 
-  // 1. МАКСИМАЛЬНО ПРОСТОЙ СКВОЗНОЙ ВЫВОД СТРОК ОБНОВЛЕНИЙ
+  // 1. СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
   function renderPage(page) {
     list.innerHTML = '';
     var pageItems = feedData.pages[page] || [];
+    var isHome = (controlsId === "home-news-pagination");
 
     pageItems.forEach(function(item) {
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       
-      // ИСПРАВЛЕНО: Безупречная склейка даты формата DD.MM.YYYY из строки Питона
+      // Переводим дату из YYYY-MM-DD в канонический формат DD.MM.YYYY
       var dateParts = item.date.split('-');
-      var dateStr = (dateParts.length === 3) ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
+      var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
 
-      // Базовые универсальные классы строки контура
-      li.className = 'news-item' + pinnedClass;
-      li.setAttribute('data-date', item.date);
-      li.setAttribute('data-is-post', item.is_post);
-      
-      var emojiStr = item.emoji ? ' ' + item.emoji : '';
-      
-      // Чистый сквозной HTML без инлайн-стилей и тяжелых конструкций
-      li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                     '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
-                     '</span></div>';
-      
-      li.style.setProperty('display', 'flex', 'important');
+      if (isHome) {
+        // ВАРИАНТ А: Полный клон вёрстки для Главной страницы (Карточка "Что нового?")
+        li.className = 'news-item news-item-compact' + pinnedClass;
+        li.setAttribute('data-date', item.date);
+        li.setAttribute('data-is-post', item.is_post);
+        
+        var emojiStr = item.emoji ? ' ' + item.emoji : '';
+        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
+                       '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
+                       '</span></div>';
+        li.style.setProperty('display', 'flex', 'important');
+      } else {
+        // ВАРИАНТ Б: Полный клон вёрстки для Журнала и частных лент сайтов
+        li.className = 'news-item' + pinnedClass;
+        li.setAttribute('data-date', item.date);
+        li.setAttribute('data-is-post', item.is_post);
+        li.style.cssText = 'margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;';
+        
+        var personalEmojiStr = item.personal_emoji ? ' ' + item.personal_emoji : '';
+        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
+                       '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +
+                       '</span></div>';
+        li.style.setProperty('display', 'block', 'important');
+      }
+
       list.appendChild(li);
     });
 
     renderControls();
   }
 
-  // 2. БАЗОВЫЕ КНОПКИ УПРАВЛЕНИЯ ЭКСПЕРИМЕНТОМ
+  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ФИКСАЦИЕЙ ЭКРАНА СТРОГО ПО КОНТЕКСТУ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -78,6 +87,18 @@ function runPagination(listId, controlsId, itemsPerPage) {
       btn.addEventListener('click', function() {
         currentPage = targetPage;
         renderPage(currentPage);
+        
+        // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
+        // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
+        var isHome = (controlsId === "home-news-pagination");
+        if (!isHome) {
+          var feedContainer = document.querySelector('.news-feed');
+          if (feedContainer) {
+            feedContainer.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
       });
     }
     return btn;
@@ -94,7 +115,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
     return span;
   }
 
-  // 3. СЛЕПАЯ ГЕНЕРАЦИЯ КНОПОК НА ОСНОВЕ ДАННЫХ ПИТОНА
+  // 3. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ДАННЫХ ПИТОНА
   function renderControls() {
     controls.innerHTML = '';
     var totalPages = feedData.total_pages || 1;

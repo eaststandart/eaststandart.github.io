@@ -36,9 +36,12 @@ function runPagination(listId, controlsId, itemsPerPage) {
   function renderPage(page) {
     list.innerHTML = '';
     var pageItems = feedData.pages[page] || [];
-    var isHome = (currentSection === 'news' && window.location.pathname === '/');
+    
+    # 🌟 НАДЁЖНЫЙ МАРКЕР ГЛАВНОЙ: Проверяем физическое имя контейнера кнопок
+    var isHome = (controlsId === "home-news-pagination");
 
     pageItems.forEach(function(item) {
+
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       

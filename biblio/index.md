@@ -4,6 +4,7 @@ description: "Рекомендуемые книги и учебники, про�
 title: Список литературы
 navtitle: "Литература"
 custom_css: ["/assets/css/biblio.css"]
+emoji: "📚"
 ---
 
 <div class="biblio-list">

@@ -55,7 +55,15 @@ function runPagination(listId, controlsId, itemsPerPage, showEmoji) {
     regularItems.slice(start, end).forEach(function(el) {
       var emoji = el.getAttribute('data-emoji');
       var link = el.querySelector('.item-link');
-      if (showEmoji === 'Y' && link && emoji && !link.innerHTML.includes(emoji)) {
+      
+      // УМНЫЙ ФИЛЬТР ШУМА: прячем дефолтные значки разделов внутри этих же разделов
+      var path = window.location.pathname;
+      var isDefaultSectionEmoji = false;
+      if (path.includes('/journal/') && emoji === '✍🏻') isDefaultSectionEmoji = true;
+      if (path.includes('/media/') && emoji === '👀') isDefaultSectionEmoji = true;
+      if (path.includes('/question/') && emoji === '❓') isDefaultSectionEmoji = true;
+
+      if (showEmoji === 'Y' && link && emoji && !isDefaultSectionEmoji && !link.innerHTML.includes(emoji)) {
         link.innerHTML += ' ' + emoji;
       }
       el.style.setProperty('display', isArchive ? 'block' : 'flex', 'important'); 

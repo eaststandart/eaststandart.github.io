@@ -4,9 +4,10 @@
 @module feed
 @about Изолированный монолитный сборщик единой ленты обновлений из Источника Правды.
 @purpose Автоматически вычисляет типы, проекты и наследует эмодзи на основе URL карты навигации,
-         выгружая универсальный файл данных _data/feed.yml для нужд Jekyll и Liquid.
+         квантует массивы по страницам со сквозными закрепами на основе свойства perpage
+         и выгружает раздельные постраничные логи под каждую ленту сайта.
 @author TechLab
-@version 2.1.0-safe-baskets
+@version 3.0.0-page-quantum
 """
 
 import os
@@ -94,7 +95,7 @@ def build_universal_feed():
         if not target_section:
             target_section = passport.get('relatedcollection', '')
 
-        # Нативно наследуем эмодзи из кэша разделов по вычисленному родителю
+        # Нативно наследуем эмодзи из кэша разделов по вычисленным родителям
         calculated_emoji = passport.get('emoji', '')
         if not calculated_emoji and target_section:
             calculated_emoji = section_emojis.get(target_section, "")
@@ -128,24 +129,31 @@ def build_universal_feed():
         else:
             regular_posts.append(node)
 
-    # 🟢 ШАГ 3: УНИВЕРСАЛЬНАЯ СОРТИРОВКА И КВАНТОВАНИЕ ПО СТРАНИЦАМ В FEED.YML
+    # 🟢 ШАГ 3: СКВОЗНАЯ МУЛЬТИ-СОРТИРОВКА И ДИНАМИЧЕСКОЕ КВАНТОВАНИЕ ПО СТРАНИЦАМ
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
     final_feed = pinned_posts + regular_posts
 
-    # Динамически инициализируем корзины и дефолтные значки по пермалинкам ключей feed-
+    # Динамически инициализируем корзины, значки и лимиты страниц по пермалинкам ключей feed-
     baskets = {'news': []}
     feed_section_emojis = {}
+    feed_section_limits = {'news': 10}  # По умолчанию для Главной лимит равен 10
 
     for key, items in nav_data.items():
         if key.startswith('feed-') and isinstance(items, list) and len(items) > 0:
-            sect_card = items[0]
+            sect_card = items[0] if isinstance(items, list) and len(items) > 0 else items
             if isinstance(sect_card, dict) and sect_card.get('url'):
                 b_name = sect_card['url'].strip('/')
                 if b_name:
                     baskets[b_name] = []
                     if sect_card.get('emoji'):
                         feed_section_emojis[b_name] = sect_card['emoji']
+                    # Считываем свойство perpage напрямую из Source of Truth карты навигации
+                    if sect_card.get('perpage'):
+                        try:
+                            feed_section_limits[b_name] = int(sect_card['perpage'])
+                        except ValueError:
+                            feed_section_limits[b_name] = 10
 
     # Наполняем временные плоские списки из готового массива final_feed
     for f_item in final_feed:
@@ -189,47 +197,47 @@ def build_universal_feed():
             }
             baskets[c_posttype].append(node_own)
 
-    # ПЕРЕХОДИМ К КВАНТОВАНИЮ МАССИВОВ И ФОРМИРОВАНИЮ СТРУКТУРИРОВАННЫХ ЛОГОВ
+    # НАЧИНАЕМ СКВОЗНОЕ КВАНТОВАНИЕ МАССИВОВ С ДУБЛИРОВАНИЕМ ЗАКРЕПОВ НА ВСЕ СТРАНИЦЫ
     final_feed_data = {}
     os.makedirs(log_dir_path, exist_ok=True)
-    
-    # Константа лимита постов на одну страницу
-    ITEMS_PER_PAGE = 10
 
     for b_name, b_items in baskets.items():
-        # 1. Первичная сортировка всей кучки: закрепы текущей ленты всегда наверху, ниже — хронология
+        # Сортируем кучку: закрепы текущей ленты наверх, обычные — по датам вниз
         sorted_pool = sorted(b_items, key=lambda x: (1 if x['pinned'] else 0, x['date']), reverse=True)
         
-        # 2. Логика нарезки закрепов строго 1-в-1 как старая
-        # Вычленяем закрепы и обычные посты в изолированные очереди
+        # Вычленяем закрепы и обычную хронику в изолированные очереди
         pinned_queue = [x for x in sorted_pool if x['pinned']]
         regular_queue = [x for x in sorted_pool if not x['pinned']]
         
-        # Динамический лимит для первой страницы: если есть закрепы, обычных выводим меньше
-        first_page_limit = ITEMS_PER_PAGE - len(pinned_queue)
-        if first_page_limit < 1: 
-            first_page_limit = 1
-            
-        # Нарезаем регулярную очередь на порции
+        # Забираем динамический лимит perpage из карты навигации
+        ITEMS_PER_PAGE = feed_section_limits.get(b_name, 10)
+        
+        # Рассчитываем, сколько обычных постов поместится на страницу под закрепами
+        regular_step = ITEMS_PER_PAGE - len(pinned_queue)
+        if regular_step < 1:
+            regular_step = 1  # Защита от переполнения закрепами
+
         pages_dict = {}
         total_items = len(sorted_pool)
         
         if total_items > 0:
-            # СТРАНИЦА 1: Всегда включает закрепы текущей ленты + первую порцию обычных постов
-            pages_dict[1] = pinned_queue + regular_queue[:first_page_limit]
-            
-            # ПОСЛЕДУЮЩИЕ СТРАНИЦЫ: Только обычные посты без дублирования закрепов
-            remaining_regular = regular_queue[first_page_limit:]
-            page_num = 2
-            for i in range(0, len(remaining_regular), ITEMS_PER_PAGE):
-                pages_dict[page_num] = remaining_regular[i:i + ITEMS_PER_PAGE]
-                page_num += 1
+            page_num = 1
+            # Если обычных постов нет, но есть закрепы — выводим одну страницу закрепов
+            if not regular_queue and pinned_queue:
+                pages_dict[page_num] = pinned_queue
+            else:
+                # Нарезаем обычные посты шагами regular_step и в начало каждой страницы дописываем закрепы!
+                for i in range(0, len(regular_queue), regular_step):
+                    chunk = regular_queue[i:i + regular_step]
+                    # СКВОЗНАЯ МАТЕМАТИКА: закрепы жестко подмешиваются на абсолютно любую страницу контура
+                    pages_dict[page_num] = pinned_queue + chunk
+                    page_num += 1
         else:
-            pages_dict[1] = []
+            pages_dict = {}
 
         total_pages = len(pages_dict)
 
-        # Сохраняем квантованную структуру для итоговой базы YAML
+        # Сохраняем квантованную многопоточную структуру для итоговой базы YAML
         final_feed_data[b_name] = {
             'per_page': ITEMS_PER_PAGE,
             'total_pages': total_pages,
@@ -237,7 +245,7 @@ def build_universal_feed():
             'pages': pages_dict
         }
 
-        # 3. Генерация глубокого раздельного структурированного лога на диск
+        # ГЕНЕРАЦИЯ ОФИЦИАЛЬНОГО ПОСТРАНИЧНОГО ОТЧЕТА КОНТРОЛЯ ЗАКРЕПОВ
         log_buffer = []
         log_buffer.append("=========================================================================")
         log_buffer.append(f"РЕЕСТР ОБОСОБЛЕННОЙ ЛЕНТЫ ОБНОВЛЕНИЙ: {b_name.upper()}")
@@ -246,10 +254,11 @@ def build_universal_feed():
         
         global_idx = 1
         for p_idx in sorted(pages_dict.keys()):
-            log_buffer.append(f"\n[📑 СТРАНИЦА {p_idx}] (Выведено событий: {len(pages_dict[p_idx])})")
+            current_page_list = pages_dict[p_idx]
+            log_buffer.append(f"\n[📑 СТРАНИЦА {p_idx}] (Закрепов: {len(pinned_queue)} | Хроники: {len(current_page_list) - len(pinned_queue)} | Всего строк: {len(current_page_list)})")
             log_buffer.append("-------------------------------------------------------------------------")
             
-            for item in pages_dict[p_idx]:
+            for item in current_page_list:
                 p_status = "POST" if item['is_post'] == 'true' else "PAGE"
                 pin_marker = "PIN" if item['pinned'] else "   "
                 log_buffer.append(
@@ -264,7 +273,7 @@ def build_universal_feed():
         except Exception as e:
             print(f"[FEED-ERROR] Не удалось сохранить изолированный лог {b_name}: {e}")
 
-    # Записываем квантованную многопоточную базу готовых корзин контура на диск
+    # Сбрасываем квантованную многопоточную базу готовых корзин на диск
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:
             yaml.dump(final_feed_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)

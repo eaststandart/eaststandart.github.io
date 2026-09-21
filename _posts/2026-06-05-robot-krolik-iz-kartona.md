@@ -9,7 +9,6 @@ date: 2026-06-05
 posttype: journal
 discus: "journal"
 pinnedfeed: [news, journal]
-emoji: "❓"
 ---
 
 **Содержание**\

@@ -12,7 +12,6 @@ layout: default
   </ul>
 </div>
 
-{% comment %}
+
 {% assign limit = page.per_page | default: 10 %} 
-{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket=current_section %}
-{% endcomment %} 
+{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket="journal" %}

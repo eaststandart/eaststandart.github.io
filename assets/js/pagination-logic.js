@@ -1,69 +1,72 @@
 /**
- * @about Модуль пагинации (РАБОЧИЙ AJAX-ОРИГИНАЛ С НАШИМИ СТИЛЯМИ).
- * @purpose Полностью берет логику подгрузки из Источника 13, но рендерит строки
- *          буква в букву по классам и тегам вашего оригинального шаблона из Источника 12.
+ * @about Модуль пагинации (ЧЕСТНЫЙ СЕТЕВОЙ КОНТУР JSON).
+ * @purpose Физически скачивает с сервера строго по 10 постов в формате JSON (статус 200 ОК)
+ *          при переключении страниц, полностью сохраняя оригинальные цвета и классы CSS.
  * @author TechLab
- * @version 4.1.0-fixed-styles
+ * @version 8.0.0-pure-json-network
  */
 
-function runPagination(listId, controlsId, itemsPerPage) {
+function runPagination(listId, controlsId, itemsPerPage, basketName) {
   var list = document.getElementById(listId);
   if (!list) return;
 
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Автоматически определяем текущую ленту по адресу страницы
-  var pathClean = window.location.pathname.replace(/^\/|\/$/g, '');
-  var currentSection = pathClean.split('/').pop() || 'news';
-  if (window.location.pathname === '/' || currentSection === '') {
-    currentSection = 'news';
+  // Железный автомат имени корзины напрямую из параметра вызова Liquid
+  var currentSection = (basketName || 'news').trim().toLowerCase();
+  
+  var currentPage = 1;
+  var totalPages = 1;
+
+  // 1. ЧЕСТНЫЙ СЕТЕВОЙ ЗАПРОС К КОНКРЕТНОМУ МИКРО-ФАЙЛУ ПОРЦИИ
+  function loadPortion(page) {
+    // Формируем прямой физический адрес порции в открытой папке assets/feed/
+    var portionUrl = window.location.origin + '/assets/feed/' + currentSection + '-page' + page + '.json';
+    
+    fetch(portionUrl)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('Сетевой сбой при подкачке порции: ' + response.status);
+        }
+        return response.json(); // Нативно парсим JSON без тяжелых библиотек
+      })
+      .then(function(portionData) {
+        totalPages = portionData.total_pages || 1;
+        currentPage = page;
+        renderPage(portionData.items);
+      })
+      .catch(function(error) {
+        console.error('[PAGINATION-ERROR] Не удалось подкачать сетевую порцию:', error);
+      });
   }
 
-  var currentPage = 1;
-  var feedData = null;
-
-  // 1. МГНОВЕННЫЙ ФОНОВЫЙ ЗАПРОС К КВАНТОВАННОЙ БАЗЕ ДАННЫХ
-  // var feedUrl = window.location.origin + '/_data/feed.yml';
-  var feedUrl = window.location.origin + '/assets/feed.yml';
-  
-  fetch(feedUrl)
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(yamlText) {
-      try {
-        if (window.site_feed_data) {
-          feedData = window.site_feed_data[currentSection];
-        } else {
-          feedData = site.data.feed[currentSection];
-        }
-      } catch(e) {
-        console.error("Ожидание компиляции feed.yml сервером Jekyll...");
-      }
-      
-      if (!feedData) return;
-      renderPage(currentPage);
-    });
-
-  // 2. ОТРИСОВКА СТРОК СТРОГО ПО НАШИМ ОРИГИНАЛЬНЫМ СТИЛЯМ ИЗ ИСТОЧНИКА 12
-  function renderPage(page) {
+  // 2. СБОРКА HTML СТРОК СТРОГО ПО ЭТАЛОНУ ВАШЕГО CSS
+  function renderPage(items) {
     list.innerHTML = '';
-    var pageItems = feedData.pages[page] || [];
-    
-    // 🌟 ЖЕЛЕЗНЫЙ МАРКЕР ГЛАВНОЙ: если ID равен главной пагинации, то это не архив
     var isHome = (controlsId === "home-news-pagination");
 
-    pageItems.forEach(function(item) {
+    items.forEach(function(item) {
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       
-      // Нативно переводим дату в формат DD.MM.YYYY
-      var dateStr = item.date.split('-').reverse().join('.');
-      
-      if (!isHome) { // 🌟 Если это НЕ Главная — включаем Вариант Б (Журнал, Вопросы и т.д.)
+      // Переводим дату из YYYY-MM-DD в канонический формат DD.MM.YYYY
+      var dateParts = item.date.split('-');
+      var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
 
-        // ВАРИАНТ Б: Перевод на наши стили для Журнала (строго по Источнику 12)
+      if (isHome) {
+        // ВАРИАНТ А: Точный клон вёрстки для Главной страницы (Карточка "Что нового?")
+        li.className = 'news-item news-item-compact' + pinnedClass;
+        li.setAttribute('data-date', item.date);
+        li.setAttribute('data-is-post', item.is_post);
+        
+        var emojiStr = item.emoji ? ' ' + item.emoji : '';
+        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
+                       '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
+                       '</span></div>';
+        li.style.setProperty('display', 'flex', 'important');
+      } else {
+        // ВАРИАНТ Б: Точный клон вёрстки для Журнала, Вопросов и Медиатеки
         li.className = 'news-item' + pinnedClass;
         li.setAttribute('data-date', item.date);
         li.setAttribute('data-is-post', item.is_post);
@@ -74,26 +77,15 @@ function runPagination(listId, controlsId, itemsPerPage) {
                        '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +
                        '</span></div>';
         li.style.setProperty('display', 'block', 'important');
-      } else {
-        // ВАРИАНТ А: Перевод на наши стили для Главной страницы (строго по Источнику 12)
-        li.className = 'news-item news-item-compact' + pinnedClass;
-        li.setAttribute('data-date', item.date);
-        li.setAttribute('data-is-post', item.is_post);
-        
-        var emojiStr = item.emoji ? ' ' + item.emoji : '';
-        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
-                       '</span></div>';
-        li.style.setProperty('display', 'flex', 'important');
       }
-      
+
       list.appendChild(li);
     });
 
     renderControls();
   }
 
-  // 3. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ФИКСАЦИЕЙ ЭКРАНА СТРОГО ПО КОНТЕКСТУ
+  // 3. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ЧЕСТНОЙ СЕТЕВОЙ ПОДКАЧКОЙ ПРИ КЛИКЕ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -105,13 +97,13 @@ function runPagination(listId, controlsId, itemsPerPage) {
     }
     if (!isDisabled && !isCurrent) {
       btn.addEventListener('click', function() {
-        currentPage = targetPage;
-        renderPage(currentPage);
+        // 🌟 ЧЕСТНЫЙ СЕТЕВОЙ КЛИК: Скачиваем строго нужный файл-порцию с сервера по сети
+        loadPortion(targetPage);
         
         // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
         // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
-        var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
-        if (isArchive) {
+        var isHome = (controlsId === "home-news-pagination");
+        if (!isHome) {
           var feedContainer = document.querySelector('.news-feed');
           if (feedContainer) {
             feedContainer.scrollIntoView({ behavior: 'smooth' });
@@ -135,10 +127,9 @@ function runPagination(listId, controlsId, itemsPerPage) {
     return span;
   }
 
-  // 4. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ДАННЫХ ПИТОНА
+  // 4. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ТЕКУЩЕГО МИКРО-JSON
   function renderControls() {
     controls.innerHTML = '';
-    var totalPages = feedData.total_pages || 1;
     
     if (controlsId === "home-news-pagination") {
       var archiveBtn = document.createElement('button');
@@ -183,4 +174,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
 
     controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
   }
+
+  // 🌟 СТАРТОВЫЙ ЗАПУСК: При загрузке страницы честно качаем первую порцию с сервера
+  loadPortion(currentPage);
 }

@@ -51,6 +51,13 @@ jobs:
           name: jekyll-feed-log
           path: _feed_files/
 
+      - name: Upload All Generated JSON Portions as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jekyll-server-feed-json
+          path: assets/feed/
+          if-no-files-found: error
+
       - name: Upload Post Page Generator Log
         uses: actions/upload-artifact@v4
         with:

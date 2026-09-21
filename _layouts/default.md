@@ -51,5 +51,10 @@ purpose: Базовый скелет для всего сайта (шапка, �
 <!-- БЛОК ЛИЦЕНЗИИ -->
 {% include footer.liquid %}
 
+<script>
+  // Прокидываем квантованную бэкенд-базу Питона напрямую в оперативную память фронтенда
+  window.site_feed_data = {{ site.data.feed | jsonify }};
+</script>
+
 </body>
 </html>

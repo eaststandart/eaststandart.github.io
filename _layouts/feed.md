@@ -16,8 +16,3 @@ layout: default
 {% assign limit = page.per_page | default: 10 %} 
 {% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket=current_section %}
 {% endcomment %} 
-
-{% assign limit = page.per_page | default: 10 %}
-{% comment %} ЧИСТАЯ НА ТИВНАЯ ФИЗИКА: Очищаем ваш ручной permalink от слэшей и пробелов {% endcomment %} 
-{% assign clean_basket = page.permalink | replace: "/", "" | strip | downcase %}
-{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket=clean_basket %}

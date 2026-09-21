@@ -4,25 +4,23 @@
 @module feed
 @about Изолированный монолитный сборщик единой ленты обновлений из Источника Правды.
 @purpose Автоматически вычисляет типы, проекты и наследует эмодзи на основе URL карты навигации,
-         квантует массивы по страницам со сквозными закрепами на основе свойства perpage,
-         выгружает их в виде раздельных физических JSON-порций в открытую папку assets/feed/
-         и полностью сохраняет ваши оригинальные постраничные логи контроля закрепов.
+         квантует массивы по страницам со сквозными закрепами на основе свойства perpage
+         и выгружает раздельные постраничные логи под каждую ленту сайта.
 @author TechLab
-@version 4.0.0-json-portions
+@version 3.0.0-page-quantum
 """
 
 import os
 import sys
 import yaml
-import json
 
 def build_universal_feed():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
     nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
-    # Автоматический путь к новой открытой папке порций сетевой подкачки
-    portions_dir_path = os.path.join(root_dir, 'assets', 'feed')
+    # output_feed_path = os.path.join(root_dir, '_data', 'feed.yml')
+    output_feed_path = os.path.join(root_dir, 'assets', 'feed.yml')
     log_dir_path = os.path.join(root_dir, '_feed_files')
     
     if not os.path.exists(nav_file_path):
@@ -52,6 +50,7 @@ def build_universal_feed():
         if '/' not in key and isinstance(items, list) and len(items) > 0:
             section_card = items[0]
             if isinstance(section_card, dict) and section_card.get('emoji'):
+                # Очищаем имя ключа от приставки feed- для 100% совместимости с Шагом 2
                 clean_key = key.replace('feed-', '').strip().lower()
                 section_emojis[clean_key] = section_card['emoji']
 
@@ -77,26 +76,32 @@ def build_universal_feed():
         project_slug = ""
         is_post_flag = 'false'
 
+        # Если файл лежит в папке _posts или его URL содержит структуру постов хроники
         if file_key.startswith('_posts/') and item_url:
             url_parts = item_url.split('/')
             if len(url_parts) >= 2:
+                # Нативно вырезаем тип контента сайта (journal/media) и слаг проекта из адреса!
                 post_type = url_parts[0]
                 project_slug = url_parts[1]
                 is_post_flag = 'true'
         else:
+            # Для обычных карточек проектов определяем слаг по финалу URL
             if item_url:
                 project_slug = item_url.split('/')[-1]
 
+        # Вычисляем имя родителя строго по полям связи карты
         target_section = post_type
         if not target_section:
             target_section = passport.get('relatedsection', '')
         if not target_section:
             target_section = passport.get('relatedcollection', '')
 
+        # Нативно наследуем эмодзи из кэша разделов по вычисленным родителям
         calculated_emoji = passport.get('emoji', '')
         if not calculated_emoji and target_section:
             calculated_emoji = section_emojis.get(target_section, "")
 
+        # Всеядный очиститель синтаксиса pinnedfeed
         raw_pinned = passport.get('pinnedfeed', False)
         pinned_list = []
         if isinstance(raw_pinned, list):
@@ -115,10 +120,11 @@ def build_universal_feed():
             'related': project_slug,
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
-            'personal_emoji': passport.get('emoji', ''),
+            'personal_emoji': passport.get('emoji', ''),  # Сохраняем чистый знак из Obsidian
             'pinned_list': pinned_list
         }
 
+        # Первичное разделение по оригинальной схеме для сохранения закрепов
         if 'news' in pinned_list or (str(post_type).strip().lower() in pinned_list if post_type else False):
             pinned_posts.append(node)
         else:
@@ -192,10 +198,9 @@ def build_universal_feed():
             }
             baskets[c_posttype].append(node_own)
 
-    # НАЧИНАЕМ СКВОЗНОЕ КВАНТОВАНИЕ МАССИВОВ С АВТОМАТИЧЕСКИМ СОЗДАНИЕМ ПАПКИ И JSON-ПОРЦИЙ
+    # НАЧИНАЕМ СКВОЗНОЕ КВАНТОВАНИЕ МАССИВОВ С ДУБЛИРОВАНИЕМ ЗАКРЕПОВ НА ВСЕ СТРАНИЦЫ
+    final_feed_data = {}
     os.makedirs(log_dir_path, exist_ok=True)
-    # 🌟 АВТОМАТ ПАПКИ: Питон сам физически создаёт открытую папку на диске
-    os.makedirs(portions_dir_path, exist_ok=True)
 
     for b_name, b_items in baskets.items():
         # Сортируем кучку: закрепы текущей ленты наверх, обычные — по датам вниз
@@ -233,27 +238,15 @@ def build_universal_feed():
 
         total_pages = len(pages_dict)
 
-        # 🌟 ЧЕСТНАЯ СЕТЕВАЯ ПОДКАЧКА: Питон нарезает и сохраняет независимые файлы JSON под каждую страницу!
-        for p_idx, p_items in pages_dict.items():
-            portion_filename = f"{b_name}-page{p_idx}.json"
-            portion_file_path = os.path.join(portions_dir_path, portion_filename)
-            
-            # Структура одного изолированного файла-порции для JavaScript
-            portion_data = {
-                'per_page': ITEMS_PER_PAGE,
-                'total_pages': total_pages,
-                'total_items': total_items,
-                'current_page': p_idx,
-                'items': p_items
-            }
-            
-            try:
-                with open(portion_file_path, 'w', encoding='utf-8') as jf:
-                    json.dump(portion_data, jf, ensure_ascii=False, indent=2)
-            except Exception as e:
-                print(f"[FEED-ERROR] Не удалось сохранить JSON-порцию {portion_filename}: {e}")
+        # Сохраняем квантованную многопоточную структуру для итоговой базы YAML
+        final_feed_data[b_name] = {
+            'per_page': ITEMS_PER_PAGE,
+            'total_pages': total_pages,
+            'total_items': total_items,
+            'pages': pages_dict
+        }
 
-        # ГЕНЕРАЦИЯ ОФИЦИАЛЬНОГО ПОСТРАНИЧНОГО ОТЧЕТА КОНТРОЛЯ ЗАКРЕПОВ (1-в-1 ВАШ СТАРЫЙ ЛОГ)
+        # ГЕНЕРАЦИЯ ОФИЦИАЛЬНОГО ПОСТРАНИЧНОГО ОТЧЕТА КОНТРОЛЯ ЗАКРЕПОВ
         log_buffer = []
         log_buffer.append("=========================================================================")
         log_buffer.append(f"РЕЕСТР ОБОСОБЛЕННОЙ ЛЕНТЫ ОБНОВЛЕНИЙ: {b_name.upper()}")
@@ -281,7 +274,13 @@ def build_universal_feed():
         except Exception as e:
             print(f"[FEED-ERROR] Не удалось сохранить изолированный лог {b_name}: {e}")
 
-    print(f"[FEED-SUCCESS] Честный порционный контур JSON создан в assets/feed/. Лент: {len(baskets)}")
+    # Сбрасываем квантованную многопоточную базу готовых корзин на диск
+    try:
+        with open(output_feed_path, 'w', encoding='utf-8') as f:
+            yaml.dump(final_feed_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        print(f"[FEED-SUCCESS] Квантованная база создана в feed.yml. Лент: {len(final_feed_data)}")
+    except Exception as e:
+        print(f"[FEED-ERROR] Ошибка записи квантованного файла feed.yml: {e}")
 
 if __name__ == '__main__':
     build_universal_feed()

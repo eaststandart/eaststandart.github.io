@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Сборка и рендер первой страницы обновлений на основе квантованных корзин feed.yml.
-@purpose Нативно выводит пакет первой страницы (pages.1) из базы Питона, 
+@purpose Нативно выводит пакет первой страницы через строковый ключ ["1"],
          полностью сохраняя оригинальное форматирование Вариантов А и Б.
 @author TechLab 
 {%- endcomment -%}
@@ -17,8 +17,8 @@
   {%- assign target_basket = site.data.feed[current_section] -%}
 {%- endif -%}
 
-{% comment %} КВАНТОВАННЫЙ ОБХОД: Извлекаем строго пакет первой страницы {% endcomment %}
-{%- assign first_page_items = target_basket.pages.1 -%}
+{% comment %} СТРОГОЕ ИСПРАВЛЕНИЕ: Извлекаем пакет первой страницы через текстовый ключ ["1"] {% endcomment %}
+{%- assign first_page_items = target_basket.pages["1"] -%}
 
 {%- for item in first_page_items -%}
   {%- assign pinned_class = "" -%}

@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jekyll-feed-log
-          path: _feed_files/feed_debug.log
+          path: _feed_files/
 
       - name: Upload Post Page Generator Log
         uses: actions/upload-artifact@v4

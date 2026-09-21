@@ -37,7 +37,7 @@ date: 2026-03-12
 1\. 🔌[Схема электрическая принципиальная, PDF](plavnoe-zazhiganie-svetodioda-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, JPG](plavnoe-zazhiganie-svetodioda-esd.jpg)
 
-![v](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
+![720х1018](github/eaststandart.github.io/faire/plavnoe-zazhiganie-svetodioda/plavnoe-zazhiganie-svetodioda-05.webp)
 
 {%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}

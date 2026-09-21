@@ -1,55 +1,53 @@
 {%- comment -%}
-@about Сборка и фильтрация ленты обновлений на основе единой ленты feed.yml.
-@purpose Заменяет тяжелый сквозной поиск Jekyll быстрым чтением готовой базы данных, сохраняя стили закрепов.
+@about Сборка и фильтрация ленты обновлений на основе обособленных корзин feed.yml.
+@purpose Нативно выводит готовые списки Питона, сохраняя оригинальное форматирование 
+         Вариантов А и Б без лишних циклов фильтрации на стороне сервера.
 @author TechLab 
 {%- endcomment -%}
 
-{%- assign feed_source = site.data.feed.feed -%}
-{%- assign filter_folder = include.folder | strip -%}
+{% comment %} АВТОМАТ АДРЕСОВ: Нативно вырезаем чистое имя текущей папки из интернет-адреса {% endcomment %}
+{%- assign current_path_clean = page.url | strip_search | strip_slash -%}
+{%- assign url_parts = current_path_clean | split: "/" -%}
+{%- assign current_section = url_parts | last | strip | downcase -%}
 
-{%- for item in feed_source -%}
-  {%- assign is_allowed = false -%}
+{% comment %} ДИНАМИЧЕСКИЙ ВЫБОР КОРЗИНЫ: Брем либо news для Главной, либо корзину раздела {% endcomment %}
+{%- if include.type == "home" -%}
+  {%- assign target_basket = site.data.feed.news -%}
+{%- else -%}
+  {%- assign target_basket = site.data.feed[current_section] -%}
+{%- endif -%}
 
-  {%- if filter_folder and filter_folder != "" -%}
-    {%- if item.posttype == filter_folder -%}
-      {%- assign is_allowed = true -%}
-    {%- endif -%}
-  {%- else -%}
-    {%- assign is_allowed = true -%}
+{%- for item in target_basket -%}
+  {%- comment -%} Класс закрепа (pinned) теперь берется напрямую из флага готовой корзины Питона {%- endcomment -%}
+  {%- assign pinned_class = "" -%}
+  {%- if item.pinned == true or item.pinned == "true" -%}
+    {%- assign pinned_class = " pinned-item" -%}
   {%- endif -%}
 
-  {%- if is_allowed -%}
-    {%- comment -%} Вычисляем класс закрепа на основе данных из feed.yml {%- endcomment -%}
-    {%- assign pinned_class = "" -%}
-    {%- if item.pinnedfeed == true or item.pinnedfeed == "true" -%}
-      {%- assign pinned_class = " pinned-item" -%}
-    {%- endif -%}
-
-    {%- if include.type == "home" -%}
-      <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none;">
-        <div>
-          <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-          <span>
-            <a href="{{ item.url | relative_url }}" class="item-link">
-              {{ item.title }}
-            </a>
-          </span>
-        </div>
-      </li>
-      
-    {%- elsif include.type == "news" -%}
-      <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-        <div>
-          <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-          <span>
-            <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-              {{ item.title }}
-            </a>
-          </span>
-        </div>
-      </li>
-    {%- endif -%}
+  {%- if include.type == "home" -%}
+    <!-- Вариант А: ОРИГИНАЛЬНЫЙ Компактный стиль для Главной страницы (Карточка "Что нового?") -->
+    <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none;">
+      <div>
+        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+        <span>
+          <a href="{{ item.url | relative_url }}" class="item-link">
+            {{ item.title }}{% if item.emoji and item.emoji != "" %} {{ item.emoji }}{% endif %}
+          </a>
+        </span>
+      </div>
+    </li>
+    
+  {%- elsif include.type == "news" -%}
+    <!-- Вариант Б: ОРИГИНАЛЬНЫЙ Широкий стиль с разделительными линиями для страниц частных лент контура -->
+    <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+      <div>
+        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+        <span>
+          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
+            {{ item.title }}{% if item.personal_emoji and item.personal_emoji != "" %} {{ item.personal_emoji }}{% endif %}
+          </a>
+        </span>
+      </div>
+    </li>
   {%- endif -%}
 {%- endfor -%}

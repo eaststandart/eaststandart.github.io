@@ -1,9 +1,9 @@
 /**
- * @about Модуль пагинации (РЕАКТИВНЫЙ КОНТУР И ЭТАЛОННЫЕ СТИЛИ).
- * @purpose Запрашивает квантованные страницы из feed.yml и рендерит строки
- *          строго 1-в-1 по классам и стилям вашего оригинального Liquid-файла.
+ * @about Модуль пагинации (ЧИСТЫЙ СВИТЧЕР СТРАНИЦ).
+ * @purpose Только переключает видимость готовых блоков feed-page-block.
+ *          Внутри скрипта нет генерации HTML-строк и скрытия ссылок.
  * @author TechLab
- * @version 4.1.0-pure-colors
+ * @version 5.0.0-switcher
  */
 
 function runPagination(listId, controlsId, itemsPerPage) {
@@ -13,67 +13,26 @@ function runPagination(listId, controlsId, itemsPerPage) {
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Автоматически определяем имя текущей ленты по интернет-адресу страницы
-  var pathClean = window.location.pathname.replace(/^\/|\/$/g, '');
-  var currentSection = pathClean.split('/').pop() || 'news';
-  if (window.location.pathname === '/' || currentSection === '') {
-    currentSection = 'news';
-  }
+  // Находим все готовые постраничные блоки, которые сервер Liquid уже создал со всеми стилями
+  var pageBlocks = Array.from(list.getElementsByClassName('feed-page-block'));
+  if (pageBlocks.length === 0) return;
 
   var currentPage = 1;
-  var feedData = null;
+  var totalPages = pageBlocks.length;
 
-  // Подхватываем квантованную базу данных из оперативной памяти сервера Jekyll
-  if (window.site_feed_data && window.site_feed_data[currentSection]) {
-    feedData = window.site_feed_data[currentSection];
-    renderPage(currentPage);
-  } else {
-    console.error("Ожидание проброса глобального объекта site_feed_data...");
-    return;
-  }
-
-  // 1. СБОРКА HTML СТРОК СТРОГО ПО ЭТАЛОНУ ВАШЕГО LIQUID-ФАЙЛА
-  function renderPage(page) {
-    list.innerHTML = '';
-    var pageItems = feedData.pages[page] || [];
-    var isHome = (currentSection === 'news' && window.location.pathname === '/');
-
-    pageItems.forEach(function(item) {
-      var li = document.createElement('li');
-      var pinnedClass = item.pinned ? ' pinned-item' : '';
-      
-      // Вычисляем дату в канонический формат DD.MM.YYYY
-      var dateParts = item.date.split('-');
-      var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
-
-      if (isHome) {
-        // ВАРИАНТ А: 1-в-1 ваша оригинальная верстка для Главной страницы
-        li.className = 'news-item news-item-compact' + pinnedClass;
-        
-        var emojiStr = item.emoji ? ' ' + item.emoji : '';
-        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
-                       '</span></div>';
-        li.style.setProperty('display', 'flex', 'important');
+  // 1. ПЕРЕКЛЮЧЕНИЕ ВИДИМОСТИ ГОТОВЫХ СЕРВЕРНЫХ БЛОКОВ
+  function showPage(pageToBlock) {
+    pageBlocks.forEach(function(block) {
+      var blockPageNum = parseInt(block.getAttribute('data-page'), 10);
+      if (blockPageNum === pageToBlock) {
+        block.style.setProperty('display', 'block', 'important');
       } else {
-        // ВАРИАНТ Б: 1-в-1 ваша оригинальная верстка для Журнала и частных лент
-        li.className = 'news-item' + pinnedClass;
-        li.style.cssText = 'margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;';
-        
-        var personalEmojiStr = item.personal_emoji ? ' ' + item.personal_emoji : '';
-        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +
-                       '</span></div>';
-        li.style.setProperty('display', 'block', 'important');
+        block.style.setProperty('display', 'none', 'important');
       }
-
-      list.appendChild(li);
     });
-
     renderControls();
   }
 
-  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ФИКСАЦИЕЙ ЭКРАНА СТРОГО ПО КОНТЕКСТУ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -86,18 +45,11 @@ function runPagination(listId, controlsId, itemsPerPage) {
     if (!isDisabled && !isCurrent) {
       btn.addEventListener('click', function() {
         currentPage = targetPage;
-        renderPage(currentPage);
+        showPage(currentPage);
         
-        // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
-        // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
-        var isHome = (currentSection === 'news' && window.location.pathname === '/');
-        if (!isHome) {
-          var feedContainer = document.querySelector('.news-feed');
-          if (feedContainer) {
-            feedContainer.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
+        // ФИКСАЦИЯ ПРЫЖКОВ: На Главной экран стоит на месте, в Журнале — плавно фокусирует начало
+        if (controlsId !== "home-news-pagination") {
+          list.scrollIntoView({ behavior: 'smooth' });
         }
       });
     }
@@ -111,15 +63,12 @@ function runPagination(listId, controlsId, itemsPerPage) {
     span.style.color = '#6a737d';
     span.style.fontSize = '0.9rem';
     span.style.fontWeight = '600';
-    span.style.userSelect = 'none';
     return span;
   }
 
-  // 3. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ДАННЫХ ПИТОНА
+  // 2. ОТРИСОВКА КНОПОК НА ОСНОВЕ ФИЗИЧЕСКОГО КОЛИЧЕСТВА СТРАНИЦ
   function renderControls() {
     controls.innerHTML = '';
-    var totalPages = feedData.total_pages || 1;
-    var isHome = (currentSection === 'news' && window.location.pathname === '/');
     
     if (controlsId === "home-news-pagination") {
       var archiveBtn = document.createElement('button');
@@ -164,4 +113,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
 
     controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
   }
+
+  // Запуск стартовой отрисовки первой страницы
+  showPage(currentPage);
 }

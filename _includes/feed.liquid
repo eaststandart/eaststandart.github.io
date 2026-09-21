@@ -1,56 +1,60 @@
 {%- comment -%}
-@about Сборка и рендер первой страницы обновлений на основе квантованных корзин feed.yml.
-@purpose Нативно выводит пакет первой страницы (pages.1) из базы Питона, 
-         полностью освобождая сервер от циклов фильтрации.
+@about Сборка ленты на основе квантованных страниц Питона с сохранением 100% оригинальных стилей.
+@purpose Рендерит все страницы раздельно, сохраняя ваши канонические цвета ссылок.
 @author TechLab 
 {%- endcomment -%}
 
-{% comment %} АВТОМАТ АДРЕСОВ: Нативно вырезаем чистое имя текущей папки из интернет-адреса {% endcomment %}
 {%- assign current_path_clean = page.url | strip_search | strip_slash -%}
 {%- assign url_parts = current_path_clean | split: "/" -%}
 {%- assign current_section = url_parts | last | strip | downcase -%}
 
-{% comment %} ДИНАМИЧЕСКИЙ ВЫБОР КОРЗИНЫ: Берем либо news для Главной, либо корзину раздела {% endcomment %}
 {%- if include.type == "home" or current_section == "news" -%}
   {%- assign target_basket = site.data.feed.news -%}
 {%- else -%}
   {%- assign target_basket = site.data.feed[current_section] -%}
 {%- endif -%}
 
-{% comment %} КВАНТОВАННЫЙ ОБХОД: Извлекаем строго пакет первой страницы {% endcomment %}
-{%- assign first_page_items = target_basket.pages.1 -%}
+{% comment %} Обходим пронумерованные страницы, созданные Питоном {% endcomment %}
+{%- for page_hash in target_basket.pages -%}
+  {%- assign page_num = page_hash[0] -%}
+  {%- assign page_items = page_hash[1] -%}
 
-{%- for item in first_page_items -%}
-  {%- comment -%} Класс закрепа берется напрямую из флага готовой корзины Питона {%- endcomment -%}
-  {%- assign pinned_class = "" -%}
-  {%- if item.pinned == true or item.pinned == "true" -%}
-    {%- assign pinned_class = " pinned-item" -%}
-  {%- endif -%}
-
-  {%- if include.type == "home" -%}
-    <!-- Вариант А: ОРИГИНАЛЬНЫЙ Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-    <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none;">
-      <div>
-        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ item.url | relative_url }}" class="item-link">
-            {{ item.title }}{% if item.emoji and item.emoji != "" %} {{ item.emoji }}{% endif %}
-          </a>
-        </span>
-      </div>
-    </li>
+  <!-- Оболочка страницы пагинации. Первая видна всегда, остальные изначально скрыты -->
+  <div class="feed-page-block" data-page="{{ page_num }}" {% if page_num != 1 and page_num != "1" %}style="display: none;"{% endif %}>
     
-  {%- elsif include.type == "feed" -%}
-    <!-- Вариант Б: ОРИГИНАЛЬНЫЙ Широкий стиль с разделительными линиями для страниц частных лент контура -->
-    <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
-      <div>
-        <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
-        <span>
-          <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-            {{ item.title }}{% if item.personal_emoji and item.personal_emoji != "" %} {{ item.personal_emoji }}{% endif %}
-          </a>
-        </span>
-      </div>
-    </li>
-  {%- endif -%}
+    {%- for item in page_items -%}
+      {%- assign pinned_class = "" -%}
+      {%- if item.pinned == true or item.pinned == "true" -%}
+        {%- assign pinned_class = " pinned-item" -%}
+      {%- endif -%}
+
+      {%- if include.type == "home" -%}
+        <!-- Вариант А: ВАШИ ОРИГИНАЛЬНЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ -->
+        <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}">
+          <div>
+            <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>
+              <a href="{{ item.url | relative_url }}" class="item-link">
+                {{ item.title }}{% if item.emoji and item.emoji != "" %} {{ item.emoji }}{% endif %}
+              </a>
+            </span>
+          </div>
+        </li>
+        
+      {%- elsif include.type == "feed" -%}
+        <!-- Вариант Б: ВАШИ ОРИГИНАЛЬНЫЕ СТИЛИ С ЛИНИЯМИ ДЛЯ ЖУРНАЛА -->
+        <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+          <div>
+            <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
+            <span>
+              <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
+                {{ item.title }}{% if item.personal_emoji and item.personal_emoji != "" %} {{ item.personal_emoji }}{% endif %}
+              </a>
+            </span>
+          </div>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
 {%- endfor -%}

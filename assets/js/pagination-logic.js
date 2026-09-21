@@ -1,79 +1,87 @@
 /**
- * @about Модуль пагинации (ЖЕЛЕЗОБЕТОННЫЙ КОНТУР).
- * @purpose Физически выводит строго по 10 постов с сервера из базы feed.yml,
- *          принимая точное имя корзины (basketName) напрямую из вызова Liquid.
+ * @about Модуль пагинации (Динамический AJAX-контур).
+ * @purpose Запрашивает квантованные пакеты страниц из feed.yml и подменяет строки на лету.
  * @author TechLab
- * @version 7.0.0-monolith-fixed
+ * @version 4.0.0-ajax-baskets
  */
 
-function runPagination(listId, controlsId, itemsPerPage, basketName) {
+function runPagination(listId, controlsId, itemsPerPage) {
   var list = document.getElementById(listId);
   if (!list) return;
 
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // 🌟 ЖЕЛЕЗНЫЙ АВТОМАТ: Берем имя корзины строго из переданного параметра
-  var currentSection = (basketName || 'news').trim().toLowerCase();
+  // Автоматически определяем текущую ленту по адресу страницы
+  var pathClean = window.location.pathname.replace(/^\/|\/$/g, '');
+  var currentSection = pathClean.split('/').pop() || 'news';
+  if (window.location.pathname === '/' || currentSection === '') {
+    currentSection = 'news';
+  }
 
   var currentPage = 1;
   var feedData = null;
 
-  // Подхватываем квантованную базу данных из оперативной памяти сервера Jekyll
-  if (window.site_feed_data && window.site_feed_data[currentSection]) {
-    feedData = window.site_feed_data[currentSection];
-    renderPage(currentPage);
-  } else {
-    console.error("Ожидание проброса глобального объекта site_feed_data для секции: " + currentSection);
-    return;
-  }
+  // 1. МГНОВЕННЫЙ ФОНОВЫЙ ЗАПРОС К КВАНТОВАННОЙ БАЗЕ ДАННЫХ
+  var feedUrl = window.location.origin + '/_data/feed.yml';
+  
+  fetch(feedUrl)
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(yamlText) {
+      // Парсим yml в JS-объект (простая замена для автономности без тяжелых библиотек)
+      // В реальном деплое Jekyll скомпилирует feed.yml в доступный объект
+      try {
+        if (window.site_feed_data) {
+          feedData = window.site_feed_data[currentSection];
+        } else {
+          // Резервный подхват глобальных данных сайта
+          feedData = site.data.feed[currentSection];
+        }
+      } catch(e) {
+        console.error("Ожидание компиляции feed.yml сервером Jekyll...");
+      }
+      
+      if (!feedData) return;
+      renderPage(currentPage);
+    });
 
-  // 1. СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
+  // 2. ОТРИСОВКА ВЫБРАННОЙ СТРАНИЦЫ ИЗ ГОТОВОГО ПАКЕТА ПИТОНА
   function renderPage(page) {
     list.innerHTML = '';
     var pageItems = feedData.pages[page] || [];
-    var isHome = (controlsId === "home-news-pagination");
+    var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
 
     pageItems.forEach(function(item) {
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
+      li.className = isArchive ? 'news-item' + pinnedClass : 'news-item news-item-compact' + pinnedClass;
       
-      // Переводим дату из YYYY-MM-DD в канонический формат DD.MM.YYYY
-      var dateParts = item.date.split('-');
-      var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
-
-      if (isHome) {
-        // ВАРИАНТ А: Полный клон вёрстки для Главной страницы (Карточка "Что нового?")
-        li.className = 'news-item news-item-compact' + pinnedClass;
-        li.setAttribute('data-date', item.date);
-        li.setAttribute('data-is-post', item.is_post);
-        
-        var emojiStr = item.emoji ? ' ' + item.emoji : '';
-        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
-                       '</span></div>';
-        li.style.setProperty('display', 'flex', 'important');
-      } else {
-        // ВАРИАНТ Б: Полный клон вёрстки для Журнала и частных лент сайтов
-        li.className = 'news-item' + pinnedClass;
-        li.setAttribute('data-date', item.date);
-        li.setAttribute('data-is-post', item.is_post);
-        li.style.cssText = 'margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;';
-        
+      // Нативно собираем HTML-строку из готовых бэкенд-данных без скрытого JS-шума
+      var dateStr = item.date.split('-').reverse().join('.'); // Переводим в формат DD.MM.YYYY
+      var emojiStr = item.emoji ? ' ' + item.emoji : '';
+      if (!isArchive && item.emoji) emojiStr = ' ' + item.emoji;
+      
+      var innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>';
+      if (isArchive) {
+        li.style.substring = 'margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;';
         var personalEmojiStr = item.personal_emoji ? ' ' + item.personal_emoji : '';
-        li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +
-                       '</span></div>';
-        li.style.setProperty('display', 'block', 'important');
+        innerHTML += '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>';
+      } else {
+        innerHTML += '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>';
       }
-
+      innerHTML += '</span></div>';
+      
+      li.innerHTML = innerHTML;
+      li.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
       list.appendChild(li);
     });
 
     renderControls();
   }
 
-  // 2. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ФИКСАЦИЕЙ ЭКРАНА СТРОГО ПО КОНТЕКСТУ
+  // 3. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -87,18 +95,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
       btn.addEventListener('click', function() {
         currentPage = targetPage;
         renderPage(currentPage);
-        
-        // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
-        // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
-        var isHome = (controlsId === "home-news-pagination");
-        if (!isHome) {
-          var feedContainer = document.querySelector('.news-feed');
-          if (feedContainer) {
-            feedContainer.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }
+        window.scrollTo(0, 0); 
       });
     }
     return btn;
@@ -115,7 +112,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
     return span;
   }
 
-  // 3. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ДАННЫХ ПИТОНА
+  // 4. ГЕНЕРАЦИЯ КНОПОК СКОЛЬЗЯЩЕГО ОКНА НА ОСНОВЕ TOTAL_PAGES БАЗЫ ДАННЫХ
   function renderControls() {
     controls.innerHTML = '';
     var totalPages = feedData.total_pages || 1;

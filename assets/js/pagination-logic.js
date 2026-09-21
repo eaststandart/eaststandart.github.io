@@ -49,7 +49,9 @@ function runPagination(listId, controlsId, itemsPerPage) {
   function renderPage(page) {
     list.innerHTML = '';
     var pageItems = feedData.pages[page] || [];
-    var isArchive = window.location.pathname.includes('/news/') || window.location.pathname.includes('/journal/');
+    
+    // 🌟 ЖЕЛЕЗНЫЙ МАРКЕР ГЛАВНОЙ: если ID равен главной пагинации, то это не архив
+    var isHome = (controlsId === "home-news-pagination");
 
     pageItems.forEach(function(item) {
       var li = document.createElement('li');
@@ -58,7 +60,8 @@ function runPagination(listId, controlsId, itemsPerPage) {
       // Нативно переводим дату в формат DD.MM.YYYY
       var dateStr = item.date.split('-').reverse().join('.');
       
-      if (isArchive) {
+      if (!isHome) { // 🌟 Если это НЕ Главная — включаем Вариант Б (Журнал, Вопросы и т.д.)
+
         // ВАРИАНТ Б: Перевод на наши стили для Журнала (строго по Источнику 12)
         li.className = 'news-item' + pinnedClass;
         li.setAttribute('data-date', item.date);

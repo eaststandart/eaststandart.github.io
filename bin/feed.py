@@ -281,6 +281,30 @@ def build_universal_feed():
         except Exception as e:
             print(f"[FEED-ERROR] Не удалось сохранить изолированный лог {b_name}: {e}")
 
+    # 🌟 ТОТАЛЬНАЯ ИНСПЕКЦИЯ: Питон детально рапортует обо всех созданных файлах порций
+    print("\n=========================================================================")
+    print("ФИЗИЧЕСКАЯ КАРТА СЕРВЕРНЫХ JSON-ПОРЦИЙ В ПАПКЕ assets/feed/:")
+    print("=========================================================================")
+    
+    try:
+        generated_files = sorted(os.listdir(portions_dir_path))
+        if not generated_files:
+            print("[FEED-WARNING] Папка assets/feed/ пуста! Файлы не создались.")
+        else:
+            for file_name in generated_files:
+                if file_name.endswith('.json'):
+                    full_p_path = os.path.join(portions_dir_path, file_name)
+                    # Читаем вес и заглядываем внутрь для проверки количества постов
+                    with open(full_p_path, 'r', encoding='utf-8') as j_check:
+                        c_data = json.load(j_check)
+                        p_items_count = len(c_data.get('items', []))
+                        p_total_pages = c_data.get('total_pages', 1)
+                    
+                    print(f" 📂 [FILE] {file_name:<25} | Постов в порции: {p_items_count:<3} | Всего страниц ленты: {p_total_pages}")
+    except Exception as e:
+        print(f"[FEED-ERROR] Не удалось провести инспекцию папки порций: {e}")
+        
+    print("=========================================================================\n")
     print(f"[FEED-SUCCESS] Честный порционный контур JSON создан в assets/feed/. Лент: {len(baskets)}")
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Сборка и фильтрация ленты обновлений на основе единой ленты feed.yml.
-@purpose Переносит рендер эмодзи на бэкенд, полностью блокируя скрытый JS-шум в браузере.
+@purpose Заменяет тяжелый сквозной поиск Jekyll быстрым чтением готовой базы данных, сохраняя стили закрепов.
 @author TechLab 
 {%- endcomment -%}
 
@@ -19,22 +19,20 @@
   {%- endif -%}
 
   {%- if is_allowed -%}
-    {%- comment -%} УМНЫЙ АВТОМАТ: разделяем закрепы для Главной и для частных лент постов {%- endcomment -%}
+    {%- comment -%} Вычисляем класс закрепа на основе данных из feed.yml {%- endcomment -%}
     {%- assign pinned_class = "" -%}
-    {%- if include.type == "home" -%}
-      {%- if item.pinned_news == true or item.pinned_news == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
-    {%- else -%}
-      {%- if item.pinned_own == true or item.pinned_own == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
+    {%- if item.pinnedfeed == true or item.pinnedfeed == "true" -%}
+      {%- assign pinned_class = " pinned-item" -%}
     {%- endif -%}
 
     {%- if include.type == "home" -%}
       <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none;">
+      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
             <a href="{{ item.url | relative_url }}" class="item-link">
-              {{ item.title }}{% if item.emoji and item.emoji != "" %} {{ item.emoji }}{% endif %}
+              {{ item.title }}
             </a>
           </span>
         </div>
@@ -42,12 +40,12 @@
       
     {%- elsif include.type == "news" -%}
       <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
             <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-              {{ item.title }}{% if item.personal_emoji and item.personal_emoji != "" %} {{ item.personal_emoji }}{% endif %}
+              {{ item.title }}
             </a>
           </span>
         </div>

@@ -6,7 +6,7 @@ permalink: /reference/
 per_page: 10
 folder: "reference"
 pinned_url: ""
-emoji: "📝"
+emoji: ""
 ---
 
 {% comment %} 

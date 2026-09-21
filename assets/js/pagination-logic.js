@@ -24,7 +24,6 @@ function runPagination(listId, controlsId, itemsPerPage) {
   var feedData = null;
 
   // 1. МГНОВЕННЫЙ ФОНОВЫЙ ЗАПРОС К КВАНТОВАННОЙ БАЗЕ ДАННЫХ
-  // var feedUrl = window.location.origin + '/_data/feed.yml';
   var feedUrl = window.location.origin + '/assets/feed.yml';
   
   fetch(feedUrl)

@@ -1,12 +1,11 @@
 /**
- * @about Модуль пагинации (КРИСТАЛЬНО ЧИСТЫЙ).
+ * @about Модуль пагинации (ИСПРАВЛЕННЫЙ).
  * @purpose Разбивает список на страницы, удерживая закрепленные посты на самом верху каждой страницы.
- *          Полностью очищен от мёртвого кода дописки эмодзи и серверных фильтров.
  * @author TechLab
- * @version 3.0.0-pure-pagination
+ * @version 2.1.1-fixed
  */
 
-function runPagination(listId, controlsId, itemsPerPage) {
+function runPagination(listId, controlsId, itemsPerPage, showEmoji) {
   var list = document.getElementById(listId);
   if (!list) return;
 
@@ -39,7 +38,13 @@ function runPagination(listId, controlsId, itemsPerPage) {
 
     // Шаг А: Первыми выводим закрепленные посты на абсолютно любой странице
     pinnedItems.forEach(function(pinnedEl) {
+      var pEmoji = pinnedEl.getAttribute('data-emoji');
+      var pLink = pinnedEl.querySelector('.item-link');
+      if (showEmoji === 'Y' && pLink && pEmoji && !pLink.innerHTML.includes(pEmoji)) {
+        pLink.innerHTML += ' ' + pEmoji;
+      }
       pinnedEl.style.setProperty('display', isArchive ? 'block' : 'flex', 'important');
+      // 🔥 ТОЧНОЕ ИСПРАВЛЕНИЕ: Передаем конкретный элемент pinnedEl вместо массива pinnedItems!
       list.appendChild(pinnedEl);
     });
 
@@ -48,6 +53,19 @@ function runPagination(listId, controlsId, itemsPerPage) {
     var end = start + dynamicLimit;
     
     regularItems.slice(start, end).forEach(function(el) {
+      var emoji = el.getAttribute('data-emoji');
+      var link = el.querySelector('.item-link');
+      
+      // УМНЫЙ ФИЛЬТР ШУМА: прячем дефолтные значки разделов внутри этих же разделов
+      var path = window.location.pathname;
+      var isDefaultSectionEmoji = false;
+      if (path.includes('/journal/') && emoji === '✍🏻') isDefaultSectionEmoji = true;
+      if (path.includes('/media/') && emoji === '👀') isDefaultSectionEmoji = true;
+      if (path.includes('/question/') && emoji === '❓') isDefaultSectionEmoji = true;
+
+      if (showEmoji === 'Y' && link && emoji && !isDefaultSectionEmoji && !link.innerHTML.includes(emoji)) {
+        link.innerHTML += ' ' + emoji;
+      }
       el.style.setProperty('display', isArchive ? 'block' : 'flex', 'important'); 
       list.appendChild(el);
     });

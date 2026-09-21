@@ -6,6 +6,7 @@ author: ["TechLab"]
 date: 2026-05-14
 posttype: journal
 discus: "journal"
+emoji: "❓"
 ---
 
 📷 **Процесс создания**

@@ -1,9 +1,9 @@
 /**
- * @about Модуль пагинации (ГИБРИДНЫЙ ЧИСТЫЙ КОНТУР).
- * @purpose Скачивает плоскую базу feed.yml и рендерит порции строго по 10 штук,
- *          копируя структуру классов вашего оригинального Liquid-файла.
+ * @about Модуль пагинации (НАДЁЖНЫЙ ЧИСТЫЙ КОНТУР).
+ * @purpose Управляет видимостью порций по 10 штук из уже набитой базы Питона,
+ *          полностью исключая fetch-запросы и ошибки скачивания файлов.
  * @author TechLab
- * @version 9.0.0-pure-hybrid
+ * @version 4.2.0-switcher-fixed
  */
 
 function runPagination(listId, controlsId, itemsPerPage, basketName) {
@@ -13,76 +13,46 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
   var controls = document.getElementById(controlsId);
   if (!controls) return;
 
-  // Железный автомат имени корзины напрямую из параметра вызова Liquid
+  // Железно определяем имя секции напрямую из вызова Liquid без угадывания адресов
   var currentSection = (basketName || 'news').trim().toLowerCase();
-  
+
   var currentPage = 1;
-  var fullPool = [];
-  var totalPages = 1;
+  var feedData = null;
 
-  // 1. ПОДХВАТ ДАННЫХ ИЗ ОПЕРАТИВНОЙ ПАМЯТИ ИЛИ СЕТИ
+  // Мгновенно подхватываем квантованный объект Питона из памяти сайта
   if (window.site_feed_data && window.site_feed_data[currentSection]) {
-    // Если Jekyll уже пробросил базу данных в память сайта
-    var rawData = window.site_feed_data[currentSection];
-    fullPool = Array.isArray(rawData) ? rawData : (rawData.items || rawData.pages || []);
-    initPagination();
-  } else {
-    // Резервный сетевой запрос к плоскому файлу базы данных feed.yml
-    var feedUrl = window.location.origin + '/_data/feed.yml';
-    fetch(feedUrl)
-      .then(function(response) { return response.text(); })
-      .then(function(yamlText) {
-        if (window.site_feed_data && window.site_feed_data[currentSection]) {
-          fullPool = window.site_feed_data[currentSection];
-          initPagination();
-        }
-      });
-  }
-
-  function initPagination() {
-    if (!Array.isArray(fullPool) || fullPool.length === 0) return;
-    totalPages = Math.ceil(fullPool.length / itemsPerPage);
+    feedData = window.site_feed_data[currentSection];
     renderPage(currentPage);
+  } else {
+    console.error("Ожидание проброса глобального объекта site_feed_data для секции: " + currentSection);
+    return;
   }
 
-  // 2. СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
+  // СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
   function renderPage(page) {
     list.innerHTML = '';
+    var pageItems = feedData.pages[page] || [];
     var isHome = (controlsId === "home-news-pagination");
-
-    // Вырезаем порцию строго по 10 штук для текущей страницы
-    var start = (page - 1) * itemsPerPage;
-    var end = start + itemsPerPage;
-    var pageItems = fullPool.slice(start, end);
 
     pageItems.forEach(function(item) {
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       
-      // Переводим дату из YYYY-MM-DD в канонический формат DD.MM.YYYY
-      var dateStr = item.date;
-      if (item.date && item.date.indexOf('-') !== -1) {
-        dateStr = item.date.split('-').reverse().join('.');
-      }
+      var dateParts = item.date.split('-');
+      var dateStr = dateParts.length === 3 ? dateParts + '.' + dateParts + '.' + dateParts : item.date;
 
       if (isHome) {
-        // ВАРИАНТ А: Точный клон вёрстки для Главной страницы (Карточка "Что нового?")
+        // ВАРИАНТ А: Ваша оригинальная верстка для Главной страницы
         li.className = 'news-item news-item-compact' + pinnedClass;
-        li.setAttribute('data-date', item.date);
-        li.setAttribute('data-is-post', item.is_post);
-        
         var emojiStr = item.emoji ? ' ' + item.emoji : '';
         li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
                        '<a href="' + item.url + '" class="item-link">' + item.title + emojiStr + '</a>' +
                        '</span></div>';
         li.style.setProperty('display', 'flex', 'important');
       } else {
-        // ВАРИАНТ Б: Точный клон вёрстки для Журнала, Вопросов и частных лент
+        // ВАРИАНТ Б: Ваша оригинальная верстка для Журнала, Вопросов и т.д.
         li.className = 'news-item' + pinnedClass;
-        li.setAttribute('data-date', item.date);
-        li.setAttribute('data-is-post', item.is_post);
         li.style.cssText = 'margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;';
-        
         var personalEmojiStr = item.personal_emoji ? ' ' + item.personal_emoji : '';
         li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
                        '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +

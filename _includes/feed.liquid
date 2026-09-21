@@ -1,6 +1,7 @@
 {%- comment -%}
-@about Сборка и фильтрация ленты обновлений на основе обособленных корзин feed.yml.
-@purpose Нативно выводит первые 10 постов со всеми каноническими стилями Вариантов А и Б.
+@about Сборка и рендер первой страницы обновлений на основе квантованных корзин feed.yml.
+@purpose Нативно выводит пакет первой страницы через строковый ключ ["1"],
+         полностью сохраняя оригинальное форматирование Вариантов А и Б.
 @author TechLab 
 {%- endcomment -%}
 
@@ -9,15 +10,17 @@
 {%- assign url_parts = current_path_clean | split: "/" -%}
 {%- assign current_section = url_parts | last | strip | downcase -%}
 
-{% comment %} ДИНАМИЧЕСКИЙ ВЫБОР КОРЗИНЫ: Брем либо news для Главной, либо корзину раздела {% endcomment %}
+{% comment %} ДИНАМИЧЕСКИЙ ВЫБОР КОРЗИНЫ: Берем либо news для Главной, либо корзину раздела {% endcomment %}
 {%- if include.type == "home" or current_section == "news" -%}
   {%- assign target_basket = site.data.feed.news -%}
 {%- else -%}
   {%- assign target_basket = site.data.feed[current_section] -%}
 {%- endif -%}
 
-{% comment %} СЕРВЕРНЫЙ ЛИМИТ: Выводим строго первые 10 постов, защищая оригинальные стили {% endcomment %}
-{%- for item in target_basket limit: 10 -%}
+{% comment %} ЖЕСТКОЕ ИСПРАВЛЕНИЕ: Читаем квант первой страницы Питона через текстовый ключ {% endcomment %}
+{%- assign first_page_items = target_basket.pages["1"] -%}
+
+{%- for item in first_page_items -%}
   {%- assign pinned_class = "" -%}
   {%- if item.pinned == true or item.pinned == "true" -%}
     {%- assign pinned_class = " pinned-item" -%}

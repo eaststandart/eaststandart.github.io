@@ -92,7 +92,8 @@ def build_universal_feed():
             target_section = passport.get('relatedcollection', '')
 
         # Нативно наследуем эмодзи из кэша разделов по вычисленному родителю
-        calculated_emoji = passport.get('emoji', '')
+        personal_emoji = passport.get('emoji', '') # Строго авторский знак из Obsidian
+        calculated_emoji = personal_emoji
         if not calculated_emoji and target_section:
             calculated_emoji = section_emojis.get(target_section, "")
 
@@ -122,6 +123,7 @@ def build_universal_feed():
             'related': project_slug,
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
+            'personal_emoji': personal_emoji,
             'pinnedfeed': raw_pinned,
             'pinned_news': is_pinned_news,  # Флаг закрепа на Главной
             'pinned_own': is_pinned_own     # Динамический флаг закрепа в своей ленте

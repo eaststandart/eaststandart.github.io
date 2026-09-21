@@ -85,6 +85,9 @@ def build_universal_feed():
         else:
             if item_url:
                 project_slug = item_url.split('/')[-1]
+            post_type = passport.get('relatedsection', '')
+            if not post_type:
+                post_type = passport.get('relatedcollection', '')
 
         # Нативно вычисляем дефолтный эмодзи, принудительно подставляя приставку feed-
         personal_emoji = passport.get('emoji', '')  # Ручной знак из Obsidian

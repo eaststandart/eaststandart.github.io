@@ -19,7 +19,8 @@ def build_universal_feed():
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
     nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
-    output_feed_path = os.path.join(root_dir, '_data', 'feed.yml')
+    # output_feed_path = os.path.join(root_dir, '_data', 'feed.yml')
+    output_feed_path = os.path.join(root_dir, 'assets', 'feed.yml')
     log_dir_path = os.path.join(root_dir, '_feed_files')
     
     if not os.path.exists(nav_file_path):

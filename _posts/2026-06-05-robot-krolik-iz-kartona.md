@@ -8,6 +8,7 @@ sources: "[6 Lego Vehicles vs 6 Obstacles (2nd edit)](https://youtu.be/j-NEOrWxc
 date: 2026-06-05
 posttype: journal
 discus: "journal"
+pinnedfeed: [news, journal]
 ---
 
 **Содержание**\

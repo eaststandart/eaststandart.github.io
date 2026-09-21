@@ -97,22 +97,6 @@ def build_universal_feed():
         if not calculated_emoji and target_section:
             calculated_emoji = section_emojis.get(target_section, "")
 
-        # Универсальная нормализация синтаксиса pinnedfeed (всеядность к строкам и спискам)
-        raw_pinned = passport.get('pinnedfeed', False)
-        pinned_list = []
-        if isinstance(raw_pinned, list):
-            pinned_list = [str(x).strip().lower() for x in raw_pinned]
-        elif isinstance(raw_pinned, str):
-            pinned_list = [raw_pinned.strip().lower()]
-        elif raw_pinned is True:
-            # Обратная совместимость: если старый пост содержал просто true
-            pinned_list = ['news', str(post_type).strip().lower()]
-
-        # Вычисляем динамические маркеры закрепов без привязки к именам папок
-        current_posttype = str(post_type).strip().lower()
-        is_pinned_news = 'news' in pinned_list
-        is_pinned_own = current_posttype in pinned_list if current_posttype else False
-
         node = {
             'title': passport.get('title', 'Без названия'),
             'url': passport.get('url', ''),
@@ -121,25 +105,19 @@ def build_universal_feed():
             'related': project_slug,
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
-            'pinnedfeed': raw_pinned,
-            'pinned_news': is_pinned_news,  # Флаг закрепа на Главной
-            'pinned_own': is_pinned_own     # Динамический флаг закрепа в своей ленте
+            'pinnedfeed': passport.get('pinnedfeed', False)
         }
 
-        # Складываем в общую базу regular_posts. Глобальную сортировку по блокам сделаем на Шаге 3!
-        regular_posts.append(node)
+        if passport.get('pinnedfeed') is True:
+            node['pinned'] = True
+            pinned_posts.append(node)
+        else:
+            regular_posts.append(node)
 
     # 🟢 ШАГ 3: СОРТИРОВКА И ОБЪЕДИНЕНИЕ ПОТОКОВ
-    # Универсальная каскадная сортировка: 
-    # Приоритет 1: Любые закрепы (news или own) идут первыми. Приоритет 2: Внутри блоков всё строго по датам!
-    final_feed = sorted(
-        regular_posts,
-        key=lambda x: (
-            1 if (x.get('pinned_news') or x.get('pinned_own')) else 0,
-            x['date']
-        ),
-        reverse=True
-    )
+    pinned_posts.sort(key=lambda x: x['date'], reverse=True)
+    regular_posts.sort(key=lambda x: x['date'], reverse=True)
+    final_feed = pinned_posts + regular_posts
 
     log_buffer.append(f"[SUMMARY] Всего извлечено уникальных событий: {len(final_feed)}")
     log_buffer.append("-------------------------------------------------------------------------")

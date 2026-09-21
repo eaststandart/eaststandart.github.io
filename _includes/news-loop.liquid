@@ -1,33 +1,39 @@
 {%- comment -%}
 @about Сборка и фильтрация ленты обновлений на основе единой ленты feed.yml.
-@purpose Переносит рендер эмодзи на бэкенд, полностью блокируя скрытый JS-шум в браузере.
+@purpose Автоматически вычисляет текущий раздел по page.url и фильтрует эмодзи-шум общего контура.
 @author TechLab 
 {%- endcomment -%}
 
 {%- assign feed_source = site.data.feed.feed -%}
-{%- assign filter_folder = include.folder | strip -%}
+
+{% comment %} АВТОМАТ АДРЕСОВ: Вырезаем чистое имя текущего раздела из адреса страницы {% endcomment %}
+{%- assign current_path_clean = page.url | strip_search | strip_slash -%}
+{%- assign url_parts = current_path_clean | split: "/" -%}
+{%- assign current_section = url_parts | last | strip | downcase -%}
 
 {%- for item in feed_source -%}
   {%- assign is_allowed = false -%}
 
-  {%- if filter_folder and filter_folder != "" -%}
-    {%- if item.posttype == filter_folder -%}
+  {% comment %} Фильтрация постов для частных лент разделов {% endcomment %}
+  {%- if current_section and current_section != "news" -%}
+    {%- if item.posttype == current_section -%}
       {%- assign is_allowed = true -%}
     {%- endif -%}
   {%- else -%}
+    {% comment %} На Главной странице новостей (news) разрешаем вывод вообще всех постов каскадом {% endcomment %}
     {%- assign is_allowed = true -%}
   {%- endif -%}
 
   {%- if is_allowed -%}
-    {%- comment -%} УМНЫЙ АВТОМАТ: разделяем закрепы для Главной и для частных лент постов {%- endcomment -%}
+    {%- comment -%} УМНЫЙ АВТОМАТ ЗАКРЕПОВ: разделяем закрепы для Главной и для частных лент постов {%- endcomment -%}
     {%- assign pinned_class = "" -%}
-    {%- if include.type == "home" -%}
+    {%- if current_section == "news" -%}
       {%- if item.pinned_news == true or item.pinned_news == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
     {%- else -%}
       {%- if item.pinned_own == true or item.pinned_own == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
     {%- endif -%}
 
-    {%- if include.type == "home" -%}
+    {%- if current_section == "news" -%}
       <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
       <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none;">
         <div>
@@ -40,8 +46,8 @@
         </div>
       </li>
       
-    {%- elsif include.type == "news" -%}
-      <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
+    {%- else -%}
+      <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц частных лент контура -->
       <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>

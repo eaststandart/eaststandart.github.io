@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 @module feed
-@about Изолированный монолитный сборщик единой ленты обновлений из Источника Правды.
-@purpose Автоматически вычисляет типы, проекты и наследует эмодзи на основе URL карты навигации,
-         выгружая универсальный файл данных _data/feed.yml для нужд Jekyll и Liquid.
+@about Динамический сборщик обособленных корзин обновлений из Источника Правды.
+@purpose Автоматически собирает корзины на основе пермалинков карты навигации,
+         нативно выжигает эмодзи-шум, независимо сортирует мультизакрепы
+         и выгружает раздельные логи под каждую ленту сайта.
 @author TechLab
-@version 1.1.0-url-fixed
+@version 2.0.0-baskets-monolith
 """
 
 import os
@@ -19,7 +20,7 @@ def build_universal_feed():
     
     nav_file_path = os.path.join(root_dir, '_data', 'navigation.yml')
     output_feed_path = os.path.join(root_dir, '_data', 'feed.yml')
-    log_file_path = os.path.join(root_dir, '_feed_files', 'feed_debug.log')
+    log_dir_path = os.path.join(root_dir, '_feed_files')
     
     if not os.path.exists(nav_file_path):
         print(f"[FEED-ERROR] Единый Источник Правды не найден по пути: {nav_file_path}")
@@ -32,24 +33,27 @@ def build_universal_feed():
         print(f"[FEED-ERROR] Сбой YAML при чтении карты сайта: {e}")
         return
 
-    log_buffer = []
-    log_buffer.append("=========================================================================")
-    log_buffer.append("СТАРТ СЕРВЕРНОГО АУДИТА ЕДИНОЙ ЛЕНТЫ ОБНОВЛЕНИЙ FEED.YML")
-    log_buffer.append("=========================================================================\n")
-
-    regular_posts = []
-
-    # 🟢 ШАГ 1: КЭШИРУЕМ ЗНАЧКИ ЭМОДЗИ ИЗ ГОЛОВНЫХ РАЗДЕЛОВ КАРТЫ НАВИГАЦИИ
+    # 🟢 ШАГ 1: ДИНАМИЧЕСКИЙ СБОР КОРЗИН И КЭША ЭМОДЗИ ПО ПЕРМАЛИНКАМ КЛЮЧЕЙ 'feed-'
+    baskets = {}
     section_emojis = {}
-    for key, items in nav_data.items():
-        if key == 'detected_root_folders':
-            continue
-        if '/' not in key and isinstance(items, list) and len(items) > 0:
-            section_card = items[0]
-            if isinstance(section_card, dict) and section_card.get('emoji'):
-                section_emojis[key] = section_card['emoji']
+    
+    # Главная корзина новостей создается всегда по умолчанию
+    baskets['news'] = []
+    section_emojis['news'] = ""
 
-    # 🟢 ШАГ 2: СКВОЗНОЙ СБОР И НАЙТИВНОЕ РАСПОЗНАВАНИЕ ТИПОВ ИЗ URL
+    for key, items in nav_data.items():
+        if key.startswith('feed-') and isinstance(items, list) and len(items) > 0:
+            passport = items[0]
+            if isinstance(passport, dict) and passport.get('url'):
+                # Вырезаем чистое имя корзины из пермалинка (например, "/journal/" -> "journal")
+                basket_name = passport['url'].strip('/')
+                if basket_name:
+                    baskets[basket_name] = []
+                    # Запоминаем дефолтный эмодзи секции строго по принудительному ключу feed-имя
+                    if passport.get('emoji'):
+                        section_emojis[key] = passport['emoji']
+
+    # 🟢 ШАГ 2: СКВОЗНОЙ СБОР ПОСТОВ И КАСКАДНОЕ РАСПРЕДЕЛЕНИЕ С ФИЛЬТРАЦИЕЙ ШУМА
     for file_key, nodes in nav_data.items():
         if file_key == 'detected_root_folders':
             continue
@@ -71,51 +75,40 @@ def build_universal_feed():
         project_slug = ""
         is_post_flag = 'false'
 
-        # Если файл лежит в папке _posts или его URL содержит структуру постов хроники
+        # Вырезаем тип контента и слаг проекта из адресов папки _posts
         if file_key.startswith('_posts/') and item_url:
             url_parts = item_url.split('/')
             if len(url_parts) >= 2:
-                # Нативно вырезаем тип контента сайта (journal/media) и слаг проекта из адреса!
                 post_type = url_parts[0]
                 project_slug = url_parts[1]
                 is_post_flag = 'true'
         else:
-            # Для обычных карточек проектов определяем слаг по финалу URL
             if item_url:
                 project_slug = item_url.split('/')[-1]
 
-        # Вычисляем имя родителя строго по полям связи карты
-        target_section = post_type
-        if not target_section:
-            target_section = passport.get('relatedsection', '')
-        if not target_section:
-            target_section = passport.get('relatedcollection', '')
-
-        # Нативно наследуем эмодзи из кэша разделов по вычисленному родителю
-        personal_emoji = passport.get('emoji', '') # Строго авторский знак из Obsidian
+        # Нативно вычисляем дефолтный эмодзи, принудительно подставляя приставку feed-
+        personal_emoji = passport.get('emoji', '')  # Ручной знак из Obsidian
         calculated_emoji = personal_emoji
-        if not calculated_emoji and target_section:
-            calculated_emoji = section_emojis.get(target_section, "")
+        
+        if not calculated_emoji and post_type:
+            target_key = f"feed-{post_type}"
+            calculated_emoji = section_emojis.get(target_key, "")
 
-        # УНИВЕРСАЛЬНЫЙ ОЧИСТИТЕЛЬ: Намертво выжигает скобки и нарезает элементы по запятым
+        # Всеядный очиститель синтаксиса pinnedfeed
         raw_pinned = passport.get('pinnedfeed', False)
         pinned_list = []
-        
         if isinstance(raw_pinned, list):
             pinned_list = [str(x).strip().lower() for x in raw_pinned]
         elif isinstance(raw_pinned, str):
-            # Стираем технические скобки [ ] и кавычки, после чего режем по запятой
             clean_str = raw_pinned.replace('[', '').replace(']', '').replace("'", "").replace('"', '')
             pinned_list = [x.strip().lower() for x in clean_str.split(',') if x.strip()]
         elif raw_pinned is True:
             pinned_list = ['news', str(post_type).strip().lower()]
 
-        # Вычисляем динамические маркеры закрепов без привязки к именам папок
         current_posttype = str(post_type).strip().lower()
-        is_pinned_news = 'news' in pinned_list
-        is_pinned_own = current_posttype in pinned_list if current_posttype else False
 
-        node = {
+        # Базовая карточка-нода для Главной корзины news
+        node_news = {
             'title': passport.get('title', 'Без названия'),
             'url': passport.get('url', ''),
             'date': item_date,
@@ -124,61 +117,77 @@ def build_universal_feed():
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
             'personal_emoji': personal_emoji,
-            'pinnedfeed': raw_pinned,
-            'pinned_news': is_pinned_news,  # Флаг закрепа на Главной
-            'pinned_own': is_pinned_own     # Динамический флаг закрепа в своей ленте
+            'pinned': 'news' in pinned_list
         }
+        baskets['news'].append(node_news)
 
-        # Складываем в общую базу regular_posts. Глобальную сортировку по блокам сделаем на Шаге 3!
-        regular_posts.append(node)
+        # Если у поста есть целевая обособленная корзина — дублируем его туда
+        if current_posttype in baskets:
+            # Вычисляем дефолтный знак этого конкретного раздела контура
+            default_section_emoji = section_emojis.get(f"feed-{current_posttype}", "")
+            
+            # Нативная бэкенд-очистка: если эмодзи унаследован — стираем его в пустоту. Личные знаки — оставляем!
+            final_own_emoji = calculated_emoji
+            if calculated_emoji == default_section_emoji and not personal_emoji:
+                final_own_emoji = ""
 
-    # 🟢 ШАГ 3: СОРТИРОВКА И ОБЪЕДИНЕНИЕ ПОТОКОВ
-    # Универсальная каскадная сортировка: 
-    # Приоритет 1: Любые закрепы (news или own) идут первыми. Приоритет 2: Внутри блоков всё строго по датам!
-    final_feed = sorted(
-        regular_posts,
-        key=lambda x: (
-            1 if (x.get('pinned_news') or x.get('pinned_own')) else 0,
-            x['date']
-        ),
-        reverse=True
-    )
+            node_own = {
+                'title': passport.get('title', 'Без названия'),
+                'url': passport.get('url', ''),
+                'date': item_date,
+                'posttype': post_type,
+                'related': project_slug,
+                'is_post': is_post_flag,
+                'emoji': final_own_emoji,
+                'personal_emoji': personal_emoji,
+                'pinned': current_posttype in pinned_list
+            }
+            baskets[current_posttype].append(node_own)
 
-    log_buffer.append(f"[SUMMARY] Всего извлечено уникальных событий: {len(final_feed)}")
-    log_buffer.append("-------------------------------------------------------------------------")
-    log_buffer.append("ПОСТРОЧНЫЙ ХРОНОЛОГИЧЕСКИЙ REEСТР УНИВЕРСАЛЬНОЙ ЛЕНТЫ FEED.YML:")
-    log_buffer.append("-------------------------------------------------------------------------")
-    
-    for idx, f_item in enumerate(final_feed, 1):
-        p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
+    # 🟢 ШАГ 3: НЕЗАВИСИМАЯ МУЛЬТИ-СОРТИРОВКА И ВЫГРУЗКА РАЗДЕЛЬНЫХ ЛОГОВ
+    final_feed_data = {}
+    os.makedirs(log_dir_path, exist_ok=True)
+
+    for b_name, b_items in baskets.items():
+        # Сортируем каждую корзину отдельно: сначала закрепы (pinned), внутри блоков — строго по датам хроники
+        sorted_items = sorted(
+            b_items,
+            key=lambda x: (1 if x.get('pinned') else 0, x['date']),
+            reverse=True
+        )
         
-        # Калибровка лога: наглядно показываем тип мультизакрепления
-        if f_item.get('pinned_news') and f_item.get('pinned_own'):
-            pin_marker = "N/O"
-        elif f_item.get('pinned_news'):
-            pin_marker = " N "
-        elif f_item.get('pinned_own'):
-            pin_marker = " O "
-        else:
-            pin_marker = "   "
+        # Сохраняем готовую очищенную корзину для YAML
+        final_feed_data[b_name] = sorted_items
 
-        log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {pin_marker} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
+        # Пишем индивидуальный, независимый текстовый лог для текущей ленты на диск
+        log_buffer = []
+        log_buffer.append("=========================================================================")
+        log_buffer.append(f"РЕЕСТР ОБОСОБЛЕННОЙ ЛЕНТЫ ОБНОВЛЕНИЙ: {b_name.upper()}")
+        log_buffer.append(f"[SUMMARY] Всего извлечено уникальных событий: {len(sorted_items)}")
+        log_buffer.append("=========================================================================")
+        
+        for idx, f_item in enumerate(sorted_items, 1):
+            p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
+            pin_marker = "PIN" if f_item.get('pinned') else "   "
+            log_buffer.append(
+                f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {pin_marker} | "
+                f"{f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}"
+            )
+            
+        try:
+            individual_log_path = os.path.join(log_dir_path, f"{b_name}_debug.log")
+            with open(individual_log_path, 'w', encoding='utf-8') as lf:
+                lf.write("\n".join(log_buffer))
+        except Exception as e:
+            print(f"[FEED-ERROR] Не удалось сохранить изолированный лог {b_name}: {e}")
 
+    # Записываем монолитную многопоточную базу готовых корзин контура на диск
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:
-            yaml.dump({'feed': final_feed}, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        print(f"[FEED-SUCCESS] Универсальная лента создана. Элементов: {len(final_feed)}")
+            yaml.dump(final_feed_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        print(f"[FEED-SUCCESS] Обособленные корзины созданы в feed.yml. Лент: {len(final_feed_data)}")
     except Exception as e:
-        print(f"[FEED-ERROR] Ошибка записи feed.yml: {e}")
-        return
-
-    try:
-        os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-        with open(log_file_path, 'w', encoding='utf-8') as lf:
-            lf.write("\n".join(log_buffer))
-        print("[FEED-SUCCESS] Отчёт успешно сохранён.")
-    except Exception as e:
-        print(f"[FEED-ERROR] Не удалось сохранить лог: {e}")
+        print(f"[FEED-ERROR] Ошибка записи многопоточного feed.yml: {e}")
 
 if __name__ == '__main__':
     build_universal_feed()

@@ -1,9 +1,8 @@
 ---
-layout: news
+layout: feed
 title: Новости уголка конструктора
 permalink: /news/
 per_page: 10
-folder: ""
 ---
 
 {% comment %} 

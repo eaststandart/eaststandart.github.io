@@ -8,7 +8,7 @@ layout: default
 <!-- ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ И ЖУРНАЛА -->
 <div class="news-feed">
   <ul id="posts-list" style="list-style: none; padding: 0;">
-    {% include feed.liquid type="news" %}
+    {% include feed.liquid type="feed" %}
   </ul>
 </div>
 

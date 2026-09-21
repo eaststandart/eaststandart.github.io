@@ -1,11 +1,9 @@
 ---
-layout: news
+layout: feed
 title: Посты
 description: Лента постов без типа (дополнительные и справочные посты).
 permalink: /post/
 per_page: 10
-folder: "post"
-pinned_url: ""
 emoji: "📝"
 ---
 

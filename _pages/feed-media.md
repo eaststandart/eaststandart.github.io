@@ -1,11 +1,9 @@
 ---
-layout: news
+layout: feed
 title: Медиа-материалы
 description: Лента постов с медиа материалами по выполненным проектам.
 permalink: /media/
 per_page: 10
-folder: "media"
-pinned_url: ""
 emoji: "👀"
 ---
 

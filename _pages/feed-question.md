@@ -1,11 +1,9 @@
 ---
-layout: news
+layout: feed
 title: Вопросы проектов
 description: Лента постов вопросов по выполненным проектам.
 permalink: /question/
 per_page: 10
-folder: "question"
-pinned_url: ""
 emoji: "❓"
 ---
 

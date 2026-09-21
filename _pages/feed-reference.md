@@ -1,11 +1,9 @@
 ---
-layout: news
+layout: feed
 title: Справочник
 description: Лента постов справочных материалов.
 permalink: /reference/
 per_page: 10
-folder: "reference"
-pinned_url: ""
 emoji: ""
 ---
 

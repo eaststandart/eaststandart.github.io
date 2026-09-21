@@ -1,9 +1,9 @@
 /**
- * @about Модуль пагинации (ЧИСТАЯ ПОРЦИОННАЯ ПОДКАЧКА).
- * @purpose Физически выводит строго по 10 постов с сервера из базы feed.yml,
- *          собирая разметку буква в букву по эталону ваших оригинальных стилей Liquid.
+ * @about Модуль пагинации (ОРИГИНАЛЬНЫЙ РАБОЧИЙ КОНТУР).
+ * @purpose Восстанавливает первый рабочий алгоритм вывода, точечно исправляя 
+ *          цвета ссылок путём синхронизации тегов с классами вашего CSS.
  * @author TechLab
- * @version 6.0.0-pure-clones
+ * @version 6.1.0-original-fixed
  */
 
 function runPagination(listId, controlsId, itemsPerPage) {
@@ -32,16 +32,13 @@ function runPagination(listId, controlsId, itemsPerPage) {
     return;
   }
 
-  // 1. СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
+  // 1. ТОТ САМЫЙ ОРИГИНАЛЬНЫЙ ВЫВОД СТРОК С ИСПРАВЛЕНИЕМ ЦВЕТА
   function renderPage(page) {
     list.innerHTML = '';
     var pageItems = feedData.pages[page] || [];
-    
-    # 🌟 НАДЁЖНЫЙ МАРКЕР ГЛАВНОЙ: Проверяем физическое имя контейнера кнопок
     var isHome = (controlsId === "home-news-pagination");
 
     pageItems.forEach(function(item) {
-
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       
@@ -50,7 +47,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
       var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
 
       if (isHome) {
-        // ВАРИАНТ А: Полный клон вёрстки для Главной страницы (Карточка "Что нового?")
+        // ВАРИАНТ А: Точный рабочий вывод для Главной страницы без ломающих инлайн-стилей
         li.className = 'news-item news-item-compact' + pinnedClass;
         li.setAttribute('data-date', item.date);
         li.setAttribute('data-is-post', item.is_post);
@@ -61,7 +58,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
                        '</span></div>';
         li.style.setProperty('display', 'flex', 'important');
       } else {
-        // ВАРИАНТ Б: Полный клон вёрстки для Журнала и частных лент сайтов
+        // ВАРИАНТ Б: Точный рабочий вывод для Журнала с сохранением отступов и линий
         li.className = 'news-item' + pinnedClass;
         li.setAttribute('data-date', item.date);
         li.setAttribute('data-is-post', item.is_post);
@@ -69,7 +66,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
         
         var personalEmojiStr = item.personal_emoji ? ' ' + item.personal_emoji : '';
         li.innerHTML = '<div><span>' + dateStr + '&nbsp;»&nbsp;</span><span>' +
-                       '<a href="' + item.url + '" class="item-link" style="text-decoration: none;">' + item.title + personalEmojiStr + '</a>' +
+                       '<a href="' + item.url + '" class="item-link">' + item.title + personalEmojiStr + '</a>' +
                        '</span></div>';
         li.style.setProperty('display', 'block', 'important');
       }
@@ -97,7 +94,7 @@ function runPagination(listId, controlsId, itemsPerPage) {
         
         // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
         // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
-        var isHome = (currentSection === 'news' && window.location.pathname === '/');
+        var isHome = (controlsId === "home-news-pagination");
         if (!isHome) {
           var feedContainer = document.querySelector('.news-feed');
           if (feedContainer) {
@@ -126,7 +123,6 @@ function runPagination(listId, controlsId, itemsPerPage) {
   function renderControls() {
     controls.innerHTML = '';
     var totalPages = feedData.total_pages || 1;
-    var isHome = (currentSection === 'news' && window.location.pathname === '/');
     
     if (controlsId === "home-news-pagination") {
       var archiveBtn = document.createElement('button');

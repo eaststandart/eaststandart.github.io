@@ -19,12 +19,10 @@
   {%- endif -%}
 
   {%- if is_allowed -%}
-    {%- comment -%} УМНЫЙ АВТОМАТ: разделяем закрепы для Главной и для частных лент постов {%- endcomment -%}
+    {%- comment -%} Вычисляем класс закрепа на основе данных из feed.yml {%- endcomment -%}
     {%- assign pinned_class = "" -%}
-    {%- if include.type == "home" -%}
-      {%- if item.pinned_news == true or item.pinned_news == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
-    {%- else -%}
-      {%- if item.pinned_own == true or item.pinned_own == "true" -%}{%- assign pinned_class = " pinned-item" -%}{%- endif -%}
+    {%- if item.pinnedfeed == true or item.pinnedfeed == "true" -%}
+      {%- assign pinned_class = " pinned-item" -%}
     {%- endif -%}
 
     {%- if include.type == "home" -%}

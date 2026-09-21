@@ -5,7 +5,7 @@
  * @version 2.1.1-fixed
  */
 
-function runPagination(listId, controlsId, itemsPerPage, showEmoji) {
+function runPagination(listId, controlsId, itemsPerPage, pinnedUrl, showEmoji) {
   var list = document.getElementById(listId);
   if (!list) return;
 

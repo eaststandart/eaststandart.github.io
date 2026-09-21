@@ -128,7 +128,7 @@ def build_universal_feed():
         else:
             regular_posts.append(node)
 
-    # 🟢 ШАГ 3: УНИВЕРСАЛЬНАЯ СОРТИРОВКА И КВАНТОВАНИЕ ПО СТРАНИЦАМ В FEED.YML
+    # 🟢 ШАГ 3: УНИВЕРСАЛЬНАЯ СОРТИРОВКА И ПЕРЕНОС В ОБОСОБЛЕННЫЕ КОРЗИНЫ
     pinned_posts.sort(key=lambda x: x['date'], reverse=True)
     regular_posts.sort(key=lambda x: x['date'], reverse=True)
     final_feed = pinned_posts + regular_posts
@@ -147,7 +147,7 @@ def build_universal_feed():
                     if sect_card.get('emoji'):
                         feed_section_emojis[b_name] = sect_card['emoji']
 
-    # Наполняем временные плоские списки из готового массива final_feed
+    # Наполняем изолированные корзины из готового массива final_feed
     for f_item in final_feed:
         c_posttype = str(f_item['posttype']).strip().lower()
 
@@ -189,74 +189,29 @@ def build_universal_feed():
             }
             baskets[c_posttype].append(node_own)
 
-    # ПЕРЕХОДИМ К КВАНТОВАНИЮ МАССИВОВ И ФОРМИРОВАНИЮ СТРУКТУРИРОВАННЫХ ЛОГОВ
+    # ВЫГРУЗКА РАЗДЕЛЬНЫХ СОРТИРОВАННЫХ ЛОГОВ ПО КАЖДОЙ КОРЗИНЕ НА ДИСК
     final_feed_data = {}
     os.makedirs(log_dir_path, exist_ok=True)
-    
-    # Константа лимита постов на одну страницу
-    ITEMS_PER_PAGE = 10
 
     for b_name, b_items in baskets.items():
-        # 1. Первичная сортировка всей кучки: закрепы текущей ленты всегда наверху, ниже — хронология
-        sorted_pool = sorted(b_items, key=lambda x: (1 if x['pinned'] else 0, x['date']), reverse=True)
-        
-        # 2. Логика нарезки закрепов строго 1-в-1 как старая
-        # Вычленяем закрепы и обычные посты в изолированные очереди
-        pinned_queue = [x for x in sorted_pool if x['pinned']]
-        regular_queue = [x for x in sorted_pool if not x['pinned']]
-        
-        # Динамический лимит для первой страницы: если есть закрепы, обычных выводим меньше
-        first_page_limit = ITEMS_PER_PAGE - len(pinned_queue)
-        if first_page_limit < 1: 
-            first_page_limit = 1
-            
-        # Нарезаем регулярную очередь на порции
-        pages_dict = {}
-        total_items = len(sorted_pool)
-        
-        if total_items > 0:
-            # СТРАНИЦА 1: Всегда включает закрепы текущей ленты + первую порцию обычных постов
-            pages_dict[1] = pinned_queue + regular_queue[:first_page_limit]
-            
-            # ПОСЛЕДУЮЩИЕ СТРАНИЦЫ: Только обычные посты без дублирования закрепов
-            remaining_regular = regular_queue[first_page_limit:]
-            page_num = 2
-            for i in range(0, len(remaining_regular), ITEMS_PER_PAGE):
-                pages_dict[page_num] = remaining_regular[i:i + ITEMS_PER_PAGE]
-                page_num += 1
-        else:
-            pages_dict[1] = []
+        # Сортируем каждую корзину отдельно: сначала закрепы этой ленты, затем по датам
+        sorted_basket = sorted(b_items, key=lambda x: (1 if x['pinned'] else 0, x['date']), reverse=True)
+        final_feed_data[b_name] = sorted_basket
 
-        total_pages = len(pages_dict)
-
-        # Сохраняем квантованную структуру для итоговой базы YAML
-        final_feed_data[b_name] = {
-            'per_page': ITEMS_PER_PAGE,
-            'total_pages': total_pages,
-            'total_items': total_items,
-            'pages': pages_dict
-        }
-
-        # 3. Генерация глубокого раздельного структурированного лога на диск
+        # Запись изолированного лога для текущей корзины
         log_buffer = []
         log_buffer.append("=========================================================================")
         log_buffer.append(f"РЕЕСТР ОБОСОБЛЕННОЙ ЛЕНТЫ ОБНОВЛЕНИЙ: {b_name.upper()}")
-        log_buffer.append(f"[SUMMARY] Всего событий: {total_items} | Страниц пагинации: {total_pages} | Лимит: {ITEMS_PER_PAGE} на стр.")
+        log_buffer.append(f"[SUMMARY] Всего извлечено уникальных событий: {len(sorted_basket)}")
         log_buffer.append("=========================================================================")
         
-        global_idx = 1
-        for p_idx in sorted(pages_dict.keys()):
-            log_buffer.append(f"\n[📑 СТРАНИЦА {p_idx}] (Выведено событий: {len(pages_dict[p_idx])})")
-            log_buffer.append("-------------------------------------------------------------------------")
-            
-            for item in pages_dict[p_idx]:
-                p_status = "POST" if item['is_post'] == 'true' else "PAGE"
-                pin_marker = "PIN" if item['pinned'] else "   "
-                log_buffer.append(
-                    f"{global_idx:03d}. [{p_status}] {item['date']} | {item['emoji']:2} | {pin_marker} | "
-                    f"{str(item['posttype']):8} | {item['related']:20} | {item['title']}"
-                )
-                global_idx += 1
+        for idx, item in enumerate(sorted_basket, 1):
+            p_status = "POST" if item['is_post'] == 'true' else "PAGE"
+            pin_marker = "PIN" if item['pinned'] else "   "
+            log_buffer.append(
+                f"{idx:03d}. [{p_status}] {item['date']} | {item['emoji']:2} | {pin_marker} | "
+                f"{item['posttype']:8} | {item['related']:20} | {item['title']}"
+            )
             
         try:
             with open(os.path.join(log_dir_path, f"{b_name}_debug.log"), 'w', encoding='utf-8') as lf:
@@ -264,13 +219,13 @@ def build_universal_feed():
         except Exception as e:
             print(f"[FEED-ERROR] Не удалось сохранить изолированный лог {b_name}: {e}")
 
-    # Записываем квантованную многопоточную базу готовых корзин контура на диск
+    # Запись монолитной многопоточной базы готовых корзин контура на диск
     try:
         with open(output_feed_path, 'w', encoding='utf-8') as f:
             yaml.dump(final_feed_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-        print(f"[FEED-SUCCESS] Квантованная база создана в feed.yml. Лент: {len(final_feed_data)}")
+        print(f"[FEED-SUCCESS] Обособленные корзины созданы в feed.yml. Лент: {len(final_feed_data)}")
     except Exception as e:
-        print(f"[FEED-ERROR] Ошибка записи квантованного файла feed.yml: {e}")
+        print(f"[FEED-ERROR] Ошибка записи многопоточного feed.yml: {e}")
 
 if __name__ == '__main__':
     build_universal_feed()

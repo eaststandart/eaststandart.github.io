@@ -15,8 +15,7 @@
     runPagination(
       "{{ include.list_id }}", 
       "{{ include.controls_id }}", 
-      itemsPerPage,
-      "{{ include.basket | default: 'news' }}"
+      itemsPerPage
     );
   })();
 </script>

@@ -13,4 +13,4 @@ layout: default
 </div>
 
 {% assign limit = page.per_page | default: 10 %} 
-{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit %}
+{% include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket=current_section %}

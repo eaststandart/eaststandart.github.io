@@ -1,9 +1,9 @@
 /**
- * @about Модуль пагинации (ЧЕСТНЫЙ СЕТЕВОЙ КОНТУР JSON).
- * @purpose Физически скачивает с сервера строго по 10 постов в формате JSON (статус 200 ОК)
- *          при переключении страниц, полностью сохраняя оригинальные цвета и классы CSS.
+ * @about Модуль пагинации (ГИБРИДНЫЙ ЧИСТЫЙ КОНТУР).
+ * @purpose Скачивает плоскую базу feed.yml и рендерит порции строго по 10 штук,
+ *          копируя структуру классов вашего оригинального Liquid-файла.
  * @author TechLab
- * @version 8.0.0-pure-json-network
+ * @version 9.0.0-pure-hybrid
  */
 
 function runPagination(listId, controlsId, itemsPerPage, basketName) {
@@ -17,42 +17,53 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
   var currentSection = (basketName || 'news').trim().toLowerCase();
   
   var currentPage = 1;
+  var fullPool = [];
   var totalPages = 1;
 
-  // 1. ЧЕСТНЫЙ СЕТЕВОЙ ЗАПРОС К КОНКРЕТНОМУ МИКРО-ФАЙЛУ ПОРЦИИ
-  function loadPortion(page) {
-    // Формируем прямой физический адрес порции в открытой папке assets/feed/
-    var portionUrl = window.location.origin + '/assets/feed/' + currentSection + '-page' + page + '.json';
-    
-    fetch(portionUrl)
-      .then(function(response) {
-        if (!response.ok) {
-          throw new Error('Сетевой сбой при подкачке порции: ' + response.status);
+  // 1. ПОДХВАТ ДАННЫХ ИЗ ОПЕРАТИВНОЙ ПАМЯТИ ИЛИ СЕТИ
+  if (window.site_feed_data && window.site_feed_data[currentSection]) {
+    // Если Jekyll уже пробросил базу данных в память сайта
+    var rawData = window.site_feed_data[currentSection];
+    fullPool = Array.isArray(rawData) ? rawData : (rawData.items || rawData.pages || []);
+    initPagination();
+  } else {
+    // Резервный сетевой запрос к плоскому файлу базы данных feed.yml
+    var feedUrl = window.location.origin + '/_data/feed.yml';
+    fetch(feedUrl)
+      .then(function(response) { return response.text(); })
+      .then(function(yamlText) {
+        if (window.site_feed_data && window.site_feed_data[currentSection]) {
+          fullPool = window.site_feed_data[currentSection];
+          initPagination();
         }
-        return response.json(); // Нативно парсим JSON без тяжелых библиотек
-      })
-      .then(function(portionData) {
-        totalPages = portionData.total_pages || 1;
-        currentPage = page;
-        renderPage(portionData.items);
-      })
-      .catch(function(error) {
-        console.error('[PAGINATION-ERROR] Не удалось подкачать сетевую порцию:', error);
       });
   }
 
-  // 2. СБОРКА HTML СТРОК СТРОГО ПО ЭТАЛОНУ ВАШЕГО CSS
-  function renderPage(items) {
+  function initPagination() {
+    if (!Array.isArray(fullPool) || fullPool.length === 0) return;
+    totalPages = Math.ceil(fullPool.length / itemsPerPage);
+    renderPage(currentPage);
+  }
+
+  // 2. СБОРКА СТРОК СТРОГО ПО КЛАССАМ И ТЕГАМ ВАШЕГО LIQUID-ФАЙЛА
+  function renderPage(page) {
     list.innerHTML = '';
     var isHome = (controlsId === "home-news-pagination");
 
-    items.forEach(function(item) {
+    // Вырезаем порцию строго по 10 штук для текущей страницы
+    var start = (page - 1) * itemsPerPage;
+    var end = start + itemsPerPage;
+    var pageItems = fullPool.slice(start, end);
+
+    pageItems.forEach(function(item) {
       var li = document.createElement('li');
       var pinnedClass = item.pinned ? ' pinned-item' : '';
       
       // Переводим дату из YYYY-MM-DD в канонический формат DD.MM.YYYY
-      var dateParts = item.date.split('-');
-      var dateStr = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0] : item.date;
+      var dateStr = item.date;
+      if (item.date && item.date.indexOf('-') !== -1) {
+        dateStr = item.date.split('-').reverse().join('.');
+      }
 
       if (isHome) {
         // ВАРИАНТ А: Точный клон вёрстки для Главной страницы (Карточка "Что нового?")
@@ -66,7 +77,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
                        '</span></div>';
         li.style.setProperty('display', 'flex', 'important');
       } else {
-        // ВАРИАНТ Б: Точный клон вёрстки для Журнала, Вопросов и Медиатеки
+        // ВАРИАНТ Б: Точный клон вёрстки для Журнала, Вопросов и частных лент
         li.className = 'news-item' + pinnedClass;
         li.setAttribute('data-date', item.date);
         li.setAttribute('data-is-post', item.is_post);
@@ -85,7 +96,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
     renderControls();
   }
 
-  // 3. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ЧЕСТНОЙ СЕТЕВОЙ ПОДКАЧКОЙ ПРИ КЛИКЕ
+  // 3. ВСПОМОГАТЕЛЬНЫЕ КНОПКИ УПРАВЛЕНИЯ С ФИКСАЦИЕЙ ЭКРАНА СТРОГО ПО КОНТЕКСТУ
   function createButton(text, targetPage, isCurrent, isDisabled) {
     var btn = document.createElement('button');
     btn.innerText = text;
@@ -97,11 +108,11 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
     }
     if (!isDisabled && !isCurrent) {
       btn.addEventListener('click', function() {
-        // 🌟 ЧЕСТНЫЙ СЕТЕВОЙ КЛИК: Скачиваем строго нужный файл-порцию с сервера по сети
-        loadPortion(targetPage);
+        currentPage = targetPage;
+        renderPage(currentPage);
         
         // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
-        // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
+        // Если в Журнале / Вопросах — плавно возвращаем фокус к началу блока постов.
         var isHome = (controlsId === "home-news-pagination");
         if (!isHome) {
           var feedContainer = document.querySelector('.news-feed');
@@ -127,7 +138,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
     return span;
   }
 
-  // 4. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ТЕКУЩЕГО МИКРО-JSON
+  // 4. ГЕНЕРАЦИЯ КНОПОК ПАГИНАЦИИ НА ОСНОВЕ ДАННЫХ ВЫБРАННОЙ КОРЗИНЫ
   function renderControls() {
     controls.innerHTML = '';
     
@@ -174,7 +185,4 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
 
     controls.appendChild(createButton('»', currentPage + 1, false, currentPage === totalPages));
   }
-
-  // 🌟 СТАРТОВЫЙ ЗАПУСК: При загрузке страницы честно качаем первую порцию с сервера
-  loadPortion(currentPage);
 }

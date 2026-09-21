@@ -148,9 +148,17 @@ def build_universal_feed():
     log_buffer.append("ПОСТРОЧНЫЙ ХРОНОЛОГИЧЕСКИЙ REEСТР УНИВЕРСАЛЬНОЙ ЛЕНТЫ FEED.YML:")
     log_buffer.append("-------------------------------------------------------------------------")
     
-    for idx, f_item in enumerate(final_feed, 1):
         p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
-        pin_marker = "PIN" if f_item.get('pinnedfeed') is True else "   "
+        
+        # Калибровка лога: наглядно показываем тип мультизакрепления
+        if f_item.get('pinned_news') and f_item.get('pinned_own'):
+            pin_marker = "N/O"
+        elif f_item.get('pinned_news'):
+            pin_marker = " N "
+        elif f_item.get('pinned_own'):
+            pin_marker = " O "
+        else:
+            pin_marker = "   "
 
         log_buffer.append(f"{idx:03d}. [{p_status}] {f_item['date']} | {f_item['emoji']:2} | {pin_marker} | {f_item['posttype']:8} | {f_item['related']:20} | {f_item['title']}")
 

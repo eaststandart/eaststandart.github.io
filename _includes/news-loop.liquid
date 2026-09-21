@@ -1,6 +1,6 @@
 {%- comment -%}
 @about Сборка и фильтрация ленты обновлений на основе единой ленты feed.yml.
-@purpose Заменяет тяжелый сквозной поиск Jekyll быстрым чтением готовой базы данных, сохраняя стили закрепов.
+@purpose Переносит рендер эмодзи на бэкенд, полностью блокируя скрытый JS-шум в браузере.
 @author TechLab 
 {%- endcomment -%}
 
@@ -29,12 +29,12 @@
 
     {%- if include.type == "home" -%}
       <!-- Вариант А: Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none;">
+      <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
             <a href="{{ item.url | relative_url }}" class="item-link">
-              {{ item.title }}
+              {{ item.title }}{% if item.emoji and item.emoji != "" %} {{ item.emoji }}{% endif %}
             </a>
           </span>
         </div>
@@ -42,12 +42,12 @@
       
     {%- elsif include.type == "news" -%}
       <!-- Вариант Б: Широкий стиль с разделительными линиями для страниц Новостей и Журнала -->
-      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" data-emoji="{{ item.emoji }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+      <li class="news-item{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}" style="display: none; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
         <div>
           <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
           <span>
             <a href="{{ item.url | relative_url }}" class="item-link" style="text-decoration: none;">
-              {{ item.title }}
+              {{ item.title }}{% if item.personal_emoji and item.personal_emoji != "" %} {{ item.personal_emoji }}{% endif %}
             </a>
           </span>
         </div>

@@ -5,7 +5,7 @@ title: Журнал
 description: Лента постов журнальных записей по проектам.
 permalink: /journal/
 per_page: 10
-f-older: "journal"
+folder: "journal"
 emoji: "✍🏻"
 ---
 

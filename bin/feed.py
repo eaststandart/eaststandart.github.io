@@ -147,6 +147,7 @@ def build_universal_feed():
     log_buffer.append("ПОСТРОЧНЫЙ ХРОНОЛОГИЧЕСКИЙ REEСТР УНИВЕРСАЛЬНОЙ ЛЕНТЫ FEED.YML:")
     log_buffer.append("-------------------------------------------------------------------------")
     
+    for idx, f_item in enumerate(final_feed, 1):
         p_status = "POST" if f_item['is_post'] == 'true' else "PAGE"
         
         # Калибровка лога: наглядно показываем тип мультизакрепления

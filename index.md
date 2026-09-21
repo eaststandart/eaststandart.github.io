@@ -40,7 +40,7 @@ header_theme: classic
         <!-- Смысловой контейнер для изоляции стилей обновлений Главной -->
         <div class="home-news-feed">
             <ul id="posts-list" style="list-style: none; padding: 0; margin: 0;">
-                {% include news-loop.liquid type="home" %}
+                {% include feed.liquid type="home" %}
             </ul>
         </div>
         <div id="home-news-pagination"></div>

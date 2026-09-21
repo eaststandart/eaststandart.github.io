@@ -15,7 +15,8 @@
     runPagination(
       "{{ include.list_id }}", 
       "{{ include.controls_id }}", 
-      itemsPerPage
+      itemsPerPage, 
+      "{{ include.emoji | default: 'Y' }}"
     );
   })();
 </script>

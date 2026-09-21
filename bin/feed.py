@@ -48,7 +48,9 @@ def build_universal_feed():
         if '/' not in key and isinstance(items, list) and len(items) > 0:
             section_card = items[0]
             if isinstance(section_card, dict) and section_card.get('emoji'):
-                section_emojis[key] = section_card['emoji']
+                # Очищаем имя ключа от приставки feed- для 100% совместимости с Шагом 2
+                clean_key = key.replace('feed-', '').strip().lower()
+                section_emojis[clean_key] = section_card['emoji']
 
     # 🟢 ШАГ 2: СКВОЗНОЙ СБОР И НАЙТИВНОЕ РАСПОЗНАВАНИЕ ТИПОВ ИЗ URL
     for file_key, nodes in nav_data.items():

@@ -97,15 +97,17 @@ def build_universal_feed():
         if not calculated_emoji and target_section:
             calculated_emoji = section_emojis.get(target_section, "")
 
-        # Универсальная нормализация синтаксиса pinnedfeed (всеядность к строкам и спискам)
+        # УНИВЕРСАЛЬНЫЙ ОЧИСТИТЕЛЬ: Намертво выжигает скобки и нарезает элементы по запятым
         raw_pinned = passport.get('pinnedfeed', False)
         pinned_list = []
+        
         if isinstance(raw_pinned, list):
             pinned_list = [str(x).strip().lower() for x in raw_pinned]
         elif isinstance(raw_pinned, str):
-            pinned_list = [raw_pinned.strip().lower()]
+            # Стираем технические скобки [ ] и кавычки, после чего режем по запятой
+            clean_str = raw_pinned.replace('[', '').replace(']', '').replace("'", "").replace('"', '')
+            pinned_list = [x.strip().lower() for x in clean_str.split(',') if x.strip()]
         elif raw_pinned is True:
-            # Обратная совместимость: если старый пост содержал просто true
             pinned_list = ['news', str(post_type).strip().lower()]
 
         # Вычисляем динамические маркеры закрепов без привязки к именам папок

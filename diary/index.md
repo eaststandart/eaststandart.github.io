@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Дневник инженера
-navtitle: "Дневник"
+crumbtitle: "Дневник"
 custom_css: ["/assets/css/diary.css"]
 ---
 

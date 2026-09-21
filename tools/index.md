@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Полезные инструменты
-navtitle: "Инструменты"
+crumbtitle: "Инструменты"
 custom_css: ["/assets/css/tools.css"]
 ---
 

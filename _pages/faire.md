@@ -2,7 +2,6 @@
 layout: faire
 description: Проекты дополнительные к учебным программам для юных инженеров и мастеров по техническим направлениям.
 title: Ярмарка поделок
-navtitle: "Поделки"
 crumbtitle: "Поделки"
 permalink: /faire/
 emoji: "🔥"

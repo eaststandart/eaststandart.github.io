@@ -2,7 +2,7 @@
 layout: page
 description: Направление для изучения проектов от простых основ до сложных систем.
 title: Учебные проекты
-navtitle: "Проекты"
+crumbtitle: "Проекты"
 custom_css: ["/assets/css/projects.css"]
 emoji: "🗂️"
 ---

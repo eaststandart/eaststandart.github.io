@@ -6,7 +6,6 @@ description: Лента постов журнальных записей по п
 permalink: /journal/
 per_page: 10
 folder: "journal"
-pinned_url: ""
 emoji: "✍🏻"
 ---
 

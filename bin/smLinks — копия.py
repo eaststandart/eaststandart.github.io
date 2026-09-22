@@ -96,8 +96,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                 'node': node,
                 'front_matter': front_data if front_data else {},
                 'body_content': '',
-                'file_path': index_file_path,
-                'stamp_permalink_to_disk': False
+                'file_path': index_file_path
             }
 
     # ФИНАЛЬНАЯ ПРОВЕРКА ШАГА 1: Добор автономных файлов из папки _pages/
@@ -120,8 +119,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             'node': node,
                             'front_matter': p_data,
                             'body_content': p_body,
-                            'file_path': os.path.join(pages_dir, file),
-                            'stamp_permalink_to_disk': False
+                            'file_path': os.path.join(pages_dir, file)
                         }
 
     # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
@@ -145,7 +143,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                     node = {}
                     node['title'] = data.get('title', file_slug)
-                    need_permalink = False
 
                     # 1. Если у файла ЕСТЬ permalink
                     if ready_permalink:
@@ -177,10 +174,10 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             # Присваиваем только URL по умолчанию как у Jekyll (.html)
                             node['url'] = f"/{clean_section_name}/{file_slug}/"
                             
-                            # Взводим флаг-сигнал для физического штампа на диске на Финале конвейера
-                            need_permalink = True
+                            # Передаем конвейеру флаг-сигнал для физического штампа на диске
+                            passport_flags = {'stamp_permalink_to_disk': True}
                             
-                            # Фиксируем факт генерации в памяти логов контура
+                            # Фиксируем факт в памяти
                             if not name.startswith('_'):
                                 log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
 
@@ -194,8 +191,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         'node': node,
                         'front_matter': data,
                         'body_content': body,
-                        'file_path': file_path,
-                        'stamp_permalink_to_disk': need_permalink
+                        'file_path': file_path
                     }
 
     # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (ТОЛЬКО ЧИСТЫЕ СВЯЗИ И URL В ПАМЯТЬ)
@@ -265,8 +261,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                     'node': node,
                     'front_matter': data,
                     'body_content': body,
-                    'file_path': file_path,
-                    'stamp_permalink_to_disk': False  # Постам хроники пермалинк на диск никогда не штампуется
+                    'file_path': file_path
                 }
 
     return sitemap_flat_map, root_dirs_present

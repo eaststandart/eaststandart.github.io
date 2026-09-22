@@ -93,13 +93,12 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
             else:
                 node['section'] = clean_section_name
                 
-            # Исправлено: Паспорт пишется в едином сквозном формате словаря
-            sitemap_flat_map[clean_section_name] = {
+            sitemap_flat_map[clean_section_name] = [{
                 'node': node,
                 'front_matter': front_data if front_data else {},
                 'body_content': '',
                 'file_path': index_file_path
-            }
+            }]
 
     # ФИНАЛЬНАЯ ПРОВЕРКА ШАГА 1: Добор автономных файлов из папки _pages/
     pages_dir = os.path.join(root_dir, '_pages')
@@ -122,12 +121,12 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             
                         node['section'] = slug
                         
-                        sitemap_flat_map[slug] = {
+                        sitemap_flat_map[slug] = [{
                             'node': node,
                             'front_matter': p_data,
                             'body_content': p_body,
                             'file_path': os.path.join(pages_dir, file)
-                        }
+                        }]
 
     # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
     for name in os.listdir(root_dir):
@@ -186,12 +185,81 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                     data['section'] = name.lstrip('_')
 
-                    # Упаковываем в плоскую сквозную карту в памяти без лишних вложений массивов
-                    sitemap_flat_map[relative_file_key] = {
+                    sitemap_flat_map[relative_file_key] = [{
                         'node': node,
                         'front_matter': data,
                         'body_content': body,
                         'file_path': file_path
-                    }
+                    }]
+
+    # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (ТОЛЬКО ЧИСТЫЕ СВЯЗИ И URL)
+    posts_dir = os.path.join(root_dir, '_posts')
+    if os.path.exists(posts_dir):
+        for root, _, files in os.walk(posts_dir):
+            for file in files:
+                if not (file.endswith('.md') or file.endswith('.html')): continue
+                
+                file_path = os.path.join(root, file)
+                data, front_text, body = parse_yaml_front_matter(file_path)
+                if data is None or data.get('published') is False: continue
+
+                file_name_clean, _ = os.path.splitext(file)
+                file_slug_no_date = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', file_name_clean)
+                ready_permalink = data.get('permalink', '').strip()
+                relative_file_key = os.path.relpath(file_path, root_dir).replace(os.sep, '/')
+
+                match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name_clean)
+                post_date = match_date.group(1) if match_date else "2026-01-01"
+
+                # 1. МАГИЯ СВЯЗЕЙ: Ищем родительский проект по чистому слагу в оперативной памяти Шага 2
+                calculated_parent_path = ""
+                parent_file_name = f"{file_slug_no_date}.md"
+                for key_path in sitemap_flat_map.keys():
+                    if key_path.endswith(f"/{parent_file_name}") or key_path == parent_file_name:
+                        calculated_parent_path = key_path
+                        break
+
+                node = {}
+                node['title'] = data.get('title', file_slug_no_date)
+
+                # 2. СБОРКА URL И КОРНЕВЫХ СВЯЗЕЙ (ПОЛНОСТЬЮ АНАЛОГИЧНО ШАГУ 2)
+                # А. Если у поста ЕСТЬ permalink автора
+                if ready_permalink:
+                    node['url'] = ready_permalink
+                    permalink_clean = ready_permalink.strip('/')
+                    first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                    
+                    has_clean_dir = first_word in root_dirs_present
+                    has_under_dir = f"_{first_word}" in root_dirs_present
+                    
+                    if calculated_parent_path:
+                        node['relatedpages'] = calculated_parent_path
+                    
+                    if has_clean_dir and has_under_dir:
+                        pass
+                    elif has_under_dir:
+                        node['relatedcollection'] = first_word
+                    elif has_clean_dir:
+                        node['relatedsection'] = first_word
+
+                # Б. Если у поста НЕТ permalink (Динамическая сборка URL по умолчанию без записи на диск)
+                else:
+                    node['url'] = f"/journal/{file_slug_no_date}/{post_date.replace('-', '/')}/{file_name_clean}.html"
+                    if calculated_parent_path:
+                        node['relatedpages'] = calculated_parent_path
+                        
+                    # Так как пермалинка нет, по умолчанию привязываем к разделу journal
+                    if 'journal' in root_dirs_present:
+                        node['relatedsection'] = 'journal'
+                    elif '_journal' in root_dirs_present:
+                        node['relatedcollection'] = 'journal'
+
+                # Упаковываем очищенный паспорт поста хроники в сквозную карту памяти
+                sitemap_flat_map[relative_file_key] = [{
+                    'node': node,
+                    'front_matter': data,
+                    'body_content': body,
+                    'file_path': file_path
+                }]
 
     return sitemap_flat_map, root_dirs_present

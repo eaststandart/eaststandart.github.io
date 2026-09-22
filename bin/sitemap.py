@@ -197,7 +197,7 @@ def build_sitemap_tree():
                     if ready_permalink:
                         node['url'] = ready_permalink
                         permalink_clean = ready_permalink.strip('/')
-                        first_word = permalink_clean.split('/') if permalink_clean else ''
+                        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                         
                         has_clean_dir = first_word in root_dirs_present
                         has_under_dir = f"_{first_word}" in root_dirs_present
@@ -253,7 +253,7 @@ def build_sitemap_tree():
                 raw_post_type = str(data.get('posttype', '')).strip().lower() if data.get('posttype') else ""
                 
                 # ОБЩЕЕ УНИВЕРСАЛЬНОЕ ПРАВИЛО: Выделяем базовый тип контента (отсекаем приставку -close)
-                base_type_clean = raw_post_type.split('-') if '-' in raw_post_type else raw_post_type
+                base_type_clean = raw_post_type.split('/')[0] if '-' in raw_post_type else raw_post_type
 
                 # Вычисляем полный физический путь к родителю (СТАРАЯ ЛОГИКА 1 в 1)
                 calculated_parent_path = ""
@@ -274,7 +274,7 @@ def build_sitemap_tree():
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
-                    first_word = permalink_clean.split('/') if permalink_clean else ''
+                    first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                     
                     has_clean_dir = first_word in root_dirs_present
                     has_under_dir = f"_{first_word}" in root_dirs_present

@@ -2,19 +2,24 @@
 # -*- coding: utf-8 -*-
 """
 @module smPropsIn
-@about Затягивание свойств Obsidian в карту сайта
-@purpose Пробегает по готовому каркасу ссылок конвейера в оперативной памяти и обогащает ноды кастомными метаданными Front Matter заметок.
+@about Обогащение карты и расчет инвариантных дат
+@purpose Затягивает из Front Matter свойства Obsidian в карту сайта и вычисляет недостающие даты через каскад Git/mtime в оперативной памяти.
 @author TechLab
-@version 1.0.0
+@version 2.0.0
 """
 
+import os
+import re
+import datetime
+import subprocess
+
 def enrich_sitemap_properties(sitemap_flat_map):
-    """Принимает сквозную карту памяти конвейера и затягивает в ноды свойства Obsidian."""
+    """Принимает сквозную карту памяти конвейера, затягивает свойства Obsidian и рассчитывает даты."""
     if not sitemap_flat_map:
         return sitemap_flat_map
 
     # Список кастомных текстовых свойств Obsidian, которые строго должны попасть в sitemap.yml
-    SITEMAP_PROPERTIES = ['crumbtitle', 'emoji', 'posttype']
+    SITEMAP_PROPERTIES = ['crumbtitle', 'emoji', 'posttype', 'pinnedfeed']
 
     for file_key, passport in sitemap_flat_map.items():
         # Технический ключ списка папок игнорируем
@@ -23,15 +28,60 @@ def enrich_sitemap_properties(sitemap_flat_map):
 
         node = passport.get('node', {})
         front_data = passport.get('front_matter', {})
+        file_path = passport.get('file_path', '')
 
         if not node or not front_data:
             continue
 
-        # Сквозной нативный перенос свойств Obsidian внутрь ноды памяти карты сайта
+        # 1. Сквозной нативный перенос свойств Obsidian внутрь ноды памяти карты сайта
         for prop in SITEMAP_PROPERTIES:
             if front_data.get(prop):
                 val_clean = str(front_data[prop]).strip()
                 if val_clean:
                     node[prop] = front_data[prop]
+
+        # 2. ОРИГИНАЛЬНЫЙ КАСКАД ВЫЧИСЛЕНИЯ ДАТЫ В ОПЕРАТИВНОЙ ПАМЯТИ (БЛОК А)
+        # Инициализируем флаг-сигнал для Этапа 3
+        passport['stamp_date_to_disk'] = False
+
+        # А. Если дата изначально задана автором в Obsidian Front Matter
+        if front_data.get('date'):
+            node['date'] = str(front_data['date']).strip()
+
+        # Б. Если даты в файле нет — включаем каскад оригинальных вычислений контура
+        else:
+            calculated_date = ""
+            
+            # Приоритет 1: Для постов хроники вырезаем дату из имени файла
+            file_name = os.path.basename(file_path) if file_path else ""
+            match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name)
+            
+            if match_date:
+                calculated_date = match_date.group(1)
+            
+            # Приоритет 2: Для обычных файлов вызываем системную команду Git log
+            else:
+                if file_path and os.path.exists(file_path):
+                    try:
+                        cmd = ['git', 'log', '--diff-filter=A', '--format=%as', '--', file_path]
+                        git_date = subprocess.check_output(cmd, text=True).strip().split('\n')[-1]
+                        if git_date and re.match(r'^\d{4}-\d{2}-\d{2}$', git_date):
+                            calculated_date = git_date
+                        else:
+                            # Приоритет 3: Если Гит молчит — берём системное mtime диска
+                            mtime = os.path.getmtime(file_path)
+                            calculated_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                    except Exception:
+                        # Защитный fallback на mtime диска при сбое команды Git
+                        mtime = os.path.getmtime(file_path)
+                        calculated_date = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+
+            # Если дата успешно вычислена, фиксируем её в памяти конвейера
+            if calculated_date:
+                node['date'] = calculated_date
+                front_data['date'] = calculated_date  # Обновляем словарь Front Matter в памяти для Этапа 3
+                
+                # Включаем зеленый свет для физической записи на диск на Этапе 3
+                passport['stamp_date_to_disk'] = True
 
     return sitemap_flat_map

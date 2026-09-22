@@ -188,7 +188,7 @@ def build_navigation_tree():
     os.makedirs(debug_dir, exist_ok=True)
 
     # Список жестких технических исключений корневых папок диска
-    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_navigation_files'}
+    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_navigation_files', '_sitemap_files'}
     
     flat_map = {}
     root_dirs_present = set()

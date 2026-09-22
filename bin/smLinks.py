@@ -11,6 +11,7 @@
 import os
 import re
 import yaml
+from sitemap import log_artifact
 
 def parse_yaml_front_matter(file_path):
     """Извлекает блок Front Matter из markdown-файла контента сайта."""
@@ -170,7 +171,12 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         # Б. Если в родительской папке НЕТ индексного файла
                         else:
                             node['url'] = f"/{clean_section_name}/{file_slug}/"
+                            
+                            # ТОЧЕЧНОЕ ВОЗВРАЩЕНИЕ ЛОГА: Фиксируем факт в памяти
+                            if not name.startswith('_'):
+                                log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
 
+                        # Единый сквозной блок связей контента (Оригинальное восстановление вложенности!)
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:

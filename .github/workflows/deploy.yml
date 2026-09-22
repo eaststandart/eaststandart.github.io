@@ -33,6 +33,20 @@ jobs:
       - name: Run Markdown Preprocessor
         run: python bin/preprocess.py
 
+      - name: Upload Sitemap Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitemap-metadata
+          path: _data/sitemap.yml
+          retention-days: 7
+
+      - name: Upload Sitemap Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitemap-logs
+          path: _sitemap_files/sitemap-md-properties.log
+          retention-days: 7
+
       - name: Upload Navigation Tree to GitHub Interface
         uses: actions/upload-artifact@v4
         with:

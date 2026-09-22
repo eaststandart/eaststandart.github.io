@@ -145,7 +145,15 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                     node = {}
                     node['title'] = data.get('title', file_slug)
-                    need_permalink = False
+                    
+                    # Создаем паспорт объекта в памяти ДО проверок условий, чтобы флаг лег по вашей аналогии!
+                    passport = {
+                        'node': node,
+                        'front_matter': data,
+                        'body_content': body,
+                        'file_path': file_path,
+                        'stamp_permalink_to_disk': False  # По умолчанию штамп на диск выключен
+                    }
 
                     # 1. Если у файла ЕСТЬ permalink
                     if ready_permalink:
@@ -177,26 +185,20 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             # Присваиваем только URL по умолчанию как у Jekyll (.html)
                             node['url'] = f"/{clean_section_name}/{file_slug}/"
                             
-                            # Взводим флаг-сигнал для физического штампа на диске на Финале конвейера
-                            need_permalink = True
+                            # ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Прямое сквозное выражение флага строго по вашей аналогии!
+                            passport['stamp_permalink_to_disk'] = True
                             
-                            # Фиксируем факт генерации в памяти логов контура
+                            # Фиксируем факт генерации в памяти логов контура контроля
                             if not name.startswith('_'):
                                 log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
 
-                        # Единый сквозной блок связей контента (Оригинальное восстановление вложенности!)
+                        # Единый сквозной блок связей контента (Вложенность условий полностью восстановлена)
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:
                             node['relatedsection'] = clean_section_name
 
-                    sitemap_flat_map[relative_file_key] = {
-                        'node': node,
-                        'front_matter': data,
-                        'body_content': body,
-                        'file_path': file_path,
-                        'stamp_permalink_to_disk': need_permalink
-                    }
+                    sitemap_flat_map[relative_file_key] = passport
 
     # 🔥 ШАГ 3: ОБРАБОТКА ПАПКИ СВЯЗАННЫХ ПОСТОВ ХРОНИКИ _POSTS/ (ТОЛЬКО ЧИСТЫЕ СВЯЗИ И URL В ПАМЯТЬ)
     posts_dir = os.path.join(root_dir, '_posts')

@@ -100,17 +100,13 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
         // 🌟 ЧЕСТНЫЙ СЕТЕВОЙ КЛИК: Скачиваем строго нужный файл-порцию с сервера по сети
         loadPortion(targetPage);
         
-        // ФИКСАЦИЯ ЭКРАНА: Если мы на Главной — экран стоит как влитой.
-        // Если в Журнале — плавно возвращаем фокус к началу блока постов без срыва шапки.
-        var isHome = (controlsId === "home-news-pagination");
-        if (!isHome) {
-          var feedContainer = document.querySelector('.news-feed');
-          if (feedContainer) {
-            feedContainer.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }
+    if (!isDisabled && !isCurrent) {
+      btn.addEventListener('click', function() {
+        // 🌟 ЧЕСТНЫЙ СЕТЕВОЙ КЛИК: Переключаем порции без шевеления и прыжков экрана!
+        loadPortion(targetPage);
+      });
+    }
+
       });
     }
     return btn;

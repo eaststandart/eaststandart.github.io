@@ -148,6 +148,11 @@ def navigation_feed_properties(data, passport, file_path=None):
     # В. ЕДИНАЯ ФИЗИЧЕСКАЯ ПЕРЕЗАПИСЬ ФАЙЛА С ФИКСАЦИЕЙ ЧИСТОГО ЛОГА
     if (date_was_written or tags_were_written) and file_path and os.path.exists(file_path):
         try:
+            # 🛡️ СВЕРХНАДЁЖНАЯ ЗАЩИТА URL: Страхуем пермалинк от затирания перед отправкой на диск
+            if not data.get('permalink') and isinstance(target_dict, dict) and target_dict.get('url'):
+                # Прошиваем канонический адрес карты прямо во Front Matter записываемого файла!
+                data['permalink'] = target_dict['url']
+
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
@@ -344,7 +349,7 @@ def build_navigation_tree():
                             node['relatedsection'] = clean_section_name
 
                     data['section'] = name.lstrip('_')
-                    # write_yaml_front_matter(file_path, data, body)
+                    write_yaml_front_matter(file_path, data, body)
 
                     node = navigation_feed_properties(data, node, file_path)
 

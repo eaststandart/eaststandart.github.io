@@ -3,12 +3,6 @@ about: Шаблон ленты новостей.
 purpose: Автоматически строит каркас ленты и выводит кнопки пагинации.
 layout: default
 ---
-
-{% comment %} АВТОМАТ АДРЕСОВ: Нативно вырезаем имя текущей папки (journal/question) {% endcomment %} 
-{%- assign current_path_clean = page.url | strip_search | strip_slash -%} 
-{%- assign url_parts = current_path_clean | split: "/" -%}
-{%- assign current_section = url_parts | last | strip | downcase -%}
-
 {{ content }}
 
 <!-- ТЕХНИЧЕСКИЙ ШАБЛОН: ЛЕНТЫ НОВОСТЕЙ И ЖУРНАЛА -->

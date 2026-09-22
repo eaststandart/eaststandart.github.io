@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module sitemap_navigation (Шаг 1 из пакета sitemap)
+@module sitemap_navigation
 @about Подмодуль Этажа 3. Собирает базовую структуру, связи контента и URL в память.
 """
 
 import os
 import re
-from .sitemap import parse_yaml_front_matter  # Системная утилита чтения
+
+# Импортируем парсер из соседнего файла sitemap.py напрямую БЕЗ точек
+from sitemap import parse_yaml_front_matter
 
 def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
     """Скан репозитория, расчет базовых URL/связей и сборка сквозного словаря в памяти."""
@@ -20,7 +22,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
         if os.path.isdir(os.path.join(root_dir, name)) and not name.startswith('.') and name not in EXCLUDED_FOLDERS:
             root_dirs_present.add(name)
 
-    # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО КАСКАДНОЙ ТАБЛИЦЕ
+    # 🔥 ШАГ 1: ОБРАБОТКА КОРНЕВЫХ ПАПОК (БЕЗ ФАЙЛОВ И ИНДЕКСОВ) СТРОГО ПО ВАШЕЙ КАСКАДНОЙ ТАБЛИЦЕ
     for name in os.listdir(root_dir):
         full_path = os.path.join(root_dir, name)
         if os.path.isdir(full_path) and name not in EXCLUDED_FOLDERS and not name.startswith('.') and name != '_posts':
@@ -31,7 +33,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
             front_data = None
             index_file_path = ""
             
-            # --- ПРИОРИТЕТ 1: Поиск физического индекса прямо внутри папки ---
             possible_index_md = os.path.join(full_path, 'index.md')
             possible_index_html = os.path.join(full_path, 'index.html')
             
@@ -44,7 +45,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                 front_data, _, _ = parse_yaml_front_matter(index_file_path)
                 folders_with_index.add(name)
                 
-            # --- ПРИОРИТЕТ 2: Поиск совпадения в папке _pages/ ---
             if not front_data:
                 possible_page = os.path.join(root_dir, '_pages', f"{clean_section_name}.md")
                 if os.path.exists(possible_page):
@@ -52,8 +52,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
             # Собираем паспорт раздела
             node = {}
-            
-            # Вычисление title, crumbtitle, emoji в папках разделов (Приоритет 1 и 2)
             if front_data:
                 node['title'] = front_data.get('title', clean_section_name.capitalize())
                 if 'crumbtitle' in front_data:
@@ -61,19 +59,14 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                 if front_data.get('emoji'):
                     node['emoji'] = front_data['emoji']
                 
-                # Вычисление URL по пермалинку
                 if front_data.get('permalink'):
                     node['url'] = front_data['permalink'].strip()
                 else:
-                    # --- ПРИОРИТЕТ 3 (Сброс URL на автомат папки, если пермалинка в шапке не было) ---
                     node['url'] = f"/{clean_section_name}/"
-            
-            # --- ПРИОРИТЕТ 3: Полный автомат, если файлов на диске вообще не найдено ---
             else:
                 node['title'] = clean_section_name.capitalize()
                 node['url'] = f"/{clean_section_name}/"
 
-            # Назначение прямых свойств связи в зависимости от наличия подчёркивания папки на диске
             if is_under_dir:
                 node['collection'] = clean_section_name
             else:
@@ -140,7 +133,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                     if ready_permalink:
                         node['url'] = ready_permalink
                         permalink_clean = ready_permalink.strip('/')
-                        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                        first_word = permalink_clean.split('/') if permalink_clean else ''
                         
                         has_clean_dir = first_word in root_dirs_present
                         has_under_dir = f"_{first_word}" in root_dirs_present
@@ -152,7 +145,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         elif has_clean_dir:
                             node['relatedsection'] = first_word
 
-                    # 2. Если у файла НЕТ permalink (с вашим точечным исправлением по индексам папок)
+                    # 2. Если у файла НЕТ permalink (ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ С .HTML ДЛЯ ИНДЕКСОВ)
                     else:
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')
@@ -171,7 +164,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                     data['section'] = name.lstrip('_')
 
-                    # Вместо физической записи на диск мы пока просто упаковываем всё в сквозной паспорт в памяти
+                    # Упаковываем всё в сквозной паспорт в оперативной памяти
                     sitemap_flat_map[relative_file_key] = [{
                         'node': node,
                         'front_matter': data,

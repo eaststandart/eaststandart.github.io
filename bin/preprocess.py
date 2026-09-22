@@ -86,18 +86,18 @@ def main():
         print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ЕДИНАЯ ЛЕНТА НОВОСТЕЙ FEED.YML
-    try:
-        from feed import build_universal_feed
-        build_universal_feed()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
+    # try:
+    #     from feed import build_universal_feed
+    #     build_universal_feed()
+    # except Exception as e:
+    #     print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
-    try:
-        from postpage import generate_posts_pages
-        generate_posts_pages()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
+    # try:
+    #     from postpage import generate_posts_pages
+    #     generate_posts_pages()
+    # except Exception as e:
+    #     print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
 
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     # try:

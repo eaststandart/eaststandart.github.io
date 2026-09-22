@@ -7,7 +7,7 @@
 
 import os
 import re
-from .sitemap_utils import parse_yaml_front_matter  # Системная утилита чтения
+from .sitemap import parse_yaml_front_matter  # Системная утилита чтения
 
 def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
     """Скан репозитория, расчет базовых URL/связей и сборка сквозного словаря в памяти."""

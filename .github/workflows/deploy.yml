@@ -38,14 +38,14 @@ jobs:
         with:
           name: sitemap-metadata
           path: _data/sitemap.yml
-          retention-days: 7
+          if-no-files-found: warn
 
       - name: Upload Sitemap Logs
         uses: actions/upload-artifact@v4
         with:
           name: sitemap-logs
           path: _sitemap_files/sitemap-md-properties.log
-          retention-days: 7
+          if-no-files-found: warn
 
       - name: Upload Navigation Tree to GitHub Interface
         uses: actions/upload-artifact@v4

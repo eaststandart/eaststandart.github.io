@@ -93,12 +93,13 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
             else:
                 node['section'] = clean_section_name
                 
-            sitemap_flat_map[clean_section_name] = [{
+            # Исправлено: Паспорт пишется в едином сквозном формате словаря
+            sitemap_flat_map[clean_section_name] = {
                 'node': node,
                 'front_matter': front_data if front_data else {},
                 'body_content': '',
                 'file_path': index_file_path
-            }]
+            }
 
     # ФИНАЛЬНАЯ ПРОВЕРКА ШАГА 1: Добор автономных файлов из папки _pages/
     pages_dir = os.path.join(root_dir, '_pages')
@@ -121,12 +122,12 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             
                         node['section'] = slug
                         
-                        sitemap_flat_map[slug] = [{
+                        sitemap_flat_map[slug] = {
                             'node': node,
                             'front_matter': p_data,
                             'body_content': p_body,
                             'file_path': os.path.join(pages_dir, file)
-                        }]
+                        }
 
     # 🔥 ШАГ 2: ОБХОД ФИЗИЧЕСКИХ ФАЙЛОВ СТАТЕЙ И ПРОЕКТОВ (ИНДЕКСЫ ПОЛНОСТЬЮ ИГНОРИРУЮТСЯ)
     for name in os.listdir(root_dir):
@@ -185,12 +186,12 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                     data['section'] = name.lstrip('_')
 
-                    # Упаковываем всё в сквозной паспорт в оперативной памяти
-                    sitemap_flat_map[relative_file_key] = [{
+                    # Упаковываем в плоскую сквозную карту в памяти без лишних вложений массивов
+                    sitemap_flat_map[relative_file_key] = {
                         'node': node,
                         'front_matter': data,
                         'body_content': body,
                         'file_path': file_path
-                    }]
+                    }
 
     return sitemap_flat_map, root_dirs_present

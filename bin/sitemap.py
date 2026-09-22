@@ -51,12 +51,13 @@ def build_sitemap_tree():
     # 1. Получаем расширенную сквозную карту из оперативной памяти
     sitemap_flat_map, root_dirs_present = sitemap_navigation.run_navigation_stage(root_dir, EXCLUDED_FOLDERS)
 
-    # 2. ТЕСТИРОВАНИЕ: Пересобираем сквозную карту в чистый словарь для выгрузки в sitemap.yml
+    # 2. Пересобираем сквозную карту в чистый словарь для выгрузки в sitemap.yml
     final_output_map = {}
     final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))
     
-    for key_file, items in sitemap_flat_map.items():
-        final_output_map[key_file] = [item['node'] for item in items]
+    for key_file, item in sitemap_flat_map.items():
+        # Прямое извлечение ноды из плоского паспорта
+        final_output_map[key_file] = [item['node']]
 
     # 3. Выгружаем результат в sitemap.yml
     output_file = os.path.join(data_dir, 'sitemap.yml')
@@ -68,12 +69,13 @@ def build_sitemap_tree():
     except Exception as e:
         print(f"[SITEMAP-ERROR] Ошибка записи карты sitemap.yml: {e}")
 
-    # Запись чистого лога для прохождения шага в GitHub Actions
+    # Запись гарантированно увесистого лога, чтобы Actions не игнорировал шаг из-за пустого файла
     try:
         log_file_path = os.path.join(debug_dir, 'sitemap-md-properties.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
-            lf.write("[SITEMAP] Успешная инициализация этапа навигации в памяти.")
-        print("[SITEMAP-SUCCESS] Лог сохранен.")
+            lf.write("[SITEMAP-LOG] Конвейер навигации успешно инициализирован в памяти сервера.\n")
+            lf.write(f"[SITEMAP-LOG] Всего обнаружено и проиндексировано объектов структуры: {len(sitemap_flat_map)}\n")
+        print("[SITEMAP-SUCCESS] Диагностический лог сохранен.")
     except Exception as e:
         print(f"[SITEMAP-ERROR] Не удалось сохранить лог: {e}")
 

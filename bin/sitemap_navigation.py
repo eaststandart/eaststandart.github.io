@@ -155,7 +155,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                     if ready_permalink:
                         node['url'] = ready_permalink
                         permalink_clean = ready_permalink.strip('/')
-                        first_word = permalink_clean.split('/') if permalink_clean else ''
+                        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
                         
                         has_clean_dir = first_word in root_dirs_present
                         has_under_dir = f"_{first_word}" in root_dirs_present

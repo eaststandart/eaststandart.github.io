@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module sitemap_navigation
-@about Подмодуль Этажа 3. Собирает базовую структуру, связи контента и URL в память.
+@module smLinks.py
+@about Геометрия каркаса и связей сайта.
+@purpose Сканирует репозиторий, рассчитывает базовые URL-адреса и строит сквозные связи контента в оперативной памяти.
+@author TechLab
+@version 1.0.0
 """
 
 import os
@@ -71,21 +74,16 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                 if os.path.exists(possible_page):
                     front_data, _, _ = parse_yaml_front_matter(possible_page)
 
-            # Собираем паспорт раздела
+            # Собираем чистый паспорт раздела (без emoji и crumbtitle)
             node = {}
-            if front_data:
-                node['title'] = front_data.get('title', clean_section_name.capitalize())
-                if 'crumbtitle' in front_data:
-                    node['crumbtitle'] = front_data['crumbtitle']
-                if front_data.get('emoji'):
-                    node['emoji'] = front_data['emoji']
-                
-                if front_data.get('permalink'):
-                    node['url'] = front_data['permalink'].strip()
-                else:
-                    node['url'] = f"/{clean_section_name}/"
+            if front_data and front_data.get('title'):
+                node['title'] = front_data['title']
             else:
                 node['title'] = clean_section_name.capitalize()
+
+            if front_data and front_data.get('permalink'):
+                node['url'] = front_data['permalink'].strip()
+            else:
                 node['url'] = f"/{clean_section_name}/"
 
             if is_under_dir:
@@ -93,7 +91,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
             else:
                 node['section'] = clean_section_name
                 
-            # Исправлено: Паспорт пишется в едином сквозном формате словаря
             sitemap_flat_map[clean_section_name] = {
                 'node': node,
                 'front_matter': front_data if front_data else {},
@@ -113,14 +110,9 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                     if p_data:
                         node = {
                             'title': p_data.get('title', slug.capitalize()),
-                            'url': p_data.get('permalink', f"/{slug}/").strip()
+                            'url': p_data.get('permalink', f"/{slug}/").strip(),
+                            'section': slug
                         }
-                        if p_data.get('crumbtitle'):
-                            node['crumbtitle'] = p_data['crumbtitle']
-                        if p_data.get('emoji'):
-                            node['emoji'] = p_data['emoji']
-                            
-                        node['section'] = slug
                         
                         sitemap_flat_map[slug] = {
                             'node': node,
@@ -184,9 +176,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         else:
                             node['relatedsection'] = clean_section_name
 
-                    data['section'] = name.lstrip('_')
-
-                    # Упаковываем в плоскую сквозную карту в памяти без лишних вложений массивов
                     sitemap_flat_map[relative_file_key] = {
                         'node': node,
                         'front_matter': data,
@@ -229,10 +218,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
 
                 node = {}
                 node['title'] = data.get('title', file_slug_no_date)
-                
-                # Записываем точное свойство posttype в карту навигации, только если оно физически есть в Obsidian
-                if raw_post_type:
-                    node['posttype'] = raw_post_type
 
                 # А. Пост хроники С пермалинком (Адрес полностью в приоритете автора — СТАРАЯ ЛОГИКА)
                 if ready_permalink:
@@ -261,7 +246,6 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                     if calculated_parent_path:
                         node['relatedpages'] = calculated_parent_path
 
-                # Упаковываем очищенный паспорт поста хроники в сквозную карту памяти пакета
                 sitemap_flat_map[relative_file_key] = {
                     'node': node,
                     'front_matter': data,

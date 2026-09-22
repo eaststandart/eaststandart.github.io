@@ -168,11 +168,16 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         # А. Если в родительской папке ЕСТЬ индексный файл (index.md / index.html)
                         if name in folders_with_index:
                             node['url'] = f"/{clean_section_name}/{file_slug}.html"
+
                         # Б. Если в родительской папке НЕТ индексного файла
                         else:
+                            # Присваиваем только URL по умолчанию как у Jekyll (.html)
                             node['url'] = f"/{clean_section_name}/{file_slug}/"
                             
-                            # ТОЧЕЧНОЕ ВОЗВРАЩЕНИЕ ЛОГА: Фиксируем факт в памяти
+                            # Передаем конвейеру флаг-сигнал для физического штампа на диске
+                            sitemap_flat_map[relative_file_key] = {'stamp_permalink_to_disk': True}
+                            
+                            # Фиксируем факт в памяти
                             if not name.startswith('_'):
                                 log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
 

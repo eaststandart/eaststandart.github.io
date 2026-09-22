@@ -10,7 +10,7 @@ posttype: journal
 discus: "journal"
 pinnedfeed: [news, journal]
 ---
-
+ 
 **Содержание**\
 [Этап 1. Изготовление конструкции и покраска](#etap-1)\
 [Этап 2. Создание деталей и шарниров](#etap-2)\

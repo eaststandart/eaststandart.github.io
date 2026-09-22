@@ -102,11 +102,9 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
         
     if (!isDisabled && !isCurrent) {
       btn.addEventListener('click', function() {
-        // 🌟 ЧЕСТНЫЙ СЕТЕВОЙ КЛИК: Переключаем порции без шевеления и прыжков экрана!
         loadPortion(targetPage);
       });
     }
-
       });
     }
     return btn;

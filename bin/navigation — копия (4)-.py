@@ -344,7 +344,7 @@ def build_navigation_tree():
                             node['relatedsection'] = clean_section_name
 
                     data['section'] = name.lstrip('_')
-                    # write_yaml_front_matter(file_path, data, body)
+                    write_yaml_front_matter(file_path, data, body)
 
                     node = navigation_feed_properties(data, node, file_path)
 

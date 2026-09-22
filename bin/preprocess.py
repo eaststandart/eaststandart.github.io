@@ -81,7 +81,7 @@ def main():
     # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА SITEMAP (ОБНОВЛЕННЫЙ МОДУЛЬ)
     try:
         # Импортируем и вызываем новую функцию build_sitemap_tree из файла navigation.py
-        from navigation import build_sitemap_tree
+        from sitemap import build_sitemap_tree
         build_sitemap_tree()
     except Exception as e:
         print(f"[ERROR] Не удалось запустить модуль генерации sitemap: {e}")

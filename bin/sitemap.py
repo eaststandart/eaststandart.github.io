@@ -81,6 +81,7 @@ def build_sitemap_tree():
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("[SITEMAP-LOG] Конвейер навигации smLinks успешно инициализирован в памяти сервера.\n")
             lf.write(f"[SITEMAP-LOG] Всего обнаружено и проиндексировано объектов структуры: {len(sitemap_flat_map)}\n")
+            lf.write("\n".join(artifacts_log_buffer))
         print("[SITEMAP-SUCCESS] Диагностический лог сохранен.")
     except Exception as e:
         print(f"[SITEMAP-ERROR] Не удалось сохранить лог: {e}")

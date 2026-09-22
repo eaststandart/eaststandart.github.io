@@ -3,9 +3,9 @@
 """
 @module navigation (Часть 1 из 3)
 @about Универсальный плоский препроцессор однотипной карты метаданных контента.
-@purpose Этаж 1, 2 и подготовка Диспетчера к каскадному Шагу 1.
+@purpose Этаж 1 и подготовка Диспетчера к каскадному Шагу 1 (БЕЗ модуля Feed, с выгрузкой в Sitemap).
 @author TechLab
-@version 19.0.0-split-cascade
+@version 19.0.0-split-cascade-base
 """
 
 import os
@@ -57,125 +57,9 @@ def write_yaml_front_matter(file_path, data, body_content):
         print(f"[NAV-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
 # =====================================================================
-# ЭТАЖ 2: ПОДКЛЮЧАЕМЫЙ МОДУЛЬ FEED
-# =====================================================================
-def navigation_feed_properties(data, passport, file_path=None):
-    """Модуль ленты feed на Этаже 2. Рассчитывает, записывает свойства на диск 
-    и выводит факты изменений в лог контура контроля."""
-    import datetime
-    
-    date_was_written = False
-    
-    # Вспомогательные функции очистки текстовых свойств по вашему эталону
-    def clean_tag_local(text):
-        if not text: return ""
-        return re.sub(r'\s+', '', str(text).lower().strip())
-        
-    def translit_title_local(text):
-        if not text: return ""
-        return re.sub(r'[^a-z0-9а-яё]', '', str(text).lower().strip())
-
-    # А. БЛОК ОБРАБОТКИ ДАТЫ
-    date_was_written = False
-    if not data.get('date'):
-        file_name = os.path.basename(file_path) if file_path else ""
-        match_date = re.match(r'^(\d{4}-\d{2}-\d{2})', file_name)
-        if match_date:
-            data['date'] = match_date.group(1)
-            date_was_written = True
-        else:
-            if file_path and os.path.exists(file_path):
-                try:
-                    cmd = ['git', 'log', '--diff-filter=A', '--format=%as', '--', file_path]
-                    git_date = subprocess.check_output(cmd, text=True).strip().split('\n')[-1]
-                    if git_date and re.match(r'^\d{4}-\d{2}-\d{2}$', git_date):
-                        data['date'] = git_date
-                    else:
-                        mtime = os.path.getmtime(file_path)
-                        data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                except Exception:
-                    mtime = os.path.getmtime(file_path)
-                    data['date'] = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
-                date_was_written = True
-
-    # Безопасно распаковываем паспорт: если это массив, берем его внутренний словарь
-    target_dict = passport[0] if isinstance(passport, list) and len(passport) > 0 else passport
-
-    if isinstance(target_dict, dict):
-        # Записываем дату в карту навигации
-        target_dict['date'] = str(data.get('date', ''))
-        
-        # Записываем эмодзи и свойства в карту навигации
-        for prop in ['direction', 'entity', 'level', 'emoji']:
-            if data.get(prop):
-                target_dict[prop] = data[prop]
-
-    # Б. АВТОМАТИЧЕСКАЯ СБОРКА И ЗАПИСИ ТЕГОВ НА ДИСК
-    tags_were_written = False
-    calculated_tags = []
-    if data.get('direction'): calculated_tags.append(clean_tag_local(data['direction']))
-    if data.get('entity'): calculated_tags.append(clean_tag_local(data['entity']))
-    if data.get('level'): calculated_tags.append(f"{str(data['level']).strip()}класс")
-    if data.get('title'):
-        title_text = str(data['title']).strip()
-        # Если в заголовке есть двоеточие — делим его на тему и рубрику контура
-        if ':' in title_text:
-            parts = title_text.split(':', 1)
-            tag_before = translit_title_local(parts[0])
-            tag_after = translit_title_local(parts[1])
-            if tag_before: calculated_tags.append(tag_before)
-            if tag_after: calculated_tags.append(tag_after)
-        else:
-            # Если двоеточия нет — обрабатываем заголовок монолитно (СТАРАЯ ЛОГИКА)
-            calculated_tags.append(translit_title_local(title_text))
-    
-    if data.get('keywords'):
-        if isinstance(data['keywords'], list):
-            for kw in data['keywords']: calculated_tags.append(clean_tag_local(kw))
-        else:
-            calculated_tags.append(clean_tag_local(data['keywords']))
-
-    final_tags = []
-    for t in calculated_tags:
-        if t and t not in final_tags: final_tags.append(t)
-
-    if final_tags and data.get('tags') != final_tags:
-        data['tags'] = final_tags
-        if 'keywords' in data: 
-            del data['keywords']
-        tags_were_written = True
-
-    # В. ЕДИНАЯ ФИЗИЧЕСКАЯ ПЕРЕЗАПИСЬ ФАЙЛА С ФИКСАЦИЕЙ ЧИСТОГО ЛОГА
-    if (date_was_written or tags_were_written) and file_path and os.path.exists(file_path):
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-            body_content = content[match.end():] if match else content
-            
-            write_yaml_front_matter(file_path, data, body_content)
-            
-            root_dir_local = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-            f_rel = os.path.relpath(file_path, root_dir_local).replace(os.sep, '/')
-            
-            # Печатаем логи изменений строго по факту первой физической записи на диск
-            if date_was_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано date: {data['date']}")
-            if tags_were_written:
-                log_artifact(f"[NAV-DEBUG] Файл: {f_rel} | Записано tags: {data['tags']}")
-        except Exception as e:
-            print(f"[NAV-ERROR] Не удалось перезаписать свойства контента в {file_path}: {e}")
-
-    # Г. БЛОК ОБРАБОТКИ PINNEDFEED (УНИВЕРСАЛЬНЫЙ СКВОЗНОЙ ПЕРЕНОС ЛЮБЫХ ТИПОВ ДАННЫХ)
-    if data and data.get('pinnedfeed'):
-        passport['pinnedfeed'] = data['pinnedfeed']
-            
-    return passport
-
-# =====================================================================
 # ЭТАЖ 3: ГЛАВНЫЙ УПРАВЛЯЮЩИЙ КОНВЕЙЕР (Диспетчер обхода)
 # =====================================================================
-def build_navigation_tree():
+def build_sitemap_tree():
     global artifacts_log_buffer
     artifacts_log_buffer.clear()
     
@@ -184,11 +68,11 @@ def build_navigation_tree():
     data_dir = os.path.join(root_dir, '_data')
     os.makedirs(data_dir, exist_ok=True)
 
-    debug_dir = os.path.join(root_dir, '_navigation_files')
+    debug_dir = os.path.join(root_dir, '_sitemap_files')
     os.makedirs(debug_dir, exist_ok=True)
 
     # Список жестких технических исключений корневых папок диска
-    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_navigation_files'}
+    EXCLUDED_FOLDERS = {'_includes', '_layouts', '_pages', 'assets', 'bin', '.git', '.github', '_data', '_navigation_files', '_sitemap_files'}
     
     flat_map = {}
     root_dirs_present = set()
@@ -261,8 +145,6 @@ def build_navigation_tree():
                 
             flat_map[clean_section_name] = [node]
 
-            flat_map[clean_section_name] = [node]
-
     # ФИНАЛЬНАЯ ПРОВЕРКА: Добор автономных файлов из папки _pages/
     pages_dir = os.path.join(root_dir, '_pages')
     if os.path.exists(pages_dir):
@@ -315,7 +197,7 @@ def build_navigation_tree():
                     if ready_permalink:
                         node['url'] = ready_permalink
                         permalink_clean = ready_permalink.strip('/')
-                        first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                        first_word = permalink_clean.split('/') if permalink_clean else ''
                         
                         has_clean_dir = first_word in root_dirs_present
                         has_under_dir = f"_{first_word}" in root_dirs_present
@@ -336,7 +218,7 @@ def build_navigation_tree():
 
                         if name not in folders_with_index and not name.startswith('_'):                        
                             data['permalink'] = node['url']
-                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
+                            log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
 
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
@@ -345,8 +227,6 @@ def build_navigation_tree():
 
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
-
-                    node = navigation_feed_properties(data, node, file_path)
 
                     flat_map[relative_file_key] = [node]
 
@@ -373,7 +253,7 @@ def build_navigation_tree():
                 raw_post_type = str(data.get('posttype', '')).strip().lower() if data.get('posttype') else ""
                 
                 # ОБЩЕЕ УНИВЕРСАЛЬНОЕ ПРАВИЛО: Выделяем базовый тип контента (отсекаем приставку -close)
-                base_type_clean = raw_post_type.split('-')[0] if '-' in raw_post_type else raw_post_type
+                base_type_clean = raw_post_type.split('-') if '-' in raw_post_type else raw_post_type
 
                 # Вычисляем полный физический путь к родителю (СТАРАЯ ЛОГИКА 1 в 1)
                 calculated_parent_path = ""
@@ -394,7 +274,7 @@ def build_navigation_tree():
                 if ready_permalink:
                     node['url'] = ready_permalink
                     permalink_clean = ready_permalink.strip('/')
-                    first_word = permalink_clean.split('/')[0] if permalink_clean else ''
+                    first_word = permalink_clean.split('/') if permalink_clean else ''
                     
                     has_clean_dir = first_word in root_dirs_present
                     has_under_dir = f"_{first_word}" in root_dirs_present
@@ -435,16 +315,13 @@ def build_navigation_tree():
 
                     if final_type_prefix and final_topic_slug:
                         data['categories'] = [final_type_prefix, final_topic_slug]
-                        log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано универсальные categories: {data['categories']}")
+                        log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано универсальные categories: {data['categories']}")
 
                 # Сохраняем имя свойства для обратной совместимости со старым Jekyll-рендером
                 if base_type_clean in ['journal', 'media']:
                     data['post-page'] = base_type_clean
 
                 write_yaml_front_matter(file_path, data, body)
-
-                # 🔥 ПОДКЛЮЧЕНИЕ МОДУЛЯ НОВОСТЕЙ: Расширение паспорта строго в оперативной памяти сервера
-                node = navigation_feed_properties(data, node, file_path)
 
                 flat_map[relative_file_key] = [node]
 
@@ -455,7 +332,7 @@ def build_navigation_tree():
         final_output_map[k] = v
 
     # Запись плоской карты на диск без значков *id
-    output_file = os.path.join(data_dir, 'navigation.yml')
+    output_file = os.path.join(data_dir, 'sitemap.yml')
     try:
         yaml.SafeDumper.ignore_aliases = lambda self, data: True
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -464,12 +341,12 @@ def build_navigation_tree():
         print(f"[NAV-ERROR] Ошибка записи карты навигации: {e}")
 
     try:
-        log_file_path = os.path.join(debug_dir, 'navigation-md-properties.log')
+        log_file_path = os.path.join(debug_dir, 'sitemap-md-properties.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
             lf.write("\n".join(artifacts_log_buffer))
-        print("[NAV-SUCCESS] Лог изменений свойств успешно сохранен.")
+        print("[SITEMAP-SUCCESS] Лог изменений свойств успешно сохранен.")
     except Exception as e:
         print(f"[NAV-ERROR] Не удалось сохранить лог: {e}")
 
 if __name__ == '__main__':
-    build_navigation_tree()
+    build_sitemap_tree()

@@ -78,6 +78,14 @@ def main():
                 
     print(f"[PREPROCESS] Полный обход завершен. Всего обработано файлов: {md_count}")
 
+    # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА SITEMAP (ОБНОВЛЕННЫЙ МОДУЛЬ)
+    try:
+        # Импортируем и вызываем новую функцию build_sitemap_tree из файла navigation.py
+        from navigation import build_sitemap_tree
+        build_sitemap_tree()
+    except Exception as e:
+        print(f"[ERROR] Не удалось запустить модуль генерации sitemap: {e}")
+
     # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА НАВИГАЦИИ
     try:
         from navigation import build_navigation_tree
@@ -86,18 +94,18 @@ def main():
         print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ЕДИНАЯ ЛЕНТА НОВОСТЕЙ FEED.YML
-    # try:
-    #     from feed import build_universal_feed
-    #     build_universal_feed()
-    # except Exception as e:
-    #     print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
+    try:
+        from feed import build_universal_feed
+        build_universal_feed()
+    except Exception as e:
+        print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
-    # try:
-    #     from postpage import generate_posts_pages
-    #     generate_posts_pages()
-    # except Exception as e:
-    #     print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
+    try:
+        from postpage import generate_posts_pages
+        generate_posts_pages()
+    except Exception as e:
+        print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
 
     # 🚀 АВТОМАТИЧЕСКОЕ ЗАКРЕПЛЕНИЕ И ОФОРМЛЕНИЕ ЛЕНТЫ НОВОСТЕЙ
     # try:

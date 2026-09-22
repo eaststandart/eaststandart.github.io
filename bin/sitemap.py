@@ -57,6 +57,9 @@ def build_sitemap_tree():
     # 1. Получаем расширенную сквозную карту из оперативной памяти нового модуля smLinks
     sitemap_flat_map, root_dirs_present = smLinks.run_navigation_stage(root_dir, EXCLUDED_FOLDERS)
 
+    import smPropsIn
+    sitemap_flat_map = smPropsIn.enrich_sitemap_properties(sitemap_flat_map)
+
     # 2. ТЕСТИРОВАНИЕ: Пересобираем сквозную карту в чистый словарь для выгрузки в sitemap.yml
     final_output_map = {}
     final_output_map['detected_root_folders'] = sorted(list(root_dirs_present))

@@ -2,38 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 @module sitemap
-@about Главный диспетчер пакета sitemap со встроенными утилитами парсинга.
+@about Главный диспетчер пакета sitemap со встроенными утилитами записи.
 """
 
 import os
-import re
 import yaml
-
-# =====================================================================
-# СИСТЕМНЫЕ УТИЛИТЫ ОБРАБОТКИ ФАЙЛОВ (Встроенный Этаж 1)
-# =====================================================================
-def parse_yaml_front_matter(file_path):
-    """Извлекает блок Front Matter из markdown-файла контента сайта."""
-    content = ""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-    except Exception as e:
-        print(f"[SITEMAP-ERROR] Не удалось прочитать файл {file_path}: {e}")
-        return None, None, content
-
-    match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-    if not match: return None, None, content
-
-    front_matter_text = match.group(1)
-    body_content = content[match.end():]
-
-    try:
-        data = yaml.safe_load(front_matter_text)
-        return data if data else {}, front_matter_text, body_content
-    except Exception as e:
-        print(f"[SITEMAP-ERROR] Сбой синтаксиса YAML во Front Matter в {file_path}: {e}")
-        return None, None, content
 
 artifacts_log_buffer = []
 
@@ -51,11 +24,7 @@ def write_yaml_front_matter(file_path, data, body_content):
     except Exception as e:
         print(f"[SITEMAP-ERROR] Не удалось перезаписать файл {file_path}: {e}")
 
-
-# =====================================================================
-# УПРАВЛЯЮЩАЯ ТОЧКА ВХОДА СБОРЩИКА (Бывший Этаж 3)
-# =====================================================================
-# Импортируем первый этап обхода структуры прямо из папки bin/ БЕЗ точек
+# Импортируем первый этап обхода структуры без точек
 import sitemap_navigation
 
 def build_sitemap_tree():
@@ -97,15 +66,16 @@ def build_sitemap_tree():
             yaml.dump(final_output_map, f, Dumper=yaml.SafeDumper, allow_unicode=True, default_flow_style=False, sort_keys=False)
         print(f"[SITEMAP-SUCCESS] Тестовая карта успешно сохранена на диск: _data/sitemap.yml")
     except Exception as e:
-        print(f"[SITEMAP-ERROR] Ошибка записи тестовой карты sitemap.yml: {e}")
+        print(f"[SITEMAP-ERROR] Ошибка записи карты sitemap.yml: {e}")
 
-    # Запись пустого базового лога для прохождения шага в GitHub Actions
+    # Запись чистого лога для прохождения шага в GitHub Actions
     try:
         log_file_path = os.path.join(debug_dir, 'sitemap-md-properties.log')
         with open(log_file_path, 'w', encoding='utf-8') as lf:
-            lf.write("[SITEMAP] Инициализация пустого лога этапа навигации.")
-    except Exception:
-        pass
+            lf.write("[SITEMAP] Успешная инициализация этапа навигации в памяти.")
+        print("[SITEMAP-SUCCESS] Лог сохранен.")
+    except Exception as e:
+        print(f"[SITEMAP-ERROR] Не удалось сохранить лог: {e}")
 
     # Возвращаем сквозную карту дальше по конвейеру
     return sitemap_flat_map

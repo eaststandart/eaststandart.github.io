@@ -7,9 +7,30 @@
 
 import os
 import re
+import yaml
 
-# Импортируем парсер из соседнего файла sitemap.py напрямую БЕЗ точек
-from sitemap import parse_yaml_front_matter
+def parse_yaml_front_matter(file_path):
+    """Извлекает блок Front Matter из markdown-файла контента сайта."""
+    content = ""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f"[SITEMAP-ERROR] Не удалось прочитать файл {file_path}: {e}")
+        return None, None, content
+
+    match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+    if not match: return None, None, content
+
+    front_matter_text = match.group(1)
+    body_content = content[match.end():]
+
+    try:
+        data = yaml.safe_load(front_matter_text)
+        return data if data else {}, front_matter_text, body_content
+    except Exception as e:
+        print(f"[SITEMAP-ERROR] Сбой синтаксиса YAML во Front Matter в {file_path}: {e}")
+        return None, None, content
 
 def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
     """Скан репозитория, расчет базовых URL/связей и сборка сквозного словаря в памяти."""
@@ -145,7 +166,7 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                         elif has_clean_dir:
                             node['relatedsection'] = first_word
 
-                    # 2. Если у файла НЕТ permalink (ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ С .HTML ДЛЯ ИНДЕКСОВ)
+                    # 2. Если у файла НЕТ permalink
                     else:
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')

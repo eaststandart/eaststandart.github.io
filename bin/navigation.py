@@ -332,16 +332,26 @@ def build_navigation_tree():
                         clean_section_name = name.lstrip('_')
                         is_under_dir = name.startswith('_')
                         
-                        node['url'] = f"/{clean_section_name}/{file_slug}/"
+                        # А. Если в родительской папке ЕСТЬ индексный файл (index.md / index.html)
+                        if name in folders_with_index:
+                            # Присваиваем только URL по умолчанию как у Jekyll (.html), на диск ничего не пишем!
+                            node['url'] = f"/{clean_section_name}/{file_slug}.html"
 
-                        if name not in folders_with_index and not name.startswith('_'):                        
-                            data['permalink'] = node['url']
-                            log_artifact(f"[NAV-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
+                        # Б. Если в родительской папке НЕТ индексного файла
+                        else:
+                            # Сохраняем исходное поведение: адрес-папка и принудительный штамп пермалинка на диск
+                            node['url'] = f"/{clean_section_name}/{file_slug}/"
+                            
+                            if not name.startswith('_'):                        
+                                data['permalink'] = node['url']
+                                log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {data['permalink']}")
 
+                        # Единый сквозной блок связей контента (выполняется один раз без дублирования)
                         if is_under_dir:
                             node['relatedcollection'] = clean_section_name
                         else:
                             node['relatedsection'] = clean_section_name
+
                     data['section'] = name.lstrip('_')
                     write_yaml_front_matter(file_path, data, body)
 

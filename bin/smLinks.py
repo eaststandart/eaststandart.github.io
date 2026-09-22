@@ -74,6 +74,8 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                 possible_page = os.path.join(root_dir, '_pages', f"{clean_section_name}.md")
                 if os.path.exists(possible_page):
                     front_data, _, _ = parse_yaml_front_matter(possible_page)
+                    # Фиксируем путь к реальному файлу в _pages/ для каскада дат!
+                    index_file_path = possible_page
 
             # Собираем чистый паспорт раздела (без emoji и crumbtitle)
             node = {}

@@ -11,18 +11,7 @@
 import os
 import re
 import yaml
-
-def write_local_log(text):
-    """Локально дописывает строку в изолированный лог первого модуля smLinks."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    log_dir = os.path.join(current_dir, '..', '_sitemap_files')
-    os.makedirs(log_dir, exist_ok=True)
-    log_path = os.path.join(log_dir, 'smLinks-md-properties.log')
-    try:
-        with open(log_path, 'a', encoding='utf-8') as f:
-            f.write(text + "\n")
-    except Exception as e:
-        print(f"[SITEMAP-ERROR] Не удалось записать лог smLinks: {e}")
+from sitemap import log_artifact
 
 def parse_yaml_front_matter(file_path):
     """Извлекает блок Front Matter из markdown-файла контента сайта."""
@@ -200,9 +189,9 @@ def run_navigation_stage(root_dir, EXCLUDED_FOLDERS):
                             passport['stamp_permalink_to_disk'] = True
                             
                             # Фиксируем факт генерации в памяти логов контура контроля
-                            # Стало (Точечное исправление):
+                            # ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Пишем строго в локальный лог геометрии smLinks!
                             if not name.startswith('_'):
-                                write_local_log(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
+                                log_artifact(f"[SITEMAP-DEBUG] Файл: {relative_file_key} | Записано permalink: {node['url']}")
 
                         # Единый сквозной блок связей контента (Вложенность условий полностью восстановлена)
                         if is_under_dir:

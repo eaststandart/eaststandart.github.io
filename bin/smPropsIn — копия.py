@@ -13,20 +13,6 @@ import re
 import datetime
 import subprocess
 
-import os
-
-def write_local_log(text):
-    """Локально дописывает строку в изолированный лог второго модуля smPropsIn."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    log_dir = os.path.join(current_dir, '..', '_sitemap_files')
-    os.makedirs(log_dir, exist_ok=True)
-    log_path = os.path.join(log_dir, 'smPropsIn-md-properties.log')
-    try:
-        with open(log_path, 'a', encoding='utf-8') as f:
-            f.write(text + "\n")
-    except Exception as e:
-        print(f"[SITEMAP-ERROR] Не удалось записать лог smPropsIn: {e}")
-
 def enrich_sitemap_properties(sitemap_flat_map):
     """Принимает сквозную карту памяти конвейера, затягивает свойства Obsidian и рассчитывает даты."""
     if not sitemap_flat_map:

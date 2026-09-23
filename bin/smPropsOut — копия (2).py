@@ -10,18 +10,7 @@
 
 import os
 import re
-
-def write_local_log(text):
-    """Локально дописывает строку в изолированный лог третьего модуля smPropsOut."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    log_dir = os.path.join(current_dir, '..', '_sitemap_files')
-    os.makedirs(log_dir, exist_ok=True)
-    log_path = os.path.join(log_dir, 'smPropsOut-md-properties.log')
-    try:
-        with open(log_path, 'a', encoding='utf-8') as f:
-            f.write(text + "\n")
-    except Exception as e:
-        print(f"[SITEMAP-ERROR] Не удалось записать лог smPropsOut: {e}")
+from sitemap import write_yaml_front_matter, log_artifact
 
 def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_present):
     """Рассчитывает динамические свойства в памяти и за один проход сохраняет md-файлы на диск."""
@@ -140,14 +129,14 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
         if date_was_written or tags_were_written or categories_were_written or permalink_was_written:
             # write_yaml_front_matter(file_path, data, body)
             
-            # Печатаем логи изменений
+            # Печатаем логи изменений строго по вашему лаконичному эталону (1 слово "Записано")
             if permalink_was_written:
-                write_local_log(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано permalink: {data['permalink']}")
+                log_artifact(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано permalink: {data['permalink']}")
             if date_was_written:
-                write_local_log(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано date: {data['date']}")
+                log_artifact(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано date: {data['date']}")
             if tags_were_written:
-                write_local_log(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано tags: {data['tags']}")
+                log_artifact(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано tags: {data['tags']}")
             if categories_were_written:
-                write_local_log(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано categories: {data['categories']}")
+                log_artifact(f"[SITEMAP-DEBUG] Файл: {file_key} | Записано categories: {data['categories']}")
 
     return sitemap_flat_map

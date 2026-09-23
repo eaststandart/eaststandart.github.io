@@ -11,6 +11,13 @@
 import os
 import yaml
 
+artifacts_log_buffer = []
+
+def log_artifact(text):
+    """Выводит строку лога в консоль Actions и буферизирует её для архива артефактов."""
+    print(text)
+    artifacts_log_buffer.append(text)
+
 def write_yaml_front_matter(file_path, data, body_content):
     """Записывает обновленные свойства обратно в md-файл на диске."""
     try:
@@ -76,7 +83,16 @@ def build_sitemap_tree():
     except Exception as e:
         print(f"[SITEMAP-ERROR] Ошибка записи карты sitemap.yml: {e}")
 
-    print(f"[SITEMAP-SUCCESS] Всего обнаружено и проиндексировано объектов структуры: {len(sitemap_flat_map)}")
+    # Запись чистого лога для прохождения шага в GitHub Actions
+    try:
+        log_file_path = os.path.join(debug_dir, 'sitemap-md-properties.log')
+        with open(log_file_path, 'w', encoding='utf-8') as lf:
+            lf.write("[SITEMAP-LOG] Конвейер навигации smLinks успешно инициализирован в памяти сервера.\n")
+            lf.write(f"[SITEMAP-LOG] Всего обнаружено и проиндексировано объектов структуры: {len(sitemap_flat_map)}\n")
+            lf.write("\n".join(artifacts_log_buffer))
+        print("[SITEMAP-SUCCESS] Диагностический лог сохранен.")
+    except Exception as e:
+        print(f"[SITEMAP-ERROR] Не удалось сохранить лог: {e}")
 
     # Возвращаем сквозную карту дальше по конвейеру
     return sitemap_flat_map

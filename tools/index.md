@@ -1,11 +1,11 @@
 ---
+workflow: "разбить на разделы программы, сервисы и оборудование – то чем пользуюсь"
 layout: page
 title: Полезные инструменты
 crumbtitle: "Инструменты"
 custom_css: ["/assets/css/tools.css"]
+emoji: "🛠"
 ---
-
-разбить на разделы программы, сервисы и оборудование – то чем пользуюсь
 
 <div class="tool-list">
     <a href="sprintlayout.html" class="tool-card">

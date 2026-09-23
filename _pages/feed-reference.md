@@ -5,7 +5,7 @@ description: Лента постов справочных материалов.
 date: 2025-09-05
 permalink: /reference/
 per_page: 10
-emoji: ""
+emoji: "📖"
 ---
 
 {% comment %} 

@@ -158,9 +158,7 @@
 
 /* Каёмка по периметру для корневых папок (Выравнивание и отступы) */
 .home-news-feed .news-item.root-section-item {
-    border: 1px solid #0366d6 !important;     /* Тонкая каёмка фирменного синего цвета */
-    border-radius: 6px !important;            /* Аккуратное скругление уголков */
-    padding: 3px 6px !important;              /* Воздух внутри рамки, чтобы текст не лип к краям */
+    border-color: #0366d6 !important;     /* Окрашиваем каёмку в фирменный синий цвет */
 }
 
 /* --- Б. СТРАНИЦЫ АРХИВОВ (/news/ и /journal/) --- */

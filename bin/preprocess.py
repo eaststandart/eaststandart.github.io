@@ -78,20 +78,13 @@ def main():
                 
     print(f"[PREPROCESS] Полный обход завершен. Всего обработано файлов: {md_count}")
 
-    # 🚀 ТЕСТИРОВАНИЕ ПАКЕТНОЙ СБОРКИ SITEMAP ЧЕРЕЗ ОПЕРАТИВНУЮ ПАМЯТЬ
+    # 🚀 ПАКЕТНАЯ СБОРКА SITEMAP ЧЕРЕЗ ОПЕРАТИВНУЮ ПАМЯТЬ
     try:
         from sitemap import build_sitemap_tree
         # Запускает первый этап конвейера и возвращает заполненный паспорт структуры сайта
         sitemap_memory_map = build_sitemap_tree()
     except Exception as e:
         print(f"[ERROR] Не удалось запустить тестовый конвейер sitemap: {e}")
-
-    # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА НАВИГАЦИИ
-    try:
-        from navigation import build_navigation_tree
-        build_navigation_tree()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
 
     # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ЕДИНАЯ ЛЕНТА НОВОСТЕЙ FEED.YML
     try:

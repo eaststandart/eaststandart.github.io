@@ -86,26 +86,5 @@ def main():
     except Exception as e:
         print(f"[ERROR] Не удалось запустить тестовый конвейер sitemap: {e}")
 
-    # 🚀 СБОРКА АВТОМАТИЧЕСКОГО ДЕРЕВА НАВИГАЦИИ
-    try:
-        from navigation import build_navigation_tree
-        build_navigation_tree()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить модуль навигации: {e}")
-
-    # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ЕДИНАЯ ЛЕНТА НОВОСТЕЙ FEED.YML
-    try:
-        from feed import build_universal_feed
-        build_universal_feed()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить модуль ленты feed: {e}")
-
-    # 🚀 АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СТРАНИЦ ПОСТОВ ДЛЯ СТРАНИЦ ПРОЕКТОВ
-    try:
-        from postpage import generate_posts_pages
-        generate_posts_pages()
-    except Exception as e:
-        print(f"[ERROR] Не удалось запустить генератор страниц проектов postpage: {e}")
-
 if __name__ == '__main__':
     main()

@@ -3,9 +3,9 @@ layout: page
 title: "Праздничный домик: создал Кирилл К."
 description: "Вариант конструкции праздничного домика."
 author: ["Кирилл К."]
-tags: [kirill-k]
 date: 2026-02-05
 posttype: media
+keywords: [kirill-k] 
 ---
 
 📷 **Общий вид конструкции**

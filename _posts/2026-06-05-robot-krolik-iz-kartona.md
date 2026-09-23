@@ -3,12 +3,12 @@ layout: page
 title: "Робот кролик из картона: модель с разворотом"
 description: "Процесс создания модели с корпусом из фанеры, функцией дистанционного управления и механизмом разворота на 360° градусов на одном месте."
 author: ["Лиза Б."]
-tags: ["eastemitting"]
 sources: "[6 Lego Vehicles vs 6 Obstacles (2nd edit)](https://youtu.be/j-NEOrWxcdY)"
 date: 2026-06-05
 posttype: journal
 discus: "journal"
 pinnedfeed: [news, journal]
+keywords: ["eastemitting"]
 ---
 
 **Содержание**\

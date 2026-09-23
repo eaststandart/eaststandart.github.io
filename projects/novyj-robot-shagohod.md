@@ -2,10 +2,10 @@
 layout: default
 description: Развитие навыков конструирования.
 title: Робот новый
-tags: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 sources: "[Walking Robot – Templates pdf – Blackfish](https://blackfishspace.com/)"
 date: 2026-05-06
 permalink: /projects/novyj-robot-shagohod/
+keywords: [конструированиеимоделирование, проектучебный, 5класс, проект, роботдвуногийшагающийизкартона]
 ---
 
 ### Описание проекта

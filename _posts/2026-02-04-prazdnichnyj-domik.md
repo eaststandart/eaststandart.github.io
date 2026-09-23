@@ -3,9 +3,9 @@ layout: page
 title: "Праздничный домик: создала Лиза Б."
 description: "Вариант конструкции праздничного домика."
 author: ["Лиза Б."]
-tags: ["eastemitting"]
 date: 2026-02-04
 posttype: media
+keywords: ["eastemitting"]
 ---
 
 📷 **Общий вид конструкции**

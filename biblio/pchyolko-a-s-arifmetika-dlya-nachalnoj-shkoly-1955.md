@@ -3,9 +3,7 @@ layout: page
 title: Книги по арифметике, сборники задач и упражнений к ним
 bibliography: "Пчёлко А.С. Арифметика для первого класса начальной школы. — Советские учебники, 2022. — 144 с. — ISBN 978-5-907508-52-1."
 sources: "[Пчёлко А.С., Арифметика. 1 класс, 1955 г.](https://konzeptual.ru/arifmetika-uchebnik-dlja-pervogo-klassa-nachal-noj-shkoly-1955-11975/)"
-tags: [пчелко, попова, киселев, березанская, математика, арифметика, младшийвозраст, среднийвозраст, книга]
-parent_name: "Литература"
-parent_url: "/biblio/"
+keywords: [пчелко, попова, киселев, березанская, математика, арифметика, младшийвозраст, среднийвозраст, книга]
 ---
 
 ![320x405](img/pchyolko-a-s-arifmetika-dlya-pervogo-klassa-nachalnoj-shkoly-2022.webp)

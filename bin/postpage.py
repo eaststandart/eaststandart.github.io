@@ -60,13 +60,8 @@ def generate_posts_pages():
             nav_key != 'detected_root_folders' and 
             isinstance(nav_nodes, list) and len(nav_nodes) > 0):
             
-            # Безопасное извлечение ноды проекта
-            project_passport = nav_nodes[0] if isinstance(nav_nodes, list) and len(nav_nodes) > 0 else nav_nodes
-            if isinstance(project_passport, dict) and 'node' in project_passport:
-                project_passport = project_passport['node']
-                
+            project_passport = nav_nodes[0]
             if isinstance(project_passport, dict) and 'title' in project_passport:
-
                 p_slug = nav_key.split('/')[-2] if '/' in nav_key else nav_key.replace('.md', '')
                 parent_projects[nav_key] = {
                     'project_file': nav_key,
@@ -80,11 +75,7 @@ def generate_posts_pages():
     # ➡️ ШАГ 1: Сбор и фильтрация связанных постов строго по URL на основе связанных проектов
     for nav_key, nav_nodes in navigation_map.items():
         if nav_key.startswith('_posts/') and isinstance(nav_nodes, list) and len(nav_nodes) > 0:
-            # Безопасное извлечение ноды поста хроники
             post_passport = nav_nodes[0]
-            if isinstance(post_passport, dict) and 'node' in post_passport:
-                post_passport = post_passport['node']
-                
             if isinstance(post_passport, dict):
                 related_page_path = post_passport.get('relatedpages')
                 
@@ -162,8 +153,7 @@ def generate_posts_pages():
                 print(log_msg)
                 log_buffer.append(log_msg)
                 
-                # Запоминаем паспорт для последующей дозаписи в sitemap.yml
-                # ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Вычищаем обертку node, пишем свойства в чистом виде!
+                # Запоминаем паспорт для последующей дозаписи в navigation.yml
                 append_nodes[jekyll_page_path] = [{
                     'title': f"{parent_title}: лента постов",
                     'url': jekyll_permalink,
@@ -182,7 +172,7 @@ def generate_posts_pages():
             # Физически дописываем паспорта в самый конец файла navigation.yml
             with open(navigation_file, 'a', encoding='utf-8') as f:
                 f.write("\n# =========================================================================\n")
-                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POSTPAGE-OPEN) ДЛЯ SITEMAP\n")
+                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
                 f.write("# =========================================================================\n")
                 yaml.dump(append_nodes, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
             log_buffer.append(f"[APPEND-SUCCESS] В хвост navigation.yml добавлено паспортов: {len(append_nodes)}")

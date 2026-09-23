@@ -138,7 +138,7 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
         # Если хотя бы один триггер истинен — осуществляем физическую запись за 1 проход
         # ПРИМЕЧАНИЕ: Для тестирования симуляции вы можете временно закомментировать строку с write_yaml_front_matter
         if date_was_written or tags_were_written or categories_were_written or permalink_was_written:
-            # write_yaml_front_matter(file_path, data, body)
+            write_yaml_front_matter(file_path, data, body)
             
             # Печатаем логи изменений
             if permalink_was_written:

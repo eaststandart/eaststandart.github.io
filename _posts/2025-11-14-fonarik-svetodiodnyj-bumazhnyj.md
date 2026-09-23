@@ -6,6 +6,7 @@ sources: "📄[Описание проекта, PDF](/faire/fonarik-svetodiodnyj
 date: 2025-11-14
 posttype: question
 discus: "questions"
+keywords: [схема, теория]
 ---
 
 ### Описание проекта

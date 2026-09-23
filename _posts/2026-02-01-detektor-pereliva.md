@@ -6,6 +6,7 @@ sources: "📄[Описание проекта, PDF](/faire/detektor-pereliva/de
 date: 2026-02-01
 posttype: question
 discus: "questions"
+keywords: [схема, теория]
 ---
 
 ### Описание проекта

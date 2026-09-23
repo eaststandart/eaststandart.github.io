@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module post-page
+@module postpage.py
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
 @purpose 100% бэкенд-фильтрация постов по карте навигации navigation.yml. 
          Python на Шаге 0 находит проекты, на Шаге 1 собирает посты по relatedpages, 

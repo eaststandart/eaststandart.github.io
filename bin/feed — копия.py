@@ -8,7 +8,7 @@
          выгружает их в виде раздельных физических JSON-порций в открытую папку assets/feed/
          и полностью сохраняет ваши оригинальные постраничные логи контроля закрепов.
 @author TechLab
-@version 1.0.0
+@version 4.0.0-json-portions
 """
 
 import os
@@ -63,11 +63,7 @@ def build_universal_feed():
         if not isinstance(nodes, list) or len(nodes) == 0:
             continue
             
-        # Универсально извлекаем чистую ноду навигации из списка карты
         passport = nodes[0] if isinstance(nodes, list) and len(nodes) > 0 else nodes
-        if isinstance(passport, dict) and 'node' in passport:
-            passport = passport['node'] # Безопасный fallback, если структура усложнится
-            
         if not isinstance(passport, dict):
             continue
 

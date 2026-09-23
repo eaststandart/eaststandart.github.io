@@ -1,6 +1,8 @@
 ---
 layout: feed
 title: Новости уголка конструктора
+description: Общая лента новостей Лаборатории.
+date: 2025-09-01
 permalink: /news/
 per_page: 10
 ---

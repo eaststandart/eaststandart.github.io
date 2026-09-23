@@ -45,18 +45,6 @@ jobs:
           name: sitemap-logs
           path: _sitemap_files/*.log
 
-      - name: Upload Navigation Tree to GitHub Interface
-        uses: actions/upload-artifact@v4
-        with:
-          name: jekyll-navigation-file
-          path: _data/navigation.yml
-
-      - name: Upload Preprocessor Changes for Debugging
-        uses: actions/upload-artifact@v4
-        with:
-          name: jekyll-navigation-log
-          path: _navigation_files/
-
       - name: Upload Universal Feed Generator Log
         uses: actions/upload-artifact@v4
         with:

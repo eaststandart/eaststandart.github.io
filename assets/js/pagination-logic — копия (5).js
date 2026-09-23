@@ -57,8 +57,7 @@ function runPagination(listId, controlsId, itemsPerPage, basketName) {
 
       if (isHome) {
         // ВАРИАНТ А: Точный клон вёрстки для Главной страницы (Карточка "Что нового?")
-        var sectionClass = (item.is_section === true || item.is_section === 'true') ? ' root-section-item' : '';
-        li.className = 'news-item news-item-compact' + pinnedClass + sectionClass;
+        li.className = 'news-item news-item-compact' + pinnedClass;
         li.setAttribute('data-date', item.date);
         li.setAttribute('data-is-post', item.is_post);
         

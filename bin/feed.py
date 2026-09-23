@@ -107,6 +107,11 @@ def build_universal_feed():
         elif raw_pinned is True:
             pinned_list = ['news', str(post_type).strip().lower()]
 
+        # Вычисляем, является ли элемент корневой папкой или коллекцией
+        is_section_folder = False
+        if passport.get('section') or passport.get('collection'):
+            is_section_folder = True
+
         node = {
             'title': passport.get('title', 'Без названия'),
             'url': passport.get('url', ''),
@@ -116,7 +121,9 @@ def build_universal_feed():
             'is_post': is_post_flag,
             'emoji': calculated_emoji,
             'personal_emoji': passport.get('emoji', ''),
-            'pinned_list': pinned_list
+            'pinned_list': pinned_list,
+            # Вживляем чистый признак для JavaScript и Liquid
+            'is_section': is_section_folder
         }
 
         if 'news' in pinned_list or (str(post_type).strip().lower() in pinned_list if post_type else False):
@@ -165,8 +172,10 @@ def build_universal_feed():
             'is_post': f_item['is_post'],
             'emoji': f_item['emoji'],
             'personal_emoji': f_item['personal_emoji'],
-            'pinned': is_pinned_news
+            'pinned': is_pinned_news,
+            'is_section': f_item['is_section']
         }
+
         baskets['news'].append(node_news)
 
         # Б. Наполнение частной корзины текущего раздела
@@ -188,7 +197,8 @@ def build_universal_feed():
                 'is_post': f_item['is_post'],
                 'emoji': final_own_emoji,
                 'personal_emoji': f_item['personal_emoji'],
-                'pinned': is_pinned_own
+                'pinned': is_pinned_own,
+                'is_section': f_item['is_section']
             }
             baskets[c_posttype].append(node_own)
 

@@ -29,11 +29,7 @@
 
   {%- if include.type == "home" -%}
     <!-- Вариант А: ОРИГИНАЛЬНЫЙ Компактный стиль для Главной страницы (Карточка "Что нового?") -->
-    {%- assign section_class = "" -%}
-    {%- if item.is_section == true or item.is_section == "true" -%}
-      {%- assign section_class = " root-section-item" -%}
-    {%- endif -%}
-    <li class="news-item news-item-compact{{ pinned_class }}{{ section_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}">
+    <li class="news-item news-item-compact{{ pinned_class }}" data-date="{{ item.date }}" data-is-post="{{ item.is_post }}">
       <div>
         <span>{{ item.date | date: "%d.%m.%Y" }}&nbsp;»&nbsp;</span>
         <span>

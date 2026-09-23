@@ -3,11 +3,11 @@
 """
 @module postpage.py
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose 100% бэкенд-фильтрация постов по карте сайта sitemap.yml. 
+@purpose 100% бэкенд-фильтрация постов по карте навигации sitemap.yml. 
          Python на Шаге 0 находит проекты, на Шаге 1 собирает посты по relatedpages, 
          проверяет наличие posttype и передаёт в Jekyll готовый массив URL-адресов.
 @author TechLab
-@version 15.1.0-sitemap-clean
+@version 15.0.0-pure-url-backend
 """
 
 import os
@@ -17,7 +17,7 @@ import yaml
 def generate_posts_pages():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
-    sitemap_file_path = os.path.join(root_dir, '_data', 'sitemap.yml')
+    navigation_file = os.path.join(root_dir, '_data', 'sitemap.yml')
     # 🧼 ЗАЧИСТКА ВАРНИНГОВ: Переносим лог в каноничную папку артефактов контента
     log_file_path = os.path.join(root_dir, '_post_page_files', 'posts-page-generator.log')
     
@@ -27,14 +27,14 @@ def generate_posts_pages():
     # Допишите сюда любое имя (например, 'ref'), и весь скрипт каскадом заработает под него!
     ALLOWED_POST_TYPES = ['journal', 'media', 'question']
     
-    if not os.path.exists(sitemap_file_path):
-        print(f"[POST-ERROR] Карта сайта sitemap.yml не найдена: {sitemap_file_path}")
+    if not os.path.exists(navigation_file):
+        print(f"[POST-ERROR] Карта навигации sitemap.yml не найдена: {navigation_file}")
         return
 
     # Загружаем Единственный Источник Правды в оперативную память
     try:
-        with open(sitemap_file_path, 'r', encoding='utf-8') as f:
-            sitemap_data = yaml.safe_load(f) or {}
+        with open(navigation_file, 'r', encoding='utf-8') as f:
+            navigation_map = yaml.safe_load(f) or {}
     except Exception as e:
         print(f"[POST-ERROR] Сбой чтения конфигурационного файла YAML: {e}")
         return
@@ -49,13 +49,13 @@ def generate_posts_pages():
                     file_to_remove = os.path.join(folder_path, file_name)
                     try:
                         os.remove(file_to_remove)
-                        log_buffer.append(f"[CLEAN] Удален устаревший... {target_folder}/{file_name}")
+                        log_buffer.append(f"[CLEAN] Удален устаревший файл: {target_folder}/{file_name}")
                     except Exception as e:
                         print(f"[POST-ERROR] Не удалось удалить файл {file_to_remove}: {e}")
 
     # ➡️ ШАГ 0: Находим все живые родительские проекты в карте сайта
     parent_projects = {}
-    for nav_key, nav_nodes in sitemap_data.items():
+    for nav_key, nav_nodes in navigation_map.items():
         if (not nav_key.startswith('_posts/') and 
             nav_key != 'detected_root_folders' and 
             isinstance(nav_nodes, list) and len(nav_nodes) > 0):
@@ -73,7 +73,7 @@ def generate_posts_pages():
                     parent_projects[nav_key][f"{t_name}_urls"] = []
 
     # ➡️ ШАГ 1: Сбор и фильтрация связанных постов строго по URL на основе связанных проектов
-    for nav_key, nav_nodes in sitemap_data.items():
+    for nav_key, nav_nodes in navigation_map.items():
         if nav_key.startswith('_posts/') and isinstance(nav_nodes, list) and len(nav_nodes) > 0:
             post_passport = nav_nodes[0]
             if isinstance(post_passport, dict):
@@ -102,7 +102,7 @@ def generate_posts_pages():
     append_nodes = {}
 
     for rel_path, proj in parent_projects.items():
-        # Generator штампует папки и страницы строго по нашему единому списку типов контура
+        # Генератор штампует папки и страницы строго по нашему единому списку типов контура
         for loop_type in ALLOWED_POST_TYPES:
             urls_list = proj.get(f"{loop_type}_urls", [])
             
@@ -153,7 +153,7 @@ def generate_posts_pages():
                 print(log_msg)
                 log_buffer.append(log_msg)
                 
-                # Запоминаем паспорт для последующей дозаписи в sitemap.yml (В чистом, плоском виде без node!)
+                # Запоминаем паспорт для последующей дозаписи в sitemap.yml
                 append_nodes[jekyll_page_path] = [{
                     'title': f"{parent_title}: лента постов",
                     'url': jekyll_permalink,
@@ -163,28 +163,28 @@ def generate_posts_pages():
             except Exception as e:
                 print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")
 
-    # ➡️ ШАГ 3: ДОЗАПИСЬ ПАСПОРТОВ В КАРТУ САЙТА И ВЫВОД КАРТЫ В ЛОГ АУДИТА
+    # ➡️ ШАГ 3: ДОЗАПИСЬ ПАСПОРТОВ В НАВИГАЦИЮ И ВЫВОД КАРТЫ В ЛОГ АУДИТА
     if append_nodes:
         try:
-            # Обновляем карту в оперативной памяти для полного лога
-            sitemap_data.update(append_nodes)
+            # Обновляем навигационную карту в памяти для полного лога
+            navigation_map.update(append_nodes)
             
             # Физически дописываем паспорта в самый конец файла sitemap.yml
-            with open(sitemap_file_path, 'a', encoding='utf-8') as f:
+            with open(navigation_file, 'a', encoding='utf-8') as f:
                 f.write("\n# =========================================================================\n")
-                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POST-PAGE-OPEN) ДЛЯ SITEMAP\n")
+                f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
                 f.write("# =========================================================================\n")
                 yaml.dump(append_nodes, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
             log_buffer.append(f"[APPEND-SUCCESS] В хвост sitemap.yml добавлено паспортов: {len(append_nodes)}")
         except Exception as e:
             print(f"[POST-ERROR] Не удалось дозаписать паспорта в sitemap.yml: {e}")
 
-    # Сохраняем изолированный слепок полной карты sitemap в отдельный файл лога для ручного аудита
+    # Сохраняем изолированный слепок полной карты навигации в отдельный файл лога для ручного аудита
     try:
         nav_log_file_path = os.path.join(root_dir, '_post_page_files', 'navigation_after_postpage.log')
         os.makedirs(os.path.dirname(nav_log_file_path), exist_ok=True)
         with open(nav_log_file_path, 'w', encoding='utf-8') as nlf:
-            yaml.dump(sitemap_data, nlf, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            yaml.dump(navigation_map, nlf, allow_unicode=True, default_flow_style=False, sort_keys=False)
     except:
         pass
 

@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sitemap-logs
-          path: _sitemap_files/sitemap-md-properties.log
+          path: _sitemap_files/*.log
 
       - name: Upload Navigation Tree to GitHub Interface
         uses: actions/upload-artifact@v4

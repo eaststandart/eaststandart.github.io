@@ -163,13 +163,12 @@ def generate_posts_pages():
                 log_buffer.append(log_msg)
                 
                 # Запоминаем паспорт для последующей дозаписи в sitemap.yml
+                # ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Вычищаем обертку node, пишем свойства в чистом виде!
                 append_nodes[jekyll_page_path] = [{
-                    'node': {
-                        'title': f"{parent_title}: лента постов",
-                        'url': jekyll_permalink,
-                        'posttype': 'post-page-open',
-                        'relatedpages': rel_path
-                    }
+                    'title': f"{parent_title}: лента постов",
+                    'url': jekyll_permalink,
+                    'posttype': 'post-page-open',
+                    'relatedpages': rel_path
                 }]
             except Exception as e:
                 print(f"[POST-ERROR] Не удалось записать файл архива {target_md_file}: {e}")

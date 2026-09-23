@@ -134,18 +134,11 @@ def build_universal_feed():
     feed_section_emojis = {}
     feed_section_limits = {'news': 10}  # По умолчанию для Главной лимит равен 10
 
-    # Извлекаем чистую ноду для правильного создания JSON-файлов пагинации
     for key, items in nav_data.items():
         if key.startswith('feed-') and isinstance(items, list) and len(items) > 0:
             sect_card = items[0] if isinstance(items, list) and len(items) > 0 else items
-            
-            # Если внутри структуры есть ключ 'node' — проваливаемся в него
-            if isinstance(sect_card, dict) and 'node' in sect_card:
-                sect_card = sect_card['node']
-                
             if isinstance(sect_card, dict) and sect_card.get('url'):
                 b_name = sect_card['url'].strip('/')
-
                 if b_name:
                     baskets[b_name] = []
                     if sect_card.get('emoji'):
@@ -316,4 +309,3 @@ def build_universal_feed():
 
 if __name__ == '__main__':
     build_universal_feed()
-

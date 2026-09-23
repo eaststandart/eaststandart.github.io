@@ -6,6 +6,7 @@ author: ["TechLab"]
 date: 2026-03-16
 posttype: question
 discus: "questions"
+keywords: [схема, практика]
 ---
 
 🎬 **Демонстрация синхронизации**

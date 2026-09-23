@@ -6,6 +6,7 @@ author: ["TechLab"]
 date: 2026-04-19
 posttype: question
 discus: "questions"
+keywords: [практика]
 ---
 
 🎬 **Демонстрация измерений**

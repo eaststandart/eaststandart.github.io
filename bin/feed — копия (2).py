@@ -3,12 +3,12 @@
 """
 @module feed.py
 @about Изолированный монолитный сборщик единой ленты обновлений из Источника Правды.
-@purpose Автоматически вычисляет типы, проекты и наследует эмодзи на основе URL карты сайта sitemap.yml,
+@purpose Автоматически вычисляет типы, проекты и наследует эмодзи на основе URL карты навигации,
          квантует массивы по страницам со сквозными закрепами на основе свойства perpage,
          выгружает их в виде раздельных физических JSON-порций в открытую папку assets/feed/
          и полностью сохраняет ваши оригинальные постраничные логи контроля закрепов.
 @author TechLab
-@version 4.1.0-sitemap-clean
+@version 4.0.0-json-portions
 """
 
 import os
@@ -20,18 +20,18 @@ def build_universal_feed():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))
     
-    sitemap_file_path = os.path.join(root_dir, '_data', 'sitemap.yml')
+    nav_file_path = os.path.join(root_dir, '_data', 'sitemap.yml')
     # Автоматический путь к новой открытой папке порций сетевой подкачки
     portions_dir_path = os.path.join(root_dir, 'assets', 'feed')
     log_dir_path = os.path.join(root_dir, '_feed_files')
     
-    if not os.path.exists(sitemap_file_path):
-        print(f"[FEED-ERROR] Единый Источник Правды не найден по пути: {sitemap_file_path}")
+    if not os.path.exists(nav_file_path):
+        print(f"[FEED-ERROR] Единый Источник Правды не найден по пути: {nav_file_path}")
         return
 
     try:
-        with open(sitemap_file_path, 'r', encoding='utf-8') as f:
-            sitemap_data = yaml.safe_load(f) or {}
+        with open(nav_file_path, 'r', encoding='utf-8') as f:
+            nav_data = yaml.safe_load(f) or {}
     except Exception as e:
         print(f"[FEED-ERROR] Сбой YAML при чтении карты сайта: {e}")
         return
@@ -44,9 +44,9 @@ def build_universal_feed():
     pinned_posts = []
     regular_posts = []
 
-    # 🟢 ШАГ 1: КЭШИРУЕМ ЗНАЧКИ ЭМОДЗИ ИЗ ГОЛОВНЫХ РАЗДЕЛОВ КАРТЫ САЙТА
+    # 🟢 ШАГ 1: КЭШИРУЕМ ЗНАЧКИ ЭМОДЗИ ИЗ ГОЛОВНЫХ РАЗДЕЛОВ КАРТЫ НАВИГАЦИИ
     section_emojis = {}
-    for key, items in sitemap_data.items():
+    for key, items in nav_data.items():
         if key == 'detected_root_folders':
             continue
         if '/' not in key and isinstance(items, list) and len(items) > 0:
@@ -56,7 +56,7 @@ def build_universal_feed():
                 section_emojis[clean_key] = section_card['emoji']
 
     # 🟢 ШАГ 2: СКВОЗНОЙ СБОР И НАЙТИВНОЕ РАСПОЗНАВАНИЕ ТИПОВ ИЗ URL
-    for file_key, nodes in sitemap_data.items():
+    for file_key, nodes in nav_data.items():
         if file_key == 'detected_root_folders':
             continue
             
@@ -134,7 +134,7 @@ def build_universal_feed():
     feed_section_emojis = {}
     feed_section_limits = {'news': 10}  # По умолчанию для Главной лимит равен 10
 
-    for key, items in sitemap_data.items():
+    for key, items in nav_data.items():
         if key.startswith('feed-') and isinstance(items, list) and len(items) > 0:
             sect_card = items[0] if isinstance(items, list) and len(items) > 0 else items
             if isinstance(sect_card, dict) and sect_card.get('url'):
@@ -143,7 +143,7 @@ def build_universal_feed():
                     baskets[b_name] = []
                     if sect_card.get('emoji'):
                         feed_section_emojis[b_name] = sect_card['emoji']
-                    # Считываем свойство perpage напрямую из Source of Truth карты сайта
+                    # Считываем свойство perpage напрямую из Source of Truth карты навигации
                     if sect_card.get('perpage'):
                         try:
                             feed_section_limits[b_name] = int(sect_card['perpage'])
@@ -205,7 +205,7 @@ def build_universal_feed():
         pinned_queue = [x for x in sorted_pool if x['pinned']]
         regular_queue = [x for x in sorted_pool if not x['pinned']]
         
-        # Забираем динамический лимит perpage из карты сайта sitemap_data
+        # Забираем динамический лимит perpage из карты навигации
         ITEMS_PER_PAGE = feed_section_limits.get(b_name, 10)
         
         # Рассчитываем, сколько обычных постов поместится на страницу под закрепами
@@ -253,7 +253,7 @@ def build_universal_feed():
             except Exception as e:
                 print(f"[FEED-ERROR] Не удалось сохранить JSON-порцию {portion_filename}: {e}")
 
-        # ГЕНЕРАЦИЯ ОФИЦИАЛЬНОГО ПОСТРАНИЧНОГО ОТЧЕТА КОНТРОЛЯ ЗАКРЕПОВ
+        # ГЕНЕРАЦИЯ ОФИЦИАЛЬНОГО ПОСТРАНИЧНОГО ОТЧЕТА КОНТРОЛЯ ЗАКРЕПОВ (1-в-1 ВАШ СТАРЫЙ ЛОГ)
         log_buffer = []
         log_buffer.append("=========================================================================")
         log_buffer.append(f"РЕЕСТР ОБОСОБЛЕННОЙ ЛЕНТЫ ОБНОВЛЕНИЙ: {b_name.upper()}")
@@ -305,7 +305,8 @@ def build_universal_feed():
         print(f"[FEED-ERROR] Не удалось провести инспекцию папки порций: {e}")
         
     print("=========================================================================\n")
-    print(f"[FEED-SUCCESS] Честный порционный контур JSON создан in-memory и сохранен в assets/feed/. Лент: {len(baskets)}")
+    print(f"[FEED-SUCCESS] Честный порционный контур JSON создан в assets/feed/. Лент: {len(baskets)}")
 
 if __name__ == '__main__':
     build_universal_feed()
+

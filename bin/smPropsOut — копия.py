@@ -5,7 +5,7 @@
 @about Расчет тегов, категорий контура и сохранение файлов
 @purpose Принимает из оперативной памяти обогащенную карту, вычисляет динамические метаданные и за один присест физически обновляет файлы на диске.
 @author TechLab
-@version 1.1.0
+@version 1.0.0
 """
 
 import os
@@ -35,12 +35,7 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
         body = passport.get('body_content', '')
         file_path = passport.get('file_path', '')
 
-        # ИГНОРИРУЕМ КОРНЕВЫЕ РАЗДЕЛЫ САЙТА (УСТРАНЯЕМ АНОМАЛИЮ 3)
-        # Корневые папки разделов из Шага 1 не имеют физического md-файла внутри своей папки, 
-        # либо в их паспорте нативно взведен признак section/collection без related-приставок.
-        if not file_path or not os.path.exists(file_path):
-            continue
-        if 'section' in node or 'collection' in node:
+        if not data or not file_path or not os.path.exists(file_path):
             continue
 
         # Состояния-триггеры для жесткого контроля избыточных дисковых операций
@@ -55,10 +50,8 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
         if data.get('entity'): calculated_tags.append(clean_tag_local(data['entity']))
         if data.get('level'): calculated_tags.append(f"{str(data['level']).strip()}класс")
         
-        # НАДЁЖНОЕ ИЗВЛЕЧЕНИЕ ЗАГОЛОВКА ДЛЯ СТАТЕЙ И ПОСТОВ ХРОНИКИ (УСТРАНЯЕМ АНОМАЛИЮ 1 И 2)
-        # Если во front-matter пусто, забираем вычисленный title из оперативной памяти ноды каркаса
-        title_text = str(data.get('title', node.get('title', ''))).strip()
-        if title_text:
+        if node.get('title'):
+            title_text = str(node['title']).strip()
             if ':' in title_text:
                 parts = title_text.split(':', 1)
                 tag_before = translit_title_local(parts[0])
@@ -74,7 +67,7 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
             else:
                 calculated_tags.append(clean_tag_local(data['keywords']))
 
-        # Умное слияние: бережно сохраняем и подклеиваем старые теги из файла контента
+        # Умное слияние по вашей логике: бережно сохраняем и подклеиваем старые теги из файла
         old_tags = data.get('tags', [])
         if isinstance(old_tags, list):
             for ot in old_tags: calculated_tags.append(clean_tag_local(ot))
@@ -125,9 +118,8 @@ def process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_presen
             pass
 
         # Если хотя бы один триггер истинен — осуществляем физическую запись за 1 проход
-        # ПРИМЕЧАНИЕ: Для тестирования симуляции вы можете временно закомментировать строку с write_yaml_front_matter
         if date_was_written or tags_were_written or categories_were_written or permalink_was_written:
-            write_yaml_front_matter(file_path, data, body)
+            # write_yaml_front_matter(file_path, data, body)
             
             # Печатаем логи изменений строго по вашему лаконичному эталону (1 слово "Записано")
             if permalink_was_written:

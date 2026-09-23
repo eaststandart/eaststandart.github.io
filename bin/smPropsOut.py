@@ -10,6 +10,7 @@
 
 import os
 import re
+from sitemap import write_yaml_front_matter
 
 def write_local_log(text):
     """Локально дописывает строку в изолированный лог третьего модуля smPropsOut."""

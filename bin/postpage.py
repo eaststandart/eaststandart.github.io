@@ -3,7 +3,7 @@
 """
 @module postpage.py
 @about Изолированный автономный генератор физических md-страниц архивов проектов.
-@purpose 100% бэкенд-фильтрация постов по карте навигации navigation.yml. 
+@purpose 100% бэкенд-фильтрация постов по карте навигации sitemap.yml. 
          Python на Шаге 0 находит проекты, на Шаге 1 собирает посты по relatedpages, 
          проверяет наличие posttype и передаёт в Jekyll готовый массив URL-адресов.
 @author TechLab
@@ -28,7 +28,7 @@ def generate_posts_pages():
     ALLOWED_POST_TYPES = ['journal', 'media', 'question']
     
     if not os.path.exists(navigation_file):
-        print(f"[POST-ERROR] Карта навигации navigation.yml не найдена: {navigation_file}")
+        print(f"[POST-ERROR] Карта навигации sitemap.yml не найдена: {navigation_file}")
         return
 
     # Загружаем Единственный Источник Правды в оперативную память
@@ -153,7 +153,7 @@ def generate_posts_pages():
                 print(log_msg)
                 log_buffer.append(log_msg)
                 
-                # Запоминаем паспорт для последующей дозаписи в navigation.yml
+                # Запоминаем паспорт для последующей дозаписи в sitemap.yml
                 append_nodes[jekyll_page_path] = [{
                     'title': f"{parent_title}: лента постов",
                     'url': jekyll_permalink,
@@ -169,15 +169,15 @@ def generate_posts_pages():
             # Обновляем навигационную карту в памяти для полного лога
             navigation_map.update(append_nodes)
             
-            # Физически дописываем паспорта в самый конец файла navigation.yml
+            # Физически дописываем паспорта в самый конец файла sitemap.yml
             with open(navigation_file, 'a', encoding='utf-8') as f:
                 f.write("\n# =========================================================================\n")
                 f.write("# АВТОГЕНЕРИРУЕМЫЕ СТРАНИЦЫ ПОСТОВ ПРОЕКТОВ (POST-PAGE-OPEN)\n")
                 f.write("# =========================================================================\n")
                 yaml.dump(append_nodes, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-            log_buffer.append(f"[APPEND-SUCCESS] В хвост navigation.yml добавлено паспортов: {len(append_nodes)}")
+            log_buffer.append(f"[APPEND-SUCCESS] В хвост sitemap.yml добавлено паспортов: {len(append_nodes)}")
         except Exception as e:
-            print(f"[POST-ERROR] Не удалось дозаписать паспорта в navigation.yml: {e}")
+            print(f"[POST-ERROR] Не удалось дозаписать паспорта в sitemap.yml: {e}")
 
     # Сохраняем изолированный слепок полной карты навигации в отдельный файл лога для ручного аудита
     try:

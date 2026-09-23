@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module smPropsIn
+@module smPropsIn.py
 @about Обогащение карты и расчет инвариантных дат
 @purpose Затягивает из Front Matter свойства Obsidian в карту сайта и вычисляет недостающие даты через каскад Git/mtime в оперативной памяти.
 @author TechLab

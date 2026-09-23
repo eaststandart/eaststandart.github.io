@@ -40,7 +40,7 @@ def build_sitemap_tree():
     # Исключения корневых папок проекта
     EXCLUDED_FOLDERS = {
         '_includes', '_layouts', '_pages', 'assets', 'bin', 
-        '.git', '.github', '_data', '_navigation_files', '_sitemap_files'
+        '.git', '.github', '_data', '_sitemap_files'
     }
 
     print("[SITEMAP] Запуск Конвейера в оперативной памяти. Шаг 1: Навигация (smLinks)...")

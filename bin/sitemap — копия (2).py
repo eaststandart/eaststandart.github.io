@@ -28,6 +28,8 @@ import smLinks
 
 def build_sitemap_tree():
     """Главный диспетчер пакета sitemap. Вызывается из preprocess.py."""
+    global artifacts_log_buffer
+    artifacts_log_buffer.clear()
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, '..'))

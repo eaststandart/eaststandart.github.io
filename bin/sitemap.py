@@ -57,8 +57,13 @@ def build_sitemap_tree():
     # 1. Получаем расширенную сквозную карту из оперативной памяти нового модуля smLinks
     sitemap_flat_map, root_dirs_present = smLinks.run_navigation_stage(root_dir, EXCLUDED_FOLDERS)
 
+    print("[SITEMAP] Подключение конвейера. Шаг 2: Обогащение свойств карты (smPropsIn)...")
     import smPropsIn
     sitemap_flat_map = smPropsIn.enrich_sitemap_properties(sitemap_flat_map)
+
+    print("[SITEMAP] Подключение конвейера. Шаг 3: Расчет тегов, категорий и запись на диск (smPropsOut)...")
+    import smPropsOut
+    sitemap_flat_map = smPropsOut.process_files_metadata_and_save(sitemap_flat_map, root_dir, root_dirs_present)
 
     # 2. ТЕСТИРОВАНИЕ: Пересобираем сквозную карту в чистый словарь для выгрузки в sitemap.yml
     final_output_map = {}

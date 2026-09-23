@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Керамический дисковый конденсатор
-tags: [красотаэлектронныхкомпонентов, керамическийдисковыйконденсатор, конденсатор]
+tags: [красотаэлектронныхкомпонентов, конденсатор]
 sources: "Schlaepfer E., Oskay W., Open Circuits: The Inner Beauty of Electronic Components, 2023, pp. 32-33"
 ---
 

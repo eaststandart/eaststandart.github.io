@@ -29,4 +29,4 @@ discus: "questions"
 
 🗣️ Прокомментировать соревнования можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/13#discussioncomment-17905255) 👈
 
-🗣️ [Задать вопрос](https://github.com/eaststandart/eaststandart.github.io/discussions/29) по теме данной статьи можно в комментариях ниже 👇
+🗣️ Задать вопрос  по теме данной статьи можно в комментариях ниже 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

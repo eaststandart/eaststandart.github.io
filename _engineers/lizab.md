@@ -3,7 +3,7 @@ workflow: "думаю по полям сделать автоматич спис
 layout: page
 description: ""
 title: "Лиза"
-date: 2026-09-25
+date: 2026-09-24
 keywords: [юный инженер]
 ---
 

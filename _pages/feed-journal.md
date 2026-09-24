@@ -1,6 +1,6 @@
 ---
 layout: feed
-title: Журнал
+title: Журнал проектов
 description: Лента постов журнальных записей по проектам.
 date: 2025-10-01
 permalink: /journal/

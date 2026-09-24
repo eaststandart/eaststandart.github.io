@@ -6,7 +6,7 @@ description: Общая лента новостей Лаборатории.
 date: 2025-10-01
 permalink: /news/
 per_page: 10
-emoji: "☄️"
+emoji: "📰"
 ---
 
 {% comment %} 

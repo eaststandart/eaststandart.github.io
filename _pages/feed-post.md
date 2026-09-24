@@ -5,7 +5,7 @@ description: Лента постов без типа (дополнительны
 date: 2025-10-01
 permalink: /post/
 per_page: 10
-emoji: "📝"
+emoji: "📄"
 ---
 
 {% comment %} 

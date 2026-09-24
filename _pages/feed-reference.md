@@ -1,11 +1,11 @@
 ---
 layout: feed
-title: Справочник
+title: Справочные материалы
 description: Лента постов справочных материалов.
 date: 2025-10-01
 permalink: /reference/
 per_page: 10
-emoji: "📖"
+emoji: "🗃️"
 ---
 
 {% comment %} 

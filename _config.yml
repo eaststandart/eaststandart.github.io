@@ -23,6 +23,12 @@ collections:
   people:
     output: true
     permalink: "/people/:title/"
+  engineers:
+    output: true
+    permalink: "/engineers/:title/"
+  process:
+    output: true
+    permalink: "/process/:title/"
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

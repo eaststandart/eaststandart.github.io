@@ -57,8 +57,8 @@ header_theme: classic
             <li><a href="#">✨ Деятельность клуба</a></li>
             <li><a href="#">🎓 Регулярные занятия</a></li>
             <li><a href="#">🪁 Детско-юношеский лагерь</a></li>
-            <li><a href="#">🎨 Творческий процесс</a></li>
-            <li><a href="#">💥 Работы юных инженеров</a></li>
+            <li><a href="/process/">🎨 Творческий процесс</a></li>
+            <li><a href="/engineers/">💥 Работы юных инженеров</a></li>
         </ul>
     </section>
 </div>

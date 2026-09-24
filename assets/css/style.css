@@ -96,7 +96,7 @@ body {
 
 /* Главный заголовок верхнего уровня страницы */
 h1 { 
-    margin: 5px 0 0 0;
+    margin: 0 0 0 0;
     font-size: 2rem; 
     line-height: 1.2;
 }
@@ -528,7 +528,7 @@ p:has(img) + blockquote,
     /* Пропорциональное уменьшение шрифта и отступов основного H1 заголовка */
     h1 { 
         font-size: 1.5rem; 
-        margin: 5px 0 10px 0 !important; 
+        margin: 0 0 0 0 !important; 
     }
     
     /* Убираем углы и маргины для ВСЕХ устройств ниже 900px */

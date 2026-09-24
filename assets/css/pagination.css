@@ -53,7 +53,7 @@
 
 /* Родительский контейнер шапки крошек */
 .navigation-header {
-    margin-bottom: 15px !important;            /* Твой маргин 15px */
+    margin-bottom: 0.9rem !important;            /* Твой маргин 0.9rem */
     font-size: 0.9rem !important;               /* Твой шрифт 0.9rem */
     border-bottom: 1px solid #f0f0f0 !important;/* Твоя серая линия */
     padding-bottom: 8px !important;             /* Твой падинг снизу 8px */

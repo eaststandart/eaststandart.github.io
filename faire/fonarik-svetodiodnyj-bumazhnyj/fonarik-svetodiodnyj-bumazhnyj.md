@@ -27,7 +27,7 @@ keywords: [электроникаисхемотехника, проектуче�
 2\. 📄[Описание проекта, sPlan](fonarik-svetodiodnyj-bumazhnyj.spl8)\
 3\. 🔢[Фонарик светодиодный бумажный. Шаблон корпуса, PDF](fonarik-svetodiodnyj-bumazhnyj-trafaret.pdf)
 
-{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСЫ, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

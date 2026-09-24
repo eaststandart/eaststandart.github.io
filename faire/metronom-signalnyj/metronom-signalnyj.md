@@ -32,7 +32,7 @@ keywords: [электроникаисхемотехника, проектуче�
 1\. 🔌[Схема электрическая принципиальная, PDF](metronom-signalnyj-esd.pdf)\
 2\. 🔌[Схема электрическая принципиальная, sPlan](metronom-signalnyj-esd.spl8)
 
-{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСЫ, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

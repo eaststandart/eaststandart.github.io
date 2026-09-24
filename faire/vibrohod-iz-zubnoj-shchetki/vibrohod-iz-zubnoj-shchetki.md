@@ -29,7 +29,7 @@ keywords: [электроникаисхемотехника, конструир�
 2\. Провести соревнования: гонки роботов [Racing Bristlebots: On Your Mark. Get Set. Go!](https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p010/robotics/racing-bristlebots) или  прохождение лабиринта [Easy DIY Robots for Kids](https://youtu.be/5fPU9LJgTbA).\
 3\. Выполнить научный проект: изучить движение роботов [Science Project: Bristlebot Motion Tracking](https://youtu.be/NmMflaqzJXQ).
 
-{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСЫ, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

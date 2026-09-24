@@ -26,7 +26,7 @@ keywords: [электроникаисхемотехника, столярное�
 3\. Установка дополнительных креплений для дополнительных щупов осциллографа.\
 4\. Разработка магнитных держателей для быстрой и надёжной фиксации подставки на вертикальных металлических стенах или приборных панелях.
 
-{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
+{%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСЫ, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}
 {% include posts-page.liquid posttype="question" header-h3="Вопросы проекта" per_page="" %}
 {% include posts-page.liquid posttype="media" header-h3="Галерея работ" per_page="" %}

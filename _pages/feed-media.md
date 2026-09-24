@@ -2,7 +2,7 @@
 layout: feed
 title: Медиа-материалы
 description: Лента постов с медиа материалами по выполненным проектам.
-date: 2025-09-03
+date: 2025-10-01
 permalink: /media/
 per_page: 10
 emoji: "👀"

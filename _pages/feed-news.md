@@ -3,7 +3,7 @@ workflow: "per_page 10 перенести в скрипт или пусть ск
 layout: feed
 title: Новости уголка конструктора
 description: Общая лента новостей Лаборатории.
-date: 2025-09-01
+date: 2025-10-01
 permalink: /news/
 per_page: 10
 emoji: "☄️"

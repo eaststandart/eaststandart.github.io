@@ -2,7 +2,7 @@
 layout: feed
 title: Посты
 description: Лента постов без типа (дополнительные и информационные посты).
-date: 2025-09-06
+date: 2025-10-01
 permalink: /post/
 per_page: 10
 emoji: "📝"

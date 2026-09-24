@@ -1,8 +1,9 @@
 ---
 layout: page
-description: Направление для изучения проектов от простых основ до сложных систем.
 title: Учебные проекты
-crumbtitle: "Проекты"
+crumbtitle: Проекты
+description: Направление для изучения проектов от простых основ до сложных систем.
+date: 2025-08-01
 custom_css: ["/assets/css/projects.css"]
 emoji: "🗂️"
 ---

@@ -2,7 +2,7 @@
 layout: feed
 title: Журнал
 description: Лента постов журнальных записей по проектам.
-date: 2025-09-02
+date: 2025-10-01
 permalink: /journal/
 per_page: 10
 emoji: "✍🏻"

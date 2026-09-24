@@ -2,7 +2,7 @@
 layout: feed
 title: Вопросы проектов
 description: Лента постов вопросов по выполненным проектам.
-date: 2025-09-04
+date: 2025-10-01
 permalink: /question/
 per_page: 10
 emoji: "❓"

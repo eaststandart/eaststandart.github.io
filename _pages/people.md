@@ -2,7 +2,7 @@
 layout: default
 title: Люди
 description: Известные люди в инженерной и научно-технической области.
-date: 2025-09-07
+date: 2025-09-01
 permalink: /people/
 emoji: "🧍‍♂️"
 ---

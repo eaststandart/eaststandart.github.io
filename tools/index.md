@@ -2,7 +2,9 @@
 workflow: "разбить на разделы программы, сервисы и оборудование – то чем пользуюсь"
 layout: page
 title: Полезные инструменты
-crumbtitle: "Инструменты"
+crumbtitle: Инструменты
+description:
+date: 2025-08-01
 custom_css: ["/assets/css/tools.css"]
 emoji: "🛠"
 ---

@@ -1,4 +1,5 @@
 ---
+workflow: "строку include pagination.liquid list_id="posts-list" controls_id="news-pagination" per_page=limit basket=current_section вычистить от лишних параметров"
 about: Шаблон ленты новостей.
 purpose: Автоматически строит каркас ленты и выводит кнопки пагинации.
 layout: default

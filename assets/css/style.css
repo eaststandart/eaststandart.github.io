@@ -96,7 +96,7 @@ body {
 
 /* Главный заголовок верхнего уровня страницы */
 h1 { 
-    margin: 5px 0 15px 0;
+    margin: 5px 0 0 0;
     font-size: 2rem; 
     line-height: 1.2;
 }
@@ -539,7 +539,7 @@ p:has(img) + blockquote,
         margin: 5px 0 10px 0 !important; 
     }
     
-    /* Убираем углы и маргины для ВСЕХ устройств ниже 900px) */
+    /* Убираем углы и маргины для ВСЕХ устройств ниже 900px */
     .content-wrapper { 
         width: 100% !important; 
         padding: var(--pad-mobile) !important; /* Зазор 12px по бокам внутри карточки */
@@ -553,7 +553,7 @@ p:has(img) + blockquote,
         /* Видео растягиваются на всю ширину экрана смартфона */
         .main-content video:not(.video-fig) {
             height: auto !important;    
-            width: 100%; !important; 
+            width: 100% !important; 
             margin: 0 !important;
         }
         
@@ -594,7 +594,7 @@ p:has(img) + blockquote,
     .item-image-round {
         width: 40px !important;
         height: 40px !important;
-    }
+    }   
 }
 
 }

@@ -62,4 +62,4 @@ header_theme: classic
     </section>
 </div>
 
-{% include pagination.liquid list_id="posts-list" controls_id="home-news-pagination" per_page=10 pinned_url="/people/fran-blanche/" %}
+{% include pagination.liquid list_id="posts-list" controls_id="home-news-pagination" per_page=10 %}

@@ -5,6 +5,7 @@ crumbtitle: Дневник
 description: 
 date: 2025-08-01
 custom_css: ["/assets/css/diary.css"]
+emoji: "📝"
 ---
 
 <div class="diary-list">

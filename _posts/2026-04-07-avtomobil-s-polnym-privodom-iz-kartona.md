@@ -7,4 +7,4 @@ posttype: question-close
 discus: "questions"
 ---
 
-🗣️ [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29) Спроси – не стесняйся ... 👇
+🗣️ Спроси – не стесняйся ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

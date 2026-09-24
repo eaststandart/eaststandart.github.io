@@ -25,8 +25,8 @@ keywords: [столярноедело, проектучебный, 3класс, 
 Возможно изменение абажура, формы и цвета подставки, подбор новых видов растений и установка датчика освещенности или движения для автоматического включения лампы в темноте. Можно предусмотреть установку солнечных батарей и аккумулятора, чтобы лампа стала автономным прибором, как оборудование на настоящем космическом корабле.
 
 ### Файлы проекта
-1\. 📐[Сборочный чертеж, PDF](nastolnaya-svetodiodnaya-lampa-s-rasteniem.pdf)\
-2\. 📐[Сборочный чертеж, LibreCAD](nastolnaya-svetodiodnaya-lampa-s-rasteniem.dxf)
+1\. 📐[Сборочный чертеж, PDF](nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.pdf)\
+2\. 📐[Сборочный чертеж, LibreCAD](nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.dxf)
 
 {%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}

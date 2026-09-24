@@ -1,4 +1,5 @@
 ---
+workflow: "sprintlayout_macros.zip недоступен надо что-то сделать на гитхаб много местазинимает"
 layout: page
 title: Sprint Layout
 description: "Проектирование и ручная разводка печатных плат малой и средней сложности."

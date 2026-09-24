@@ -30,8 +30,8 @@ keywords: [конструированиеимоделирование, прое�
 Возможна модификация робота путем установки светодиодов для «зажигания глаз», что позволит роботу передвигаться в ночи и освещать путь в темных зонах других планет. Добавление дистанционного управления  для точной доставки грузов между базами.
 
 ### Файлы проекта
-1\. 📐[Сборочный чертеж, PDF](simple-cardboard-walking-robot.pdf)\
-2\. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robot.dxf)
+1\. 📐[Сборочный чертеж, PDF](simple-cardboard-walking-robotj-ad.pdf)\
+2\. 📐[Сборочный чертеж, LibreCAD](simple-cardboard-walking-robotj-ad.dxf)
 
 {%- comment -%}БЛОК ПРОЕКТА: ЖУРНАЛ, ВОПРОСS, ГАЛЕРЕЯ{%- endcomment -%}
 {% include posts-page.liquid posttype="journal" header-h3="Журнал проекта" per_page="" %}

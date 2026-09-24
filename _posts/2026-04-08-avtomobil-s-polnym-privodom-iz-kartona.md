@@ -30,4 +30,4 @@ posttype: media
 
 🗣️ Прокомментировать работу можно [здесь](https://github.com/eaststandart/eaststandart.github.io/discussions/80#discussioncomment-17930150) 👈
 
-🗣️ Задать вопрос по самодельному редуктору можно [здесь](https://eaststandart.github.io/journal/avtomobil-s-polnym-privodom-iz-kartona/2026/04/07/avtomobil-s-polnym-privodom-iz-kartona.html) 👈
+🗣️ Задать вопрос по самодельному редуктору можно [здесь](https://eaststandart.github.io/question/avtomobil-s-polnym-privodom-iz-kartona/2026/04/07/avtomobil-s-polnym-privodom-iz-kartona.html) 👈

@@ -72,4 +72,4 @@ discus: "journal"
 
 ![video](github/eaststandart.github.io/faire/elektronnyj-organ/elektronnyj-organ-05.webm)
 
-🗣️ [Обсудить проект](https://github.com/eaststandart/eaststandart.github.io/discussions/29) по теме данной статьи можно в комментариях ниже 👇
+🗣️ Поделиться мнением по теме данной статьи можно в комментариях ниже 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

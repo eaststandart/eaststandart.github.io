@@ -1,32 +1,27 @@
-/* giscus-custom.css — Этот код принудительно применится внутри окон Гитхаба */
+@charset "UTF-8";
 
-img {
-    margin-bottom: 24px !important; /* Наш нижний отступ от фотографии до фотографии */
-    border-radius: 8px !important;  /* Аккуратно скругляем жесткие углы картинок */
-    display: block !important;       /* Переводим в блочный режим, чтобы отступ сработал на 100% */
-    max-width: 100% !important;     /* Защита от вылезания за края */
+/* Обязательные системные переменные, без которых Giscus сбрасывает тему */
+main {
+  --color-prettylights-syntax-comment: #8c959f;
+  --color-prettylights-syntax-constant: #0550ae;
+  --color-btn-text: #24292f;
+  --color-btn-bg: #f6f8fa;
+  --color-btn-border: rgba(27,31,36,0.15);
+  --color-canvas-default: #ffffff;
+  --color-canvas-overlay: #ffffff;
+  --color-fg-default: #24292f;
+  --color-border-default: #d0d7de;
 }
 
-/* iframe.css — этот код внедрится внутрь фрейма комментариев */
-
-.comment-body img, 
-.markdown-body img,
-img.js-gh-image-fallback {
-    margin-bottom: 24px !important; /* Наш ровный нижний отступ от фото до фото */
-    border-radius: 8px !important;  /* Скругление краев заблюренных фото */
-    display: block !important;       /* Переводим в блочный режим, чтобы отступы сработали */
-    max-width: 100% !important;
-    height: auto !important;
-}
-
-/* iframe.css — Код по официальным правилам Giscus */
-
+/* ========================================== */
+/* НАШ КОД: Отступы для заблюренных фото      */
+/* ========================================== */
 .gsc-comment-content img,
 .gsc-markdown img,
-.gsc-comment-body img {
+img.js-gh-image-fallback {
     margin-bottom: 24px !important; /* Наш ровный нижний отступ от фото до фото */
-    border-radius: 8px !important;  /* Скругление краев заблюренных фото */
-    display: block !important;       /* Переводим в блочный режим, чтобы отступы сработали */
+    border-radius: 8px !important;  /* Скругление краев */
+    display: block !important;       /* Переводим в блочный режим для работы отступа */
     max-width: 100% !important;
     height: auto !important;
 }

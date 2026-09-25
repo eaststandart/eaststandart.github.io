@@ -7,11 +7,8 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-.gsc-comment-content img,
-.gsc-markdown img,
-.markdown-body img {
+img.js-gh-image-fallback {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
-    border-radius: 8px !important;  /* Аккуратные скругленные уголки фото */
     display: block !important;       /* Включаем блочный режим для работы маргина */
     max-width: 100% !important;
     height: auto !important;

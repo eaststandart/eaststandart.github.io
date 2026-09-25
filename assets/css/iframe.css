@@ -1,9 +1,7 @@
 @charset "UTF-8";
 
 .gsc-comment-content img,
-.gsc-markdown img,
-img.js-gh-image-fallback,
-img {
+.gsc-markdown img {
     margin-bottom: 16px !important; /* Наш ровный нижний отступ */
     display: block !important;       /* Включаем блочный режим */
     max-width: 100% !important;

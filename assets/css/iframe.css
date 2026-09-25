@@ -1,8 +1,19 @@
 @charset "UTF-8";
 
-.gsc-comment-content img {
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+/* ======================================================== */
+/* НАШ КОД: Только отступы и скругления картинок в Giscus   */
+/* ======================================================== */
+
+.gsc-comment-content img,
+.gsc-markdown img,
+.markdown-body img {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
-    display: block !important;       /* Включаем блочный режим */
+    border-radius: 8px !important;  /* Аккуратные скругленные уголки фото */
+    display: block !important;       /* Включаем блочный режим для работы маргина */
     max-width: 100% !important;
     height: auto !important;
 }
+

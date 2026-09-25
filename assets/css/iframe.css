@@ -18,3 +18,15 @@ img.js-gh-image-fallback {
     max-width: 100% !important;
     height: auto !important;
 }
+
+/* iframe.css — Код по официальным правилам Giscus */
+
+.gsc-comment-content img,
+.gsc-markdown img,
+.gsc-comment-body img {
+    margin-bottom: 24px !important; /* Наш ровный нижний отступ от фото до фото */
+    border-radius: 8px !important;  /* Скругление краев заблюренных фото */
+    display: block !important;       /* Переводим в блочный режим, чтобы отступы сработали */
+    max-width: 100% !important;
+    height: auto !important;
+}

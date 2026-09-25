@@ -12,23 +12,17 @@
     margin-right: 0 !important;
 }
 
-/* Отступы между фотографиями и видео внутри комментариев на телефонах */
-.giscus-frame, 
-.giscus-frame giscus-viewer img, 
-.giscus-frame giscus-viewer video,
-.giscus-frame iframe {
-    margin-bottom: 10px !important; /* Делает аккуратный нижний отступ от фото до фото */
-}
-
-/* Сглаживаем края у картинок, чтобы они выглядели профессионально */
-.giscus-frame giscus-viewer img {
-    border-radius: 6px;
-    height: auto !important;
-}
 
 /* На мобильных экранах убираем лишние ограничения */
 @media (max-width: 768px) {
     .giscus-frame {
         width: 100% !important;
     }
+
+    /* Добавляем тот самый нижний отступ для медиа на смартфонах */
+    .giscus-frame giscus-viewer img, 
+    .giscus-frame giscus-viewer video {
+        margin-bottom: 16px !important; /* Расстояние между картинками 16px (1rem) */
+    }
+
 }

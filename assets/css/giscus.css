@@ -12,17 +12,13 @@
     margin-right: 0 !important;
 }
 
+.gsc-comment-author img {
+    margin-bottom: 16px !important;
+}
 
 /* На мобильных экранах убираем лишние ограничения */
 @media (max-width: 768px) {
     .giscus-frame {
         width: 100% !important;
     }
-
-    /* Добавляем тот самый нижний отступ для медиа на смартфонах */
-    .giscus-frame giscus-viewer img, 
-    .giscus-frame giscus-viewer video {
-        margin-bottom: 16px !important; /* Расстояние между картинками 16px (1rem) */
-    }
-
 }

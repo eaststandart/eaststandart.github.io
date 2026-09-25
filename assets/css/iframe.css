@@ -1,0 +1,8 @@
+/* giscus-custom.css — Этот код принудительно применится внутри окон Гитхаба */
+
+img.js-gh-image-fallback {
+    margin-bottom: 24px !important; /* Наш нижний отступ от фотографии до фотографии */
+    border-radius: 8px !important;  /* Аккуратно скругляем жесткие углы картинок */
+    display: block !important;       /* Переводим в блочный режим, чтобы отступ сработал на 100% */
+    max-width: 100% !important;     /* Защита от вылезания за края */
+}

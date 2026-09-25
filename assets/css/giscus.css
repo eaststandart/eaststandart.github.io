@@ -12,17 +12,6 @@
     margin-right: 0 !important;
 }
 
-.gsc-comment-author img, 
-.markdown img {
-    margin-bottom: 16px !important;
-}
-
-/* Влияем на системный класс картинок Гитхаба внутри виджета */
-img.js-gh-image-fallback {
-    margin-bottom: 20px !important; /* Наш ровный нижний отступ от фото до фото */
-    display: inline-block !important; /* Защищаем картинки от принудительного растягивания */
-}
-
 /* На мобильных экранах убираем лишние ограничения */
 @media (max-width: 768px) {
     .giscus-frame {

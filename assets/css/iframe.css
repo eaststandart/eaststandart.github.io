@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* Обязательные системные переменные, без которых Giscus сбрасывает тему */
 main {
   --color-prettylights-syntax-comment: #8c959f;
   --color-prettylights-syntax-constant: #0550ae;
@@ -13,15 +12,12 @@ main {
   --color-border-default: #d0d7de;
 }
 
-/* ========================================== */
-/* НАШ КОД: Отступы для заблюренных фото      */
-/* ========================================== */
 .gsc-comment-content img,
 .gsc-markdown img,
 img.js-gh-image-fallback {
-    margin-bottom: 24px !important; /* Наш ровный нижний отступ от фото до фото */
+    margin-bottom: 24px !important; /* Наш ровный нижний отступ */
     border-radius: 8px !important;  /* Скругление краев */
-    display: block !important;       /* Переводим в блочный режим для работы отступа */
+    display: block !important;       /* Включаем блочный режим */
     max-width: 100% !important;
     height: auto !important;
 }

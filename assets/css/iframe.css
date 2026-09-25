@@ -10,8 +10,3 @@
 img.js-gh-image-fallback {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
 }
-
-/* 2. ПРИЖИМАЕМ ЗАГОЛОВКИ: Уменьшаем гигантский отступ, который вы нашли */
-h3[dir="auto"] {
-    margin-top: 0px !important;    /* Срезали отступ с 24px до красивых 12px */
-}

@@ -9,8 +9,9 @@
 
 img.js-gh-image-fallback {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
-    display: block !important;       /* Включаем блочный режим для работы маргина */
-    max-width: 100% !important;
-    height: auto !important;
 }
 
+/* 2. ПРИЖИМАЕМ ЗАГОЛОВКИ: Уменьшаем гигантский отступ, который вы нашли */
+h3[dir="auto"] {
+    margin-top: 0px !important;    /* Срезали отступ с 24px до красивых 12px */
+}

@@ -2,12 +2,13 @@
 workflow: "**Преподаватель:** {{ page.teacher }} - выводить внизу страницы"
 layout: page
 description: "Здесь собраны успехи наших юных инженеров. Вы можете пролистать фотографии, загрузить свои кадры с занятий."
-title: "Творческий процесс: Осень 2026"
+title: "Творческий процесс: Осень 2026 – электронное конструирование – TechLab
 date: 2026-09-24
+direction: электронное конструирование
 studytype: "regular"
 quarter: "1"
-teacher: "ФИО"
+teacher: "TechLab"
 discus: "process"
 ---
 
- Оставить комментарий в блоке ниже ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)
+ Обсудить творческий процесс или поделиться своим мнением можно в комментариях ниже ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

@@ -14,7 +14,8 @@ main {
 
 .gsc-comment-content img,
 .gsc-markdown img,
-img.js-gh-image-fallback {
+img.js-gh-image-fallback,
+img {
     margin-bottom: 24px !important; /* Наш ровный нижний отступ */
     border-radius: 8px !important;  /* Скругление краев */
     display: block !important;       /* Включаем блочный режим */

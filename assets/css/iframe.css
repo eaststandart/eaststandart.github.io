@@ -17,7 +17,7 @@
 }
 
 img {
-    margin-right: 1rem !important;
+    margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
     max-width: calc(50% - 9px) !important;
     display: inline-block;

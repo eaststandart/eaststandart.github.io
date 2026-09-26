@@ -2,17 +2,18 @@
 
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
+@import url("style.css");
 
 /* ======================================================== */
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-img.js-gh-image-fallback {
+im1g.js-gh-image-fallback {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
     max-width: 48% !important;
 }
 
-img {
+im1g {
     margin: 1rem !important; /* Наш ровный нижний отступ */
 }
 

@@ -24,17 +24,19 @@ img.js-gh-image-fallback {
 
 details.details-reset {
     display: inline-block !important;
-    max-width: calc(50% - 9px) !important;   
+    max-width: calc(50% - 15px) !important;   
     width: 100% !important;         
-    margin-bottom: 1rem !important; 
+    margin-bottom: 1rem !important;
+    margin-right: 0.7rem !important;
 }
 
+/*
 video {
-    margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
     max-width: calc(50% - 9px) !important;
     display: inline-block !important;
 }
+*/
 
 /* СКРЫВАЕМ ИКОНКУ ВИДЕОКАМЕРЫ */
 details.details-reset svg.octicon-device-camera-video {

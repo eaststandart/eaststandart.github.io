@@ -15,8 +15,8 @@
 
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: 364px !important;
-    width: calc(50% - 0.45rem) !important;
+    max-width: 361px !important;
+    max-height: 203px !important;
     margin-bottom: 1rem !important;
 }
 
@@ -48,6 +48,15 @@ video {
 /* СКРЫВАЕМ ИКОНКУ ВИДЕОКАМЕРЫ */
 details.details-reset svg.octicon-device-camera-video {
     display: none !important;
+}
+
+
+@media (max-width: 900px) and (orientation: portrait) {
+
+    img.js-gh-image-fallback {
+        width: calc(50% - 15px) !important;
+    }
+    
 }
 
 @media (orientation: portrait) {

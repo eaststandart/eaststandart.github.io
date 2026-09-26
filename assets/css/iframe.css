@@ -15,7 +15,7 @@
 
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: calc(50% - 0.45rem) !important;
+    max-width: 364px !important;
     width: calc(50% - 0.45rem) !important;
     margin-bottom: 1rem !important;
 }
@@ -53,7 +53,6 @@ details.details-reset svg.octicon-device-camera-video {
 @media (orientation: portrait) {
 
     img.js-gh-image-fallback {
-        max-width: none !important;
         width: 100% !important;
     }
 

@@ -20,13 +20,21 @@ img.js-gh-image-fallback {
     max-width: 48% !important;
 }
 
-
 img {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
     max-width: 48% !important;
     display: inline-block;
 }
 
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* Компактная фиксированная высота видео для экономии высоты экрана */
+    img {
+        margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
+        display: inline-block;
+    }
+}
 /* ======================================================== */
 /* НАШ КОД: Уменьшаем видеоплееры в комментариях           */
 /* ======================================================== */

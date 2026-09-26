@@ -24,7 +24,8 @@ img.js-gh-image-fallback {
 
 details.details-reset {
     display: inline-block !important;
-    max-width: calc(50% - 15px) !important;   
+    max-width: 320px !important;
+    width: calc(50% - 15px) !important; 
     width: 100% !important;         
     margin-bottom: 1rem !important;
     margin-right: 0.7rem !important;

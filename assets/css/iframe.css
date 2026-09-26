@@ -26,7 +26,13 @@ video {
     max-width: 320px !important;    /* Видео никогда не станет шире 420 пикселей! */
     width: 100% !important;         /* На маленьких телефонах оно сожмётся под экран */
     height: auto !important;        /* Пропорции высоты сохранятся автоматически */
-    display: block !important;       /* Переводим в блок для работы маргинов */
+    display: inline-block !important;       /* Переводим в блок для работы маргинов */
+}
+
+details.details-reset {
+    max-width: calc(50% - 9px) !important;   
+    width: 100% !important;         
+    margin-bottom: 1rem !important; 
 }
 
 @media (orientation: portrait) {

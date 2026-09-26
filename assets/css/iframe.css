@@ -7,12 +7,18 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
+.gsc-comment-content,
+.gsc-markdown,
+.markdown-body {
+    text-align: justify !important;
+}
+
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: calc(50% - 9px) !important;
+    max-height: 209px !important;
     margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
-    width: calc(50% - 1rem) !important;
+    width: calc(50% - 0.45rem) !important;
 }
 
 /* Находим каждое второе (четное) фото в ряду и обнуляем ему правый зазор */

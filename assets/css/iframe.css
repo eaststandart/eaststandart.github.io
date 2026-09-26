@@ -52,6 +52,7 @@ details.details-reset svg.octicon-device-camera-video {
 
     details.details-reset {
         max-width: 100% !important;
+        width: 100% !important;
     }
 
 }

@@ -46,7 +46,7 @@ video {
     }
 }
 
-@media (orientation: landscape) {
+@media screen and (orientation: landscape) {
 
     img {
         margin-bottom: 1rem !important;

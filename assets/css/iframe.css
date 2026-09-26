@@ -7,7 +7,7 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-.gsc-comment-content h3 {
+.gsc-comment-content {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -21,8 +21,9 @@ img.js-gh-image-fallback {
 }
 
 img {
-    margin: 1rem !important; /* Наш ровный нижний отступ */
+    margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
     max-width: 48% !important;
+    display: inline-block;
 }
 
 /* ======================================================== */

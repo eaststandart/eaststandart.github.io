@@ -20,11 +20,6 @@ img.js-gh-image-fallback {
     margin-bottom: 1rem !important;
 }
 
-/* Находим каждое второе (четное) фото в ряду и обнуляем ему правый зазор */
-img.js-gh-image-fallback:nth-child(even) {
-    margin-right: 0 !important; 
-}
-
 /* ======================================================== */
 /* НАШ КОД: Уменьшаем видеоплееры в комментариях           */
 /* ======================================================== */
@@ -50,16 +45,7 @@ details.details-reset svg.octicon-device-camera-video {
     display: none !important;
 }
 
-
-@media (max-width: 900px) and (orientation: portrait) {
-
-    img.js-gh-image-fallback {
-        width: calc(50% - 15px) !important;
-    }
-    
-}
-
-@media (max-height: 500px) and (orientation: portrait) {
+@media (orientation: portrait) {
 
     img.js-gh-image-fallback {
         width: 100% !important;

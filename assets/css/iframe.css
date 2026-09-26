@@ -14,6 +14,11 @@ img {
     margin-bottom: 1rem !important;
 }
 
+/* Находим каждое второе (четное) фото в ряду и обнуляем ему правый зазор */
+img:nth-child(even) {
+    margin-right: 0 !important; 
+}
+
 i1mg.js-gh-image-fallback {
     display: inline-block;
 }

@@ -7,20 +7,11 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-.js-gh-image-fallback a:has(img) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: var(--gap-pc);         
-    margin: 1em 0 !important;   
-    padding: 0 !important;      
-}
-
 img {
     margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
     max-width: calc(50% - 9px) !important;
-    display: inline-block;
+    display: inline-block !important;
 }
 
 img.js-gh-image-fallback {
@@ -38,18 +29,10 @@ video {
     display: block !important;       /* Переводим в блок для работы маргинов */
 }
 
-@media (max-height: 500px) and (orientation: landscape) {
+@media (orientation: portrait) {
 
     img {
         margin-bottom: 1rem !important;
-        display: inline-block;
-    }
-}
-
-@media screen and (orientation: landscape) {
-
-    img {
-        margin-bottom: 1rem !important;
-        display: inline-block;
+        display: inline-block !important;
     }
 }

@@ -9,6 +9,7 @@
 
 img.js-gh-image-fallback {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
+    max-width: 48% !important;
 }
 
 img {

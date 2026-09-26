@@ -23,7 +23,7 @@ img.js-gh-image-fallback {
 /* ======================================================== */
 
 video {
-    max-width: 320px !important;    /* Видео никогда не станет шире 420 пикселей! */
+    max-width: calc(50% - 9px)
     width: 100% !important;         /* На маленьких телефонах оно сожмётся под экран */
     height: auto !important;        /* Пропорции высоты сохранятся автоматически */
     display: inline-block !important;       /* Переводим в блок для работы маргинов */

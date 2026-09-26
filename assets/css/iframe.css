@@ -54,7 +54,7 @@ details.details-reset svg.octicon-device-camera-video {
 
     img.js-gh-image-fallback {
         max-width: 100% !important;
-        max-height: none !important;
+        width: 100% !important;
     }
 
     details.details-reset {

@@ -34,5 +34,7 @@ video {
     img {
         margin-bottom: 1rem !important;
         display: inline-block !important;
+        max-width: 100% !important;
+        max-height: none !important;
     }
 }

@@ -15,11 +15,9 @@
 
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: 360px !important;
+    max-width: 361px !important;
     max-height: 203px !important;
     margin-bottom: 1rem !important;
-    float: left !important;
-    margin-right: 1rem !important;
 }
 
 /* ======================================================== */

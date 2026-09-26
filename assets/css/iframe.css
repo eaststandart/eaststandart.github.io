@@ -7,18 +7,19 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-.gsc-comment-content {
+.js-gh-image-fallback a:has(img) {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: var(--gap-pc);         
     margin: 1em 0 !important;   
-    padding: 0 !important;    
+    padding: 0 !important;      
 }
 
 img.js-gh-image-fallback {
     max-width: 48% !important;
 }
+
 
 img {
     margin-bottom: 1rem !important; /* Наш ровный нижний отступ */

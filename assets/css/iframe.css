@@ -35,6 +35,11 @@ details.details-reset {
     margin-bottom: 1rem !important; 
 }
 
+/* СКРЫВАЕМ ИКОНКУ ВИДЕОКАМЕРЫ */
+details.details-reset svg.octicon-device-camera-video {
+    display: none !important;
+}
+
 @media (orientation: portrait) {
 
     img {

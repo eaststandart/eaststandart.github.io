@@ -52,4 +52,12 @@ details.details-reset svg.octicon-device-camera-video {
         max-width: 100% !important;
         max-height: none !important;
     }
+
+    details.details-reset {
+        margin-bottom: 1rem !important;
+        display: inline-block !important;
+        max-width: 100% !important;
+        max-height: none !important;
+    }
+
 }

@@ -22,15 +22,6 @@ img {
     display: inline-block;
 }
 
-
-@media (max-height: 500px) and (orientation: landscape) {
-
-    /* Компактная фиксированная высота видео для экономии высоты экрана */
-    img {
-        margin-bottom: 1rem !important; /* Наш ровный нижний отступ */
-        display: inline-block;
-    }
-}
 /* ======================================================== */
 /* НАШ КОД: Уменьшаем видеоплееры в комментариях           */
 /* ======================================================== */
@@ -40,4 +31,12 @@ video {
     width: 100% !important;         /* На маленьких телефонах оно сожмётся под экран */
     height: auto !important;        /* Пропорции высоты сохранятся автоматически */
     display: block !important;       /* Переводим в блок для работы маргинов */
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+    img {
+        margin-bottom: 1rem !important;
+        display: inline-block;
+    }
 }

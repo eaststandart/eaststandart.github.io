@@ -8,13 +8,13 @@
 /* ======================================================== */
 
 img {
+    display: inline-block !important;
+    max-width: calc(50% - 9px) !important;
     margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
-    max-width: calc(50% - 9px) !important;
-    display: inline-block !important;
 }
 
-img.js-gh-image-fallback {
+i1mg.js-gh-image-fallback {
     display: inline-block;
 }
 
@@ -25,9 +25,9 @@ img.js-gh-image-fallback {
 details.details-reset {
     display: inline-block !important;
     max-width: 320px !important;
-    width: calc(50% - 15px) !important;         
-    margin-bottom: 1rem !important;
+    width: calc(50% - 15px) !important;
     margin-right: 0.7rem !important;
+    margin-bottom: 1rem !important;
 }
 
 /*
@@ -46,17 +46,12 @@ details.details-reset svg.octicon-device-camera-video {
 @media (orientation: portrait) {
 
     img {
-        margin-bottom: 1rem !important;
-        display: inline-block !important;
         max-width: 100% !important;
         max-height: none !important;
     }
 
     details.details-reset {
-        margin-bottom: 1rem !important;
-        display: inline-block !important;
         max-width: 100% !important;
-        max-height: none !important;
     }
 
 }

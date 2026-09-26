@@ -53,6 +53,7 @@ details.details-reset svg.octicon-device-camera-video {
 @media (orientation: portrait) {
 
     img.js-gh-image-fallback {
+        max-width: none !important;
         width: 100% !important;
     }
 

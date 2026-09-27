@@ -12,6 +12,12 @@
     gap: 1rem !important;
 }
 
+.gsc-comment-content div:not([class])[dir="auto"]:has(a[href*="giscus-video-gallery"]) {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
+    gap: 1rem !important;                             /* Идеальный зазор между видео */
+}
+
 @media screen and (max-width: 500px) {
 
     .gsc-comment-content div:not([class])[dir="auto"]:has(img[alt*="giscus-gallery"]) {

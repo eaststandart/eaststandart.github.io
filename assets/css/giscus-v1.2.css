@@ -24,4 +24,10 @@
         display: flex !important;
         flex-direction: column !important;
     }
+
+    .gsc-comment-content div:not([class])[dir="auto"]:has(a[href*="giscus-video-gallery"]) {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
 }

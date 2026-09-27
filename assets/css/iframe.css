@@ -3,13 +3,17 @@
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
 
+summary {
+    margin-top: 1rem !important;
+}
+
 p {
     margin-top: 1rem !important;
 }
 
 div.gsc-comment-footer,
 .gsc-comment-footer {
-    margin-top: 0 !important; /* Намертво убирает пустой зазор сверху от лайков */
+    margin-top: 0 !important;
 }
 
 /* ======================================================== */

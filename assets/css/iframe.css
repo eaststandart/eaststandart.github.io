@@ -34,17 +34,13 @@ img.js-gh-image-fallback:nth-child(even) {
 
 details.details-reset {
     display: inline-block !important;
-    max-width: 279px !important;
+    max-width: 369px !important;
     margin-bottom: 0.2rem !important;
 }
 
-/*
 video {
-    margin-bottom: 1rem !important;
-    max-width: calc(50% - 9px) !important;
-    display: inline-block !important;
+    max-width: 369px !important;
 }
-*/
 
 @media (orientation: portrait) {
 

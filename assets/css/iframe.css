@@ -3,7 +3,7 @@
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
 
-summary {
+.gsc-comment-content summary:not(tmp-px-3 py-2) {
     margin-top: 1rem !important;
 }
 

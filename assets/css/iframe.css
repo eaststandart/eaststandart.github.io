@@ -38,9 +38,11 @@ details.details-reset {
     margin-bottom: 0.2rem !important;
 }
 
+/*
 video {
     max-width: 365px !important;
 }
+*/
 
 @media (orientation: portrait) {
 

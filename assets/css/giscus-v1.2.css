@@ -12,12 +12,6 @@
     gap: 1rem !important;
 }
 
-.gsc-comment-content div:not([class])[dir="auto"]:has(a[href*="giscus-video-gallery"]) {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
-    gap: 1rem !important;                             /* Идеальный зазор между видео */
-}
-
 .gsc-comment-content div:not([class])[dir="auto"]:has(video[src*="githubusercontent"]) {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
@@ -31,14 +25,10 @@
         flex-direction: column !important;
     }
 
-    .gsc-comment-content div:not([class])[dir="auto"]:has(a[href*="giscus-video-gallery"]) {
+    .gsc-comment-content div:not([class])[dir="auto"]:has(video[src*="githubusercontent"]) {
         display: flex !important;
         flex-direction: column !important;
-    }
-
-        .gsc-comment-content div:not([class])[dir="auto"]:has(video[src*="githubusercontent"]) {
-        display: flex !important;
-        flex-direction: column !important;
+        gap: unset !important;
     }
 
 }

@@ -9,7 +9,7 @@
 
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: calc(50% - 9px) !important;
+    max-width: 350px !important;
     margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
     width: calc(50% - 1rem) !important;
@@ -43,8 +43,7 @@ video {
 @media (orientation: portrait) {
 
     img.js-gh-image-fallback {
-        max-width: 100% !important;
-        max-height: none !important;
+        width: 100% !important;
     }
 
     details.details-reset {

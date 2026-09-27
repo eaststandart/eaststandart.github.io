@@ -10,3 +10,12 @@
     display: flex !important;
     gap: 1rem !important;
 }
+
+@media (orientation: portrait) {
+
+    img[alt*="Light"] {
+    margin-bottom: 1rem !important;
+    border-radius: 8px !important;
+}
+    }
+}

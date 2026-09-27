@@ -13,9 +13,7 @@
 
 @media (orientation: portrait) {
 
-    img[alt*="Light"] {
-    margin-bottom: 1rem !important;
-    border-radius: 8px !important;
-}
+    .gsc-comment-content div:not([class])[align="center"][dir="auto"] {
+        flex-direction: column !important;
     }
 }

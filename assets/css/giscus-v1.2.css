@@ -7,13 +7,15 @@
 
 .gsc-comment-content div:not([class])[dir="auto"]:has(img[alt*="giscus-gallery"]) {
     /* Ваши кастомные свойства: маргины, отступы или размеры */
-    display: flex !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem !important;
 }
 
 @media screen and (max-width: 500px) {
 
     .gsc-comment-content div:not([class])[dir="auto"]:has(img[alt*="giscus-gallery"]) {
+        display: flex !important;
         flex-direction: column !important;
     }
 }

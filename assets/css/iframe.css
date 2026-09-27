@@ -23,7 +23,7 @@ div.gsc-comment-footer,
 img.js-gh-image-fallback {
     display: inline-block !important;
     max-width: 365px !important;
-    max-height: 205px !important;
+    max-height: auto !important;
     margin-bottom: 0.2rem !important;
 }
 

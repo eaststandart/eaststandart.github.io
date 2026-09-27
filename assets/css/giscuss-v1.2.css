@@ -1,0 +1,10 @@
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+/* ТЕКУЩАЯ */
+
+.gsc-comment-content div:not([class])[align="center"][dir="auto"] {
+    /* Ваши кастомные свойства: маргины, отступы или размеры */
+    display: flex !important;
+    gap: 1rem !important;
+}

@@ -7,17 +7,17 @@
 /* НАШ КОД: Только отступы и скругления картинок в Giscus   */
 /* ======================================================== */
 
-.gsc-comment-content,
-.gsc-markdown,
-.markdown-body {
-    text-align: justify !important;
-}
-
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: 361px !important;
-    max-height: 203px !important;
+    max-width: calc(50% - 9px) !important;
+    margin-right: 0.7rem !important;
     margin-bottom: 1rem !important;
+    width: calc(50% - 1rem) !important;
+}
+
+/* Находим каждое второе (четное) фото в ряду и обнуляем ему правый зазор */
+img.js-gh-image-fallback:nth-child(even) {
+    margin-right: 0 !important; 
 }
 
 /* ======================================================== */
@@ -40,15 +40,11 @@ video {
 }
 */
 
-/* СКРЫВАЕМ ИКОНКУ ВИДЕОКАМЕРЫ */
-details.details-reset svg.octicon-device-camera-video {
-    display: none !important;
-}
-
 @media (orientation: portrait) {
 
     img.js-gh-image-fallback {
-        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
     }
 
     details.details-reset {

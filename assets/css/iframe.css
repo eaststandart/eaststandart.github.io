@@ -18,8 +18,8 @@ div.gsc-comment-footer,
 
 img.js-gh-image-fallback {
     display: inline-block !important;
-    max-width: 369px !important;
-    max-height: 207px !important;
+    max-width: 365px !important;
+    max-height: 205px !important;
     margin-bottom: 0.2rem !important;
 }
 
@@ -34,12 +34,12 @@ img.js-gh-image-fallback:nth-child(even) {
 
 details.details-reset {
     display: inline-block !important;
-    max-width: 369px !important;
+    max-width: 365px !important;
     margin-bottom: 0.2rem !important;
 }
 
 video {
-    max-width: 369px !important;
+    max-width: 365px !important;
 }
 
 @media (orientation: portrait) {

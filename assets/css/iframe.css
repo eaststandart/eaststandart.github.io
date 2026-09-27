@@ -18,6 +18,10 @@ img.js-gh-image-fallback:nth-child(even) {
     margin-right: 0 !important; 
 }
 
+.gsc-comment-content a:has(img.js-gh-image-fallback):nth-of-type(even) {
+    margin-right: 0 !important; 
+}
+
 /* ======================================================== */
 /* НАШ КОД: Уменьшаем видеоплееры в комментариях           */
 /* ======================================================== */

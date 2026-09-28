@@ -5,11 +5,10 @@
 
 /* СТИЛИ ДЛЯ ГАЛЕРЕИ */
 
-.gsc-comment-content div:not([class])[dir="auto"]:has(img[alt*="giscus-gallery"]) {
-    /* Ваши кастомные свойства: маргины, отступы или размеры */
+.gsc-comment-content div:not([class])[dir="auto"]:has(img[src*="githubusercontent"]) {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
+    gap: 1rem !important;                             /* Идеальный зазор между видео */
 }
 
 .gsc-comment-content div:not([class])[dir="auto"]:has(video[src*="githubusercontent"]) {
@@ -20,7 +19,7 @@
 
 @media screen and (max-width: 500px) {
 
-    .gsc-comment-content div:not([class])[dir="auto"]:has(img[alt*="giscus-gallery"]) {
+    .gsc-comment-content div:not([class])[dir="auto"]:has(img[src*="githubusercontent"]) {
         display: flex !important;
         flex-direction: column !important;
     }

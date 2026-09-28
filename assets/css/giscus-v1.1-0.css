@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+/* СТИЛИ ДЛЯ ТВОРЧЕСКОГО ПРОЦЕССА */
+
+.gsc-comment-content summary:not(.tmp-px-3):not(.py-2) {
+    margin-top: 1rem !important;
+}
+
+p {
+    margin-top: 1rem !important;
+}
+
+div.gsc-comment-footer,
+.gsc-comment-footer {
+    margin-top: 0 !important;
+}
+
+/* ======================================================== */
+/* НАШ КОД: Только отступы и скругления картинок в Giscus   */
+/* ======================================================== */
+
+img.js-gh-image-fallback {
+    display: inline-block !important;
+    max-width: 365px !important;
+    max-height: none !important;
+    margin-bottom: 0.2rem !important;
+}
+
+/* Находим каждое второе (четное) фото в ряду и обнуляем ему правый зазор */
+img.js-gh-image-fallback:nth-child(even) {
+    margin-right: 0 !important; 
+}
+
+/* ======================================================== */
+/* НАШ КОД: Уменьшаем видеоплееры в комментариях           */
+/* ======================================================== */
+
+details.details-reset {
+    display: inline-block !important;
+    max-width: 365px !important;
+    margin-bottom: 0.2rem !important;
+}
+
+/*
+video {
+    max-width: 365px !important;
+}
+*/
+
+@media (orientation: portrait) {
+
+    img.js-gh-image-fallback {
+        width: 100% !important;
+    }
+
+    details.details-reset {
+        width: 100% !important;
+    }
+
+}

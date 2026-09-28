@@ -5,7 +5,7 @@ description: "Здесь мы публикуем живые кадры из на
 title: Творческий процесс
 crumbtitle: Творчество
 year: "2026"
-date: 2026-09-25
+date: 2026-09-26
 permalink: /process/
 emoji: "🎨"
 keywords: {техничекское творчество, creative process}

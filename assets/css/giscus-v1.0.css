@@ -54,3 +54,17 @@ video {
     }
 
 }
+
+/*
+
+Для H3
+margin-top: 1.5rem;
+margin-bottom: 0.5rem;
+
+ДЛя DIV 
+margin-bottom: 1rem; - чтобы текст не прилипал к картинке ДЛЯ КАРТИНОК!!
+
+<details open >
+margin-bottom: 0; - чтобы в открытом состоянии блок видео не отталкивал нижний текст
+
+*/

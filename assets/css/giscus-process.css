@@ -1,9 +1,14 @@
+/*
+@module giscus-process.css
+@about Модуль изолированных стилей страницы дискусий раздела Творческий процесс
+@purpose 
+@author TechLab
+*/
+
 @charset "UTF-8";
 
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
-
-/* СТИЛИ ДЛЯ ГАЛЕРЕИ */
 
 .gsc-comment-content div:not([class])[align="left"]:has(img[src*="githubusercontent"]) {
     display: grid !important;

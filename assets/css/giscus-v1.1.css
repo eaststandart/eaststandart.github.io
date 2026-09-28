@@ -13,7 +13,7 @@
 
 .gsc-comment-content div:not([class])[align="left"]:has(video[src*="githubusercontent"]) {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
+    grid-template-columns: repeat(2, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
     gap: 1rem !important;                             /* Идеальный зазор между видео */
 }
 

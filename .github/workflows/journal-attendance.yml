@@ -29,7 +29,7 @@ jobs:
             
             // 1. Ищем все временные файлы групп за сегодняшний день
             const allFiles = fs.readdirSync(dataDir);
-            const groupFiles = allFiles.filter(f => f.startsWith('journal-attendance-') && f.endsWith('.json'));
+            const groupFiles = allFiles.filter(f => f.includes('-journal-attendance-') && f.endsWith('.json'));
             
             if (groupFiles.length === 0) {
               console.log("=== ЛОГ РОБОТА ===");

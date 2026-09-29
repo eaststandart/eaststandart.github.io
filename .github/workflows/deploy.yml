@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
-      - '_data/journal-*.json'
+      - '_data/*-journal-attendance-*.json'
 
 permissions:
   contents: read

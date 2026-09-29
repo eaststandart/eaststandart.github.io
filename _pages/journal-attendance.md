@@ -9,7 +9,7 @@ permalink: /journal-attendance/
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
   .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
   .btn-auth { background-color: #24292e; color: white; }
-  .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; padding: 10px 5px; margin: 0; font-size: 14px; flex: 1; min-width: 40px; text-align: center; border-radius: 6px; font-weight: bold; }
+  .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; padding: 10px 0px; margin: 0; font-size: 14px; flex: 1; min-width: 40px; text-align: center; border-radius: 6px; font-weight: bold; }
   .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
   .btn-day.active-sat { background-color: #2b8a3e; color: white; }
   .btn-day.active-sun { background-color: #1c7ed6; color: white; }
@@ -173,7 +173,7 @@ permalink: /journal-attendance/
       // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД В ЭТОТ ЖЕ РЯД
       daysContainer.innerHTML += `
         <button class="btn-big btn-day" 
-                style="border-left: none; padding: 10px 0px !important; padding-left: 5px; padding-right: 5px; text-align: center; background-color: #c92a2a; color: white;" 
+                style="border-left: none; padding-left: 5px; padding-right: 5px; text-align: center; background-color: #c92a2a; color: white;" 
                 onclick="logoutTeacher()">
           ВЫХОД
         </button>`;

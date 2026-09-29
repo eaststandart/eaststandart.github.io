@@ -308,12 +308,14 @@ permalink: /journal-attendance/
     .then(r => r.json())
     .then(userData => {
       const teacherUsername = userData.name || userData.login || "Преподаватель";
+      const teacherLogin = userData.login.toLowerCase().trim(); // ДОБАВЛЕНО: Объявляем переменную логина!
 
       const currentGroupPayload = {
         date: dateStr,
         day: day,
         time: time,
         teacher_username: teacherUsername,
+        teacher_login: teacherLogin, // ДОБАВЛЕНО: Записываем логин в JSON
         present_permanent: presentKids,
         newbies: newbiesList,
         probation: probationList

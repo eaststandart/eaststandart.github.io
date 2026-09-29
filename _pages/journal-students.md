@@ -4,8 +4,6 @@ title: Журнал посещаемости
 permalink: /admin-journal/
 ---
 
-{% raw %}
-
 <!-- Стилевое оформление крупных кнопок под пальцы смартфона -->
 <style>
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
@@ -225,5 +223,3 @@ permalink: /admin-journal/
     el.innerText = text;
   }
 </script>
-
-{% endraw %}

@@ -114,7 +114,7 @@ jobs:
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
-            let markdownBody = `### 📅 Единый журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
+            let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
             markdownBody += `*Проверил и отправил преподаватель: **${teacherUsername}***\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
             markdownBody += `| :--- | :---: |\n`;
@@ -132,7 +132,7 @@ jobs:
                 if (isPresent) {
                   markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
                 } else {
-                  markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
+                  markdownBody += `| ${kid} | 🔴 Отсутствовал |\n`;
                 }
               });
 

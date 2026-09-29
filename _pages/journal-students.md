@@ -273,9 +273,6 @@ permalink: /admin-journal/
         },
         body: JSON.stringify(commitBody)
       });
-
-      });
-    })
     .then(response => {
       if (!response.ok) throw new Error("Ошибка записи временного файла на GitHub");
       return response.json();

@@ -44,13 +44,6 @@ permalink: /journal-attendance/
     <!-- Контейнер для динамических кнопок дней недели -->
     <div id="days-buttons-container" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
 
-	<!-- Кнопка смены пользователя / выхода -->
-    <div style="text-align: right; margin-top: 10px;">
-      <button onclick="logoutTeacher()" style="background: none; border: none; color: #c92a2a; font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: underline;">
-        ❌ Сменить пользователя / Выйти
-      </button>
-    </div>
-
 	<div id="notification" class="notify hidden"></div>
 
     <!-- Контейнер для динамических групп детей -->

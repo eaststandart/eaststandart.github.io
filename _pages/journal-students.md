@@ -255,48 +255,25 @@ permalink: /admin-journal/
       };
 
       const filePath = `_data/temp-journal.json`;
-      
-      // Шаг 2: Скачиваем старый временный файл, если он уже был создан сегодня
-      // Адрес: https://api . github . com/repos/owner/name/contents/_data/temp-journal.json
+            // Шаг 2: Формируем имя файла индивидуально для каждой группы
+      const filePath = `_data/journal-${dateStr}-${timeId}.json`;
+
+      let commitBody = {
+        message: `Отчет группы: Группа ${time} (${day}) от ${teacherUsername}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
+      };
+
+      // Шаг 3: Отправляем файл напрямую на GitHub без склейки в браузере
+      // Адрес: https://api . github . com/repos/owner/name/contents/_data/journal-date-time.json
       return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
-        headers: { "Authorization": `token ${accessToken}` }
-      })
-      .then(res => res.status === 200 ? res.json() : null)
-      .then(existingFileData => {
-        let tempJournal = {};
-        let fileSha = null;
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(commitBody)
+      });
 
-        if (existingFileData) {
-          fileSha = existingFileData.sha;
-          // Декодируем старый журнал из Base64
-          const oldText = decodeURIComponent(atob(existingFileData.content).split('').map(function(c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
-          try { tempJournal = JSON.parse(oldText); } catch(e) {}
-        }
-
-        // Дописываем (или обновляем) текущую группу в общий пакет дня
-        tempJournal[time] = currentGroupPayload;
-
-        let commitBody = {
-          message: `Порция журнала: Группа ${time} (${day}) от ${teacherUsername}`,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(tempJournal, null, 2))))
-        };
-
-        if (fileSha) {
-          commitBody.sha = fileSha;
-        }
-
-        // Шаг 3: Отправляем обновленный временный журнал дня на GitHub
-        // Адрес: https://api . github . com/repos/owner/name/contents/_data/temp-journal.json
-        return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
-          method: "PUT",
-          headers: {
-            "Authorization": `token ${accessToken}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(commitBody)
-        });
       });
     })
     .then(response => {

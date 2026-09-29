@@ -115,7 +115,6 @@ jobs:
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
-            markdownBody += `*Проверил и отправил преподаватель: **${teacherUsername}***\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
             markdownBody += `| :--- | :---: |\n`;
 
@@ -150,6 +149,8 @@ jobs:
                 });
               }
             });
+            
+            markdownBody += `\n*Проверил и отправил преподаватель: **${teacherUsername}***\n`;
 
             // 5. ПУБЛИКАЦИЯ В GitHub Discussions №38
             const queryGetId = `query {

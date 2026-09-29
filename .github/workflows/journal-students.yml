@@ -212,17 +212,27 @@ jobs:
             fs.unlinkSync(tempPath);
             console.log("Временный файл удален локально.");
 
-      // 8. ФИНАЛЬНЫЙ КОММИТ ОТ ИМЕНИ ПРЕПОДАВАТЕЛЯ И ЗАЧИСТКА В РЕПОЗИТОРИИ
+      # 8. ФИНАЛЬНЫЙ КОММИТ ОТ ИМЕНИ ПРЕПОДАВАТЕЛЯ И ЗАЧИСТКА В РЕПОЗИТОРИИ
       - name: Push Base Updates and Delete Temp File from Repo
         run: |
-          echo "const fs = require('fs'); try { const data = JSON.parse(fs.readFileSync('_data/temp-journal.json', 'utf8')); const firstKey = Object.keys(data)[0]; console.log(data[firstKey].teacher_username); } catch(e) { console.log('GitHub Academic Robot'); }" > get_name.js
-          TEACHER_NAME=\$(node get_name.js)
-          rm -f get_name.js
+          node -e "
+            const fs = require('fs');
+            try {
+              const data = JSON.parse(fs.readFileSync('_data/temp-journal.json', 'utf8'));
+              const firstKey = Object.keys(data)[0];
+              console.log(data[firstKey].teacher_username);
+            } catch(e) {
+              console.log('GitHub Academic Robot');
+            }
+          " > t_name.txt
           
-          git config --global user.name "\$TEACHER_NAME"
+          TEACHER_NAME=$(cat t_name.txt)
+          rm -f t_name.txt
+          
+          git config --global user.name "$TEACHER_NAME"
           git config --global user.email "actions@github.com"
           
           git rm -f _data/temp-journal.json || true
           git add _data/journal-students.yml
           
-          git commit -m "Сводный журнал посещаемости за день от \$TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для коммита"
+          git commit -m "Сводный журнал посещаемости за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для коммита"

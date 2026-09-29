@@ -114,25 +114,32 @@ permalink: /admin-journal/
 
   function logoutTeacher() {
     if (confirm("Вы уверены, что хотите выйти из журнала и сменить ключ доступа?")) {
-      // Полностью стираем токен из памяти браузера
       localStorage.removeItem("github_journal_token");
       accessToken = null;
-      
-      // Перезагружаем страницу, чтобы вернуть чистый экран ввода пароля
       window.location.reload();
     }
   }
 
   // Часть 3: Чтение базы детей с правильным парсером, два поля ввода и отправка порций
-  function loadStudentsFromYaml() {
-    showNotify("Загрузка списка учеников...", "success");
+   function loadStudentsFromYaml() {
+    showNotify("Идентификация пользователя...", "success");
     
-    // Адрес загрузки файла: https://api . github . com/repos/owner/name/contents/_data/journal-students.yml
-    fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-students.yml`, {
+    // Сначала узнаем логин учителя, чтобы понять какой личный файл скачивать
+    fetch("https://api.github.com/user", {
       headers: { "Authorization": `token ${accessToken}` }
     })
+    .then(r => r.json())
+    .then(userData => {
+      const userLogin = userData.login; // Например, "TechLab"
+      showNotify(`Загрузка журнала для ${userLogin}...`, "success");
+      
+      // Динамический адрес личного файла: journal-attendance-ЛОГИН.yml
+      return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml`, {
+        headers: { "Authorization": `token ${accessToken}` }
+      });
+    })
     .then(response => {
-      if (!response.ok) throw new Error("Не удалось скачать файл");
+      if (!response.ok) throw new Error("Личный файл журнала не найден в папке _data");
       return response.json();
     })
     .then(data => {
@@ -142,11 +149,10 @@ permalink: /admin-journal/
       
       studentsData = parseSimpleYaml(yamlText);
       
-      // Генерация сетки из 7 календарных дней недели
+      // Генерация сетки дней недели + 8-я кнопка ВЫХОД
       const daysContainer = document.getElementById("days-buttons-container");
       daysContainer.innerHTML = "";
       
-      // Строгий календарный порядок дней и их короткие имена для экрана
       const calendarOrder = [
         { key: "понедельник", label: "ПН", color: "#e63946" },
         { key: "вторник", label: "ВТ", color: "#d9480f" },
@@ -159,9 +165,7 @@ permalink: /admin-journal/
       
       calendarOrder.forEach(dayInfo => {
         const btnId = `btn-day-${dayInfo.key}`;
-        // Проверяем, зарегистрирован ли этот день недели в нашем YAML-файле
         const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
-        
         const disabledAttr = isAvailable ? "" : "disabled";
         const borderStyle = isAvailable ? `border-left: 4px solid ${dayInfo.color};` : "";
         
@@ -173,13 +177,20 @@ permalink: /admin-journal/
           </button>`;
       });
 
-	  showNotify("Список учеников успешно загружен!", "success");
+      // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД В ЭТОТ ЖЕ РЯД
+      daysContainer.innerHTML += `
+        <button class="btn-big btn-day" 
+                style="border-left: 4px solid #c92a2a; background-color: #fff5f5; color: #c92a2a;" 
+                onclick="logoutTeacher()">
+          ВЫХОД
+        </button>`;
 
+      showNotify("Журнал успешно загружен!", "success");
       setTimeout(() => { document.getElementById("notification").classList.add("hidden"); }, 2000);
     })
     .catch(err => {
       console.error(err);
-      showNotify("Ошибка загрузки списка детей из папки _data", "error");
+      showNotify("Ошибка загрузки личного журнала. Проверьте наличие файла на GitHub.", "error");
     });
   }
 

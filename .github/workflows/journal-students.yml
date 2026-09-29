@@ -85,3 +85,132 @@ jobs:
             // Узнаем, сколько всего групп запланировано в расписании на этот день недели
             const scheduleGroups = studentsData[targetDay] ? Object.keys(studentsData[targetDay]) : [];
             console.log(`Запланировано групп на ${targetDay}: ${scheduleGroups.length}. Отправлено учителем: ${filledTimes.length}`);
+            // 3. ПРОВЕРКА КОМПЛЕКТНОСТИ ДНЯ
+            // Если учитель заполнил ещё не все группы из расписания, останавливаемся
+            if (filledTimes.length < scheduleGroups.length) {
+              console.log("День ещё не завершён. Ждём отправки остальных групп. Завершаем текущий шаг.");
+              return;
+            }
+
+            console.log("Все группы за день успешно собраны! Генерируем финальный отчёт...");
+
+            // 4. СБОРКА ЕДИНОЙ ТАБЛИЦЫ ДЛЯ ДИСКУССИЙ
+            const dateParts = dateStr.split('-');
+            const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
+
+            let markdownBody = `### 📅 Единый журнал посещений за ${formattedDate} (${firstReport.day})\n\n`;
+            markdownBody += `*Проверил и отправил преподаватель: **${teacherUsername}***\n\n`;
+            markdownBody += `| Группа / Ученик | Статус |\n`;
+            markdownBody += `| :--- | :---: |\n`;
+
+            // Бежим по каждой группе текущего дня из расписания
+            scheduleGroups.sort().forEach(time => {
+              markdownBody += `| **⏰ ГРУППА ${time}** | |\n`;
+              const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
+              const permanentKids = studentsData[targetDay][time] || [];
+
+              // Отмечаем присутствующих постоянных детей
+              permanentKids.forEach(kid => {
+                if (groupData.present_permanent.includes(kid)) {
+                  markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
+                }
+              });
+
+              // Добавляем новых постоянных новичков
+              if (groupData.newbies && groupData.newbies.length > 0) {
+                groupData.newbies.forEach(newbie => {
+                  markdownBody += `| ${newbie} | 🟢 Присутствовал (Новичок) |\n`;
+                });
+              }
+
+              // Добавляем временных пробных детей
+              if (groupData.probation && groupData.probation.length > 0) {
+                groupData.probation.forEach(prob => {
+                  markdownBody += `| ${prob} | 🔵 Присутствовал (Пробное) |\n`;
+                });
+              }
+
+              // Отмечаем отсутствующих постоянных детей
+              permanentKids.forEach(kid => {
+                if (!groupData.present_permanent.includes(kid)) {
+                  markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
+                }
+              });
+            });
+
+            // 5. ОТПРАВКА КОММЕНТАРИЯ В GitHub Discussions №38
+            const queryGetId = `query {
+              repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                discussion(number: 38) { id }
+              }
+            }`;
+            const resId = await github.graphql(queryGetId);
+            const discussionId = resId.repository.discussion.id;
+
+            const mutationAddComment = `mutation {
+              addDiscussionComment(input: {discussionId: "${discussionId}", body: ${JSON.stringify(markdownBody)}}) {
+                comment { id }
+              }
+            }`;
+            await github.graphql(mutationAddComment);
+            console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
+
+            // 6. ОБНОВЛЕНИЕ YAML БАЗЫ ДЕТЕЙ (ТОЛЬКО ПОСТОЯННЫЕ НОВИЧКИ)
+            let hasNewbies = false;
+            filledTimes.forEach(time => {
+              if (tempJournal[time].newbies && tempJournal[time].newbies.length > 0) hasNewbies = true;
+            });
+
+            if (hasNewbies) {
+              console.log("Обнаружены постоянные новички. Записываем их в базу...");
+              let newLines = [];
+              let insideDay = false;
+              let insideGroup = false;
+
+              for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const trimmed = line.trimEnd();
+                const indent = line.search(/\S/);
+
+                if (indent === 0 && trimmed.endsWith(':')) {
+                  insideDay = (trimmed.slice(0, -1).toLowerCase().trim() === targetDay);
+                }
+                if (insideDay && indent === 2 && trimmed.includes(':')) {
+                  const groupTime = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                  insideGroup = tempJournal[groupTime] && tempJournal[groupTime].newbies && tempJournal[groupTime].newbies.length > 0;
+                  
+                  newLines.push(line);
+                  if (insideGroup) {
+                    const groupTimeClean = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                    const currentPermanent = studentsData[targetDay][groupTimeClean] || [];
+                    tempJournal[groupTimeClean].newbies.forEach(newbie => {
+                      if (!currentPermanent.includes(newbie)) {
+                        newLines.push(`    - ${newbie}`);
+                      }
+                    });
+                  }
+                  continue;
+                }
+                newLines.push(line);
+              }
+              fs.writeFileSync(yamlPath, newLines.join('\n'), 'utf8');
+            }
+
+            // 7. ЗАЧИСТКА: Удаляем временный файл temp-journal.json с диска виртуальной машины
+            fs.unlinkSync(tempPath);
+            console.log("Временный файл удален локально.");
+
+      // 8. ФИНАЛЬНЫЙ КОММИТ ОТ ИМЕНИ ПРЕПОДАВАТЕЛЯ И ЗАЧИСТКА В РЕПОЗИТОРИИ
+      - name: Push Base Updates and Delete Temp File from Repo
+        run: |
+          # Вытягиваем логин учителя, переданный из фронтенда, или ставим стандартный
+          TEACHER_NAME=\$(node -e "try{console.log(JSON.parse(fs.readFileSync('_data/temp-journal.json', 'utf8'))[Object.keys(JSON.parse(fs.readFileSync('_data/temp-journal.json', 'utf8')))[0]].teacher_username)}catch(e){console.log('GitHub Academic Robot')}")
+          
+          git config --global user.name "\$TEACHER_NAME"
+          git config --global user.email "actions@github.com"
+          
+          # Удаляем временный файл из репозитория, чтобы не захламлять репо
+          git rm -f _data/temp-journal.json || true
+          git add _data/journal-students.yml
+          
+          git commit -m "Сводный журнал посещаемости за день от \$TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для коммита"

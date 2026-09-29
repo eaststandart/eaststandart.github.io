@@ -1,0 +1,126 @@
+name: Generate Attendance Report to Discussions
+
+on:
+  push:
+    paths:
+      - '_attendance/**.json' # Робот просыпается только тогда, когда телефон присылает новый JSON-отчет
+
+permissions:
+  contents: write
+  discussions: write # Даем роботу право официально писать в Обсуждения
+
+jobs:
+  build_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Report Generator Script
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // 1. Находим самый свежий файл отчета в папке _attendance
+            const dirPath = path.join(process.env.GITHUB_WORKSPACE, '_attendance');
+            if (!fs.existsSync(dirPath)) {
+              console.log("Папка _attendance не найдена.");
+              return;
+            }
+
+            const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.json'));
+            if (files.length === 0) {
+              console.log("JSON файлы отчетов не найдены.");
+              return;
+            }
+
+            // Сортируем файлы, чтобы взять самый последний по дате и времени
+            files.sort();
+            const latestFile = files[files.length - 1];
+            const rawData = fs.readFileSync(path.join(dirPath, latestFile), 'utf8');
+            const report = JSON.parse(rawData);
+
+            // 2. Читаем актуальный список детей из вашего основного файла _data/journal-students.yml
+            const yamlPath = path.join(process.env.GITHUB_WORKSPACE, '_data', 'journal-students.yml');
+            if (!fs.existsSync(yamlPath)) {
+              console.log("Файл базы данных детей не найден.");
+              return;
+            }
+
+            const yamlText = fs.readFileSync(yamlPath, 'utf8');
+            
+            // Простейший разборщик YAML для Node.js без внешних зависимостей
+            let studentsData = {};
+            let currentDay = "";
+            let currentGroup = "";
+            yamlText.split('\n').forEach(line => {
+              const trimmed = line.trimEnd();
+              if (!trimmed || trimmed.startsWith('#')) return;
+              const indent = line.search(/\S/);
+              if (indent === 0 && trimmed.endsWith(':')) {
+                currentDay = trimmed.slice(0, -1).toLowerCase().trim();
+                studentsData[currentDay] = {};
+              } else if (indent === 2 && trimmed.includes(':')) {
+                currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                studentsData[currentDay][currentGroup] = [];
+              } else if (indent === 4 && trimmed.startsWith('-')) {
+                const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
+                if (currentDay && currentGroup) studentsData[currentDay][currentGroup].push(name);
+              }
+            });
+
+            // 3. Форматируем красивую дату из имени файла (например, 2026-09-29 -> 29.09.2026)
+            const dateParts = report.date.split('-');
+            const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
+
+            // 4. Начинаем строить идеальную Markdown-таблицу
+            let markdownBody = `### 📅 Журнал посещений за ${formattedDate}\n\n`;
+            markdownBody += `| Группа / Ученик | Статус |\n`;
+            markdownBody += `| :--- | :---: |\n`;
+            markdownBody += `| **⏰ ГРУППА ${report.time}** | |\n`;
+
+            const targetDay = report.day.toLowerCase();
+            const permanentKids = (studentsData[targetDay] && studentsData[targetDay][report.time]) ? studentsData[targetDay][report.time] : [];
+
+            // Выводим тех постоянных, кто ПРИШЁЛ
+            permanentKids.forEach(kid => {
+              if (report.present_permanent.includes(kid)) {
+                markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
+              }
+            });
+
+            // Выводим пришедших НОВИЧКОВ
+            if (report.newbies && report.newbies.length > 0) {
+              report.newbies.forEach(newbie => {
+                const suffix = report.is_newbies_probation ? " (Пробное)" : " (Новичок)";
+                markdownBody += `| ${newbie} | 🟢 Присутствовал${suffix} |\n`;
+              });
+            }
+
+            // Выводим тех постоянных, кто НЕ ПРИШЁЛ
+            permanentKids.forEach(kid => {
+              if (!report.present_permanent.includes(kid)) {
+                markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
+              }
+            });
+
+            // 5. Отправляем готовый текст в GraphQL API GitHub Discussions #38
+            const queryGetId = `query {
+              repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                discussion(number: 38) { id }
+              }
+            }`;
+            
+            const resId = await github.graphql(queryGetId);
+            const discussionId = resId.repository.discussion.id;
+
+            const mutationAddComment = `mutation {
+              addDiscussionComment(input: {discussionId: "${discussionId}", body: ${JSON.stringify(markdownBody)}}) {
+                comment { id }
+              }
+            }`;
+
+            await github.graphql(mutationAddComment);
+            console.log("Журнал успешно опубликован в Обсуждении #38!");

@@ -15,6 +15,17 @@
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a>
 </p>
 
+
+[![GitHub Pages Status](https://shields.io.svg?label=Сайт&style=flat-square&color=success)](https://github.io)
+[![Latest Release](https://shields.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com)
+
+<p align="left">
+  <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a> • 
+  <a href="https://github.com"><b>💬 Обсуждение для родителей</b></a>
+</p>
+
+---
+
 ### 🏗️ О проекте и структуре Лаборатории
 
 Для понимания структуры, целей и терминологии проекта ниже приведены ключевые определения:

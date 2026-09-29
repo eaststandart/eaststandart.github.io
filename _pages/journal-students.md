@@ -49,7 +49,7 @@ permalink: /admin-journal/
 
 <script>
   // Конфигурация вашего репозитория на GitHub
-  const client_id = "Ov23ct4AghWJgX9O3X3M"; // Системный ID для безопасного входа (заменим позже на ваш реальный)
+  const client_id = "Ov23lio8AV0SPM0ViUlP"; // Системный ID для безопасного входа (заменим позже на ваш реальный)
   const repo_owner = "eaststandart";
   const repo_name = "eaststandart.github.io";
 

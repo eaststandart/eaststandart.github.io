@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Журнал посещаемости
-permalink: /admin-journal/
+permalink: /journal-attendance/
 ---
 
 <!-- Часть 1: Обновленные стили и интерфейс с двумя раздельными полями ввода -->

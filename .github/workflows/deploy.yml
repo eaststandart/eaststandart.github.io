@@ -3,6 +3,9 @@ name: Deploy Jekyll site with Preprocessing
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - '_attendance/**'
+      - '_data/temp-journal.json'
 
 permissions:
   contents: read

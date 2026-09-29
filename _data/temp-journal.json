@@ -32,5 +32,17 @@
     ],
     "newbies": [],
     "probation": []
+  },
+  "10:00": {
+    "date": "2026-09-29",
+    "day": "суббота",
+    "time": "10:00",
+    "teacher_username": "TechLab",
+    "present_permanent": [
+      "Дмитрий 1.",
+      "Дмитрий 3."
+    ],
+    "newbies": [],
+    "probation": []
   }
 }

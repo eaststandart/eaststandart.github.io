@@ -207,7 +207,8 @@ permalink: /admin-journal/
 
   function saveGroupAttendance(day, time) {
     const today = new Date();
-    const dateStr = today.toISOString().split('T') [0] ;
+    // Чистая дата в формате ГГГГ-ММ-ДД
+    const dateStr = today.toISOString().split('T')[0]; 
     const timeId = time.replace(':', '-');
     
     let presentKids = [];
@@ -229,10 +230,10 @@ permalink: /admin-journal/
       probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
     }
 
-    showNotify(`Подготовка отчета для группы ${time}...`, "success");
+    showNotify(`Подготовка и склейка отчета для группы ${time}...`, "success");
 
     // Шаг 1: Узнаем логин преподавателя
-    // Адрес запроса: https://api . github . com/user
+    // Адрес: https://api . github . com/user
     fetch("https://api.github.com/user", {
       headers: { "Authorization": `token ${accessToken}` }
     })
@@ -240,7 +241,7 @@ permalink: /admin-journal/
     .then(userData => {
       const teacherUsername = userData.name || userData.login || "Преподаватель";
 
-      const reportPayload = {
+      const currentGroupPayload = {
         date: dateStr,
         day: day,
         time: time,
@@ -250,28 +251,41 @@ permalink: /admin-journal/
         probation: probationList
       };
 
-      const fileName = `${dateStr}-journal-${timeId}.json`;
-      const filePath = `_attendance/${fileName}`;
+      const filePath = `_data/temp-journal.json`;
       
-      // Шаг 2: Проверяем, существует ли уже такой файл, чтобы взять его SHA
-      // Адрес файла: https://api . github . com/repos/owner/name/contents/_attendance/filename
+      // Шаг 2: Скачиваем старый временный файл, если он уже был создан сегодня
+      // Адрес: https://api . github . com/repos/owner/name/contents/_data/temp-journal.json
       return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
         headers: { "Authorization": `token ${accessToken}` }
       })
-      .then(res => res.ok ? res.json() : null)
+      .then(res => res.status === 200 ? res.json() : null)
       .then(existingFileData => {
-        let commitBody = {
-          message: `Отчет: Группа ${time} (${day}) от ${teacherUsername}`,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(reportPayload, null, 2))))
-        };
+        let tempJournal = {};
+        let fileSha = null;
 
-        // Если файл уже был, добавляем его SHA-код для успешной перезаписи
-        if (existingFileData && existingFileData.sha) {
-          commitBody.sha = existingFileData.sha;
+        if (existingFileData) {
+          fileSha = existingFileData.sha;
+          // Декодируем старый журнал из Base64
+          const oldText = decodeURIComponent(atob(existingFileData.content).split('').map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+          try { tempJournal = JSON.parse(oldText); } catch(e) {}
         }
 
-        // Шаг 3: Отправляем или обновляем файл на GitHub
-        // Адрес отправки: https://api . github . com/repos/owner/name/contents/_attendance/filename
+        // Дописываем (или обновляем) текущую группу в общий пакет дня
+        tempJournal[time] = currentGroupPayload;
+
+        let commitBody = {
+          message: `Порция журнала: Группа ${time} (${day}) от ${teacherUsername}`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(tempJournal, null, 2))))
+        };
+
+        if (fileSha) {
+          commitBody.sha = fileSha;
+        }
+
+        // Шаг 3: Отправляем обновленный временный журнал дня на GitHub
+        // Адрес: https://api . github . com/repos/owner/name/contents/_data/temp-journal.json
         return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
           method: "PUT",
           headers: {
@@ -283,20 +297,21 @@ permalink: /admin-journal/
       });
     })
     .then(response => {
-      if (!response.ok) throw new Error("Ошибка записи на GitHub");
+      if (!response.ok) throw new Error("Ошибка записи временного файла на GitHub");
       return response.json();
     })
     .then(data => {
-      showNotify(`Группа ${time} успешно сохранена/обновлена на GitHub!`, "success");
+      showNotify(`Группа ${time} успешно отправлена в общую сборку дня!`, "success");
       
       const block = document.getElementById(`block-${timeId}`);
-      block.style.opacity = "0.7";
+      block.style.opacity = "0.6";
       const btn = document.getElementById(`btn-save-${timeId}`);
-      btn.innerText = `🔄 Переотправить группу ${time}`;
+      btn.innerText = `✅ Группа ${time} сохранена`;
+      btn.disabled = true;
     })
     .catch(err => {
       console.error(err);
-      showNotify("Не удалось сохранить отчет. Ошибка синхронизации GitHub.", "error");
+      showNotify("Не удалось сохранить группу. Ошибка синхронизации данных.", "error");
     });
   }
 

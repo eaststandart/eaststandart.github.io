@@ -236,7 +236,7 @@ permalink: /admin-journal/
     showNotify("Отправка отчета на GitHub...", "success");
 
     // Адрес отправки: https://api .github .com/repos/owner/name/contents/_attendance/filename
-    fetch(`https://api.github .com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
+    fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
       method: "PUT",
       headers: {
         "Authorization": `token ${accessToken}`,

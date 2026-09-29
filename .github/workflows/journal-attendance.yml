@@ -114,7 +114,7 @@ jobs:
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
-            let markdownBody = `### 📅 Единый журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
+            let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
             markdownBody += `*Проверил и отправил преподаватель: **${teacherUsername}***\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
             markdownBody += `| :--- | :---: |\n`;
@@ -132,21 +132,21 @@ jobs:
                 if (isPresent) {
                   markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
                 } else {
-                  markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
+                  markdownBody += `| ${kid} | 🔴 Отсутствовал |\n`;
                 }
               });
 
               // Добавляем новичков в конец этой конкретной группы
               if (groupData.newbies && groupData.newbies.length > 0) {
                 groupData.newbies.forEach(newbie => {
-                  markdownBody += `| ${newbie} | 🟢 Присутствовал (Новичок) |\n`;
+                  markdownBody += `| ${newbie} | 🟡 Новичок |\n`;
                 });
               }
 
               // Добавляем временных пробных в конец этой конкретной группы
               if (groupData.probation && groupData.probation.length > 0) {
                 groupData.probation.forEach(prob => {
-                  markdownBody += `| ${prob} | 🔵 Присутствовал (Пробное) |\n`;
+                  markdownBody += `| ${prob} | 🔵 Пробное |\n`;
                 });
               }
             });

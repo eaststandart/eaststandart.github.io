@@ -98,15 +98,15 @@ permalink: /admin-journal/
     loadStudentsFromYaml();
   }
 
-  // Робот сам заглядывает в ваш файл _data/journal-students.yml
+  // Робот сам заглядывает в ваш файл data/journal-students.yml
   function loadStudentsFromYaml() {
-    fetch('/_data/journal-students.yml')
+    fetch('/data/journal-students.yml')
       .then(response => response.text())
       .then(yamlText => {
         studentsData = parseSimpleYaml(yamlText);
       })
       .catch(err => {
-        showNotify("Ошибка загрузки списка детей из папки _data", "error");
+        showNotify("Ошибка загрузки списка детей из папки data", "error");
       });
   }
 

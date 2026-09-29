@@ -190,7 +190,7 @@ jobs:
                   insideDay = (trimmed.slice(0, -1).toLowerCase().trim() === targetDay);
                 }
                 if (insideDay && indent === 2 && trimmed.includes(':')) {
-                  const groupTimeClean = trimmed.split(':')[0].replace(/"/g, '').replace(/'/g, '').trim();
+                  const groupTimeClean = trimmed.trim().slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                   insideGroup = tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0;
                   
                   newLines.push(line);

@@ -3,7 +3,7 @@ name: Generate Attendance Report to Discussions
 on:
   push:
     paths:
-      - '_data/journal-attendance-*.json'
+      - '_data/*-journal-attendance-*.json'
 
 permissions:
   contents: write

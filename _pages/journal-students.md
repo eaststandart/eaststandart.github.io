@@ -4,7 +4,7 @@ title: Журнал посещаемости
 permalink: /admin-journal/
 ---
 
-<!-- Стилевое оформление крупных кнопок под пальцы смартфона -->
+<!-- Часть 1: Стили оформления и HTML разметка блоков -->
 <style>
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
   .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
@@ -24,91 +24,154 @@ permalink: /admin-journal/
   .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; }
   .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
   .notify-error { background-color: #ffe3e3; color: #c92a2a; }
+  .device-code-box { background-color: #f8f9fa; border: 2px dashed #ced4da; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+  .device-code-value { font-size: 24px; font-weight: bold; color: #24292e; letter-spacing: 2px; margin: 10px 0; }
 </style>
 
 <div class="admin-container">
   <!-- БЛОК АВТОРИЗАЦИИ -->
   <div id="auth-section">
-    <button class="btn-big btn-auth" onclick="loginWithGitHub()">🔐 Войти через аккаунт GitHub</button>
+    <button id="btn-login" class="btn-big btn-auth" onclick="startDeviceLogin()">🔐 Войти через аккаунт GitHub</button>
+    <div id="device-code-section" class="hidden">
+      <div class="device-code-box">
+        <p style="margin: 0 0 10px 0;">1. Откройте ссылку в новой вкладке:</p>
+        <a id="device-url" href="https://github.com" target="_blank" style="font-weight: bold; color: #1c7ed6;">https://github.com</a>
+        <p style="margin: 15px 0 10px 0;">2. Введите этот код подтверждения:</p>
+        <div id="device-code-display" class="device-code-value">XXXX-XXXX</div>
+        <p style="margin: 10px 0 0 0; font-size: 13px; color: #868e96;">Ожидание подтверждения на GitHub...</p>
+      </div>
+    </div>
   </div>
 
   <!-- РАБОЧАЯ ЗОНА ЖУРНАЛА -->
   <div id="journal-section" class="hidden">
-    <!-- Выбор дня недели -->
     <div style="display: flex; gap: 10px;">
       <button id="btn-sat" class="btn-big btn-day" onclick="selectDay('суббота')">🟢 СУББОТА</button>
       <button id="btn-sun" class="btn-big btn-day" onclick="selectDay('воскресенье')">🔵 ВОСКРЕСЕНЬЕ</button>
     </div>
-
     <div id="notification" class="notify hidden"></div>
-
-    <!-- Сюда JavaScript сам подгрузит группы из YAML файла -->
     <div id="groups-container"></div>
   </div>
 </div>
-
 <script>
-  // Конфигурация вашего репозитория на GitHub
-  const client_id = "Client ID Ov23lio8AV0SPM0ViUlP"; // Вставьте сюда ваш Client ID
+  // Часть 2: Настройки репозитория и логика авторизации
+  const client_id = "Iv23liZhE21h0jjt9cTp"; 
   const repo_owner = "eaststandart";
   const repo_name = "eaststandart.github.io";
 
-  // Адрес бесплатного шлюза-посредника, который оживит кнопку входа
-  const oauth_gate_url = "https://vercel.app";
-  const client_secret = "cba34a070f9f63a1ed6ca926f4e428d1c15b4f85"; // Вставьте сюда секрет
-
   let accessToken = localStorage.getItem("github_journal_token");
   let studentsData = {};
+  let loginInterval = null;
 
-  // Проверяем, авторизован ли уже учитель
   document.addEventListener("DOMContentLoaded", () => {
-    // Проверяем, вернулся ли Гитхаб с кодом авторизации в ссылке
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-
-    if (code) {
-      window.history.replaceState({}, document.title, window.location.pathname);
-      exchangeCodeForToken(code);
-    } else if (accessToken) {
+    if (accessToken) {
       showJournal();
     }
   });
 
-  function loginWithGitHub() {
-    // Перенаправляем на официальный безопасный шлюз авторизации Гитхаба
-    window.location.href = `https://github.com{client_id}&scope=repo`;
+  // Запрашиваем код устройства у GitHub
+  function startDeviceLogin() {
+    document.getElementById("btn-login").disabled = true;
+    document.getElementById("btn-login").innerText = "Запрос кода...";
+
+    fetch("https://github.com", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ client_id: client_id })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.device_code) {
+        document.getElementById("device-code-section").classList.remove("hidden");
+        document.getElementById("device-code-display").innerText = data.user_code;
+        document.getElementById("device-url").href = data.verification_uri;
+        
+        // Каждые несколько секунд опрашиваем GitHub - не ввел ли учитель код?
+        startPolling(data.device_code, data.interval || 5);
+      } else {
+        alert("Не удалось получить код от GitHub. Проверьте Client ID.");
+        document.getElementById("btn-login").disabled = false;
+        document.getElementById("btn-login").innerText = "🔐 Войти через аккаунт GitHub";
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Ошибка сети при запросе кода.");
+      document.getElementById("btn-login").disabled = false;
+    });
   }
 
-  function exchangeCodeForToken(code) {
-    document.getElementById("notification").classList.remove("hidden");
-    document.getElementById("notification").className = "notify notify-success";
-    document.getElementById("notification").innerText = "Авторизация... Пожалуйста, подождите.";
-    
-    // Временная заглушка для локального сохранения, пока мы не настроили OAuth Gate
-    localStorage.setItem("github_journal_token", "mock_token_success");
-    accessToken = "mock_token_success";
-    showJournal();
-  </div>
+  // Каждые 5 секунд проверяем, ввёл ли учитель пароль на GitHub
+  function startPolling(deviceCode, intervalSeconds) {
+    if (loginInterval) clearInterval(loginInterval);
+
+    loginInterval = setInterval(() => {
+      fetch("https://github.com", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          client_id: client_id,
+          device_code: deviceCode,
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.access_token) {
+          clearInterval(loginInterval);
+          localStorage.setItem("github_journal_token", data.access_token);
+          accessToken = data.access_token;
+          showJournal();
+        } else if (data.error && data.error !== "authorization_pending") {
+          clearInterval(loginInterval);
+          alert("Ошибка авторизации: " + data.error);
+          document.getElementById("device-code-section").classList.add("hidden");
+          document.getElementById("btn-login").disabled = false;
+          document.getElementById("btn-login").innerText = "🔐 Войти через аккаунт GitHub";
+        }
+      });
+    }, intervalSeconds * 1000);
+  }
 
   function showJournal() {
     document.getElementById("auth-section").classList.add("hidden");
     document.getElementById("journal-section").classList.remove("hidden");
     loadStudentsFromYaml();
   }
-
-  // Робот сам заглядывает в ваш файл data/journal-students.yml
+  // Часть 3: Чтение базы детей, генерация интерфейса и отправка отчета
   function loadStudentsFromYaml() {
-    fetch('/data/journal-students.yml')
-      .then(response => response.text())
-      .then(yamlText => {
-        studentsData = parseSimpleYaml(yamlText);
-      })
-      .catch(err => {
-        showNotify("Ошибка загрузки списка детей из папки data", "error");
-      });
+    showNotify("Загрузка списка учеников...", "success");
+    
+    fetch(`https://github.com{repo_owner}/${repo_name}/contents/_data/journal-students.yml`, {
+      headers: { "Authorization": `token ${accessToken}` }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Не удалось скачать файл из репозитория");
+      return response.json();
+    })
+    .then(data => {
+      // Декодируем Base64 с полной поддержкой кириллицы (UTF-8)
+      const yamlText = decodeURIComponent(atob(data.content).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      studentsData = parseSimpleYaml(yamlText);
+      showNotify("Список учеников успешно загружен!", "success");
+      setTimeout(() => { document.getElementById("notification").classList.add("hidden"); }, 2000);
+    })
+    .catch(err => {
+      console.error(err);
+      showNotify("Ошибка загрузки списка детей из папки _data. Проверьте права приложения.", "error");
+    });
   }
 
-  // Простой встроенный разборщик YAML-структуры
+  // Разборщик YAML-структуры
   function parseSimpleYaml(text) {
     let result = {};
     let currentDay = "";
@@ -121,7 +184,7 @@ permalink: /admin-journal/
 
       const indent = line.search(/\S/);
       if (indent === 0 && trimmed.endsWith(':')) {
-        currentDay = trimmed.slice(0, -1).toLowerCase();
+        currentDay = trimmed.slice(0, -1).toLowerCase().trim();
         result[currentDay] = {};
       } else if (indent === 2 && (trimmed.includes(':'))) {
         currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
@@ -148,7 +211,6 @@ permalink: /admin-journal/
       return;
     }
 
-    // Генерируем блоки групп под пальцы
     Object.keys(studentsData[day]).sort().forEach(time => {
       const kids = studentsData[day][time];
       let groupHtml = `<div class="group-block">
@@ -180,11 +242,9 @@ permalink: /admin-journal/
   }
 
   function saveGroupAttendance(day, time) {
-    const container = document.getElementById("groups-container");
     const today = new Date();
-    const dateStr = today.toISOString().split('T')[0]; // Формат: 2026-09-29
+    const dateStr = today.toISOString().split('T')[0]; 
     
-    // Собираем имена тех, кто отмечен галочками
     let presentKids = [];
     const checkboxes = document.querySelectorAll(`[id^="kid-${time}-"]`);
     checkboxes.forEach(chk => {
@@ -199,7 +259,6 @@ permalink: /admin-journal/
       newbiesList = newbiesInput.split(',').map(n => n.trim()).filter(n => n !== "");
     }
 
-    // Собираем итоговый JSON пакет данных для сохранения
     const reportPayload = {
       date: dateStr,
       day: day,
@@ -210,10 +269,34 @@ permalink: /admin-journal/
     };
 
     const fileName = `${dateStr}-journal-students-${time.replace(':', '-')}.json`;
-    showNotify(`Журнал группы ${time} успешно сформирован! Идет отправка в файл ${fileName}...`, "success");
+    const filePath = `_attendance/${fileName}`;
     
-    // Здесь скрипт сделает коммит напрямую в ваш репозиторий через GitHub API
-    console.log("Пакет данных для GitHub Actions:", reportPayload);
+    showNotify("Отправка отчета на GitHub...", "success");
+
+    fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: `Отчет по посещаемости: Группа ${time} (${day})`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(reportPayload, null, 2))))
+      })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Ошибка при записи файла на GitHub");
+      return response.json();
+    })
+    .then(data => {
+      showNotify(`Успешно отправлено! Робот обновит Дискуссии в течение 1-2 минут.`, "success");
+      document.getElementById(`newbies-${time}`).value = "";
+      document.getElementById(`probation-${time}`).checked = false;
+    })
+    .catch(err => {
+      console.error(err);
+      showNotify("Не удалось отправить отчет. Проверьте права GitHub App.", "error");
+    });
   }
 
   function showNotify(text, type) {

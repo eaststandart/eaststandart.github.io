@@ -21,5 +21,17 @@
     ],
     "newbies": [],
     "probation": []
+  },
+  "12": {
+    "date": "2026-09-29",
+    "day": "суббота",
+    "time": "12",
+    "teacher_username": "TechLab",
+    "present_permanent": [
+      "Дмитрий 8.",
+      "Дмитрий 9."
+    ],
+    "newbies": [],
+    "probation": []
   }
 }

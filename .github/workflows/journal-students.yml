@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  discussions: write # Даем роботу право писать в Обсуждения и обновлять файлы
+  discussions: write
 
 jobs:
   build_report:
@@ -66,7 +66,7 @@ jobs:
                 currentDay = trimmed.slice(0, -1).toLowerCase().trim();
                 studentsData[currentDay] = {};
               } else if (indent === 2 && trimmed.includes(':')) {
-                currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                currentGroup = trimmed.split(':').replace(/['"]/g, '').trim();
                 studentsData[currentDay][currentGroup] = [];
               } else if (indent === 4 && trimmed.startsWith('-')) {
                 const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
@@ -147,13 +147,12 @@ jobs:
                 }
 
                 if (insideTargetDay && indent === 2 && trimmed.includes(':')) {
-                  const groupTime = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                  const groupTime = trimmed.split(':').replace(/['"]/g, '').trim();
                   insideTargetGroup = (groupTime === report.time);
                 }
 
                 newLines.push(line);
 
-                // Если мы дошли до конца нужной группы (перед началом новой группы или дня), вставляем новичков
                 if (insideTargetDay && insideTargetGroup) {
                   const nextLine = lines[i + 1];
                   const nextIndent = nextLine ? nextLine.search(/\S/) : -1;
@@ -174,7 +173,6 @@ jobs:
               }
 
               fs.writeFileSync(yamlPath, newLines.join('\n'), 'utf8');
-              process.env.RUN_COMMIT = "true"; // Флаг для следующего шага Git Commit
             }
 
       // 7. ФИНАЛЬНЫЙ ШАГ: Автоматический коммит обновленного списка детей обратно в репозиторий

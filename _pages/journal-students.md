@@ -207,7 +207,7 @@ permalink: /admin-journal/
 
   function saveGroupAttendance(day, time) {
     const today = new Date();
-    const dateStr = today.toISOString().split('T')[0]; 
+    const dateStr = today.toISOString().split('T'); 
     const timeId = time.replace(':', '-');
     
     let presentKids = [];
@@ -229,8 +229,11 @@ permalink: /admin-journal/
       probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
     }
 
-    // Сначала узнаем логин преподавателя, чтобы передать его роботу
-    fetch("https://api.github.com/user", {
+    showNotify(`Подготовка отчета для группы ${time}...`, "success");
+
+    // Шаг 1: Узнаем логин преподавателя
+    // Адрес запроса: https://api . github . com/user
+    fetch("https://github.com", {
       headers: { "Authorization": `token ${accessToken}` }
     })
     .then(r => r.json())
@@ -250,38 +253,50 @@ permalink: /admin-journal/
       const fileName = `${dateStr}-journal-${timeId}.json`;
       const filePath = `_attendance/${fileName}`;
       
-      showNotify(`Отправка группы ${time}...`, "success");
-
-      // Ссылка отправки: https://api . github . com/repos/owner/name/contents/_attendance/filename
-      return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${accessToken}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+      // Шаг 2: Проверяем, существует ли уже такой файл, чтобы взять его SHA
+      // Адрес файла: https://api . github . com/repos/owner/name/contents/_attendance/filename
+      return fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+        headers: { "Authorization": `token ${accessToken}` }
+      })
+      .then(res => res.ok ? res.json() : null)
+      .then(existingFileData => {
+        let commitBody = {
           message: `Отчет: Группа ${time} (${day}) от ${teacherUsername}`,
           content: btoa(unescape(encodeURIComponent(JSON.stringify(reportPayload, null, 2))))
-        })
+        };
+
+        // Если файл уже был, добавляем его SHA-код для успешной перезаписи
+        if (existingFileData && existingFileData.sha) {
+          commitBody.sha = existingFileData.sha;
+        }
+
+        // Шаг 3: Отправляем или обновляем файл на GitHub
+        // Адрес отправки: https://api . github . com/repos/owner/name/contents/_attendance/filename
+        return fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${accessToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(commitBody)
+        });
       });
     })
     .then(response => {
-      if (!response.ok) throw new Error("Ошибка отправки отчета на GitHub");
+      if (!response.ok) throw new Error("Ошибка записи на GitHub");
       return response.json();
     })
     .then(data => {
-      showNotify(`Группа ${time} успешно отправлена! Ждем остальные группы для финальной сборки дня.`, "success");
+      showNotify(`Группа ${time} успешно сохранена/обновлена на GitHub!`, "success");
       
-      // Визуально блокируем отправленную группу, чтобы препод не нажал дважды
       const block = document.getElementById(`block-${timeId}`);
-      block.style.opacity = "0.5";
+      block.style.opacity = "0.7";
       const btn = document.getElementById(`btn-save-${timeId}`);
-      btn.disabled = true;
-      btn.innerText = `✅ Группа ${time} отправлена`;
+      btn.innerText = `🔄 Переотправить группу ${time}`;
     })
     .catch(err => {
       console.error(err);
-      showNotify("Не удалось отправить отчет. Проверьте права токена.", "error");
+      showNotify("Не удалось сохранить отчет. Ошибка синхронизации GitHub.", "error");
     });
   }
 

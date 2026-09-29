@@ -9,7 +9,8 @@ permalink: /admin-journal/
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
   .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
   .btn-auth { background-color: #24292e; color: white; }
-  .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; }
+  .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; padding: 10px 5px; margin: 0; font-size: 14px; flex: 1; min-width: 40px; text-align: center; border-radius: 6px; font-weight: bold; }
+  .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
   .btn-day.active-sat { background-color: #2b8a3e; color: white; }
   .btn-day.active-sun { background-color: #1c7ed6; color: white; }
   .btn-save { background-color: #37b24d; color: white; margin-top: 15px; }
@@ -123,26 +124,38 @@ permalink: /admin-journal/
       
       studentsData = parseSimpleYaml(yamlText);
       
-      // Автоматическая генерация кнопок на основе дней в YAML-файле
+      // Генерация сетки из 7 календарных дней недели
       const daysContainer = document.getElementById("days-buttons-container");
-      daysContainer.innerHTML = ""; // Очищаем контейнер
+      daysContainer.innerHTML = "";
       
-      const colors = ["#2b8a3e", "#1c7ed6", "#d9480f", "#862e9c", "#0c8599", "#5c940d", "#e63946"];
+      // Строгий календарный порядок дней и их короткие имена для экрана
+      const calendarOrder = [
+        { key: "понедельник", label: "ПН", color: "#e63946" },
+        { key: "вторник", label: "ВТ", color: "#d9480f" },
+        { key: "среда", label: "СР", color: "#f59f00" },
+        { key: "четверг", label: "ЧТ", color: "#2b8a3e" },
+        { key: "пятница", label: "ПТ", color: "#0c8599" },
+        { key: "суббота", label: "СБ", color: "#2b8a3e" },
+        { key: "воскресенье", label: "ВС", color: "#1c7ed6" }
+      ];
       
-      Object.keys(studentsData).forEach((day, index) => {
-        const btnId = `btn-day-${day}`;
-        const btnColor = colors[index % colors.length];
+      calendarOrder.forEach(dayInfo => {
+        const btnId = `btn-day-${dayInfo.key}`;
+        // Проверяем, зарегистрирован ли этот день недели в нашем YAML-файле
+        const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
         
-        // Создаем кнопку для каждого дня недели из файла
+        const disabledAttr = isAvailable ? "" : "disabled";
+        const borderStyle = isAvailable ? `border-left: 4px solid ${dayInfo.color};` : "";
+        
         daysContainer.innerHTML += `
-          <button id="${btnId}" class="btn-big btn-day" 
-                  style="border-left: 6px solid ${btnColor}; transition: 0.2s;" 
-                  onclick="selectDynamicDay('${day}', '${btnColor}')">
-            ${day.toUpperCase()}
+          <button id="${btnId}" class="btn-big btn-day" ${disabledAttr} 
+                  style="${borderStyle} transition: 0.2s;" 
+                  onclick="selectDynamicDay('${dayInfo.key}', '${dayInfo.color}')">
+            ${dayInfo.label}
           </button>`;
       });
 
-      showNotify("Список учеников успешно загружен!", "success");
+	  showNotify("Список учеников успешно загружен!", "success");
 
       setTimeout(() => { document.getElementById("notification").classList.add("hidden"); }, 2000);
     })

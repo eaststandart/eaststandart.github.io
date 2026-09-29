@@ -41,8 +41,12 @@ permalink: /journal-attendance/
   <!-- РАБОЧАЯ ЗОНА ЖУРНАЛА -->
   <div id="journal-section" class="hidden">
     <!-- Выбор дня недели -->
+
     <!-- Контейнер для динамических кнопок дней недели -->
     <div id="days-buttons-container" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+
+     <!--  Единый контейнер для управляемой даты дня --> 
+     <div id="global-date-container" style="margin: 15px 0 5px 0; font-size: 15px; font-weight: bold; color: #495057;"></div>
 
 	<div id="notification" class="notify hidden"></div>
 
@@ -220,7 +224,7 @@ permalink: /journal-attendance/
   }
 
     function selectDynamicDay(day, activeColor) {
-    // 1. Сбрасываем стили у абсолютно всех кнопок дней, делая их стандартными
+    // 1. Сбрасываем стили у абсолютно всех кнопок дней
     const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);
     allDayButtons.forEach(btn => {
       btn.style.backgroundColor = "#f1f3f5";
@@ -234,7 +238,19 @@ permalink: /journal-attendance/
       activeBtn.style.color = "white";
     }
     
-    // 3. Генерируем группы для выбранного дня недели
+    // 3. Выводим ОДНО ЕДИНСТВЕННОЕ общее поле даты под календарь
+    const localToday = new Date();
+    const offset = localToday.getTimezoneOffset();
+    const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
+    const defaultDateStr = correctedDate.toISOString().split('T')[0];
+
+    document.getElementById("global-date-container").innerHTML = `
+      📅 Дата проведения занятий: 
+      <input type="text" id="global-journal-date" value="${defaultDateStr}" 
+             style="width: 120px; padding: 6px; font-size: 15px; font-weight: bold; text-align: center; border: 1px solid #ced4da; border-radius: 6px; margin-left: 5px;">
+    `;
+
+    // 4. Генерируем группы для выбранного дня недели
     const container = document.getElementById("groups-container");
     container.innerHTML = "";
 
@@ -246,19 +262,9 @@ permalink: /journal-attendance/
     Object.keys(studentsData[day]).sort().forEach(time => {
       const kids = studentsData[day][time];
       
-      // Автоматически формируем сегодняшнюю дату для инпута в формате ГГГГ-ММ-ДД
-      const localToday = new Date();
-      const offset = localToday.getTimezoneOffset();
-      const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
-      const defaultDateStr = correctedDate.toISOString().split('T')[0];
-
+      // Возвращаем чистый заголовок группы без внутренних инпутов дат
       let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px;">
-          <h3 class="group-title" style="margin: 0; border: none; padding: 0;">⏰ Группа ${time}</h3>
-          <div style="font-size: 14px; font-weight: bold; color: #495057;">
-            Дата: <input type="text" id="date-${time}" value="${defaultDateStr}" style="width: 110px; padding: 5px; font-size: 14px; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
-          </div>
-        </div>`;
+        <h3 class="group-title" style="margin-top: 0; color: #212529; border-bottom: 2px solid #e9ecef; padding-bottom: 5px;">⏰ Группа ${time}</h3>`;
       
       kids.forEach((kid, index) => {
         const id = `kid-${time.replace(':', '-')}-${index}`;
@@ -273,7 +279,7 @@ permalink: /journal-attendance/
 
       groupHtml += `
         <div style="margin-top: 15px;">
-          <label class="field-label">➕ Постоянные новые ученики (войдут в базу):</label>
+          <label class="field-label">➕ Новые постоянные ученики (войдут в базу):</label>
           <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую">
           
           <label class="field-label" style="color: #1c7ed6;">⏳ Временные ученики (только на сегодня):</label>
@@ -287,8 +293,8 @@ permalink: /journal-attendance/
   }
 
   function saveGroupAttendance(day, time) {
-    // Считываем управляемую дату прямо из текстового поля группы
-    const dateStr = document.getElementById(`date-${time}`).value.trim(); 
+    // Считываем дату один раз из единого верхнего поля под календарем
+    const dateStr = document.getElementById("global-journal-date").value.trim(); 
     const timeId = time.replace(':', '-');
 
     let presentKids = [];

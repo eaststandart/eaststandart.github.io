@@ -52,7 +52,7 @@ jobs:
             // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
             const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_username.toLowerCase().trim()}.yml`);
             if (!fs.existsSync(yamlPath)) {
-              console.log("КРИТИЧЕСКАЯ ОШИБКА: Личный файл journal-attendance не найден.");
+              console.log(`КРИТИЧЕСКАЯ ОШИБКА: Личный файл не найден по пути: ${yamlPath}`);
               return;
             }
 

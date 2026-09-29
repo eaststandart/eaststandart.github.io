@@ -245,20 +245,8 @@ permalink: /journal-attendance/
 
     Object.keys(studentsData[day]).sort().forEach(time => {
       const kids = studentsData[day][time];
-      
-      // Автоматически формируем сегодняшнюю дату для инпута в формате ГГГГ-ММ-ДД
-      const localToday = new Date();
-      const offset = localToday.getTimezoneOffset();
-      const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
-      const defaultDateStr = correctedDate.toISOString().split('T')[0];
-
       let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px;">
-          <h3 class="group-title" style="margin: 0; border: none; padding: 0;">⏰ Группа ${time}</h3>
-          <div style="font-size: 14px; font-weight: bold; color: #495057;">
-            Дата: <input type="text" id="date-${time}" value="${defaultDateStr}" style="width: 110px; padding: 5px; font-size: 14px; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
-          </div>
-        </div>`;
+        <h3 class="group-title">⏰ Группа ${time}</h3>`;
       
       kids.forEach((kid, index) => {
         const id = `kid-${time.replace(':', '-')}-${index}`;
@@ -286,11 +274,12 @@ permalink: /journal-attendance/
     });
   }
 
-  function saveGroupAttendance(day, time) {
-    // Считываем управляемую дату прямо из текстового поля группы
-    const dateStr = document.getElementById(`date-${time}`).value.trim(); 
+   function saveGroupAttendance(day, time) {
+    const today = new Date();
+    // Чистая дата в формате ГГГГ-ММ-ДД
+    const dateStr = today.toISOString().split('T')[0]; 
     const timeId = time.replace(':', '-');
-
+    
     let presentKids = [];
     const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
     checkboxes.forEach(chk => {

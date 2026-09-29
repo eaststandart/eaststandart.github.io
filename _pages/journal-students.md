@@ -207,7 +207,7 @@ permalink: /admin-journal/
 
   function saveGroupAttendance(day, time) {
     const today = new Date();
-    const dateStr = today.toISOString().split('T'); 
+    const dateStr = today . toISOString() . split('T') [0] ;
     const timeId = time.replace(':', '-');
     
     let presentKids = [];

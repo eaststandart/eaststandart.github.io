@@ -49,9 +49,13 @@ permalink: /admin-journal/
 
 <script>
   // Конфигурация вашего репозитория на GitHub
-  const client_id = "Ov23lio8AV0SPM0ViUlP"; // Системный ID для безопасного входа (заменим позже на ваш реальный)
+  const client_id = "Client ID Ov23lio8AV0SPM0ViUlP"; // Вставьте сюда ваш Client ID
   const repo_owner = "eaststandart";
   const repo_name = "eaststandart.github.io";
+
+  // Адрес бесплатного шлюза-посредника, который оживит кнопку входа
+  const oauth_gate_url = "https://vercel.app";
+  const client_secret = "cba34a070f9f63a1ed6ca926f4e428d1c15b4f85"; // Вставьте сюда секрет
 
   let accessToken = localStorage.getItem("github_journal_token");
   let studentsData = {};

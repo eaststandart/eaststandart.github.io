@@ -4,7 +4,7 @@ title: Журнал посещаемости
 permalink: /admin-journal/
 ---
 
-<!-- Часть 1: Стили оформления и HTML разметка блоков -->
+<!-- Часть 1: Обновленные стили оформления и форма ввода ключа-пароля -->
 <style>
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
   .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
@@ -19,124 +19,85 @@ permalink: /admin-journal/
   .kid-row:last-child { border-bottom: none; }
   .chk-big { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
   .lbl-big { font-size: 16px; cursor: pointer; user-select: none; flex-grow: 1; }
-  .input-text { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
+  .input-text { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
   .hidden { display: none; }
   .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; }
   .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
   .notify-error { background-color: #ffe3e3; color: #c92a2a; }
-  .device-code-box { background-color: #f8f9fa; border: 2px dashed #ced4da; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
-  .device-code-value { font-size: 24px; font-weight: bold; color: #24292e; letter-spacing: 2px; margin: 10px 0; }
+  .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 </style>
 
 <div class="admin-container">
-  <!-- БЛОК АВТОРИЗАЦИИ -->
-  <div id="auth-section">
-    <button id="btn-login" class="btn-big btn-auth" onclick="startDeviceLogin()">🔐 Войти через аккаунт GitHub</button>
-    <div id="device-code-section" class="hidden">
-      <div class="device-code-box">
-        <p style="margin: 0 0 10px 0;">1. Откройте ссылку в новой вкладке:</p>
-        <a id="device-url" href="https://github.com" target="_blank" style="font-weight: bold; color: #1c7ed6;">https://github.com</a>
-        <p style="margin: 15px 0 10px 0;">2. Введите этот код подтверждения:</p>
-        <div id="device-code-display" class="device-code-value">XXXX-XXXX</div>
-        <p style="margin: 10px 0 0 0; font-size: 13px; color: #868e96;">Ожидание подтверждения на GitHub...</p>
-      </div>
-    </div>
+  <!-- БЛОК АВТОРИЗАЦИИ ЧЕРЕЗ ТОКЕН-ПАРОЛЬ -->
+  <div id="auth-section" class="auth-box">
+    <h3 style="margin-top: 0; color: #24292e;">🔑 Доступ к журналу</h3>
+    <p style="font-size: 14px; color: #6c757d; margin-bottom: 15px;">Вставьте ваш личный персональный ключ доступа (github_pat), чтобы открыть журнал:</p>
+    <input type="password" id="token-input" class="input-text" placeholder="github_pat_...">
+    <button id="btn-login" class="btn-big btn-auth" onclick="submitToken()">🔓 Подключить журнал</button>
   </div>
 
   <!-- РАБОЧАЯ ЗОНА ЖУРНАЛА -->
   <div id="journal-section" class="hidden">
+    <!-- Выбор дня недели -->
     <div style="display: flex; gap: 10px;">
       <button id="btn-sat" class="btn-big btn-day" onclick="selectDay('суббота')">🟢 СУББОТА</button>
       <button id="btn-sun" class="btn-big btn-day" onclick="selectDay('воскресенье')">🔵 ВОСКРЕСЕНЬЕ</button>
     </div>
+
     <div id="notification" class="notify hidden"></div>
+
+    <!-- Контейнер для динамических групп детей -->
     <div id="groups-container"></div>
   </div>
 </div>
 <script>
-  // Часть 2: Настройки репозитория и логика авторизации
-  const client_id = "Iv23liZhE21h0jjt9cTp"; 
+  // Часть 2: Настройки репозитория и логика проверки ключа-пароля
   const repo_owner = "eaststandart";
   const repo_name = "eaststandart.github.io";
 
   let accessToken = localStorage.getItem("github_journal_token");
   let studentsData = {};
-  let loginInterval = null;
 
+  // Проверяем, заходил ли учитель ранее
   document.addEventListener("DOMContentLoaded", () => {
     if (accessToken) {
       showJournal();
     }
   });
 
-  // Запрашиваем код устройства у GitHub
-  function startDeviceLogin() {
-    document.getElementById("btn-login").disabled = true;
-    document.getElementById("btn-login").innerText = "Запрос кода...";
+  // Функция проверки и сохранения пароля-токена
+  function submitToken() {
+    const tokenValue = document.getElementById("token-input").value.trim();
+    if (!tokenValue) {
+      alert("Пожалуйста, введите ключ доступа!");
+      return;
+    }
 
-    fetch("https://github.com/login/oauth/device/code", {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ client_id: client_id })
+    document.getElementById("btn-login").disabled = true;
+    document.getElementById("btn-login").innerText = "Проверка пароля...";
+
+    // Проверяем ключ, делая запрос к официальному API профиля
+    fetch("https://api .github.com/user", {
+      headers: { "Authorization": `token ${tokenValue}` }
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.device_code) {
-        document.getElementById("device-code-section").classList.remove("hidden");
-        document.getElementById("device-code-display").innerText = data.user_code;
-        document.getElementById("device-url").href = data.verification_uri;
-        
-        // Каждые несколько секунд опрашиваем GitHub - не ввел ли учитель код?
-        startPolling(data.device_code, data.interval || 5);
+    .then(response => {
+      if (response.ok) {
+        // Если ключ подошел, запоминаем его в памяти браузера
+        localStorage.setItem("github_journal_token", tokenValue);
+        accessToken = tokenValue;
+        showJournal();
       } else {
-        alert("Не удалось получить код от GitHub. Проверьте Client ID.");
+        alert("Неверный ключ доступа! Проверьте, правильно ли вы его скопировали.");
         document.getElementById("btn-login").disabled = false;
-        document.getElementById("btn-login").innerText = "🔐 Войти через аккаунт GitHub";
+        document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
       }
     })
     .catch(err => {
       console.error(err);
-      alert("Ошибка сети при запросе кода.");
+      alert("Ошибка сети при проверке пароля. Попробуйте еще раз.");
       document.getElementById("btn-login").disabled = false;
+      document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
     });
-  }
-
-  // Каждые 5 секунд проверяем, ввёл ли учитель пароль на GitHub
-  function startPolling(deviceCode, intervalSeconds) {
-    if (loginInterval) clearInterval(loginInterval);
-
-    loginInterval = setInterval(() => {
-      fetch("https://github.com/login/oauth/access_token", {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          client_id: client_id,
-          device_code: deviceCode,
-          grant_type: "urn:ietf:params:oauth:grant-type:device_code"
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.access_token) {
-          clearInterval(loginInterval);
-          localStorage.setItem("github_journal_token", data.access_token);
-          accessToken = data.access_token;
-          showJournal();
-        } else if (data.error && data.error !== "authorization_pending") {
-          clearInterval(loginInterval);
-          alert("Ошибка авторизации: " + data.error);
-          document.getElementById("device-code-section").classList.add("hidden");
-          document.getElementById("btn-login").disabled = false;
-          document.getElementById("btn-login").innerText = "🔐 Войти через аккаунт GitHub";
-        }
-      });
-    }, intervalSeconds * 1000);
   }
 
   function showJournal() {
@@ -148,7 +109,8 @@ permalink: /admin-journal/
   function loadStudentsFromYaml() {
     showNotify("Загрузка списка учеников...", "success");
     
-    fetch(`https://github.com{repo_owner}/${repo_name}/contents/_data/journal-students.yml`, {
+    // Адрес запроса: https://api .github .com/repos/owner/name/contents/_data/journal-students.yml
+    fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-students.yml`, {
       headers: { "Authorization": `token ${accessToken}` }
     })
     .then(response => {
@@ -167,7 +129,7 @@ permalink: /admin-journal/
     })
     .catch(err => {
       console.error(err);
-      showNotify("Ошибка загрузки списка детей из папки _data. Проверьте права приложения.", "error");
+      showNotify("Ошибка загрузки списка детей из папки _data. Проверьте токен.", "error");
     });
   }
 
@@ -187,7 +149,7 @@ permalink: /admin-journal/
         currentDay = trimmed.slice(0, -1).toLowerCase().trim();
         result[currentDay] = {};
       } else if (indent === 2 && (trimmed.includes(':'))) {
-        currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+        currentGroup = trimmed.split(':').map(s => s.trim()).filter(s => s)[0].replace(/['"]/g, '');
         result[currentDay][currentGroup] = [];
       } else if (indent === 4 && trimmed.startsWith('-')) {
         const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
@@ -273,7 +235,8 @@ permalink: /admin-journal/
     
     showNotify("Отправка отчета на GitHub...", "success");
 
-    fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+    // Адрес отправки: https://api .github .com/repos/owner/name/contents/_attendance/filename
+    fetch(`https://api.github .com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
       method: "PUT",
       headers: {
         "Authorization": `token ${accessToken}`,
@@ -295,7 +258,7 @@ permalink: /admin-journal/
     })
     .catch(err => {
       console.error(err);
-      showNotify("Не удалось отправить отчет. Проверьте права GitHub App.", "error");
+      showNotify("Не удалось отправить отчет. Убедитесь в правильности токена.", "error");
     });
   }
 

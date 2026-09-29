@@ -169,7 +169,7 @@ permalink: /journal-attendance/
             ${dayInfo.label}
           </button>`;
       });
- 
+
       // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД В ЭТОТ ЖЕ РЯД
       daysContainer.innerHTML += `
         <button class="btn-big btn-day" 
@@ -261,10 +261,10 @@ permalink: /journal-attendance/
 
       groupHtml += `
         <div style="margin-top: 15px;">
-          <label class="field-label">➕ Новые постоянные ученики (войдут в базу навсегда):</label>
+          <label class="field-label">➕ Постоянные новые ученики (войдут в базу):</label>
           <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую">
           
-          <label class="field-label" style="color: #1c7ed6;">⏳ Временные / Пробные ученики (только на сегодня):</label>
+          <label class="field-label" style="color: #1c7ed6;">⏳ Временные ученики (только на сегодня):</label>
           <input type="text" id="probation-${time}" class="input-text" placeholder="Имена через запятую" style="border-color: #a5d8ff;">
         </div>
         <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${time}</button>

@@ -233,7 +233,7 @@ permalink: /admin-journal/
 
     // Шаг 1: Узнаем логин преподавателя
     // Адрес запроса: https://api . github . com/user
-    fetch("https://github.com", {
+    fetch("https://api.github.com/user", {
       headers: { "Authorization": `token ${accessToken}` }
     })
     .then(r => r.json())

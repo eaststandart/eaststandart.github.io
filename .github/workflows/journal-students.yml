@@ -3,7 +3,7 @@ name: Generate Attendance Report to Discussions
 on:
   push:
     paths:
-      - '_attendance/**.json' # Робот просыпается при появлении нового JSON-отчета от телефона
+      - '_attendance/**.json'
 
 permissions:
   contents: write
@@ -25,7 +25,6 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            // 1. Находим самый свежий файл отчета в папке _attendance
             const dirPath = path.join(process.env.GITHUB_WORKSPACE, '_attendance');
             if (!fs.existsSync(dirPath)) {
               console.log("Папка _attendance не найдена.");
@@ -43,7 +42,6 @@ jobs:
             const rawData = fs.readFileSync(path.join(dirPath, latestFile), 'utf8');
             const report = JSON.parse(rawData);
 
-            // 2. Читаем актуальный список детей из вашего основного файла _data/journal-students.yml
             const yamlPath = path.join(process.env.GITHUB_WORKSPACE, '_data', 'journal-students.yml');
             if (!fs.existsSync(yamlPath)) {
               console.log("Файл базы данных детей не найден.");
@@ -52,7 +50,6 @@ jobs:
 
             let yamlText = fs.readFileSync(yamlPath, 'utf8');
             
-            // Простейший разборщик YAML-структуры
             let studentsData = {};
             let currentDay = "";
             let currentGroup = "";
@@ -74,11 +71,9 @@ jobs:
               }
             });
 
-            // 3. Форматируем красивую дату из имени файла (например, 2026-09-29 -> 29.09.2026)
-            const dateParts = report.date.split('-');
+            const dateParts = report.date[0].split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
-            // 4. Начинаем строить идеальную Markdown-таблицу
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate}\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
             markdownBody += `| :--- | :---: |\n`;
@@ -87,14 +82,12 @@ jobs:
             const targetDay = report.day.toLowerCase().trim();
             const permanentKids = (studentsData[targetDay] && studentsData[targetDay][report.time]) ? studentsData[targetDay][report.time] : [];
 
-            // Выводим тех постоянных, кто ПРИШЁЛ
             permanentKids.forEach(kid => {
               if (report.present_permanent.includes(kid)) {
                 markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
               }
             });
 
-            // Выводим пришедших НОВИЧКОВ
             if (report.newbies && report.newbies.length > 0) {
               report.newbies.forEach(newbie => {
                 const suffix = report.is_newbies_probation ? " (Пробное)" : " (Новичок)";
@@ -102,14 +95,12 @@ jobs:
               });
             }
 
-            // Выводим тех постоянных, кто НЕ ПРИШЁЛ
             permanentKids.forEach(kid => {
               if (!report.present_permanent.includes(kid)) {
                 markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
               }
             });
 
-            // 5. ОТПРАВЛЯЕМ ГОТОВЫЙ ТЕКСТ В ОБСУЖДЕНИЕ #38 НА GITHUB
             const queryGetId = `query {
               repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
                 discussion(number: 38) { id }
@@ -127,9 +118,8 @@ jobs:
             await github.graphql(mutationAddComment);
             console.log("Журнал успешно опубликован в Обсуждении #38!");
 
-            // 6. АВТОМАТИЧЕСКОЕ ДОПИСЫВАНИЕ НОВИЧКОВ В БАЗУ ДАННЫХ YAML НА КЛУБ
             if (report.newbies && report.newbies.length > 0 && !report.is_newbies_probation) {
-              console.log("Обнаружены постоянные новички. Запускаем обновление файла базы данных...");
+              console.log("Обнаружены постоянные новички. Обновляем базу данных...");
               
               let newLines = [];
               let insideTargetDay = false;
@@ -162,7 +152,6 @@ jobs:
                       report.newbies.forEach(newbie => {
                         if (!permanentKids.includes(newbie)) {
                           newLines.push(`    - ${newbie}`);
-                          console.log(`Ребенок ${newbie} успешно добавлен в группу ${report.time}`);
                         }
                       });
                       added = true;
@@ -175,7 +164,6 @@ jobs:
               fs.writeFileSync(yamlPath, newLines.join('\n'), 'utf8');
             }
 
-      // 7. ФИНАЛЬНЫЙ ШАГ: Автоматический коммит обновленного списка детей обратно в репозиторий
       - name: Commit Database Updates
         run: |
           git config --global user.name "GitHub Academic Robot"

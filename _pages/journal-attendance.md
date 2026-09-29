@@ -173,7 +173,7 @@ permalink: /journal-attendance/
       // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД В ЭТОТ ЖЕ РЯД
       daysContainer.innerHTML += `
         <button class="btn-big btn-day" 
-                style="border-left: none; padding: 10px 0px !important; text-align: center; background-color: #c92a2a; color: white;" 
+                style="border-left: none; padding: 10px 0px !important; padding-left: 5px; padding-right: 5px; text-align: center; background-color: #c92a2a; color: white;" 
                 onclick="logoutTeacher()">
           ВЫХОД
         </button>`;

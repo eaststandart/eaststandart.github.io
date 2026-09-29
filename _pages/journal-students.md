@@ -255,7 +255,7 @@ permalink: /admin-journal/
       
       // Шаг 2: Проверяем, существует ли уже такой файл, чтобы взять его SHA
       // Адрес файла: https://api . github . com/repos/owner/name/contents/_attendance/filename
-      return fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+      return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
         headers: { "Authorization": `token ${accessToken}` }
       })
       .then(res => res.ok ? res.json() : null)

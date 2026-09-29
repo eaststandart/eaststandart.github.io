@@ -167,6 +167,7 @@ jobs:
             }`;
             await github.graphql(mutationAddComment);
             console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
+            core.exportVariable('TEACHER_NAME', teacherUsername);
 
             // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ
             let hasNewbies = false;

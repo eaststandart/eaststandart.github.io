@@ -4,7 +4,7 @@ title: Журнал посещаемости
 permalink: /admin-journal/
 ---
 
-<!-- Часть 1: Обновленные стили оформления и форма ввода ключа-пароля -->
+<!-- Часть 1: Обновленные стили и интерфейс с двумя раздельными полями ввода -->
 <style>
   .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
   .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
@@ -21,10 +21,11 @@ permalink: /admin-journal/
   .lbl-big { font-size: 16px; cursor: pointer; user-select: none; flex-grow: 1; }
   .input-text { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
   .hidden { display: none; }
-  .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; }
+  .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; font-weight: bold; }
   .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
   .notify-error { background-color: #ffe3e3; color: #c92a2a; }
-  .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; }
+  .field-label { font-size: 14px; font-weight: bold; color: #495057; display: block; margin-top: 10px; }
 </style>
 
 <div class="admin-container">
@@ -51,21 +52,21 @@ permalink: /admin-journal/
   </div>
 </div>
 <script>
-  // Часть 2: Настройки репозитория и логика проверки ключа-пароля
+  // Часть 2: Настройки репозитория и проверка пароля преподавателя
   const repo_owner = "eaststandart";
   const repo_name = "eaststandart.github.io";
 
   let accessToken = localStorage.getItem("github_journal_token");
   let studentsData = {};
 
-  // Проверяем, заходил ли учитель ранее
+  // Автоматический вход, если ключ уже сохранен в браузере
   document.addEventListener("DOMContentLoaded", () => {
     if (accessToken) {
       showJournal();
     }
   });
 
-  // Функция проверки и сохранения пароля-токена
+  // Функция проверки введенного пароля
   function submitToken() {
     const tokenValue = document.getElementById("token-input").value.trim();
     if (!tokenValue) {
@@ -76,25 +77,24 @@ permalink: /admin-journal/
     document.getElementById("btn-login").disabled = true;
     document.getElementById("btn-login").innerText = "Проверка пароля...";
 
-    // Проверяем ключ, делая запрос к официальному API профиля
-    fetch("https://api.github.com/user", {
+    // Ссылка запроса: https://api . github . com/user
+    fetch(" https://api.github.com/user", {
       headers: { "Authorization": `token ${tokenValue}` }
     })
     .then(response => {
       if (response.ok) {
-        // Если ключ подошел, запоминаем его в памяти браузера
         localStorage.setItem("github_journal_token", tokenValue);
         accessToken = tokenValue;
         showJournal();
       } else {
-        alert("Неверный ключ доступа! Проверьте, правильно ли вы его скопировали.");
+        alert("Неверный ключ доступа! Проверьте символы.");
         document.getElementById("btn-login").disabled = false;
         document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
       }
     })
     .catch(err => {
       console.error(err);
-      alert("Ошибка сети при проверке пароля. Попробуйте еще раз.");
+      alert("Ошибка сети. Проверьте интернет-соединение.");
       document.getElementById("btn-login").disabled = false;
       document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
     });
@@ -105,20 +105,20 @@ permalink: /admin-journal/
     document.getElementById("journal-section").classList.remove("hidden");
     loadStudentsFromYaml();
   }
-  // Часть 3: Чтение базы детей, генерация интерфейса и отправка отчета
+
+  // Часть 3: Чтение базы детей с правильным парсером, два поля ввода и отправка порций
   function loadStudentsFromYaml() {
     showNotify("Загрузка списка учеников...", "success");
     
-    // Адрес запроса: https://api .github .com/repos/owner/name/contents/_data/journal-students.yml
+    // Адрес загрузки файла: https://api . github . com/repos/owner/name/contents/_data/journal-students.yml
     fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-students.yml`, {
       headers: { "Authorization": `token ${accessToken}` }
     })
     .then(response => {
-      if (!response.ok) throw new Error("Не удалось скачать файл из репозитория");
+      if (!response.ok) throw new Error("Не удалось скачать файл");
       return response.json();
     })
     .then(data => {
-      // Декодируем Base64 с полной поддержкой кириллицы (UTF-8)
       const yamlText = decodeURIComponent(atob(data.content).split('').map(function(c) {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
@@ -129,11 +129,11 @@ permalink: /admin-journal/
     })
     .catch(err => {
       console.error(err);
-      showNotify("Ошибка загрузки списка детей из папки _data. Проверьте токен.", "error");
+      showNotify("Ошибка загрузки списка детей из папки _data", "error");
     });
   }
 
-  // Разборщик YAML-структуры
+  // Обновленный парсер YAML под структуру с правильными отступами
   function parseSimpleYaml(text) {
     let result = {};
     let currentDay = "";
@@ -145,13 +145,16 @@ permalink: /admin-journal/
       if (!trimmed || trimmed.startsWith('#')) return;
 
       const indent = line.search(/\S/);
+      
       if (indent === 0 && trimmed.endsWith(':')) {
         currentDay = trimmed.slice(0, -1).toLowerCase().trim();
         result[currentDay] = {};
-      } else if (indent === 2 && (trimmed.includes(':'))) {
-        currentGroup = trimmed.split(':').map(s => s.trim()).filter(s => s)[0].replace(/['"]/g, '');
+      } 
+      else if (indent === 2 && trimmed.includes(':')) {
+        currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
         result[currentDay][currentGroup] = [];
-      } else if (indent === 4 && trimmed.startsWith('-')) {
+      } 
+      else if (indent === 4 && trimmed.trim().startsWith('-')) {
         const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
         if (currentDay && currentGroup) {
           result[currentDay][currentGroup].push(name);
@@ -175,7 +178,7 @@ permalink: /admin-journal/
 
     Object.keys(studentsData[day]).sort().forEach(time => {
       const kids = studentsData[day][time];
-      let groupHtml = `<div class="group-block">
+      let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
         <h3 class="group-title">⏰ Группа ${time}</h3>`;
       
       kids.forEach((kid, index) => {
@@ -189,14 +192,13 @@ permalink: /admin-journal/
 
       groupHtml += `
         <div style="margin-top: 15px;">
-          <label class="lbl-big" style="font-weight: bold;">➕ Новые ученики на ${time}:</label>
-          <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую (например: Марк В., Лев К.)">
-          <div class="kid-row" style="border:none; padding: 5px 0 0 0;">
-            <input type="checkbox" id="probation-${time}" class="chk-big" style="width:20px; height:20px;">
-            <label for="probation-${time}" class="lbl-big" style="font-size:14px; color:#6c757d;">⚠️ Только пробное занятие (не добавлять в базу насовсем)</label>
-          </div>
+          <label class="field-label">➕ Новые постоянные ученики (войдут в базу навсегда):</label>
+          <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую">
+          
+          <label class="field-label" style="color: #1c7ed6;">⏳ Временные / Пробные ученики (только на сегодня):</label>
+          <input type="text" id="probation-${time}" class="input-text" placeholder="Имена через запятую" style="border-color: #a5d8ff;">
         </div>
-        <button class="btn-big btn-save" onclick="saveGroupAttendance('${day}', '${time}')">💾 Сохранить группу ${time}</button>
+        <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${time}</button>
       </div>`;
       
       container.innerHTML += groupHtml;
@@ -206,6 +208,7 @@ permalink: /admin-journal/
   function saveGroupAttendance(day, time) {
     const today = new Date();
     const dateStr = today.toISOString().split('T')[0]; 
+    const timeId = time.replace(':', '-');
     
     let presentKids = [];
     const checkboxes = document.querySelectorAll(`[id^="kid-${time}-"]`);
@@ -214,51 +217,71 @@ permalink: /admin-journal/
     });
 
     const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
-    const isProbation = document.getElementById(`probation-${time}`).checked;
+    const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
     let newbiesList = [];
     if (newbiesInput !== "") {
       newbiesList = newbiesInput.split(',').map(n => n.trim()).filter(n => n !== "");
     }
 
-    const reportPayload = {
-      date: dateStr,
-      day: day,
-      time: time,
-      present_permanent: presentKids,
-      newbies: newbiesList,
-      is_newbies_probation: isProbation
-    };
+    let probationList = [];
+    if (probationInput !== "") {
+      probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
+    }
 
-    const fileName = `${dateStr}-journal-students-${time.replace(':', '-')}.json`;
-    const filePath = `_attendance/${fileName}`;
-    
-    showNotify("Отправка отчета на GitHub...", "success");
+    // Сначала узнаем логин преподавателя, чтобы передать его роботу
+    fetch("https://api.github.com/user", {
+      headers: { "Authorization": `token ${accessToken}` }
+    })
+    .then(r => r.json())
+    .then(userData => {
+      const teacherUsername = userData.name || userData.login || "Преподаватель";
 
-    // Адрес отправки: https://api .github .com/repos/owner/name/contents/_attendance/filename
-    fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
-      method: "PUT",
-      headers: {
-        "Authorization": `token ${accessToken}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: `Отчет по посещаемости: Группа ${time} (${day})`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(reportPayload, null, 2))))
-      })
+      const reportPayload = {
+        date: dateStr,
+        day: day,
+        time: time,
+        teacher_username: teacherUsername,
+        present_permanent: presentKids,
+        newbies: newbiesList,
+        probation: probationList
+      };
+
+      const fileName = `${dateStr}-journal-${timeId}.json`;
+      const filePath = `_attendance/${fileName}`;
+      
+      showNotify(`Отправка группы ${time}...`, "success");
+
+      // Ссылка отправки: https://api . github . com/repos/owner/name/contents/_attendance/filename
+      return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: `Отчет: Группа ${time} (${day}) от ${teacherUsername}`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(reportPayload, null, 2))))
+        })
+      });
     })
     .then(response => {
-      if (!response.ok) throw new Error("Ошибка при записи файла на GitHub");
+      if (!response.ok) throw new Error("Ошибка отправки отчета на GitHub");
       return response.json();
     })
     .then(data => {
-      showNotify(`Успешно отправлено! Робот обновит Дискуссии в течение 1-2 минут.`, "success");
-      document.getElementById(`newbies-${time}`).value = "";
-      document.getElementById(`probation-${time}`).checked = false;
+      showNotify(`Группа ${time} успешно отправлена! Ждем остальные группы для финальной сборки дня.`, "success");
+      
+      // Визуально блокируем отправленную группу, чтобы препод не нажал дважды
+      const block = document.getElementById(`block-${timeId}`);
+      block.style.opacity = "0.5";
+      const btn = document.getElementById(`btn-save-${timeId}`);
+      btn.disabled = true;
+      btn.innerText = `✅ Группа ${time} отправлена`;
     })
     .catch(err => {
       console.error(err);
-      showNotify("Не удалось отправить отчет. Убедитесь в правильности токена.", "error");
+      showNotify("Не удалось отправить отчет. Проверьте права токена.", "error");
     });
   }
 

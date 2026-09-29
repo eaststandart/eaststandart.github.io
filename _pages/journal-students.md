@@ -145,17 +145,18 @@ permalink: /admin-journal/
       if (!trimmed || trimmed.startsWith('#')) return;
 
       const indent = line.search(/\S/);
+      const cleanText = trimmed.trim();
       
-      if (indent === 0 && trimmed.endsWith(':')) {
-        currentDay = trimmed.slice(0, -1).toLowerCase().trim();
+      if (indent === 0 && cleanText.endsWith(':')) {
+        currentDay = cleanText.slice(0, -1).toLowerCase().trim();
         result[currentDay] = {};
       } 
-      else if (indent === 2 && trimmed.includes(':')) {
-        currentGroup = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+      else if (indent === 2 && cleanText.endsWith(':')) {
+        currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
         result[currentDay][currentGroup] = [];
       } 
-      else if (indent === 4 && trimmed.trim().startsWith('-')) {
-        const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
+      else if (indent === 4 && cleanText.startsWith('-')) {
+        const name = cleanText.substring(cleanText.indexOf('-') + 1).trim();
         if (currentDay && currentGroup) {
           result[currentDay][currentGroup].push(name);
         }
@@ -185,8 +186,10 @@ permalink: /admin-journal/
         const id = `kid-${time.replace(':', '-')}-${index}`;
         groupHtml += `
           <div class="kid-row">
-            <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
-            <label for="${id}" class="lbl-big">${kid}</label>
+            <label class="lbl-big">
+              <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
+              ${kid}
+            </label>
           </div>`;
       });
 

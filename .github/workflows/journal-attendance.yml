@@ -50,7 +50,7 @@ jobs:
             const todaysFiles = groupFiles.filter(f => f.startsWith(`${dateStr}-`));
 
             // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
-            const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_username.toLowerCase().trim()}.yml`);
+            const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_login}.yml`);
             if (!fs.existsSync(yamlPath)) {
               console.log(`КРИТИЧЕСКАЯ ОШИБКА: Личный файл не найден по пути: ${yamlPath}`);
               return;

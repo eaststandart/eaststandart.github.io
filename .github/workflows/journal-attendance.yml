@@ -52,7 +52,7 @@ jobs:
             // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
             const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_username.toLowerCase().trim()}.yml`);
             if (!fs.existsSync(yamlPath)) {
-              console.log("КРИТИЧЕСКАЯ ОШИБКА: Файл базы данных детей journal-students.yml не найден.");
+              console.log("КРИТИЧЕСКАЯ ОШИБКА: Личный файл journal-attendance не найден.");
               return;
             }
 
@@ -177,7 +177,7 @@ jobs:
 
             if (hasNewbies) {
               console.log("=== ОБНОВЛЕНИЕ БАЗЫ ДАННЫХ ===");
-              console.log("Обнаружены постоянные новички. Вносим их в файл journal-students.yml...");
+              console.log("Обнаружены постоянные новички. Вносим их в личный файл журнала...");
               let newLines = [];
               let insideDay = false;
               let insideGroup = false;
@@ -231,6 +231,7 @@ jobs:
           git config --global user.email "actions@github.com"
           
           # Фиксируем удаление временных файлов групп в репозитории
+          git add _data/journal-attendance-*.json
           git add _data/journal-attendance-*.yml
           
           git commit -m "Сводный журнал за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"

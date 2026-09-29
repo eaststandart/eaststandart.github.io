@@ -118,7 +118,10 @@ jobs:
 
               // Отмечаем присутствующих постоянных детей
               permanentKids.forEach(kid => {
-                if (groupData.present_permanent.includes(kid)) {
+                // Очищаем имя из базы и ищем его совпадение в присланном массиве с сайта
+                const isPresent = groupData.present_permanent.some(p => p.trim().toLowerCase() === kid.trim().toLowerCase());
+                
+                if (isPresent) {
                   markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
                 }
               });
@@ -139,11 +142,12 @@ jobs:
 
               // Отмечаем отсутствующих постоянных детей
               permanentKids.forEach(kid => {
-                if (!groupData.present_permanent.includes(kid)) {
+                const isPresent = groupData.present_permanent.some(p => p.trim().toLowerCase() === kid.trim().toLowerCase());
+                
+                if (!isPresent) {
                   markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
                 }
               });
-            });
 
             // 5. ОТПРАВКА КОММЕНТАРИЯ В GitHub Discussions №38
             const queryGetId = `query {

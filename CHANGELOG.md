@@ -4,6 +4,7 @@ title: Журнал изменений проекта
 type: changelog
 project: eaststandart.github.io
 last_updated: 2026-09-29
+keywords: ["project/management", "documentation"]
 ---
 
 # Журнал изменений (Changelog)

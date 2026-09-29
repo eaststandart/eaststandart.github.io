@@ -208,7 +208,7 @@ permalink: /admin-journal/
     });
   }
 
-  function saveGroupAttendance(day, time) {
+   function saveGroupAttendance(day, time) {
     const today = new Date();
     // Чистая дата в формате ГГГГ-ММ-ДД
     const dateStr = today.toISOString().split('T')[0]; 
@@ -233,10 +233,9 @@ permalink: /admin-journal/
       probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
     }
 
-    showNotify(`Подготовка и склейка отчета для группы ${time}...`, "success");
+    showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
     // Шаг 1: Узнаем логин преподавателя
-    // Адрес: https://api . github . com/user
     fetch("https://api.github.com/user", {
       headers: { "Authorization": `token ${accessToken}` }
     })
@@ -254,8 +253,7 @@ permalink: /admin-journal/
         probation: probationList
       };
 
-      const filePath = `_data/temp-journal.json`;
-            // Шаг 2: Формируем имя файла индивидуально для каждой группы
+      // Шаг 2: Формируем имя файла индивидуально для каждой группы
       const filePath = `_data/journal-${dateStr}-${timeId}.json`;
 
       let commitBody = {
@@ -264,7 +262,6 @@ permalink: /admin-journal/
       };
 
       // Шаг 3: Отправляем файл напрямую на GitHub без склейки в браузере
-      // Адрес: https://api . github . com/repos/owner/name/contents/_data/journal-date-time.json
       return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
         method: "PUT",
         headers: {
@@ -273,8 +270,9 @@ permalink: /admin-journal/
         },
         body: JSON.stringify(commitBody)
       });
+    })
     .then(response => {
-      if (!response.ok) throw new Error("Ошибка записи временного файла на GitHub");
+      if (!response.ok) throw new Error("Ошибка записи файла на GitHub");
       return response.json();
     })
     .then(data => {

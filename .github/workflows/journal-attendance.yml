@@ -47,7 +47,7 @@ jobs:
             console.log(`Обнаружена дата занятия: ${dateStr} (${targetDay})`);
 
             // Filter файлов строго за эту дату (на случай если остались старые)
-            const todaysFiles = groupFiles.filter(f => f.startsWith(`journal-attendance-${dateStr}-`));
+            const todaysFiles = groupFiles.filter(f => f.startsWith(`${dateStr}-`));
 
             // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
             const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_username.toLowerCase().trim()}.yml`);
@@ -231,7 +231,7 @@ jobs:
           git config --global user.email "actions@github.com"
           
           # Фиксируем удаление временных файлов групп в репозитории
-          git add _data/journal-attendance-*.json
+          git add _data/*-journal-attendance-*.json
           git add _data/journal-attendance-*.yml
           
           git commit -m "Сводный журнал за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"

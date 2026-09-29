@@ -40,10 +40,12 @@ permalink: /admin-journal/
   <!-- РАБОЧАЯ ЗОНА ЖУРНАЛА -->
   <div id="journal-section" class="hidden">
     <!-- Выбор дня недели -->
-    <!-- Контейнер для динамических кнопок дней недели -->
-    <div id="days-buttons-container" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+    <div style="display: flex; gap: 10px;">
+      <button id="btn-sat" class="btn-big btn-day" onclick="selectDay('суббота')">🟢 СУББОТА</button>
+      <button id="btn-sun" class="btn-big btn-day" onclick="selectDay('воскресенье')">🔵 ВОСКРЕСЕНЬЕ</button>
+    </div>
 
-	<div id="notification" class="notify hidden"></div>
+    <div id="notification" class="notify hidden"></div>
 
     <!-- Контейнер для динамических групп детей -->
     <div id="groups-container"></div>
@@ -122,28 +124,7 @@ permalink: /admin-journal/
       }).join(''));
       
       studentsData = parseSimpleYaml(yamlText);
-      
-      // Автоматическая генерация кнопок на основе дней в YAML-файле
-      const daysContainer = document.getElementById("days-buttons-container");
-      daysContainer.innerHTML = ""; // Очищаем контейнер
-      
-      const colors = ["#2b8a3e", "#1c7ed6", "#d9480f", "#862e9c", "#0c8599", "#5c940d", "#e63946"];
-      
-      Object.keys(studentsData).forEach((day, index) => {
-        const btnId = `btn-day-${day}`;
-        const btnColor = colors[index % colors.length];
-        
-        // Создаем кнопку для каждого дня недели из файла
-        daysContainer.innerHTML += `
-          <button id="${btnId}" class="btn-big btn-day" 
-                  style="border-left: 6px solid ${btnColor}; transition: 0.2s;" 
-                  onclick="selectDynamicDay('${day}', '${btnColor}')">
-            ${day.toUpperCase()}
-          </button>`;
-      });
-
       showNotify("Список учеников успешно загружен!", "success");
-
       setTimeout(() => { document.getElementById("notification").classList.add("hidden"); }, 2000);
     })
     .catch(err => {
@@ -184,22 +165,10 @@ permalink: /admin-journal/
     return result;
   }
 
-    function selectDynamicDay(day, activeColor) {
-    // 1. Сбрасываем стили у абсолютно всех кнопок дней, делая их стандартными
-    const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);
-    allDayButtons.forEach(btn => {
-      btn.style.backgroundColor = "#f1f3f5";
-      btn.style.color = "#495057";
-    });
-
-    // 2. Подсвечиваем выбранную кнопку её уникальным цветом
-    const activeBtn = document.getElementById(`btn-day-${day}`);
-    if (activeBtn) {
-      activeBtn.style.backgroundColor = activeColor;
-      activeBtn.style.color = "white";
-    }
+  function selectDay(day) {
+    document.getElementById("btn-sat").className = "btn-big btn-day " + (day === "суббота" ? "active-sat" : "");
+    document.getElementById("btn-sun").className = "btn-big btn-day " + (day === "воскресенье" ? "active-sun" : "");
     
-    // 3. Генерируем группы для выбранного дня недели
     const container = document.getElementById("groups-container");
     container.innerHTML = "";
 

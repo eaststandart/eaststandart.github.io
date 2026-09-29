@@ -182,7 +182,7 @@ permalink: /admin-journal/
         <h3 class="group-title">⏰ Группа ${time}</h3>`;
       
       kids.forEach((kid, index) => {
-        const id = `kid-${time}-${index}`;
+        const id = `kid-${time.replace(':', '-')}-${index}`;
         groupHtml += `
           <div class="kid-row">
             <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
@@ -212,7 +212,7 @@ permalink: /admin-journal/
     const timeId = time.replace(':', '-');
     
     let presentKids = [];
-    const checkboxes = document.querySelectorAll(`[id^="kid-${time}-"]`);
+    const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
     checkboxes.forEach(chk => {
       if (chk.checked) presentKids.push(chk.value);
     });

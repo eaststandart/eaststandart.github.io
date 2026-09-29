@@ -167,6 +167,7 @@ jobs:
             }`;
             await github.graphql(mutationAddComment);
             console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
+            core.exportVariable('TEACHER_NAME', teacherUsername);
 
             // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ
             let hasNewbies = false;
@@ -215,31 +216,21 @@ jobs:
               fs.unlinkSync(path.join(dataDir, file));
             });
 
-      # 7. НАДЁЖНЫЙ БАШ-СКРИПТ ДЛЯ УЗНАВАНИЯ ИМЕНИ, УДАЛЕНИЯ МУСОРА И КОММИТА
+      # 7. БАШ-СКРИПТ ДЛЯ УЗНАВАНИЯ ИМЕНИ, УДАЛЕНИЯ МУСОРА И КОММИТА
       - name: Commit Base Updates and Purge Temp Files
         run: |
-          # Вытаскиваем имя преподавателя из первого попавшегося файла группы через Node.js
-          TEACHER_NAME=$(node -e "
-            const fs = require('fs');
-            try {
-              const files = fs.readdirSync('_data').filter(f => f.startsWith('journal-') && f.endsWith('.json'));
-              if (files.length > 0) {
-                const data = JSON.parse(fs.readFileSync('_data/' + files[0], 'utf8'));
-                console.log(data.teacher_username);
-              } else {
-                console.log('GitHub Academic Robot');
-              }
-            } catch(e) {
-              console.log('GitHub Academic Robot');
-            }
-          ")
+          # Используем имя преподавателя, которое передаётся через настройки Git-окружения
+          TEACHER_NAME="${{ env.TEACHER_NAME }}"
+          if [ -z "$TEACHER_NAME" ]; then
+            TEACHER_NAME="TechLab"
+          fi
           
           echo "Автор коммита: $TEACHER_NAME"
           
           git config --global user.name "$TEACHER_NAME"
           git config --global user.email "actions@github.com"
           
-          # Начисто удаляем все временные файлы групп из репозитория
+          # Фиксируем удаление временных файлов групп в репозитории
           git add _data/journal-*.json || true
           git add _data/journal-students.yml
           

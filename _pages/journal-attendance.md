@@ -169,7 +169,7 @@ permalink: /journal-attendance/
             ${dayInfo.label}
           </button>`;
       });
-
+ 
       // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД В ЭТОТ ЖЕ РЯД
       daysContainer.innerHTML += `
         <button class="btn-big btn-day" 

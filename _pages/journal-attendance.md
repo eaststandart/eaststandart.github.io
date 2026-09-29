@@ -327,7 +327,7 @@ permalink: /journal-attendance/
       };
 
       // Шаг 2: Формируем имя файла индивидуально для каждой группы
-      const filePath = `_data/journal-${dateStr}-${timeId}.json`;
+      const filePath = `_data/journal-attendance-${dateStr}-${timeId}.json`;
 
       let commitBody = {
         message: `Отчет группы: Группа ${time} (${day}) от ${teacherUsername}`,

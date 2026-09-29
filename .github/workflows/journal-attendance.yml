@@ -139,14 +139,14 @@ jobs:
               // Добавляем новичков в конец этой конкретной группы
               if (groupData.newbies && groupData.newbies.length > 0) {
                 groupData.newbies.forEach(newbie => {
-                  markdownBody += `| ${newbie} | 🟢 Присутствовал (Новичок) |\n`;
+                  markdownBody += `| ${newbie} | 🟡 Новичок |\n`;
                 });
               }
 
               // Добавляем временных пробных в конец этой конкретной группы
               if (groupData.probation && groupData.probation.length > 0) {
                 groupData.probation.forEach(prob => {
-                  markdownBody += `| ${prob} | 🔵 Присутствовал (Пробное) |\n`;
+                  markdownBody += `| ${prob} | 🔵 Пробное |\n`;
                 });
               }
             });

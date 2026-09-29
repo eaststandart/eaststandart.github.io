@@ -3,7 +3,7 @@ name: Generate Attendance Report to Discussions
 on:
   push:
     paths:
-      - '_data/journal-attendance-*.json'
+      - '_data/*-journal-attendance-*.json'
 
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
             
             // 1. Ищем все временные файлы групп за сегодняшний день
             const allFiles = fs.readdirSync(dataDir);
-            const groupFiles = allFiles.filter(f => f.startsWith('journal-attendance-') && f.endsWith('.json'));
+            const groupFiles = allFiles.filter(f => f.includes('-journal-attendance-') && f.endsWith('.json'));
             
             if (groupFiles.length === 0) {
               console.log("=== ЛОГ РОБОТА ===");
@@ -47,7 +47,7 @@ jobs:
             console.log(`Обнаружена дата занятия: ${dateStr} (${targetDay})`);
 
             // Filter файлов строго за эту дату (на случай если остались старые)
-            const todaysFiles = groupFiles.filter(f => f.startsWith(`journal-attendance-${dateStr}-`));
+            const todaysFiles = groupFiles.filter(f => f.startsWith(`${dateStr}-`));
 
             // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
             const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_username.toLowerCase().trim()}.yml`);
@@ -231,7 +231,7 @@ jobs:
           git config --global user.email "actions@github.com"
           
           # Фиксируем удаление временных файлов групп в репозитории
-          git add _data/journal-attendance-*.json
+          git add _data/*-journal-attendance-*.json
           git add _data/journal-attendance-*.yml
           
           git commit -m "Сводный журнал за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"

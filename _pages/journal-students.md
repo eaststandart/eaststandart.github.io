@@ -44,6 +44,13 @@ permalink: /admin-journal/
     <!-- Контейнер для динамических кнопок дней недели -->
     <div id="days-buttons-container" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
 
+	<!-- Кнопка смены пользователя / выхода -->
+    <div style="text-align: right; margin-top: 10px;">
+      <button onclick="logoutTeacher()" style="background: none; border: none; color: #c92a2a; font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: underline;">
+        ❌ Сменить пользователя / Выйти
+      </button>
+    </div>
+
 	<div id="notification" class="notify hidden"></div>
 
     <!-- Контейнер для динамических групп детей -->
@@ -103,6 +110,17 @@ permalink: /admin-journal/
     document.getElementById("auth-section").classList.add("hidden");
     document.getElementById("journal-section").classList.remove("hidden");
     loadStudentsFromYaml();
+  }
+
+  function logoutTeacher() {
+    if (confirm("Вы уверены, что хотите выйти из журнала и сменить ключ доступа?")) {
+      // Полностью стираем токен из памяти браузера
+      localStorage.removeItem("github_journal_token");
+      accessToken = null;
+      
+      // Перезагружаем страницу, чтобы вернуть чистый экран ввода пароля
+      window.location.reload();
+    }
   }
 
   // Часть 3: Чтение базы детей с правильным парсером, два поля ввода и отправка порций

@@ -3,7 +3,7 @@ name: Generate Attendance Report to Discussions
 on:
   push:
     paths:
-      - '_data/temp-journal.json'
+      - '_data/journal-*.json'
 
 permissions:
   contents: write
@@ -18,44 +18,41 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Report Generator and Database Updater
+      - name: Run Dynamic Report Generator
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
 
-            // 1. Читаем временный файл дня, присланный с сайта
-            const tempPath = path.join(process.env.GITHUB_WORKSPACE, '_data', 'temp-journal.json');
-            if (!fs.existsSync(tempPath)) {
-              console.log("Временный файл отчета temp-journal.json не найден.");
+            const dataDir = path.join(process.env.GITHUB_WORKSPACE, '_data');
+            
+            // 1. Ищем все временные файлы групп за сегодняшний день
+            const allFiles = fs.readdirSync(dataDir);
+            const groupFiles = allFiles.filter(f => f.startsWith('journal-') && f.endsWith('.json'));
+            
+            if (groupFiles.length === 0) {
+              console.log("=== ЛОГ РОБОТА ===");
+              console.log("Временные файлы журналов групп не найдены.");
               return;
             }
 
-            const rawTempData = fs.readFileSync(tempPath, 'utf8');
-            let tempJournal = {};
-            try {
-              tempJournal = JSON.parse(rawTempData);
-            } catch (e) {
-              console.log("Ошибка чтения JSON из temp-journal.json");
-              return;
-            }
+            // Читаем первый попавшийся файл, чтобы определить текущий день недели и дату
+            const sampleData = JSON.parse(fs.readFileSync(path.join(dataDir, groupFiles[0]), 'utf8'));
+            const targetDay = sampleData.day.toLowerCase().trim();
+            const dateStr = sampleData.date;
+            const teacherUsername = sampleData.teacher_username || "Преподаватель";
 
-            // Достаем метаданные дня из первой попавшейся заполненной группы
-            const filledTimes = Object.keys(tempJournal);
-            if (filledTimes.length === 0) {
-              console.log("Временный журнал пуст.");
-              return;
-            }
-            const firstReport = tempJournal[filledTimes[0]];
-            const targetDay = firstReport.day.toLowerCase().trim();
-            const dateStr = firstReport.date;
-            const teacherUsername = firstReport.teacher_username || "Преподаватель";
+            console.log("=== ЛОГ РОБОТА: ИНИЦИАЛИЗАЦИЯ ===");
+            console.log(`Обнаружена дата занятия: ${dateStr} (${targetDay})`);
 
-            // 2. Читаем официальную YAML базу детей, чтобы узнать расписание групп
-            const yamlPath = path.join(process.env.GITHUB_WORKSPACE, '_data', 'journal-students.yml');
+            // Filter файлов строго за эту дату (на случай если остались старые)
+            const todaysFiles = groupFiles.filter(f => f.startsWith(`journal-${dateStr}-`));
+
+            // 2. Читаем YAML расписание, чтобы понять сколько групп должно быть
+            const yamlPath = path.join(dataDir, 'journal-students.yml');
             if (!fs.existsSync(yamlPath)) {
-              console.log("Файл базы данных детей не найден.");
+              console.log("КРИТИЧЕСКАЯ ОШИБКА: Файл базы данных детей journal-students.yml не найден.");
               return;
             }
 
@@ -77,7 +74,7 @@ jobs:
                 studentsData[currentDay] = {};
               } 
               else if (indent === 2 && cleanText.endsWith(':')) {
-                currentGroup = cleanText.slice(0, -1).replace(/['"]/g, '').trim();
+                currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                 studentsData[currentDay][currentGroup] = [];
               } 
               else if (indent === 4 && cleanText.startsWith('-')) {
@@ -88,70 +85,73 @@ jobs:
               }
             });
 
-            // Узнаем, сколько всего групп запланировано в расписании на этот день недели
-            const scheduleGroups = studentsData[targetDay] ? Object.keys(studentsData[targetDay]) : [];
-            console.log(`Запланировано групп на ${targetDay}: ${scheduleGroups.length}. Отправлено учителем: ${filledTimes.length}`);
-            // 3. ПРОВЕРКА КОМПЛЕКТНОСТИ ДНЯ
+            const scheduleGroups = studentsData[targetDay] ? Object.keys(studentsData[targetDay]).sort() : [];
+            // 3. ПОДРОБНОЕ ЛОГИРОВАНИЕ И ПРОВЕКА КОМПЛЕКТНОСТИ
+            console.log("=== ЛОГ РОБОТА: ПРОВЕРКА РАСПИСАНИЯ ===");
+            console.log("Запланированные группы из YAML базы:", JSON.stringify(scheduleGroups));
+            
+            // Собираем данные из прилетевших файлов во временный объект
+            let tempJournal = {};
+            todaysFiles.forEach(file => {
+              const fileData = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8'));
+              tempJournal[fileData.time] = fileData;
+            });
+            
+            const filledTimes = Object.keys(tempJournal).sort();
+            console.log("Полученные группы с сайта за сегодня:", JSON.stringify(filledTimes));
+
+            // Если прилетели еще не все группы, которые есть в расписании на этот день
             if (filledTimes.length < scheduleGroups.length) {
-              console.log("День ещё не завершён. Ждём отправки остальных групп. Завершаем текущий шаг.");
+              console.log("=== СТАТУС СБОРКИ ===");
+              console.log(`Ожидаем остальные группы. Комплект не собран (${filledTimes.length} из ${scheduleGroups.length}). Завершаем шаг.`);
               return;
             }
 
-            console.log("Все группы за день успешно собраны! Генерируем финальный отчёт...");
+            console.log("=== СТАТУС СБОРКИ ===");
+            console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. СБОРКА ЕДИНОЙ ТАБЛИЦЫ ДЛЯ ДИСКУССИЙ С ВЫВОДОМ ПОДРОБНЫХ ЛОГОВ
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С ИСПРАВЛЕННЫМ ПОРЯДКОМ ИМЕН (1-2-3)
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
-            let markdownBody = `### 📅 Единый журнал посещений за ${formattedDate} (${firstReport.day})\n\n`;
+            let markdownBody = `### 📅 Единый журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
             markdownBody += `*Проверил и отправил преподаватель: **${teacherUsername}***\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
             markdownBody += `| :--- | :---: |\n`;
 
-            scheduleGroups.sort().forEach(time => {
+            scheduleGroups.forEach(time => {
               markdownBody += `| **⏰ ГРУППА ${time}** | |\n`;
               const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
               const permanentKids = studentsData[targetDay][time] || [];
 
-              // ВЫВОД ПОДРОБНЫХ ЛОГОВ ДЛЯ НАГЛЯДНОСТИ ФАКТОВ
-              console.log(`=== ОТЛАДКА ГРУППЫ ${time} ===`);
-              console.log(`Ученики из YAML-базы:`, JSON.stringify(permanentKids));
-              console.log(`Присланные галочки с сайта (present_permanent):`, JSON.stringify(groupData.present_permanent));
-              console.log(`Присланные новички (newbies):`, JSON.stringify(groupData.newbies));
-              console.log(`Присланные пробные (probation):`, JSON.stringify(groupData.probation));
-
-              // Отмечаем присутствующих постоянных детей
+              // Выводим учеников строго по порядку из базы данных
               permanentKids.forEach(kid => {
-                const isPresent = groupData.present_permanent.includes(kid);
+                // Продвинутое сравнение строк без учета невидимых пробелов и точек
+                const isPresent = groupData.present_permanent.some(p => p.trim().replace(/\.\(/, '').toLowerCase() === kid.trim().replace(/\.\)/, '').toLowerCase());
+                
                 if (isPresent) {
                   markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
+                } else {
+                  markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
                 }
               });
 
-              // Добавляем новых постоянных новичков
+              // Добавляем новичков в конец этой конкретной группы
               if (groupData.newbies && groupData.newbies.length > 0) {
                 groupData.newbies.forEach(newbie => {
                   markdownBody += `| ${newbie} | 🟢 Присутствовал (Новичок) |\n`;
                 });
               }
 
-              // Добавляем временных пробных детей
+              // Добавляем временных пробных в конец этой конкретной группы
               if (groupData.probation && groupData.probation.length > 0) {
                 groupData.probation.forEach(prob => {
                   markdownBody += `| ${prob} | 🔵 Присутствовал (Пробное) |\n`;
                 });
               }
-
-              // Отмечаем отсутствующих постоянных детей
-              permanentKids.forEach(kid => {
-                const isPresent = groupData.present_permanent.includes(kid);
-                if (!isPresent) {
-                  markdownBody += `| ${kid} | 🔴 Не присутствовал |\n`;
-                }
-              });
             });
 
-            // 5. ОТПРАВКА КОММЕНТАРИЯ В GitHub Discussions №38
+            // 5. ПУБЛИКАЦИЯ В GitHub Discussions №38
             const queryGetId = `query {
               repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
                 discussion(number: 38) { id }
@@ -168,14 +168,15 @@ jobs:
             await github.graphql(mutationAddComment);
             console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
 
-            // 6. ОБНОВЛЕНИЕ YAML БАЗЫ ДЕТЕЙ (ТОЛЬКО ПОСТОЯННЫЕ НОВИЧКИ)
+            // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ
             let hasNewbies = false;
             filledTimes.forEach(time => {
               if (tempJournal[time].newbies && tempJournal[time].newbies.length > 0) hasNewbies = true;
             });
 
             if (hasNewbies) {
-              console.log("Обнаружены постоянные новички. Записываем их в базу...");
+              console.log("=== ОБНОВЛЕНИЕ БАЗЫ ДАННЫХ ===");
+              console.log("Обнаружены постоянные новички. Вносим их в файл journal-students.yml...");
               let newLines = [];
               let insideDay = false;
               let insideGroup = false;
@@ -189,7 +190,7 @@ jobs:
                   insideDay = (trimmed.slice(0, -1).toLowerCase().trim() === targetDay);
                 }
                 if (insideDay && indent === 2 && trimmed.includes(':')) {
-                  const groupTimeClean = trimmed.split(':')[0].replace(/['"]/g, '').trim();
+                  const groupTimeClean = trimmed.split(':')[0].replace(/"/g, '').replace(/'/g, '').trim();
                   insideGroup = tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0;
                   
                   newLines.push(line);
@@ -198,6 +199,7 @@ jobs:
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
                       if (!currentPermanent.includes(newbie)) {
                         newLines.push(`    - ${newbie}`);
+                        console.log(`Робот записал новичка: ${newbie} в группу ${groupTimeClean}`);
                       }
                     });
                   }
@@ -208,31 +210,32 @@ jobs:
               fs.writeFileSync(yamlPath, newLines.join('\n'), 'utf8');
             }
 
-            // 7. ЗАЧИСТКА: Удаляем временный файл с диска виртуальной машины
-            fs.unlinkSync(tempPath);
-            console.log("Временный файл удален локально.");
-
-      # 8. ФИНАЛЬНЫЙ КОММИТ ОТ ИМЕНИ ПРЕПОДАВАТЕЛЯ И ЗАЧИСТКА В РЕПОЗИТОРИИ
-      - name: Push Base Updates and Delete Temp File from Repo
+      // 7. НАДЁЖНЫЙ БАШ-СКРИПТ ДЛЯ УЗНАВАНИЯ ИМЕНИ, УДАЛЕНИЯ МУСОРА И КОММИТА
+      - name: Commit Base Updates and Purge Temp Files
         run: |
-          node -e "
+          # Вытаскиваем имя преподавателя из первого попавшегося файла группы через Node.js
+          TEACHER_NAME=\$(node -e "
             const fs = require('fs');
             try {
-              const data = JSON.parse(fs.readFileSync('_data/temp-journal.json', 'utf8'));
-              const firstKey = Object.keys(data)[0];
-              console.log(data[firstKey].teacher_username);
+              const files = fs.readdirSync('_data').filter(f => f.startsWith('journal-') && f.endsWith('.json'));
+              if (files.length > 0) {
+                const data = JSON.parse(fs.readFileSync('_data/' + files[0], 'utf8'));
+                console.log(data.teacher_username);
+              } else {
+                console.log('GitHub Academic Robot');
+              }
             } catch(e) {
               console.log('GitHub Academic Robot');
             }
-          " > t_name.txt
+          ")
           
-          TEACHER_NAME=$(cat t_name.txt)
-          rm -f t_name.txt
+          echo "Автор коммита: \$TEACHER_NAME"
           
-          git config --global user.name "$TEACHER_NAME"
+          git config --global user.name "\$TEACHER_NAME"
           git config --global user.email "actions@github.com"
           
-          git rm -f _data/temp-journal.json || true
+          # Начисто удаляем все временные файлы групп из репозитория
+          git rm -f _data/journal-*.json || true
           git add _data/journal-students.yml
           
-          git commit -m "Сводный журнал посещаемости за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для коммита"
+          git commit -m "Сводный журнал за день от \$TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"

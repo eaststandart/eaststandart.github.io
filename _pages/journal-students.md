@@ -272,7 +272,7 @@ permalink: /admin-journal/
 
         // Шаг 3: Отправляем или обновляем файл на GitHub
         // Адрес отправки: https://api . github . com/repos/owner/name/contents/_attendance/filename
-        return fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+        return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
           method: "PUT",
           headers: {
             "Authorization": `token ${accessToken}`,

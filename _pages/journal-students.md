@@ -77,7 +77,7 @@ permalink: /admin-journal/
     document.getElementById("btn-login").innerText = "Проверка пароля...";
 
     // Проверяем ключ, делая запрос к официальному API профиля
-    fetch("https://api .github.com/user", {
+    fetch("https://api.github.com/user", {
       headers: { "Authorization": `token ${tokenValue}` }
     })
     .then(response => {

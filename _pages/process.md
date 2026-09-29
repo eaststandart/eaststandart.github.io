@@ -10,7 +10,7 @@ permalink: /process/
 emoji: "🎨"
 keywords: {техничекское творчество, creative process}
 ---
- 
+
 
 ---
 

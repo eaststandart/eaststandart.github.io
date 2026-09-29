@@ -68,17 +68,24 @@ jobs:
             lines.forEach(line => {
               const trimmed = line.trimEnd();
               if (!trimmed || trimmed.startsWith('#')) return;
+              
               const indent = line.search(/\S/);
-              if (indent === 0 && trimmed.endsWith(':')) {
-                currentDay = trimmed.slice(0, -1).toLowerCase().trim();
+              const cleanText = trimmed.trim();
+
+              if (indent === 0 && cleanText.endsWith(':')) {
+                currentDay = cleanText.slice(0, -1).toLowerCase().trim();
                 studentsData[currentDay] = {};
-              } else if (indent === 2 && trimmed.includes(':')) {
-                // Исправлено с добавлением индекса [0] перед очисткой строки
-                currentGroup = trimmed.split(':').slice(0, 2).join(':').replace(/['"]/g, '').trim();
+              } 
+              else if (indent === 2 && cleanText.endsWith(':')) {
+                // Полностью очищаем имя группы от любых кавычек и двоеточий
+                currentGroup = cleanText.slice(0, -1).replace(/['"]/g, '').trim();
                 studentsData[currentDay][currentGroup] = [];
-              } else if (indent === 4 && trimmed.startsWith('-')) {
-                const name = trimmed.substring(trimmed.indexOf('-') + 1).trim();
-                if (currentDay && currentGroup) studentsData[currentDay][currentGroup].push(name);
+              } 
+              else if (indent === 4 && cleanText.startsWith('-')) {
+                const name = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+                if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
+                  studentsData[currentDay][currentGroup].push(name);
+                }
               }
             });
 

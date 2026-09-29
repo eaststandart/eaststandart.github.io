@@ -74,7 +74,7 @@ permalink: /admin-journal/
     document.getElementById("btn-login").disabled = true;
     document.getElementById("btn-login").innerText = "Запрос кода...";
 
-    fetch("https://github.com", {
+    fetch("https://github.com/login/oauth/device/code", {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -109,7 +109,7 @@ permalink: /admin-journal/
     if (loginInterval) clearInterval(loginInterval);
 
     loginInterval = setInterval(() => {
-      fetch("https://github.com", {
+      fetch("https://github.com/login/oauth/access_token", {
         method: "POST",
         headers: {
           "Accept": "application/json",

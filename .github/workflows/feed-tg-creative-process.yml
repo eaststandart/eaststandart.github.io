@@ -11,7 +11,7 @@ jobs:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. Проверка разрешенных веток (Дискуссия №83)
+          # 1. Проверка разрешенных веток (Жестко под ветку №83)
           ALLOWED_DISCUSSIONS="83"
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           
@@ -27,7 +27,7 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК П ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
@@ -37,24 +37,17 @@ jobs:
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
           # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
-          # Превращаем картинки в базовые маркеры [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
           
-          # Находим обычные ссылки на video-файлы (.webm, .mp4, .mov, .avi) и тоже превращаем их в [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
 
-          # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги div
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|code\|details\|summary\|video)[^>]*>||gi')
 
-          # ТОЧЕЧНОЕ УНИЧТОЖЕНИЕ МУСОРА: Вычищаем скрытый символ узкого пробела
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed 's/&thinsp;//g')
-
-          # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
-          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
@@ -65,69 +58,35 @@ jobs:
             }
           }')
 
-          # Перевод маркдауна в HTML
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
 
-          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА: Схлопываем избыточные пустые строки
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
 
-          # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
-          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
+          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ] || [ "$COMPRESSED_BODY" = "$'\n'" ]; then
             COMPRESSED_BODY="<i>Медиа-вложение</i>"
           fi
 
-          # Сохраняем итоговый текст в память робота
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card to Telegram Topic via Python
+      - name: Send Standardized Card to Telegram (HTML Pro Style)
         if: env.PROCEED == 'true'
-        shell: python
-        run: |
-          import urllib.request
-          import urllib.parse
-          import json
-          import os
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          # ⚡ СЕКРЕТНЫЙ ТРЮК: Склеиваем ID группы и ID ветки через нижнее подчеркивание
+          to: "${{ secrets.TELEGRAM_CHAT_ID }}_45"
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          disable_web_page_preview: false
+          message: |
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
-          # БЕЗОПАСНО ЗАБИРАЕМ ДАННЫЕ ИЗ СИСТЕМНОЙ ПАМЯТИ
-          token = """${{ secrets.TELEGRAM_BOT_TOKEN }}""".strip()
-          chat_id = """${{ secrets.TELEGRAM_CHAT_ID }}""".strip()
-          media_url = """${{ steps.parse_data.outputs.media_url }}""".strip()
-          clean_text = """${{ steps.parse_data.outputs.clean_text }}""".strip()
-          title = """${{ github.event.discussion.title }}""".strip()
-          number = """${{ github.event.discussion.number }}""".strip()
-          author = """${{ github.event.comment.user.login }}""".strip()
-          comment_url = """${{ github.event.comment.html_url }}""".strip()
+            💬 <b>Текст:</b>
+            ${{ steps.parse_data.outputs.clean_text }}
 
-          # ФОРМИРУЕМ МОНОЛИТНЫЙ HTML ТЕКСТ КАРТОЧКИ
-          message_text = (
-              f'<a href="{media_url}">&#8203;</a>📅 <b>{title}</b> (Ветка #{number})\n\n'
-              f'💬 <b>Текст:</b>\n{clean_text}\n\n'
-              f'👤 <b>Автор:</b> @{author}\n'
-              f'───────────────────\n'
-              f'📥 <a href="{comment_url}">Посмотреть и ответить на GitHub</a>'
-          )
-
-          # ⚡ ИСПРАВЛЕНО: Безопасно кодируем токен, чтобы двоеточие не ломало интернет-ссылку URL
-          safe_token = urllib.parse.quote(token)
-          url = f"https://telegram.org{safe_token}/sendMessage"
-          
-          payload = {
-              "chat_id": chat_id,
-              "message_thread_id": 45,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": False
-          }
-
-          # НАДЕЖНАЯ ОТПРАВКА В TELEGRAM API
-          req = urllib.request.Request(
-              url, 
-              data=json.dumps(payload).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
-          )
-          with urllib.request.urlopen(req) as response:
-              print("Telegram Response Status:", response.getcode())
+            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
+            ───────────────────
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>

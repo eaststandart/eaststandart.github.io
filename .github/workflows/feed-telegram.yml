@@ -43,17 +43,16 @@ jobs:
           
           # Удаляем любые обертки картинок и скрытый мусорный пробел &thinsp;
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|thinsp\|code)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code)[^>]*>||gi')
 
-          # ⚡ ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
+          # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
           # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
-          # Построчно удаляем дубликаты маркеров [Медиа]
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
-              if (!media) { print "\n<b>[Медиа]</b>"; media = 1 }
+              if (!media) { print "<b>[Медиа]</b>"; media = 1 }
             } else {
               print $0
               if (val != "") media = 0
@@ -81,10 +80,12 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html
           disable_web_page_preview: false
+          # 💡 ПРЯМОЙ ПЕРЕНОС: Ставим пустую строку между словом Текст: и самим текстом
           message: |
             <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
+            
             ${{ steps.parse_data.outputs.clean_text }}
 
             👤 <b>Автор:</b> @${{ github.event.comment.user.login }}

@@ -9,6 +9,7 @@ on:
       - 'LICENSE.txt'
       - 'CHANGELOG.md'
       - 'ARCHITECTURE.md'
+      - 'ROADMAP.md'
       - '_data/*-journal-attendance-*.json'
 
 permissions:

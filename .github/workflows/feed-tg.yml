@@ -1,133 +1,42 @@
-name: Broadcast Creative Process to Telegram
+name: Broadcast Discussion Comments to Telegram
 
 on:
   discussion_comment:
     types: [created]
 
 jobs:
-  telegram-creative-process:
+  telegram-comments:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter and Clean Message Data
-        id: parse_data
+      - name: Filter Specific Discussions and Send
         run: |
-          # 1. Жесткая цифровая проверка дискуссии №83
-          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
+          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Дописывайте номера через пробел):
+          ALLOWED_DISCUSSIONS="38"
           
-          if [ "$CLEAN_NUM" != "83" ]; then
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          
+          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "Ветка #$CURRENT_DISCUSSION разрешена. Отправляем комментарий..."
+            echo "PROCEED=true" >> $GITHUB_ENV
+          else
+            echo "Ветка #$CURRENT_DISCUSSION не входит в список разрешенных. Пропускаем."
             echo "PROCEED=false" >> $GITHUB_ENV
-            exit 0
-          fi
-          echo "PROCEED=true" >> $GITHUB_ENV
-
-          # 2. Забираем сырой текст комментария
-          RAW_BODY=$(cat << 'EOF'
-          ${{ github.event.comment.body }}
-          EOF
-          )
-
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Раздельный бронебойный поиск)
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
-          if [ -z "$URL" ]; then
-            URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
-          fi
-          if [ -z "$URL" ]; then
-            URL="${{ github.event.comment.html_url }}"
           fi
 
-          echo "media_url=$URL" >> $GITHUB_OUTPUT
-
-          # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
-          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
-
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
-
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed 's/&thinsp;//g')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
-
-          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
-            val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
-            if (val == "<b>[Медиа]</b>") {
-              if (!media) { print "<b>[Медиа]</b>"; media = 1 }
-            } else {
-              print $0
-              if (val != "") media = 0
-            }
-          }')
-
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
-
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
-
-          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ] || [ "$COMPRESSED_BODY" = "$'\n'" ]; then
-            COMPRESSED_BODY="<i>Медиа-вложение</i>"
-          fi
-
-          echo "clean_text<<EOF" >> $GITHUB_OUTPUT
-          echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Send Standardized Card to Telegram Topic via Python (Broboneoyniy Mode)
+      - name: Send Standardized Card to Telegram
         if: env.PROCEED == 'true'
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
-          CLEAN_TEXT: ${{ steps.parse_data.outputs.clean_text }}
-          DISC_TITLE: ${{ github.event.discussion.title }}
-          AUTHOR: ${{ github.event.comment.user.login }}
-          COMMENT_URL: ${{ github.event.comment.html_url }}
-        run: |
-          import urllib.request
-          import json
-          import os
-          import sys
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          disable_web_page_preview: false # Включает авто-превью фото и видео под текстом
+          message: |
+            **${{ github.event.discussion.title }}** (Дискуссии #${{ github.event.discussion.number }})
 
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          
-          # Оставляем только важные строки списков
-          info_lines = []
-          for line in os.environ.get("CLEAN_TEXT", "").split("\n"):
-              if any(x in line for x in ["В кадре:", "Преподаватель:", "Место:", "Источник:"]):
-                  info_lines.append(line.strip())
-          
-          clean_info = "\n".join(info_lines)
+            💬 **Текст:**
+            ${{ github.event.comment.body }}
 
-          # Сборка финального макета без календаря и с восклицательным знаком
-          message_text = (
-              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{os.environ.get("DISC_TITLE")}</b>\n\n'
-              f'📢 В репозитории клуба опубликованы новые media-материалы!\n\n'
-              f'{clean_info}\n\n'
-              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
-          )
-
-          base_host = "https://telegram.org"
-          endpoint = "/bot" + token + "/sendMessage"
-          url = base_host + endpoint
-          
-          payload = {
-              "chat_id": chat_id,
-              "message_thread_id": 45,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": False
-          }
-
-          req = urllib.request.Request(
-              url, 
-              data=json.dumps(payload).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
-          )
-          
-          try:
-              with urllib.request.urlopen(req) as response:
-                  print("HTTP Status Code:", response.getcode())
-          except Exception as e:
-              sys.exit(1)
+            👤 **Автор:** @${{ github.event.comment.user.login }}
+            ───────────────────
+            📥 [Посмотреть и ответить на GitHub](${{ github.event.comment.html_url }})

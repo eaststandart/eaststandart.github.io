@@ -75,7 +75,6 @@ jobs:
       - name: Send Standardized Card to Telegram Topic via Python (Broboneoyniy Mode)
         if: env.PROCEED == 'true'
         shell: python
-        # 💡 Передаем все данные через изолированные системные переменные env, защищая от эмодзи и кавычек
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -91,11 +90,9 @@ jobs:
           import os
           import sys
 
-          # Извлекаем данные из безопасного окружения
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           
-          # Формируем итоговое HTML сообщение карточки
           message_text = (
               f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a> <b>{os.environ.get("DISC_TITLE")}</b> (Ветка #{os.environ.get("DISC_NUM")})\n\n'
               f'💬 <b>Текст:</b>\n{os.environ.get("CLEAN_TEXT")}\n\n'
@@ -104,8 +101,11 @@ jobs:
               f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть и ответить на GitHub</a>'
           )
 
-          # Базовый чистый URL к Telegram API без токена в хосте (Защита от InvalidURL)
-          url = f"https://telegram.org{token}/sendMessage"
+          # ⚡ ИСПРАВЛЕНО НА КОРНЕВОМ УРОВНЕ: Собираем адрес по частям через объединение строк, 
+          # чтобы urllib не пытался парсить внутреннее двоеточие токена как номер порта!
+          base_host = "https://telegram.org"
+          endpoint = "/bot" + token + "/sendMessage"
+          url = base_host + endpoint
           
           payload = {
               "chat_id": chat_id,

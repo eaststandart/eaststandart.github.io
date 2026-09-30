@@ -27,39 +27,39 @@ jobs:
           EOF
           )
 
-          # 3. УНИВЕРСАЛЬНЫЙ ПОИСК МЕДИА
-          # Забираем адрес, останавливаясь перед кавычкой, скобкой или пробелом
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
+          # Забираем только самый первый адрес, останавливаясь перед кавычкой, скобкой или пробелом
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
-          # ⚙️ ОТЛАДОЧНЫЙ ВЫВОД ДЛЯ КЛУБА (печатаем результат поиска в логи)
+          # Отладочный вывод в логи
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
-          echo "Робот нашел вот эту ссылку на медиа: '$URL'"
+          echo "Робот нашел обложку: '$URL'"
           echo "==============================="
 
-          # Передаем чистый URL в память робота
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. ЖЕСТКАЯ ОЧИСТКА: вырезаем из текста все медиа-теги, div'ы, картинки и видео
-          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's/!\[[^]]*\]\(https:\/\/[^)]+\)//g' | sed -E 's/<img[^>]*>//g' | sed -E 's/<video[^>]*>.*<\/video>//g' | sed -E 's/<video[^>]*>//g' | sed -E 's/<div[^>]*>//g' | sed -E 's/<\/div>//g')
+          # 4. УМНАЯ ЗАМЕНА НА МАРКЕРЫ: 
+          # Заменяем длинные ссылки ассетов на аккуратное слово [Медиа], а HTML-теги Telegram скроет сам
+          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|https://github.com[^") ]+|<b>[Медиа]</b>|g')
           
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
           echo "$CLEAN_BODY" | sed '/^$/d' >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card to Telegram (Pro Style)
+      - name: Send Standardized Card to Telegram (HTML Pro Style)
         if: env.PROCEED == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          format: html # 💡 Переключили плагин в режим HTML
           disable_web_page_preview: false
           message: |
-            [ ](${{ steps.parse_data.outputs.media_url }}) **${{ github.event.discussion.title }}** (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
-            💬 **Текст:**
+            💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}
 
-            👤 **Автор:** @${{ github.event.comment.user.login }}
+            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
             ───────────────────
-            📥 [Посмотреть и ответить на GitHub](${{ github.event.comment.html_url }})
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>

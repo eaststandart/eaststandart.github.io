@@ -83,26 +83,48 @@ jobs:
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card Directly to Telegram Topic via curl
+      - name: Send Standardized Card to Telegram Topic via Python
         if: env.PROCEED == 'true'
+        shell: python
         run: |
-          # 💡 СОБИРАЕМ ТЕКСТ ШАБЛОНА СООБЩЕНИЯ В ПЕРЕМЕННУЮ
-          TEXT_MESSAGE=$(cat << 'EOF'
-          <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+          import urllib.request
+          import json
+          import os
 
-          💬 <b>Текст:</b>
-          ${{ steps.parse_data.outputs.clean_text }}
+          # 💡 БЕЗОПАСНО ЗАБИРАЕМ ДАННЫЕ ИЗ СИСТЕМНОЙ ПАМЯТИ
+          token = """${{ secrets.TELEGRAM_BOT_TOKEN }}""".strip()
+          chat_id = """${{ secrets.TELEGRAM_CHAT_ID }}""".strip()
+          media_url = """${{ steps.parse_data.outputs.media_url }}""".strip()
+          clean_text = """${{ steps.parse_data.outputs.clean_text }}""".strip()
+          title = """${{ github.event.discussion.title }}""".strip()
+          number = """${{ github.event.discussion.number }}""".strip()
+          author = """${{ github.event.comment.user.login }}""".strip()
+          comment_url = """${{ github.event.comment.html_url }}""".strip()
 
-          👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
-          ───────────────────
-          📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
-          EOF
+          # ФОРМИРУЕМ МОНОЛИТНЫЙ HTML ТЕКСТ КАРТОЧКИ
+          message_text = (
+              f'<a href="{media_url}">&#8203;</a> <b>{title}</b> (Ветка #{number})\n\n'
+              f'💬 <b>Текст:</b>\n{clean_text}\n\n'
+              f'👤 <b>Автор:</b> @{author}\n'
+              f'───────────────────\n'
+              f'📥 <a href="{comment_url}">Посмотреть и ответить на GitHub</a>'
           )
 
-          # ⚡ БРОНЕБОЙНЫЙ ПРЯМОЙ ЗАПРОС К TELEGRAM API С УКАЗАНИЕМ ВЕТКИ (THREAD ID)
-          curl -s -X POST "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d "message_thread_id=45" \
-            -d "parse_mode=HTML" \
-            -d "disable_web_page_preview=false" \
-            --data-urlencode "text=$TEXT_MESSAGE"
+          # ПАРАМЕТРЫ ЗАПРОСА С УКАЗАНИЕМ ВЕТКИ (THREAD ID: 45)
+          url = f"https://telegram.org{token}/sendMessage"
+          payload = {
+              "chat_id": chat_id,
+              "message_thread_id": 45,
+              "text": message_text,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": False
+          }
+
+          # НАДЕЖНАЯ ОТПРАВКА В TELEGRAM API
+          req = urllib.request.Request(
+              url, 
+              data=json.dumps(payload).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          with urllib.request.urlopen(req) as response:
+              print("Telegram Response Status:", response.getcode())

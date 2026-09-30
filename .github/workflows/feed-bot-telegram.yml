@@ -60,9 +60,9 @@ jobs:
 
           if disc_num == "83":
               payload["message_thread_id"] = 45  # Добавляем квартиру (топик), если это 83 ветка
-              announcement = "📢 В Дискуссиях клуба обновлён журнал посещений!"
-          elif disc_num == "38":
               announcement = "📢 В Дискуссиях клуба опубликованы новые медиа-материалы!"
+          elif disc_num == "38":
+              announcement = "📢 В Дискуссиях клуба обновлён журнал посещений!"
           else:
               sys.exit(0)
 

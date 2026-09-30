@@ -27,7 +27,7 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
+          # 3. ПОИСК П ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
@@ -88,10 +88,11 @@ jobs:
         shell: python
         run: |
           import urllib.request
+          import urllib.parse
           import json
           import os
 
-          # 💡 БЕЗОПАСНО ЗАБИРАЕМ ДАННЫЕ ИЗ СИСТЕМНОЙ ПАМЯТИ
+          # БЕЗОПАСНО ЗАБИРАЕМ ДАННЫЕ ИЗ СИСТЕМНОЙ ПАМЯТИ
           token = """${{ secrets.TELEGRAM_BOT_TOKEN }}""".strip()
           chat_id = """${{ secrets.TELEGRAM_CHAT_ID }}""".strip()
           media_url = """${{ steps.parse_data.outputs.media_url }}""".strip()
@@ -103,15 +104,17 @@ jobs:
 
           # ФОРМИРУЕМ МОНОЛИТНЫЙ HTML ТЕКСТ КАРТОЧКИ
           message_text = (
-              f'<a href="{media_url}">&#8203;</a> <b>{title}</b> (Ветка #{number})\n\n'
+              f'<a href="{media_url}">&#8203;</a>📅 <b>{title}</b> (Ветка #{number})\n\n'
               f'💬 <b>Текст:</b>\n{clean_text}\n\n'
               f'👤 <b>Автор:</b> @{author}\n'
               f'───────────────────\n'
               f'📥 <a href="{comment_url}">Посмотреть и ответить на GitHub</a>'
           )
 
-          # ПАРАМЕТРЫ ЗАПРОСА С УКАЗАНИЕМ ВЕТКИ (THREAD ID: 45)
-          url = f"https://telegram.org{token}/sendMessage"
+          # ⚡ ИСПРАВЛЕНО: Безопасно кодируем токен, чтобы двоеточие не ломало интернет-ссылку URL
+          safe_token = urllib.parse.quote(token)
+          url = f"https://telegram.org{safe_token}/sendMessage"
+          
           payload = {
               "chat_id": chat_id,
               "message_thread_id": 45,

@@ -101,9 +101,8 @@ jobs:
               f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть и ответить на GitHub</a>'
           )
 
-          # ⚡ ИСПРАВЛЕНО НА КОРНЕВОМ УРОВНЕ: Собираем адрес по частям через объединение строк, 
-          # чтобы urllib не пытался парсить внутреннее двоеточие токена как номер порта!
-          base_host = "https://telegram.org"
+          # ⚡ ИСПРАВЛЕНО: Теперь адрес ведет строго на боевой API сервер Телеграма
+          base_host = "https://api.telegram.org"
           endpoint = "/bot" + token + "/sendMessage"
           url = base_host + endpoint
           

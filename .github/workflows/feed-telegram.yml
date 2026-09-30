@@ -36,20 +36,14 @@ jobs:
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. УМНАЯ ОЧИСТКА И УЛЬТРА-СЖАТИЕ БЕЗ СИНТАКСИЧЕСКИХ ОШИБОК
+          # 4. УМНАЯ ОЧИСТКА И УЛЬТРА-СЖАТИЕ ЧЕРЕЗ РЕЖИМ СТРИМА (-z)
           # Превращаем громоздкие HTML-блоки картинок и Markdown в слово [Медиа]
-          FLAT_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
-          FLAT_BODY=$(echo "$FLAT_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
-          FLAT_BODY=$(echo "$FLAT_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
+          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
           
-          # Заменяем физические переносы строк на текстовую метку _BR_ для временного выравнивания
-          FLAT_LINES=$(echo "$FLAT_BODY" | tr '\n' ' ' | sed 's/ / _BR_ /g')
-          
-          # Намертво схлопываем кучу идущих подряд маркеров [Медиа] в ОДИН
-          COMPRESSED_LINE=$(echo "$FLAT_LINES" | sed -E 's|(<b>\[Медиа\]<\/b>[[:space:]_BR_]*)+|<b>[Медиа]</b> |g')
-          
-          # ИСПРАВЛЕНО (Строка 52): Возвращаем переносы строк обратно с помощью чистого синтаксиса sed
-          COMPRESSED_BODY=$(echo "$COMPRESSED_LINE" | sed 's/ _BR_ /\n/g')
+          # ⚡ НАДЕЖНОЕ СХЛОПЫВАНИЕ: Спрессовываем идущие подряд маркеры в один, вообще не ломая обычные слова
+          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | sed -z -E 's|(<b>\[Медиа\]<\/b>[[:space:]]*)+|<b>[Медиа]</b>\n|g')
 
           # Удаляем случайные пустые строки на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
@@ -73,7 +67,7 @@ jobs:
           format: html
           disable_web_page_preview: false
           message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}

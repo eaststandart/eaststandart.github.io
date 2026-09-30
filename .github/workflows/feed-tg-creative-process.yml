@@ -27,10 +27,11 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Универсальный и защищенный)
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://(github\.com\|github-production-user-asset[^") ]+)' | head -n 1)
-          
-          # Защита: Если пост без картинок и видео, ставим ссылку на сам GitHub, чтобы карточка не ломалась
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Раздельный бронебойный поиск)
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
+          if [ -z "$URL" ]; then
+            URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
+          fi
           if [ -z "$URL" ]; then
             URL="${{ github.event.comment.html_url }}"
           fi
@@ -48,7 +49,7 @@ jobs:
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
 
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|code\|details\|summary\|video)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
 
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed 's/&thinsp;//g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
@@ -86,7 +87,7 @@ jobs:
           format: html
           disable_web_page_preview: false
           message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}

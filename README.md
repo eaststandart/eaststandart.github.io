@@ -15,11 +15,9 @@
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a>
 </p>
 
-![GitHub Pages Status](https://img.shields.io.svg/?label=Сайт&style=flat-square&color=success)
-
-[![GitHub Pages Status](https://img.shields.io/badge/Сайт-работает-success .svg?style=flat-square)](https://eaststandart.github.io)
-[![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io .svg?label=Релиз&style=flat-square&color=blue)](https://eaststandart.github.io)
-[![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange .svg?style=flat-square&logo=github)](https://eaststandart.github.io)
+[![GitHub Pages Status](https://img.shields.io/badge/Сайт-работает-success.svg?style=flat-square)](https://eaststandart.github.io/)
+[![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com/eaststandart/eaststandart.github.io/releases/)
+[![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
 
 <p align="left">
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a> • 

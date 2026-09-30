@@ -66,9 +66,8 @@ jobs:
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
 
-          # ⚡ ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА ПО ВАШЕЙ ЛОГИКЕ: Схлопываем ВСЕ пустые строки в одну
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
+          # ⚡ ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА ПО ВАШЕЙ ЛОГИКЕ: Схлопываем только избыточные пустые строки
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{3,}/\n\n/g')
 
           # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
           if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
@@ -94,6 +93,6 @@ jobs:
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}
 
-            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
+            👤 <b>Author:</b> @${{ github.event.comment.user.login }}
             ───────────────────
             📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>

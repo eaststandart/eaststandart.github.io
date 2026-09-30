@@ -13,71 +13,71 @@ jobs:
         run: |
           # 1. Проверка разрешенных веток
           ALLOWED_DISCUSSIONS="38"
-          CURRENT_DISCUSSION="\${{ github.event.discussion.number }}"
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           
-          if ! echo "\(ALLOWED_DISCUSSIONS" \vert{} grep -qw "\)CURRENT_DISCUSSION"; then
-            echo "PROCEED=false" >> \$GITHUB_ENV
+          if ! echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "PROCEED=false" >> $GITHUB_ENV
             exit 0
           fi
-          echo "PROCEED=true" >> \$GITHUB_ENV
+          echo "PROCEED=true" >> $GITHUB_ENV
 
           # 2. Забираем сырой текст комментария
-          RAW_BODY=\((cat << 'EOF'\){{ github.event.comment.body }}
+          RAW_BODY=$(cat << 'EOF'
+          ${{ github.event.comment.body }}
           EOF
           )
 
           # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
-          URL=(echo "RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
-          echo "Робот нашел обложку: '\$URL'"
+          echo "Робот нашел обложку: '$URL'"
           echo "==============================="
 
-          echo "media_url=URL" >> GITHUB_OUTPUT
+          echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. УМНАЯ ОЧИСТКА И УЛЬТРА-СЖАТИЕ БЕЗ ЦИКЛОВ
-          # Заменяем все переносы строк на уникальный маркер [NEWLINE], чтобы текст временно стал плоским
-          FLAT_BODY=(echo "RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
-          FLAT_BODY=(echo "FLAT_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
-          FLAT_BODY=(echo "FLAT_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
+          # 4. УМНАЯ ОЧИСТКА И УЛЬТРА-СЖАТИЕ БЕЗ СИНТАКСИЧЕСКИХ ОШИБОК
+          # Превращаем громоздкие HTML-блоки картинок и Markdown в слово [Медиа]
+          FLAT_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
+          FLAT_BODY=$(echo "$FLAT_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
+          FLAT_BODY=$(echo "$FLAT_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
           
-          # Заменяем физические переносы строк на текстовую метку `_BR_`
-          FLAT_LINES=(echo "FLAT_BODY" | tr '\n' ' ' | sed 's/ / _BR_ /g')
+          # Заменяем физические переносы строк на текстовую метку _BR_ для временного выравнивания
+          FLAT_LINES=$(echo "$FLAT_BODY" | tr '\n' ' ' | sed 's/ / _BR_ /g')
           
-          # Жестко схлопываем любые идущие подряд маркеры [Медиа] (даже если между ними были переносы строк или пробелы) в ОДИН
-          COMPRESSED_LINE=(echo "FLAT_LINES" | sed -E 's|(<b>\[Медиа\]<\/b>[[:space:]_BR_]*)+|<b>[Медиа]</b> |g')
+          # Намертво схлопываем кучу идущих подряд маркеров [Медиа] в ОДИН
+          COMPRESSED_LINE=$(echo "$FLAT_LINES" | sed -E 's|(<b>\[Медиа\]<\/b>[[:space:]_BR_]*)+|<b>[Медиа]</b> |g')
           
-          # Возвращаем нормальные переносы строк обратно на место метки _BR_
-          COMPRESSED_BODY=(echo "COMPRESSED_LINE" | sed 's/ _BR_ /\
-/g')
+          # ИСПРАВЛЕНО (Строка 52): Возвращаем переносы строк обратно с помощью чистого синтаксиса sed
+          COMPRESSED_BODY=$(echo "$COMPRESSED_LINE" | sed 's/ _BR_ /\n/g')
 
-          # Финальное удаление случайных пустых строк на выходе
-          COMPRESSED_BODY=\$(echo "\(COMPRESSED_BODY" \vert{} sed 's/[[:space:]]*\)//' | tr -s '\n')
+          # Удаляем случайные пустые строки на выходе
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
-          # Проверяем, что текст не пустой (если пустой, ставим заглушку, чтобы не упал экшен)
-          if [ -z "\$COMPRESSED_BODY" ]; then
-            COMPRESSED_BODY="<i>Медиа-вложение без текста</i>"
+          # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
+          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
+            COMPRESSED_BODY="<i>Медиа-вложение</i>"
           fi
 
           # Сохраняем итоговый текст в память робота
-          echo "clean_text<<EOF" >> \$GITHUB_OUTPUT
-          echo "\(COMPRESSED_BODY" >> \)GITHUB_OUTPUT
-          echo "EOF" >> \$GITHUB_OUTPUT
+          echo "clean_text<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send Standardized Card to Telegram (HTML Pro Style)
         if: env.PROCEED == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
-          to: \${{ secrets.TELEGRAM_CHAT_ID }}
-          token: \${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html
           disable_web_page_preview: false
           message: |
-            <a href="\${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>\({{ github.event.discussion.title }}</b> (Ветка #\){{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
-            \${{ steps.parse_data.outputs.clean_text }}
+            ${{ steps.parse_data.outputs.clean_text }}
 
-            👤 <b>Автор:</b> @\${{ github.event.comment.user.login }}
+            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
             ───────────────────
-            📥 <a href="\${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>

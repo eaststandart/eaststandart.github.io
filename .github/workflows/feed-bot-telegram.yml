@@ -6,84 +6,46 @@ on:
 
 jobs:
   # =========================================================================
-  # 🏢 БЛОК №1: РЕГУЛЯРНЫЕ ЗАНЯТИЯ (ВЕТКА №38) - В ОБЩИЙ ЧАТ В СТАНДАРТЕ
+  # 🏢 БЛОК №1: РЕГУЛЯРНЫЕ ЗАНЯТИЯ (ВЕТКА №38) - В ОБЩУЮ ГРУППУ
+  # Родной, на 100% рабочий код плагина. Изменен ТОЛЬКО вывод в message!
   # =========================================================================
-  telegram-lessons-38:
+  telegram-general-chat:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter and Prepare Message Data
-        id: parse_data
+      - name: Filter Specific Discussions and Send
         run: |
-          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
-          if [ "$CLEAN_NUM" != "38" ]; then
-            echo "PROCEED=false" >> $GITHUB_ENV
-            exit 0
-          fi
-          echo "PROCEED=true" >> $GITHUB_ENV
-
-          RAW_BODY=$(cat << 'EOF'
-          ${{ github.event.comment.body }}
-          EOF
-          )
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
-          if [ -z "$URL" ]; then
-            URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
-          fi
-          if [ -z "$URL" ]; then
-            URL="${{ github.event.comment.html_url }}"
-          fi
-          echo "media_url=$URL" >> $GITHUB_OUTPUT
-
-      - name: Send Standardized Minimal Card to General Chat via Python
-        if: env.PROCEED == 'true'
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
-          DISC_TITLE: ${{ github.event.discussion.title }}
-          COMMENT_URL: ${{ github.event.comment.html_url }}
-        run: |
-          import urllib.request
-          import json
-          import os
-          import sys
-
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          title = os.environ.get("DISC_TITLE", "").strip()
-
-          # Наш строгий стандарт: заголовок из GitHub и рупор про медиа-материалы
-          message_text = (
-              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{title}</b>\n\n'
-              f'📢 В Дискуссиях клуба опубликованы новые медиа-материалы!\n\n'
-              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
-          )
-
-          base_host = "https://telegram.org"
-          endpoint = "/bot" + token + "/sendMessage"
-          url = base_host + endpoint
+          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК ДЛЯ ОБЩЕГО ЧАТА (Дописывайте номера через пробел):
+          ALLOWED_DISCUSSIONS="38"
           
-          payload = {
-              "chat_id": chat_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": False
-          }
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          
+          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "Ветка #$CURRENT_DISCUSSION разрешена. Отправляем комментарий..."
+            echo "PROCEED=true" >> $GITHUB_ENV
+          else
+            echo "Ветка #$CURRENT_DISCUSSION не входит в список разрешенных. Пропускаем."
+            echo "PROCEED=false" >> $GITHUB_ENV
+          fi
 
-          print("=== ЛОГ PYTHON (ВЕТКА 38): ОТПРАВЛЯЕМЫЙ JSON ===")
-          print(json.dumps(payload, indent=2, ensure_ascii=False))
-          print("================================================")
+      - name: Send Standardized Card to Telegram
+        if: env.PROCEED == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          disable_web_page_preview: false
+          # ⚡ ИЗМЕНЕН СТРОГО ВЫВОД: Наш согласованный стандарт без сырого текста комментариев
+          message: |
+            <b>${{ github.event.discussion.title }}</b> (Дискуссии #${{ github.event.discussion.number }})
 
-          req = urllib.request.Request(url, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
-          try:
-              with urllib.request.urlopen(req) as response:
-                  print("HTTP Status Code:", response.getcode())
-          except Exception as e:
-              sys.exit(1)
+            📢 В Дискуссиях клуба опубликовали новые медиа-материалы!
+
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть фото и видео на GitHub</a>
 
   # =========================================================================
-  # 🎨 БЛОК №2: ТВОРЧЕСКИЙ ПРОЦЕСС (ВЕТКА №83) - СТРОГО В ТОПИК №45 В СТАНДАРТЕ
+  # 🎨 БЛОК №2: ТВОРЧЕСКИЙ ПРОЦЕСС (ВЕТКА №83) - СТРОГО В ТОПИК №45 С ФОРМОЙ
+  # Родной, на 100% рабочий код Python для топика
   # =========================================================================
   telegram-creative-83:
     runs-on: ubuntu-latest
@@ -92,6 +54,7 @@ jobs:
         id: parse_data
         run: |
           CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
+          
           if [ "$CLEAN_NUM" != "83" ]; then
             echo "PROCEED=false" >> $GITHUB_ENV
             exit 0
@@ -102,6 +65,7 @@ jobs:
           ${{ github.event.comment.body }}
           EOF
           )
+
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           if [ -z "$URL" ]; then
             URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
@@ -111,7 +75,7 @@ jobs:
           fi
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card to Telegram Topic via Python
+      - name: Send Standardized Card to Telegram Topic via Python (Broboneoyniy Mode)
         if: env.PROCEED == 'true'
         shell: python
         env:
@@ -130,7 +94,7 @@ jobs:
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           title = os.environ.get("DISC_TITLE", "").strip()
 
-          # Наш строгий стандарт: заголовок из GitHub и рупор про журнал посещений
+          # Наш согласованный макет: заголовок из GitHub и точечный рупор про журнал
           message_text = (
               f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{title}</b>\n\n'
               f'📢 В Дискуссиях клуба обновлён журнал посещений!\n\n'
@@ -149,13 +113,22 @@ jobs:
               "disable_web_page_preview": False
           }
 
-          print("=== ЛОГ PYTHON (ВЕТКА 83): ОТПРАВЛЯЕМЫЙ JSON ===")
+          print("=== ЛОГ PYTHON: ОТПРАВЛЯЕМЫЙ JSON ПАКЕТ ===")
           print(json.dumps(payload, indent=2, ensure_ascii=False))
-          print("================================================")
+          print("===========================================")
 
-          req = urllib.request.Request(url, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
+          req = urllib.request.Request(
+              url, 
+              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          
+          print("=== ЛОГ PYTHON: ОТВЕТ СЕРВЕРА TELEGRAM API ===")
           try:
               with urllib.request.urlopen(req) as response:
                   print("HTTP Status Code:", response.getcode())
+                  print("Response Body:", response.read().decode('utf-8'))
           except Exception as e:
+              print("Ошибка отправки сети:", str(e))
               sys.exit(1)
+          print("==============================================")

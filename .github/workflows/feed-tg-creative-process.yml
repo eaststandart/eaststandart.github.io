@@ -1,17 +1,17 @@
-name: Broadcast Master-Classes to Telegram
+name: Broadcast Creative Process to Telegram
 
 on:
   discussion_comment:
     types: [created]
 
 jobs:
-  telegram-master-classes:
+  telegram-creative-process:
     runs-on: ubuntu-latest
     steps:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. ⚙️ ФИЛЬТР: Пропускаем только комментарии из дискуссии №83
+          # 1. Проверка разрешенных веток (Дискуссия №83)
           ALLOWED_DISCUSSIONS="83"
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           
@@ -37,16 +37,19 @@ jobs:
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
           # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
-          # Превращаем картинки (HTML и Markdown) в базовые маркеры [Медиа]
+          # Превращаем картинки в базовые маркеры [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
           
           # Находим обычные ссылки на video-файлы (.webm, .mp4, .mov, .avi) и тоже превращаем их в [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
 
-          # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги выравнивания div
+          # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги div
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
+
+          # ТОЧЕЧНОЕ УНИЧТОЖЕНИЕ МУСОРА: Вычищаем скрытый символ узкого пробела
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed 's/&thinsp;//g')
 
           # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
@@ -66,7 +69,7 @@ jobs:
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
 
-          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА ПО ВАШЕЙ ЛОГИКЕ: Схлопываем только избыточные пустые строки
+          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА: Схлопываем избыточные пустые строки
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
 
@@ -80,21 +83,26 @@ jobs:
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card to Telegram (HTML Pro Style)
+      - name: Send Standardized Card Directly to Telegram Topic via curl
         if: env.PROCEED == 'true'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: html
-          message_thread_id: 83  
-          disable_web_page_preview: false
-          message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+        run: |
+          # 💡 СОБИРАЕМ ТЕКСТ ШАБЛОНА СООБЩЕНИЯ В ПЕРЕМЕННУЮ
+          TEXT_MESSAGE=$(cat << 'EOF'
+          <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
-            💬 <b>Текст:</b>
-            ${{ steps.parse_data.outputs.clean_text }}
+          💬 <b>Текст:</b>
+          ${{ steps.parse_data.outputs.clean_text }}
 
-            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
-            ───────────────────
-            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
+          👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
+          ───────────────────
+          📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
+          EOF
+          )
+
+          # ⚡ БРОНЕБОЙНЫЙ ПРЯМОЙ ЗАПРОС К TELEGRAM API С УКАЗАНИЕМ ВЕТКИ (THREAD ID)
+          curl -s -X POST "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "message_thread_id=45" \
+            -d "parse_mode=HTML" \
+            -d "disable_web_page_preview=false" \
+            --data-urlencode "text=$TEXT_MESSAGE"

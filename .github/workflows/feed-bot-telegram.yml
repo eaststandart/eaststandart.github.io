@@ -11,7 +11,7 @@ jobs:
       - name: Filter Specific Discussions and Send
         run: |
           # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Дописывайте номера через пробел):
-          ALLOWED_DISCUSSIONS="38"
+          ALLOWED_DISCUSSIONS="38 83"
           
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           

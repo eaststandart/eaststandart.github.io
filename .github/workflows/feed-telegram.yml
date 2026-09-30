@@ -1,4 +1,4 @@
-name: Broadcast Discussion Comments to Telegram 
+name: Broadcast Discussion Comments to Telegram
 
 on:
   discussion_comment:
@@ -46,7 +46,10 @@ jobs:
 
           # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги выравнивания div
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|code\|details\|summary\|video)[^>]*>||gi')
+
+          # ⚡ ТОЧЕЧНОЕ УНИЧТОЖЕНИЕ МУСОРА: Вычищаем скрытый символ узкого пробела, который ломал отступы
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed 's/&thinsp;//g')
 
           # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
@@ -66,14 +69,9 @@ jobs:
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
 
-          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА ПО ВАШЕЙ ЛОГИКЕ: Удаляем \r и намертво схлопываем любые многократные пустые строки в одну
+          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА: Схлопываем избыточные пустые строки, когда мусор &thinsp; уже стерт
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
-
-          # ⚙️ ЛОГ ФИНАЛЬНОГО ТЕКСТА ДЛЯ ДИАГНОСТИКИ СТРОК:
-          echo "=== ИТОГОВЫЙ ТЕКСТ ДЛЯ ТЕЛЕГРАМА ==="
-          echo "$COMPRESSED_BODY"
-          echo "====================================="
 
           # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
           if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ] || [ "$COMPRESSED_BODY" = "$'\n'" ]; then

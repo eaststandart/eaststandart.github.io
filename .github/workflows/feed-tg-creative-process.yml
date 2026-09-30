@@ -27,9 +27,14 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Универсальный и защищенный)
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://(github\.com\|github-production-user-asset[^") ]+)' | head -n 1)
           
+          # Защита: Если пост без картинок и видео, ставим ссылку на сам GitHub, чтобы карточка не ломалась
+          if [ -z "$URL" ]; then
+            URL="${{ github.event.comment.html_url }}"
+          fi
+
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
           echo "Robot found media URL: '$URL'"
           echo "==============================="
@@ -76,7 +81,6 @@ jobs:
         if: env.PROCEED == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
-          # ⚡ СЕКРЕТНЫЙ ТРЮК: Склеиваем ID группы и ID ветки через нижнее подчеркивание
           to: "${{ secrets.TELEGRAM_CHAT_ID }}_45"
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html

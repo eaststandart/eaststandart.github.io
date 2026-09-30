@@ -78,7 +78,7 @@ jobs:
               f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
           )
 
-          base_host = "https://telegram.org"
+          base_host = "https://api.telegram.org"
           endpoint = "/bot" + token + "/sendMessage"
           url = base_host + endpoint
           

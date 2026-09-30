@@ -43,13 +43,13 @@ jobs:
           
           # Удаляем любые обертки картинок и скрытый мусорный пробел &thinsp;
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|thinsp\|code)[^>]*>||gi')
 
-          # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
+          # ⚡ ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
           # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
-          # Построчно удаляем дубликаты маркеров [Медиа] и принудительно возвращаем красивый пустой отступ перед первым словом
+          # Построчно удаляем дубликаты маркеров [Медиа]
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {

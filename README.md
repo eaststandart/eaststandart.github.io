@@ -1,7 +1,7 @@
 [![GitHub Pages Status](https://img.shields.io/badge/Сайт-работает-success.svg?style=flat-square)](https://eaststandart.github.io/)
 [![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com/eaststandart/eaststandart.github.io/releases/)
 [![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
-[![Изменения](//img.shields.io/badge/Документация-Changelog-grey .svg?style=flat-square)](CHANGELOG.md)
+[![CHANGELOG](https://img.shields.io/badge/Документация-Changelog-grey .svg?style=flat-square)](CHANGELOG.md)
 
 ---
 

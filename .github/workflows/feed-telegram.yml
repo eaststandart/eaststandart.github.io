@@ -36,23 +36,47 @@ jobs:
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. УМНАЯ ОЧИСТКА И УЛЬТРА-СЖАТИЕ БЛОКОВ
+          # 4. УМНАЯ ОЧИСТКА В ПЛОСКИЙ ТЕКСТ
           # Схлопываем конструкции картинок в тегах <a> и <img> в слово [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           
-          # Подчищаем одиночные теги <img> и Markdown-картинки, убирая тег img из текста
+          # Подчищаем одиночные теги <img> и Markdown-картинки
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
           
-          # Вырезаем обертки тегов div, чтобы Telegram не ругался на пустые блоки
+          # Вырезаем обертки тегов div
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
 
-          # ⚡ МАГИЯ СХЛОПЫВАНИЯ: переводим весь текст в одну строку, заменяем кучу идущих подряд 
-          # маркеров [Медиа] (с любыми пробелами/переносами между ними) на ОДИН, и возвращаем структуру обратно
-          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | tr '\n' '\r' | sed -E 's|(<b>\[Медиа\]<\/b>[[:space:]\r]*)+|<b>[Медиа]</b>|g' | tr '\r' '\n')
+          # ⚡ ЖЕЛЕЗНОЕ СХЛОПЫВАНИЕ ПОСТРОЧНЫМ ЦИКЛОМ (Убираем забор из маркеров)
+          COMPRESSED_BODY=""
+          LAST_WAS_MEDIA=false
 
-          # ЖЕСТКОЕ СЖАТИЕ СТРОК: убираем лишние случайные переносы по всему тексту
+          # Заменяем переносы строк на временный разделитель, чтобы надежно прочитать каждую строчку
+          echo "$CLEAN_BODY" | while IFS= read -r line; do
+            # Убираем пробелы по краям строки для точной проверки
+            TRIMMED_LINE=$(echo "$line" | sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            
+            if [ "$TRIMMED_LINE" = "<b>[Медиа]</b>" ]; then
+              if [ "$LAST_WAS_MEDIA" = false ]; then
+                COMPRESSED_BODY+="$line"$'\n'
+                LAST_WAS_MEDIA=true
+              fi
+            else
+              if [ ! -z "$TRIMMED_LINE" ]; then
+                COMPRESSED_BODY+="$line"$'\n'
+                LAST_WAS_MEDIA=false
+              else
+                # Пропускаем пустые строки, если до этого шло медиа, чтобы сжать дыры
+                if [ "$LAST_WAS_MEDIA" = false ]; then
+                  COMPRESSED_BODY+="$line"$'\n'
+                fi
+              fi
+            fi
+          done
+
+          # Финальное сжатие случайных пустых строк на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
+          # Сохраняем итоговый текст в память робота
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT

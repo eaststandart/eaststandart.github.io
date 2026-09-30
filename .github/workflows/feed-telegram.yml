@@ -37,20 +37,21 @@ jobs:
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
           # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
-          # Превращаем громоздкие HTML-блоки картинок и Markdown в базовые маркеры [Медиа]
+          # Превращаем картинки (HTML и Markdown) в базовые маркеры [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
           
-          # Удаляем любые обертки картинок и скрытый мусорный пробел &thinsp;
+          # ⚡ ИСПРАВЛЕНО (Универсальный поиск видео-ссылок): Ловит любое имя файла с дефисами и цифрами, переходящее в ассет
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
+
+          # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги выравнивания div
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          
-          # ⚡ ИСПРАВЛЕНО: Вырезаем теги спойлеров видео <details> и <summary>, чтобы защитить Telegram от ошибок
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary)[^>]*>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
 
           # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
-          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK (Исходный рабочий код, который сжимает в 1 слово)
+          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
@@ -64,7 +65,7 @@ jobs:
           # Удаляем случайные концевые пробелы и пустые строки на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
-          # ЧИСТАЯ ПОСТ-ОБРАБОТКА: Добавляем текстовый перенос строки строго перед готовым словом [Медиа]
+          # ЧИСТАЯ ПОСТ-ОБРАБОТКА: Добавляем отступ перед [Медиа] и переводим маркдаун в HTML
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed "s|<b>\[Медиа\]<\/b>|\n<b>[Медиа]</b>|g")
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')

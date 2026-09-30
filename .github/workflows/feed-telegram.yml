@@ -46,11 +46,12 @@ jobs:
           # Вырезаем обертки тегов div, чтобы Telegram не ругался на пустые блоки
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
 
-          # ⚡ ЖЕСТКОЕ СЖАТИЕ: Удаляем концевые пробелы и схлопываем множественные переносы строк в один
+          # ЖЕСТКОЕ СЖАТИЕ: Удаляем концевые пробелы и схлопываем множественные переносы строк в один
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
+          # 💡 ИСПРАВЛЕНО: Теперь данные железно улетают в системный вывод GitHub
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
-          echo "$COMPRESSED_BODY"
+          echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send Standardized Card to Telegram (HTML Pro Style)

@@ -8,10 +8,10 @@ jobs:
   telegram-broadcast:
     runs-on: ubuntu-latest
     steps:
-      - name: Route and Prepare Message Data
+      - name: Filter and Route Message Data
         id: parse_data
         run: |
-          # 1. ⚙️ ПРОВЕРКА РАЗРЕШЕННЫХ ЖУРНАЛОВ (Дискуссии №83 и №38)
+          # 1. Проверка дискуссий
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
@@ -21,7 +21,14 @@ jobs:
           fi
           echo "PROCEED=true" >> $GITHUB_ENV
 
-          # 2. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Чистый сырой текст)
+          # Переключаем топик Telegram в зависимости от номера дискуссии
+          if [ "$CLEAN_NUM" = "83" ]; then
+            echo "target_topic=45" >> $GITHUB_OUTPUT
+          elif [ "$CLEAN_NUM" = "38" ]; then
+            echo "target_topic=38" >> $GITHUB_OUTPUT
+          fi
+
+          # 2. ПОИСК ОБЛОЖКИ
           RAW_BODY=$(cat << 'EOF'
           ${{ github.event.comment.body }}
           EOF
@@ -35,65 +42,19 @@ jobs:
           fi
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Minimal Card to Telegram Topic
+      - name: Send Standardized Card to Telegram (HTML Pro Style)
         if: env.PROCEED == 'true'
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
-          DISC_TITLE: ${{ github.event.discussion.title }}
-          DISC_NUM: ${{ github.event.discussion.number }}
-          COMMENT_URL: ${{ github.event.comment.html_url }}
-        run: |
-          import urllib.request
-          import json
-          import os
-          import sys
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: "${{ secrets.TELEGRAM_CHAT_ID }}_${{ steps.parse_data.outputs.target_topic }}"
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          # ⚙️ ВКЛЮЧАЕМ ЛОГИРОВАНИЕ ПЛАГИНА ДЛЯ ПОИСКА ОШИБКИ
+          debug: true
+          disable_web_page_preview: false
+          message: |
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a><b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          disc_num = str(os.environ.get("DISC_NUM", "")).strip().replace("#", "")
+            📢 В репозитории клуба опубликованы новые медиа-материалы!
 
-          # 🎯 АВТОМАТИЧЕСКИЙ ДИСПЕТЧЕР ВЕТОК TELEGRAM
-          if disc_num == "83":
-              target_thread_id = 45
-          elif disc_num == "38":
-              target_thread_id = 38
-          else:
-              sys.exit(0)
-
-          # Безопасно очищаем заголовок темы от скрытых ломающих JSON UTF-символов
-          raw_title = os.environ.get("DISC_TITLE", "")
-          clean_title = raw_title.encode('utf-8', 'ignore').decode('utf-8')
-
-          # Сборка нашего единого ультра-лаконичного стандарта
-          message_text = (
-              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{clean_title}</b>\n\n'
-              f'📢 В репозитории клуба опубликованы новые медиа-материалы!\n\n'
-              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
-          )
-
-          base_host = "https://api.telegram.org"
-          endpoint = "/bot" + token + "/sendMessage"
-          url = base_host + endpoint
-          
-          payload = {
-              "chat_id": chat_id,
-              "message_thread_id": target_thread_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": False
-          }
-
-          req = urllib.request.Request(
-              url, 
-              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
-          )
-          
-          try:
-              with urllib.request.urlopen(req) as response:
-                  print("HTTP Status Code:", response.getcode())
-          except Exception as e:
-              sys.exit(1)
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть фото и видео на GitHub</a>

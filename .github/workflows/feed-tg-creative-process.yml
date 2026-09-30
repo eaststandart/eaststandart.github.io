@@ -11,7 +11,7 @@ jobs:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. Исправленная цифровая проверка дискуссии №83
+          # 1. Цифровая проверка дискуссии №83
           CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
           
           if [ "$CLEAN_NUM" != "83" ]; then
@@ -34,10 +34,6 @@ jobs:
           if [ -z "$URL" ]; then
             URL="${{ github.event.comment.html_url }}"
           fi
-
-          echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
-          echo "Robot found media URL: '$URL'"
-          echo "==============================="
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
@@ -68,7 +64,7 @@ jobs:
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
 
-          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ] || [ "$COMPRESSED_BODY" = "$'\n'" ]; then
+          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
             COMPRESSED_BODY="<i>Медиа-вложение</i>"
           fi
 
@@ -79,7 +75,7 @@ jobs:
       - name: Send Standardized Card Directly via curl (Safe JSON Mode)
         if: env.PROCEED == 'true'
         run: |
-          # 💡 ФОРМИРУЕМ МОНОЛИТНЫЙ ТЕКСТ КАРТОЧКИ
+          # 1. СБОРКА ТЕКСТА КАРТОЧКИ
           TEXT_MESSAGE=$(cat << 'EOF'
           <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
@@ -92,14 +88,23 @@ jobs:
           EOF
           )
 
-          # 📦 БЕЗОПАСНО УПАКОВЫВАЕМ ДАННЫЕ В JSON-ФАЙЛ (Защита от ломающих кавычек и переносов)
+          # 2. УПАКОВКА В JSON
           jq -n \
             --arg chat_id "${{ secrets.TELEGRAM_CHAT_ID }}" \
             --arg thread_id "45" \
             --arg text "$TEXT_MESSAGE" \
             '{chat_id: $chat_id, message_thread_id: ($thread_id | tonumber), text: $text, parse_mode: "HTML", disable_web_page_preview: false}' > telegram_payload.json
 
-          # ⚡ ОТПРАВЛЯЕМ НАПРЯМУЮ В TELEGRAM API ЧЕРЕЗ JSON ПОТОК
-          curl -s -X POST "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          # ⚙️ ЛОГ №1: ВЫВОД СФОРМИРОВАННОГО ПАКЕТА JSON В КОНСОЛЬ ACTIONS
+          echo "=== ОТЛАДКА JSON ПАКЕТА ==="
+          cat telegram_payload.json
+          echo "==========================="
+
+          # ⚡ ОТПРАВКА С ТОТАЛЬНЫМ ОТСЛЕЖИВАНИЕМ И ЛОГОМ ОТВЕТА TELEGRAM
+          # Экранируем ссылку с помощью флага --url, чтобы двоеточие в токене не ломало curl
+          echo "=== ОТВЕТ СЕРВЕРА TELEGRAM API ==="
+          curl -w "\nHTTP Status Code: %{http_code}\n" \
+            --url "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -H "Content-Type: application/json" \
             -d @telegram_payload.json
+          echo "=================================="

@@ -1,4 +1,4 @@
-name: Broadcast Discussion Comments to Telegram
+name: Broadcast Discussion Comments to Telegram 
 
 on:
   discussion_comment:

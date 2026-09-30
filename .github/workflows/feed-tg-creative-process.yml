@@ -26,7 +26,7 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Раздельный бронебойный поиск)
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           if [ -z "$URL" ]; then
             URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
@@ -64,7 +64,7 @@ jobs:
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
 
-          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
+          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ] || [ "$COMPRESSED_BODY" = "$'\n'" ]; then
             COMPRESSED_BODY="<i>Медиа-вложение</i>"
           fi
 
@@ -81,7 +81,6 @@ jobs:
           MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
           CLEAN_TEXT: ${{ steps.parse_data.outputs.clean_text }}
           DISC_TITLE: ${{ github.event.discussion.title }}
-          DISC_NUM: ${{ github.event.discussion.number }}
           AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_URL: ${{ github.event.comment.html_url }}
         run: |
@@ -93,15 +92,22 @@ jobs:
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           
+          # Оставляем только важные строки списков
+          info_lines = []
+          for line in os.environ.get("CLEAN_TEXT", "").split("\n"):
+              if any(x in line for x in ["В кадре:", "Преподаватель:", "Место:", "Источник:"]):
+                  info_lines.append(line.strip())
+          
+          clean_info = "\n".join(info_lines)
+
+          # Сборка финального макета без календаря и с восклицательным знаком
           message_text = (
-              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a> <b>{os.environ.get("DISC_TITLE")}</b> (Ветка #{os.environ.get("DISC_NUM")})\n\n'
-              f'💬 <b>Текст:</b>\n{os.environ.get("CLEAN_TEXT")}\n\n'
-              f'👤 <b>Автор:</b> @{os.environ.get("AUTHOR")}\n'
-              f'───────────────────\n'
-              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть и ответить на GitHub</a>'
+              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{os.environ.get("DISC_TITLE")}</b>\n\n'
+              f'📢 В репозитории клуба опубликованы новые media-материалы!\n\n'
+              f'{clean_info}\n\n'
+              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
           )
 
-          # ⚡ ИСПРАВЛЕНО: Теперь адрес ведет строго на боевой API сервер Телеграма
           base_host = "https://api.telegram.org"
           endpoint = "/bot" + token + "/sendMessage"
           url = base_host + endpoint
@@ -114,26 +120,14 @@ jobs:
               "disable_web_page_preview": False
           }
 
-          print("=== ОТЛАДКА JSON ПАКЕТА PYTHON ===")
-          print(json.dumps(payload, indent=2, ensure_ascii=False))
-          print("==================================")
-
           req = urllib.request.Request(
               url, 
               data=json.dumps(payload).encode('utf-8'), 
               headers={'Content-Type': 'application/json'}
           )
           
-          print("=== ОТВЕТ СЕРВЕРА TELEGRAM API ===")
           try:
               with urllib.request.urlopen(req) as response:
                   print("HTTP Status Code:", response.getcode())
-                  print("Response:", response.read().decode('utf-8'))
-          except urllib.error.HTTPError as e:
-              print("HTTP Error Code:", e.code)
-              print("Error Response:", e.read().decode('utf-8'))
-              sys.exit(1)
           except Exception as e:
-              print("System General Error:", str(e))
               sys.exit(1)
-          print("==================================")

@@ -27,15 +27,19 @@ jobs:
           EOF
           )
 
-          # 3. УНИВЕРСАЛЬНЫЙ ПОИСК МЕДИА: Ищем строго ПЕРВУЮ ссылку на медиафайл
-          # (в Markdown, HTML-тегах <img>/<video> или прямой ссылке)
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[a-zA-Z0-9-.]+' | head -n 1)
+          # 3. УНИВЕРСАЛЬНЫЙ ПОИСК МЕДИА
+          # Забираем адрес, останавливаясь перед кавычкой, скобкой или пробелом
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
-          # Передаем чистый URL первой картинки/видео в память робота
+          # ⚙️ ОТЛАДОЧНЫЙ ВЫВОД ДЛЯ КЛУБА (печатаем результат поиска в логи)
+          echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
+          echo "Робот нашел вот эту ссылку на медиа: '$URL'"
+          echo "==============================="
+
+          # Передаем чистый URL в память робота
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. ЖЕСТКАЯ ОЧИСТКА: полностью вырезаем ВСЕ медиа-теги, div'ы, картинки и видео, 
-          # чтобы отсечь абсолютно все остальные файлы, если они есть в посте
+          # 4. ЖЕСТКАЯ ОЧИСТКА: вырезаем из текста все медиа-теги, div'ы, картинки и видео
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's/!\[[^]]*\]\(https:\/\/[^)]+\)//g' | sed -E 's/<img[^>]*>//g' | sed -E 's/<video[^>]*>.*<\/video>//g' | sed -E 's/<video[^>]*>//g' | sed -E 's/<div[^>]*>//g' | sed -E 's/<\/div>//g')
           
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
@@ -49,7 +53,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: markdown
-          disable_web_page_preview: false # Обязательно разрешаем превью для скрытой ссылки
+          disable_web_page_preview: false
           message: |
             [ ](${{ steps.parse_data.outputs.media_url }}) **${{ github.event.discussion.title }}** (Ветка #${{ github.event.discussion.number }})
 

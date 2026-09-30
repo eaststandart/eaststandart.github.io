@@ -45,15 +45,15 @@ jobs:
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code)[^>]*>||gi')
 
-          # ⚡ ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа], чтобы awk их точно распознал
+          # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
           # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
-          # Построчно удаляем идущие подряд дубликаты маркеров [Медиа]
+          # Построчно удаляем дубликаты маркеров [Медиа] и принудительно возвращаем красивый пустой отступ перед первым словом
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
-              if (!media) { print "<b>[Медиа]</b>"; media = 1 }
+              if (!media) { print "\n<b>[Медиа]</b>"; media = 1 }
             } else {
               print $0
               if (val != "") media = 0

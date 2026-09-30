@@ -1,3 +1,9 @@
+[![GitHub Pages Status](https://img.shields.io/badge/Сайт-работает-success.svg?style=flat-square)](https://eaststandart.github.io/)
+[![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com/eaststandart/eaststandart.github.io/releases/)
+[![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
+
+---
+
 <h1 align="center"><!--
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120">
@@ -12,19 +18,9 @@
 **Добро пожаловать в репозиторий проекта!** Он разработан для поддержки технического творчества, обмена инженерным опытом и предназначен для тех, кто хочет знать, как всё устроено и создавать технологии самостоятельно.
 
 <p align="left">
-  <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a>
-</p>
-
-[![GitHub Pages Status](https://img.shields.io/badge/Сайт-работает-success.svg?style=flat-square)](https://eaststandart.github.io/)
-[![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com/eaststandart/eaststandart.github.io/releases/)
-[![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
-
-<p align="left">
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a> • 
-  <a href="https://github.com"><b>💬 Обсуждение для родителей</b></a>
+  <a href="https://github.com/eaststandart/eaststandart.github.io/discussions"><b>💬 Обсуждение для родителей</b></a>
 </p>
-
----
 
 ### 🏗️ О проекте и структуре Лаборатории
 

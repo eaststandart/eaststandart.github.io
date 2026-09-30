@@ -15,9 +15,11 @@
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a>
 </p>
 
+![GitHub Pages Status](https://img.shields.io.svg/?label=Сайт&style=flat-square&color=success)
 
-[![GitHub Pages Status](https://shields.io.svg?label=Сайт&style=flat-square&color=success)](https://github.io)
-[![Latest Release](https://shields.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com)
+[![GitHub Pages Status](https://shields.io .svg?label=Сайт&style=flat-square&color=success)](https://eaststandart.github.io)
+[![Latest Release](https://shields.io .svg?label=Релиз&style=flat-square&color=blue)](https://eaststandart.github.io)
+[![GitHub Discussions](https://shields.io .svg?style=flat-square&logo=github&color=orange)](https://eaststandart.github.io)
 
 <p align="left">
   <a href="CHANGELOG.md"><b>📜 Журнал изменений (Changelog)</b></a> • 

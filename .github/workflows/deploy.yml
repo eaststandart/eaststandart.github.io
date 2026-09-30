@@ -10,7 +10,9 @@ on:
       - 'CHANGELOG.md'
       - 'ARCHITECTURE.md'
       - 'ROADMAP.md'
+      - '.github/workflows/**'
       - '_data/*-journal-attendance-*.json'
+  workflow_dispatch:
 
 permissions:
   contents: read

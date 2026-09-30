@@ -1,0 +1,100 @@
+name: Broadcast Master-Classes to Telegram
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  telegram-master-classes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Filter and Clean Message Data
+        id: parse_data
+        run: |
+          # 1. ⚙️ ФИЛЬТР: Пропускаем только комментарии из дискуссии №83
+          ALLOWED_DISCUSSIONS="83"
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          
+          if ! echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "PROCEED=false" >> $GITHUB_ENV
+            exit 0
+          fi
+          echo "PROCEED=true" >> $GITHUB_ENV
+
+          # 2. Забираем сырой текст комментария
+          RAW_BODY=$(cat << 'EOF'
+          ${{ github.event.comment.body }}
+          EOF
+          )
+
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
+          
+          echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
+          echo "Robot found media URL: '$URL'"
+          echo "==============================="
+
+          echo "media_url=$URL" >> $GITHUB_OUTPUT
+
+          # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
+          # Превращаем картинки (HTML и Markdown) в базовые маркеры [Медиа]
+          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
+          
+          # Находим обычные ссылки на video-файлы (.webm, .mp4, .mov, .avi) и тоже превращаем их в [Медиа]
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
+
+          # Полностью срезаем любые HTML-обёртки, спойлеры деталей, разделители и теги выравнивания div
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary\|video)[^>]*>||gi')
+
+          # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
+
+          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK
+          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
+            val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
+            if (val == "<b>[Медиа]</b>") {
+              if (!media) { print "<b>[Медиа]</b>"; media = 1 }
+            } else {
+              print $0
+              if (val != "") media = 0
+            }
+          }')
+
+          # Перевод маркдауна в HTML
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
+
+          # ЖЕЛЕЗНАЯ ПОСТОБРАБОТКА ПО ВАШЕЙ ЛОГИКЕ: Схлопываем только избыточные пустые строки
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | tr -d '\r')
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -z -E 's/\n{2,}/\n\n/g')
+
+          # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
+          if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then
+            COMPRESSED_BODY="<i>Медиа-вложение</i>"
+          fi
+
+          # Сохраняем итоговый текст в память робота
+          echo "clean_text<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send Standardized Card to Telegram (HTML Pro Style)
+        if: env.PROCEED == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          message_thread_id: 83  
+          disable_web_page_preview: false
+          message: |
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+
+            💬 <b>Текст:</b>
+            ${{ steps.parse_data.outputs.clean_text }}
+
+            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
+            ───────────────────
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>

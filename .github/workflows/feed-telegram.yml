@@ -43,12 +43,14 @@ jobs:
           
           # Удаляем любые обертки картинок и скрытый мусорный пробел &thinsp;
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code)[^>]*>||gi')
+          
+          # ⚡ ИСПРАВЛЕНО: Вырезаем теги спойлеров видео <details> и <summary>, чтобы защитить Telegram от ошибок
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code\|details\|summary)[^>]*>||gi')
 
           # ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа]
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
 
-          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWК
+          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK (Исходный рабочий код, который сжимает в 1 слово)
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
             val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
@@ -62,7 +64,7 @@ jobs:
           # Удаляем случайные концевые пробелы и пустые строки на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
-          # ⚡ ЧИСТАЯ ПОСТ-ОБРАБОТКА: Добавляем отступ перед [Медиа] и переводим маркдаун в HTML
+          # ЧИСТАЯ ПОСТ-ОБРАБОТКА: Добавляем текстовый перенос строки строго перед готовым словом [Медиа]
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed "s|<b>\[Медиа\]<\/b>|\n<b>[Медиа]</b>|g")
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')

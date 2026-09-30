@@ -9,26 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Filter Specific Discussions and Send
-        id: router
         run: |
-          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Добавили 83 через пробел):
-          ALLOWED_DISCUSSIONS="38 83"
+          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Дописывайте номера через пробел):
+          ALLOWED_DISCUSSIONS="38"
           
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
-          CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
-          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CLEAN_NUM"; then
-            echo "Ветка #$CLEAN_NUM разрешена. Отправляем комментарий..."
+          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "Ветка #$CURRENT_DISCUSSION разрешена. Отправляем комментарий..."
             echo "PROCEED=true" >> $GITHUB_ENV
-            
-            # Динамически определяем, в какой топик Telegram слать
-            if [ "$CLEAN_NUM" = "83" ]; then
-              echo "target_topic=45" >> $GITHUB_OUTPUT
-            elif [ "$CLEAN_NUM" = "38" ]; then
-              echo "target_topic=38" >> $GITHUB_OUTPUT
-            fi
           else
-            echo "Ветка #$CLEAN_NUM не входит в список разрешенных. Пропускаем."
+            echo "Ветка #$CURRENT_DISCUSSION не входит в список разрешенных. Пропускаем."
             echo "PROCEED=false" >> $GITHUB_ENV
           fi
 
@@ -36,14 +27,16 @@ jobs:
         if: env.PROCEED == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
-          # Маршрутизируем пост в нужную квартиру (топик) мессенджера
-          to: "${{ secrets.TELEGRAM_CHAT_ID }}_${{ steps.router.outputs.target_topic }}"
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: html
-          disable_web_page_preview: false
+          format: markdown
+          disable_web_page_preview: false # Включает авто-превью фото и видео под текстом
           message: |
-            <b>${{ github.event.discussion.title }}</b> (Дискуссии #${{ github.event.discussion.number }})
+            **${{ github.event.discussion.title }}** (Дискуссии #${{ github.event.discussion.number }})
 
-            📢 В репозитории клуба опубликованы новые медиа-материалы!
+            💬 **Текст:**
+            ${{ github.event.comment.body }}
 
-            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть фото и видео на GitHub</a>
+            👤 **Автор:** @${{ github.event.comment.user.login }}
+            ───────────────────
+            📥 [Посмотреть и ответить на GitHub](${{ github.event.comment.html_url }})

@@ -31,7 +31,7 @@ jobs:
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
-          echo "Робот нашел обложку: '$URL'"
+          echo "Robot found media URL: '$URL'"
           echo "==============================="
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
@@ -45,10 +45,13 @@ jobs:
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|br\|thinsp\|code)[^>]*>||gi')
 
-          # ⚡ НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
-          # Заменяем цепочки идущих подряд маркеров [Медиа] (с любыми переносами или пробелами) на ОДИН
+          # ⚡ ТОЧЕЧНАЯ ЗАЧИСТКА ПРОБЕЛОВ: убираем любые скрытые отступы вокруг маркеров [Медиа], чтобы awk их точно распознал
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|[[:space:]]*<b>\[Медиа\]<\/b>[[:space:]]*|<b>[Медиа]</b>|g')
+
+          # НАДЕЖНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
+          # Построчно удаляем идущие подряд дубликаты маркеров [Медиа]
           COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
-            val = $0; gsub(/^[ \t]+|[ \t]+$/, "", val)
+            val = $0; gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", val)
             if (val == "<b>[Медиа]</b>") {
               if (!media) { print "<b>[Медиа]</b>"; media = 1 }
             } else {

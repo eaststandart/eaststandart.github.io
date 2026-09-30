@@ -11,8 +11,7 @@ jobs:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. ⚡ ИСПРАВЛЕННАЯ БРОНЕБОЙНАЯ ПРОВЕРКА ДИСКУССИИ №83
-          # Очищаем системный номер от любых лишних символов и знаков #
+          # 1. Исправленная цифровая проверка дискуссии №83
           CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
           
           if [ "$CLEAN_NUM" != "83" ]; then
@@ -77,20 +76,30 @@ jobs:
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card to Telegram (HTML Pro Style)
+      - name: Send Standardized Card Directly via curl (Safe JSON Mode)
         if: env.PROCEED == 'true'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: "${{ secrets.TELEGRAM_CHAT_ID }}_45"
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: html
-          disable_web_page_preview: false
-          message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+        run: |
+          # 💡 ФОРМИРУЕМ МОНОЛИТНЫЙ ТЕКСТ КАРТОЧКИ
+          TEXT_MESSAGE=$(cat << 'EOF'
+          <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
-            💬 <b>Текст:</b>
-            ${{ steps.parse_data.outputs.clean_text }}
+          💬 <b>Текст:</b>
+          ${{ steps.parse_data.outputs.clean_text }}
 
-            👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
-            ───────────────────
-            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
+          👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
+          ───────────────────
+          📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
+          EOF
+          )
+
+          # 📦 БЕЗОПАСНО УПАКОВЫВАЕМ ДАННЫЕ В JSON-ФАЙЛ (Защита от ломающих кавычек и переносов)
+          jq -n \
+            --arg chat_id "${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --arg thread_id "45" \
+            --arg text "$TEXT_MESSAGE" \
+            '{chat_id: $chat_id, message_thread_id: ($thread_id | tonumber), text: $text, parse_mode: "HTML", disable_web_page_preview: false}' > telegram_payload.json
+
+          # ⚡ ОТПРАВЛЯЕМ НАПРЯМУЮ В TELEGRAM API ЧЕРЕЗ JSON ПОТОК
+          curl -s -X POST "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d @telegram_payload.json

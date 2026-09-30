@@ -1,5 +1,5 @@
 ---
-workflow: "Вывести на страницу сайта, например, `eaststandart.github.io/changelog` или в раздел «Новости». сделать так, чтобы файл CHANGELOG.md автоматически превратился в красивую страницу новостей на  сайте GitHub Pages."
+workflow: "Вывести на страницу сайта, например, `eaststandart.github.io/changelog` или в раздел «Новости». сделать так, чтобы файл CHANGELOG.md автоматически превратился в красивую страницу новостей на  сайте GitHub Pages. вывести картинкой в строку что нового на главной!!!"
 title: Журнал изменений проекта
 type: changelog
 project: eaststandart.github.io

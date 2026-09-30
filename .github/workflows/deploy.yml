@@ -4,6 +4,11 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
+      - 'README.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'LICENSE.txt'
+      - 'CHANGELOG.md'
+      - 'ARCHITECTURE.md'
       - '_data/*-journal-attendance-*.json'
 
 permissions:

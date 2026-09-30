@@ -27,7 +27,7 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (без изменений, работает идеально)
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           
           echo "=== ТЕСТ АВТОМАТИКИ TECHLAB ==="
@@ -36,18 +36,21 @@ jobs:
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. УМНАЯ ОЧИСТКА ОТ IMG ДЛЯ ЗАЩИТЫ TELEGRAM:
-          # Сначала схлопываем конструкции картинок в тегах <a> и <img> в слово [Медиа]
+          # 4. УМНАЯ ОЧИСТКА И СХЛОПЫВАНИЕ ПУСТЫХ СТРОК
+          # Схлопываем конструкции картинок в тегах <a> и <img> в слово [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           
-          # На всякий случай подчищаем одиночные теги <img> и Markdown-картинки, убирая тег img из текста
+          # Подчищаем одиночные теги <img> и Markdown-картинки, убирая тег img из текста
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
           
           # Вырезаем обертки тегов div, чтобы Telegram не ругался на пустые блоки
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
 
+          # ⚡ ЖЕСТКОЕ СЖАТИЕ: Удаляем концевые пробелы и схлопываем множественные переносы строк в один
+          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
+
           echo "clean_text<<EOF" >> $GITHUB_OUTPUT
-          echo "$CLEAN_BODY" | sed '/^$/d' >> $GITHUB_OUTPUT
+          echo "$COMPRESSED_BODY"
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send Standardized Card to Telegram (HTML Pro Style)
@@ -59,7 +62,7 @@ jobs:
           format: html
           disable_web_page_preview: false
           message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}

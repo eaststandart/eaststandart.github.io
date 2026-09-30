@@ -65,8 +65,8 @@ jobs:
           # Удаляем случайные концевые пробелы и пустые строки на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
 
-          # ⚡ ИСПРАВЛЕННАЯ ПОСТ-ОБРАБОТКА: Добавляем отступ СТРОГО СНИЗУ от готового слова [Медиа]
-          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed "s|<b>\[Медиа\]<\/b>|<b>[Медиа]</b>\n|g")
+          # ⚡ СТАБИЛЬНАЯ ПОСТ-ОБРАБОТКА: Оборачиваем [Медиа] в тег абзаца <p> для идеальных автоматических отступов
+          COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed "s|<b>\[Медиа\]<\/b>|<p><b>[Медиа]</b></p>|g")
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\*\*([^*]+)\*\*/<b>\1<\/b>/g')
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed -E 's/\[([^]]+)\]\((https?:[^)]+)\)/<a href="\2">\1<\/a>/g')
 

@@ -91,16 +91,28 @@ jobs:
 
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          raw_text = os.environ.get("CLEAN_TEXT", "")
+
+          # ⚙️ ЛОГ №1: Печатаем в консоль то, что пришло после очистки sed/awk
+          print("=== ЛОГ PYTHON: СЫРОЙ ВХОДНОЙ ТЕКСТ ===")
+          print(repr(raw_text))
+          print("=======================================")
           
-          # Оставляем только важные строки списков, игнорируя смайлики в начале
+          # Фильтруем важные строки
           info_lines = []
-          for line in os.environ.get("CLEAN_TEXT", "").split("\n"):
+          for line in raw_text.split("\n"):
+              # Печатаем каждую строку для проверки
+              print(f"Проверка строки: {repr(line)}")
               if any(x in line for x in ["В кадре", "Преподаватель", "Место", "Источник"]):
                   info_lines.append(line.strip())
           
           clean_info = "\n".join(info_lines)
 
-          # Сборка финального согласованного макета (только русские буквы!)
+          # ⚙️ ЛОГ №2: Печатаем то, что удалось отфильтровать
+          print("=== ЛОГ PYTHON: ОТФИЛЬТРОВАННЫЕ СТРОКИ ===")
+          print(repr(clean_info))
+          print("==========================================")
+
           message_text = (
               f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{os.environ.get("DISC_TITLE")}</b>\n\n'
               f'📢 В репозитории клуба опубликованы новые медиа-материалы!\n\n'
@@ -126,8 +138,12 @@ jobs:
               headers={'Content-Type': 'application/json'}
           )
           
+          print("=== ЛОГ PYTHON: ОТВЕТ ТЕЛЕГРАМА ===")
           try:
               with urllib.request.urlopen(req) as response:
                   print("HTTP Status Code:", response.getcode())
+                  print("Response:", response.read().decode('utf-8'))
           except Exception as e:
+              print("Ошибка отправки:", str(e))
               sys.exit(1)
+          print("====================================")

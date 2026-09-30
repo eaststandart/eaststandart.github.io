@@ -1,102 +1,49 @@
-name: Universal Telegram Broadcast Dispatcher
+name: Broadcast Discussion Comments to Telegram
 
 on:
   discussion_comment:
     types: [created]
 
 jobs:
-  telegram-broadcast:
+  telegram-comments:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter and Route Message Data
-        id: parse_data
+      - name: Filter Specific Discussions and Send
+        id: router
         run: |
-          # 1. Сборка и очистка номера дискуссии
+          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Добавили 83 через пробел):
+          ALLOWED_DISCUSSIONS="38 83"
+          
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
-          if [ "$CLEAN_NUM" != "83" ] && [ "$CLEAN_NUM" != "38" ]; then
+          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CLEAN_NUM"; then
+            echo "Ветка #$CLEAN_NUM разрешена. Отправляем комментарий..."
+            echo "PROCEED=true" >> $GITHUB_ENV
+            
+            # Динамически определяем, в какой топик Telegram слать
+            if [ "$CLEAN_NUM" = "83" ]; then
+              echo "target_topic=45" >> $GITHUB_OUTPUT
+            elif [ "$CLEAN_NUM" = "38" ]; then
+              echo "target_topic=38" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Ветка #$CLEAN_NUM не входит в список разрешенных. Пропускаем."
             echo "PROCEED=false" >> $GITHUB_ENV
-            exit 0
           fi
-          echo "PROCEED=true" >> $GITHUB_ENV
 
-          # 2. ПОИСК ОБЛОЖКИ (Наш рабочий проверенный код)
-          RAW_BODY=$(cat << 'EOF'
-          ${{ github.event.comment.body }}
-          EOF
-          )
-          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
-          if [ -z "$URL" ]; then
-            URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
-          fi
-          if [ -z "$URL" ]; then
-            URL="${{ github.event.comment.html_url }}"
-          fi
-          echo "media_url=$URL" >> $GITHUB_OUTPUT
-
-      - name: Send Standardized Minimal Card to Telegram Topic via Python
+      - name: Send Standardized Card to Telegram
         if: env.PROCEED == 'true'
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
-          DISC_TITLE: ${{ github.event.discussion.title }}
-          DISC_NUM: ${{ github.event.discussion.number }}
-          COMMENT_URL: ${{ github.event.comment.html_url }}
-        run: |
-          import urllib.request
-          import json
-          import os
-          import sys
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          # Маршрутизируем пост в нужную квартиру (топик) мессенджера
+          to: "${{ secrets.TELEGRAM_CHAT_ID }}_${{ steps.router.outputs.target_topic }}"
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          disable_web_page_preview: false
+          message: |
+            <b>${{ github.event.discussion.title }}</b> (Дискуссии #${{ github.event.discussion.number }})
 
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          
-          # Очищаем номер дискуссии для точного переключения веток
-          disc_num = str(os.environ.get("DISC_NUM", "")).strip().replace("#", "")
+            📢 В репозитории клуба опубликованы новые медиа-материалы!
 
-          # 🎯 АВТОМАТИЧЕСКИЙ ДИСПЕТЧЕР ТОПИКОВ TELEGRAM
-          if disc_num == "83":
-              target_thread_id = 45  # Журнал посещений летит в топик 45
-          elif disc_num == "38":
-              target_thread_id = 38  # Регулярные занятия летят в топик 38
-          else:
-              sys.exit(0)
-
-          # Наш строго согласованный лаконичный макет
-          message_text = (
-              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{os.environ.get("DISC_TITLE")}</b>\n\n'
-              f'📢 В репозитории клуба опубликованы новые медиа-материалы!\n\n'
-              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть фото и видео на GitHub</a>'
-          )
-
-          # ⚡ ПРАВИЛЬНЫЙ ЖЕСТКИЙ АДРЕС БЕЗ ОПЕЧАТОК И ПРОБЕЛОВ
-          base_host = "https://api.telegram.org"
-          endpoint = "/bot" + token + "/sendMessage"
-          url = base_host + endpoint
-          
-          payload = {
-              "chat_id": chat_id,
-              "message_thread_id": target_thread_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": False
-          }
-
-          req = urllib.request.Request(
-              url, 
-              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
-          )
-          
-          print("=== ОТВЕТ СЕРВЕРА TELEGRAM API ===")
-          try:
-              with urllib.request.urlopen(req) as response:
-                  print("HTTP Status Code:", response.getcode())
-                  print("Response:", response.read().decode('utf-8'))
-          except Exception as e:
-              print("Сетевая ошибка:", str(e))
-              sys.exit(1)
-          print("==================================")
+            📥 <a href="${{ github.event.comment.html_url }}">Посмотреть фото и видео на GitHub</a>

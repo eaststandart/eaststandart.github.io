@@ -2,7 +2,6 @@
 [![Latest Release](https://img.shields.io/github/v/release/eaststandart/eaststandart.github.io.svg?label=Релиз&style=flat-square&color=blue)](https://github.com/eaststandart/eaststandart.github.io/releases/)
 [![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-orange.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
 [![CHANGELOG](https://img.shields.io/badge/История-Changelog-informational.svg?style=flat-square)](CHANGELOG.md)
-[![ARCHITECTURE](https://img.shields.io/badge/Структура-Architecture-purple.svg?style=flat-square)](ARCHITECTURE.md)
 
 ---
 

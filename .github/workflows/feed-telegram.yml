@@ -36,31 +36,22 @@ jobs:
 
           echo "media_url=$URL" >> $GITHUB_OUTPUT
 
-          # 4. УМНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ ЧЕРЕЗ AWK
-          # Превращаем громоздкие HTML-блоки картинок и Markdown в слово [Медиа]
+          # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И ФИНАЛЬНОЕ СЖАТИЕ КАРТОЧКИ
+          # Сначала превращаем картинки и Markdown в базовые маркеры [Медиа]
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
-          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<div[^>]*>||g' | sed -E 's|</div>||g')
           
-          # ⚡ БРОНЕБОЙНОЕ СХЛОПЫВАНИЕ ЧЕРЕЗ AWK:
-          # Построчно удаляем идущие подряд дубликаты маркеров [Медиа] и сжимаем пустые дыры между ними
-          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | awk '{
-            val = $0; gsub(/^[ \t]+|[ \t]+$/, "", val)
-            if (val == "<b>[Медиа]</b>") {
-              if (!media) { print $0; media = 1 }
-            } else {
-              print $0
-              if (val != "") media = 0
-            }
-          }')
+          # 🔥 УНИВЕРСАЛЬНЫЙ ФИЛЬТР ТЕГОВ: Удаляем АБСОЛЮТНО ВСЕ HTML-теги, кроме разрешенных в Telegram (b, i, a)
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|</?(div\|span\|ul\|ol\|li\|p\|h[1-6]\|br\|thinsp\|code)[^>]*>||gi')
+          
+          # Вырезаем оставшиеся ссылки на вложения ассетов, которые искажают текст
+          CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
 
-          # Удаляем случайные концевые пробелы и пустые строки на выходе
+          # ⚡ ЖЕЛЕЗНОЕ СХЛОПЫВАНИЕ: Временно переводим текст в строку и сжимаем любые цепочки [Медиа] в ОДИН маркер
+          COMPRESSED_BODY=$(echo "$CLEAN_BODY" | tr '\n' ' ' | sed -E 's|(<b>\[Медиа\]<\/b>[[:space:]]*)+|<b>[Медиа]</b> |g' | tr ' ' '\n')
+
+          # Удаляем случайные пустые строки на выходе
           COMPRESSED_BODY=$(echo "$COMPRESSED_BODY" | sed 's/[[:space:]]*$//' | tr -s '\n')
-
-          # ⚙️ НОВЫЙ ТОЧЕЧНЫЙ ЛОГ ДЛЯ ДИАГНОСТИКИ (Добавляем строго сюда):
-          echo "=== ОТЛАДКА ТЕКСТА КАРТОЧКИ TECHLAB ==="
-          echo "$COMPRESSED_BODY"
-          echo "======================================="
 
           # Если комментарий состоял только из пачки картинок, ставим аккуратный текст
           if [ -z "$COMPRESSED_BODY" ] || [ "$COMPRESSED_BODY" = " " ]; then

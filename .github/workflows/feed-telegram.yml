@@ -8,34 +8,53 @@ jobs:
   telegram-comments:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter Specific Discussions and Send
+      - name: Filter and Clean Message Data
+        id: parse_data
         run: |
-          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Дописывайте номера через пробел):
+          # 1. Проверка разрешенных веток
           ALLOWED_DISCUSSIONS="38"
-          
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           
-          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
-            echo "Ветка #$CURRENT_DISCUSSION разрешена. Отправляем комментарий..."
-            echo "PROCEED=true" >> $GITHUB_ENV
-          else
-            echo "Ветка #$CURRENT_DISCUSSION не входит в список разрешенных. Пропускаем."
+          if ! echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
             echo "PROCEED=false" >> $GITHUB_ENV
+            exit 0
           fi
+          echo "PROCEED=true" >> $GITHUB_ENV
 
-      - name: Send Standardized Card to Telegram
+          # 2. Забираем сырой текст комментария
+          RAW_BODY=$(cat << 'EOF'
+          ${{ github.event.comment.body }}
+          EOF
+          )
+
+          # 3. УНИВЕРСАЛЬНЫЙ ПОИСК МЕДИА: Ищем строго ПЕРВУЮ ссылку на медиафайл
+          # (в Markdown, HTML-тегах <img>/<video> или прямой ссылке)
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[a-zA-Z0-9-.]+' | head -n 1)
+          
+          # Передаем чистый URL первой картинки/видео в память робота
+          echo "media_url=$URL" >> $GITHUB_OUTPUT
+
+          # 4. ЖЕСТКАЯ ОЧИСТКА: полностью вырезаем ВСЕ медиа-теги, div'ы, картинки и видео, 
+          # чтобы отсечь абсолютно все остальные файлы, если они есть в посте
+          CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's/!\[[^]]*\]\(https:\/\/[^)]+\)//g' | sed -E 's/<img[^>]*>//g' | sed -E 's/<video[^>]*>.*<\/video>//g' | sed -E 's/<video[^>]*>//g' | sed -E 's/<div[^>]*>//g' | sed -E 's/<\/div>//g')
+          
+          echo "clean_text<<EOF" >> $GITHUB_OUTPUT
+          echo "$CLEAN_BODY" | sed '/^$/d' >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send Standardized Card to Telegram (Pro Style)
         if: env.PROCEED == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: markdown
-          disable_web_page_preview: false # Включает авто-превью фото и видео под текстом
+          disable_web_page_preview: false # Обязательно разрешаем превью для скрытой ссылки
           message: |
-            **${{ github.event.discussion.title }}** (Дискуссии #${{ github.event.discussion.number }})
+            [ ](${{ steps.parse_data.outputs.media_url }}) **${{ github.event.discussion.title }}** (Ветка #${{ github.event.discussion.number }})
 
             💬 **Текст:**
-            ${{ github.event.comment.body }}
+            ${{ steps.parse_data.outputs.clean_text }}
 
             👤 **Автор:** @${{ github.event.comment.user.login }}
             ───────────────────

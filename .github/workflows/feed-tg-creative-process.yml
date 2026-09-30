@@ -11,7 +11,7 @@ jobs:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. Цифровая проверка дискуссии №83
+          # 1. Жесткая цифровая проверка дискуссии №83
           CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
           
           if [ "$CLEAN_NUM" != "83" ]; then
@@ -72,39 +72,69 @@ jobs:
           echo "$COMPRESSED_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send Standardized Card Directly via curl (Safe JSON Mode)
+      - name: Send Standardized Card to Telegram Topic via Python (Broboneoyniy Mode)
         if: env.PROCEED == 'true'
+        shell: python
+        # 💡 Передаем все данные через изолированные системные переменные env, защищая от эмодзи и кавычек
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
+          CLEAN_TEXT: ${{ steps.parse_data.outputs.clean_text }}
+          DISC_TITLE: ${{ github.event.discussion.title }}
+          DISC_NUM: ${{ github.event.discussion.number }}
+          AUTHOR: ${{ github.event.comment.user.login }}
+          COMMENT_URL: ${{ github.event.comment.html_url }}
         run: |
-          # 1. СБОРКА ТЕКСТА КАРТОЧКИ
-          TEXT_MESSAGE=$(cat << 'EOF'
-          <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+          import urllib.request
+          import json
+          import os
+          import sys
 
-          💬 <b>Текст:</b>
-          ${{ steps.parse_data.outputs.clean_text }}
-
-          👤 <b>Автор:</b> @${{ github.event.comment.user.login }}
-          ───────────────────
-          📥 <a href="${{ github.event.comment.html_url }}">Посмотреть и ответить на GitHub</a>
-          EOF
+          # Извлекаем данные из безопасного окружения
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          
+          # Формируем итоговое HTML сообщение карточки
+          message_text = (
+              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a> <b>{os.environ.get("DISC_TITLE")}</b> (Ветка #{os.environ.get("DISC_NUM")})\n\n'
+              f'💬 <b>Текст:</b>\n{os.environ.get("CLEAN_TEXT")}\n\n'
+              f'👤 <b>Автор:</b> @{os.environ.get("AUTHOR")}\n'
+              f'───────────────────\n'
+              f'📥 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть и ответить на GitHub</a>'
           )
 
-          # 2. УПАКОВКА В JSON
-          jq -n \
-            --arg chat_id "${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --arg thread_id "45" \
-            --arg text "$TEXT_MESSAGE" \
-            '{chat_id: $chat_id, message_thread_id: ($thread_id | tonumber), text: $text, parse_mode: "HTML", disable_web_page_preview: false}' > telegram_payload.json
+          # Базовый чистый URL к Telegram API без токена в хосте (Защита от InvalidURL)
+          url = f"https://telegram.org{token}/sendMessage"
+          
+          payload = {
+              "chat_id": chat_id,
+              "message_thread_id": 45,
+              "text": message_text,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": False
+          }
 
-          # ⚙️ ЛОГ №1: ВЫВОД СФОРМИРОВАННОГО ПАКЕТА JSON В КОНСОЛЬ ACTIONS
-          echo "=== ОТЛАДКА JSON ПАКЕТА ==="
-          cat telegram_payload.json
-          echo "==========================="
+          print("=== ОТЛАДКА JSON ПАКЕТА PYTHON ===")
+          print(json.dumps(payload, indent=2, ensure_ascii=False))
+          print("==================================")
 
-          # ⚡ ОТПРАВКА С ТОТАЛЬНЫМ ОТСЛЕЖИВАНИЕМ И ЛОГОМ ОТВЕТА TELEGRAM
-          # Экранируем ссылку с помощью флага --url, чтобы двоеточие в токене не ломало curl
-          echo "=== ОТВЕТ СЕРВЕРА TELEGRAM API ==="
-          curl -w "\nHTTP Status Code: %{http_code}\n" \
-            --url "https://telegram.org{{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d @telegram_payload.json
-          echo "=================================="
+          req = urllib.request.Request(
+              url, 
+              data=json.dumps(payload).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          
+          print("=== ОТВЕТ СЕРВЕРА TELEGRAM API ===")
+          try:
+              with urllib.request.urlopen(req) as response:
+                  print("HTTP Status Code:", response.getcode())
+                  print("Response:", response.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              print("HTTP Error Code:", e.code)
+              print("Error Response:", e.read().decode('utf-8'))
+              sys.exit(1)
+          except Exception as e:
+              print("System General Error:", str(e))
+              sys.exit(1)
+          print("==================================")

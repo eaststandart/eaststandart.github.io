@@ -11,11 +11,11 @@ jobs:
       - name: Filter and Clean Message Data
         id: parse_data
         run: |
-          # 1. Проверка разрешенных веток (Жестко под ветку №83)
-          ALLOWED_DISCUSSIONS="83"
-          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          # 1. ⚡ ИСПРАВЛЕННАЯ БРОНЕБОЙНАЯ ПРОВЕРКА ДИСКУССИИ №83
+          # Очищаем системный номер от любых лишних символов и знаков #
+          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
           
-          if ! echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+          if [ "$CLEAN_NUM" != "83" ]; then
             echo "PROCEED=false" >> $GITHUB_ENV
             exit 0
           fi
@@ -27,7 +27,7 @@ jobs:
           EOF
           )
 
-          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ (Раздельный бронебойный поиск)
+          # 3. ПОИСК ПЕРВОГО МЕДИА ДЛЯ ОБЛОЖКИ
           URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
           if [ -z "$URL" ]; then
             URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
@@ -45,7 +45,6 @@ jobs:
           # 4. УНИВЕРСАЛЬНАЯ ОЧИСТКА И АБСОЛЮТНОЕ СЖАТИЕ БЛОКОВ
           CLEAN_BODY=$(echo "$RAW_BODY" | sed -E 's|<a[^>]*>[[:space:]]*<img[^>]*>[[:space:]]*</a>|<b>[Медиа]</b>|g')
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|!\[[^]]*\]\(https://[^)]+\)|<b>[Медиа]</b>|g' | sed -E 's|<img[^>]*>|<b>[Медиа]</b>|g')
-          
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|\[[^]]+\.(webm\|mp4\|mov\|avi)[^]]*\]\(https://[^)]*user-attachments/assets/[^)]+\)|<b>[Медиа]</b>|g')
 
           CLEAN_BODY=$(echo "$CLEAN_BODY" | sed -E 's|<a href="[^"]*user-attachments/assets/[^"]*">||gi' | sed -E 's|</a>||gi')
@@ -87,7 +86,7 @@ jobs:
           format: html
           disable_web_page_preview: false
           message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}

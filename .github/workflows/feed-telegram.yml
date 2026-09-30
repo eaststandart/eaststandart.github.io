@@ -1,0 +1,42 @@
+name: Broadcast Discussion Comments to Telegram
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  telegram-comments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Filter Specific Discussions and Send
+        run: |
+          # 🛠️ СПИСОК РАЗРЕШЕННЫХ ВЕТОК (Дописывайте номера через пробел):
+          ALLOWED_DISCUSSIONS="38"
+          
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          
+          if echo "$ALLOWED_DISCUSSIONS" | grep -qw "$CURRENT_DISCUSSION"; then
+            echo "Ветка #$CURRENT_DISCUSSION разрешена. Отправляем комментарий..."
+            echo "PROCEED=true" >> $GITHUB_ENV
+          else
+            echo "Ветка #$CURRENT_DISCUSSION не входит в список разрешенных. Пропускаем."
+            echo "PROCEED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Send Standardized Card to Telegram
+        if: env.PROCEED == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          disable_web_page_preview: false # Включает авто-превью фото и видео под текстом
+          message: |
+            ${{ github.event.discussion.category.emoji }} **${{ github.event.discussion.title }}** (Ветка #${{ github.event.discussion.number }})
+
+            👤 **Автор комментария:** @${{ github.event.comment.user.login }}
+            💬 **Текст:** 
+            ${{ github.event.comment.body }}
+
+            ---
+            📥 [Посмотреть и ответить на GitHub](${{ github.event.comment.html_url }})

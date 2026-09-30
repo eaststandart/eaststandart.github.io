@@ -55,7 +55,7 @@ jobs:
           format: html # 💡 Переключили плагин в режим HTML
           disable_web_page_preview: false
           message: |
-            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a>📅 <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
+            <a href="${{ steps.parse_data.outputs.media_url }}">&#8203;</a> <b>${{ github.event.discussion.title }}</b> (Ветка #${{ github.event.discussion.number }})
 
             💬 <b>Текст:</b>
             ${{ steps.parse_data.outputs.clean_text }}

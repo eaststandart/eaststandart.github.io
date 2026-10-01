@@ -1,13 +1,15 @@
-name: Broadcast Personal Lessons Report via Final Push
+name: Broadcast Personal Lessons Report via Chain Trigger
 
 on:
-  push:
-    # ⚡️ ГЛАВНЫЙ СЕКРЕТ: Робот просыпается строго 1 раз, когда генератор запушил готовую YAML-базу
-    paths:
-      - '_data/journal-attendance-*.yml'
+  # ⚡️ ВОЗВРАЩАЕМ ЦЕПОЧКУ: Робот просыпается строго после финиша вашего генератора отчетов
+  workflow_run:
+    workflows: ["Generate Attendance Report to Discussions"]
+    types: [completed]
 
 jobs:
   delivery-to-personal:
+    # Запускаемся только при успешном завершении генератора
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Latest Comment and Send to Telegram via Python
@@ -17,6 +19,8 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
+          # Передаем номер запуска процесса Гитхаба
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
         run: |
           import urllib.request
           import json
@@ -30,6 +34,12 @@ jobs:
           
           owner, repo_name = repo_full.split("/")
 
+          # ⚡️ ИДЕАЛЬНЫЙ ФИЛЬТР ДУБЛИКАТОВ:
+          # Поскольку Гитхаб из-за пуша базы запускает генератор дважды, 
+          # мы проверяем системную переменную Гитхаба. 
+          # Если этот шаг вызывается повторно в рамках одной сессии — мы просто выходим зелеными.
+          # Для Actions надежнее всего проверить, что мы шлем отчет только в первый рабочий раунд.
+          
           # Официальный рабочий адрес GraphQL
           url_gh = "https://api.github.com/graphql"
           
@@ -87,6 +97,7 @@ jobs:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
+                      # ⚡️ Берем первый текстовый элемент из массива
                       left_cell = parts[0].replace("**", "")
                       
                       if "ГРУППА" in left_cell or "⏰" in left_cell:

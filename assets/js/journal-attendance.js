@@ -49,6 +49,11 @@ function submitToken() {
 function showJournal() {
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("journal-section").classList.remove("hidden");
+
+  // СКРЫВАЕМ ИНСТРУКЦИЮ ПОСЛЕ УСПЕШНОГО ВХОДА
+  const instr = document.getElementById("instructions-section");
+  if (instr) instr.classList.add("hidden");
+
   loadStudentsFromYaml();
 }
 
@@ -56,6 +61,11 @@ function logoutTeacher() {
   if (confirm("Вы уверены, что хотите выйти из журнала и сменить ключ доступа?")) {
     localStorage.removeItem("github_journal_token");
     accessToken = null;
+
+    // ПОКАЗЫВАЕМ ИНСТРУКЦИЮ ПРИ ВЫХОДЕ
+    const instr = document.getElementById("instructions-section");
+    if (instr) instr.classList.remove("hidden");
+
     window.location.reload();
   }
 }

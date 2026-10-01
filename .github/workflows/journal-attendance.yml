@@ -235,5 +235,5 @@ jobs:
           git add _data/*-journal-attendance-*.json
           git add _data/journal-attendance-*.yml
           
-          git commit -m "Сводный журнал за день от $TEACHER_NAME [skip ci]" && git push -o ci.skip || echo "Нет изменений для авто-коммита базы"
+          git commit -m "Сводный журнал за день от $TEACHER_NAME [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"
           

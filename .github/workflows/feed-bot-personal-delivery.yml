@@ -1,14 +1,13 @@
-name: Broadcast Personal Lessons Report via Chain Trigger
+name: Broadcast Personal Lessons Report via Final Push
 
 on:
-  # Робот просыпается строго после финиша вашего генератора отчетов
-  workflow_run:
-    workflows: ["Generate Attendance Report to Discussions"]
-    types: [completed]
+  push:
+    # ⚡️ ГЛАВНЫЙ СЕКРЕТ: Робот просыпается строго 1 раз, когда генератор запушил готовую YAML-базу
+    paths:
+      - '_data/journal-attendance-*.yml'
 
 jobs:
   delivery-to-personal:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Latest Comment and Send to Telegram via Python
@@ -18,57 +17,23 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
-          # Передаем ID запущенного генератора, чтобы прочитать его логи
-          RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
           import urllib.request
           import json
           import os
           import sys
-          import zipfile
-          import io
 
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           gh_token = os.environ.get("GH_TOKEN", "").strip()
           repo_full = os.environ.get("REPO_NAME", "").strip()
-          run_id = os.environ.get("RUN_ID", "").strip()
           
           owner, repo_name = repo_full.split("/")
-          headers_gh = {
-              "Authorization": f"Bearer {gh_token}",
-              "Content-Type": "application/json",
-              "User-Agent": "GitHub-Actions-Robot"
-          }
 
-          # 🎯 ШАГ 1: Проверяем логи генератора, чтобы исключить пустые холостые прогоны
-          logs_url = f"https://github.com{repo_full}/actions/runs/{run_id}/logs"
-          req_logs = urllib.request.Request(logs_url, headers={"Authorization": f"Bearer {gh_token}", "User-Agent": "GitHub-Actions-Robot"})
-          
-          is_real_publish = False
-          try:
-              with urllib.request.urlopen(req_logs) as response:
-                  # Логи Гитхаба скачиваются в виде ZIP-архива
-                  zip_data = response.read()
-                  with zipfile.ZipFile(io.BytesIO(zip_data)) as z:
-                      for filename in z.namelist():
-                          with z.open(filename) as f:
-                              log_content = f.read().decode('utf-8', errors='ignore')
-                              if "Сводный журнал успешно опубликован" in log_content:
-                                  is_real_publish = True
-                                  break
-          except Exception as e:
-              # Если логи еще не сгенерировались сервером, делаем резервную проверку по времени
-              print("ℹ️ Проверка логов недоступна, переключаемся на стандартный режим.")
-              is_real_publish = True
-
-          if not is_real_publish:
-              print("ℹ️ Системное уведомление: Комплект еще не собран, это холостой прогон генератора. Пропускаем шаг.")
-              sys.exit(0)
-
-          # 🎯 ШАГ 2: Официальный GraphQL-запрос к GitHub для получения свежего комментария
+          # Официальный рабочий адрес GraphQL
           url_gh = "https://api.github.com/graphql"
           
+          # Запрашиваем текст последнего комментария в Дискуссии №38
           graphql_query = {
               "query": f"""
               query {{
@@ -85,6 +50,12 @@ jobs:
               """
           }
 
+          headers_gh = {
+              "Authorization": f"Bearer {gh_token}",
+              "Content-Type": "application/json",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+
           req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
           
           try:
@@ -92,20 +63,20 @@ jobs:
                   res_data = json.loads(response.read().decode('utf-8'))
                   nodes = res_data['data']['repository']['discussion']['comments']['nodes']
                   if not nodes:
-                      print("ℹ️ Новые комментарии не найдены.")
+                      print("ℹ️ Комментарии не найдены.")
                       sys.exit(0)
                   raw_body = nodes[0]['body']
           except Exception as e:
               print("Ошибка получения данных с GitHub GraphQL API:", str(e))
               sys.exit(1)
 
-          print("=== ЛОГ PYTHON: СЫРОЙ ТЕКСТ ИЗ ДИСКУССИИ №38 ===")
+          print("=== ЛОГ PYTHON: СЫРОЙ ВХОДНОЙ ТЕКСТ ИЗ ДИСКУССИИ ===")
           print(repr(raw_body))
           print("=====================================================")
 
           clean_lines = []
           
-          # Построчно очищаем маркдаун-таблицу от лишних палочек и дефисов
+          # Построчно очищаем маркдаун-таблицу
           for line in raw_body.split("\n"):
               line_str = line.strip()
               
@@ -139,15 +110,15 @@ jobs:
 
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ЧЕЛОВЕКА ===")
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
           print(repr(message_text))
           print("=====================================================")
 
           if not message_text:
-              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем.")
+              print("ℹ️ Системное уведомление: Текст пуст. Пропускаем отправку.")
               sys.exit(0)
 
-          # 🎯 ШАГ 3: Отправка итогового чистого текста на ваш секретный ID
+          # Отправка итогового чистого текста Валерию
           url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {

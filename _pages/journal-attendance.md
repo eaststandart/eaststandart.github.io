@@ -5,36 +5,14 @@ permalink: /journal-attendance/
 emoji: "📅"
 ---
 
-<!-- Часть 1: Обновленные стили и интерфейс с двумя раздельными полями ввода -->
-<style>
-  .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
-  .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
-  .btn-auth { background-color: #24292e; color: white; }
-  .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; padding: 10px 0px; margin: 0; font-size: 14px; flex: 1; min-width: 40px; text-align: center; border-radius: 6px; font-weight: bold; }
-  .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
-  .btn-day.active-sat { background-color: #2b8a3e; color: white; }
-  .btn-day.active-sun { background-color: #1c7ed6; color: white; }
-  .btn-save { background-color: #37b24d; color: white; margin-top: 15px; }
-  .group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 20px 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-  .group-title { font-size: 18px; margin-top: 0; color: #212529; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; }
-  .kid-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f3f5; }
-  .kid-row:last-child { border-bottom: none; }
-  .chk-big { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
-  .lbl-big { font-size: 16px; cursor: pointer; user-select: none; flex-grow: 1; }
-  .input-text { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
-  .hidden { display: none; }
-  .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; font-weight: bold; }
-  .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
-  .notify-error { background-color: #ffe3e3; color: #c92a2a; }
-  .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; }
-  .field-label { font-size: 14px; font-weight: bold; color: #495057; display: block; margin-top: 10px; }
-</style>
+<!-- Подключение внешнего файла стилей -->
+<link rel="stylesheet" href="{{ '/assets/css/journal-attendance.css' | relative_url }}">
 
 <div class="admin-container">
   <!-- БЛОК АВТОРИЗАЦИИ ЧЕРЕЗ ТОКЕН-ПАРОЛЬ -->
   <div id="auth-section" class="auth-box">
-    <h3 style="margin-top: 0; color: #24292e;">🔑 Доступ к журналу</h3>
-    <p style="font-size: 14px; color: #6c757d; margin-bottom: 15px;">Вставьте ваш личный персональный ключ доступа (github_pat), чтобы открыть журнал:</p>
+    <h3 class="auth-title">🔑 Доступ к журналу</h3>
+    <p class="auth-desc">Вставьте ваш личный персональный ключ доступа (github_pat), чтобы открыть журнал:</p>
     <input type="password" id="token-input" class="input-text" placeholder="github_pat_...">
     <button id="btn-login" class="btn-big btn-auth" onclick="submitToken()">🔓 Подключить журнал</button>
   </div>
@@ -44,10 +22,10 @@ emoji: "📅"
     <!-- Выбор дня недели -->
 
     <!-- Контейнер для динамических кнопок дней недели -->
-    <div id="days-buttons-container" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+    <div id="days-buttons-container" class="days-flex-container"></div>
 
      <!--  Единый контейнер для управляемой даты дня --> 
-     <div id="global-date-container" style="margin: 15px 0 5px 0; font-size: 15px; font-weight: bold; color: #495057;"></div>
+     <div id="global-date-container" class="global-date-box"></div>
 
 	<div id="notification" class="notify hidden"></div>
 
@@ -55,6 +33,8 @@ emoji: "📅"
     <div id="groups-container"></div>
   </div>
 </div>
+
+
 <script>
   // Часть 2: Настройки репозитория и проверка пароля преподавателя
   const repo_owner = "eaststandart";

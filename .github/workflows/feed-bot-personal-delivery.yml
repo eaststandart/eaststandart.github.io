@@ -6,18 +6,16 @@ on:
     types: [completed]
 
 jobs:
-  delivery-to-personal:
+  research-logs:
     runs-on: ubuntu-latest
     steps:
-      - name: Research and Log Workflow Trigger Data via Python
+      - name: Deep Analysis of Trigger and Discussion State via Python
         shell: python
         env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
           
-          # Забираем из системы Гитхаба скрытые технические данные этого запуска
+          # Системные метки триггера запуска
           RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
           RUN_EVENT: ${{ github.event.workflow_run.event }}
           RUN_ID: ${{ github.event.workflow_run.id }}
@@ -25,21 +23,82 @@ jobs:
           RUN_SHA: ${{ github.event.workflow_run.head_sha }}
           RUN_COMMIT_MSG: ${{ github.event.workflow_run.head_commit.message }}
         run: |
+          import urllib.request
+          import json
           import os
           import sys
 
           print("=====================================================")
-          print("⚡️ СИСТЕМНЫЙ ЛОГ ИССЛЕДОВАНИЯ ПРИЧИНЫ ДВОЙНОГО ЗАПУСКА")
+          print("⚡️ КРАТКИЙ СИСТЕМНЫЙ ЛОГ ТРИГГЕРА (ДЛЯ СВЯЗИ С ПРОШЛЫМ ТЕСТОМ)")
           print("=====================================================")
-          
-          # Выводим на экран все скрытые метки Гитхаба, которые вызвали этот запуск
-          print(f"1. Статус завершения 1-го робота (Conclusion): {os.environ.get('RUN_CONCLUSION')}")
-          print(f"2. Какое событие вызвало 1-го робота (Event): {os.environ.get('RUN_EVENT')}")
+          print(f"1. Статус завершения 1-го робота: {os.environ.get('RUN_CONCLUSION')}")
+          print(f"2. Какое событие вызвало 1-го робота: {os.environ.get('RUN_EVENT')}")
           print(f"3. Уникальный ID запуска 1-го робота (Run ID): {os.environ.get('RUN_ID')}")
           print(f"4. Порядковый номер запуска (Run Number): {os.environ.get('RUN_NUMBER')}")
           print(f"5. Хеш-код коммита (SHA): {os.environ.get('RUN_SHA')}")
           print(f"6. Текст сообщения коммита: {os.environ.get('RUN_COMMIT_MSG')}")
+
+          # 📊 ИССЛЕДОВАНИЕ ЖИВОГО СОСТОЯНИЯ ДИСКУССИИ №38
+          gh_token = os.environ.get("GH_TOKEN", "").strip()
+          repo_full = os.environ.get("REPO_NAME", "").strip()
+          owner, repo_name = repo_full.split("/")
+
+          url_gh = "https://api.github.com/graphql"
           
+          # Запрашиваем 1 самый последний комментарий в Дискуссии №38
+          graphql_query = {
+              "query": f"""
+              query {{
+                repository(owner: "{owner}", name: "{repo_name}") {{
+                  discussion(number: 38) {{
+                    comments(last: 1) {{
+                      nodes {{
+                        id
+                        author {{ login }}
+                        createdAt
+                        body
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+              """
+          }
+
+          headers_gh = {
+              "Authorization": f"Bearer {gh_token}",
+              "Content-Type": "application/json",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+
+          req_gh = urllib.request.Request(
+              url_gh, 
+              data=json.dumps(graphql_query).encode('utf-8'), 
+              headers=headers_gh
+          )
+          
+          print("\n=====================================================")
+          print("📋 ГЛУБОКИЙ ЛОГ СОСТОЯНИЯ ВЕТКИ №38 НА МОМЕНТ ЗАПУСКА")
           print("=====================================================")
-          print("ℹ️ Анализ завершен. Этот запуск выполнен только для сбора логов.")
+          try:
+              with urllib.request.urlopen(req_gh) as response:
+                  res_data = json.loads(response.read().decode('utf-8'))
+                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
+                  
+                  if not nodes:
+                      print("ℹ️ В Дискуссии №38 вообще нет комментариев.")
+                  else:
+                      last_comment = nodes[0]
+                      print(f"• Уникальный ID комментария: {last_comment.get('id')}")
+                      print(f"• Кто автор комментария (Автор): {last_comment.get('author', {}).get('login')}")
+                      print(f"• Точное время публикации (UTC): {last_comment.get('createdAt')}")
+                      print("\n• ЖИВОЙ ТЕКСТ ПОСЛЕДНЕГО КОММЕНТАРИЯ НА ДАННЫЙ МИГ:")
+                      print("-----------------------------------------------------")
+                      print(last_comment.get('body', ''))
+                      print("-----------------------------------------------------")
+          except Exception as e:
+              print("❌ Ошибка сбора логов через GraphQL API:", str(e))
+              
+          print("=====================================================")
+          print("ℹ️ Исследование завершено. Данные зафиксированы.")
           print("=====================================================")

@@ -1,5 +1,5 @@
 ---
-workflow: "добавть padding-bottom: 0px; в <div class="content-wrapper"> чтобы внизу страницы не ыло пустого поля - это глобальное свойство для всех"
+workflow: "добавть padding-bottom: 0px; в div class=content-wrapper чтобы внизу страницы не ыло пустого поля - это глобальное свойство для всех"
 layout: page
 title: Журнал посещаемости
 permalink: /journal-attendance/

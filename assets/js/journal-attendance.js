@@ -140,24 +140,25 @@ function loadStudentsFromYaml() {
   .catch(err => {
     console.error(err);
     
-    // Возвращаем форму входа и разблокируем интерфейс
-    document.getElementById("auth-section").classList.remove("hidden");
-    document.getElementById("journal-section").classList.add("hidden");
-    
-    const instr = document.getElementById("instructions-section");
-    if (instr) instr.classList.remove("hidden");
-    
-    document.getElementById("btn-login").disabled = false;
-    document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
-
     // ПРОВЕРКА: Извлекаем сохранённый логин и сверяем с белым списком
     const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
     
     if (allowedTeachers.includes(enteredLogin)) {
-      // Наш официальный преподаватель, но у него сбоит или отсутствует файл базы
+      // СИТУАЦИЯ 1: Это наш официальный преподаватель, но у него отсутствует файл базы.
+      // Поведение строго как в старом коде: оставляем в журнале и просто пишем ошибку!
       showNotify("Ошибка загрузки личного журнала. Проверьте наличие файла на GitHub.", "error");
     } else {
-      // Это посторонний человек с левым токеном
+      // СИТУАЦИЯ 2: Это посторонний человек с левым токеном.
+      // Только в этом случае жестко выкидываем на экран ввода ключа и блокируем!
+      document.getElementById("auth-section").classList.remove("hidden");
+      document.getElementById("journal-section").classList.add("hidden");
+      
+      const instr = document.getElementById("instructions-section");
+      if (instr) instr.classList.remove("hidden");
+      
+      document.getElementById("btn-login").disabled = false;
+      document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
+      
       showNotify("❌ Доступ заблокирован. Ваш аккаунт не зарегистрирован в базе преподавателей. Обратитесь к администратору.", "error");
     }
   });

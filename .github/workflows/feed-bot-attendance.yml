@@ -1,0 +1,110 @@
+name: Broadcast Personal Lessons Report to Telegram
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  telegram-personal-lessons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Filter Discussion and Get Raw Body
+        id: parse_data
+        run: |
+          # 1. Жесткая цифровая проверка — работаем ТОЛЬКО с дискуссией №38
+          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
+          
+          if [ "$CLEAN_NUM" != "38" ]; then
+            echo "PROCEED=false" >> $GITHUB_ENV
+            exit 0
+          fi
+          echo "PROCEED=true" >> $GITHUB_ENV
+
+          # 2. Забираем сырой текст комментария (тело отчета из Obsidian)
+          echo "raw_body<<EOF" >> $GITHUB_OUTPUT
+          cat << 'EOF' >> $GITHUB_OUTPUT
+          ${{ github.event.comment.body }}
+          EOF
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Convert Markdown Table to Clean Personal Text via Python
+        if: env.PROCEED == 'true'
+        shell: python
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
+          RAW_BODY: ${{ steps.parse_data.outputs.raw_body }}
+        run: |
+          import urllib.request
+          import json
+          import os
+          import sys
+
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          raw_body = os.environ.get("RAW_BODY", "")
+
+          clean_lines = []
+          
+          # Построчно очищаем маркдаун-таблицу от мусора, сохраняя все приписки [э]/[с]
+          for line in raw_body.split("\n"):
+              line_str = line.strip()
+              
+              # Пропускаем технические шапки и разделители таблиц Гитхаба
+              if "| :---" in line_str or "Группа / Ученик" in line_str:
+                  continue
+                  
+              # Обрабатываем строки таблицы, убирая символы палок |
+              if line_str.startswith("|"):
+                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
+                  
+                  if len(parts) >= 1:
+                      left_cell = parts[0].replace("**", "") # Убираем маркдаун-звёздочки у групп
+                      
+                      # Если строка является временным заголовком группы
+                      if "ГРУППА" in left_cell or "⏰" in left_cell:
+                          clean_lines.append(f"\n{left_cell}")
+                          
+                      # Если строка содержит имя ученика и его статус посещения
+                      elif len(parts) >= 2:
+                          status_cell = parts[1]
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          student_name = left_cell
+                          clean_lines.append(f"{student_name} {emoji}")
+                          
+              # Обрабатываем дату отчета и подпись преподавателя
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                  if "Журнал посещений за" in line_str:
+                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                      clean_lines.append(f"📅 Отчет за {date_part}")
+                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
+                      # Извлекаем чистое имя (например, TechLab) и оборачиваем строго в HTML-тег <b>
+                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  else:
+                      clean_lines.append(line_str)
+
+          # Склеиваем очищенные строки в единый красивый текст
+          message_text = "\n".join([l for l in clean_lines if l.strip()])
+
+          # Отправка по нашему безопасному f-строковому методу без слэша в bot
+          url = f"https://telegram.org{token}/sendMessage"
+          
+          payload = {
+              "chat_id": chat_id,
+              "text": message_text,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": True
+          }
+
+          req = urllib.request.Request(
+              url, 
+              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          
+          try:
+              with urllib.request.urlopen(req) as response:
+                  print("HTTP Status Code:", response.getcode())
+          except Exception as e:
+              sys.exit(1)

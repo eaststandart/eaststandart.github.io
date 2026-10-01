@@ -1,14 +1,13 @@
 name: Broadcast Personal Lessons Report via Chain Trigger
 
 on:
-  # ⚡ СЕКРЕТ ЗАПУСКА: Робот просыпается строго после финиша вашего генератора отчетов
+  # ⚡ Робот просыпается строго после финиша вашего генератора отчетов
   workflow_run:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
 jobs:
   delivery-to-personal:
-    # Робот сработает только в том случае, если генератор отчетов отработал успешно
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +16,6 @@ jobs:
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
-          # Передаем системные переменные репозитория для авторизации в API GitHub
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
         run: |
@@ -29,34 +27,53 @@ jobs:
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           gh_token = os.environ.get("GH_TOKEN", "").strip()
-          repo = os.environ.get("REPO_NAME", "").strip()
-
-          # 1. Скачиваем самый последний комментарий из дискуссии №38 через GitHub API
-          # Используем официальный шлюз, который обходит любые блокировки ботов
-          gh_url = f"https://github.com{repo}/discussions/38/comments?per_page=1&page=1"
+          repo_full = os.environ.get("REPO_NAME", "").strip()
           
-          # Заголовки для авторизации внутри GitHub API
-          headers = {
+          owner, repo_name = repo_full.split("/")
+
+          # ⚡ ОФИЦИАЛЬНЫЙ GRAPHQL ЗАПРОС К GITHUB ДЛЯ ДИСКУССИЙ
+          url_gh = "https://github.com"
+          
+          # Запрашиваем последний комментарий из дискуссии №38
+          graphql_query = {
+              "query": f"""
+              query {{
+                repository(owner: "{owner}", name: "{repo_name}") {{
+                  discussion(number: 38) {{
+                    comments(last: 1) {{
+                      nodes {{
+                        body
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+              """
+          }
+
+          headers_gh = {
               "Authorization": f"Bearer {gh_token}",
-              "Accept": "application/vnd.github+json",
+              "Content-Type": "application/json",
               "User-Agent": "GitHub-Actions-Robot"
           }
 
-          req_gh = urllib.request.Request(gh_url, headers=headers)
+          req_gh = urllib.request.Request(
+              url_gh, 
+              data=json.dumps(graphql_query).encode('utf-8'), 
+              headers=headers_gh
+          )
           
           try:
               with urllib.request.urlopen(req_gh) as response:
-                  comments = json.loads(response.read().decode('utf-8'))
+                  res_data = json.loads(response.read().decode('utf-8'))
+                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
+                  if not nodes:
+                      print("ℹ️ Новые комментарии не найдены.")
+                      sys.exit(0)
+                  raw_body = nodes[0]['body']
           except Exception as e:
-              print("Ошибка получения данных с GitHub API:", str(e))
+              print("Ошибка получения данных с GitHub GraphQL API:", str(e))
               sys.exit(1)
-
-          if not comments or len(comments) == 0:
-              print("ℹ️ Комментарии в дискуссии №38 не найдены.")
-              sys.exit(0)
-
-          # Забираем сырое текстовое тело самого последнего комментария
-          raw_body = comments[0].get("body", "")
 
           print("=== ЛОГ PYTHON: СЫРОЙ ТЕКСТ ИЗ ДИСКУССИИ №38 ===")
           print(repr(raw_body))
@@ -64,7 +81,6 @@ jobs:
 
           clean_lines = []
           
-          # 2. Построчно очищаем маркдаун-таблицу, сохраняя все пометки [э]/[с]
           for line in raw_body.split("\n"):
               line_str = line.strip()
               
@@ -75,6 +91,7 @@ jobs:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
+                      # ⚡ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: берем первый элемент из текстового массива
                       left_cell = parts[0].replace("**", "")
                       
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
@@ -98,17 +115,16 @@ jobs:
 
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ЧЕЛОВЕКА ===")
           print(repr(message_text))
           print("=====================================================")
 
-          # Автоспасение от красных сборок: если комментарий пуст или это не отчет — выходим зелеными
           if not message_text:
               print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем.")
               sys.exit(0)
 
-          # 3. Отправка итогового чистого текста на ваш секретный ID без слэша в bot
-          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          # Отправка на боевой сервер Telegram
+          url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {
               "chat_id": chat_id,
@@ -121,7 +137,7 @@ jobs:
               payload["message_thread_id"] = 38
 
           req_tg = urllib.request.Request(
-              url, 
+              url_tg, 
               data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
               headers={'Content-Type': 'application/json'}
           )

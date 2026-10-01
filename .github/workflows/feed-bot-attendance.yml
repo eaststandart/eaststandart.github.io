@@ -11,7 +11,6 @@ jobs:
       - name: Filter Discussion and Verify
         id: parse_data
         run: |
-          # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
@@ -51,11 +50,9 @@ jobs:
                   continue
                   
               if line_str.startswith("|"):
-                  # Разбиваем по палочкам и берем только заполненные ячейки
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
-                      # ⚡ ИСПРАВЛЕНИЕ: берем первый элемент массива (имя ученика или группу)
                       left_cell = parts[0].replace("**", "")
                       
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
@@ -83,7 +80,6 @@ jobs:
           print(message_text)
           print("=====================================================")
 
-          # ⚡ ВАША ИДЕАЛЬНАЯ СТРОКА СЛИЯНИЯ АДРЕСА
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {
@@ -92,6 +88,11 @@ jobs:
               "parse_mode": "HTML",
               "disable_web_page_preview": True
           }
+
+          # 🎯 АВТОСПАСЕНИЕ ОШИБКИ 400: Если это системный ID ветки форума, корректно разделяем данные
+          if len(chat_id) > 10 and chat_id.startswith("822"):
+              # Прописываем правильную маршрутизацию внутри пакета
+              payload["message_thread_id"] = 38
 
           req = urllib.request.Request(
               url, 
@@ -104,6 +105,10 @@ jobs:
               with urllib.request.urlopen(req) as response:
                   print("HTTP Status Code:", response.getcode())
                   print("Response:", response.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              print("HTTP Error Code:", e.code)
+              print("Response Body:", e.read().decode('utf-8'))
+              sys.exit(1)
           except Exception as e:
               print("Ошибка отправки сети:", str(e))
               sys.exit(1)

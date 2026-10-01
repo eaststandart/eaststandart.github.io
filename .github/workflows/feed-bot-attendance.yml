@@ -12,7 +12,8 @@ jobs:
         id: parse_data
         run: |
           # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
-          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
+          CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
+          CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
           if [ "$CLEAN_NUM" != "38" ]; then
             echo "PROCEED=false" >> $GITHUB_ENV
@@ -25,7 +26,6 @@ jobs:
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          # ⚡ ЗАМЕНЕНО СТРОГО ПО ВАШЕЙ КОМАНДЕ: Новый точный секрет получателя
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           RAW_BODY: ${{ github.event.comment.body }}
         run: |
@@ -51,9 +51,11 @@ jobs:
                   continue
                   
               if line_str.startswith("|"):
+                  # Разбиваем по палочкам и берем только заполненные ячейки
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
+                      # ⚡ ИСПРАВЛЕНИЕ: берем первый элемент массива (имя ученика или группу)
                       left_cell = parts[0].replace("**", "")
                       
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
@@ -81,6 +83,7 @@ jobs:
           print(message_text)
           print("=====================================================")
 
+          # ⚡ ВАША ИДЕАЛЬНАЯ СТРОКА СЛИЯНИЯ АДРЕСА
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {

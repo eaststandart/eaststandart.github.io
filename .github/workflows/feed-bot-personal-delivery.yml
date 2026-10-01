@@ -32,7 +32,7 @@ jobs:
           owner, repo_name = repo_full.split("/")
 
           # ⚡ ОФИЦИАЛЬНЫЙ GRAPHQL ЗАПРОС К GITHUB ДЛЯ ДИСКУССИЙ
-          url_gh = "https://github.com/api/graphql"
+          url_gh = "https://api.github.com/graphql"
           
           # Запрашиваем последний комментарий из дискуссии №38
           graphql_query = {

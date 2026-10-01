@@ -1,159 +1,45 @@
 name: Broadcast Personal Lessons Report via Chain Trigger
 
 on:
-  # ⚡️ ВОЗВРАЩАЕМ ЦЕПОЧКУ: Робот просыпается строго после финиша вашего генератора отчетов
   workflow_run:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
 jobs:
   delivery-to-personal:
-    # Запускаемся только при успешном завершении генератора
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Latest Comment and Send to Telegram via Python
+      - name: Research and Log Workflow Trigger Data via Python
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
-          # Передаем номер запуска процесса Гитхаба
+          
+          # Забираем из системы Гитхаба скрытые технические данные этого запуска
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
           RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_COMMIT_MSG: ${{ github.event.workflow_run.head_commit.message }}
         run: |
-          import urllib.request
-          import json
           import os
           import sys
 
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          gh_token = os.environ.get("GH_TOKEN", "").strip()
-          repo_full = os.environ.get("REPO_NAME", "").strip()
-          
-          owner, repo_name = repo_full.split("/")
-
-          # ⚡️ ИДЕАЛЬНЫЙ ФИЛЬТР ДУБЛИКАТОВ:
-          # Поскольку Гитхаб из-за пуша базы запускает генератор дважды, 
-          # мы проверяем системную переменную Гитхаба. 
-          # Если этот шаг вызывается повторно в рамках одной сессии — мы просто выходим зелеными.
-          # Для Actions надежнее всего проверить, что мы шлем отчет только в первый рабочий раунд.
-          
-          # Официальный рабочий адрес GraphQL
-          url_gh = "https://api.github.com/graphql"
-          
-          # Запрашиваем текст последнего комментария в Дискуссии №38
-          graphql_query = {
-              "query": f"""
-              query {{
-                repository(owner: "{owner}", name: "{repo_name}") {{
-                  discussion(number: 38) {{
-                    comments(last: 1) {{
-                      nodes {{
-                        body
-                      }}
-                    }}
-                  }}
-                }}
-              }}
-              """
-          }
-
-          headers_gh = {
-              "Authorization": f"Bearer {gh_token}",
-              "Content-Type": "application/json",
-              "User-Agent": "GitHub-Actions-Robot"
-          }
-
-          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
-          
-          try:
-              with urllib.request.urlopen(req_gh) as response:
-                  res_data = json.loads(response.read().decode('utf-8'))
-                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
-                  if not nodes:
-                      print("ℹ️ Комментарии не найдены.")
-                      sys.exit(0)
-                  raw_body = nodes[0]['body']
-          except Exception as e:
-              print("Ошибка получения данных с GitHub GraphQL API:", str(e))
-              sys.exit(1)
-
-          print("=== ЛОГ PYTHON: СЫРОЙ ВХОДНОЙ ТЕКСТ ИЗ ДИСКУССИИ ===")
-          print(repr(raw_body))
           print("=====================================================")
-
-          clean_lines = []
-          
-          # Построчно очищаем маркдаун-таблицу
-          for line in raw_body.split("\n"):
-              line_str = line.strip()
-              
-              if "| :---" in line_str or "Группа / Ученик" in line_str:
-                  continue
-                  
-              if line_str.startswith("|"):
-                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
-                  
-                  if len(parts) >= 1:
-                      # ⚡️ Берем первый текстовый элемент из массива
-                      left_cell = parts[0].replace("**", "")
-                      
-                      if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n{left_cell}")
-                          
-                      elif len(parts) >= 2:
-                          status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          student_name = left_cell
-                          clean_lines.append(f"{student_name} {emoji}")
-                          
-              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
-                  if "Журнал посещений за" in line_str:
-                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
-                      clean_lines.append(f"📅 Отчет за {date_part}")
-                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
-                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
-                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
-                  else:
-                      clean_lines.append(line_str)
-
-          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
-
-          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
-          print(repr(message_text))
+          print("⚡️ СИСТЕМНЫЙ ЛОГ ИССЛЕДОВАНИЯ ПРИЧИНЫ ДВОЙНОГО ЗАПУСКА")
           print("=====================================================")
-
-          if not message_text:
-              print("ℹ️ Системное уведомление: Текст пуст. Пропускаем отправку.")
-              sys.exit(0)
-
-          # Отправка итогового чистого текста Валерию
-          url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
           
-          payload = {
-              "chat_id": chat_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": True
-          }
-
-          if len(chat_id) > 10 and chat_id.startswith("822"):
-              payload["message_thread_id"] = 38
-
-          req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
+          # Выводим на экран все скрытые метки Гитхаба, которые вызвали этот запуск
+          print(f"1. Статус завершения 1-го робота (Conclusion): {os.environ.get('RUN_CONCLUSION')}")
+          print(f"2. Какое событие вызвало 1-го робота (Event): {os.environ.get('RUN_EVENT')}")
+          print(f"3. Уникальный ID запуска 1-го робота (Run ID): {os.environ.get('RUN_ID')}")
+          print(f"4. Порядковый номер запуска (Run Number): {os.environ.get('RUN_NUMBER')}")
+          print(f"5. Хеш-код коммита (SHA): {os.environ.get('RUN_SHA')}")
+          print(f"6. Текст сообщения коммита: {os.environ.get('RUN_COMMIT_MSG')}")
           
-          print("=== ЛОГ PYTHON: ОТВЕТ СЕРВЕРА TELEGRAM API ===")
-          try:
-              with urllib.request.urlopen(req_tg) as response:
-                  print("HTTP Status Code:", response.getcode())
-                  print("Response:", response.read().decode('utf-8'))
-          except urllib.error.HTTPError as e:
-              print("HTTP Error Code:", e.code)
-              print("Response Body:", e.read().decode('utf-8'))
-              sys.exit(1)
-          except Exception as e:
-              print("Ошибка отправки сети:", str(e))
-              sys.exit(1)
-          print("==============================================")
+          print("=====================================================")
+          print("ℹ️ Анализ завершен. Этот запуск выполнен только для сбора логов.")
+          print("=====================================================")

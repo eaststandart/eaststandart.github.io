@@ -1,6 +1,7 @@
 // Часть 2: Настройки репозитория и проверка пароля преподавателя
 const repo_owner = "eaststandart";
 const repo_name = "eaststandart.github.io";
+const allowedTeachers = ["eaststandart"];
 
 let accessToken = localStorage.getItem("github_journal_token");
 let studentsData = {};
@@ -81,6 +82,7 @@ function loadStudentsFromYaml() {
   .then(r => r.json())
   .then(userData => {
     const userLogin = userData.login; // Например, "TechLab"
+    localStorage.setItem("github_journal_logged_user", userLogin);
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
     
     // Динамический адрес личного файла: journal-attendance-ЛОГИН.yml
@@ -137,7 +139,27 @@ function loadStudentsFromYaml() {
   })
   .catch(err => {
     console.error(err);
-    showNotify("Ошибка загрузки личного журнала. Проверьте наличие файла на GitHub.", "error");
+    
+    // Возвращаем форму входа и разблокируем интерфейс
+    document.getElementById("auth-section").classList.remove("hidden");
+    document.getElementById("journal-section").classList.add("hidden");
+    
+    const instr = document.getElementById("instructions-section");
+    if (instr) instr.classList.remove("hidden");
+    
+    document.getElementById("btn-login").disabled = false;
+    document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
+
+    // ПРОВЕРКА: Извлекаем сохранённый логин и сверяем с белым списком
+    const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
+    
+    if (allowedTeachers.includes(enteredLogin)) {
+      // Наш официальный преподаватель, но у него сбоит или отсутствует файл базы
+      showNotify("Ошибка загрузки личного журнала. Проверьте наличие файла на GitHub.", "error");
+    } else {
+      // Это посторонний человек с левым токеном
+      showNotify("❌ Доступ заблокирован. Ваш аккаунт не зарегистрирован в базе преподавателей. Обратитесь к администратору.", "error");
+    }
   });
 }
 

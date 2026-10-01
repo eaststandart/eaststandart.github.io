@@ -8,10 +8,10 @@ jobs:
   telegram-personal-lessons:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter Discussion and Get Raw Body
+      - name: Filter Discussion and Verify
         id: parse_data
         run: |
-          # 1. Жесткая цифровая проверка — работаем ТОЛЬКО с дискуссией №38
+          # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
           CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
           
           if [ "$CLEAN_NUM" != "38" ]; then
@@ -20,20 +20,13 @@ jobs:
           fi
           echo "PROCEED=true" >> $GITHUB_ENV
 
-          # 2. Забираем сырой текст комментария (тело отчета из Obsidian)
-          echo "raw_body<<EOF" >> $GITHUB_OUTPUT
-          cat << 'EOF' >> $GITHUB_OUTPUT
-          ${{ github.event.comment.body }}
-          EOF
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Convert Markdown Table to Clean Personal Text via Python
         if: env.PROCEED == 'true'
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
-          RAW_BODY: ${{ steps.parse_data.outputs.raw_body }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_PERSONAL_ID_38 }}
+          RAW_BODY: ${{ github.event.comment.body }}
         run: |
           import urllib.request
           import json
@@ -44,13 +37,16 @@ jobs:
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           raw_body = os.environ.get("RAW_BODY", "")
 
+          print("=== ЛОГ PYTHON: СЫРОЙ ВХОДНОЙ ТЕКСТ ИЗ OBSIDIAN ===")
+          print(repr(raw_body))
+          print("=====================================================")
+
           clean_lines = []
           
-          # Построчно очищаем маркдаун-таблицу от мусора, сохраняя все приписки [э]/[с]
           for line in raw_body.split("\n"):
               line_str = line.strip()
               
-              # Пропускаем технические шапки и разделители таблиц Гитхаба
+              # Пропускаем технические шапки и разделители маркдаун-таблиц Гитхаба
               if "| :---" in line_str or "Группа / Ученик" in line_str:
                   continue
                   
@@ -59,7 +55,8 @@ jobs:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "") # Убираем маркдаун-звёздочки у групп
+                      # ⚡ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: берём конкретный текстовый элемент из массива
+                      left_cell = parts[0].replace("**", "")
                       
                       # Если строка является временным заголовком группы
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
@@ -78,14 +75,16 @@ jobs:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
                       clean_lines.append(f"📅 Отчет за {date_part}")
                   elif "Преподаватель:" in line_str or "Проверил" in line_str:
-                      # Извлекаем чистое имя (например, TechLab) и оборачиваем строго в HTML-тег <b>
                       raw_name = line_str.split(":")[-1].replace("*", "").strip()
                       clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
                   else:
                       clean_lines.append(line_str)
 
-          # Склеиваем очищенные строки в единый красивый текст
           message_text = "\n".join([l for l in clean_lines if l.strip()])
+
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
+          print(message_text)
+          print("=====================================================")
 
           # Отправка по нашему безопасному f-строковому методу без слэша в bot
           url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -103,8 +102,12 @@ jobs:
               headers={'Content-Type': 'application/json'}
           )
           
+          print("=== ЛОГ PYTHON: ОТВЕТ СЕРВЕРА TELEGRAM API ===")
           try:
               with urllib.request.urlopen(req) as response:
                   print("HTTP Status Code:", response.getcode())
+                  print("Response:", response.read().decode('utf-8'))
           except Exception as e:
+              print("Ошибка отправки сети:", str(e))
               sys.exit(1)
+          print("==============================================")

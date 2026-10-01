@@ -1,0 +1,141 @@
+name: Broadcast Personal Lessons Report via Chain Trigger
+
+on:
+  # ⚡ СЕКРЕТ ЗАПУСКА: Робот просыпается строго после финиша вашего генератора отчетов
+  workflow_run:
+    workflows: ["Generate Attendance Report to Discussions"]
+    types: [completed]
+
+jobs:
+  delivery-to-personal:
+    # Робот сработает только в том случае, если генератор отчетов отработал успешно
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Latest Comment and Send to Telegram via Python
+        shell: python
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
+          # Передаем системные переменные репозитория для авторизации в API GitHub
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          import urllib.request
+          import json
+          import os
+          import sys
+
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          gh_token = os.environ.get("GH_TOKEN", "").strip()
+          repo = os.environ.get("REPO_NAME", "").strip()
+
+          # 1. Скачиваем самый последний комментарий из дискуссии №38 через GitHub API
+          # Используем официальный шлюз, который обходит любые блокировки ботов
+          gh_url = f"https://github.com{repo}/discussions/38/comments?per_page=1&page=1"
+          
+          # Заголовки для авторизации внутри GitHub API
+          headers = {
+              "Authorization": f"Bearer {gh_token}",
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+
+          req_gh = urllib.request.Request(gh_url, headers=headers)
+          
+          try:
+              with urllib.request.urlopen(req_gh) as response:
+                  comments = json.loads(response.read().decode('utf-8'))
+          except Exception as e:
+              print("Ошибка получения данных с GitHub API:", str(e))
+              sys.exit(1)
+
+          if not comments or len(comments) == 0:
+              print("ℹ️ Комментарии в дискуссии №38 не найдены.")
+              sys.exit(0)
+
+          # Забираем сырое текстовое тело самого последнего комментария
+          raw_body = comments[0].get("body", "")
+
+          print("=== ЛОГ PYTHON: СЫРОЙ ТЕКСТ ИЗ ДИСКУССИИ №38 ===")
+          print(repr(raw_body))
+          print("=====================================================")
+
+          clean_lines = []
+          
+          # 2. Построчно очищаем маркдаун-таблицу, сохраняя все пометки [э]/[с]
+          for line in raw_body.split("\n"):
+              line_str = line.strip()
+              
+              if "| :---" in line_str or "Группа / Ученик" in line_str:
+                  continue
+                  
+              if line_str.startswith("|"):
+                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
+                  
+                  if len(parts) >= 1:
+                      left_cell = parts[0].replace("**", "")
+                      
+                      if "ГРУППА" in left_cell or "⏰" in left_cell:
+                          clean_lines.append(f"\n{left_cell}")
+                          
+                      elif len(parts) >= 2:
+                          status_cell = parts[1]
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          student_name = left_cell
+                          clean_lines.append(f"{student_name} {emoji}")
+                          
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                  if "Журнал посещений за" in line_str:
+                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                      clean_lines.append(f"📅 Отчет за {date_part}")
+                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
+                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  else:
+                      clean_lines.append(line_str)
+
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
+
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
+          print(repr(message_text))
+          print("=====================================================")
+
+          # Автоспасение от красных сборок: если комментарий пуст или это не отчет — выходим зелеными
+          if not message_text:
+              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем.")
+              sys.exit(0)
+
+          # 3. Отправка итогового чистого текста на ваш секретный ID без слэша в bot
+          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          
+          payload = {
+              "chat_id": chat_id,
+              "text": message_text,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": True
+          }
+
+          if len(chat_id) > 10 and chat_id.startswith("822"):
+              payload["message_thread_id"] = 38
+
+          req_tg = urllib.request.Request(
+              url, 
+              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          
+          print("=== ЛОГ PYTHON: ОТВЕТ СЕРВЕРА TELEGRAM API ===")
+          try:
+              with urllib.request.urlopen(req_tg) as response:
+                  print("HTTP Status Code:", response.getcode())
+                  print("Response:", response.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              print("HTTP Error Code:", e.code)
+              print("Response Body:", e.read().decode('utf-8'))
+              sys.exit(1)
+          except Exception as e:
+              print("Ошибка отправки сети:", str(e))
+              sys.exit(1)
+          print("==============================================")

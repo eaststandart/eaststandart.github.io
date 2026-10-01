@@ -35,15 +35,11 @@
 .btn-day { background-color: #f1f3f5; color: #495057; border: 1px solid #ced4da; padding: 10px 0px; margin: 0; font-size: 14px; flex: 1; min-width: 40px; text-align: center; border-radius: 6px; font-weight: bold; transition: 0.2s; }
 .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
 
-/* Специфические стили для активных кнопок */
-.btn-day.active-sat { background-color: #2b8a3e; color: white; }
-.btn-day.active-sun { background-color: #1c7ed6; color: white; }
-
 /* Индивидуальные цветные каёмки и кнопка выхода */
-.day-border-пн { border-left: 4px solid #e63946; }
-.day-border-вт { border-left: 4px solid #d9480f; }
-.day-border-ср { border-left: 4px solid #f59f00; }
-.day-border-чт { border-left: 4px solid #2b8a3e; }
+.day-border-пнедельник { border-left: 4px solid #e63946; }
+.day-border-вторник { border-left: 4px solid #d9480f; }
+.day-border-среда { border-left: 4px solid #f59f00; }
+.day-border-четверг { border-left: 4px solid #2b8a3e; }
 .day-border-пятница { border-left: 4px solid #0c8599; }
 .day-border-суббота { border-left: 4px solid #2b8a3e; }
 .day-border-воскресенье { border-left: 4px solid #1c7ed6; }
@@ -51,10 +47,10 @@
 
 /* Стили для активных (нажатых) кнопок дней недели */
 .btn-day.active.day-border-понедельник { background-color: #e63946 !important; color: white !important; }
-.btn-day.active.day-вторник { background-color: #d9480f !important; color: white !important; }
-.btn-day.active.day-среда { background-color: #f59f00 !important; color: white !important; }
-.btn-day.active.day-четверг { background-color: #2b8a3e !important; color: white !important; }
-.btn-day.active.day-пятница { background-color: #0c8599 !important; color: white !important; }
+.btn-day.active.day-border-вторник { background-color: #d9480f !important; color: white !important; }
+.btn-day.active.day-border-среда { background-color: #f59f00 !important; color: white !important; }
+.btn-day.active.day-border-четверг { background-color: #2b8a3e !important; color: white !important; }
+.btn-day.active.day-border-пятница { background-color: #0c8599 !important; color: white !important; }
 .btn-day.active.day-border-суббота { background-color: #2b8a3e !important; color: white !important; }
 .btn-day.active.day-border-воскресенье { background-color: #1c7ed6 !important; color: white !important; }
 

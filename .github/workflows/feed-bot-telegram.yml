@@ -1,0 +1,88 @@
+name: Universal Telegram Broadcast Dispatcher
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  telegram-broadcast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare Media Cover URL
+        id: parse_data
+        run: |
+          # 1. Проверяем, что ветка разрешена (38 или 83)
+          CLEAN_NUM=$(echo "${{ github.event.discussion.number }}" | tr -cd '0-9')
+          if [ "$CLEAN_NUM" != "38" ] && [ "$CLEAN_NUM" != "83" ]; then
+            exit 0
+          fi
+
+          # 2. Ищем первую картинку или видео для обложки
+          RAW_BODY=$(cat << 'EOF'
+          ${{ github.event.comment.body }}
+          EOF
+          )
+          URL=$(echo "$RAW_BODY" | grep -o -E 'https://github.com[^") ]+' | head -n 1)
+          if [ -z "$URL" ]; then
+            URL=$(echo "$RAW_BODY" | grep -o -E 'https://github-production-user-asset[^") ]+' | head -n 1)
+          fi
+          if [ -z "$URL" ]; then
+            URL="${{ github.event.comment.html_url }}"
+          fi
+          echo "media_url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Send Standardized Card via Python (One Code For All)
+        shell: python
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MEDIA_URL: ${{ steps.parse_data.outputs.media_url }}
+          DISC_TITLE: ${{ github.event.discussion.title }}
+          DISC_NUM: ${{ github.event.discussion.number }}
+          COMMENT_URL: ${{ github.event.comment.html_url }}
+        run: |
+          import urllib.request
+          import json
+          import os
+          import sys
+
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          disc_num = str(os.environ.get("DISC_NUM", "")).strip().replace("#", "")
+          title = os.environ.get("DISC_TITLE", "").strip()
+
+          # 🎯 ОДИН ШАБЛОН НА ВСЕ СЛУЧАИ С АВТО-ПЕРЕКЛЮЧЕНИЕМ ТЕКСТА И ТОПИКА
+          payload = {
+              "chat_id": chat_id,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": False
+          }
+
+          if disc_num == "83":
+              payload["message_thread_id"] = 45  # Добавляем квартиру (топик), если это 83 ветка
+              announcement = "📢 В Дискуссиях клуба опубликованы новые медиа-материалы!"
+          elif disc_num == "38":
+              announcement = "📢 В Дискуссиях клуба обновлён журнал посещений!"
+          else:
+              sys.exit(0)
+
+          # Сборка единого макета текста
+          payload["text"] = (
+              f'<a href="{os.environ.get("MEDIA_URL")}">&#8203;</a><b>{title}</b>\n\n'
+              f'{announcement}\n\n'
+              f'👀 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть на GitHub Discussions</a>'
+          )
+
+          # Отправка на боевой сервер
+          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          req = urllib.request.Request(
+              url, 
+              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
+              headers={'Content-Type': 'application/json'}
+          )
+          
+          try:
+              with urllib.request.urlopen(req) as response:
+                  print("HTTP Status Code:", response.getcode())
+          except Exception as e:
+              sys.exit(1)

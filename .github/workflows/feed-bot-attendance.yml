@@ -8,10 +8,10 @@ jobs:
   telegram-personal-lessons:
     runs-on: ubuntu-latest
     steps:
-      - name: Filter Discussion and Verify
+      - name: Filter and Clean Table Data to Clean Text
         id: parse_data
         run: |
-          # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
+          # 1. Проверяем, что ветка строго №38
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
@@ -21,99 +21,41 @@ jobs:
           fi
           echo "PROCEED=true" >> $GITHUB_ENV
 
-      - name: Convert Markdown Table to Clean Personal Text via Python
-        if: env.PROCEED == 'true'
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
-          RAW_BODY: ${{ github.event.comment.body }}
-        run: |
-          import urllib.request
-          import json
-          import os
-          import sys
-
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          raw_body = os.environ.get("RAW_BODY", "")
-
-          print("=== ЛОГ PYTHON: СЫРОЙ ВХОДНОЙ ТЕКСТ ИЗ OBSIDIAN ===")
-          print(repr(raw_body))
-          print("=====================================================")
-
-          clean_lines = []
-          
-          for line in raw_body.split("\n"):
-              line_str = line.strip()
-              
-              if "| :---" in line_str or "Группа / Ученик" in line_str:
-                  continue
-                  
-              if line_str.startswith("|"):
-                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
-                  
-                  if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "")
-                      
-                      if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n{left_cell}")
-                          
-                      elif len(parts) >= 2:
-                          status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          student_name = left_cell
-                          clean_lines.append(f"{student_name} {emoji}")
-                          
-              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
-                  if "Журнал посещений за" in line_str:
-                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
-                      clean_lines.append(f"📅 Отчет за {date_part}")
-                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
-                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
-                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
-                  else:
-                      clean_lines.append(line_str)
-
-          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
-
-          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ЧЕЛОВЕКА ===")
-          print(repr(message_text))
-          print("=====================================================")
-
-          if not message_text:
-              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем.")
-              sys.exit(0)
-
-          # Ваша идеальная строка слияния адреса
-          url = f"https://api.telegram.org/bot{token}/sendMessage"
-          
-          payload = {
-              "chat_id": chat_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": True
-          }
-
-          if len(chat_id) > 10 and chat_id.startswith("822"):
-              payload["message_thread_id"] = 38
-
-          req = urllib.request.Request(
-              url, 
-              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
+          # 2. Забираем живой сырой текст из Obsidian
+          RAW_BODY=$(cat << 'EOF'
+          ${{ github.event.comment.body }}
+          EOF
           )
+
+          # 3. БРОНЕБОЙНАЯ ОЧИСТКА МАРКДАУН-ТАБЛИЦЫ СРЕДСТВАМИ BASH
+          # Убираем шапку таблицы и разделительные дефисы
+          CLEAN_TEXT=$(echo "$RAW_BODY" | grep -v -E "Группа / Ученик|\| :---")
           
-          print("=== ЛОГ PYTHON: ОТВЕТ СЕРВЕРА TELEGRAM API ===")
-          try:
-              with urllib.request.urlopen(req) as response:
-                  print("HTTP Status Code:", response.getcode())
-                  print("Response:", response.read().decode('utf-8'))
-          except urllib.error.HTTPError as e:
-              print("HTTP Error Code:", e.code)
-              print("Response Body:", e.read().decode('utf-8'))
-              sys.exit(1)
-          except Exception as e:
-              print("Ошибка отправки сети:", str(e))
-              sys.exit(1)
-          print("==============================================")
+          # Превращаем технический заголовок в красивый "📅 Отчет за..."
+          CLEAN_TEXT=$(echo "$CLEAN_TEXT" | sed -E 's/### 📅 Журнал посещений за/📅 Отчет за/g' | sed 's/г\.//g')
+
+          # Вырезаем палочки, слова "Присутствовал/Отсутствовал" и маркдаун-звёздочки у групп
+          CLEAN_TEXT=$(echo "$CLEAN_TEXT" | sed -E 's/\|//g' | sed -E 's/Присутствовал//g' | sed -E 's/Отсутствовал//g' | sed 's/\*\*//g')
+
+          # Переформатируем подпись преподавателя строго под правила Markdown плагина
+          CLEAN_TEXT=$(echo "$CLEAN_TEXT" | sed -E 's/\*?Проверил и отправил преподаватель:\*?/\nПреподаватель:/g')
+          CLEAN_TEXT=$(echo "$CLEAN_TEXT" | sed -E 's/Преподаватель:[[:space:]]*\*?([A-Za-z0-9_-]+)\*?/Преподаватель: \*\1\*/g')
+
+          # Удаляем лишние пробелы в концах строк, сохраняя структуру
+          CLEAN_TEXT=$(echo "$CLEAN_TEXT" | sed -E 's/[[:space:]]+$//')
+
+          # Экспортируем готовый очищенный текст в плагин через буфер Гитхаба
+          echo "REPORT_TEXT<<EOF" >> $GITHUB_ENV
+          echo "$CLEAN_TEXT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send Standardized Personal Report to Telegram
+        if: env.PROCEED == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          disable_web_page_preview: true
+          # ⚡ ПЕРЕДАЕМ ЖИВОЙ, ОЧИЩЕННЫЙ ТЕКСТ КОММЕНТАРИЯ
+          message: ${{ env.REPORT_TEXT }}

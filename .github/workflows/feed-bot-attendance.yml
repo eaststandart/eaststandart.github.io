@@ -49,7 +49,6 @@ jobs:
               if "| :---" in line_str or "Группа / Ученик" in line_str:
                   continue
                   
-              # ⚡ ИСПРАВЛЕНИЕ: Читаем строку, даже если в начале стояли пробелы преподавателя
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
@@ -75,11 +74,16 @@ jobs:
                   else:
                       clean_lines.append(line_str)
 
-          message_text = "\n".join([l for l in clean_lines if l.strip()])
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
           print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
-          print(message_text)
+          print(repr(message_text))
           print("=====================================================")
+
+          # 🎯 АВТОСПАСЕНИЕ КРАСНОЙ СБОРКИ: Если текст пуст, не шлём ошибку, а мягко выходим с кодом 0
+          if not message_text:
+              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем отправку.")
+              sys.exit(0)
 
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           

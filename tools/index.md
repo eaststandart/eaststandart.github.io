@@ -87,7 +87,6 @@ emoji: "🛠"
             <p></p>
         </div>
     </a> 
-    </a> 
     <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">
@@ -95,8 +94,7 @@ emoji: "🛠"
             <p></p>
         </div>
     </a> 
-    </a> 
-        <a href="#" class="tool-card">
+    <a href="#" class="tool-card">
         <img src="#" class="tool-image-round">
         <div class="tool-info">
             <h3>audacity</h3>

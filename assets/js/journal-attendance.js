@@ -24,7 +24,7 @@ function submitToken() {
   document.getElementById("btn-login").innerText = "Проверка пароля...";
 
   // Ссылка запроса: https://github.com
-  fetch("https://github.com", {
+  fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${tokenValue}` }
   })
   .then(response => {
@@ -65,7 +65,7 @@ function loadStudentsFromYaml() {
   showNotify("Идентификация пользователя...", "success");
   
   // Сначала узнаем логин учителя, чтобы понять какой личный файл скачивать
-  fetch("https://github.com", {
+  fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
@@ -74,7 +74,7 @@ function loadStudentsFromYaml() {
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
     
     // Динамический адрес личного файла: journal-attendance-ЛОГИН.yml
-    return fetch(`https://github.com{repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml`, {
+    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml`, {
       headers: { "Authorization": `token ${accessToken}` }
     });
   })
@@ -258,7 +258,7 @@ function saveGroupAttendance(day, time) {
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
   // Шаг 1: Узнаем логин преподавателя
-  fetch("https://github.com", {
+  fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
@@ -286,7 +286,7 @@ function saveGroupAttendance(day, time) {
     };
 
     // Шаг 3: Отправляем файл напрямую на GitHub без склейки в браузере
-    return fetch(`https://github.com{repo_owner}/${repo_name}/contents/${filePath}`, {
+    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
       method: "PUT",
       headers: {
         "Authorization": `token ${accessToken}`,

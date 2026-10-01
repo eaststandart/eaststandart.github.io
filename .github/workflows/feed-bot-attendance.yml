@@ -49,6 +49,7 @@ jobs:
               if "| :---" in line_str or "Группа / Ученик" in line_str:
                   continue
                   
+              # ⚡ ИСПРАВЛЕНИЕ: Читаем строку, даже если в начале стояли пробелы преподавателя
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
@@ -89,9 +90,7 @@ jobs:
               "disable_web_page_preview": True
           }
 
-          # 🎯 АВТОСПАСЕНИЕ ОШИБКИ 400: Если это системный ID ветки форума, корректно разделяем данные
           if len(chat_id) > 10 and chat_id.startswith("822"):
-              # Прописываем правильную маршрутизацию внутри пакета
               payload["message_thread_id"] = 38
 
           req = urllib.request.Request(

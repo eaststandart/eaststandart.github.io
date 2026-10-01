@@ -25,6 +25,7 @@ jobs:
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          # ⚡ ЗАМЕНЕНО СТРОГО ПО ВАШЕЙ КОМАНДЕ: Новый точный секрет получателя
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           RAW_BODY: ${{ github.event.comment.body }}
         run: |
@@ -46,30 +47,24 @@ jobs:
           for line in raw_body.split("\n"):
               line_str = line.strip()
               
-              # Пропускаем технические шапки и разделители маркдаун-таблиц Гитхаба
               if "| :---" in line_str or "Группа / Ученик" in line_str:
                   continue
                   
-              # Обрабатываем строки таблицы, убирая символы палок |
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   
                   if len(parts) >= 1:
-                      # ⚡ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: берём конкретный текстовый элемент из массива
                       left_cell = parts[0].replace("**", "")
                       
-                      # Если строка является временным заголовком группы
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
                           clean_lines.append(f"\n{left_cell}")
                           
-                      # Если строка содержит имя ученика и его статус посещения
                       elif len(parts) >= 2:
                           status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
                           student_name = left_cell
                           clean_lines.append(f"{student_name} {emoji}")
                           
-              # Обрабатываем дату отчета и подпись преподавателя
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
@@ -86,7 +81,6 @@ jobs:
           print(message_text)
           print("=====================================================")
 
-          # Отправка по нашему безопасному f-строковому методу без слэша в bot
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {

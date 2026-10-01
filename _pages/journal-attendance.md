@@ -8,8 +8,7 @@ custom_css: "/assets/css/journal-attendance.css"
 
 {% include journal-attendance.liquid %}
 
-<!-- ДОБАВЛЕНО: Контейнер для скрытия инструкции после входа --> 
-<div id="instructions-section">
+<div id="instructions-section" markdown="1">
 
 ---
 

@@ -49,6 +49,23 @@
 .day-border-воскресенье { border-left: 4px solid #1c7ed6; }
 .btn-logout { border-left: none; padding-left: 5px; padding-right: 5px; text-align: center; background-color: #c92a2a; color: white; }
 
+/* Стили для активных (нажатых) кнопок дней недели */
+.btn-day.active.day-border-понедельник { background-color: #e63946 !important; color: white !important; }
+.btn-day.active.day-вторник { background-color: #d9480f !important; color: white !important; }
+.btn-day.active.day-среда { background-color: #f59f00 !important; color: white !important; }
+.btn-day.active.day-четверг { background-color: #2b8a3e !important; color: white !important; }
+.btn-day.active.day-пятница { background-color: #0c8599 !important; color: white !important; }
+.btn-day.active.day-суббота { background-color: #2b8a3e !important; color: white !important; }
+.btn-day.active.day-воскресенье { background-color: #1c7ed6 !important; color: white !important; }
+
 /* Макет заголовочной части групп */
 .group-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px; }
 .group-title-clean { margin: 0; border: none; padding: 0; }
+
+/* Дополнительные стили, извлеченные из JavaScript-шаблонов */
+.btn-day-transition { transition: 0.2s; }
+.margin-top-15 { margin-top: 15px; }
+.input-probation-blue { border-color: #a5d8ff; }
+.group-block-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px; }
+.group-title-clean { margin: 0; border: none; padding: 0; }
+

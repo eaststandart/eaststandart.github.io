@@ -1,0 +1,33 @@
+{%- comment -%}
+@module journal-attendance.liquid
+@about 
+@purpose 
+@author TechLab
+{%- endcomment -%}
+
+<div class="admin-container">
+  <!-- БЛОК АВТОРИЗАЦИИ ЧЕРЕЗ ТОКЕН-ПАРОЛЬ -->
+  <div id="auth-section" class="auth-box">
+    <h3 class="auth-title">🔑 Доступ к журналу</h3>
+    <p class="auth-desc">Вставьте ваш личный персональный ключ доступа (github_pat), чтобы открыть журнал:</p>
+    <input type="password" id="token-input" class="input-text" placeholder="github_pat_...">
+    <button id="btn-login" class="btn-big btn-auth" onclick="submitToken()">🔓 Подключить журнал</button>
+  </div>
+
+  <!-- РАБОЧАЯ ЗОНА ЖУРНАЛА -->
+  <div id="journal-section" class="hidden">
+    <!-- Контейнер для динамических кнопок дней недели -->
+    <div id="days-buttons-container" class="days-flex-container"></div>
+
+     <!-- Единый контейнер для управляемой даты дня --> 
+     <div id="global-date-container" class="global-date-box"></div>
+
+    <div id="notification" class="notify hidden"></div>
+
+    <!-- Контейнер для динамических групп детей -->
+    <div id="groups-container"></div>
+  </div>
+</div>
+
+<!-- Подключение внешнего файла очищенных скриптов JavaScript -->
+<script src="{{ '/assets/js/journal-attendance.js' | relative_url }}"></script>

@@ -11,6 +11,7 @@ jobs:
       - name: Filter Discussion and Verify
         id: parse_data
         run: |
+          # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
           CURRENT_DISCUSSION="${{ github.event.discussion.number }}"
           CLEAN_NUM=$(echo "$CURRENT_DISCUSSION" | tr -cd '0-9')
           
@@ -76,15 +77,15 @@ jobs:
 
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ВАЛЕРИЯ ===")
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ЧЕЛОВЕКА ===")
           print(repr(message_text))
           print("=====================================================")
 
-          # 🎯 АВТОСПАСЕНИЕ КРАСНОЙ СБОРКИ: Если текст пуст, не шлём ошибку, а мягко выходим с кодом 0
           if not message_text:
-              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем отправку.")
+              print("ℹ️ Системное уведомление: Этот комментарий не является таблицей отчёта. Пропускаем.")
               sys.exit(0)
 
+          # Ваша идеальная строка слияния адреса
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           
           payload = {

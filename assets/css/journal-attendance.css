@@ -36,7 +36,7 @@
 .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
 
 /* Индивидуальные цветные каёмки и кнопка выхода */
-.day-border-пнедельник { border-left: 4px solid #e63946; }
+.day-border-понедельник { border-left: 4px solid #e63946; }
 .day-border-вторник { border-left: 4px solid #d9480f; }
 .day-border-среда { border-left: 4px solid #f59f00; }
 .day-border-четверг { border-left: 4px solid #2b8a3e; }

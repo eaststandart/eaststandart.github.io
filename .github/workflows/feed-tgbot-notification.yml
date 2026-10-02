@@ -59,7 +59,7 @@ jobs:
           }
 
           if disc_num == "83":
-              payload["message_thread_id"] = 45  # Добавляем квартиру (топик), если это 83 ветка
+              payload["message_thread_id"] = 45  # Добавляем , если это 83 ветка
               announcement = "📢 В Дискуссиях клуба опубликованы новые медиа-материалы!"
           elif disc_num == "38":
               announcement = "📢 В Дискуссиях клуба обновлён журнал посещений!"
@@ -73,7 +73,7 @@ jobs:
               f'👀 <a href="{os.environ.get("COMMENT_URL")}">Посмотреть на GitHub Discussions</a>'
           )
 
-          # Отправка на боевой сервер
+          # Отправка на сервер
           url = f"https://api.telegram.org/bot{token}/sendMessage"
           req = urllib.request.Request(
               url, 

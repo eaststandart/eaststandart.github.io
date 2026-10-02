@@ -94,7 +94,7 @@ jobs:
                       elif len(parts) >= 2:
                           status_cell = parts
                           only_emoji = status_cell[0] if status_cell else "⚪"
-                          clean_lines.append(f"{status_cell} {left_cell}")
+                          clean_lines.append(f"{only_emoji} {left_cell}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()

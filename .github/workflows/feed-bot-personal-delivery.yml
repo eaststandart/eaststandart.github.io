@@ -6,6 +6,10 @@ on:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
+concurrency:
+  group: personal-delivery-group
+  cancel-in-progress: false
+
 jobs:
   delivery-to-personal:
     # Запускаемся строго при успешном (зелёном) финише первого робота

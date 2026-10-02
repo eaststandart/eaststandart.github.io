@@ -70,16 +70,15 @@ jobs:
                   res_data = json.loads(response.read().decode('utf-8'))
                   nodes = res_data['data']['repository']['discussion']['comments']['nodes']
                   if not nodes:
-                      print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
+                      print("ℹ dependency LOG: Комментарии не найдены.")
                       sys.exit(0)
                   
-                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ СИНТАКСИСА: Извлекаем первый (нулевой) элемент массива nodes
                   raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
 
-          # Сначала собираем все имена для поиска динамического максимума
+          # Сначала собираем все имена для поиска динамического максимума длины строки
           names_list = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -93,7 +92,7 @@ jobs:
           # Вычисляем самое длинное имя в списке текущего дня + 2 пробела
           text_line = max(len(n) for n in names_list) + 2 if names_list else 15
 
-          # 🎯 ШАГ 2: Очищаем маркдаун-таблицу и выравниваем по моноширинной сетке
+          # 🎯 ШАГ 2: Чистая построчная очистка маркдаун-таблицы без врезки тегов внутрь цикла
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -104,44 +103,31 @@ jobs:
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          # Закрываем тегом прошлую группу (если она была) и открываем новую
-                          if clean_lines and not clean_lines[-1].endswith("</pre>"):
-                              clean_lines.append("</pre>")
                           clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          # Открываем моноширинный блок перед списком детей
-                          if clean_lines and not clean_lines[-1].startswith("<pre>") and not "</pre>" in clean_lines[-1]:
-                              clean_lines.append("<pre>")
-                          elif not clean_lines:
-                              clean_lines.append("<pre>")
-                          
-                          # Принудительно выравниваем длину имени пробелами
+                          # Принудительно выравниваем длину имени пробелами с помощью ljust
                           clean_lines.append(f"{left_cell.ljust(text_line)}{emoji}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
-                  # Закрываем моноширинный блок перед подписями преподавателя
-                  if clean_lines and not clean_lines[-1].endswith("</pre>") and any("<pre>" in l for l in clean_lines):
-                      clean_lines.append("</pre>")
-                  
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
                       clean_lines.append(f"📅 Отчет за {date_part}")
                   elif "Преподаватель:" in line_str or "Проверил" in line_str:
                       raw_name = line_str.split(":")[-1].replace("*", "").strip()
-                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                      clean_lines.append(f"\nПреподаватель: {raw_name}")
                   else:
                       clean_lines.append(line_str)
 
-          # Финальный предохранитель закрытия тега в конце файла
-          if clean_lines and not clean_lines[-1].endswith("</pre>") and any("<pre>" in l for l in clean_lines) and not "Преподаватель:" in clean_lines[-1]:
-              clean_lines.append("</pre>")
+          inner_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
-
-          if not message_text:
+          if not inner_text:
               print("ℹ️ Сформированный текст отчета пуст. Завершаем.")
               sys.exit(0)
+
+          # ⚡️ БРОНЕБОЙНАЯ РАЗМЕТКА: Заворачиваем абсолютно весь текст целиком в моноширинный блок
+          # Это гарантирует 100% защиту от ошибки 422/400 и выравнивает все строки
+          message_text = f"<pre>{inner_text}</pre>"
 
           # Считаем уникальный хэш-код текущего текста отчета для фильтрации дубликатов
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()

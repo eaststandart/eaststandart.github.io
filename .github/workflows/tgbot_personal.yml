@@ -19,7 +19,7 @@ jobs:
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTSTANDART_PERSONAL_ID }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_VALVODOLAZ_PERSONAL_ID }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
         run: |

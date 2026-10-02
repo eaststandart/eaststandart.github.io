@@ -72,7 +72,9 @@ jobs:
                   if not nodes:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
-                  raw_body = nodes['body']
+                  
+                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ СИНТАКСИСА: Извлекаем первый (нулевой) элемент массива nodes
+                  raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
@@ -84,7 +86,7 @@ jobs:
               if line_str.startswith("|") and not "Группа" in line_str and not ":---" in line_str:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts.replace("**", "")
+                      left_cell = parts[0].replace("**", "")
                       if not "ГРУППА" in left_cell and not "⏰" in left_cell:
                           names_list.append(left_cell)
 
@@ -100,14 +102,14 @@ jobs:
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts.replace("**", "")
+                      left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
                           # Закрываем тегом прошлую группу (если она была) и открываем новую
                           if clean_lines and not clean_lines[-1].endswith("</pre>"):
                               clean_lines.append("</pre>")
                           clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
-                          status_cell = parts
+                          status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
                           # Открываем моноширинный блок перед списком детей
                           if clean_lines and not clean_lines[-1].startswith("<pre>") and not "</pre>" in clean_lines[-1]:

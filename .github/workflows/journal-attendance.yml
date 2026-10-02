@@ -9,6 +9,9 @@ permissions:
   contents: write
   discussions: write
 
+env:
+  PUBLISH_AS_BOT: "false"
+
 jobs:
   build_report:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
       - name: Run Dynamic Report Generator
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.MY_ADMIN_TOKEN }}
+          github-token: ${{ env.PUBLISH_AS_BOT == 'true' && secrets.GITHUB_TOKEN || secrets.MY_ADMIN_TOKEN }}
           script: |
             const fs = require('fs');
             const path = require('path');

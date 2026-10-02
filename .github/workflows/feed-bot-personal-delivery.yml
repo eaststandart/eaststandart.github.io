@@ -89,11 +89,11 @@ jobs:
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n{left_cell}")
+                          # Красиво выделяем заголовки групп жирным
+                          clean_lines.append(f"\n<b>{left_cell}</b>")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          clean_lines.append(f"{left_cell} {emoji}")
+                          clean_lines.append(f"{status_cell} {left_cell}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()

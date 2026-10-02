@@ -38,6 +38,7 @@ jobs:
               "Accept": "application/vnd.github+json",
               "User-Agent": "GitHub-Actions-Robot"
           }
+          
           # 🎯 ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
           # GraphQL АДРЕС: api . github . com / graphql
           url_gh = "https://api.github.com/graphql"
@@ -67,7 +68,7 @@ jobs:
                   if not nodes:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
-                  raw_body = nodes[0]['body']
+                  raw_body = nodes['body']
           except Exception as e:
               print("❌ КРИТИЧЕСКАЯ ОШИБКА шлюза GraphQL API:", str(e))
               sys.exit(1)
@@ -106,13 +107,14 @@ jobs:
 
           # Считаем уникальный хэш-код текущего текста отчета
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
+          target_artifact_name = f"journal-attendance-{text_hash}"
           
           print("=====================================================")
           print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
           print("=====================================================")
           print(f"• Хэш-код текущего отчета: {text_hash}")
 
-          # 🎯 ШАГ 3: Скачиваем список артефактов, чтобы проверить, отсылали ли мы уже такой хэш текста
+          # 🎯 ШАГ 3: Проверяем память серверов Гитхаба на наличие этого уникального имени артефакта
           # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
           url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
           req_arts = urllib.request.Request(url_arts, headers=headers_gh)
@@ -126,13 +128,12 @@ jobs:
                   
                   for art in artifacts:
                       name = art.get("name", "")
-                      print(f"  --> Проверяем маркер из памяти: {name}")
-                      if name == f"text-hash-{text_hash}":
+                      if name == target_artifact_name:
                           is_duplicate = True
-                          print("  [!] НАЙДЕНО СОВПАДЕНИЕ СИМВОЛ В СИМВОЛ!")
+                          print(f"  [!] НАЙДЕНО СОВПАДЕНИЕ СИМВОЛ В СИМВОЛ: {name}")
                           break
           except Exception as e:
-              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (Base считается пустой)")
+              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (База считается пустой)")
 
           if is_duplicate:
               print("-----------------------------------------------------")
@@ -163,21 +164,27 @@ jobs:
               print("❌ Ошибка сети при отправке в Telegram:", str(e))
               sys.exit(1)
 
-          # 🎯 ШАГ 5: Запоминаем уникальный хэш. Создаем текстовый файл СТРОГО В ПАПКЕ _data/
+          # 🎯 ШАГ 5: Запоминаем уникальный хэш. Создаем файл СТРОГО С УНИКАЛЬНЫМ ИМЕНЕМ в папке _data/
           os.makedirs("_data", exist_ok=True)
-          marker_filename = os.path.join("_data", "hash.txt")
+          marker_filename = os.path.join("_data", f"{target_artifact_name}.txt")
           with open(marker_filename, "w") as f:
               f.write(text_hash)
-          print(f"• Робот успешно зафиксировал маркер на сервере по пути: _data/hash.txt с хэшем: {text_hash}")
+          print(f"• Робот временно создал файл на сервере: {marker_filename}")
 
-          # Передаем хэш в окружение Гитхаба для шага сохранения артефакта памяти
+          # Передаем уникальное имя артефакта в окружение Гитхаба для шага сохранения
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-              env_file.write(f"CURRENT_TEXT_HASH={text_hash}\n")
+              env_file.write(f"TARGET_ARTIFACT_NAME={target_artifact_name}\n")
 
-      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (пишется с начала строки в 6 пробелов, сохраняет наш _data/hash.txt):
-      - name: Save Report Text Hash to Memory
+      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (сохраняет уникальный файл в память и сразу зачищает за собой диск):
+      - name: Save Unique Report Hash to Memory
         uses: actions/upload-artifact@v4
         with:
-          name: text-hash-${{ env.CURRENT_TEXT_HASH }}
-          path: _data/hash.txt
+          name: ${{ env.TARGET_ARTIFACT_NAME }}
+          path: _data/${{ env.TARGET_ARTIFACT_NAME }}.txt
           retention-days: 1
+
+      - name: Purge Temporary Local Hash File
+        run: |
+          # Железно удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
+          rm -f _data/journal-attendance-*.txt
+          echo "• Временный локальный файл успешно удален с диска виртуальной машины."

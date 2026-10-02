@@ -93,6 +93,7 @@ jobs:
                           clean_lines.append(f"\n<b>{left_cell}</b>")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
+                          only_emoji = status_cell[0] if status_cell else "⚪"
                           clean_lines.append(f"{status_cell} {left_cell}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:

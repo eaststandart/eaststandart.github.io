@@ -131,7 +131,7 @@ jobs:
                       name = art.get("name", "")
                       if name == target_artifact_name:
                           is_duplicate = True
-                          print(f"  [!] НАЙДЕНО СОВПАДЕНИЕ СИМВОЛ В СИМВОЛ: {name}")
+                          print(f"  [!] НАЙДЕНО СОВПАДЕНИЕ: {name}")
                           break
           except Exception as e:
               print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (Base считается пустой)")

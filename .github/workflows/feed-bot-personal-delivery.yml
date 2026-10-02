@@ -65,13 +65,11 @@ jobs:
                   res_data = json.loads(response.read().decode('utf-8'))
                   nodes = res_data['data']['repository']['discussion']['comments']['nodes']
                   if not nodes:
-                      print("ℹ️ Комментарии не найдены.")
+                      print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
-                  
-                  # ⚡️ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ СИНТАКСИСА: берем первый элемент из списка nodes
                   raw_body = nodes[0]['body']
           except Exception as e:
-              print("❌ Ошибка забора данных из GraphQL API:", str(e))
+              print("❌ КРИТИЧЕСКАЯ ОШИБКА шлюза GraphQL API:", str(e))
               sys.exit(1)
 
           # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу, сохраняя приписки [э]/[с]
@@ -101,16 +99,20 @@ jobs:
                       clean_lines.append(line_str)
 
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
-          print("=== Системный лог: Сформированный текст отчета подготовлен ===")
 
           if not message_text:
-              print("ℹ️ Текст отчета пуст. Пропускаем.")
+              print("ℹ️ СИСТЕМНЫЙ ЛОГ: Сформированный текст отчета пуст. Завершаем.")
               sys.exit(0)
 
           # Считаем уникальный хэш-код текущего текста отчета
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
+          
+          print("=====================================================")
+          print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
+          print("=====================================================")
+          print(f"• Хэш-код текущего отчета: {text_hash}")
 
-          # 🎯 ШАГ 3: Железная проверка дубликатов по локальной памяти сохраненных текстов Гитхаба
+          # 🎯 ШАГ 3: Скачиваем список артефактов, чтобы проверить, отсылали ли мы уже такой хэш текста
           # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
           url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
           req_arts = urllib.request.Request(url_arts, headers=headers_gh)
@@ -119,17 +121,28 @@ jobs:
           try:
               with urllib.request.urlopen(req_arts) as res_a:
                   arts_data = json.loads(res_a.read().decode('utf-8'))
-                  for art in arts_data.get("artifacts", []):
-                      # Если в памяти сервера уже лежит маркер с таким хэшем текста — это дубликат
-                      if art.get("name") == f"text-hash-{text_hash}":
+                  artifacts = arts_data.get("artifacts", [])
+                  print(f"• Найдено прошлых маркеров в памяти сервера: {len(artifacts)}")
+                  
+                  for art in artifacts:
+                      name = art.get("name", "")
+                      print(f"  --> Проверяем маркер из памяти: {name}")
+                      if name == f"text-hash-{text_hash}":
                           is_duplicate = True
+                          print("  [!] НАЙДЕНО СОВПАДЕНИЕ СИМВОЛ В СИМВОЛ!")
                           break
           except Exception as e:
-              print("ℹ️ База сохраненных текстов пуста.")
+              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (Base считается пустой)")
 
           if is_duplicate:
-              print("ℹ️ ЖЕЛЕЗНЫЙ ФИЛЬТР: Этот текст отчёта уже отправлялся Валерию сегодня. Отмена дубликата!")
+              print("-----------------------------------------------------")
+              print("🛑 ВЕРДИКТ: Этот текст отчёта уже отправлялся сегодня. Отмена дубликата!")
+              print("=====================================================")
               sys.exit(0)
+          else:
+              print("-----------------------------------------------------")
+              print("🟢 ВЕРДИКТ: Текст полностью уникальный. Разрешаем отправку в Telegram.")
+              print("=====================================================")
 
           # 🎯 ШАГ 4: Отправка в Telegram Валерию лично
           url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -145,19 +158,26 @@ jobs:
           req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
           try:
               with urllib.request.urlopen(req_tg) as response:
-                  print("HTTP Status Code: 200 OK. Отчёт успешно доставлен!")
+                  print("🚀 ОТВЕТ TELEGRAM API: HTTP Status Code: 200 OK. Отчёт успешно доставлен!")
           except Exception as e:
-              print("❌ Ошибка отправки в Telegram:", str(e))
+              print("❌ Ошибка сети при отправке в Telegram:", str(e))
               sys.exit(1)
 
-          # Передаем переменную в окружение Гитхаба для шага сохранения артефакта памяти
+          # 🎯 ШАГ 5: Запоминаем уникальный хэш. Создаем текстовый файл СТРОГО В ПАПКЕ _data/
+          os.makedirs("_data", exist_ok=True)
+          marker_filename = os.path.join("_data", "hash.txt")
+          with open(marker_filename, "w") as f:
+              f.write(text_hash)
+          print(f"• Робот успешно зафиксировал маркер на сервере по пути: _data/hash.txt с хэшем: {text_hash}")
+
+          # Передаем хэш в окружение Гитхаба для шага сохранения артефакта памяти
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"CURRENT_TEXT_HASH={text_hash}\n")
 
-      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (пишется с начала строки в 6 пробелов):
+      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (пишется с начала строки в 6 пробелов, сохраняет наш _data/hash.txt):
       - name: Save Report Text Hash to Memory
         uses: actions/upload-artifact@v4
         with:
           name: text-hash-${{ env.CURRENT_TEXT_HASH }}
-          path: .github/
+          path: _data/hash.txt
           retention-days: 1

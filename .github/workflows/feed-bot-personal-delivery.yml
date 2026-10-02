@@ -73,8 +73,8 @@ jobs:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
                   
-                  # Извлекаем первый (нулевой) элемент массива нод
-                  raw_body = nodes['body']
+                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ: Извлекаем первый (нулевой) элемент из списка nodes
+                  raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
@@ -95,7 +95,7 @@ jobs:
                           status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else "⚪"
                           
-                          # ⚡️ ВАШ НОВЫЙ ФОРМАТ: Сначала сочный шарик, потом имя ребенка
+                          # ⚡️ ВАШ ФОРМАТ: Сначала сочный шарик, потом имя ребенка
                           clean_lines.append(f"{emoji} {left_cell}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:

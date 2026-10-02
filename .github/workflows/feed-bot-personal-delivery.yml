@@ -27,8 +27,14 @@ jobs:
           gh_token = os.environ.get("GH_TOKEN", "").strip()
           repo_full = os.environ.get("REPO_NAME", "").strip()
           owner, repo_name = repo_full.split("/")
-
-          # ⚡️ GRAPHQL АДРЕС GITHUB API: api . github . com / graphql
+          headers_gh = {
+              "Authorization": f"Bearer {gh_token}",
+              "Content-Type": "application/json",
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+          # 🎯 ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
+          # GraphQL АДРЕС: api . github . com / graphql
           url_gh = "https://api.github.com/graphql"
           
           graphql_query = {
@@ -47,13 +53,6 @@ jobs:
               """
           }
 
-          headers_gh = {
-              "Authorization": f"Bearer {gh_token}",
-              "Content-Type": "application/json",
-              "Accept": "application/vnd.github+json",
-              "User-Agent": "GitHub-Actions-Robot"
-          }
-
           req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
           
           try:
@@ -63,7 +62,9 @@ jobs:
                   if not nodes:
                       print("ℹ️ Комментарии не найдены.")
                       sys.exit(0)
-                  raw_body = nodes['body']
+                  
+                  # ⚡️ ЖЕЛЕЗНОЕ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Извлекаем строго нулевой элемент списка
+                  raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных:", str(e))
               sys.exit(1)
@@ -75,7 +76,7 @@ jobs:
               if line_str.startswith("|") and not "Группа" in line_str and not ":---" in line_str:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts.replace("**", "")
+                      left_cell = parts[0].replace("**", "")
                       if not "ГРУППА" in left_cell and not "⏰" in left_cell:
                           names_list.append(left_cell)
 
@@ -100,18 +101,18 @@ jobs:
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts.replace("**", "")
+                      left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
                           clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
-                          status_cell = parts
+                          status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
                           
                           # Формируем и замеряем строку с ljust
                           aligned_name = left_cell.ljust(text_line)
                           final_line = f"{aligned_name}{emoji}"
                           
-                          # Выводим подробный замер в лог
+                          # Выводим подробный замер в лог черного экрана
                           print(f"Имя: {repr(left_cell.ljust(text_line))} | Итоговая длина до шарика: {len(aligned_name)} симв.")
                           clean_lines.append(final_line)
 

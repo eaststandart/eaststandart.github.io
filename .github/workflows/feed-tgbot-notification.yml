@@ -1,4 +1,4 @@
-name: Universal Telegram Broadcast Dispatcher
+name: Telegram Group Notification
 
 on:
   discussion_comment:
@@ -8,7 +8,7 @@ jobs:
   telegram-broadcast:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare Media Cover URL
+      - name: telegram-group-notification
         id: parse_data
         run: |
           # 1. Проверяем, что ветка разрешена (38 или 83)
@@ -51,7 +51,7 @@ jobs:
           disc_num = str(os.environ.get("DISC_NUM", "")).strip().replace("#", "")
           title = os.environ.get("DISC_TITLE", "").strip()
 
-          # 🎯 ОДИН ШАБЛОН НА ВСЕ СЛУЧАИ С АВТО-ПЕРЕКЛЮЧЕНИЕМ ТЕКСТА И ТОПИКА
+          # ОДИН ШАБЛОН С АВТО-ПЕРЕКЛЮЧЕНИЕМ ТЕКСТА И ТОПИКА
           payload = {
               "chat_id": chat_id,
               "parse_mode": "HTML",

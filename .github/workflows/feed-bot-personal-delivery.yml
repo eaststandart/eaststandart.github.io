@@ -31,7 +31,7 @@ jobs:
           repo_full = os.environ.get("REPO_NAME", "").strip()
           
           # Умная проверка завершения дня: смотрим, очистил ли первый робот папку _data
-          url_contents = f"https://api.github.com/repos/{repo_full}/contents /_data"
+          url_contents = f"https://api.github.com/repos/{repo_full}/contents/_data"
           headers_gh = {
               "Authorization": f"Bearer {gh_token}",
               "User-Agent": "GitHub-Actions-Robot"

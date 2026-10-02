@@ -1,4 +1,4 @@
-name: Broadcast Personal Lessons Report via Chain Trigger
+name: Telegram Personal Report
 
 on:
   # Робот просыпается строго по факту окончания работы первого бота
@@ -7,12 +7,11 @@ on:
     types: [completed]
 
 concurrency:
-  group: personal-delivery-group
+  group: telegram-personal-report
   cancel-in-progress: false
 
 jobs:
   delivery-to-personal:
-    # Запускаемся строго при успешном (зелёном) финише первого робота
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +41,8 @@ jobs:
               "Accept": "application/vnd.github+json",
               "User-Agent": "GitHub-Actions-Robot"
           }
-          # 🎯 ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
-          # GraphQL АДРЕС: api . github . com / graphql
+ 
+          # ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
           url_gh = "https://api.github.com/graphql"
           
           graphql_query = {
@@ -72,13 +71,12 @@ jobs:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
                   
-                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ: Берем первый (нулевой) элемент из массива nodes
                   raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ КРИТИЧЕСКАЯ ОШИБКА шлюза GraphQL API:", str(e))
               sys.exit(1)
 
-          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу, сохраняя приписки [э]/[с]
+          # ШАГ 2: Построчно очищаем маркдаун-таблицу, сохраняя приписки [э]/[с]
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -89,7 +87,6 @@ jobs:
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          # Красиво выделяем заголовки групп жирным
                           clean_lines.append(f"\n<b>{left_cell}</b>")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
@@ -116,12 +113,11 @@ jobs:
           target_artifact_name = f"journal-attendance-{text_hash}"
           
           print("=====================================================")
-          print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
+          print("🔍 ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
           print("=====================================================")
           print(f"• Хэш-код текущего отчета: {text_hash}")
 
-          # 🎯 ШАГ 3: Проверяем память серверов Гитхаба на наличие этого уникального имени артефакта
-          # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
+          # ШАГ 3: Проверяем память серверов Гитхаба на наличие этого уникального имени артефакта
           url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
           req_arts = urllib.request.Request(url_arts, headers=headers_gh)
           
@@ -143,15 +139,15 @@ jobs:
 
           if is_duplicate:
               print("-----------------------------------------------------")
-              print("🛑 ВЕРДИКТ: Этот текст отчёта уже отправлялся сегодня. Отмена дубликата!")
+              print("🛑 Текст не уникальный. Запрещаем отправку в Telegram.")
               print("=====================================================")
               sys.exit(0)
           else:
               print("-----------------------------------------------------")
-              print("🟢 ВЕРДИКТ: Текст полностью уникальный. Разрешаем отправку в Telegram.")
+              print("🟢 Текст уникальный. Разрешаем отправку в Telegram.")
               print("=====================================================")
 
-          # 🎯 ШАГ 4: Отправка в Telegram Валерию лично
+          # ШАГ 4: Отправка в Telegram Валерию лично
           url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
           payload = {
               "chat_id": chat_id,
@@ -170,7 +166,7 @@ jobs:
               print("❌ Ошибка сети при отправке в Telegram:", str(e))
               sys.exit(1)
 
-          # 🎯 ШАГ 5: Запоминаем уникальный хэш. Создаем файл СТРОГО С УНИКАЛЬНЫМ ИМЕНЕМ в папке _data/
+          # ШАГ 5: Запоминаем уникальный хэш. Создаем файл СТРОГО С УНИКАЛЬНЫМ ИМЕНЕМ в папке _data/
           os.makedirs("_data", exist_ok=True)
           marker_filename = os.path.join("_data", f"{target_artifact_name}.txt")
           with open(marker_filename, "w") as f:
@@ -181,7 +177,7 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"TARGET_ARTIFACT_NAME={target_artifact_name}\n")
 
-      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (сохраняет уникальный файл в память и сразу зачищает за собой диск):
+      # Сохраняет файл в память и сразу зачищает за собой диск:
       - name: Save Unique Report Hash to Memory
         uses: actions/upload-artifact@v4
         with:
@@ -191,6 +187,6 @@ jobs:
 
       - name: Purge Temporary Local Hash File
         run: |
-          # Железно удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
+          # Удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
           rm -f _data/journal-attendance-*.txt
           echo "• Временный локальный файл успешно удален с диска виртуальной машины."

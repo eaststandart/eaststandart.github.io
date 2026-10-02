@@ -120,7 +120,7 @@ jobs:
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
             markdownBody += `| Группа / Ученик | Статус |\n`;
-            markdownBody += `| :--- | :---: |\n`;
+            markdownBody += `| :--- | :--- |\n`;
 
             scheduleGroups.forEach(time => {
               markdownBody += `| **⏰ ГРУППА ${time}** | |\n`;

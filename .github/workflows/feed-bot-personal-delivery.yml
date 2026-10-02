@@ -6,10 +6,10 @@ on:
     types: [completed]
 
 jobs:
-  trace-publication-moment:
+  research-logs:
     runs-on: ubuntu-latest
     steps:
-      - name: Trace Step Logs and Mutation Moment via Python
+      - name: Deep Analysis of Step Execution Logs via Python
         shell: python
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +33,7 @@ jobs:
               "User-Agent": "GitHub-Actions-Robot"
           }
 
-          # 🎯 ЗАПРОС №1: Получаем детальный статус всех шагов первого бота внутри текущего запуска
+          # 🎯 ЗАПРОС №1: Получаем детальный статус и поминутное время всех внутренних шагов
           url_jobs = f"https://api.github.com/repos/{repo_full}/actions/runs/{run_id}/jobs"
           req_jobs = urllib.request.Request(url_jobs, headers=headers)
 
@@ -47,39 +47,57 @@ jobs:
                   for job in jobs_data.get("jobs", []):
                       print(f"Статус задачи '{job.get('name')}': {job.get('conclusion')}")
                       print("-----------------------------------------------------")
-                      print("⏱️ Лог выполнения шагов внутри задачи:")
+                      print("⏱️ Поминутный лог выполнения шагов:")
                       for step in job.get("steps", []):
-                          # Выводим точное время начала и конца каждого шага первого бота
                           print(f" • Шаг: [{step.get('name')}] | Статус: {step.get('conclusion')} | Начало: {step.get('started_at')} | Конец: {step.get('completed_at')}")
           except Exception as e:
               print("❌ Ошибка получения шагов выполнения:", str(e))
 
-          # 🎯 ЗАПРОС №2: Проверяем, менялся ли состав файлов в коммите, который вызвал этот запуск
-          url_run = f"https://api.github.com/repos/{repo_full}/actions/runs/{run_id}/jobs"
-          req_run = urllib.request.Request(url_run, headers=headers)
-          
           print("\n=====================================================")
-          print("📋 ПРОВЕРКА ДАННЫХ ИСТОЧНИКА ДЛЯ ЭТОГО ЗАПУСКА")
+          print("📋 ЖИВОЙ ЛОГ ТЕКСТА ПУБЛИКАЦИИ ИЗ ДИСКУССИИ №38")
           print("=====================================================")
+          
+          # 🎯 ЗАПРОС №2: Запрашиваем состояние последнего комментария через GraphQL
+          owner, repo_name = repo_full.split("/")
+          url_gh = "https://api.github.com/graphql"
+          
+          graphql_query = {
+              "query": f"""
+              query {{
+                repository(owner: "{owner}", name: "{repo_name}") {{
+                  discussion(number: 38) {{
+                    comments(last: 1) {{
+                      nodes {{
+                        id
+                        author {{ login }}
+                        createdAt
+                        body
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+              """
+          }
+
+          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers={"Authorization": f"Bearer {gh_token}", "Content-Type": "application/json", "User-Agent": "GitHub-Actions-Robot"})
+          
           try:
-              with urllib.request.urlopen(req_run) as response:
-                  run_info = json.loads(response.read().decode('utf-8'))
-                  commit_sha = run_info.get("head_sha", "")
-                  
-                  # Запрашиваем информацию о коммите, чтобы увидеть, какие файлы менялись
-                  url_commit = f"https://api.github.com/repos/{repo_full}/commits/{commit_sha}"
-                  req_commit = urllib.request.Request(url_commit, headers=headers)
-                  
-                  with urllib.request.urlopen(req_commit) as res_commit:
-                      commit_data = json.loads(res_commit.read().decode('utf-8'))
-                      print(f"Автор триггера: {commit_data.get('commit', {}).get('author', {}).get('name')}")
-                      print(f"Сообщение: {commit_data.get('commit', {}).get('message', '').strip()}")
-                      print("Измененные файлы в этом раунде:")
-                      for f in commit_data.get("files", []):
-                          print(f"  - [{f.get('status')}] {f.get('filename')}")
+              with urllib.request.urlopen(req_gh) as response:
+                  res_data = json.loads(response.read().decode('utf-8'))
+                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
+                  if nodes:
+                      last_comment = nodes[0]
+                      print(f"• ID комментария в ветке: {last_comment.get('id')}")
+                      print(f"• Кто опубликовал (Логин): {last_comment.get('author', {}).get('login')}")
+                      print(f"• Время изменения ветки (UTC): {last_comment.get('createdAt')}")
+                      print("\n• ТЕКСТ КОММЕНТАРИЯ НА ЭТОТ МИГ:")
+                      print(last_comment.get('body', '').strip()[:200] + "\n... [текст сокращен для читаемости лога] ...")
+                  else:
+                      print("ℹ️ Комментарии в Дискуссии №38 отсутствуют.")
           except Exception as e:
-              print("❌ Ошибка анализа коммита:", str(e))
-              
+              print("❌ Ошибка GraphQL при заборе текста ветки:", str(e))
+
           print("=====================================================")
-          print("ℹ️ Сбор системных следов завершен.")
+          print("ℹ️ Сбор системных следов успешно завершен без ошибок коммитов.")
           print("=====================================================")

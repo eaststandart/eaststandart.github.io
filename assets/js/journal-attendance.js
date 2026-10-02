@@ -291,7 +291,7 @@ function saveGroupAttendance(day, time) {
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
   // Шаг 1: Узнаем логин преподавателя
-  fetch("https://github.com", {
+  fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
@@ -311,7 +311,7 @@ function saveGroupAttendance(day, time) {
     };
 
     const filePath = `_data/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
-    const targetUrl = `https://github.com{repo_owner}/${repo_name}/contents/${filePath}`;
+    const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`;
 
     // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии
     return fetch(targetUrl, {

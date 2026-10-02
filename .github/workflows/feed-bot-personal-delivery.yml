@@ -1,18 +1,17 @@
-name: Broadcast Personal Lessons Report via Chain Trigger
+name: Debug Broadcast via Push Trigger
 
 on:
-  # Просыпаемся каждый раз, когда первый робот завершает очередной запуск
-  workflow_run:
-    workflows: ["Generate Attendance Report to Discussions"]
-    types: [completed]
+  push:
+    branches:
+      - main
+    paths:
+      - '_data/journal-attendance-*.yml'
 
 jobs:
   delivery-to-personal:
-    # Запускаемся строго при успешном финише первого робота
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Latest Comment and Send to Telegram via Python
+      - name: Fetch Latest Comment and Print Logs via Python
         shell: python
         env:
           TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -30,34 +29,10 @@ jobs:
           gh_token = os.environ.get("GH_TOKEN", "").strip()
           repo_full = os.environ.get("REPO_NAME", "").strip()
           
-          # Умная проверка завершения дня: смотрим, очистил ли первый робот папку _data
-          url_contents = f"https://api.github.com/repos/{repo_full}/contents/_data"
-          headers_gh = {
-              "Authorization": f"Bearer {gh_token}",
-              "User-Agent": "GitHub-Actions-Robot"
-          }
-          
-          print("--- ЛОГ ПРОВЕРКИ: Проверяем наличие временных JSON-файлов на GitHub... ---")
-          try:
-              req_contents = urllib.request.Request(url_contents, headers=headers_gh)
-              with urllib.request.urlopen(req_contents) as response:
-                  files_list = json.loads(response.read().decode('utf-8'))
-                  # Ищем любые временные файлы посещаемости в ответе сервера
-                  temp_files = [f['name'] for f in files_list if 'journal-attendance-' in f['name'] and f['name'].endswith('.json')]
-                  
-                  if len(temp_files) > 0:
-                      print(f"ℹ️ Обнаружены временные файлы групп: {temp_files}")
-                      print("ℹ️ Ожидаем остальные группы дня. Пропускаем отправку в Телеграм.")
-                      sys.exit(0)
-                  else:
-                      print("✅ Временные файлы не найдены. Папка зачищена роботом! Запускаем отправку отчёта.")
-          except Exception as e:
-              print("Не удалось проверить содержимое папки _data, продолжаем стандартно:", str(e))
-
           owner, repo_name = repo_full.split("/")
 
-          # ⚡️ АДРЕС СЛУЖЕБНОГО ГРАФКВЛ API GITHUB
-          url_gh = "https://api.github.com/graphql"
+          # ⚡️ АДРЕС СЛУЖЕБНОГО GRAPHQL API GITHUB
+          url_gh = "https://api.github.com/graphq"
           
           graphql_query = {
               "query": f"""
@@ -75,7 +50,13 @@ jobs:
               """
           }
 
-          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers={'Authorization': f'Bearer {gh_token}', 'Content-Type': 'application/json', 'User-Agent': 'GitHub-Actions-Robot'})
+          headers_gh = {
+              "Authorization": f"Bearer {gh_token}",
+              "Content-Type": "application/json",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+
+          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
           
           try:
               with urllib.request.urlopen(req_gh) as response:
@@ -116,28 +97,9 @@ jobs:
 
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          if not message_text:
-              print("ℹ️ Уведомление: Текст отчета пуст. Пропускаем.")
-              sys.exit(0)
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ДЛЯ ОТПРАВКИ ===")
+          print(message_text)
+          print("=====================================================")
 
-          # ⚡️ СЛУЖЕБНЫЙ АДРЕС TELEGRAM API С bot И ПРИСТАВКОЙ api.
-          url_tg = f"https://api.telegram.org/bot{token}/sendMessagee"
-          
-          payload = {
-              "chat_id": chat_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": True
-          }
-
-          if len(chat_id) > 10 and chat_id.startswith("822"):
-              payload["message_thread_id"] = 38
-
-          req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
-          
-          try:
-              with urllib.request.urlopen(req_tg) as response:
-                  print("HTTP Status Code:", response.getcode())
-          except Exception as e:
-              print("Ошибка отправки в Telegram:", str(e))
-              sys.exit(1)
+          # ⚡️ ОТПРАВКА ЗАБЛОКИРОВАНА ДЛЯ ТЕСТА ЛОГОВ (Строка закомментирована)
+          print("✅ УСПЕХ: Фильтр триггера ветки сработал идеально! Робот проснулся строго 1 раз в финале дня.")

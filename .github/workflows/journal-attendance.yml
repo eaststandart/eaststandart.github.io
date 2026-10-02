@@ -5,6 +5,11 @@ on:
     paths:
       - '_data/*-journal-attendance-*.json'
 
+# Запрещаем параллельные запуски. Строго выстраиваем сборки в очередь!
+concurrency:
+  group: journal-attendance-queue
+  cancel-in-progress: false
+
 permissions:
   contents: write
   discussions: write

@@ -38,7 +38,6 @@ jobs:
               "Accept": "application/vnd.github+json",
               "User-Agent": "GitHub-Actions-Robot"
           }
-          
           # 🎯 ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
           # GraphQL АДРЕС: api . github . com / graphql
           url_gh = "https://api.github.com/graphql"
@@ -68,7 +67,9 @@ jobs:
                   if not nodes:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
-                  raw_body = nodes['body']
+                  
+                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ: Берем первый (нулевой) элемент из массива nodes
+                  raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ КРИТИЧЕСКАЯ ОШИБКА шлюза GraphQL API:", str(e))
               sys.exit(1)
@@ -107,7 +108,7 @@ jobs:
 
           # Считаем уникальный хэш-код текущего текста отчета
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
-          target_artifact_name = f"journal-attendance-{text_hash}"
+          target_artifact_name = f"journal-hash-{text_hash}"
           
           print("=====================================================")
           print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
@@ -133,7 +134,7 @@ jobs:
                           print(f"  [!] НАЙДЕНО СОВПАДЕНИЕ СИМВОЛ В СИМВОЛ: {name}")
                           break
           except Exception as e:
-              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (База считается пустой)")
+              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (Base считается пустой)")
 
           if is_duplicate:
               print("-----------------------------------------------------")
@@ -171,7 +172,7 @@ jobs:
               f.write(text_hash)
           print(f"• Робот временно создал файл на сервере: {marker_filename}")
 
-          # Передаем уникальное имя артефакта в окружение Гитхаба для шага сохранения
+          # Передаем уникальное имя артефакта в... окружение Гитхаба для шага сохранения
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"TARGET_ARTIFACT_NAME={target_artifact_name}\n")
 
@@ -186,5 +187,5 @@ jobs:
       - name: Purge Temporary Local Hash File
         run: |
           # Железно удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
-          rm -f _data/journal-attendance-*.txt
+          rm -f _data/journal-hash-*.txt
           echo "• Временный локальный файл успешно удален с диска виртуальной машины."

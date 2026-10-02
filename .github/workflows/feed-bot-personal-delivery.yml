@@ -1,21 +1,27 @@
 name: Broadcast Personal Lessons Report via Chain Trigger
 
 on:
+  # Робот просыпается строго по факту окончания работы первого бота
   workflow_run:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
+# Железная защита от гонки параллельных процессов
 concurrency:
   group: personal-delivery-group
   cancel-in-progress: false
 
 jobs:
-  research-alignment:
+  delivery-to-personal:
+    # Запускаемся строго при успешном (зелёном) финише первого робота
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Research String Lengths and Spaces via Python
+      - name: Fetch Latest Comment and Send to Telegram via Python
         shell: python
         env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTSTANDART_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
         run: |
@@ -23,9 +29,13 @@ jobs:
           import json
           import os
           import sys
+          import hashlib
 
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           gh_token = os.environ.get("GH_TOKEN", "").strip()
           repo_full = os.environ.get("REPO_NAME", "").strip()
+          
           owner, repo_name = repo_full.split("/")
           headers_gh = {
               "Authorization": f"Bearer {gh_token}",
@@ -60,39 +70,28 @@ jobs:
                   res_data = json.loads(response.read().decode('utf-8'))
                   nodes = res_data['data']['repository']['discussion']['comments']['nodes']
                   if not nodes:
-                      print("ℹ️ Комментарии не найдены.")
+                      print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
-                  
-                  # ⚡️ ЖЕЛЕЗНОЕ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ: Извлекаем строго нулевой элемент списка
-                  raw_body = nodes[0]['body']
+                  raw_body = nodes['body']
           except Exception as e:
-              print("❌ Ошибка забора данных:", str(e))
+              print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
 
-          # Сначала собираем все имена для поиска максимума
+          # Сначала собираем все имена для поиска динамического максимума
           names_list = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
               if line_str.startswith("|") and not "Группа" in line_str and not ":---" in line_str:
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "")
+                      left_cell = parts.replace("**", "")
                       if not "ГРУППА" in left_cell and not "⏰" in left_cell:
                           names_list.append(left_cell)
 
-          if not names_list:
-              print("ℹ️ Список учеников пуст.")
-              sys.exit(0)
+          # Вычисляем самое длинное имя в списке текущего дня + 2 пробела
+          text_line = max(len(n) for n in names_list) + 2 if names_list else 15
 
-          # Вычисляем самое длинное слово + 2 пробела
-          text_line = max(len(n) for n in names_list) + 2
-
-          print("=====================================================")
-          print("🔍 ЛОГ ИССЛЕДОВАНИЯ ВЫРАВНИВАНИЯ И ДЛИН СТРОК:")
-          print("=====================================================")
-          print(f"• Длина самого длинного имени дня + 2 пробела (text_line): {text_line} символов")
-          print("-----------------------------------------------------")
-
+          # 🎯 ШАГ 2: Очищаем маркдаун-таблицу и выравниваем по моноширинной сетке
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -101,21 +100,107 @@ jobs:
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "")
+                      left_cell = parts.replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
+                          # Закрываем тегом прошлую группу (если она была) и открываем новую
+                          if clean_lines and not clean_lines[-1].endswith("</pre>"):
+                              clean_lines.append("</pre>")
                           clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
-                          status_cell = parts[1]
+                          status_cell = parts
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          # Открываем моноширинный блок перед списком детей
+                          if clean_lines and not clean_lines[-1].startswith("<pre>") and not "</pre>" in clean_lines[-1]:
+                              clean_lines.append("<pre>")
+                          elif not clean_lines:
+                              clean_lines.append("<pre>")
                           
-                          # Формируем и замеряем строку с ljust
-                          aligned_name = left_cell.ljust(text_line)
-                          final_line = f"{aligned_name}{emoji}"
-                          
-                          # Выводим подробный замер в лог черного экрана
-                          print(f"Имя: {repr(left_cell.ljust(text_line))} | Итоговая длина до шарика: {len(aligned_name)} симв.")
-                          clean_lines.append(final_line)
+                          # Принудительно выравниваем длину имени пробелами
+                          clean_lines.append(f"{left_cell.ljust(text_line)}{emoji}")
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                  # Закрываем моноширинный блок перед подписями преподавателя
+                  if clean_lines and not clean_lines[-1].endswith("</pre>") and any("<pre>" in l for l in clean_lines):
+                      clean_lines.append("</pre>")
+                  
+                  if "Журнал посещений за" in line_str:
+                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                      clean_lines.append(f"📅 Отчет за {date_part}")
+                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
+                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  else:
+                      clean_lines.append(line_str)
 
-          print("-----------------------------------------------------")
-          print("ℹ️ Сбор логов завершён. Жду данные для анализа.")
-          print("=====================================================")
+          # Финальный предохранитель закрытия тега в конце файла
+          if clean_lines and not clean_lines[-1].endswith("</pre>") and any("<pre>" in l for l in clean_lines) and not "Преподаватель:" in clean_lines[-1]:
+              clean_lines.append("</pre>")
+
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
+
+          if not message_text:
+              print("ℹ️ Сформированный текст отчета пуст. Завершаем.")
+              sys.exit(0)
+
+          # Считаем уникальный хэш-код текущего текста отчета для фильтрации дубликатов
+          text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
+          target_artifact_name = f"journal-hash-{text_hash}"
+
+          # 🎯 ШАГ 3: Проверяем память серверов Гитхаба на наличие этого хэша текста
+          # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
+          url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
+          req_arts = urllib.request.Request(url_arts, headers=headers_gh)
+          
+          is_duplicate = False
+          try:
+              with urllib.request.urlopen(req_arts) as res_a:
+                  arts_data = json.loads(res_a.read().decode('utf-8'))
+                  for art in arts_data.get("artifacts", []):
+                      if art.get("name") == target_artifact_name:
+                          is_duplicate = True
+                          break
+          except Exception as e:
+              print(f"• Память Гитхаба пуста: {str(e)}")
+
+          if is_duplicate:
+              print(f"🛑 ВЕРДИКТ: Этот текст отчёта уже отправлялся сегодня. Отмена дубликата!")
+              sys.exit(0)
+
+          # 🎯 ШАГ 4: Отправка в Telegram Валерию лично
+          url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
+          payload = {
+              "chat_id": chat_id,
+              "text": message_text,
+              "parse_mode": "HTML",
+              "disable_web_page_preview": True
+          }
+          if len(chat_id) > 10 and chat_id.startswith("822"):
+              payload["message_thread_id"] = 38
+
+          req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
+          try:
+              with urllib.request.urlopen(req_tg) as response:
+                  print("🚀 ОТВЕТ TELEGRAM API: HTTP Status Code: 200 OK. Отчёт успешно доставлен!")
+          except Exception as e:
+              print("❌ Ошибка сети при отправке в Telegram:", str(e))
+              sys.exit(1)
+
+          # 🎯 ШАГ 5: Запоминаем уникальный хэш в папке _data/
+          os.makedirs("_data", exist_ok=True)
+          marker_filename = os.path.join("_data", f"{target_artifact_name}.txt")
+          with open(marker_filename, "w") as f:
+              f.write(text_hash)
+
+          with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+              env_file.write(f"TARGET_ARTIFACT_NAME={target_artifact_name}\n")
+
+      # СИСТЕМНЫЙ КУБИК ГИТХАБА (сохраняет уникальный файл в память и сразу зачищает за собой диск):
+      - name: Save Unique Report Hash to Memory
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.TARGET_ARTIFACT_NAME }}
+          path: _data/${{ env.TARGET_ARTIFACT_NAME }}.txt
+          retention-days: 1
+
+      - name: Purge Temporary Local Hash File
+        run: |
+          rm -f _data/journal-hash-*.txt

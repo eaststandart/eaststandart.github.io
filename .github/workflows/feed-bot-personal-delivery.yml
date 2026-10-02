@@ -1,0 +1,93 @@
+name: Broadcast Personal Lessons Report via Comment Trigger
+
+on:
+  # ⚡️ ВАШ ГЕНИАЛЬНЫЙ СПОСОБ Б: Робот реагирует строго на создание комментария в Дискуссиях
+  discussion_comment:
+    types: [created]
+
+jobs:
+  research-comment-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Discussion and Log Table Data via Python
+        shell: python
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+          CURRENT_DISCUSSION_NUM: ${{ github.event.discussion.number }}
+          RAW_BODY: ${{ github.event.comment.body }}
+        run: |
+          import os
+          import sys
+
+          # 1. Строгая проверка — работаем ТОЛЬКО с дискуссией №38
+          discussion_num = str(os.environ.get("CURRENT_DISCUSSION_NUM", "")).strip()
+          
+          print("=====================================================")
+          print(f"⚡️ СИСТЕМНЫЙ ЛОГ ДАТЧИКА КОММЕНТАРИЕВ (ДИСКУССИЯ №{discussion_num})")
+          print("=====================================================")
+
+          if discussion_num != "38":
+              print(f"ℹ️ Уведомление: Комментарий оставлен в ветке №{discussion_num}. Нам нужна только №38. Пропускаем.")
+              sys.exit(0)
+
+          # 2. Забираем живой сырой текст комментария, который только что опубликовал первый бот
+          raw_body = os.environ.get("RAW_BODY", "")
+
+          print("📋 ПОЛНЫЙ ЛОГ №1: СЫРОЙ ТЕКСТ ТАБЛИЦЫ ИЗ OBSIDIAN")
+          print("-----------------------------------------------------")
+          print(repr(raw_body))
+          print("-----------------------------------------------------")
+
+          clean_lines = []
+          
+          # 3. Построчно очищаем маркдаун-таблицу от лишних палочек и звёздочек
+          for line in raw_body.split("\n"):
+              line_str = line.strip()
+              
+              if "| :---" in line_str or "Группа / Ученик" in line_str:
+                  continue
+                  
+              if line_str.startswith("|"):
+                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
+                  
+                  if len(parts) >= 1:
+                      # Очищаем текст от маркдаун-звёздочек у групп
+                      left_cell = parts[0].replace("**", "")
+                      
+                      if "ГРУППА" in left_cell or "⏰" in left_cell:
+                          clean_lines.append(f"\n{left_cell}")
+                          
+                      elif len(parts) >= 2:
+                          status_cell = parts[1]
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          student_name = left_cell
+                          clean_lines.append(f"{student_name} {emoji}")
+                          
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                  if "Журнал посещений за" in line_str:
+                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                      clean_lines.append(f"📅 Отчет за {date_part}")
+                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
+                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  else:
+                      clean_lines.append(line_str)
+
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
+
+          print("\n🎨 ПОЛНЫЙ ЛОГ №2: СФОРМИРОВАННЫЙ ОЧИЩЕННЫЙ ТЕКСТ")
+          print("-----------------------------------------------------")
+          print(repr(message_text))
+          print("-----------------------------------------------------")
+
+          # Автоспасение от красных сборок: если преподаватель написал простой текст, а не таблицу
+          if not message_text:
+              print("ℹ️ Уведомление: Этот комментарий не является таблицей отчёта. Завершаем.")
+              sys.exit(0)
+
+          print("\n🚀 ПОЛНЫЙ ЛОГ №3: ИМИТАЦИЯ ОТПРАВКИ")
+          print("-----------------------------------------------------")
+          print("Сетевой код отправки вырезан по вашей команде.")
+          print("Данный запуск выполнен строго для проверки количества срабатываний датчика.")
+          print("=====================================================")

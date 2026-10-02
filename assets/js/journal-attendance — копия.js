@@ -291,13 +291,13 @@ function saveGroupAttendance(day, time) {
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
   // Шаг 1: Узнаем логин преподавателя
-  fetch("https://github.com", {
+  fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
   .then(userData => {
     const teacherUsername = userData.name || userData.login || "Преподаватель";
-    const teacherLogin = userData.login; // Используем оригинальную переменную логина
+    const teacherLogin = userData.login.toLowerCase().trim();
 
     const currentGroupPayload = {
       date: dateStr,
@@ -310,40 +310,22 @@ function saveGroupAttendance(day, time) {
       probation: probationList
     };
 
+    // Шаг 2: Формируем имя файла индивидуально для каждой группы
     const filePath = `_data/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
-    const targetUrl = `https://github.com{repo_owner}/${repo_name}/contents/${filePath}`;
 
-    // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии
-    return fetch(targetUrl, {
-      headers: { "Authorization": `token ${accessToken}` }
-    })
-    .then(checkRes => {
-      if (checkRes.ok) {
-        // Файл уже существует на сервере! Извлекаем его sha маркера
-        return checkRes.json().then(existingFile => existingFile.sha);
-      }
-      return null; // Файла нет, создаем с чистого листа
-    })
-    .then(sha => {
-      let commitBody = {
-        message: `Отчет группы: Группа ${time} (${day}) от ${teacherUsername}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
-      };
+    let commitBody = {
+      message: `Отчет группы: Группа ${time} (${day}) от ${teacherUsername}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
+    };
 
-      // Если маркер sha найден, обязательно прикрепляем его к запросу для перезаписи мусора!
-      if (sha) {
-        commitBody.sha = sha;
-      }
-
-      // Отправляем чистый PUT-запрос (создание или безопасное обновление поверх старого)
-      return fetch(targetUrl, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${accessToken}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(commitBody)
-      });
+    // Шаг 3: Отправляем файл напрямую на GitHub без склейки в браузере
+    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(commitBody)
     });
   })
   .then(response => {

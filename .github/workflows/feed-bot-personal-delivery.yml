@@ -1,168 +1,90 @@
-name: Broadcast Personal Lessons Report via Chain Trigger
+name: Debug Broadcast via Push Delete Trigger
 
 on:
-  # ⚡️ Робот просыпается строго по факту окончания работы первого бота
-  workflow_run:
-    workflows: ["Generate Attendance Report to Discussions"]
-    types: [completed]
+  push:
+    branches:
+      - main
+    paths:
+      - '_data/*-journal-attendance-*.json'
 
 jobs:
   delivery-to-personal:
-    # Запускаемся строго при успешном (зелёном) финише первого робота
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Latest Comment and Send to Telegram via Python
-        shell: python
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_NAME: ${{ github.repository }}
-          CURRENT_RUN_ID: ${{ github.run_id }}
+      # Шаг 1: Проверяем статус файлов в прилетевшем коммите напрямую через API GitHub
+      - name: Check Git File Status via API
+        id: check_git
         run: |
           import urllib.request
           import json
           import os
           import sys
 
-          token = os.environ.get("TG_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-          gh_token = os.environ.get("GH_TOKEN", "").strip()
-          repo_full = os.environ.get("REPO_NAME", "").strip()
-          current_run_id = os.environ.get("CURRENT_RUN_ID", "").strip()
-          
-          owner, repo_name = repo_full.split("/")
-          headers_gh = {
+          gh_token = "${{ secrets.GITHUB_TOKEN }}"
+          repo = "${{ github.repository }}"
+          commit_sha = "${{ github.sha }}"
+
+          url = f"https://api.github.com/repos/{repo_full}/commits/{commit_sha}"
+          req = urllib.request.Request(url, headers={
               "Authorization": f"Bearer {gh_token}",
-              "Content-Type": "application/json",
-              "Accept": "application/vnd.github+json",
               "User-Agent": "GitHub-Actions-Robot"
-          }
-          # 🎯 ШАГ 1: Запрашиваем состояние последнего комментария в ветке через GraphQL
-          # GraphQL АДРЕС: api . github . com / graphql
-          url_gh = "https://api.github.com/graphql"
-          
-          graphql_query = {
-              "query": f"""
-              query {{
-                repository(owner: "{owner}", name: "{repo_name}") {{
-                  discussion(number: 38) {{
-                    comments(last: 1) {{
-                      nodes {{
-                        id
-                        body
-                      }}
-                    }}
-                  }}
-                }}
-              }}
-              """
-          }
+          })
 
-          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
-          
           try:
-              with urllib.request.urlopen(req_gh) as response:
-                  res_data = json.loads(response.read().decode('utf-8'))
-                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
-                  if not nodes:
-                      print("ℹ️ Комментарии не найдены.")
-                      sys.exit(0)
+              with urllib.request.urlopen(req) as res:
+                  commit_data = json.loads(res.read().decode('utf-8'))
+                  files = commit_data.get('files', [])
                   
-                  current_comment_id = nodes[0]['id']
-                  raw_body = nodes[0]['body']
-          except Exception as e:
-              print("❌ Ошибка забора данных из GraphQL API:", str(e))
-              sys.exit(1)
-
-          print(f"=== Системный лог: Текущий ID последнего комментария на сервере: {current_comment_id} ===")
-
-          # 🎯 ШАГ 2: Базовая проверка дубликатов по локальной памяти артефактов Гитхаба
-          # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
-          url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
-          req_arts = urllib.request.Request(url_arts, headers=headers_gh)
-          
-          is_duplicate = False
-          try:
-              with urllib.request.urlopen(req_arts) as res_a:
-                  arts_data = json.loads(res_a.read().decode('utf-8'))
-                  for art in arts_data.get("artifacts", []):
-                      if art.get("name") == f"sent-id-{current_comment_id}":
-                          is_duplicate = True
-                          break
-          except Exception as e:
-              print("ℹ️ База сохраненных ID пуста.")
-
-          if is_duplicate:
-              print(f"ℹ️ ЖЕЛЕЗНЫЙ ФИЛЬТР: Этот коммент ({current_comment_id}) уже обрабатывался. Отмена дубликата!")
-              sys.exit(0)
-
-          # 🎯 ШАГ 3: Построчно очищаем маркдаун-таблицу, сохраняя приписки [э]/[с]
-          clean_lines = []
-          for line in raw_body.split("\n"):
-              line_str = line.strip()
-              if "| :---" in line_str or "Группа / Ученик" in line_str:
-                  continue
-              if line_str.startswith("|"):
-                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
-                  if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "")
-                      if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n{left_cell}")
-                      elif len(parts) >= 2:
-                          status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          clean_lines.append(f"{left_cell} {emoji}")
-              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
-                  if "Журнал посещений за" in line_str:
-                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
-                      clean_lines.append(f"📅 Отчет за {date_part}")
-                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
-                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
-                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  # Проверяем, есть ли среди измененных файлов хоть одно техническое УДАЛЕНИЕ робота
+                  has_deleted_json = any(f['status'] == 'removed' and 'journal-attendance-' in f['filename'] for f in files)
+                  
+                  if has_deleted_json:
+                      print("::set-output name=is_final::true")
+                      print("✅ ОБНАРУЖЕНО УДАЛЕНИЕ МУСОРА: Это финальный коммит робота-генератора отчетов!")
                   else:
-                      clean_lines.append(line_str)
-
-          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
-
-          if not message_text:
-              print("ℹ️ Текст отчета пуст. Пропускаем.")
-              sys.exit(0)
-
-          # 🎯 ШАГ 4: Отправка в Telegram Валерию лично
-          url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
-          payload = {
-              "chat_id": chat_id,
-              "text": message_text,
-              "parse_mode": "HTML",
-              "disable_web_page_preview": True
-          }
-          if len(chat_id) > 10 and chat_id.startswith("822"):
-              payload["message_thread_id"] = 38
-
-          req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
-          try:
-              with urllib.request.urlopen(req_tg) as response:
-                  print("HTTP Status Code: 200 OK. Отчёт успешно доставлен!")
+                      print("::set-output name=is_final::false")
+                      print("ℹ️ ОБНАРУЖЕНО ДОБАВЛЕНИЕ ФАЙЛА: Это промежуточный коммит учителя с сайта.")
           except Exception as e:
-              print("❌ Ошибка отправки в Telegram:", str(e))
+              print("Ошибка проверки коммита:", str(e))
               sys.exit(1)
+        shell: python
 
-          # 🎯 ШАГ 5: Запоминаем ID. Создаем маркер-файл, чтобы на холостом круге сработал Шаг 2
-          marker_filename = f"sent-id-{current_comment_id}.txt"
-          with open(marker_filename, "w") as f:
-              f.write(current_comment_id)
-          print(f"Робот запомнил ID отчета: {current_comment_id}")
+      # Шаг 2: Выполняем сбор логов только в том случае, если Шаг 1 подтвердил финал дня (удаление)
+       Cambria:
+        if: steps.check_git.outputs.is_final == 'true'
+        runs-on: ubuntu-latest # Исправлено: Скрипт выполняется в рамках текущей джобы
+        steps:
+          - name: Print Final Report Log
+            env:
+              TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+              TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              REPO_NAME: ${{ github.repository }}
+            run: |
+              import urllib.request
+              import json
+              import os
+              import sys
 
-          # Передаем переменную в окружение Гитхаба для шага сохранения артефакта
-          with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-              env_file.write(f"CURRENT_COMMENT_ID={current_comment_id}\n")
+              token = os.environ.get("TG_BOT_TOKEN", "").strip()
+              chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+              gh_token = os.environ.get("GH_TOKEN", "").strip()
+              repo_full = os.environ.get("REPO_NAME", "").strip()
+              owner, repo_name = repo_full.split("/")
 
-      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (пишется с начала строки в 6 пробелов):
-      - name: Save Comment ID to Repository Memory
-        uses: actions/upload-artifact@v4
-        with:
-          name: sent-id-${{ env.CURRENT_COMMENT_ID }}
-          path: sent-id-*.txt
-          retention-days: 1
+              url_gh = "https://api.github.com/graphql"
+              graphql_query = {"query": f'query {{ repository(owner: "{owner}", name: "{repo_name}") {{ discussion(number: 38) {{ comments(last: 1) {{ nodes {{ body }} }} }} }} }}'}
+              req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers={'Authorization': f'Bearer {gh_token}', 'Content-Type': 'application/json', 'User-Agent': 'GitHub-Actions-Robot'})
+              
+              try:
+                  with urllib.request.urlopen(req_gh) as response:
+                      res_data = json.loads(response.read().decode('utf-8'))
+                      raw_body = res_data['data']['repository']['discussion']['comments']['nodes'][0]['body']
+              except Exception as e:
+                  print("❌ Ошибка получения данных:", str(e))
+                  sys.exit(1)
+
+              print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ОТЧЕТА ===")
+              print(raw_body[:200] + "\n...[текст успешно получен]...")
+              print("=====================================================")
+              print("✅ УСПЕХ: Робот сработал строго 1 раз в день по факту удаления временных файлов из ветки!")

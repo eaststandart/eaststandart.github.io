@@ -108,7 +108,7 @@ jobs:
 
           # Считаем уникальный хэш-код текущего текста отчета
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
-          target_artifact_name = f"journal-hash-{text_hash}"
+          target_artifact_name = f"journal-attendance-{text_hash}"
           
           print("=====================================================")
           print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
@@ -187,5 +187,5 @@ jobs:
       - name: Purge Temporary Local Hash File
         run: |
           # Железно удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
-          rm -f _data/journal-hash-*.txt
+          rm -f _data/journal-attendance-*.txt
           echo "• Временный локальный файл успешно удален с диска виртуальной машины."

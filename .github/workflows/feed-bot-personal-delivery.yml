@@ -11,9 +11,9 @@ jobs:
   delivery-to-personal:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Проверяем статус файлов в прилетевшем коммите напрямую через API GitHub
+      # Шаг 1: Проверяем статус файлов в коммите через API. Если это не удаление робота — принудительно выходим!
       - name: Check Git File Status via API
-        id: check_git
+        shell: python
         run: |
           import urllib.request
           import json
@@ -35,56 +35,100 @@ jobs:
                   commit_data = json.loads(res.read().decode('utf-8'))
                   files = commit_data.get('files', [])
                   
-                  # Проверяем, есть ли среди измененных файлов хоть одно техническое УДАЛЕНИЕ робота
+                  # Ищем, есть ли статус 'removed' у наших JSON файлов посещаемости
                   has_deleted_json = any(f['status'] == 'removed' and 'journal-attendance-' in f['filename'] for f in files)
                   
                   if has_deleted_json:
-                      print("::set-output name=is_final::true")
                       print("✅ ОБНАРУЖЕНО УДАЛЕНИЕ МУСОРА: Это финальный коммит робота-генератора отчетов!")
                   else:
-                      print("::set-output name=is_final::false")
-                      print("ℹ️ ОБНАРУЖЕНО ДОБАВЛЕНИЕ ФАЙЛА: Это промежуточный коммит учителя с сайта.")
+                      print("ℹ️ ОБНАРУЖЕНО ДОБАВЛЕНИЕ ФАЙЛА: Это промежуточный коммит учителя с сайта. Останавливаем робота.")
+                      sys.exit(0) # Молча завершаем всю джобу, не пропуская к следующему шагу!
           except Exception as e:
               print("Ошибка проверки коммита:", str(e))
               sys.exit(1)
-        shell: python
 
-      # Шаг 2: Выполняем сбор логов только в том случае, если Шаг 1 подтвердил финал дня (удаление)
-       Cambria:
-        if: steps.check_git.outputs.is_final == 'true'
-        runs-on: ubuntu-latest # Исправлено: Скрипт выполняется в рамках текущей джобы
-        steps:
-          - name: Print Final Report Log
-            env:
-              TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-              TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              REPO_NAME: ${{ github.repository }}
-            run: |
-              import urllib.request
-              import json
-              import os
-              import sys
+      # Шаг 2: Этот шаг запустится строго тогда, когда Шаг 1 успешно прошел проверку удаления!
+      - name: Print Final Report Log
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          import urllib.request
+          import json
+          import os
+          import sys
 
-              token = os.environ.get("TG_BOT_TOKEN", "").strip()
-              chat_id = os.environ.get("TG_CHAT_ID", "").strip()
-              gh_token = os.environ.get("GH_TOKEN", "").strip()
-              repo_full = os.environ.get("REPO_NAME", "").strip()
-              owner, repo_name = repo_full.split("/")
+          token = os.environ.get("TG_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("TG_CHAT_ID", "").strip()
+          gh_token = os.environ.get("GH_TOKEN", "").strip()
+          repo_full = os.environ.get("REPO_NAME", "").strip()
+          owner, repo_name = repo_full.split("/")
 
-              url_gh = "https://api.github.com/graphql"
-              graphql_query = {"query": f'query {{ repository(owner: "{owner}", name: "{repo_name}") {{ discussion(number: 38) {{ comments(last: 1) {{ nodes {{ body }} }} }} }} }}'}
-              req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers={'Authorization': f'Bearer {gh_token}', 'Content-Type': 'application/json', 'User-Agent': 'GitHub-Actions-Robot'})
-              
-              try:
-                  with urllib.request.urlopen(req_gh) as response:
-                      res_data = json.loads(response.read().decode('utf-8'))
-                      raw_body = res_data['data']['repository']['discussion']['comments']['nodes'][0]['body']
-              except Exception as e:
-                  print("❌ Ошибка получения данных:", str(e))
-                  sys.exit(1)
+          url_gh = "https://api.github.com/graphql"
+          graphql_query = {
+              "query": f"""
+              query {{
+                repository(owner: "{owner}", name: "{repo_name}") {{
+                  discussion(number: 38) {{
+                    comments(last: 1) {{
+                      nodes {{
+                        body
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+              """
+          }
+          
+          req_gh = urllib.request.Request(
+              url_gh, 
+              data=json.dumps(graphql_query).encode('utf-8'), 
+              headers={'Authorization': f'Bearer {gh_token}', 'Content-Type': 'application/json', 'User-Agent': 'GitHub-Actions-Robot'}
+          )
+          
+          try:
+              with urllib.request.urlopen(req_gh) as response:
+                  res_data = json.loads(response.read().decode('utf-8'))
+                  nodes = res_data['data']['repository']['discussion']['comments']['nodes']
+                  if not nodes:
+                      print("ℹ️ Комментарии в Дискуссии №38 не найдены.")
+                      sys.exit(0)
+                  raw_body = nodes[0]['body']
+          except Exception as e:
+              print("❌ Ошибка получения данных:", str(e))
+              sys.exit(1)
 
-              print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ОТЧЕТА ===")
-              print(raw_body[:200] + "\n...[текст успешно получен]...")
-              print("=====================================================")
-              print("✅ УСПЕХ: Робот сработал строго 1 раз в день по факту удаления временных файлов из ветки!")
+          clean_lines = []
+          for line in raw_body.split("\n"):
+              line_str = line.strip()
+              if "| :---" in line_str or "Группа / Ученик" in line_str:
+                  continue
+              if line_str.startswith("|"):
+                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
+                  if len(parts) >= 1:
+                      left_cell = parts[0].replace("**", "")
+                      if "ГРУППА" in left_cell or "⏰" in left_cell:
+                          clean_lines.append(f"\n{left_cell}")
+                      elif len(parts) >= 2:
+                          status_cell = parts[1]
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          clean_lines.append(f"{left_cell} {emoji}")
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                  if "Журнал посещений за" in line_str:
+                      date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                      clean_lines.append(f"📅 Отчет за {date_part}")
+                  elif "Преподаватель:" in line_str or "Проверил" in line_str:
+                      raw_name = line_str.split(":")[-1].replace("*", "").strip()
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
+                  else:
+                      clean_lines.append(line_str)
+
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
+
+          print("=== ЛОГ PYTHON: СФОРМИРОВАННЫЙ ТЕКСТ ОТЧЕТА ===")
+          print(message_text)
+          print("=====================================================")
+          print("✅ УСПЕХ: Робот отработал строго 1 раз в день по факту удаления временных файлов из ветки!")

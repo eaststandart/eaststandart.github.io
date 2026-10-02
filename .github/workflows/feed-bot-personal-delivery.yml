@@ -6,7 +6,6 @@ on:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
-# Железная защита от гонки параллельных процессов на серверах Гитхаба
 concurrency:
   group: personal-delivery-group
   cancel-in-progress: false
@@ -73,13 +72,13 @@ jobs:
                       print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
                   
-                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ: Извлекаем первый (нулевой) элемент из списка nodes
+                  # ⚡️ ЖЕЛЕЗНОЕ ИСПРАВЛЕНИЕ: Берем первый (нулевой) элемент из массива nodes
                   raw_body = nodes[0]['body']
           except Exception as e:
-              print("❌ Ошибка забора данных из GraphQL API:", str(e))
+              print("❌ КРИТИЧЕСКАЯ ОШИБКА шлюза GraphQL API:", str(e))
               sys.exit(1)
 
-          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу строго под ВАРИАНТ №3 (Шарик + Имя)
+          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу, сохраняя приписки [э]/[с]
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -90,17 +89,15 @@ jobs:
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n<b>{left_cell}</b>")
+                          clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else "⚪"
-                          
-                          # ⚡️ ВАШ ФОРМАТ: Сначала сочный шарик, потом имя ребенка
-                          clean_lines.append(f"{emoji} {left_cell}")
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          clean_lines.append(f"{left_cell} {emoji}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
-                      clean_lines.append(f"📅 <b>Отчет за {date_part}</b>")
+                      clean_lines.append(f"📅 Отчет за {date_part}")
                   elif "Преподаватель:" in line_str or "Проверил" in line_str:
                       raw_name = line_str.split(":")[-1].replace("*", "").strip()
                       clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
@@ -110,14 +107,19 @@ jobs:
           message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
           if not message_text:
-              print("ℹ️ Сформированный текст отчета пуст. Завершаем.")
+              print("ℹ️ СИСТЕМНЫЙ ЛОГ: Сформированный текст отчета пуст. Завершаем.")
               sys.exit(0)
 
-          # Считаем уникальный хэш-код текущего текста отчета для фильтрации дубликатов
+          # Считаем уникальный хэш-код текущего текста отчета
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()
-          target_artifact_name = f"journal-hash-{text_hash}"
+          target_artifact_name = f"journal-attendance-{text_hash}"
+          
+          print("=====================================================")
+          print("🔍 ПОДРОБНЫЙ ЛОГ ЭТАПА СРАВНЕНИЯ ТЕКСТА:")
+          print("=====================================================")
+          print(f"• Хэш-код текущего отчета: {text_hash}")
 
-          # 🎯 ШАГ 3: Проверяем память серверов Гитхаба на наличие этого хэша текста
+          # 🎯 ШАГ 3: Проверяем память серверов Гитхаба на наличие этого уникального имени артефакта
           # АДРЕС ВСЕХ АРТЕФАКТОВ: api . github . com / repos / {repo_full} / actions / artifacts
           url_arts = f"https://api.github.com/repos/{repo_full}/actions/artifacts?per_page=20"
           req_arts = urllib.request.Request(url_arts, headers=headers_gh)
@@ -126,16 +128,27 @@ jobs:
           try:
               with urllib.request.urlopen(req_arts) as res_a:
                   arts_data = json.loads(res_a.read().decode('utf-8'))
-                  for art in arts_data.get("artifacts", []):
-                      if art.get("name") == target_artifact_name:
+                  artifacts = arts_data.get("artifacts", [])
+                  print(f"• Найдено прошлых маркеров в памяти сервера: {len(artifacts)}")
+                  
+                  for art in artifacts:
+                      name = art.get("name", "")
+                      if name == target_artifact_name:
                           is_duplicate = True
+                          print(f"  [!] НАЙДЕНО СОВПАДЕНИЕ: {name}")
                           break
           except Exception as e:
-              print(f"• Память Гитхаба пуста: {str(e)}")
+              print(f"• Ошибка чтения памяти Гитхаба: {str(e)} (Base считается пустой)")
 
           if is_duplicate:
-              print(f"🛑 ВЕРДИКТ: Этот текст отчёта уже отправлялся сегодня. Отмена дубликата!")
+              print("-----------------------------------------------------")
+              print("🛑 ВЕРДИКТ: Этот текст отчёта уже отправлялся сегодня. Отмена дубликата!")
+              print("=====================================================")
               sys.exit(0)
+          else:
+              print("-----------------------------------------------------")
+              print("🟢 ВЕРДИКТ: Текст полностью уникальный. Разрешаем отправку в Telegram.")
+              print("=====================================================")
 
           # 🎯 ШАГ 4: Отправка в Telegram Валерию лично
           url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -156,16 +169,18 @@ jobs:
               print("❌ Ошибка сети при отправке в Telegram:", str(e))
               sys.exit(1)
 
-          # 🎯 ШАГ 5: Запоминаем уникальный хэш в папке _data/
+          # 🎯 ШАГ 5: Запоминаем уникальный хэш. Создаем файл СТРОГО С УНИКАЛЬНЫМ ИМЕНЕМ в папке _data/
           os.makedirs("_data", exist_ok=True)
           marker_filename = os.path.join("_data", f"{target_artifact_name}.txt")
           with open(marker_filename, "w") as f:
               f.write(text_hash)
+          print(f"• Робот временно создал файл на сервере: {marker_filename}")
 
+          # Передаем уникальное имя артефакта в... окружение Гитхаба для шага сохранения
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"TARGET_ARTIFACT_NAME={target_artifact_name}\n")
 
-      # СИСТЕМНЫЙ КУБИК ГИТХАБА (сохраняет уникальный файл в память и сразу зачищает за собой диск):
+      # ⚡️ СИСТЕМНЫЙ КУБИК ГИТХАБА (сохраняет уникальный файл в память и сразу зачищает за собой диск):
       - name: Save Unique Report Hash to Memory
         uses: actions/upload-artifact@v4
         with:
@@ -175,4 +190,6 @@ jobs:
 
       - name: Purge Temporary Local Hash File
         run: |
-          rm -f _data/journal-hash-*.txt
+          # Железно удаляем локальный файл из папки _data перед закрытием сервера Ubuntu
+          rm -f _data/journal-attendance-*.txt
+          echo "• Временный локальный файл успешно удален с диска виртуальной машины."

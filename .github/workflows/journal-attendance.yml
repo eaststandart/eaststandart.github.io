@@ -10,7 +10,7 @@ permissions:
   discussions: write
 
 env:
-  PUBLISH_AS_BOT: "false"
+  PUBLISH_AS_BOT: "true"
 
 jobs:
   build_report:

@@ -74,26 +74,12 @@ jobs:
                       sys.exit(0)
                   
                   # Извлекаем первый (нулевой) элемент массива нод
-                  raw_body = nodes[0]['body']
+                  raw_body = nodes['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
 
-          # Сначала собираем все имена для поиска динамического максимума длины строки
-          names_list = []
-          for line in raw_body.split("\n"):
-              line_str = line.strip()
-              if line_str.startswith("|") and not "Группа" in line_str and not ":---" in line_str:
-                  parts = [p.strip() for p in line_str.split("|") if p.strip()]
-                  if len(parts) >= 1:
-                      left_cell = parts[0].replace("**", "")
-                      if not "ГРУППА" in left_cell and not "⏰" in left_cell:
-                          names_list.append(left_cell)
-
-          # Находим длину самого длинного имени текущего дня + 1 запасной шаг
-          text_line = max(len(n) for n in names_list) + 1 if names_list else 15
-
-          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу и врезаем широкие отступы Юникода
+          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу строго под ВАРИАНТ №3 (Шарик + Имя)
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -104,22 +90,17 @@ jobs:
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
-                          clean_lines.append(f"\n{left_cell}")
+                          clean_lines.append(f"\n⏰ <b>{left_cell}</b>")
                       elif len(parts) >= 2:
                           status_cell = parts[1]
-                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
+                          emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else "⚪"
                           
-                          # ⚡️ УМНЫЙ ПЕРЕСЧЁТ: Считаем разницу и дописываем длинные пробелы Юникода (\u2003)
-                          spaces_count = text_line - len(left_cell)
-                          if spaces_count < 1:
-                              spaces_count = 1
-                          em_spaces = "\u2003" * spaces_count
-                          
-                          clean_lines.append(f"{left_cell}{em_spaces}{emoji}")
+                          # ⚡️ ВАШ НОВЫЙ ФОРМАТ: Сначала сочный шарик, потом имя ребенка
+                          clean_lines.append(f"{emoji} {left_cell}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
-                      clean_lines.append(f"📅 Отчет за {date_part}")
+                      clean_lines.append(f"📅 <b>Отчет за {date_part}</b>")
                   elif "Преподаватель:" in line_str or "Проверил" in line_str:
                       raw_name = line_str.split(":")[-1].replace("*", "").strip()
                       clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")

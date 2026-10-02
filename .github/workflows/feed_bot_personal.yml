@@ -1,7 +1,7 @@
 name: Telegram Personal Report
 
 on:
-  # Робот просыпается строго по факту окончания работы первого бота
+  # Робот просыпается по окончанию работы бота
   workflow_run:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]

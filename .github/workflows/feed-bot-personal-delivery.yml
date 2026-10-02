@@ -19,42 +19,45 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
-          # ИСПРАВЛЕНО: Передаем текст сообщения последнего коммита для проверки финала дня
-          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
           import urllib.request
           import json
           import os
           import sys
 
-          # ВРЕМЕННЫЙ ЛОГ: Проверяем реальную историю последних коммитов в системе
-          import subprocess
-          try:
-              git_log = subprocess.check_output(["git", "log", "-n", "3", "--oneline"]).decode("utf-8")
-              print("=== ФАКТИЧЕСКАЯ ИСТОРИЯ КОММИТОВ НА СЕРВЕРЕ ===")
-              print(git_log)
-              print("==============================================")
-          except Exception as e:
-              print("Не удалось прочитать git log:", str(e))
-
-          # ИСПРАВЛЕНО: Проверяем, является ли коммит финальной склейкой робота
-          commit_msg = os.environ.get("COMMIT_MESSAGE", "").strip()
-          print(f"--- ЛОГ ПРОВЕРКИ: Сообщение последнего коммита: '{commit_msg}' ---")
-          
-          # Если это не финальный авто-коммит склейки журнала, выходим без отправки в чат
-          if "Сводный журнал за день" not in commit_msg:
-              print("ℹ️ Это промежуточная отправка группы. Ожидаем полную склейку дня. Пропускаем.")
-              sys.exit(0)
-
           token = os.environ.get("TG_BOT_TOKEN", "").strip()
           chat_id = os.environ.get("TG_CHAT_ID", "").strip()
           gh_token = os.environ.get("GH_TOKEN", "").strip()
           repo_full = os.environ.get("REPO_NAME", "").strip()
           
+          # Умная проверка завершения дня: смотрим, очистил ли первый робот папку _data
+          url_contents = f"https://github.com{repo_full}/contents/_data"
+          headers_gh = {
+              "Authorization": f"Bearer {gh_token}",
+              "User-Agent": "GitHub-Actions-Robot"
+          }
+          
+          print("--- ЛОГ ПРОВЕРКИ: Проверяем наличие временных JSON-файлов на GitHub... ---")
+          try:
+              req_contents = urllib.request.Request(url_contents, headers=headers_gh)
+              with urllib.request.urlopen(req_contents) as response:
+                  files_list = json.loads(response.read().decode('utf-8'))
+                  # Ищем любые временные файлы посещаемости в ответе сервера
+                  temp_files = [f['name'] for f in files_list if 'journal-attendance-' in f['name'] and f['name'].endswith('.json')]
+                  
+                  if len(temp_files) > 0:
+                      print(f"ℹ️ Обнаружены временные файлы групп: {temp_files}")
+                      print("ℹ️ Ожидаем остальные группы дня. Пропускаем отправку в Телеграм.")
+                      sys.exit(0)
+                  else:
+                      print("✅ Временные файлы не найдены. Папка зачищена роботом! Запускаем отправку отчёта.")
+          except Exception as e:
+              print("Не удалось проверить содержимое папки _data, продолжаем стандартно:", str(e))
+
           owner, repo_name = repo_full.split("/")
 
           # ⚡️ АДРЕС СЛУЖЕБНОГО ГРАФКВЛ API GITHUB
-          url_gh = "https://api.github.com/graphql"
+          url_gh = "https://github.com"
           
           graphql_query = {
               "query": f"""
@@ -72,13 +75,7 @@ jobs:
               """
           }
 
-          headers_gh = {
-              "Authorization": f"Bearer {gh_token}",
-              "Content-Type": "application/json",
-              "User-Agent": "GitHub-Actions-Robot"
-          }
-
-          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers=headers_gh)
+          req_gh = urllib.request.Request(url_gh, data=json.dumps(graphql_query).encode('utf-8'), headers={'Authorization': f'Bearer {gh_token}', 'Content-Type': 'application/json', 'User-Agent': 'GitHub-Actions-Robot'})
           
           try:
               with urllib.request.urlopen(req_gh) as response:
@@ -95,26 +92,19 @@ jobs:
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
-              
               if "| :---" in line_str or "Группа / Ученик" in line_str:
                   continue
-                  
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
-                  
                   if len(parts) >= 1:
                       left_cell = parts[0].replace("**", "")
-                      
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
                           clean_lines.append(f"\n{left_cell}")
-                          
                       elif len(parts) >= 2:
                           status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          student_name = left_cell
-                          clean_lines.append(f"{student_name} {emoji}")
-                          
-              elif "📅" in line_str or "Prepodavatel:" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
+                          clean_lines.append(f"{left_cell} {emoji}")
+              elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
                       clean_lines.append(f"📅 Отчет за {date_part}")
@@ -131,7 +121,7 @@ jobs:
               sys.exit(0)
 
           # ⚡️ СЛУЖЕБНЫЙ АДРЕС TELEGRAM API С bot И ПРИСТАВКОЙ api.
-          url_tg = f"https://api.telegram.org/bot{token}/sendMessage"
+          url_tg = f"https://telegram.org{token}/sendMessage"
           
           payload = {
               "chat_id": chat_id,
@@ -143,11 +133,7 @@ jobs:
           if len(chat_id) > 10 and chat_id.startswith("822"):
               payload["message_thread_id"] = 38
 
-          req_tg = urllib.request.Request(
-              url_tg, 
-              data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), 
-              headers={'Content-Type': 'application/json'}
-          )
+          req_tg = urllib.request.Request(url_tg, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'), headers={'Content-Type': 'application/json'})
           
           try:
               with urllib.request.urlopen(req_tg) as response:

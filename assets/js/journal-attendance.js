@@ -326,7 +326,7 @@ function saveGroupAttendance(day, time) {
     })
     .then(sha => {
       let commitBody = {
-        message: `Отчет группы: Группа ${time} (${day}) от ${teacherUsername}`,
+        message: `Отчет: группа ${time} (${day}) от ${teacherUsername}`,
         content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
       };
 

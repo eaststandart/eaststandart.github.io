@@ -19,21 +19,21 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TELEGRAM_EASTEMITTING_PERSONAL_ID_38 }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_NAME: ${{ github.repository }}
-          # Передаем логин автора последнего коммита для проверки комплектности дня
-          COMMIT_ACTOR: ${{ github.event.workflow_run.head_commit.author.name }}
+          # ИСПРАВЛЕНО: Передаем текст сообщения последнего коммита для проверки финала дня
+          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
           import urllib.request
           import json
           import os
           import sys
 
-          # КРИТИЧЕСКИЙ ФИЛЬТР ДУБЛЕЙ: Реагируем только на финальный технический пуш от робота!
-          commit_author = os.environ.get("COMMIT_ACTOR", "").strip()
-          print(f"--- ЛОГ ПРОВЕРКИ: Автор последнего коммита: '{commit_author}' ---")
+          # ИСПРАВЛЕНО: Проверяем, является ли коммит финальной склейкой робота
+          commit_msg = os.environ.get("COMMIT_MESSAGE", "").strip()
+          print(f"--- ЛОГ ПРОВЕРКИ: Сообщение последнего коммита: '{commit_msg}' ---")
           
-          # Если коммит сделал живой учитель, значит день еще не собран до конца, выходим без отправки в чат
-          if commit_author != "GitHub Actions" and commit_author != "github-actions[bot]":
-              print("ℹ️ Ожидаем остальные группы дня. Пропускаем отправку в Телеграм.")
+          # Если это не финальный авто-коммит склейки журнала, выходим без отправки в чат
+          if "Сводный журнал за день" not in commit_msg:
+              print("ℹ️ Это промежуточная отправка группы. Ожидаем полную склейку дня. Пропускаем.")
               sys.exit(0)
 
           token = os.environ.get("TG_BOT_TOKEN", "").strip()

@@ -67,7 +67,9 @@ jobs:
                   if not nodes:
                       print("ℹ️ Комментарии не найдены.")
                       sys.exit(0)
-                  raw_body = nodes['body']
+                  
+                  # ⚡️ ТОЧЕЧНОЕ ИСПРАВЛЕНИЕ СИНТАКСИСА: берем первый элемент из списка nodes
+                  raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
               sys.exit(1)
@@ -81,11 +83,11 @@ jobs:
               if line_str.startswith("|"):
                   parts = [p.strip() for p in line_str.split("|") if p.strip()]
                   if len(parts) >= 1:
-                      left_cell = parts.replace("**", "")
+                      left_cell = parts[0].replace("**", "")
                       if "ГРУППА" in left_cell or "⏰" in left_cell:
                           clean_lines.append(f"\n{left_cell}")
                       elif len(parts) >= 2:
-                          status_cell = parts
+                          status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
                           clean_lines.append(f"{left_cell} {emoji}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:

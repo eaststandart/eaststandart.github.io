@@ -27,6 +27,16 @@ jobs:
           import os
           import sys
 
+          # ВРЕМЕННЫЙ ЛОГ: Проверяем реальную историю последних коммитов в системе
+          import subprocess
+          try:
+              git_log = subprocess.check_output(["git", "log", "-n", "3", "--oneline"]).decode("utf-8")
+              print("=== ФАКТИЧЕСКАЯ ИСТОРИЯ КОММИТОВ НА СЕРВЕРЕ ===")
+              print(git_log)
+              print("==============================================")
+          except Exception as e:
+              print("Не удалось прочитать git log:", str(e))
+
           # ИСПРАВЛЕНО: Проверяем, является ли коммит финальной склейкой робота
           commit_msg = os.environ.get("COMMIT_MESSAGE", "").strip()
           print(f"--- ЛОГ ПРОВЕРКИ: Сообщение последнего коммита: '{commit_msg}' ---")

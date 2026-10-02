@@ -6,7 +6,7 @@ on:
     workflows: ["Generate Attendance Report to Discussions"]
     types: [completed]
 
-# Железная защита от гонки параллельных процессов
+# Железная защита от гонки параллельных процессов на серверах Гитхаба
 concurrency:
   group: personal-delivery-group
   cancel-in-progress: false
@@ -70,9 +70,10 @@ jobs:
                   res_data = json.loads(response.read().decode('utf-8'))
                   nodes = res_data['data']['repository']['discussion']['comments']['nodes']
                   if not nodes:
-                      print("ℹ dependency LOG: Комментарии не найдены.")
+                      print("ℹ️ ЛОГ GITHUB: Комментарии не найдены.")
                       sys.exit(0)
                   
+                  # Извлекаем первый (нулевой) элемент массива нод
                   raw_body = nodes[0]['body']
           except Exception as e:
               print("❌ Ошибка забора данных из GraphQL API:", str(e))
@@ -89,10 +90,10 @@ jobs:
                       if not "ГРУППА" in left_cell and not "⏰" in left_cell:
                           names_list.append(left_cell)
 
-          # Вычисляем самое длинное имя в списке текущего дня + 2 пробела
-          text_line = max(len(n) for n in names_list) + 2 if names_list else 15
+          # Находим длину самого длинного имени текущего дня + 1 запасной шаг
+          text_line = max(len(n) for n in names_list) + 1 if names_list else 15
 
-          # 🎯 ШАГ 2: Чистая построчная очистка маркдаун-таблицы без врезки тегов внутрь цикла
+          # 🎯 ШАГ 2: Построчно очищаем маркдаун-таблицу и врезаем широкие отступы Юникода
           clean_lines = []
           for line in raw_body.split("\n"):
               line_str = line.strip()
@@ -107,27 +108,29 @@ jobs:
                       elif len(parts) >= 2:
                           status_cell = parts[1]
                           emoji = "🟢" if "🟢" in status_cell else "🔴" if "🔴" in status_cell else ""
-                          # Принудительно выравниваем длину имени пробелами с помощью ljust
-                          clean_lines.append(f"{left_cell.ljust(text_line)}{emoji}")
+                          
+                          # ⚡️ УМНЫЙ ПЕРЕСЧЁТ: Считаем разницу и дописываем длинные пробелы Юникода (\u2003)
+                          spaces_count = text_line - len(left_cell)
+                          if spaces_count < 1:
+                              spaces_count = 1
+                          em_spaces = "\u2003" * spaces_count
+                          
+                          clean_lines.append(f"{left_cell}{em_spaces}{emoji}")
               elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
                   if "Журнал посещений за" in line_str:
                       date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
                       clean_lines.append(f"📅 Отчет за {date_part}")
                   elif "Преподаватель:" in line_str or "Проверил" in line_str:
                       raw_name = line_str.split(":")[-1].replace("*", "").strip()
-                      clean_lines.append(f"\nПреподаватель: {raw_name}")
+                      clean_lines.append(f"\nПреподаватель: <b>{raw_name}</b>")
                   else:
                       clean_lines.append(line_str)
 
-          inner_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
+          message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
-          if not inner_text:
+          if not message_text:
               print("ℹ️ Сформированный текст отчета пуст. Завершаем.")
               sys.exit(0)
-
-          # ⚡️ БРОНЕБОЙНАЯ РАЗМЕТКА: Заворачиваем абсолютно весь текст целиком в моноширинный блок
-          # Это гарантирует 100% защиту от ошибки 422/400 и выравнивает все строки
-          message_text = f"<pre>{inner_text}</pre>"
 
           # Считаем уникальный хэш-код текущего текста отчета для фильтрации дубликатов
           text_hash = hashlib.md5(message_text.encode('utf-8')).hexdigest()

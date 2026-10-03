@@ -195,8 +195,7 @@ function parseSimpleYaml(text) {
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
-      const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      const name = rawName.replace(/^["']|["']$/g, "").trim();
+      const name = cleanText.substring(cleanText.indexOf('-') + 1).trim();
       if (currentDay && currentGroup) {
         result[currentDay][currentGroup].push(name);
       }

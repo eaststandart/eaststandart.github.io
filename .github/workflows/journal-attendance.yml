@@ -149,7 +149,7 @@ jobs:
                   res += char;
                 }
               }
-              return res.replace(/-+/g, "-").replace(/^-|-\$/g, "");
+              return res.replace(/-+/g, "-").replace(/^-|-$/g, "");
             }
 
             // Глобальный поисковый массив комментов со всей Галереи репозитория

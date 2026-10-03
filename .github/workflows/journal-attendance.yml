@@ -274,6 +274,37 @@ jobs:
                   console.log(`[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: ${targetTag}`);
                 }
 
+                // Этаж 7: ГЛОБАЛЬНЫЙ РАДАР ПО КАТЕГОРИИ ГАЛЕРЕЯ (ИСПРАВЛЕН ИНДЕКС МАССИВА)
+                if (showProjects && targetTag) {
+                  let matches = globalGalleryComments.filter(c => c.body && c.body.includes(targetTag));
+                  if (matches.length > 0) {
+                    matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    projectLink = `[🔍 Поделка](${matches[0].url})`;
+                    console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches[0].url}`);
+                  }
+                }
+
+                // Этаж 8: ФИНАЛ — Чистое имя вычисляется, когда строка полностью нормализована конвейером
+                let printName = normalized.replace(/"/g, "")
+                                          .replace(/\[э\]/i, "")
+                                          .replace(/\[с\]/i, "")
+                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/g, "")
+                                          .replace(/\s+/g, " ")
+                                          .trim();
+
+                let directionSuffix = track === "электроника" ? " [э]" : track === "столярное" ? " [с]" : "";
+                let tagSuffix = targetTag ? ` ${targetTag}` : "";
+                let finalYamlLine = `${printName}${directionSuffix}${tagSuffix}`;
+
+                return {
+                  nameForSort: printName,
+                  track: track,
+                  status: statusText,
+                  project: projectLink,
+                  yamlLine: finalYamlLine
+                };
+              }
+
               // 2.1. Обработка постоянного состава из YAML
               for (const kid of permanentKids) {
                 const processed = await processKidRow(kid, "");

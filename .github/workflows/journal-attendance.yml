@@ -10,7 +10,8 @@ permissions:
   discussions: write
 
 env:
-  PUBLISH_AS_BOT: "true"
+  PUBLISH_AS_BOT: "true"       # ПЕРЕКЛЮЧЕНИЕ ПУБЛИКАЦИЙ С БОТА НА АДМИНА (true/false)
+  SHOW_PROJECTS_COLUMN: "true" # ОТКЛЮЧЕНИЕ КОЛОНКИ ПРОЕКТОВ (true/false)
 
 jobs:
   build_report:
@@ -115,85 +116,182 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С РАЗБИВКОЙ НА 3 НЕЗАВИСИМЫХ БЛОКА
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С УМНЫМ АВТОРАД АРОМ ПРОЕКТОВ (ЛАТИНСКИЙ ТРАНСЛИТ)
+            const showProjects = process.env.SHOW_PROJECTS_COLUMN === "true";
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
-            markdownBody += `| Группа / Ученик | Статус | Направление |\n`;
-            markdownBody += `| :--- | :--- | :--- |\n`;
+            
+            if (showProjects) {
+              markdownBody += `| Группа / Ученик | Статус | Направление | Чем занят? |\n`;
+              markdownBody += `| :--- | :--- | :--- | :--- |\n`;
+            } else {
+              markdownBody += `| Группа / Ученик | Статус | Направление |\n`;
+              markdownBody += `| :--- | :--- | :--- |\n`;
+            }
 
+            // Функция перевода русского текста в латинский транслит для безопасных тегов
+            function translitRusToLat(text) {
+              const rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ");
+              const lat = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch  y  e yu ya".split(" ");
+              let res = "";
+              let lower = text.toLowerCase();
+              for (let i = 0; i < lower.length; i++) {
+                let char = lower[i];
+                let idx = rus.indexOf(char);
+                if (idx !== -1) {
+                  res += lat[idx];
+                } else if (char === " " || char === "-") {
+                  res += "-";
+                } else if (/[a-z0-9_]/.test(char)) {
+                  res += char;
+                }
+              }
+              return res.replace(/-+/g, "-").replace(/^-|-\$/g, "");
+            }
 
-            scheduleGroups.forEach(time => {
-              markdownBody += `| **⏰ ГРУППА ${time}** | | |\n`;
+            for (const time of scheduleGroups) {
+              if (showProjects) {
+                markdownBody += `| **⏰ ГРУППА ${time}** | | | |\n`;
+              } else {
+                markdownBody += `| **⏰ ГРУППА ${time}** | | |\n`;
+              }
+              
               const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
               const permanentKids = studentsData[targetDay][time] || [];
 
-              // СОЗДАЕМ ТРИ ОТДЕЛЬНЫХ КАРМАНА ДЛЯ РАЗНЫХ КАТЕГОРИЙ ДЕТЕЙ
               let blockPermanent = [];
               let blockNewbies = [];
               let blockProbation = [];
 
-              // Универсальная вспомогательная функция для разбора строк и анти-опечатки
-              function parseStudent(rawName, statusText) {
-                // Анти-опечатка: Исправляем английскую c/C внутри скобок на русскую с
+              async function parseStudent(rawName, statusText, isNewbieNode = false) {
                 let normalized = rawName.replace(/\[c\]/i, "[с]");
                 
                 let track = "";
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // Очищаем имя для красивого вывода в Markdown, полностью убирая кавычки и висячие пробелы на концах
-                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                let projectLink = "";
+                
+                if (showProjects) {
+                  // Регулярное выражение ищет любой ГОТОВЫЙ тег (@название или #название)
+                  let hasReadyTag = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
+                  let targetTag = "";
+
+                  if (hasReadyTag) {
+                    // Ситуация: Учитель ввел готовый тег или он уже был в YAML базе
+                    // Но исключаем одиночный знак триггера "#", если после него пусто
+                    if (hasReadyTag[0] !== "#") {
+                      targetTag = hasReadyTag[0];
+                    }
+                  }
+
+                  // Проверяем, есть ли в строке УЖЕ готовый хэштег или ник
+                  let hasReadyTag = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
+                  
+                  // Робот имеет право генерировать тег строго если готового тега НЕТ и стоит знак #
+                  if (!hasReadyTag && normalized.includes("#")) {
+                    let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").trim();
+                    let targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
+                    normalized = normalized.replace(/#/g, "").trim() + " " + targetTag;
+                  } else {
+                    // Если готовый тег уже написан учителем или был в базе — просто вычищаем случайный мусорный знак # в хвосте
+                    normalized = normalized.replace(/\s+#\s*\$/g, "").trim();
+                  }
+
+                  if (targetTag) {
+                    const searchQuery = `query {
+                      repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                        discussion(number: 38) {
+                          comments(first: 100) {
+                            nodes {
+                              url
+                              createdAt
+                              body
+                            }
+                          }
+                        }
+                      }
+                    }`;
+                    
+                    try {
+                      const resSearch = await github.graphql(searchQuery);
+                      const allComments = resSearch.repository.discussion.comments.nodes || [];
+                      let studentComments = allComments.filter(c => c.body && c.body.includes(targetTag));
+                      
+                      if (studentComments.length > 0) {
+                        studentComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        projectLink = `[🔍 Поделка](${studentComments[0].url})`;
+                      }
+                    } catch (err) {
+                      console.log(`Не удалось выполнить поиск поделки для ${targetTag}:`, err.message);
+                    }
+                  }
+                }
+
+                let printName = normalized.replace(/"/g, "")
+                                          .replace(/\[э\]/i, "")
+                                          .replace(/\[с\]/i, "")
+                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
+                                          .replace(/\s+/g, " ")
+                                          .trim();
                 
                 return {
                   nameForSort: printName,
                   track: track,
                   status: statusText,
-                  originalWithRussianTag: normalized
+                  project: projectLink,
+                  updatedRowWithTag: normalized
                 };
               }
 
-              // 4.1. Наполняем Блок 1: Постоянный состав из YAML базы
-              permanentKids.forEach(kid => {
-                const processed = parseStudent(kid, "");
+              // 4.1. Обрабатываем постоянных учеников
+              for (const kid of permanentKids) {
+                const processed = await parseStudent(kid, "");
                 const isPresent = groupData.present_permanent.some(p => p.trim().replace(/\.\(/, '').toLowerCase() === kid.trim().replace(/\.\)/, '').toLowerCase());
                 processed.status = isPresent ? "🟢 Присутствовал" : "🔴 Отсутствовал";
                 blockPermanent.push(processed);
-              });
+              }
 
-              // 4.2. Наполняем Блок 2: Постоянные новички (с сайта)
+              // 4.2. Обрабатываем новичков
+              let processedNewbiesPayload = [];
               if (groupData.newbies && groupData.newbies.length > 0) {
-                groupData.newbies.forEach(newbie => {
-                  blockNewbies.push(parseStudent(newbie, "🟡 Новичок"));
-                });
+                for (const newbie of groupData.newbies) {
+                  const processed = await parseStudent(newbie, "🟡 Новичок", true);
+                  blockNewbies.push(processed);
+                  // Сохраняем измененную строку с тегом для Части 6 записи в YAML
+                  processedNewbiesPayload.push(processed.updatedRowWithTag);
+                }
+                // Подменяем сырой массив новичков на стандартизированный с тегами
+                tempJournal[time].newbies = processedNewbiesPayload;
               }
 
-              // 4.3. Наполняем Блок 3: Временные пробные (с сайта)
+              // 4.3. Обрабатываем временных пробных
               if (groupData.probation && groupData.probation.length > 0) {
-                groupData.probation.forEach(prob => {
-                  blockProbation.push(parseStudent(prob, "🔵 Пробное"));
-                });
+                for (const prob of groupData.probation) {
+                  blockProbation.push(await parseStudent(prob, "🔵 Пробное"));
+                }
               }
 
-              // СОРТИРУЕМ КАЖДЫЙ МАССИВ ОТДЕЛЬНО ПО АЛФАВИТУ ОТ А ДО Я
               blockPermanent.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
               blockNewbies.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
               blockProbation.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
 
-              // СКЛЕИВАЕМ СТРОКИ СТРОГО ПО НАШЕЙ ИЕРАРХИИ: Постоянные -> Новички -> Пробные (Статус теперь в центре!)
-              blockPermanent.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
-              });
-              
-              blockNewbies.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
-              });
-              
-              blockProbation.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
-              });
-            });
+              const appendRows = (block) => {
+                block.forEach(row => {
+                  if (showProjects) {
+                    markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project} |\n`;
+                  } else {
+                    markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
+                  }
+                });
+              };
+
+              appendRows(blockPermanent);
+              appendRows(blockNewbies);
+              appendRows(blockProbation);
+            }
             
             markdownBody += `\n*Проверил и отправил преподаватель: **${teacherUsername}***\n`;
 
@@ -215,7 +313,7 @@ jobs:
             console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
             core.exportVariable('TEACHER_NAME', teacherUsername);
 
-            // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ С СОРТИРОВКОЙ И МАРКЕРОМ В КОНЦЕ
+            // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ С УМНОЙ АВТОГЕНЕРАЦИЕЙ ТЕГОВ
             let hasNewbies = false;
             filledTimes.forEach(time => {
               if (tempJournal[time].newbies && tempJournal[time].newbies.length > 0) hasNewbies = true;
@@ -242,41 +340,31 @@ jobs:
                   const groupTimeClean = trimmed.trim().slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                   newLines.push(line);
 
-                  // Собираем текущих детей
                   let currentPermanent = studentsData[targetDay][groupTimeClean] || [];
                   let updatedPermanentList = [...currentPermanent];
 
                   if (tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0) {
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
-                      // Исправляем опечатку раскладки [английская c -> русская с]
                       let normalized = newbie.replace(/\[c\]/i, "[с]");
-                      
-                      let tag = "";
-                      if (normalized.toLowerCase().includes("[э]")) tag = " [э]";
-                      else if (normalized.toLowerCase().includes("[с]")) tag = " [с]";
+                      let standardizedNewbie = normalized.trim();
 
-                      let cleanName = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
-                      
-                      // Стандартизируем: Имя, а маркер СТРОГО в самом конце хвоста предложения!
-                      let standardizedNewbie = `${cleanName}${tag}`;
-
-                      // Защита от дублирования
+                      // Защита от дублирования строк: сверяем чистые имена без учета кавычек
                       const exists = updatedPermanentList.some(k => k.replace(/"/g, '') === standardizedNewbie);
                       if (!exists) {
                         updatedPermanentList.push(standardizedNewbie);
-                        console.log(`Робот подготовил новичка по стандарту: '${standardizedNewbie}' в группу ${groupTimeClean}`);
+                        console.log(`Робот записал новичка по стандарту: '${standardizedNewbie}' в группу ${groupTimeClean}`);
                       }
                     });
                   }
 
-                  // АВТОМАТИЧЕСКАЯ СОРТИРОВКА ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML
+                  // АВТОМАТИЧЕСКАЯ СОРТИРОВКА ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML БАЗУ
                   updatedPermanentList.sort((a, b) => {
-                    let cleanA = a.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
-                    let cleanB = b.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
+                    let cleanA = a.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#)[a-zA-Z0-9_\-]+/i, "").trim();
+                    let cleanB = b.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#)[a-zA-Z0-9_\-]+/i, "").trim();
                     return cleanA.localeCompare(cleanB, 'ru');
                   });
 
-                  // Перезаписываем список группы строго в двойных кавычках
+                  // Записываем отсортированный список в двойных кавычках для Jekyll безопасности
                   updatedPermanentList.forEach(kid => {
                     let cleanKid = kid.replace(/"/g, '');
                     newLines.push(`    - "${cleanKid}"`);

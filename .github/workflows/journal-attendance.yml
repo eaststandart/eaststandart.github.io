@@ -219,7 +219,6 @@ jobs:
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#)[a-zA-Z0-9_\-]+/g, "").replace(/\s+/g, " ").trim();
                 let projectLink = "";
 
                 let matchReady = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
@@ -253,6 +252,14 @@ jobs:
                     console.log(`[РАДАР] Робот нашёл поделку для ${printName} по тегу ${targetTag} -> ${matches[0].url}`);
                   }
                 }
+
+                // ИСПРАВЛЕНО: Чистое имя вычисляется в самом конце, когда строка полностью отфильтрована!
+                let printName = normalized.replace(/"/g, "")
+                                          .replace(/\[э\]/i, "")
+                                          .replace(/\[с\]/i, "")
+                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/g, "")
+                                          .replace(/\s+/g, " ")
+                                          .trim();
 
                 let directionSuffix = track === "электроника" ? " [э]" : track === "столярное" ? " [с]" : "";
                 let tagSuffix = targetTag ? ` ${targetTag}` : "";

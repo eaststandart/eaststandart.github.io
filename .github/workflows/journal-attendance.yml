@@ -227,8 +227,8 @@ jobs:
 
                 // Автогенерация по одиночному знаку #
                 if (!targetTag && normalized.includes("#")) {
-                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Имя для тега до очистки: '${printName}'`);
-                  let testTranslit = translitRusToLat(printName);
+                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Строка для тега до очистки: '${normalized}'`);
+                  let testTranslit = translitRusToLat(normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").trim());
                   console.log(`[ОТЛАДКА ТРАНСЛИТА] Результат translitRusToLat: '${testTranslit}'`);
                   
                   targetTag = `#techlab-${testTranslit}`;

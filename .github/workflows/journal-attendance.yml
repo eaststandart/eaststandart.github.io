@@ -248,8 +248,7 @@ jobs:
                   if (matches.length > 0) {
                     matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     projectLink = `[🔍 Поделка](${matches[0].url})`;
-                    // ЛОГ УСПЕШНО ВОЗВРАЩЕН НА МЕСТО:
-                    console.log(`[РАДАР] Робот нашёл поделку для ${printName} по тегу ${targetTag} -> ${matches[0].url}`);
+                    console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches.url}`);
                   }
                 }
 

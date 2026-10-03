@@ -187,14 +187,17 @@ jobs:
                     }
                   }
 
-                  // Проверяем триггер автогенерации: в строке есть одинокий знак "#", но нет готового тега
-                  if (!targetTag && normalized.includes("#")) {
-                    // Берем имя, очищаем от скобок направления и знака #
+                  // Проверяем, есть ли в строке УЖЕ готовый хэштег или ник
+                  let hasReadyTag = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
+                  
+                  // Робот имеет право генерировать тег строго если готового тега НЕТ и стоит знак #
+                  if (!hasReadyTag && normalized.includes("#")) {
                     let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").trim();
-                    // Собираем латинский хэштег по нашему железному клубному стандарту
-                    targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
-                    // Дописываем сгенерированный тег в рабочую переменную для последующего сохранения в YAML
+                    let targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                     normalized = normalized.replace(/#/g, "").trim() + " " + targetTag;
+                  } else {
+                    // Если готовый тег уже написан учителем или был в базе — просто вычищаем случайный мусорный знак # в хвосте
+                    normalized = normalized.replace(/\s+#\s*\$/g, "").trim();
                   }
 
                   if (targetTag) {
@@ -343,28 +346,7 @@ jobs:
                   if (tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0) {
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
                       let normalized = newbie.replace(/\[c\]/i, "[с]");
-                      
-                      // 6.1. Извлекаем направление занятия
-                      let directionTag = "";
-                      if (normalized.toLowerCase().includes("[э]")) directionTag = " [э]";
-                      else if (normalized.toLowerCase().includes("[с]")) directionTag = " [с]";
-
-                      // 6.2. Проверяем, есть ли уже готовый хэштег или ник в строке
-                      let projectTag = "";
-                      let projectMatch = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
-                      if (projectMatch) {
-                        projectTag = ` ${projectMatch}`;
-                      }
-
-                      // 6.3. Делаем идеально чистую строку имени для стандартизации
-                      let cleanName = normalized.replace(/\[э\]/i, "")
-                                                .replace(/\[с\]/i, "")
-                                                .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
-                                                .replace(/\s+/g, " ")
-                                                .trim();
-                      
-                      // Собираем строку строго по стандарту: Имя, маркер направления, хэштег проекта в хвост!
-                      let standardizedNewbie = `${cleanName}${directionTag}${projectTag}`;
+                      let standardizedNewbie = normalized.trim();
 
                       // Защита от дублирования строк: сверяем чистые имена без учета кавычек
                       const exists = updatedPermanentList.some(k => k.replace(/"/g, '') === standardizedNewbie);

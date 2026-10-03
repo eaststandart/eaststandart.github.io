@@ -211,34 +211,22 @@ jobs:
                 console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
                 console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
 
-                // 1. Проверяем, есть ли готовый полноценный тег с буквами (@ник или #тег)
+                // Шаг 1. Первичный поиск готового тега (@ник или #тег) в прилетевшей сырой строке
                 let matchReady = rawName.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
-                let targetTag = matchReady ? matchReady[0] : "";
-
-                // 2. Определяем флаг: нужна ли автогенерация (в строке есть знак #, но нет готового латинского тега)
-                let needAutoGenerate = !targetTag && rawName.includes("#");
-
-                // 3. СРАЗУ НА ВХОДЕ полностью выжигаем одиночный знак # и опечатки раскладки [c]/[с]
-                let normalized = rawName.replace(/\[c\]/i, "[с]")
-                                         .replace(/\s+#\s*\$/g, "") // Стираем одинокий # в самом конце
-                                         .replace(/#/g, "")        // Вычищаем любые другие случайные знаки #
-                                         .trim();
-                                         
-                console.log(`После .replace и .trim: '${normalized}' (Длина: ${normalized.length})`);
-                
-                let track = "";
-                if (normalized.toLowerCase().includes("[э]")) track = "электроника";
-                else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
-
-                let projectLink = "";
-
-                let matchReady = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                 let targetTag = matchReady ? matchReady[0] : "";
                 console.log(`Результат поиска готового тега: '${targetTag}'`);
 
-                // 4. АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
+                // Шаг 2. Вычисляем флаг автогенерации (знак # есть, а готового латинского тега нет)
+                let needAutoGenerate = !targetTag && rawName.includes("#");
+
+                // Шаг 3. Мгновенно выжигаем одиночный знак # и опечатки раскладки [c]/[с] на самом входе
+                let normalized = rawName.replace(/\[c\]/i, "[с]")
+                                         .replace(/\s+#\s*\$/g, "") 
+                                         .replace(/#/g, "")        
+                                         .trim();
+
+                // Шаг 4. АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
                 if (needAutoGenerate) {
-                  // Вычисляем чистое имя для транслита из уже готовой переменной printName (она ниже, но мы сделаем точечно здесь)
                   let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
                   targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                   

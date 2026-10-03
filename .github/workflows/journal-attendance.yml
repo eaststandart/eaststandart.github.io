@@ -116,7 +116,7 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С УМНЫМ АВТОРАД АРОМ ПРОЕКТОВ (ИСПРАВЛЕНЫ СИНТАКСИС И ДУБЛИ)
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С ИСПРАВЛЕННЫМ СРАВНЕНИЕМ И ЛОГИРОВАНИЕМ
             const showProjects = process.env.SHOW_PROJECTS_COLUMN === "true";
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
@@ -151,6 +151,7 @@ jobs:
             }
 
             for (const time of scheduleGroups) {
+              console.log(`\n--- ОБРАБОТКА ГРУППЫ ${time} ---`);
               if (showProjects) {
                 markdownBody += `| **⏰ ГРУППА ${time}** | | | |\n`;
               } else {
@@ -164,7 +165,7 @@ jobs:
               let blockNewbies = [];
               let blockProbation = [];
 
-              async function parseStudent(rawName, statusText) {
+              async function parseStudent(rawName, statusText, originalKidFromYaml = null) {
                 let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
                 
                 let track = "";
@@ -173,22 +174,28 @@ jobs:
 
                 let projectLink = "";
                 
+                // Делаем чистое имя СРАЗУ, чтобы использовать его в логах и сверках
+                let printName = normalized.replace(/"/g, "")
+                                          .replace(/\[э\]/i, "")
+                                          .replace(/\[с\]/i, "")
+                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
+                                          .replace(/\s+/g, " ")
+                                          .trim();
+
                 if (showProjects) {
-                  // Ищем, есть ли уже полноценный готовый тег в строке
                   let matchReady = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                   let targetTag = matchReady ? matchReady[0] : "";
 
-                  // Робот генерирует тег строго если готового тега НЕТ и в строке стоит знак #
                   if (!targetTag && normalized.includes("#")) {
                     let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").trim();
                     targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                     normalized = normalized.replace(/#/g, "").trim() + " " + targetTag;
                   } else {
-                    // Если готовый тег уже есть, просто вычищаем случайный мусорный знак # в конце
                     normalized = normalized.replace(/\s+#\s*\$/g, "").trim();
                   }
 
                   if (targetTag) {
+                    console.log(`[РАДАР ПРОЕКТОВ] Ученик: ${printName}. Ищу комменты по тегу: ${targetTag}`);
                     const searchQuery = `query {
                       repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
                         discussion(number: 38) {
@@ -206,25 +213,25 @@ jobs:
                     try {
                       const resSearch = await github.graphql(searchQuery);
                       const allComments = resSearch.repository.discussion.comments.nodes || [];
-                      let studentComments = allComments.filter(c => c.body && c.body.includes(targetTag));
+                      
+                      // Ищем строгое текстовое вхождение чистой строки тега
+                      let studentComments = allComments.filter(c => c.body && c.body.includes(String(targetTag)));
+                      console.log(`[РАДАР ПРОЕКТОВ] Найдено комментариев в Дискуссии №38: ${studentComments.length}`);
                       
                       if (studentComments.length > 0) {
                         studentComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        projectLink = `[🔍 Поделка](${studentComments[0].url})`;
+                        const latestUrl = studentComments[0].url;
+                        projectLink = `[🔍 Поделка](${latestUrl})`;
+                        console.log(`[РАДАР ПРОЕКТОВ] Ссылка на самую свежую поделку успешно привязана: ${latestUrl}`);
                       }
                     } catch (err) {
-                      console.log(`Не удалось выполнить поиск поделки для ${targetTag}:`, err.message);
+                      console.log(`[РАДАР ПРОЕКТОВ] ❌ Ошибка запроса к API для ${targetTag}:`, err.message);
                     }
+                  } else {
+                    console.log(`[РАДАР ПРОЕКТОВ] Ученик: ${printName}. Теги проекта отсутствуют.`);
                   }
                 }
 
-                let printName = normalized.replace(/"/g, "")
-                                          .replace(/\[э\]/i, "")
-                                          .replace(/\[с\]/i, "")
-                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
-                                          .replace(/\s+/g, " ")
-                                          .trim();
-                
                 return {
                   nameForSort: printName,
                   track: track,
@@ -234,13 +241,22 @@ jobs:
                 };
               }
 
+              // 4.1. Обрабатываем постоянных учеников (СВЕРКА ИДЕТ ПО ОЧИЩЕННОМУ ИМЕНИ ИЗ rows)
               for (const kid of permanentKids) {
                 const processed = await parseStudent(kid, "");
-                const isPresent = groupData.present_permanent.some(p => p.trim().replace(/\.\(/, '').toLowerCase() === kid.trim().replace(/\.\)/, '').toLowerCase());
+                
+                // ИСПРАВЛЕНО: Сравниваем прилетевшее p с сайта строго с ОЧИЩЕННЫМ именем processed.nameForSort
+                const isPresent = groupData.present_permanent.some(p => {
+                  const cleanP = p.trim().replace(/\.\(/, '').replace(/["']/g, '').toLowerCase();                   const cleanKid = processed.nameForSort.trim().replace(/\.\)/, '').toLowerCase();
+                  return cleanP === cleanKid;
+                });
+                
                 processed.status = isPresent ? "🟢 Присутствовал" : "🔴 Отсутствовал";
                 blockPermanent.push(processed);
+                console.log(`[ГАЛОЧКА ПОСЕЩАЕМОСТИ] Постоянный: ${processed.nameForSort} -> ${processed.status}`);
               }
 
+              // 4.2. Обрабатываем новичков
               let processedNewbiesPayload = [];
               if (groupData.newbies && groupData.newbies.length > 0) {
                 for (const newbie of groupData.newbies) {
@@ -251,6 +267,7 @@ jobs:
                 tempJournal[time].newbies = processedNewbiesPayload;
               }
 
+              // 4.3. Обрабатываем временных пробных
               if (groupData.probation && groupData.probation.length > 0) {
                 for (const prob of groupData.probation) {
                   blockProbation.push(await parseStudent(prob, "🔵 Пробное"));
@@ -264,7 +281,7 @@ jobs:
               const appendRows = (block) => {
                 block.forEach(row => {
                   if (showProjects) {
-                    markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project} |\n`;
+                    markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project || " "} |\n`;
                   } else {
                     markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
                   }
@@ -336,7 +353,7 @@ jobs:
                       let projectTag = "";
                       let projectMatch = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                       if (projectMatch) {
-                        projectTag = ` ${projectMatch[0]}`;
+                        projectTag = ` ${projectMatch}`;
                       }
 
                       let cleanName = normalized.replace(/\[э\]/i, "")

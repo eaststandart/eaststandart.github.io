@@ -279,6 +279,7 @@ jobs:
                   let matches = globalGalleryComments.filter(c => c.body && c.body.includes(targetTag));
                   if (matches.length > 0) {
                     matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    // ИСПРАВЛЕНО: возвращен точный индекс первого (самого свежего) элемента массива
                     projectLink = `[🔍 Поделка](${matches[0].url})`;
                     console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches[0].url}`);
                   }

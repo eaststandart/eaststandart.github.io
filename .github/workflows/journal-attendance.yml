@@ -82,7 +82,8 @@ jobs:
                 studentsData[currentDay][currentGroup] = [];
               } 
               else if (indent === 4 && cleanText.startsWith('-')) {
-                const name = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+                const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+                const name = rawName.replace(/^["']|["']$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
                   studentsData[currentDay][currentGroup].push(name);
                 }
@@ -114,7 +115,7 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С УНИВЕРСАЛЬНОЙ СОРТИРОВКОЙ И АНТИ-ОПЕЧАТКОЙ
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С РАЗБИВКОЙ НА 3 НЕЗАВИСИМЫХ БЛОКА
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
@@ -127,20 +128,22 @@ jobs:
               const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
               const permanentKids = studentsData[targetDay][time] || [];
 
-              // СОБИРАЕМ ВСЕХ ДЕТЕЙ ГРУППЫ ДЛЯ ТАБЛИЦЫ В ЕДИНЫЙ МАССИВ
-              let tableRows = [];
+              // СОЗДАЕМ ТРИ ОТДЕЛЬНЫХ КАРМАНА ДЛЯ РАЗНЫХ КАТЕГОРИЙ ДЕТЕЙ
+              let blockPermanent = [];
+              let blockNewbies = [];
+              let blockProbation = [];
 
-              // Вспомогательная функция для стандартизации строки и выявления направления
-              function processStudentRow(rawName, statusText) {
-                // Анти-опечатка: Заменяем английскую c/C внутри скобок на русскую с
+              // Универсальная вспомогательная функция для разбора строк и анти-опечатки
+              function parseStudent(rawName, statusText) {
+                // Анти-опечатка: Исправляем английскую c/C внутри скобок на русскую с
                 let normalized = rawName.replace(/\[c\]/i, "[с]");
                 
                 let track = "";
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // Делаем чистое имя для красивого вывода в Markdown без технических скобок
-                let printName = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                // Очищаем имя для красивого вывода в Markdown, полностью убирая кавычки и висячие пробелы на концах
+                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
                 
                 return {
                   nameForSort: printName,
@@ -150,33 +153,43 @@ jobs:
                 };
               }
 
-              // 4.1. Обрабатываем постоянных учеников из YAML
+              // 4.1. Наполняем Блок 1: Постоянный состав из YAML базы
               permanentKids.forEach(kid => {
-                const processed = processStudentRow(kid, "");
+                const processed = parseStudent(kid, "");
                 const isPresent = groupData.present_permanent.some(p => p.trim().replace(/\.\(/, '').toLowerCase() === kid.trim().replace(/\.\)/, '').toLowerCase());
                 processed.status = isPresent ? "🟢 Присутствовал" : "🔴 Отсутствовал";
-                tableRows.push(processed);
+                blockPermanent.push(processed);
               });
 
-              // 4.2. Обрабатываем новичков (с сайта)
+              // 4.2. Наполняем Блок 2: Постоянные новички (с сайта)
               if (groupData.newbies && groupData.newbies.length > 0) {
                 groupData.newbies.forEach(newbie => {
-                  tableRows.push(processStudentRow(newbie, "🟡 Новичок"));
+                  blockNewbies.push(parseStudent(newbie, "🟡 Новичок"));
                 });
               }
 
-              // 4.3. Обрабатываем временных пробных (с сайта)
+              // 4.3. Наполняем Блок 3: Временные пробные (с сайта)
               if (groupData.probation && groupData.probation.length > 0) {
                 groupData.probation.forEach(prob => {
-                  tableRows.push(processStudentRow(prob, "🔵 Пробное"));
+                  blockProbation.push(parseStudent(prob, "🔵 Пробное"));
                 });
               }
 
-              // СОРТИРОВКА СТРОК ОТ А ДО Я ПО ИМЕНИ ДЛЯ ВЫВОДА В ДИСКУССИЮ
-              tableRows.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
+              // СОРТИРУЕМ КАЖДЫЙ МАССИВ ОТДЕЛЬНО ПО АЛФАВИТУ ОТ А ДО Я
+              blockPermanent.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
+              blockNewbies.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
+              blockProbation.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
 
-              // Печатаем отсортированные строки в итоговый Markdown
-              tableRows.forEach(row => {
+              // СКЛЕИВАЕМ СТРОКИ СТРОГО ПО НАШЕЙ ИЕРАРХИИ: Постоянные -> Новички -> Пробные
+              blockPermanent.forEach(row => {
+                markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
+              });
+              
+              blockNewbies.forEach(row => {
+                markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
+              });
+              
+              blockProbation.forEach(row => {
                 markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
               });
             });
@@ -234,7 +247,7 @@ jobs:
 
                   if (tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0) {
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
-                      // Исправляем опечатку клавиатуры [английская c -> русская с]
+                      // Исправляем опечатку раскладки [английская c -> русская с]
                       let normalized = newbie.replace(/\[c\]/i, "[с]");
                       
                       let tag = "";
@@ -243,26 +256,26 @@ jobs:
 
                       let cleanName = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
                       
-                      // Стандартизируем: Название группы/имя, а маркер СТРОГО в конце предложения!
+                      // Стандартизируем: Имя, а маркер СТРОГО в самом конце хвоста предложения!
                       let standardizedNewbie = `${cleanName}${tag}`;
 
-                      // Проверка на уникальность, убирая кавычки при сравнении
+                      // Защита от дублирования
                       const exists = updatedPermanentList.some(k => k.replace(/"/g, '') === standardizedNewbie);
                       if (!exists) {
                         updatedPermanentList.push(standardizedNewbie);
-                        console.log(`Робот записал новичка по стандарту: '${standardizedNewbie}' в группу ${groupTimeClean}`);
+                        console.log(`Робот подготовил новичка по стандарту: '${standardizedNewbie}' в группу ${groupTimeClean}`);
                       }
                     });
                   }
 
-                  // СОРТИРОВКА СТРОК ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML
+                  // АВТОМАТИЧЕСКАЯ СОРТИРОВКА ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML
                   updatedPermanentList.sort((a, b) => {
                     let cleanA = a.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
                     let cleanB = b.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
                     return cleanA.localeCompare(cleanB, 'ru');
                   });
 
-                  // Записываем отсортированный список строго в двойных кавычках, чтобы у Jekyll не было сбоев
+                  // Перезаписываем список группы строго в двойных кавычках
                   updatedPermanentList.forEach(kid => {
                     let cleanKid = kid.replace(/"/g, '');
                     newLines.push(`    - "${cleanKid}"`);

@@ -206,13 +206,24 @@ jobs:
               let blockProbation = [];
               let currentGroupYamlRows = [];
 
-              // Внутренняя изолированная функция разбора и чистки строк
+              // Внутренняя изолированная функция разбора и чистки строк (ИСПРАВЛЕНО: зачистка # на входе!)
               async function processKidRow(rawName, statusText, isNewbie = false) {
                 console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
                 console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
-                console.log(`Посимвольный код rawName: ${rawName.split('').map(c => c.charCodeAt(0)).join(' ')}`);
 
-                let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
+                // 1. Проверяем, есть ли готовый полноценный тег с буквами (@ник или #тег)
+                let matchReady = rawName.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
+                let targetTag = matchReady ? matchReady[0] : "";
+
+                // 2. Определяем флаг: нужна ли автогенерация (в строке есть знак #, но нет готового латинского тега)
+                let needAutoGenerate = !targetTag && rawName.includes("#");
+
+                // 3. СРАЗУ НА ВХОДЕ полностью выжигаем одиночный знак # и опечатки раскладки [c]/[с]
+                let normalized = rawName.replace(/\[c\]/i, "[с]")
+                                         .replace(/\s+#\s*\$/g, "") // Стираем одинокий # в самом конце
+                                         .replace(/#/g, "")        // Вычищаем любые другие случайные знаки #
+                                         .trim();
+                                         
                 console.log(`После .replace и .trim: '${normalized}' (Длина: ${normalized.length})`);
                 
                 let track = "";
@@ -225,22 +236,15 @@ jobs:
                 let targetTag = matchReady ? matchReady[0] : "";
                 console.log(`Результат поиска готового тега: '${targetTag}'`);
 
-                // Автогенерация по одиночному знаку #
-                if (!targetTag && normalized.includes("#")) {
-                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Строка для тега до очистки: '${normalized}'`);
-                  let testTranslit = translitRusToLat(normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").trim());
-                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Результат translitRusToLat: '${testTranslit}'`);
+                // 4. АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
+                if (needAutoGenerate) {
+                  // Вычисляем чистое имя для транслита из уже готовой переменной printName (она ниже, но мы сделаем точечно здесь)
+                  let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                  targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                   
-                  targetTag = `#techlab-${testTranslit}`;
-                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Сформирован targetTag: '${targetTag}'`);
-                  
-                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Строка до вставки тега: '${normalized}'`);
-                  normalized = normalized.replace(/#/g, "").trim() + " " + targetTag;
-                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Строка после вставки тега: '${normalized}'`);
-                } else {
-                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Ветка else: строка очищается от знаков #`);
-                  normalized = normalized.replace(/\s+#\s*\$/g, "").trim();
-                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Результат ветки else: '${normalized}'`);
+                  // Просто приклеиваем сгенерированный тег в самый хвост чистой строки!
+                  normalized = normalized + " " + targetTag;
+                  console.log(`[АВТОГЕНЕРАЦИЯ] Для ${nameForTag} успешно создан латинский тег: ${targetTag}`);
                 }
 
                 if (showProjects && targetTag) {

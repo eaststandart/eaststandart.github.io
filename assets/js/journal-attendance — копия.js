@@ -196,12 +196,7 @@ function parseSimpleYaml(text) {
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
       const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      const name = rawName.replace(/^["']|["']$/g, "")
-                    .replace(/\[э\]/i, "")
-                    .replace(/\[с\]/i, "")
-                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
-                    .replace(/\s+/g, " ")
-                    .trim();
+      const name = rawName.replace(/^["']|["']$/g, "").trim();
       if (currentDay && currentGroup) {
         result[currentDay][currentGroup].push(name);
       }

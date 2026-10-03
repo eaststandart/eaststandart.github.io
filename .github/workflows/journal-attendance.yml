@@ -243,16 +243,18 @@ jobs:
                   console.log(`[АВТОГЕНЕРАЦИЯ] Для ${nameForTag} успешно создан латинский тег: ${targetTag}`);
                 }
 
+                // Этаж 7: ГЛОБАЛЬНЫЙ РАДАР ПО КАТЕГОРИИ ГАЛЕРЕЯ (ИСПРАВЛЕН ИНДЕКС МАССИВА)
                 if (showProjects && targetTag) {
                   let matches = globalGalleryComments.filter(c => c.body && c.body.includes(targetTag));
                   if (matches.length > 0) {
                     matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     projectLink = `[🔍 Поделка](${matches[0].url})`;
-                    console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches.url}`);
+                    // ИСПРАВЛЕНО: Лог последовательно читает текущую строку normalized и выводит верный индекс [0]
+                    console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches[0].url}`);
                   }
                 }
 
-                // ИСПРАВЛЕНО: Чистое имя вычисляется в самом конце, когда строка полностью отфильтрована!
+                // Этаж 8: ФИНАЛ — Чистое имя вычисляется, когда строка полностью отфильтрована конвейером
                 let printName = normalized.replace(/"/g, "")
                                           .replace(/\[э\]/i, "")
                                           .replace(/\[с\]/i, "")
@@ -263,7 +265,7 @@ jobs:
                 let directionSuffix = track === "электроника" ? " [э]" : track === "столярное" ? " [с]" : "";
                 let tagSuffix = targetTag ? ` ${targetTag}` : "";
                 let finalYamlLine = `${printName}${directionSuffix}${tagSuffix}`;
-                
+
                 return {
                   nameForSort: printName,
                   track: track,

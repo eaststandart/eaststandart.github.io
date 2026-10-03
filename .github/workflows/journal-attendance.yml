@@ -115,41 +115,56 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С РАЗБИВКОЙ НА 3 НЕЗАВИСИМЫХ БЛОКА
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С УНИВЕРСАЛЬНЫМ ФИЛЬТРОМ ПРОЕКТОВ И НАПРАВЛЕНИЙ
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
-            markdownBody += `| Группа / Ученик | Статус | Направление |\n`;
-            markdownBody += `| :--- | :--- | :--- |\n`;
-
+            markdownBody += `| Группа / Ученик | Статус | Направление | Чем занят? |\n`;
+            markdownBody += `| :--- | :--- | :--- | :--- |\n`;
 
             scheduleGroups.forEach(time => {
-              markdownBody += `| **⏰ ГРУППА ${time}** | | |\n`;
+              markdownBody += `| **⏰ ГРУППА ${time}** | | | |\n`;
               const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
               const permanentKids = studentsData[targetDay][time] || [];
 
-              // СОЗДАЕМ ТРИ ОТДЕЛЬНЫХ КАРМАНА ДЛЯ РАЗНЫХ КАТЕГОРИЙ ДЕТЕЙ
               let blockPermanent = [];
               let blockNewbies = [];
               let blockProbation = [];
 
-              // Универсальная вспомогательная функция для разбора строк и анти-опечатки
+              // Универсальная вспомогательная функция для глубокого разбора строк, анти-опечатки и хэштегов
               function parseStudent(rawName, statusText) {
-                // Анти-опечатка: Исправляем английскую c/C внутри скобок на русскую с
+                // 1. Анти-опечатка: заменяем английскую c/C внутри скобок на русскую с
                 let normalized = rawName.replace(/\[c\]/i, "[с]");
                 
+                // 2. Ищем направление занятия
                 let track = "";
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // Очищаем имя для красивого вывода в Markdown, полностью убирая кавычки и висячие пробелы на концах
-                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                // 3. Вытаскиваем уникальный маркер проекта (@ник или #techlab-фамилия-имя)
+                let projectLink = "";
+                let projectMatch = normalized.match(/(@[a-zA-Z0-9_\-]+|#techlab\-[a-zA-Z0-9_\-]+)/i);
+                
+                if (projectMatch) {
+                  const projectTag = projectMatch[0];
+                  // Формируем красивую короткую Markdown ссылку на поиск этого тега внутри Дискуссий репозитория
+                  projectLink = `[🔍 Проект](https://github.com{context.repo.owner}/${context.repo.repo}/discussions?discussions_q=${encodeURIComponent(projectTag)})`;
+                }
+
+                // 4. Очищаем имя от кавычек, маркеров направления и хэштегов для красивой печати
+                let printName = normalized.replace(/"/g, "")
+                                          .replace(/\[э\]/i, "")
+                                          .replace(/\[с\]/i, "")
+                                          .replace(/(@[a-zA-Z0-9_\-]+|#techlab\-[a-zA-Z0-9_\-]+)/i, "")
+                                          .replace(/\s+/g, " ")
+                                          .trim();
                 
                 return {
                   nameForSort: printName,
                   track: track,
                   status: statusText,
+                  project: projectLink,
                   originalWithRussianTag: normalized
                 };
               }
@@ -176,22 +191,22 @@ jobs:
                 });
               }
 
-              // СОРТИРУЕМ КАЖДЫЙ МАССИВ ОТДЕЛЬНО ПО АЛФАВИТУ ОТ А ДО Я
+              // СОРТИРУЕМ КАЖДЫЙ БЛОК ОТДЕЛЬНО ПО АЛФАВИТУ ОТ А ДО Я
               blockPermanent.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
               blockNewbies.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
               blockProbation.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
 
-              // СКЛЕИВАЕМ СТРОКИ СТРОГО ПО НАШЕЙ ИЕРАРХИИ: Постоянные -> Новички -> Пробные (Статус теперь в центре!)
+              // СКЛЕИВАЕМ СТРОКИ В ТАБЛИЦУ: Постоянные -> Новички -> Пробные (4 колонки!)
               blockPermanent.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project} |\n`;
               });
               
               blockNewbies.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project} |\n`;
               });
               
               blockProbation.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} | ${row.project} |\n`;
               });
             });
             
@@ -242,25 +257,35 @@ jobs:
                   const groupTimeClean = trimmed.trim().slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                   newLines.push(line);
 
-                  // Собираем текущих детей
                   let currentPermanent = studentsData[targetDay][groupTimeClean] || [];
                   let updatedPermanentList = [...currentPermanent];
 
                   if (tempJournal[groupTimeClean] && tempJournal[groupTimeClean].newbies && tempJournal[groupTimeClean].newbies.length > 0) {
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
-                      // Исправляем опечатку раскладки [английская c -> русская с]
                       let normalized = newbie.replace(/\[c\]/i, "[с]");
                       
-                      let tag = "";
-                      if (normalized.toLowerCase().includes("[э]")) tag = " [э]";
-                      else if (normalized.toLowerCase().includes("[с]")) tag = " [с]";
+                      // Извлекаем маркер направления
+                      let directionTag = "";
+                      if (normalized.toLowerCase().includes("[э]")) directionTag = " [э]";
+                      else if (normalized.toLowerCase().includes("[с]")) directionTag = " [с]";
 
-                      let cleanName = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                      // Извлекаем маркер проекта (@ник или #techlab-фамилия-имя)
+                      let projectTag = "";
+                      let projectMatch = normalized.match(/(@[a-zA-Z0-9_\-]+|#techlab\-[a-zA-Z0-9_\-]+)/i);
+                      if (projectMatch) {
+                        projectTag = ` ${projectMatch[0]}`;
+                      }
+
+                      // Делаем идеально чистую строку имени без мусора
+                      let cleanName = normalized.replace(/\[э\]/i, "")
+                                                .replace(/\[с\]/i, "")
+                                                .replace(/(@[a-zA-Z0-9_\-]+|#techlab\-[a-zA-Z0-9_\-]+)/i, "")
+                                                .replace(/\s+/g, " ")
+                                                .trim();
                       
-                      // Стандартизируем: Имя, а маркер СТРОГО в самом конце хвоста предложения!
-                      let standardizedNewbie = `${cleanName}${tag}`;
+                      // Склеиваем по нашему стандарту: Имя, маркер направления, а в самый хвост — хэштег проекта!
+                      let standardizedNewbie = `${cleanName}${directionTag}${projectTag}`;
 
-                      // Защита от дублирования
                       const exists = updatedPermanentList.some(k => k.replace(/"/g, '') === standardizedNewbie);
                       if (!exists) {
                         updatedPermanentList.push(standardizedNewbie);
@@ -269,14 +294,14 @@ jobs:
                     });
                   }
 
-                  // АВТОМАТИЧЕСКАЯ СОРТИРОВКА ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML
+                  // АВТОМАТИЧЕСКАЯ СОРТИРОВКА ОТ А ДО Я ПЕРЕД ЗАПИСЬЮ В YAML БАЗУ
                   updatedPermanentList.sort((a, b) => {
-                    let cleanA = a.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
-                    let cleanB = b.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
+                    let cleanA = a.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#techlab\-)[a-zA-Z0-9_\-]+/i, "").trim();
+                    let cleanB = b.replace(/"/g, '').replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#techlab\-)[a-zA-Z0-9_\-]+/i, "").trim();
                     return cleanA.localeCompare(cleanB, 'ru');
                   });
 
-                  // Перезаписываем список группы строго в двойных кавычках
+                  // Записываем отсортированный список в двойных кавычках
                   updatedPermanentList.forEach(kid => {
                     let cleanKid = kid.replace(/"/g, '');
                     newLines.push(`    - "${cleanKid}"`);

@@ -206,31 +206,39 @@ jobs:
               let blockProbation = [];
               let currentGroupYamlRows = [];
 
-              // Внутренняя изолированная функция разбора и чистки строк (ИСПРАВЛЕНО: зачистка # на входе!)
+              // Внутренняя изолированная функция разбора и чистки строк (МОНОЛИТНЫЙ ПОСЛЕДОВАТЕЛЬНЫЙ КОНВЕЙЕР)
               async function processKidRow(rawName, statusText, isNewbie = false) {
                 console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
                 console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
 
-                // Шаг 1. Первичный поиск готового тега (@ник или #тег) в прилетевшей сырой строке
+                // Этаж 1: Первичная инициализация базовых переменных конвейера
+                let track = "";
+                let projectLink = "";
+
+                // Этаж 2: Первичный поиск готового тега (@ник или #тег) в сырой строке
                 let matchReady = rawName.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                 let targetTag = matchReady ? matchReady[0] : "";
                 console.log(`Результат поиска готового тега: '${targetTag}'`);
 
-                // Шаг 2. Вычисляем флаг автогенерации (знак # есть, а готового латинского тега нет)
+                // Этаж 3: Вычисляем флаг автогенерации (знак # есть, а латинского тега нет)
                 let needAutoGenerate = !targetTag && rawName.includes("#");
 
-                // Шаг 3. Мгновенно выжигаем одиночный знак # и опечатки раскладки [c]/[с] на самом входе
+                // Этаж 4: СРАЗУ НА ВХОДЕ выжигаем одиночный триггер # и опечатки раскладки [c]/[с]
                 let normalized = rawName.replace(/\[c\]/i, "[с]")
                                          .replace(/\s+#\s*\$/g, "") 
                                          .replace(/#/g, "")        
                                          .trim();
 
-                // Шаг 4. АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
+                // Этаж 5: Вычисляем направление занятия (электроника или столярное)
+                if (normalized.toLowerCase().includes("[э]")) track = "электроника";
+                else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
+
+                // Этаж 6: АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
                 if (needAutoGenerate) {
                   let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
                   targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                   
-                  // Просто приклеиваем сгенерированный тег в самый хвост чистой строки!
+                  // Приклеиваем сгенерированный латинский тег в хвост чистой строки
                   normalized = normalized + " " + targetTag;
                   console.log(`[АВТОГЕНЕРАЦИЯ] Для ${nameForTag} успешно создан латинский тег: ${targetTag}`);
                 }

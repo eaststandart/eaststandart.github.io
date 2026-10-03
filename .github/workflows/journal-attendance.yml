@@ -120,8 +120,9 @@ jobs:
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
-            markdownBody += `| Группа / Ученик | Направление | Статус |\n`;
+            markdownBody += `| Группа / Ученик | Статус | Направление |\n`;
             markdownBody += `| :--- | :--- | :--- |\n`;
+
 
             scheduleGroups.forEach(time => {
               markdownBody += `| **⏰ ГРУППА ${time}** | | |\n`;
@@ -180,17 +181,17 @@ jobs:
               blockNewbies.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
               blockProbation.sort((a, b) => a.nameForSort.localeCompare(b.nameForSort, 'ru'));
 
-              // СКЛЕИВАЕМ СТРОКИ СТРОГО ПО НАШЕЙ ИЕРАРХИИ: Постоянные -> Новички -> Пробные
+              // СКЛЕИВАЕМ СТРОКИ СТРОГО ПО НАШЕЙ ИЕРАРХИИ: Постоянные -> Новички -> Пробные (Статус теперь в центре!)
               blockPermanent.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
               });
               
               blockNewbies.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
               });
               
               blockProbation.forEach(row => {
-                markdownBody += `| ${row.nameForSort} | ${row.track} | ${row.status} |\n`;
+                markdownBody += `| ${row.nameForSort} | ${row.status} | ${row.track} |\n`;
               });
             });
             

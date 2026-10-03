@@ -206,7 +206,7 @@ jobs:
               let blockProbation = [];
               let currentGroupYamlRows = [];
 
-              // Внутренняя изолированная функция разбора и чистки строк (МОНОЛИТНЫЙ ПОСЛЕДОВАТЕЛЬНЫЙ КОНВЕЙЕР)
+              // Внутренняя изолированная функция разбора и чистки строк (ЭТАЛОННЫЙ ЧИСТЫЙ КОНВЕЙЕР)
               async function processKidRow(rawName, statusText, isNewbie = false) {
                 console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
                 console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
@@ -215,65 +215,64 @@ jobs:
                 let track = "";
                 let projectLink = "";
 
-                // Этаж 2: Первичный поиск готового тега (@ник или #тег) в сырой строке
+                // Этаж 2: Первичный поиск готового тега (@ник или #тег) в прилетевшей сырой строке
                 let matchReady = rawName.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                 let targetTag = matchReady ? matchReady[0] : "";
                 console.log(`Результат поиска готового тега: '${targetTag}'`);
 
-                // Этаж 3: Вычисляем флаг автогенерации (знак # есть, а латинского тега нет)
+                // Этаж 3: Вычисляем флаг автогенерации (знак # в строке есть, а готового латинского тега нет)
                 let needAutoGenerate = !targetTag && rawName.includes("#");
 
-                // Этаж 4: СРАЗУ НА ВХОДЕ выжигаем одиночный триггер # и опечатки раскладки [c]/[с]
-                let normalized = rawName.replace(/\[c\]/i, "[с]")
-                                         .replace(/\s+#\s*\$/g, "") 
-                                         .replace(/#/g, "")        
-                                         .trim();
+                // Этаж 4: СРАЗУ НА ВХОДЕ убираем только опечатки раскладки [c]/[с] (знак # сохраняем для Вани!)
+                let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
 
                 // Этаж 5: Вычисляем направление занятия (электроника или столярное)
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // Этаж 6: АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго по нашему входному флагу
+                // Этаж 6: АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго для новичков по нашему входному флагу
                 if (needAutoGenerate) {
-                  let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                  let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").replace(/\s+/g, " ").trim();
                   targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
                   
-                  // Приклеиваем сгенерированный латинский тег в хвост чистой строки
-                  normalized = normalized + " " + targetTag;
-                  console.log(`[АВТОГЕНЕРАЦИЯ] Для ${nameForTag} успешно создан латинский тег: ${targetTag}`);
+                  // ИСПРАВЛЕНО НАЧИСТО: Хирургически заменяем одиночный символ # прямо на латинский тег!
+                  normalized = normalized.replace("#", targetTag).trim();
+                  console.log(`[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: ${targetTag}`);
                 }
 
-                // Этаж 7: ГЛОБАЛЬНЫЙ РАДАР ПО КАТЕГОРИИ ГАЛЕРЕЯ (ИСПРАВЛЕН ИНДЕКС МАССИВА)
-                if (showProjects && targetTag) {
-                  let matches = globalGalleryComments.filter(c => c.body && c.body.includes(targetTag));
-                  if (matches.length > 0) {
-                    matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    projectLink = `[🔍 Поделка](${matches[0].url})`;
-                    // ИСПРАВЛЕНО: Лог последовательно читает текущую строку normalized и выводит верный индекс [0]
-                    console.log(`[РАДАР] Робот нашёл поделку для ${normalized} по тегу ${targetTag} -> ${matches[0].url}`);
-                  }
+              // Внутренняя изолированная функция разбора и чистки строк (ЭТАЛОННЫЙ ЧИСТЫЙ КОНВЕЙЕР)
+              async function processKidRow(rawName, statusText, isNewbie = false) {
+                console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
+                console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
+
+                // Этаж 1: Первичная инициализация базовых переменных конвейера
+                let track = "";
+                let projectLink = "";
+
+                // Этаж 2: Первичный поиск готового тега (@ник или #тег) в прилетевшей сырой строке
+                let matchReady = rawName.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
+                let targetTag = matchReady ? matchReady[0] : "";
+                console.log(`Результат поиска готового тега: '${targetTag}'`);
+
+                // Этаж 3: Вычисляем флаг автогенерации (знак # в строке есть, а готового латинского тега нет)
+                let needAutoGenerate = !targetTag && rawName.includes("#");
+
+                // Этаж 4: СРАЗУ НА ВХОДЕ убираем только опечатки раскладки [c]/[с] (знак # сохраняем для Вани!)
+                let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
+
+                // Этаж 5: Вычисляем направление занятия (электроника или столярное)
+                if (normalized.toLowerCase().includes("[э]")) track = "электроника";
+                else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
+
+                // Этаж 6: АВТОГЕНЕРАЦИЯ ТЕГА: Срабатывает строго для новичков по нашему входному флагу
+                if (needAutoGenerate) {
+                  let nameForTag = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/#/g, "").replace(/\s+/g, " ").trim();
+                  targetTag = `#techlab-${translitRusToLat(nameForTag)}`;
+                  
+                  // ИСПРАВЛЕНО НАЧИСТО: Хирургически заменяем одиночный символ # прямо на латинский тег!
+                  normalized = normalized.replace("#", targetTag).trim();
+                  console.log(`[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: ${targetTag}`);
                 }
-
-                // Этаж 8: ФИНАЛ — Чистое имя вычисляется, когда строка полностью отфильтрована конвейером
-                let printName = normalized.replace(/"/g, "")
-                                          .replace(/\[э\]/i, "")
-                                          .replace(/\[с\]/i, "")
-                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/g, "")
-                                          .replace(/\s+/g, " ")
-                                          .trim();
-
-                let directionSuffix = track === "электроника" ? " [э]" : track === "столярное" ? " [с]" : "";
-                let tagSuffix = targetTag ? ` ${targetTag}` : "";
-                let finalYamlLine = `${printName}${directionSuffix}${tagSuffix}`;
-
-                return {
-                  nameForSort: printName,
-                  track: track,
-                  status: statusText,
-                  project: projectLink,
-                  yamlLine: finalYamlLine
-                };
-              }
 
               // 2.1. Обработка постоянного состава из YAML
               for (const kid of permanentKids) {

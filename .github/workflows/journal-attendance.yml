@@ -1,4 +1,4 @@
-name: Generate Attendance Report to Discussions
+name: Generate Attendance Report to Discussions 
 
 on:
   push:

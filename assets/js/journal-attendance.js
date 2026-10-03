@@ -1,3 +1,11 @@
+/**
+ * @module journal-attendance.js
+ * @about
+ * @purpose 
+ * @author TechLab
+ * @version 1.0.0
+ */
+
 // Часть 2: Настройки репозитория и проверка пароля преподавателя
 const repo_owner = "eaststandart";
 const repo_name = "eaststandart.github.io";

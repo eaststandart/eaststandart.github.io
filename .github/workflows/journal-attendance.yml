@@ -82,7 +82,8 @@ jobs:
                 studentsData[currentDay][currentGroup] = [];
               } 
               else if (indent === 4 && cleanText.startsWith('-')) {
-                const name = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+                const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+                const name = rawName.replace(/^["']|["']$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
                   studentsData[currentDay][currentGroup].push(name);
                 }
@@ -141,8 +142,8 @@ jobs:
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // Очищаем имя для красивого вывода в Markdown без технических скобок в хвосте
-                let printName = normalized.replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
+                // Очищаем имя для красивого вывода в Markdown, полностью убирая кавычки и висячие пробелы на концах
+                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/\s+/g, " ").trim();
                 
                 return {
                   nameForSort: printName,

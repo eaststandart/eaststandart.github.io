@@ -114,42 +114,56 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С ИСПРАВЛЕННЫМ ПОРЯДКОМ ИМЕН (1-2-3)
+            // 4. ГЕНЕРАЦИЯ СВОДНОЙ ТАБЛИЦЫ С УНИВЕРСАЛЬНЫМ ОПРЕДЕЛЕНИЕМ НАПРАВЛЕНИЙ
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 
             let markdownBody = `### 📅 Журнал посещений за ${formattedDate} (${sampleData.day})\n\n`;
-            markdownBody += `| Группа / Ученик | Статус |\n`;
-            markdownBody += `| :--- | :--- |\n`;
+            markdownBody += `| Группа / Ученик | Направление | Статус |\n`;
+            markdownBody += `| :--- | :--- | :--- |\n`;
 
             scheduleGroups.forEach(time => {
-              markdownBody += `| **⏰ ГРУППА ${time}** | |\n`;
+              markdownBody += `| **⏰ ГРУППА ${time}** | | |\n`;
               const groupData = tempJournal[time] || { present_permanent: [], newbies: [], probation: [] };
               const permanentKids = studentsData[targetDay][time] || [];
 
-              // Выводим учеников строго по порядку из базы данных
+              // ВЫВОД ПОСТОЯННЫХ УЧЕНИКОВ ИЗ БАЗЫ YAML
               permanentKids.forEach(kid => {
-                // Продвинутое сравнение строк без учета невидимых пробелов и точек
+                let track = "";
+                if (kid.toLowerCase().includes("[э]")) track = "электроника";
+                else if (kid.toLowerCase().includes("[с]")) track = "столярное";
+
+                let printName = kid.replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
                 const isPresent = groupData.present_permanent.some(p => p.trim().replace(/\.\(/, '').toLowerCase() === kid.trim().replace(/\.\)/, '').toLowerCase());
                 
                 if (isPresent) {
-                  markdownBody += `| ${kid} | 🟢 Присутствовал |\n`;
+                  markdownBody += `| ${printName} | ${track} | 🟢 Присутствовал |\n`;
                 } else {
-                  markdownBody += `| ${kid} | 🔴 Отсутствовал |\n`;
+                  markdownBody += `| ${printName} | ${track} | 🔴 Отсутствовал |\n`;
                 }
               });
 
-              // Добавляем новичков в конец этой конкретной группы
+              // ВЫВОД НОВИЧКОВ (С сайта, маркер может быть в любом месте строки)
               if (groupData.newbies && groupData.newbies.length > 0) {
                 groupData.newbies.forEach(newbie => {
-                  markdownBody += `| ${newbie} | 🟡 Новичок |\n`;
+                  let track = "";
+                  if (newbie.toLowerCase().includes("[э]")) track = "электроника";
+                  else if (newbie.toLowerCase().includes("[с]")) track = "столярное";
+
+                  let printName = newbie.replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
+                  markdownBody += `| ${printName} | ${track} | 🟡 Новичок |\n`;
                 });
               }
 
-              // Добавляем временных пробных в конец этой конкретной группы
+              // ВЫВОД ВРЕМЕННЫХ ПРОБНЫХ (С сайта, маркер может быть в любом месте строки)
               if (groupData.probation && groupData.probation.length > 0) {
                 groupData.probation.forEach(prob => {
-                  markdownBody += `| ${prob} | 🔵 Пробное |\n`;
+                  let track = "";
+                  if (prob.toLowerCase().includes("[э]")) track = "электроника";
+                  else if (prob.toLowerCase().includes("[с]")) track = "столярное";
+
+                  let printName = prob.replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
+                  markdownBody += `| ${printName} | ${track} | 🔵 Пробное |\n`;
                 });
               }
             });
@@ -174,7 +188,7 @@ jobs:
             console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
             core.exportVariable('TEACHER_NAME', teacherUsername);
 
-            // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ
+            // 6. ЗАПИСЬ ПОСТОЯННЫХ НОВИЧКОВ В YAML БАЗУ С АВТОМАТИЧЕСКОЙ СТАНДАРТИЗАЦИЕЙ ТЕГА В НАЧАЛО
             let hasNewbies = false;
             filledTimes.forEach(time => {
               if (tempJournal[time].newbies && tempJournal[time].newbies.length > 0) hasNewbies = true;
@@ -203,9 +217,21 @@ jobs:
                   if (insideGroup) {
                     const currentPermanent = studentsData[targetDay][groupTimeClean] || [];
                     tempJournal[groupTimeClean].newbies.forEach(newbie => {
-                      if (!currentPermanent.includes(newbie)) {
-                        newLines.push(`    - ${newbie}`);
-                        console.log(`Робот записал новичка: ${newbie} в группу ${groupTimeClean}`);
+                      // Определяем маркер новичка для правильного сохранения базы
+                      let tag = "";
+                      if (newbie.toLowerCase().includes("[э]")) tag = "[э] ";
+                      else if (newbie.toLowerCase().includes("[с]")) tag = "[с] ";
+
+                      // Вырезаем маркер из любого случайного места и делаем чистое имя
+                      let cleanName = newbie.replace(/\[э\]/i, "").replace(/\[с\]/i, "").trim();
+                      
+                      // Собираем стандартизированную строку: маркер ВСЕГДА строго в начале!
+                      let standardizedNewbie = `${tag}${cleanName}`;
+
+                      // Проверяем уникальность, чтобы не дублировать записи в YAML
+                      if (!currentPermanent.includes(standardizedNewbie)) {
+                        newLines.push(`    - ${standardizedNewbie}`);
+                        console.log(`Робот записал новичка по стандарту: '${standardizedNewbie}' в группу ${groupTimeClean}`);
                       }
                     });
                   }

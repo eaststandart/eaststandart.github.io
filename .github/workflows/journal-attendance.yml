@@ -132,7 +132,7 @@ jobs:
               markdownBody += `| :--- | :--- | :--- |\n`;
             }
 
-            // Функция латинского транслита для генерации тегов (ИСПРАВЛЕНО: чистка дефисов на конце)
+            // Функция латинского транслита для генерации тегов
             function translitRusToLat(text) {
               const rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ");
               const lat = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch  y  e yu ya".split(" ");
@@ -152,6 +152,48 @@ jobs:
               return res.replace(/-+/g, "-").replace(/^-|-\$/g, "");
             }
 
+            // Глобальный поисковый массив комментов со всей Галереи репозитория
+            let globalGalleryComments = [];
+            if (showProjects) {
+              console.log(`[ШАГ 1] Запуск сканирования всей категории Дискуссий: "${categoryName}"`);
+              const searchGql = `query {
+                repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                  discussions(first: 100, categoryId: null) {
+                    nodes {
+                      category { name }
+                      comments(first: 100) {
+                        nodes {
+                          url
+                          createdAt
+                          body
+                        }
+                      }
+                    }
+                  }
+                }
+              }`;
+              
+              try {
+                const resSearch = await github.graphql(searchGql);
+                const discs = resSearch.repository.discussions.nodes || [];
+                // Отбираем топики строго из нужной нам категории
+                const targetDiscs = discs.filter(d => d.category && d.category.name.toLowerCase() === categoryName.toLowerCase());
+                
+                targetDiscs.forEach(d => {
+                  if (d.comments && d.comments.nodes) {
+                    globalGalleryComments = globalGalleryComments.concat(d.comments.nodes);
+                  }
+                });
+                console.log(`[ШАГ 1] Успешно загружено комментов для анализа: ${globalGalleryComments.length}`);
+              } catch (err) {
+                console.log("[ШАГ 1] ❌ Ошибка глобального сбора Галереи:", err.message);
+              }
+            }
+
+            // Объект для хранения идеально подготовленных YAML строк по каждой группе
+            let yamlGroupUpdates = {};
+
+            // === ШАГ 2: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ ===
             for (const time of scheduleGroups) {
               console.log(`\n--- Обработка группы ${time} ---`);
               markdownBody += showProjects ? `| **⏰ ГРУППА ${time}** | | | |\n` : `| **⏰ ГРУППА ${time}** | | |\n`;
@@ -164,53 +206,61 @@ jobs:
               let blockProbation = [];
               let currentGroupYamlRows = [];
 
-              // Внутренняя изолированная функция разбора и чистки строк (ИСПРАВЛЕНЫ ОПЕЧАТКИ СИМВОЛА #)
+              // Внутренняя изолированная функция разбора и чистки строк
               async function processKidRow(rawName, statusText, isNewbie = false) {
+                console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
+                console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
+                console.log(`Посимвольный код rawName: ${rawName.split('').map(c => c.charCodeAt(0)).join(' ')}`);
+
                 let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
+                console.log(`После .replace и .trim: '${normalized}' (Длина: ${normalized.length})`);
                 
                 let track = "";
                 if (normalized.toLowerCase().includes("[э]")) track = "электроника";
                 else if (normalized.toLowerCase().includes("[с]")) track = "столярное";
 
-                // ИСПРАВЛЕНО: Чистое имя вычисляется СРАЗУ на самом верху и тотально выжигает любые знаки # глобально!
-                let printName = normalized.replace(/"/g, "")
-                                          .replace(/\[э\]/i, "")
-                                          .replace(/\[с\]/i, "")
-                                          .replace(/#/g, "")
-                                          .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/g, "")
-                                          .replace(/\s+/g, " ")
-                                          .trim();
-                                          
+                let printName = normalized.replace(/"/g, "").replace(/\[э\]/i, "").replace(/\[с\]/i, "").replace(/(@|#)[a-zA-Z0-9_\-]+/g, "").replace(/\s+/g, " ").trim();
                 let projectLink = "";
 
-                // Ищем готовый тег в строке
                 let matchReady = normalized.match(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i);
                 let targetTag = matchReady ? matchReady[0] : "";
+                console.log(`Результат поиска готового тега: '${targetTag}'`);
 
-                // Автогенерация по одиночному знаку #: сработает только если готового тега нет, но знак # присутствует
+                // Автогенерация по одиночному знаку #
                 if (!targetTag && normalized.includes("#")) {
-                  targetTag = `#techlab-${translitRusToLat(printName)}`;
-                  // ИСПРАВЛЕНО: вырезаем знак # из строки глобально, чтобы он не мусорил
-                  normalized = normalized.replace(/#/g, "").trim();
+                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Имя для тега до очистки: '${printName}'`);
+                  let testTranslit = translitRusToLat(printName);
+                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Результат translitRusToLat: '${testTranslit}'`);
+                  
+                  targetTag = `#techlab-${testTranslit}`;
+                  console.log(`[ОТЛАДКА ТРАНСЛИТА] Сформирован targetTag: '${targetTag}'`);
+                  
+                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Строка до вставки тега: '${normalized}'`);
+                  normalized = normalized.replace(/#/g, "").trim() + " " + targetTag;
+                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Строка после вставки тега: '${normalized}'`);
                 } else {
-                  // Если готовый тег уже есть, вычищаем случайный мусорный знак # в самом конце
+                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Ветка else: строка очищается от знаков #`);
                   normalized = normalized.replace(/\s+#\s*\$/g, "").trim();
+                  console.log(`[ОТЛАДКА ЗАМЕНЫ #] Результат ветки else: '${normalized}'`);
                 }
 
-                // Сканируем комменты из Шага 1, если тумблер включен и тег определён
                 if (showProjects && targetTag) {
                   let matches = globalGalleryComments.filter(c => c.body && c.body.includes(targetTag));
                   if (matches.length > 0) {
                     matches.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     projectLink = `[🔍 Поделка](${matches[0].url})`;
+                    // ЛОГ УСПЕШНО ВОЗВРАЩЕН НА МЕСТО:
                     console.log(`[РАДАР] Робот нашёл поделку для ${printName} по тегу ${targetTag} -> ${matches[0].url}`);
                   }
                 }
 
-                // Сборка чистой стандартизированной строки для сохранения в YAML базы
-                let tagSuffix = targetTag ? ` ${targetTag}` : "";
                 let directionSuffix = track === "электроника" ? " [э]" : track === "столярное" ? " [с]" : "";
+                let tagSuffix = targetTag ? ` ${targetTag}` : "";
                 let finalYamlLine = `${printName}${directionSuffix}${tagSuffix}`;
+                
+                console.log(`=== [ИТОГ ФУНКЦИИ] ===`);
+                console.log(`printName для таблицы: '${printName}'`);
+                console.log(`finalYamlLine для базы: '${finalYamlLine}'\n`);
 
                 return {
                   nameForSort: printName,

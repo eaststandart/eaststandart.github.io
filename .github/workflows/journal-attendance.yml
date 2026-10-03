@@ -11,7 +11,7 @@ permissions:
 
 env:
   PUBLISH_AS_BOT: "true"       # ПЕРЕКЛЮЧЕНИЕ ПУБЛИКАЦИЙ С БОТА НА АДМИНА (true/false)
-  SHOW_PROJECTS_COLUMN: "false" # ТУМБЛЕР КОЛОНКИ ПРОЕКТОВ (true/false)
+  SHOW_PROJECTS_COLUMN: "true" # ОТКЛЮЧЕНИЕ КОЛОНКИ ПРОЕКТОВ (true/false)
 
 jobs:
   build_report:

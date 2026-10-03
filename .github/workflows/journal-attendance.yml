@@ -165,7 +165,7 @@ jobs:
               let currentGroupYamlRows = [];
 
               // Внутренняя изолированная функция разбора и чистки строк (ИСПРАВЛЕНЫ ОПЕЧАТКИ СИМВОЛА #)
-              async function parseStudent(rawName, statusText, isNewbie = false) {
+              async function processKidRow(rawName, statusText, isNewbie = false) {
                 let normalized = rawName.replace(/\[c\]/i, "[с]").trim();
                 
                 let track = "";

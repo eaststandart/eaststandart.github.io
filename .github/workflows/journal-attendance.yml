@@ -265,10 +265,6 @@ jobs:
                 let tagSuffix = targetTag ? ` ${targetTag}` : "";
                 let finalYamlLine = `${printName}${directionSuffix}${tagSuffix}`;
                 
-                console.log(`=== [ИТОГ ФУНКЦИИ] ===`);
-                console.log(`printName для таблицы: '${printName}'`);
-                console.log(`finalYamlLine для базы: '${finalYamlLine}'\n`);
-
                 return {
                   nameForSort: printName,
                   track: track,

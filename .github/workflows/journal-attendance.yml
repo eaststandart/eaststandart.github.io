@@ -366,10 +366,11 @@ jobs:
             
             markdownBody += `\n*Проверил и отправил преподаватель: **${teacherUsername}***\n`;
 
-            // ПУБЛИКАЦИЯ В GitHub Discussions №38
+            // ПУБЛИКАЦИЯ В GitHub Discussions (ДИНАМИЧЕСКИЙ НОМЕР ИЗ YAML НАСТРОЕК УЧИТЕЛЯ)
+            console.log(`[ОТПРАВКА] Запрос ID для целевой Дискуссии №${configData.discussion_number}...`);
             const queryGetId = `query {
               repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
-                discussion(number: 38) { id }
+                discussion(number: ${configData.discussion_number}) { id }
               }
             }`;
             const resId = await github.graphql(queryGetId);
@@ -381,7 +382,7 @@ jobs:
               }
             }`;
             await github.graphql(mutationAddComment);
-            console.log("Сводный журнал успешно опубликован в Обсуждении #38!");
+            console.log(`Сводный журнал успешно опубликован в Обсуждении №${configData.discussion_number}!`);
             core.exportVariable('TEACHER_NAME', teacherUsername);
 
             // === ШАГ 3: ЧИСТАЯ ПЕРЕЗАПИСЬ YAML БАЗЫ ДАННЫХ ИЗ ГОТОВЫХ МАССИВОВ ШАГА 2 ===

@@ -18,10 +18,73 @@ jobs:
         with:
           fetch-depth: 0
 
+      # === ШАГ 0: АВТОМАТИЧЕСКИЙ СБОР ВСЕХ НАСТРОЕК ИЗ YAML ЗА ОДИН РАЗ ===
+      - name: Load Teacher Config from YAML
+        id: get_config
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const dataDir = path.join(process.env.GITHUB_WORKSPACE, '_data');
+            
+            // Находим личный файл преподавателя, сделавшего пуш
+            const allFiles = fs.readdirSync(dataDir);
+            const groupFiles = allFiles.filter(f => f.includes('-journal-attendance-') && f.endsWith('.json'));
+            if (groupFiles.length === 0) return;
+            
+            const sampleData = JSON.parse(fs.readFileSync(path.join(dataDir, groupFiles[0]), 'utf8'));
+            const yamlPath = path.join(dataDir, `journal-attendance-${sampleData.teacher_login}.yml`);
+            if (!fs.existsSync(yamlPath)) return;
+            
+            // Примитивный и пуленепробиваемый сбор блока config без использования регулярных выражений
+            const yamlText = fs.readFileSync(yamlPath, 'utf8');
+            let publishAsBot = "false";
+            let showProjects = "true";
+            let discussionNumber = "38";
+            let categories = [];
+            
+            let insideConfig = false;
+            let currentKey = "";
+            
+            yamlText.split('\n').forEach(line => {
+              const trimmed = line.trimEnd();
+              if (!trimmed || trimmed.startsWith('#')) return;
+              const indent = line.search(/\S/);
+              const clean = trimmed.trim();
+              
+              if (indent === 0 && clean === 'config:') { insideConfig = true; return; }
+              if (indent === 0 && clean.endsWith(':') && clean !== 'config:') { insideConfig = false; return; }
+              
+              if (insideConfig && indent === 2) {
+                const parts = clean.split(':');
+                currentKey = parts[0].trim();
+                if (parts.length >= 2 && parts[1].trim()) {
+                  const val = parts.slice(1).join(':').trim().replace(/^["']|["']\$/g, "");
+                  if (currentKey === 'publish_as_bot') publishAsBot = val;
+                  if (currentKey === 'show_projects_column') showProjects = val;
+                  if (currentKey === 'discussion_number') discussionNumber = val;
+                  if (currentKey === 'project_category_name') categories.push(val);
+                }
+              }
+              if (insideConfig && indent === 4 && clean.startsWith('-')) {
+                const val = clean.substring(clean.indexOf('-') + 1).trim().replace(/^["']|["']\$/g, "");
+                if (currentKey === 'project_category_name') categories.push(val);
+              }
+            });
+            
+            // Передаем абсолютно все готовые настройки на выход Шага 0
+            core.setOutput('publish_as_bot', publishAsBot);
+            core.setOutput('show_projects_column', showProjects);
+            core.setOutput('discussion_number', discussionNumber);
+            core.setOutput('project_category_name', JSON.stringify(categories.length ? categories : ["Галерея"]));
+
+      # === ШАГ 1: ОСНОВНОЙ ГЕНЕРАТОР ЖУРНАЛА С ДИНАМИЧЕСКИМ ТОКЕНОМ ИЗ ШАГА 0 ===
       - name: Run Dynamic Report Generator
         uses: actions/github-script@v7
         with:
-          github-token: "${{ env.PUBLISH_AS_BOT == 'false' && secrets.GITHUB_TOKEN || secrets.MY_ADMIN_TOKEN }}"
+          # Токен переключается строго на основе считанной из файла переменной Шага 0!
+          github-token: \${{ steps.get_config.outputs.publish_as_bot == 'true' && secrets.GITHUB_TOKEN || secrets.MY_ADMIN_TOKEN }}
           script: |
             const fs = require('fs');
             const path = require('path');
@@ -62,15 +125,13 @@ jobs:
             let currentDay = "";
             let currentGroup = "";
             
-            // Новые переменные для динамического сбора индивидуальных настроек учителя (ИСПРАВЛЕНО: дефолт false!)
+            // ИСХОДНЫЙ СЛОЖНЫЙ ПАРСЕР ПОЛНОСТЬЮ УДАЛЕН. Настройки берутся напрямую из Шага 0 воркфлоу!
             let configData = {
-              publish_as_bot: true, // Возвращено исходное рабочее значение по умолчанию
-              show_projects_column: true,
-              discussion_number: 38,
-              project_category_name: [] 
+              publish_as_bot: "\${{ steps.get_config.outputs.publish_as_bot }}" === "true",
+              show_projects_column: "\${{ steps.get_config.outputs.show_projects_column }}" === "true",
+              discussion_number: parseInt("\${{ steps.get_config.outputs.discussion_number }}", 10) || 38,
+              project_category_name: JSON.parse(`${{ toJSON(steps.get_config.outputs.project_category_name) }}`)
             };
-            let insideConfig = false;
-            let currentConfigKey = ""; // Отслеживаем, какой ключ конфигурации сейчас парсится
 
             const lines = yamlText.split('\n');
             lines.forEach(line => {
@@ -80,37 +141,27 @@ jobs:
               const indent = line.search(/\S/);
               const cleanText = trimmed.trim();
 
-              // Ищем начало блока конфигурации преподавателя
-              if (indent === 0 && cleanText === 'config:') {
-                insideConfig = true;
-                return;
-              }
+              // Игнорируем блок config, так как Шаг 0 его уже полностью обработал
+              if (indent === 0 && cleanText === 'config:') return;
+              if (indent === 2 && currentDay === "" && currentGroup === "") return; // пропускаем строки настроек config
+              if (indent === 4 && currentDay === "" && currentGroup === "") return; // пропускаем элементы списка config
 
-              // Если мы внутри блока config и парсится список на дефисах (ИСПРАВЛЕНО: удален слэш \ перед знаками \$)
-              if (insideConfig && indent === 4 && cleanText.startsWith('-')) {
-                const cleanValue = cleanText.substring(cleanText.indexOf('-') + 1).trim().replace(/^["']|["']\$/g, "");
-                console.log(`[РАДАР ПАРСЕРА CONFIG] Обнаружен элемент списка: "${cleanValue}" для ключа "${currentConfigKey}"`);
-                if (currentConfigKey === 'project_category_name' && cleanValue) {
-                  configData.project_category_name.push(cleanValue);
-                }
-                return;
-              }
-
-              // Как только встретили новый блок на нулевом отступе (день недели), выходим из режима config
-              if (indent === 0 && cleanText.endsWith(':') && cleanText !== 'config:') {
-                insideConfig = false;
+              // Сбор дней недели
+              if (indent === 0 && cleanText.endsWith(':')) {
                 currentDay = cleanText.slice(0, -1).toLowerCase().trim();
                 studentsData[currentDay] = {};
                 return;
               } 
               
               // Штатный сбор групп расписания
-              if (!insideConfig && indent === 2 && cleanText.endsWith(':')) {
+              if (indent === 2 && cleanText.endsWith(':')) {
                 currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                 studentsData[currentDay][currentGroup] = [];
+                return;
               } 
+              
               // Штатный сбор учеников расписания
-              else if (!insideConfig && indent === 4 && cleanText.startsWith('-')) {
+              if (indent === 4 && cleanText.startsWith('-')) {
                 const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
                 const name = rawName.replace(/^["']|["']\$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
@@ -119,7 +170,7 @@ jobs:
               }
             });
 
-            console.log("=== ЛОГ РОБОТА: ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ УЧИТЕЛЯ ===");
+            console.log("=== ЛОГ РОБОТА: ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ ИЗ ШАГА 0 ===");
             console.log(`Режим публикации через Бота: ${configData.publish_as_bot}`);
             console.log(`Показывать колонку проектов: ${configData.show_projects_column}`);
             console.log(`Целевой номер Дискуссии: #${configData.discussion_number}`);

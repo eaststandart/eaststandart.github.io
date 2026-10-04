@@ -224,6 +224,13 @@ jobs:
               try {
                 const resSearch = await github.graphql(searchGql);
                 const discs = resSearch.repository.discussions.nodes || [];
+                
+                console.log(`\n=== [РАДАР КАТЕГОРИЙ GITHUB] ===`);
+                // Выводим в лог абсолютно все категории, которые физически видит API в репозитории
+                const allRepoCategories = [...new Set(discs.map(d => d.category ? d.category.name : null).filter(Boolean))];
+                console.log(`Обнаружены категории в Discussions: ${JSON.stringify(allRepoCategories)}`);
+                console.log(`================================\n`);
+
                 // Отбираем топики строго из нужной нам категории
                 const targetDiscs = discs.filter(d => d.category && d.category.name.toLowerCase() === categoryName.toLowerCase());
                 

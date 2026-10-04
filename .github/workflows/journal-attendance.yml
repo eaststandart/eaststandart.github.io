@@ -39,8 +39,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "actions@github.com"
           
-          # Добавляем в отслеживание удаление JSON-файлов и сортировку YAML базы
-          git add _data/*.json || true
+          # ИСПРАВЛЕНО: Возвращена твоя оригинальная хирургическая маска отслеживания файлов!
+          git add _data/*-journal-attendance-*.json || true
           git add _data/journal-attendance-*.yml || true
           
           # Делаем пуш изменений с флагом [skip ci], чтобы робот не зацикливался сам на себя!

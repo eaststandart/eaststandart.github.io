@@ -11,6 +11,7 @@ on:
       - 'ARCHITECTURE.md'
       - 'ROADMAP.md'
       - '.github/workflows/**'
+      - '_actions/**'
       - '_data/*-journal-attendance-*.json'
       - '_data/*journal-attendance*.yml'
   workflow_dispatch:

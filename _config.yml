@@ -42,6 +42,5 @@ exclude:
   - ARCHITECTURE.md
   - CODE_OF_CONDUCT.md
   - LICENSE.txt
-  - README.md
-  - bin/journalattendance.py
-
+  - README.mdROADMAP.md
+  - ROADMAP.md

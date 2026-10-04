@@ -3,7 +3,7 @@ config:
   show_projects_column: true
   discussion_number: 38
   project_category_name:
-    - "Покажи и расскажи""
+    - "Галерея""
     - "Покажи и расскажи"
 
 суббота:

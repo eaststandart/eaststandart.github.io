@@ -1,3 +1,11 @@
+config:
+  publish_as_bot: true
+  show_projects_column: true
+  discussion_number: 38
+  project_category_name:
+    - "Галерея""
+    - "Покажи и расскажи"
+
 суббота:
   "10:00":
     - "Загородний Денис [э]"

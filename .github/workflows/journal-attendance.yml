@@ -95,7 +95,8 @@ jobs:
                 const parts = cleanText.split(':');
                 if (parts.length >= 2) {
                   const key = parts[0].trim();
-                  const value = parts.slice(1).join(':').trim().replace(/^["']|["']\$/g, "");
+                  // ИСПРАВЛЕНО: удален слэш \ перед знаком $
+                  const value = parts.slice(1).join(':').trim().replace(/^["']|["']$/g, "");
                   
                   if (key === 'publish_as_bot') configData.publish_as_bot = (value === 'true');
                   else if (key === 'show_projects_column') configData.show_projects_column = (value === 'true');
@@ -121,7 +122,8 @@ jobs:
               // Штатный сбор учеников расписания
               else if (!insideConfig && indent === 4 && cleanText.startsWith('-')) {
                 const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-                const name = rawName.replace(/^["']|["']\$/g, "").trim();
+                // ИСПРАВЛЕНО: удален слэш \ перед знаком $
+                const name = rawName.replace(/^["']|["']$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
                   studentsData[currentDay][currentGroup].push(name);
                 }

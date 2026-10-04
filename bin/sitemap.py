@@ -39,7 +39,7 @@ def build_sitemap_tree():
 
     # Исключения корневых папок проекта
     EXCLUDED_FOLDERS = {
-        '_includes', '_layouts', '_pages', 'assets', 'bin', 
+        '_actions', '_includes', '_layouts', '_pages', 'assets', 'bin', 
         '.git', '.github', '_data', '_sitemap_files'
     }
 

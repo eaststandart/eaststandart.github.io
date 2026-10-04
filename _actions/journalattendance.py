@@ -41,6 +41,9 @@ def main():
         # PyYAML автоматически превращает весь YAML в удобный словарь Python!
         yaml_data = yaml.safe_load(f) or {}
 
+    # ИСПРАВЛЕНО: Создаем чистую переменную расписания студентов, убирая из нее технический блок config
+    students_data = {k: v for k, v in yaml_data.items() if k != 'config'}
+
     # Вытаскиваем блок config с дефолтными значениями-страховками
     config_data = yaml_data.get('config', {})
     
@@ -187,14 +190,24 @@ def main():
             normalized = normalized.replace("#", target_tag).strip()
             print(f"[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: {target_tag}")
 
-        # ГЛОБАЛЬНЫЙ РАДАР ПОИСКА ПОДЕЛКИ В НАШЕМ СКАЧАННОМ МЕШКЕ ИЗ 38 КОММЕНТОВ
+        # ГЛОБАЛЬНЫЙ РАДАР ПОИСКА ПОДЕЛКИ В НАШЕМ СКАЧАННОМ МЕШКЕ ИЗ 38 КОММЕНТОВ (ИСПРАВЛЕНО: вывод имени категории!)
         if show_projects_column and target_tag:
-            matches = [c for c in global_gallery_comments if c.get("body") and target_tag in c["body"]]
+            matches = []
+            for c in global_gallery_comments:
+                if c.get("body") and target_tag in c["body"]:
+                    matches.append(c)
             if matches:
-                # Берем самый свежий комментарий из совпавших
                 matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
-                project_link = f"[🔍 Поделка]({matches[0]['url']})"
-                print(f"[РАДАР] Робот нашёл поделку для {normalized} по тегу {target_tag} -> {matches[0]['url']}")
+                project_link = f"[🔍 Поделка]({matches[0]['url']})`"
+                
+                # Ищем, к какому топику и категории принадлежал этот коммент
+                parent_cat = "Неизвестная категория"
+                for d in discussions:
+                    if d.get("comments") and any(com["url"] == matches[0]["url"] for com in d["comments"].get("nodes", [])):
+                        parent_cat = d["category"]["name"]
+                        break
+                        
+                print(f"[РАДАР] Робот нашёл поделку в категории \"{parent_cat}\" для {normalized} по тегу {target_tag} -> {matches[0]['url']}")
 
         # Вычисляем чистое имя для вывода в журнал на сайт
         print_name = normalized.replace('"', '')

@@ -86,27 +86,10 @@ jobs:
                 return;
               }
 
-              // Если мы внутри блока config и отступ равен 2 пробелам
-              if (insideConfig && indent === 2) {
-                const parts = cleanText.split(':');
-                if (parts.length >= 1) {
-                  currentConfigKey = parts[0].trim();
-                  
-                  // Если значение указано на этой же строке (одиночная строка)
-                  if (parts.length >= 2 && parts[1].trim()) {
-                    const value = parts.slice(1).join(':').trim().replace(/^["']|["']\$/g, "");
-                    if (currentConfigKey === 'publish_as_bot') configData.publish_as_bot = (value === 'true');
-                    else if (currentConfigKey === 'show_projects_column') configData.show_projects_column = (value === 'true');
-                    else if (currentConfigKey === 'discussion_number') configData.discussion_number = parseInt(value, 10) || 38;
-                    else if (currentConfigKey === 'project_category_name') configData.project_category_name = [value];
-                  }
-                }
-                return;
-              }
-
-              // Если мы внутри блока config и парсится список на дефисах (отступ 4 пробела)
+              // Если мы внутри блока config и парсится список на дефисах (ИСПРАВЛЕНО: удален слэш \ перед знаками \$)
               if (insideConfig && indent === 4 && cleanText.startsWith('-')) {
                 const cleanValue = cleanText.substring(cleanText.indexOf('-') + 1).trim().replace(/^["']|["']\$/g, "");
+                console.log(`[РАДАР ПАРСЕРА CONFIG] Обнаружен элемент списка: "${cleanValue}" для ключа "${currentConfigKey}"`);
                 if (currentConfigKey === 'project_category_name' && cleanValue) {
                   configData.project_category_name.push(cleanValue);
                 }

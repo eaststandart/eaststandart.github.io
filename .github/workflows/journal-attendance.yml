@@ -9,11 +9,6 @@ permissions:
   contents: write
   discussions: write
 
-env:
-  PUBLISH_AS_BOT: "true"       # ПЕРЕКЛЮЧЕНИЕ ПУБЛИКАЦИЙ С БОТА НА АДМИНА (true/false)
-  SHOW_PROJECTS_COLUMN: "true" # ОТКЛЮЧЕНИЕ КОЛОНКИ ПРОЕКТОВ (true/false)
-  PROJECTS_CATEGORY_NAME: "Галерея" # Название категории для глобального поиска поделок участников!
-
 jobs:
   build_report:
     runs-on: ubuntu-latest
@@ -175,9 +170,8 @@ jobs:
             console.log("=== СТАТУС СБОРКИ ===");
             console.log("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...");
 
-            // === ШАГ 1: ГЛОБАЛЬНЫЙ СБОР ВСЕХ ПОДЕЛКОВ ИЗ КАТЕГОРИИ ГАЛЕРЕЯ ЧЕРЕЗ API ===
-            const showProjects = process.env.SHOW_PROJECTS_COLUMN === "true";
-            const categoryName = process.env.PROJECTS_CATEGORY_NAME || "Галерея";
+            // === ШАГ 1: ГЛОБАЛЬНЫЙ СБОР ВСЕХ ПОДЕЛКОВ ИЗ КАТЕГОРИИ ЧЕРЕЗ API (ИСПРАВЛЕНО: привязка к configData!)
+            const showProjects = configData.show_projects_column;
             const dateParts = dateStr.split('-');
             const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]} г.`;
 

@@ -67,14 +67,15 @@ jobs:
             let currentDay = "";
             let currentGroup = "";
             
-            // Новые переменные для динамического сбора индивидуальных настроек учителя
+            // Новые переменные для динамического сбора индивидуальных настроек учителя (ИСПРАВЛЕНО: сбор списка!)
             let configData = {
               publish_as_bot: true,
               show_projects_column: true,
               discussion_number: 38,
-              project_category_name: "Галерея"
+              project_category_name: [] // Переменная стала массивом для хранения нескольких категорий
             };
             let insideConfig = false;
+            let currentConfigKey = ""; // Отслеживаем, какой ключ конфигурации сейчас парсится
 
             const lines = yamlText.split('\n');
             lines.forEach(line => {
@@ -93,15 +94,26 @@ jobs:
               // Если мы внутри блока config и отступ равен 2 пробелам
               if (insideConfig && indent === 2) {
                 const parts = cleanText.split(':');
-                if (parts.length >= 2) {
-                  const key = parts[0].trim();
-                  // ИСПРАВЛЕНО: удален слэш \ перед знаком $
-                  const value = parts.slice(1).join(':').trim().replace(/^["']|["']$/g, "");
+                if (parts.length >= 1) {
+                  currentConfigKey = parts[0].trim();
                   
-                  if (key === 'publish_as_bot') configData.publish_as_bot = (value === 'true');
-                  else if (key === 'show_projects_column') configData.show_projects_column = (value === 'true');
-                  else if (key === 'discussion_number') configData.discussion_number = parseInt(value, 10) || 38;
-                  else if (key === 'project_category_name') configData.project_category_name = value;
+                  // Если значение указано на этой же строке (одиночная строка)
+                  if (parts.length >= 2 && parts[1].trim()) {
+                    const value = parts.slice(1).join(':').trim().replace(/^["']|["']\$/g, "");
+                    if (currentConfigKey === 'publish_as_bot') configData.publish_as_bot = (value === 'true');
+                    else if (currentConfigKey === 'show_projects_column') configData.show_projects_column = (value === 'true');
+                    else if (currentConfigKey === 'discussion_number') configData.discussion_number = parseInt(value, 10) || 38;
+                    else if (currentConfigKey === 'project_category_name') configData.project_category_name = [value];
+                  }
+                }
+                return;
+              }
+
+              // Если мы внутри блока config и парсится список на дефисах (отступ 4 пробела)
+              if (insideConfig && indent === 4 && cleanText.startsWith('-')) {
+                const cleanValue = cleanText.substring(cleanText.indexOf('-') + 1).trim().replace(/^["']|["']\$/g, "");
+                if (currentConfigKey === 'project_category_name' && cleanValue) {
+                  configData.project_category_name.push(cleanValue);
                 }
                 return;
               }
@@ -122,8 +134,7 @@ jobs:
               // Штатный сбор учеников расписания
               else if (!insideConfig && indent === 4 && cleanText.startsWith('-')) {
                 const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-                // ИСПРАВЛЕНО: удален слэш \ перед знаком $
-                const name = rawName.replace(/^["']|["']$/g, "").trim();
+                const name = rawName.replace(/^["']|["']\$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
                   studentsData[currentDay][currentGroup].push(name);
                 }
@@ -134,12 +145,11 @@ jobs:
             console.log(`Режим публикации через Бота: ${configData.publish_as_bot}`);
             console.log(`Показывать колонку проектов: ${configData.show_projects_column}`);
             console.log(`Целевой номер Дискуссии: #${configData.discussion_number}`);
-            console.log(`Базовая категория Галереи для поиска: "${configData.project_category_name}"`);
+            console.log(`Категории для поиска поделок: ${JSON.stringify(configData.project_category_name)}`);
 
             const scheduleGroups = studentsData[targetDay] ? Object.keys(studentsData[targetDay]).sort() : [];
             // 3. ПОДРОБНОЕ ЛОГИРОВАНИЕ И ПРОВЕКА КОМПЛЕКТНОСТИ
             console.log("=== ЛОГ РОБОТА: ПРОВЕРКА РАСПИСАНИЯ ===");
-            console.log("Запланированные группы из YAML базы:", JSON.stringify(scheduleGroups));
             
             // Собираем данные из прилетевших файлов во временный объект
             let tempJournal = {};
@@ -200,10 +210,13 @@ jobs:
               return res.replace(/-+/g, "-").replace(/^-|-$/g, "");
             }
 
-            // Глобальный поисковый массив комментов со всей Галереи репозитория
+            // Глобальный поисковый массив комментов со всей Галереи репозитория (ИСПРАВЛЕНО: сканирование списка категорий!)
             let globalGalleryComments = [];
             if (showProjects) {
-              console.log(`[ШАГ 1] Запуск сканирования всей категории Дискуссий: "${categoryName}"`);
+              // Переводим весь список категорий учителя в нижний регистр для безопасного текстового сравнения
+              const searchCategoriesLower = configData.project_category_name.map(cat => cat.toLowerCase().trim());
+              console.log(`[ШАГ 1] Запуск глобального сканирования категорий: ${JSON.stringify(configData.project_category_name)}`);
+              
               const searchGql = `query {
                 repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
                   discussions(first: 100, categoryId: null) {
@@ -226,22 +239,23 @@ jobs:
                 const discs = resSearch.repository.discussions.nodes || [];
                 
                 console.log(`\n=== [РАДАР КАТЕГОРИЙ GITHUB] ===`);
-                // Выводим в лог абсолютно все категории, которые физически видит API в репозитории
                 const allRepoCategories = [...new Set(discs.map(d => d.category ? d.category.name : null).filter(Boolean))];
                 console.log(`Обнаружены категории в Discussions: ${JSON.stringify(allRepoCategories)}`);
                 console.log(`================================\n`);
 
-                // Отбираем топики строго из нужной нам категории
-                const targetDiscs = discs.filter(d => d.category && d.category.name.toLowerCase() === categoryName.toLowerCase());
+                // ИСПРАВЛЕНО НАЧИСТО: Проверяем, входит ли имя категории топика в наш настроечный массив searchCategoriesLower
+                const targetDiscs = discs.filter(d => {
+                  return d.category && d.category.name && searchCategoriesLower.includes(d.category.name.toLowerCase().trim());
+                });
                 
                 targetDiscs.forEach(d => {
                   if (d.comments && d.comments.nodes) {
                     globalGalleryComments = globalGalleryComments.concat(d.comments.nodes);
                   }
                 });
-                console.log(`[ШАГ 1] Успешно загружено комментов для анализа: ${globalGalleryComments.length}`);
+                console.log(`[ШАГ 1] Успешно загружено комментов для анализа из всех указанных категорий: ${globalGalleryComments.length}`);
               } catch (err) {
-                console.log("[ШАГ 1] ❌ Ошибка глобального сбора Галереи:", err.message);
+                console.log("[ШАГ 1] ❌ Ошибка глобального сбора поделок:", err.message);
               }
             }
 

@@ -190,17 +190,15 @@ def main():
             normalized = normalized.replace("#", target_tag).strip()
             print(f"[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: {target_tag}")
 
-        # ГЛОБАЛЬНЫЙ РАДАР ПОИСКА ПОДЕЛКИ В НАШЕМ СКАЧАННОМ МЕШКЕ ИЗ 38 КОММЕНТОВ (ИСПРАВЛЕНО НАЧИСТО!)
+        # ГЛОБАЛЬНЫЙ РАДАР ПОИСКА ПОДЕЛКИ В НАШЕМ СКАЧАННОМ МЕШКЕ ИЗ 38 КОММЕНТОВ (ИСПРАВЛЕНО: вывод имени категории!)
         if show_projects_column and target_tag:
             matches = []
             for c in global_gallery_comments:
                 if c.get("body") and target_tag in c["body"]:
                     matches.append(c)
             if matches:
-                # Сортируем от свежих к старым
                 matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
-                # Исправлено: убран бэктик в конце скобки и добавлен индекс [0]
-                project_link = f"[🔍 Поделка]({matches[0]['url']})"
+                project_link = f"[🔍 Поделка]({matches[0]['url']})`"
                 
                 # Ищем, к какому топику и категории принадлежал этот коммент
                 parent_cat = "Неизвестная категория"
@@ -229,31 +227,7 @@ def main():
             "yaml_line": final_yaml_line
         }
 
-    # === ШАГ 3: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ (ЭТАЛОННАЯ JS-ЛОГИКА) ===
-    # Собираем данные из всех прилетевших сегодня JSON файлов с сайта
-    temp_journal = {}
-    todays_files = [f for f in os.listdir(data_dir) if f.startswith(f"{date_str}-") and f.endswith(".json")]
-    for file in todays_files:
-        with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
-            file_data = json.load(f)
-            temp_journal[file_data["time"]] = file_data
-
-    # Зеркально берем запланированные группы дня строго из YAML базы расписания
-    schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
-    print(f"Запланированные группы из YAML базы: {schedule_groups}")
-    
-    filled_times = sorted(list(temp_journal.keys()))
-    print(f"Полученные группы с сайта за сегодня: {filled_times}")
-
-    # ЗЕРКАЛЬНАЯ СТРАХОВКА КОМПЛЕКТНОСТИ ДНЯ: Если прилетели еще не все группы, останавливаем шаг!
-    if len(filled_times) < len(schedule_groups):
-        print("=== СТАТУС СБОРКИ ===")
-        print(f"Ожидаем остальные группы. Комплект не собран ({len(filled_times)} из {len(schedule_groups)}). Завершаем шаг.")
-        return
-
-    print("=== СТАТУС СБОРКИ ===")
-    print("Все группы дня получены! Запускаем склейку и генерацию итогового отчета...")
-
+    # === ШАГ 3: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ ===
     import re
     date_parts = date_str.split('-')
     formatted_date = f"{date_parts[2]}.{date_parts[1]}.{date_parts[0]} г."
@@ -266,6 +240,15 @@ def main():
         markdown_body += "| Группа / Ученик | Статус | Направление |\n"
         markdown_body += "| :--- | :--- | :--- |\n"
 
+    # Читаем все прилетевшие JSON файлы с сайта во временную структуру
+    temp_journal = {}
+    todays_files = [f for f in os.listdir(data_dir) if f.startswith(f"{date_str}-") and f.endswith(".json")]
+    for file in todays_files:
+        with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
+            file_data = json.load(f)
+            temp_journal[file_data["time"]] = file_data
+
+    schedule_groups = sorted(students_data.keys())
     yaml_group_updates = {}
 
     for time in schedule_groups:
@@ -276,15 +259,14 @@ def main():
             markdown_body += f"| **⏰ ГРУППА {time}** | | |\n"
 
         group_payload = temp_journal.get(time, {"present_permanent": [], "newbies": [], "probation": []})
-        # ИСПРАВЛЕНО НАЧИСТО: Извлекаем список реальных имен детей из расписания
-        permanent_kids = students_data.get(target_day, {}).get(time, [])
+        permanent_kids = students_data[time]
 
         block_permanent = []
         block_newbies = []
         block_probation = []
         current_group_yaml_rows = []
 
-        # 3.1. Разбор постоянного состава из YAML базы
+        # 3.1. Разбор постоянного состава из YAML
         for kid in permanent_kids:
             processed = process_kid_row(kid, "")
             
@@ -311,12 +293,12 @@ def main():
                 processed = process_kid_row(prob, "🔵 Пробное")
                 block_probation.append(processed)
 
-        # Алфавитная сортировка по чистому имени от А до Я
+        # Алфавитная сортировка по имени
         block_permanent.sort(key=lambda x: x["name_for_sort"].lower())
         block_newbies.sort(key=lambda x: x["name_for_sort"].lower())
         block_probation.sort(key=lambda x: x["name_for_sort"].lower())
 
-        # Печать в Markdown ячейки отчета
+        # Запись в общую Markdown таблицу
         for row in block_permanent:
             markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
         for row in block_newbies:
@@ -324,11 +306,11 @@ def main():
         for row in block_probation:
             markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
 
-        # Алфавитная сортировка списка для перезаписи YAML базы преподавателя
+        # Сортировка для будущей записи в YAML расписание учителя
         current_group_yaml_rows.sort(key=lambda x: re.sub(r'\[э\]|\[с\]|@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+', '', x, flags=re.IGNORECASE).strip().lower())
         yaml_group_updates[time] = current_group_yaml_rows
 
-    markdown_body += f"\n*Проверил и отправил преподаватель: **{teacher_username}***\n"
+    markdown_body += f"\n*Проверил и отправил преподаватель: **${teacher_username}***\n"
     print("\n[ШАГ 3] Итоговая таблица Markdown успешно сформирована в памяти!")
 
 if __name__ == "__main__":

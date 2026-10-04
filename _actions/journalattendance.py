@@ -140,7 +140,165 @@ def main():
             
         except Exception as err:
             print(f"[ШАГ 2] ❌ Исключение при глобальном сборе поделок: {str(err)}")
+            
+    # === ВНУТРЕННИЕ ФУНКЦИИ КОНВЕЙЕРА ОБРАБОТКИ ИМЁН И ТРАНСЛИТА ===
+    def translit_rus_to_lat(text):
+        rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split()
+        lat = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch  y  e yu ya".split()
+        res = ""
+        lower_text = text.lower()
+        for char in lower_text:
+            if char in rus:
+                res += lat[rus.index(char)]
+            elif char in [" ", "-"]:
+                res += "-"
+            elif char.isalnum() or char == "_":
+                res += char
+        import re
+        res = re.sub(r'-+', '-', res)
+        return res.strip('-')
+
+    def process_kid_row(raw_name, status_text):
+        print(f"\n=== [РАДАР YAML БАЗЫ PYTHON] ===")
+        print(f"Функция получила rawName: '{raw_name}' (Длина: {len(raw_name)})")
+        print(f"Посимвольный код rawName: {' '.join(str(ord(c)) for c in raw_name)}")
+
+        track = ""
+        project_link = ""
+
+        # Находим готовый тег (@ник или #тег)
+        import re
+        match_ready = re.search(r'(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)', raw_name)
+        target_tag = match_ready.group(0) if match_ready else ""
+        print(f"Результат поиска готового тега: '{target_tag}'")
+
+        need_auto_generate = not target_tag and "#" in raw_name
+        normalized = raw_name.replace("[c]", "[с]").replace("[C]", "[с]").replace('"', '').strip()
+
+        if "[э]" in normalized.lower():
+            track = "электроника"
+        elif "[с]" in normalized.lower():
+            track = "столярное"
+
+        if need_auto_generate:
+            name_for_tag = normalized.replace("[э]", "").replace("[с]", "").replace("[Э]", "").replace("[С]", "").replace("#", "").strip()
+            name_for_tag = re.sub(r'\s+', ' ', name_for_tag).strip()
+            target_tag = f"#techlab-{translit_rus_to_lat(name_for_tag)}"
+            normalized = normalized.replace("#", target_tag).strip()
+            print(f"[АВТОГЕНЕРАЦИЯ] Одиночный знак # успешно заменен на латинский тег: {target_tag}")
+
+        # ГЛОБАЛЬНЫЙ РАДАР ПОИСКА ПОДЕЛКИ В НАШЕМ СКАЧАННОМ МЕШКЕ ИЗ 38 КОММЕНТОВ
+        if show_projects_column and target_tag:
+            matches = [c for c in global_gallery_comments if c.get("body") and target_tag in c["body"]]
+            if matches:
+                # Берем самый свежий комментарий из совпавших
+                matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
+                project_link = f"[🔍 Поделка]({matches[0]['url']})"
+                print(f"[РАДАР] Робот нашёл поделку для {normalized} по тегу {target_tag} -> {matches[0]['url']}")
+
+        # Вычисляем чистое имя для вывода в журнал на сайт
+        print_name = normalized.replace('"', '')
+        print_name = re.sub(r'\[э\]|\[с\]', '', print_name, flags=re.IGNORECASE)
+        print_name = re.sub(r'(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)', '', print_name)
+        print_name = re.sub(r'\s+', ' ', print_name).strip()
+
+        direction_suffix = " [э]" if track == "электроника" else " [с]" if track == "столярное" else ""
+        tag_suffix = f" {target_tag}" if target_tag else ""
+        final_yaml_line = f"{print_name}{direction_suffix}{tag_suffix}"
+
+        return {
+            "name_for_sort": print_name,
+            "track": track,
+            "status": status_text,
+            "project": project_link,
+            "yaml_line": final_yaml_line
+        }
+
+    # === ШАГ 3: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ ===
+    import re
+    date_parts = date_str.split('-')
+    formatted_date = f"{date_parts[2]}.{date_parts[1]}.{date_parts[0]} г."
+    
+    markdown_body = f"### 📅 Журнал посещений за {formatted_date} ({sample_data.get('day', '')})\n\n"
+    if show_projects_column:
+        markdown_body += "| Группа / Ученик | Статус | Направление | Чем занят? |\n"
+        markdown_body += "| :--- | :--- | :--- | :--- |\n"
+    else:
+        markdown_body += "| Группа / Ученик | Статус | Направление |\n"
+        markdown_body += "| :--- | :--- | :--- |\n"
+
+    # Читаем все прилетевшие JSON файлы с сайта во временную структуру
+    temp_journal = {}
+    todays_files = [f for f in os.listdir(data_dir) if f.startswith(f"{date_str}-") and f.endswith(".json")]
+    for file in todays_files:
+        with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
+            file_data = json.load(f)
+            temp_journal[file_data["time"]] = file_data
+
+    schedule_groups = sorted(students_data.keys())
+    yaml_group_updates = {}
+
+    for time in schedule_groups:
+        print(f"\n--- Обработка группы {time} ---")
+        if show_projects_column:
+            markdown_body += f"| **⏰ ГРУППА {time}** | | | |\n"
+        else:
+            markdown_body += f"| **⏰ ГРУППА {time}** | | |\n"
+
+        group_payload = temp_journal.get(time, {"present_permanent": [], "newbies": [], "probation": []})
+        permanent_kids = students_data[time]
+
+        block_permanent = []
+        block_newbies = []
+        block_probation = []
+        current_group_yaml_rows = []
+
+        # 3.1. Разбор постоянного состава из YAML
+        for kid in permanent_kids:
+            processed = process_kid_row(kid, "")
+            
+            is_present = False
+            for p in group_payload.get("present_permanent", []):
+                if p.replace('"', '').replace("'", "").strip().lower() == processed["name_for_sort"].lower():
+                    is_present = True
+                    break
+                    
+            processed["status"] = "🟢 Присутствовал" if is_present else "🔴 Отсутствовал"
+            block_permanent.append(processed)
+            current_group_yaml_rows.append(processed["yaml_line"])
+
+        # 3.2. Разбор новичков с сайта
+        for newbie in group_payload.get("newbies", []):
+            if newbie.strip():
+                processed = process_kid_row(newbie, "🟡 Новичок")
+                block_newbies.append(processed)
+                current_group_yaml_rows.append(processed["yaml_line"])
+
+        # 3.3. Разбор временных пробных детей
+        for prob in group_payload.get("probation", []):
+            if prob.strip():
+                processed = process_kid_row(prob, "🔵 Пробное")
+                block_probation.append(processed)
+
+        # Алфавитная сортировка по имени
+        block_permanent.sort(key=lambda x: x["name_for_sort"].lower())
+        block_newbies.sort(key=lambda x: x["name_for_sort"].lower())
+        block_probation.sort(key=lambda x: x["name_for_sort"].lower())
+
+        # Запись в общую Markdown таблицу
+        for row in block_permanent:
+            markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
+        for row in block_newbies:
+            markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
+        for row in block_probation:
+            markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
+
+        # Сортировка для будущей записи в YAML расписание учителя
+        current_group_yaml_rows.sort(key=lambda x: re.sub(r'\[э\]|\[с\]|@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+', '', x, flags=re.IGNORECASE).strip().lower())
+        yaml_group_updates[time] = current_group_yaml_rows
+
+    markdown_body += f"\n*Проверил и отправил преподаватель: **${teacher_username}***\n"
+    print("\n[ШАГ 3] Итоговая таблица Markdown успешно сформирована в памяти!")
 
 if __name__ == "__main__":
     main()
-

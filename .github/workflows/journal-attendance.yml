@@ -73,11 +73,11 @@ jobs:
               }
             });
             
-            // Передаем абсолютно все готовые настройки на выход Шага 0
+            // Передаем абсолютно все готовые настройки на выход Шага 0 (ИСПРАВЛЕНО: передача строкой через запятую!)
             core.setOutput('publish_as_bot', publishAsBot);
             core.setOutput('show_projects_column', showProjects);
             core.setOutput('discussion_number', discussionNumber);
-            core.setOutput('project_category_name', JSON.stringify(categories.length ? categories : ["Галерея"]));
+            core.setOutput('project_category_name', categories.length ? categories.join(',') : "Галерея");
 
       # === ШАГ 1: ОСНОВНОЙ ГЕНЕРАТОР ЖУРНАЛА С ДИНАМИЧЕСКИМ ТОКЕНОМ ИЗ ШАГА 0 ===
       - name: Run Dynamic Report Generator
@@ -125,12 +125,12 @@ jobs:
             let currentDay = "";
             let currentGroup = "";
             
-            // ИСХОДНЫЙ СЛОЖНЫЙ ПАРСЕР ПОЛНОСТЬЮ УДАЛЕН. Настройки берутся напрямую из Шага 0 воркфлоу!
+            // ИСХОДНЫЙ СЛОЖНЫЙ ПАРСЕР ПОЛНОСТЬЮ УДАЛЕН. Настройки берутся напрямую из Шага 0 воркфлоу! (ИСПРАВЛЕНО: парсинг строки через split!)
             let configData = {
-              publish_as_bot: "\${{ steps.get_config.outputs.publish_as_bot }}" === "true",
-              show_projects_column: "\${{ steps.get_config.outputs.show_projects_column }}" === "true",
-              discussion_number: parseInt("\${{ steps.get_config.outputs.discussion_number }}", 10) || 38,
-              project_category_name: JSON.parse(`${{ toJSON(steps.get_config.outputs.project_category_name) }}`)
+              publish_as_bot: "${{ steps.get_config.outputs.publish_as_bot }}" === "true",
+              show_projects_column: "${{ steps.get_config.outputs.show_projects_column }}" === "true",
+              discussion_number: parseInt("${{ steps.get_config.outputs.discussion_number }}", 10) || 38,
+              project_category_name: "${{ steps.get_config.outputs.project_category_name }}".split(',').map(c => c.trim()).filter(Boolean)
             };
 
             const lines = yamlText.split('\n');

@@ -61,5 +61,86 @@ def main():
     print(f"Целевой номер Дискуссии (считано из YAML): #{discussion_number}")
     print(f"Категории для поиска поделок (считано из YAML): {project_categories}")
 
+    # === ШАГ 2: ГЛОБАЛЬНЫЙ СБОР ВСЕХ ПОДЕЛКОВ ИЗ СОВПАВШИХ КАТЕГОРИЙ ЧЕРЕЗ API ===
+    global_gallery_comments = []
+    
+    if show_projects_column:
+        import requests
+        print("\n=== [РАДАР КАТЕГОРИЙ GITHUB НА PYTHON] ===")
+        print(f"Запуск сканирования для категорий: {project_categories}")
+        
+        # Получаем административный токен из системного окружения виртуальной машины
+        admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+        if not admin_token:
+            print("[ШАГ 2] ❌ КРИТИЧЕСКАЯ ОШИБКА: Токен авторизации GitHub не найден в окружении!")
+            return
+
+        # Наш пуленепробиваемый GraphQL-запрос к серверу GitHub
+        query_gql = """
+        query($owner: String!, $repo: String!) {
+          repository(owner: $owner, name: $repo) {
+            discussions(first: 100) {
+              nodes {
+                category { name }
+                comments(first: 100) {
+                  nodes {
+                    url
+                    createdAt
+                    body
+                  }
+                }
+              }
+            }
+          }
+        }
+        """
+        
+        headers = {
+            "Authorization": f"token {admin_token}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "query": query_gql,
+            "variables": {
+                "owner": "eaststandart",
+                "repo": "eaststandart.github.io"
+            }
+        }
+        
+        try:
+            # Отправляем сетевой запрос на сервер GitHub
+            response = requests.post("https://github.com", json=payload, headers=headers)
+            if response.status_code != 200:
+                print(f"[ШАГ 2] ❌ Ошибка сети API GitHub: Статус {response.status_code}")
+                return
+                
+            res_json = response.json()
+            if "errors" in res_json:
+                print(f"[ШАГ 2] ❌ Ошибка GraphQL от сервера: {json.dumps(res_json['errors'])}")
+                return
+                
+            discussions = res_json.get("data", {}).get("repository", {}).get("discussions", {}).get("nodes", [])
+            
+            # Собираем все реально существующие в репозитории категории для вывода в отладочный лог
+            all_repo_categories = list(set([d["category"]["name"] for d in discussions if d.get("category")]))
+            print(f"Обнаружены категории в Discussions: {all_repo_categories}")
+            
+            # Переводим список категорий учителя в нижний регистр для безопасной сверки без учета регистра
+            search_cats_lower = [c.lower().strip() for c in project_categories]
+            
+            # Фильтруем топики: оставляем только те категории, которые указал учитель в Obsidian!
+            for d in discussions:
+                if d.get("category") and d["category"]["name"].lower().strip() in search_cats_lower:
+                    comments_nodes = d.get("comments", {}).get("nodes", [])
+                    if comments_nodes:
+                        global_gallery_comments.extend(comments_nodes)
+                        
+            print(f"[ШАГ 2] Успешно загружено комментов для анализа из всех совпавших категорий: {len(global_gallery_comments)}")
+            print("=========================================\n")
+            
+        except Exception as err:
+            print(f"[ШАГ 2] ❌ Исключение при глобальном сборе поделок: {str(err)}")
+
 if __name__ == "__main__":
     main()
+

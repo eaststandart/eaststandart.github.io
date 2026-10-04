@@ -3,6 +3,9 @@ import json
 import sys
 import yaml
 
+# ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ АДРЕСА API GITHUB
+GRAPHQL_URL = "https://api.github.com/graphql"
+
 def main():
     print("=== ЛОГ РОБОТА PYTHON: ИНИЦИАЛИЗАЦИЯ ===")
     
@@ -112,7 +115,7 @@ def main():
         
         try:
             # Отправляем сетевой запрос на сервер GitHub
-            response = requests.post("https://api.github.com/graphql", json=payload, headers=headers)
+            response = requests.post(GRAPHQL_URL, json=payload, headers=headers)
             if response.status_code != 200:
                 print(f"[ШАГ 2] ❌ Ошибка сети API GitHub: Статус {response.status_code}")
                 return
@@ -365,7 +368,9 @@ def main():
                 "num": discussion_number
             }
         }
-        res_id = requests.post("https://github.com", json=id_payload, headers=headers).json()
+
+        response_id = requests.post(GRAPHQL_URL, json=id_payload, headers=headers)
+        res_id = response_id.json()
         
         if "errors" in res_id:
             print(f"[ШАГ 4] ❌ Ошибка GraphQL при получении ID: {json.dumps(res_id['errors'])}")
@@ -373,23 +378,20 @@ def main():
             
         discussion_id = res_id["data"]["repository"]["discussion"]["id"]
         
-        # 4.2. Публикуем готовую Markdown таблицу в Дискуссию на сайте
-        mutation_gql = """
-        mutation($discId: ID!, $bodyText: String!) {
-          addDiscussionComment(input: {discussionId: $discId, body: $bodyText}) {
-            comment { id }
-          }
-        }
-        """
+        # 4.2. Публикуем готовую Markdown таблицу в Дискуссию на сайте (ИСПРАВЛЕНО НАЧИСТО!)
+        mutation_gql = "mutation($discId: ID!, $bodyText: String!) { addDiscussionComment(input: {discussionId: $discId, body: $bodyText}) { comment { id } } }"
+        
         mutation_payload = {
             "query": mutation_gql,
             "variables": {
-                "discId": discussion_id,
-                "bodyText": markdown_body
+                "discId": str(discussion_id),
+                "bodyText": str(markdown_body)
             }
         }
-        res_mut = requests.post("https://github.com", json=mutation_payload, headers=headers).json()
         
+        response_mut = requests.post(GRAPHQL_URL, json=mutation_payload, headers=headers)
+        res_mut = response_mut.json()
+       
         if "errors" in res_mut:
             print(f"[ШАГ 4] ❌ Ошибка мутации GraphQL при отправке отчета: {json.dumps(res_mut['errors'])}")
             return

@@ -28,7 +28,7 @@ jobs:
           pip install pyyaml requests
 
       - name: Run Python Report Generator
-        run: python bin/journalattendance.py
+        run: python _actions/journalattendance.py
         env:
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

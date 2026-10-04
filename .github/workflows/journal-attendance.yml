@@ -145,6 +145,10 @@ jobs:
             let tempJournal = {};
             todaysFiles.forEach(file => {
               const fileData = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8'));
+              console.log(`\n=== [РАДАР JSON С САЙТА] ===`);
+              console.log(`Файл: ${file}, группа: ${fileData.time}`);
+              if (fileData.newbies) console.log(`Новички в JSON: ${JSON.stringify(fileData.newbies)}`);
+              if (fileData.present_permanent) console.log(`Постоянные в JSON: ${JSON.stringify(fileData.present_permanent)}`);
               tempJournal[fileData.time] = fileData;
             });
             
@@ -252,8 +256,9 @@ jobs:
 
               // Внутренняя изолированная функция разбора и чистки строк (ЭТАЛОННЫЙ ЧИСТЫЙ КОНВЕЙЕР)
               async function processKidRow(rawName, statusText, isNewbie = false) {
-                console.log(`\n=== [ОТЛАДКА ВВОДА] ===`);
-                console.log(`Сайт прислал rawName: '${rawName}' (Длина: ${rawName.length})`);
+                console.log(`\n=== [РАДАР YAML БАЗЫ] ===`);
+                console.log(`Функция получила rawName: '${rawName}' (Длина: ${rawName.length})`);
+                console.log(`Посимвольный код rawName: ${rawName.split('').map(c => c.charCodeAt(0)).join(' ')}`);
 
                 // Этаж 1: Первичная инициализация базовых переменных конвейера
                 let track = "";

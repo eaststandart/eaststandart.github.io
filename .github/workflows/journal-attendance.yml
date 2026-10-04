@@ -237,9 +237,13 @@ jobs:
                 console.log(`Обнаружены категории в Discussions: ${JSON.stringify(allRepoCategories)}`);
                 console.log(`================================\n`);
 
-                // ИСПРАВЛЕНО НАЧИСТО: Проверяем, входит ли имя категории топика в наш настроечный массив searchCategoriesLower
+                // ИСПРАВЛЕНО НАЧИСТО: Проверяем, входит ли имя категории топика в наш настроечный массив searchCategoriesLower (ДОБАВЛЕН РАДАР ФИЛЬТРА!)
                 const targetDiscs = discs.filter(d => {
-                  return d.category && d.category.name && searchCategoriesLower.includes(d.category.name.toLowerCase().trim());
+                  const isMatch = d.category && d.category.name && searchCategoriesLower.includes(d.category.name.toLowerCase().trim());
+                  if (d.category && d.category.name) {
+                    console.log(`[РАДАР СЛОВАЦО] Топик категории "${d.category.name}": подходит по фильтру? ${isMatch}. Комментов в нем: ${d.comments && d.comments.nodes ? d.comments.nodes.length : 0}`);
+                  }
+                  return isMatch;
                 });
                 
                 targetDiscs.forEach(d => {
@@ -247,7 +251,7 @@ jobs:
                     globalGalleryComments = globalGalleryComments.concat(d.comments.nodes);
                   }
                 });
-                console.log(`[ШАГ 1] Успешно загружено комментов для анализа из всех указанных категорий: ${globalGalleryComments.length}`);
+                console.log(`[ШАГ 1] Суммарно загружено комментов для анализа из совпавших категорий: ${globalGalleryComments.length}`);
               } catch (err) {
                 console.log("[ШАГ 1] ❌ Ошибка глобального сбора поделок:", err.message);
               }

@@ -109,7 +109,7 @@ def main():
         
         try:
             # Отправляем сетевой запрос на сервер GitHub
-            response = requests.post("https://github.com", json=payload, headers=headers)
+            response = requests.post("https://api.github.com", json=payload, headers=headers)
             if response.status_code != 200:
                 print(f"[ШАГ 2] ❌ Ошибка сети API GitHub: Статус {response.status_code}")
                 return

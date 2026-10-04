@@ -66,8 +66,17 @@ jobs:
             let studentsData = {};
             let currentDay = "";
             let currentGroup = "";
-            const lines = yamlText.split('\n');
             
+            // Новые переменные для динамического сбора индивидуальных настроек учителя
+            let configData = {
+              publish_as_bot: true,
+              show_projects_column: true,
+              discussion_number: 38,
+              project_category_name: "Галерея"
+            };
+            let insideConfig = false;
+
+            const lines = yamlText.split('\n');
             lines.forEach(line => {
               const trimmed = line.trimEnd();
               if (!trimmed || trimmed.startsWith('#')) return;
@@ -75,22 +84,55 @@ jobs:
               const indent = line.search(/\S/);
               const cleanText = trimmed.trim();
 
-              if (indent === 0 && cleanText.endsWith(':')) {
+              // Ищем начало блока конфигурации преподавателя
+              if (indent === 0 && cleanText === 'config:') {
+                insideConfig = true;
+                return;
+              }
+
+              // Если мы внутри блока config и отступ равен 2 пробелам
+              if (insideConfig && indent === 2) {
+                const parts = cleanText.split(':');
+                if (parts.length >= 2) {
+                  const key = parts[0].trim();
+                  const value = parts.slice(1).join(':').trim().replace(/^["']|["']\$/g, "");
+                  
+                  if (key === 'publish_as_bot') configData.publish_as_bot = (value === 'true');
+                  else if (key === 'show_projects_column') configData.show_projects_column = (value === 'true');
+                  else if (key === 'discussion_number') configData.discussion_number = parseInt(value, 10) || 38;
+                  else if (key === 'project_category_name') configData.project_category_name = value;
+                }
+                return;
+              }
+
+              // Как только встретили новый блок на нулевом отступе (день недели), выходим из режима config
+              if (indent === 0 && cleanText.endsWith(':') && cleanText !== 'config:') {
+                insideConfig = false;
                 currentDay = cleanText.slice(0, -1).toLowerCase().trim();
                 studentsData[currentDay] = {};
+                return;
               } 
-              else if (indent === 2 && cleanText.endsWith(':')) {
+              
+              // Штатный сбор групп расписания
+              if (!insideConfig && indent === 2 && cleanText.endsWith(':')) {
                 currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
                 studentsData[currentDay][currentGroup] = [];
               } 
-              else if (indent === 4 && cleanText.startsWith('-')) {
+              // Штатный сбор учеников расписания
+              else if (!insideConfig && indent === 4 && cleanText.startsWith('-')) {
                 const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-                const name = rawName.replace(/^["']|["']$/g, "").trim();
+                const name = rawName.replace(/^["']|["']\$/g, "").trim();
                 if (currentDay && currentGroup && studentsData[currentDay][currentGroup]) {
                   studentsData[currentDay][currentGroup].push(name);
                 }
               }
             });
+
+            console.log("=== ЛОГ РОБОТА: ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ УЧИТЕЛЯ ===");
+            console.log(`Режим публикации через Бота: ${configData.publish_as_bot}`);
+            console.log(`Показывать колонку проектов: ${configData.show_projects_column}`);
+            console.log(`Целевой номер Дискуссии: #${configData.discussion_number}`);
+            console.log(`Базовая категория Галереи для поиска: "${configData.project_category_name}"`);
 
             const scheduleGroups = studentsData[targetDay] ? Object.keys(studentsData[targetDay]).sort() : [];
             // 3. ПОДРОБНОЕ ЛОГИРОВАНИЕ И ПРОВЕКА КОМПЛЕКТНОСТИ

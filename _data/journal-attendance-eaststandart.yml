@@ -1,5 +1,5 @@
 config:
-  publish_as_bot: true
+  publish_as_bot: false
   show_projects_column: true
   discussion_number: 38
   project_category_name:

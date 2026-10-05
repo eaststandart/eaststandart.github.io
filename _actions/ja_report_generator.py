@@ -257,7 +257,7 @@ def run_generator():
     
     markdown_body = f"### 📅 Журнал посещений за {formatted_date} ({sample_data.get('day', '')})\n\n"
     if show_projects_column:
-        markdown_body += "| Группа / Ученик | Статус | Направление | Чем занят? |\n"
+        markdown_body += "| Группа / Ученик | Статус | Направление | Чем занят |\n"
         markdown_body += "| :--- | :--- | :--- | :--- |\n"
     else:
         markdown_body += "| Группа / Ученик | Статус | Направление |\n"

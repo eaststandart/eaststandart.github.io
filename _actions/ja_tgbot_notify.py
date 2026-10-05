@@ -15,7 +15,7 @@ import re
 import urllib.request
 
 # Фиксируем базовый адрес Telegram API константой в шапке модуля
-TELEGRAM_API_URL = "https://telegram.org"
+TELEGRAM_API_URL = "https://api.telegram.org"
 
 def send_public_notification(markdown_body, comment_url, public_config):
     print("\n=== [МОДУЛЬ JA_TGBOT_NOTIFY] ЗАПУСК РОДИТЕЛЬСКОГО ИНФОРМАТОРА ===")

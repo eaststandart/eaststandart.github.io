@@ -4,7 +4,7 @@ import sys
 import urllib.request
 
 # Фиксируем базовый адрес Telegram API константой в шапке модуля
-TELEGRAM_API_URL = "https://api.telegram.org/bot{token}/sendMessage"
+TELEGRAM_API_URL = "https://api.telegram.org"
 
 def send_personal_report(markdown_body, comment_url, target_day, personal_ids):
     print("\n=== [МОДУЛЬ JA_TGBOT_PERSONAL] ЗАПУСК ПЕРСОНАЛЬНОГО ИНФОРМАТОРА ===")

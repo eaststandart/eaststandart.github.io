@@ -20,8 +20,7 @@ config:
   tg_public_notify:
     - chat_id: -1002555901754 # ЧАТ №1 (@RadiotekhnikaClub)
       message_thread_id:
-        - 38   # Общие вопросы 
-        - 45   # Поток Медиа-материалов подело
+        - 38   # Общие вопросы
 
 суббота:
   "10:00":

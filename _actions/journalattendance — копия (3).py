@@ -423,20 +423,8 @@ def main():
                 group_time_clean = trimmed.strip().replace(':', '')
                 new_lines.append(line)
                 
-                # === ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
-                print(f"\n[ДИАГНОСТИКА ШАГА 4.3] Встречена строка группы в файле: '{trimmed}'")
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Вычислен ключ group_time_clean: '{group_time_clean}'")
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Какие ключи ЕСТЬ в словаре обновлений сайта: {list(yaml_group_updates.keys())}")
-                
                 # Записываем отсортированные по алфавиту строки учеников группы из Шага 3
-                final_rows = yaml_group_updates.get(group_time_clean, None)
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Результат поиска в словаре для '{group_time_clean}': {final_rows}")
-                
-                if final_rows is None:
-                    print(f"[ДИАГНОСТИКА ШАГА 4.3] ⚠️ ВНИМАНИЕ: Ключ не найден! Будет взят резервный список из базы расписания.")
-                    final_rows = students_data.get(target_day, {}).get(group_time_clean, [])
-                # =======================================================
-
+                final_rows = yaml_group_updates.get(group_time_clean, students_data.get(target_day, {}).get(group_time_clean, []))
                 for kid_line in final_rows:
                     clean_row = kid_line.replace('"', '').replace("'", "").strip()
                     new_lines.append(f'    - "{clean_row}"')

@@ -28,10 +28,12 @@ jobs:
           pip install pyyaml requests
 
       - name: Run Python Report Generator
-        run: python _actions/journalattendance.py
         env:
-          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python _actions/journalattendance.py
+
 
       # === ФИНАЛЬНЫЙ ШАГ: АВТО-КОММИТ И ФИКСАЦИЯ ИЗМЕНЕНИЙ БАЗЫ YAML НА GITHUB ===
       - name: Commit Base Updates and Purge Temp Files

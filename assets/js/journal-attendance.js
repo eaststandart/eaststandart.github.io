@@ -191,8 +191,15 @@ function parseSimpleYaml(text) {
       result[currentDay] = {};
     } 
     else if (indent === 2 && cleanText.endsWith(':')) {
-      // ИСПРАВЛЕНО НАМЕРТВО: заменяем дефис из опечатки в файле на эталонное двоеточие прямо при чтении в браузер!
-      currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').replace('-', ':').trim();
+      // ИСПРАВЛЕНО НАМЕРТВО: раскусываем любые опечатки времени (=, /, -, точки) прямо при чтении файла расписания!
+      let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+      let matchTime = rawTimeStr.match(/(\d{1,2})\D*(\d{2})/);
+      
+      if (matchTime) {
+        currentGroup = `${matchTime[1]}:${matchTime[2]}`;
+      } else {
+        currentGroup = rawTimeStr;
+      }
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
@@ -273,7 +280,7 @@ function selectDynamicDay(day) {
         <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
         <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
       </div>
-      <!-- ИСПРАВЛЕНО: Текст на кнопке выводит идеальное время с двоеточием, а технические ID сохранены через дефис! -->
+      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст на кнопке выводит идеальную переменную времени с двоеточием! -->
       <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${time}</button>
     </div>`;
     

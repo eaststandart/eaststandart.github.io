@@ -3,7 +3,7 @@
 """
 @module ja_tgbot_notify.py
 @about Отправка публичных анонсов для родителей
-@purpose Автоматическая рассылка уведомлений о журналах по группам и веткам Телеграм
+@purpose Уведомление родителей в группах и ветках со ссылкой на журнал посещений
 @author TechLab
 @version 1.0.0
 """
@@ -33,27 +33,16 @@ def send_public_notification(markdown_body, comment_url, public_config):
         import datetime
         formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
 
-    # 2. РАДАР ПОИСКА МЕДИА-ОБЛОЖКИ
-    media_url_match = re.search(r'https://github\.com[^\) \s\|]+', markdown_body)
-    if media_url_match:
-        raw_media_url = media_url_match.group(0).strip()
-        # ИСПРАВЛЕНО: Хирургически отрезаем хвостовой якорь решётки # для защиты от ошибки 400 Bad Request!
-        media_url = raw_media_url.split('#')[0]
-        print(f"[БОТ РОДИТЕЛЕЙ] Найдена обложка (очищена от якоря): {media_url}")
-    else:
-        media_url = comment_url.split('#')[0]
-        print("[БОТ РОДИТЕЛЕЙ] Поделок нет, обложкой назначен чистый адрес Дискуссии.")
-
-    # 3. СБОРКА КРАСИВОГО ШАБЛОНА СООБЩЕНИЯ С НЕВИДИМЫМ СИМВОЛОМ &#8203;
+    # 2. СБОРКА УПРОЩЕННОГО ШАБЛОНА (Невидимая ссылка ведет строго на коммент журнала)
     announcement_text = f"📢 Обновлён журнал посещений за {formatted_date}"
     
     message_text = (
-        f'<a href="{media_url}">&#8203;</a><b>📅 Детско-юношеский инженерный клуб</b>\n\n'
+        f'<a href="{comment_url}">&#8203;</a><b>📅 Детско-юношеский инженерный клуб</b>\n\n'
         f'{announcement_text}\n\n'
         f'👀 <a href="{comment_url}">Посмотреть журнал на GitHub Discussions</a>'
     )
 
-    # 4. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ДРЕВОВИДНОЙ СТРУКТУРЕ ЧАТОВ
+    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ГРУППАМ И ВЕТКАМ РОДИТЕЛЕЙ
     print(f"[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
     send_errors = 0
     total_broadcasts = 0
@@ -96,7 +85,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
                 with urllib.request.urlopen(req_tg) as response:
                     if response.getcode() == 200:
                         thread_log = f" (ветка #{thread_id})" if thread_id > 0 else ""
-                        print(f"[БОТ РОДИТЕЛЕЙ] 🚀 Успех: Анонс доставлен в чат {chat_id}{thread_log}!")
+                        print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в чат {chat_id}{thread_log}!")
                     else:
                         print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для чата {chat_id}")
             except Exception as e:

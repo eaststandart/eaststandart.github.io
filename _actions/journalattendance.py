@@ -265,25 +265,15 @@ def main():
             "yaml_line": final_yaml_line
         }
 
-    # === ШАГ 3: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ (ЭТАЛОННАЯ JS-ЛОГИКА) ===
-    # Собираем данные из всех прилетевших сегодня JSON файлов с сайта
+    # === ШАГ 3: ПОСЛЕДОВАТЕЛЬНАЯ ГЕНЕРАЦИЯ СВОДНОГО ОТЧЕТА ТАБЛИЦЫ ===
+    # Собираем данные из всех прилетевших сегодня JSON файлов с сайта — просто и без усложнений!
     temp_journal = {}
     todays_files = [f for f in os.listdir(data_dir) if f.startswith(f"{date_str}-") and f.endswith(".json")]
     for file in todays_files:
         with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
             file_data = json.load(f)
-            
-            # ИСПРАВЛЕНО НАМЕРТВО: выпрямляем время сайта сквозь дефисы прямо в момент чтения JSON пакета!
-            raw_site_time = str(file_data.get("time", "")).strip()
-            match_site_time = re.search(r'(\d{1,2})\D*(\d{2})', raw_site_time)
-            
-            if match_site_time:
-                normalized_site_time = f"{match_site_time.group(1)}:{match_site_time.group(2)}"
-            else:
-                normalized_site_time = raw_site_time
-                
-            # Сохраняем файл в коробку строго под эталонным ключом времени!
-            temp_journal[normalized_site_time] = file_data
+            # Сайт теперь всегда отдает нормальное время с двоеточием, берем ключ напрямую!
+            temp_journal[file_data["time"]] = file_data
 
     # Зеркально берем запланированные группы дня строго из YAML базы расписания
     schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))

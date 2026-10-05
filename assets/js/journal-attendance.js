@@ -191,7 +191,8 @@ function parseSimpleYaml(text) {
       result[currentDay] = {};
     } 
     else if (indent === 2 && cleanText.endsWith(':')) {
-      currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+      // ИСПРАВЛЕНО НАМЕРТВО: заменяем дефис из опечатки в файле на эталонное двоеточие прямо при чтении в браузер!
+      currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').replace('-', ':').trim();
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {

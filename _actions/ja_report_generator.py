@@ -355,7 +355,7 @@ def run_generator():
         res_id = response_id.json()
         discussion_id = res_id["data"]["repository"]["discussion"]["id"]
         
-        mutation_gql = "mutation($discId: ID!, $bodyText: String!) { addDiscussionComment(input: {discussionId: $discId, body: $bodyText}) { comment { id } } }"
+        mutation_gql = "mutation($discId: ID!, $bodyText: String!) { addDiscussionComment(input: {discussionId: $discId, body: $bodyText}) { comment { databaseId } } }"
         mutation_payload = {
             "query": mutation_gql,
             "variables": {
@@ -370,9 +370,9 @@ def run_generator():
             print(f"[ГЕНЕРАТОР] ❌ Ошибка мутации GraphQL: {json.dumps(res_mut['errors'])}")
             return False, None, None
             
-        # ИСПРАВЛЕНО: Безопасная сборка прямой ссылки через константу шапки!
+        # Сборка прямой ссылки на созданный комментарий
         try:
-            comment_id = res_mut["data"]["addDiscussionComment"]["comment"]["id"]
+            comment_id = res_mut["data"]["addDiscussionComment"]["comment"]["databaseId"]
             comment_url = f"{BASE_DISCUSSION_URL}/{discussion_number}#discussioncomment-{comment_id}"
             print(f"[ГЕНЕРАТОР РОБОТА] 🟢 ПРЯМАЯ ССЫЛКА НА КОММЕНТАРИЙ СФОРМИРОВАНА: {comment_url}")
         except Exception as link_err:

@@ -7,6 +7,7 @@ import re
 
 # ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ АДРЕСА API GITHUB ДЛЯ ЗАЩИТЫ ОТ УРЕЗАНИЯ ССЫЛОК В ЧАТЕ
 GRAPHQL_URL = "https://api.github.com/graphql"
+BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК СБОРКИ ОТЧЕТА ===")
@@ -248,7 +249,8 @@ def run_generator():
     # СТРАХОВКА КОМПЛЕКТНОСТИ ДНЯ: Сигнализируем главному диспетчеру о неполном комплекте!
     if len(filled_times) < len(schedule_groups):
         print(f"[ГЕНЕРАТОР] Ожидаем остальные группы. Комплект не собран ({len(filled_times)} из {len(schedule_groups)}).")
-        return False, None
+        # ИСПРАВЛЕНО: Возвращаем строго три значения для диспетчера!
+        return False, None, None
 
     print("[ГЕНЕРАТОР] Все группы дня получены! Запускаем склейку отчета...")
 
@@ -368,15 +370,14 @@ def run_generator():
             print(f"[ГЕНЕРАТОР] ❌ Ошибка мутации GraphQL: {json.dumps(res_mut['errors'])}")
             return False, None, None
             
-        # ИСПРАВЛЕНО НАЧИСТО: Достаем ID созданного комментария и склеиваем прямую ссылку на сайт!
+        # ИСПРАВЛЕНО: Безопасная сборка прямой ссылки через константу шапки!
         try:
             comment_id = res_mut["data"]["addDiscussionComment"]["comment"]["id"]
-            # Формируем пуленепробиваемый URL к конкретному комменту в Дискуссии #38
-            comment_url = f"https://github.com{discussion_number}#discussioncomment-{comment_id}"
+            comment_url = f"{BASE_DISCUSSION_URL}/{discussion_number}#discussioncomment-{comment_id}"
             print(f"[ГЕНЕРАТОР РОБОТА] 🟢 ПРЯМАЯ ССЫЛКА НА КОММЕНТАРИЙ СФОРМИРОВАНА: {comment_url}")
         except Exception as link_err:
             print(f"[ГЕНЕРАТОР] ⚠️ Предупреждение: Не удалось склеить прямую ссылку: {str(link_err)}")
-            comment_url = f"https://github.com{discussion_number}"
+            comment_url = f"{BASE_DISCUSSION_URL}/{discussion_number}"
             
         author_name = "Бота" if publish_as_bot else "Администратора"
         print(f"[УСПЕХ] Журнал опубликован в Обсуждении #{discussion_number} от лица {author_name}!")

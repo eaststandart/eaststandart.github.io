@@ -450,10 +450,10 @@ def main():
                 # ИСПРАВЛЕНО НАМЕРТВО: Очищаем края строки от технического мусора
                 raw_extracted_time = trimmed.strip().strip(':').strip('"').strip("'").strip()
                 
-                # Пропускаем через пуленепробиваемый фильтр тире, точек и слэшей
+                # Пропускаем через пуленепробиваемый фильтр тире, точек и слэшей (ИСПРАВЛЕНО: вызов match_file_time!)
                 match_file_time = re.search(r'(\d{1,2})\D*(\d{2})', raw_extracted_time)
                 if match_file_time:
-                    group_time_clean = f"{match_file_time.group(1)}:{match_time.group(2)}"
+                    group_time_clean = f"{match_file_time.group(1)}:{match_file_time.group(2)}"
                 else:
                     group_time_clean = raw_extracted_time
                     

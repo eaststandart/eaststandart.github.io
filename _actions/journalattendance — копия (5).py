@@ -447,20 +447,11 @@ def main():
                 continue
                 
             if inside_day and indent == 2 and trimmed.endswith(':'):
-                # ИСПРАВЛЕНО НАМЕРТВО: Очищаем края строки от технического мусора
-                raw_extracted_time = trimmed.strip().strip(':').strip('"').strip("'").strip()
+                # ИСПРАВЛЕНО НАЧИСТО: очищаем двоеточие и кавычки строго с краев строки, середина времени в безопасности!
+                group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
+                new_lines.append(line)
                 
-                # Пропускаем через пуленепробиваемый фильтр тире, точек и слэшей
-                match_file_time = re.search(r'(\d{1,2})\D*(\d{2})', raw_extracted_time)
-                if match_file_time:
-                    group_time_clean = f"{match_file_time.group(1)}:{match_time.group(2)}"
-                else:
-                    group_time_clean = raw_extracted_time
-                    
-                # Автоматически выпрямляем разметку в самом файле расписания в Obsidian!
-                new_lines.append(f'  "{group_time_clean}":')
-                
-                # === ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
+                # === РЕАЛЬНЫЙ ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
                 print(f"\n[ДИАГНОСТИКА ШАГА 4.3] Встречена строка группы в файле: '{trimmed}'")
                 print(f"[ДИАГНОСТИКА ШАГА 4.3] Вычислен ключ group_time_clean: '{group_time_clean}'")
                 print(f"[ДИАГНОСТИКА ШАГА 4.3] Какие ключи ЕСТЬ в словаре обновлений сайта: {list(yaml_group_updates.keys())}")

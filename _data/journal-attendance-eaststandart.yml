@@ -1,5 +1,5 @@
 config:
-  publish_as_bot: false
+  publish_as_bot: true
   show_projects_column: true
   discussion_number: 38
   project_category_name:
@@ -33,3 +33,4 @@ config:
   "11:00":
     - "Ренькевич Дима [э]"
     - "Салоха Влад [с]"
+    

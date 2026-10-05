@@ -47,8 +47,12 @@ def send_personal_report(markdown_body, comment_url, target_day, personal_ids):
                     
         elif "📅" in line_str or "Преподаватель:" in line_str or "Проверил" in line_str:
             if "Журнал посещений за" in line_str:
-                # Извлекаем дату и превращаем заголовок в кликабельную HTML ссылку на коммент!
-                date_part = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                import re
+                # Извлекаем сырую дату занятия
+                raw_date_segment = line_str.split("за")[-1].replace("г.", "").replace("###", "").strip()
+                # Удаляем из строки любые старые круглые скобки с полным днем недели (например "(воскресенье)")
+                date_part = re.sub(r'\(.*?\)', '', raw_date_segment).strip()
+                # Собираем идеальный чистый заголовок-ссылку
                 clean_lines.append(f'📅 <a href="{comment_url}">Отчет за {date_part} ({day_suffix})</a>')
             elif "Преподаватель:" in line_str or "Проверил" in line_str:
                 raw_name = line_str.split(":")[-1].replace("*", "").strip()

@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+@module journalattendance.py
+@about 
+@purpose 
+@author TechLab
+@version 1.0.0
+"""
+
 import os
 import sys
 import yaml
@@ -15,24 +25,23 @@ def main():
     try:
         import ja_report_generator
         
-        # Принимаем строго ЧЕТЫРЕ параметра от генератора (успех, отчет, ссылка, день недели)
+        # Принимаем четыре параметра от генератора (успех, отчет, ссылка, день недели)
         success, markdown_body, comment_url, target_day = ja_report_generator.run_generator()
         
         if not success:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🛑 Формирующий блок вернул False. Мягко завершаем конвейер.")
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🛑 Формирующий block вернул False. Мягко завершаем конвейер.")
             return
             
         print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🟢 УСПЕХ! Данные получены от генератора отчетов.")
-        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Живой лог ссылки: '{comment_url}'")
-        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] День недели для урезания: '{target_day}'")
+        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Ссылка для рассылки: '{comment_url}'")
+        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] День недели: '{target_day}'")
 
-        # Читаем список персональных ID из сохраненного YAML расписания преподавателя
+        # Читаем конфигурацию чатов из YAML расписания преподавателя
         data_dir = os.path.join(os.getcwd(), '_data')
-        
-        # Ищем личный YAML-файл в папке данных (так как имя динамическое, берем первый попавшийся yml журнала)
         yaml_files = [f for f in os.listdir(data_dir) if f.startswith('journal-attendance-') and f.endswith('.yml')]
+        
         if not yaml_files:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Ошибка: Личный файл расписания YAML не найден в паблике _data для чтения ID!")
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Ошибка: Личный файл расписания YAML не найден для чтения настроек!")
             return
             
         yaml_path = os.path.join(data_dir, yaml_files[0])
@@ -40,24 +49,26 @@ def main():
             yaml_data = yaml.safe_load(f) or {}
             
         config_data = yaml_data.get('config', {})
-        # Извлекаем список ID. Если поля нет, подставляем пустой список во избежание сбоев
+        
+        # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ПРЕПОДАВАТЕЛЮ ---
         personal_ids = config_data.get('tg_personal_id', [])
-        
-        if not personal_ids:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ⚠️ Предупреждение: Список tg_personal_id пуст или отсутствует в YAML. Бота не запускаем.")
-            return
+        if personal_ids:
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal...")
+            import ja_tgbot_personal
+            ja_tgbot_personal.send_personal_report(markdown_body, comment_url, target_day, personal_ids)
+        else:
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_personal_id пустое, пропуск личного информирования.")
 
-        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Успешно считано получателей из YAML: {personal_ids}")
-        
-        # ПОДКЛЮЧАЕМ ШАГ 2: Вызов персонального информера ja_tgbot_personal
-        print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal...")
-        import ja_tgbot_personal
-        
-        # Передаем в руки боту все четыре накопленных в памяти параметра
-        ja_tgbot_personal.send_personal_report(markdown_body, comment_url, target_day, personal_ids)
-        
-        # Сюда мы на следующем этапе подключим общий информер в группу родителей (ja_tgbot_notify)
-        print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Конвейер успешно приостановлен. Ожидаем подключение Блока Родителей...")
+        # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В ГРУППЫ РОДИТЕЛЕЙ ---
+        public_config = config_data.get('tg_public_notify', [])
+        if public_config:
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify...")
+            import ja_tgbot_notify
+            ja_tgbot_notify.send_public_notification(markdown_body, comment_url, public_config)
+        else:
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое, пропуск родительских анонсов.")
+            
+        print("=== [ГЛАВНЫЙ ДИСПЕТЧЕР] ВСЕ ЭТАПЫ КОНВЕЙЕРА УСПЕШНО ЗАВЕРШЕНЫ В 1 ШАГ! ===")
         
     except Exception as err:
         print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Критическая ошибка конвейера: {str(err)}")

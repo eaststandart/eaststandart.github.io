@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+@module ja_tgbot_personal.py
+@about 
+@purpose 
+@author TechLab
+@version 1.0.0
+"""
+
 import os
 import json
 import sys

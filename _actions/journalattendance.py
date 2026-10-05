@@ -41,40 +41,46 @@ def main():
         return
 
     with open(yaml_path, 'r', encoding='utf-8') as f:
-        # PyYAML автоматически превращает весь YAML в удобный словарь Python!
+        yaml_text_orig = f.read()
+        f.seek(0)
         yaml_data = yaml.safe_load(f) or {}
 
-    # === ВХОДНОЙ ЩИТ БЕЗОПАСНОСТИ: НОРМАЛИЗАЦИЯ И ИСПРАВЛЕНИЕ ЛЮБЫХ ОПЕЧАТОК ВРЕМЕНИ ===
+    # === ЖЕСТКИЙ ВХОДНОЙ ЩИТ: АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ В ФАЙЛЕ НА СТАРТЕ ===
     import re
     students_data = {}
-    
+    file_needs_repair = False
+    updated_yaml_text = yaml_text_orig
+
     for key, value in yaml_data.items():
         if key == 'config':
             continue
-            
-        # key — это день недели (например, 'воскресенье'). Создаем для него пустой словарь
         day_name = str(key).lower().strip()
         students_data[day_name] = {}
         
-        # Если внутри дня есть группы, нормализуем их ключи времени
         if isinstance(value, dict):
             for raw_time, kids_list in value.items():
                 clean_time_str = str(raw_time).strip()
-                
-                # Маска re.search вытаскивает 1-2 цифры часа и строго 2 цифры минут сквозь любой мусор и тире!
                 match_time = re.search(r'(\d{1,2})\D*(\d{2})', clean_time_str)
                 if match_time:
-                    # Склеиваем часы и минуты строго через эталонное двоеточие
                     normalized_time = f"{match_time.group(1)}:{match_time.group(2)}"
                     students_data[day_name][normalized_time] = kids_list if isinstance(kids_list, list) else []
-                    print(f"[ВХОДНОЙ ЩИТ ШАГА 0] Время '{clean_time_str}' успешно нормализовано к эталону: '{normalized_time}'")
+                    
+                    # Если в файле время написано с ошибкой (не совпадает с ЧЧ:ММ), фиксируем факт ремонта
+                    if clean_time_str != normalized_time:
+                        print(f"[РЕДАКТОР ШАГА 0] Найдена опечатка '{clean_time_str}'. Заменяем в файле на '{normalized_time}'")
+                        updated_yaml_text = updated_yaml_text.replace(f"'{clean_time_str}':", f'"{normalized_time}":')
+                        updated_yaml_text = updated_yaml_text.replace(f'"{clean_time_str}":', f'"{normalized_time}":')
+                        updated_yaml_text = updated_yaml_text.replace(f"{clean_time_str}:", f'"{normalized_time}":')
+                        file_needs_repair = True
                 else:
-                    # Если цифры вообще не найдены, сохраняем как есть (страховка)
                     students_data[day_name][clean_time_str] = kids_list if isinstance(kids_list, list) else []
-        else:
-            students_data[day_name] = value
 
-    # Вытаскиваем блок config с дефолтными значениями-страховками
+    # Если нашли хоть одну опечатку во времени — ТУТ ЖЕ принудительно сохраняем исправленный файл на диск!
+    if file_needs_repair:
+        with open(yaml_path, 'w', encoding='utf-8') as f:
+            f.write(updated_yaml_text)
+        print("[РЕДАКТОР ШАГА 0] Файл расписания успешно вылечен на самом старте конвейера!")
+
     config_data = yaml_data.get('config', {})
     
     publish_as_bot = config_data.get('publish_as_bot', False)
@@ -447,33 +453,15 @@ def main():
                 continue
                 
             if inside_day and indent == 2 and trimmed.endswith(':'):
-                # ИСПРАВЛЕНО НАМЕРТВО: Очищаем края строки от технического мусора
-                raw_extracted_time = trimmed.strip().strip(':').strip('"').strip("'").strip()
+                # Чистый Python-формат: просто снимаем кавычки и пробелы с краев, время уже идеально!
+                group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
+                new_lines.append(line)
                 
-                # Пропускаем через пуленепробиваемый фильтр тире, точек и слэшей (ИСПРАВЛЕНО: вызов match_file_time!)
-                match_file_time = re.search(r'(\d{1,2})\D*(\d{2})', raw_extracted_time)
-                if match_file_time:
-                    group_time_clean = f"{match_file_time.group(1)}:{match_file_time.group(2)}"
-                else:
-                    group_time_clean = raw_extracted_time
-                    
-                # Автоматически выпрямляем разметку в самом файле расписания в Obsidian!
-                new_lines.append(f'  "{group_time_clean}":')
-                
-                # === ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
-                print(f"\n[ДИАГНОСТИКА ШАГА 4.3] Встречена строка группы в файле: '{trimmed}'")
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Вычислен ключ group_time_clean: '{group_time_clean}'")
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Какие ключи ЕСТЬ в словаре обновлений сайта: {list(yaml_group_updates.keys())}")
-                
-                # Записываем отсортированные по алфавиту строки учеников группы из Шага 3
-                final_rows = yaml_group_updates.get(group_time_clean, None)
-                print(f"[ДИАГНОСТИКА ШАГА 4.3] Результат поиска в словаре для '{group_time_clean}': {final_rows}")
-                
-                if final_rows is None:
-                    print(f"[ДИАГНОСТИКА ШАГА 4.3] ⚠️ ВНИМАНИЕ: Ключ не найден! Будет взят резервный список из базы расписания.")
-                    final_rows = students_data.get(target_day, {}).get(group_time_clean, [])
-                # =======================================================
+                # === КРИСТАЛЬНО ЧИСТЫЙ ЛОГ ОБНОВЛЕНИЯ ГРУППЫ ===
+                print(f"[ОБНОВЛЕНИЕ БАЗЫ] Группа {group_time_clean}: дописываем новеньких и сортируем состав...")
+                final_rows = yaml_group_updates.get(group_time_clean, students_data.get(target_day, {}).get(group_time_clean, []))
 
+                # ИСПРАВЛЕНО: Отступы цикла выровнены строго по стандарту Python!
                 for kid_line in final_rows:
                     clean_row = kid_line.replace('"', '').replace("'", "").strip()
                     new_lines.append(f'    - "{clean_row}"')

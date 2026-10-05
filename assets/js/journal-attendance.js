@@ -191,11 +191,11 @@ function parseSimpleYaml(text) {
       result[currentDay] = {};
     } 
     else if (indent === 2 && cleanText.endsWith(':')) {
-      // ИСПРАВЛЕНО НАМЕРТВО: раскусываем любые опечатки времени (=, /, -, точки) прямо при чтении файла расписания!
+      // ИСПРАВЛЕНО НАЧИСТО: возвращены правильные индексы массива matchTime для JavaScript!
       let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
       let matchTime = rawTimeStr.match(/(\d{1,2})\D*(\d{2})/);
       
-      if (matchTime) {
+      if (matchTime && matchTime[1] && matchTime[2]) {
         currentGroup = `${matchTime[1]}:${matchTime[2]}`;
       } else {
         currentGroup = rawTimeStr;
@@ -271,6 +271,10 @@ function selectDynamicDay(day) {
         </div>`;
     });
 
+    // Локальный фильтр всеядности времени для вывода идеального текста на саму кнопку занятия
+    let matchBtnTime = time.match(/(\d{1,2})\D*(\d{2})/);
+    let cleanBtnTextTime = (matchBtnTime && matchBtnTime[1] && matchBtnTime[2]) ? `${matchBtnTime[1]}:${matchBtnTime[2]}` : time;
+
     // Текстовые блоки разметки переведены на чистые классы отступов и цветов
     groupHtml += `
       <div class="margin-top-15">
@@ -280,10 +284,10 @@ function selectDynamicDay(day) {
         <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
         <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
       </div>
-      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст на кнопке выводит идеальную переменную времени с двоеточием! -->
-      <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${time}</button>
+      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст кнопки полностью защищен от знаков равенства, дефисов и слэшей! -->
+      <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${cleanBtnTextTime}</button>
     </div>`;
-    
+  
     container.innerHTML += groupHtml;
   });
 }

@@ -236,7 +236,7 @@ def main():
                 # Сортируем от свежих к старым
                 matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
                 # Исправлено: убран бэктик в конце скобки и добавлен индекс [0]
-                project_link = f"[🔍 Поделка]({matches[0]['url']})"
+                project_link = f"🗂️ [Проект]({matches[0]['url']})"
                 
                 # Ищем, к какому топику и категории принадлежал этот коммент
                 parent_cat = "Неизвестная категория"

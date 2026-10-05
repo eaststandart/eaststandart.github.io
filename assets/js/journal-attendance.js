@@ -273,6 +273,7 @@ function selectDynamicDay(day) {
         <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
         <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
       </div>
+      <!-- ИСПРАВЛЕНО: Текст на кнопке выводит идеальное время с двоеточием, а технические ID сохранены через дефис! -->
       <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${time}</button>
     </div>`;
     

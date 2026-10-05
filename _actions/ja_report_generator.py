@@ -6,7 +6,7 @@ import requests
 import re
 
 # ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ АДРЕСА API GITHUB ДЛЯ ЗАЩИТЫ ОТ УРЕЗАНИЯ ССЫЛОК В ЧАТЕ
-GRAPHQL_URL = "https://github.com"
+GRAPHQL_URL = "https://api.github.com/graphql"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК СБОРКИ ОТЧЕТА ===")

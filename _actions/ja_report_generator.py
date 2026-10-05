@@ -366,7 +366,17 @@ def run_generator():
        
         if "errors" in res_mut:
             print(f"[ГЕНЕРАТОР] ❌ Ошибка мутации GraphQL: {json.dumps(res_mut['errors'])}")
-            return False, None
+            return False, None, None
+            
+        # ИСПРАВЛЕНО НАЧИСТО: Достаем ID созданного комментария и склеиваем прямую ссылку на сайт!
+        try:
+            comment_id = res_mut["data"]["addDiscussionComment"]["comment"]["id"]
+            # Формируем пуленепробиваемый URL к конкретному комменту в Дискуссии #38
+            comment_url = f"https://github.com{discussion_number}#discussioncomment-{comment_id}"
+            print(f"[ГЕНЕРАТОР РОБОТА] 🟢 ПРЯМАЯ ССЫЛКА НА КОММЕНТАРИЙ СФОРМИРОВАНА: {comment_url}")
+        except Exception as link_err:
+            print(f"[ГЕНЕРАТОР] ⚠️ Предупреждение: Не удалось склеить прямую ссылку: {str(link_err)}")
+            comment_url = f"https://github.com{discussion_number}"
             
         author_name = "Бота" if publish_as_bot else "Администратора"
         print(f"[УСПЕХ] Журнал опубликован в Обсуждении #{discussion_number} от лица {author_name}!")
@@ -422,9 +432,10 @@ def run_generator():
             os.remove(os.path.join(data_dir, file))
         print(f"[ЗАЧИСТКА] Временные JSON файлы ({len(todays_files)} шт.) успешно удалены!")
 
-        # ТРИУМФАЛЬНЫЙ СИГНАЛ НАВЕРХ ДИСПЕТЧЕРУ: ВСЁ ПРОШЛО УСПЕШНО!
-        return True, markdown_body
+        # СИГНАЛ НАВЕРХ ДИСПЕТЧЕРУ: Возвращаем статус, текст отчета и прямую ссылку!
+        return True, markdown_body, comment_url
 
     except Exception as err:
         print(f"[ГЕНЕРАТОР] ❌ Ошибка в финальной публикации или зачистке: {str(err)}")
-        return False, None
+        return False, None, None
+

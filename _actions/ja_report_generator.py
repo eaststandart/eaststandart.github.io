@@ -373,7 +373,7 @@ def run_generator():
         # Сборка прямой ссылки на созданный комментарий
         try:
             comment_id = res_mut["data"]["addDiscussionComment"]["comment"]["databaseId"]
-            comment_url = f"{BASE_DISCUSSION_URL}/{discussion_number}#discussioncomment-{comment_id}"
+            comment_url = f"{BASE_DISCUSSION_URL}/{discussion_number}?sort=new#discussioncomment-{comment_id}"
             print(f"[ГЕНЕРАТОР РОБОТА] 🟢 ПРЯМАЯ ССЫЛКА НА КОММЕНТАРИЙ СФОРМИРОВАНА: {comment_url}")
         except Exception as link_err:
             print(f"[ГЕНЕРАТОР] ⚠️ Предупреждение: Не удалось склеить прямую ссылку: {str(link_err)}")
@@ -433,10 +433,9 @@ def run_generator():
             os.remove(os.path.join(data_dir, file))
         print(f"[ЗАЧИСТКА] Временные JSON файлы ({len(todays_files)} шт.) успешно удалены!")
 
-        # СИГНАЛ НАВЕРХ ДИСПЕТЧЕРУ: Возвращаем статус, текст отчета и прямую ссылку!
-        return True, markdown_body, comment_url
+        # СИГНАЛ НАВЕРХ ДИСПЕТЧЕРУ: Возвращаем статус, текст отчета, ссылку и день недели!
+        return True, markdown_body, comment_url, target_day
 
     except Exception as err:
         print(f"[ГЕНЕРАТОР] ❌ Ошибка в финальной публикации или зачистке: {str(err)}")
-        return False, None, None
-
+        return False, None, None, None

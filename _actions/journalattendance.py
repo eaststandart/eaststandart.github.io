@@ -446,11 +446,12 @@ def main():
                 i += 1
                 continue
                 
-            if inside_day and indent == 2 and ':' in trimmed:
-                group_time_clean = trimmed.strip().replace(':', '')
+            if inside_day and indent == 2 and trimmed.endswith(':'):
+                # ИСПРАВЛЕНО НАЧИСТО: очищаем двоеточие и кавычки строго с краев строки, середина времени в безопасности!
+                group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
                 new_lines.append(line)
                 
-                # === ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
+                # === РЕАЛЬНЫЙ ДИАГНОСТИЧЕСКИЙ ЛОГ ДЛЯ ПРОВЕРКИ КАВЫЧЕК ===
                 print(f"\n[ДИАГНОСТИКА ШАГА 4.3] Встречена строка группы в файле: '{trimmed}'")
                 print(f"[ДИАГНОСТИКА ШАГА 4.3] Вычислен ключ group_time_clean: '{group_time_clean}'")
                 print(f"[ДИАГНОСТИКА ШАГА 4.3] Какие ключи ЕСТЬ в словаре обновлений сайта: {list(yaml_group_updates.keys())}")

@@ -44,35 +44,8 @@ def main():
         # PyYAML автоматически превращает весь YAML в удобный словарь Python!
         yaml_data = yaml.safe_load(f) or {}
 
-    # === ВХОДНОЙ ЩИТ БЕЗОПАСНОСТИ: НОРМАЛИЗАЦИЯ И ИСПРАВЛЕНИЕ ЛЮБЫХ ОПЕЧАТОК ВРЕМЕНИ ===
-    import re
-    students_data = {}
-    
-    for key, value in yaml_data.items():
-        if key == 'config':
-            continue
-            
-        # key — это день недели (например, 'воскресенье'). Создаем для него пустой словарь
-        day_name = str(key).lower().strip()
-        students_data[day_name] = {}
-        
-        # Если внутри дня есть группы, нормализуем их ключи времени
-        if isinstance(value, dict):
-            for raw_time, kids_list in value.items():
-                clean_time_str = str(raw_time).strip()
-                
-                # Маска re.search вытаскивает 1-2 цифры часа и строго 2 цифры минут сквозь любой мусор и тире!
-                match_time = re.search(r'(\d{1,2})\D*(\d{2})', clean_time_str)
-                if match_time:
-                    # Склеиваем часы и минуты строго через эталонное двоеточие
-                    normalized_time = f"{match_time.group(1)}:{match_time.group(2)}"
-                    students_data[day_name][normalized_time] = kids_list if isinstance(kids_list, list) else []
-                    print(f"[ВХОДНОЙ ЩИТ ШАГА 0] Время '{clean_time_str}' успешно нормализовано к эталону: '{normalized_time}'")
-                else:
-                    # Если цифры вообще не найдены, сохраняем как есть (страховка)
-                    students_data[day_name][clean_time_str] = kids_list if isinstance(kids_list, list) else []
-        else:
-            students_data[day_name] = value
+    # ИСПРАВЛЕНО: Создаем чистую переменную расписания студентов, убирая из нее технический блок config
+    students_data = {k: v for k, v in yaml_data.items() if k != 'config'}
 
     # Вытаскиваем блок config с дефолтными значениями-страховками
     config_data = yaml_data.get('config', {})

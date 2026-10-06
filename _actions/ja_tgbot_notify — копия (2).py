@@ -14,7 +14,7 @@ import sys
 import re
 import urllib.request
 
-# Константа адреса Telegram API
+# Фиксируем базовый адрес Telegram API константой в шапке модуля
 TELEGRAM_API_URL = "https://api.telegram.org"
 
 def send_public_notification(markdown_body, comment_url, public_config):
@@ -25,7 +25,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
         print("[БОТ РОДИТЕЛЕЙ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден!")
         return False
 
-    # 1. Перехват даты занятия из заголовка Markdown
+    # 1. АВТО-ПЕРЕХВАТ ДАТЫ ЗАНЯТИЯ ИЗ МАРКДАУНА
     date_match = re.search(r'Журнал посещений за ([\d.]+ г\.)', markdown_body)
     if date_match:
         formatted_date = date_match.group(1).strip()
@@ -33,7 +33,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
         import datetime
         formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
 
-    # 2. Сборка текста сообщения с невидимым символом ссылки
+    # 2. СБОРКА ШАБЛОНА СООБЩЕНИЯ (Невидимая ссылка ведет строго на коммент журнала)
     announcement_text = f"📢 Обновлён журнал посещений за {formatted_date}"
     
     message_text = (
@@ -42,22 +42,17 @@ def send_public_notification(markdown_body, comment_url, public_config):
         f'👀 <a href="{comment_url}">Посмотреть на GitHub Discussions</a>'
     )
 
-    # 3. Цикл рассылки по конфигурации групп и веток
-    print("[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
+    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ГРУППАМ И ВЕТКАМ РОДИТЕЛЕЙ
+    print(f"[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
     send_errors = 0
     total_broadcasts = 0
-    successful_broadcasts = 0
 
     for group in public_config:
         chat_id = str(group.get("chat_id", "")).strip()
         thread_ids = group.get("message_thread_id", [])
         
-        if not chat_id:
-            continue
-            
-        # Информирование о пропуске, если список веток пуст или закомментирован
-        if not thread_ids:
-            print(f"[БОТ РОДИТЕЛЕЙ] Пропуск чата {chat_id}: нет веток для отправки.")
+        # ИСПРАВЛЕНО: Если список веток пуст или закомментирован — полностью пропускаем чат! Нет веток — нет отправки!
+        if not chat_id or not thread_ids:
             continue
             
         if isinstance(thread_ids, (int, str)):
@@ -67,10 +62,10 @@ def send_public_notification(markdown_body, comment_url, public_config):
             raw_thread_str = str(thread).strip().lower()
             total_broadcasts += 1
             
-            # Распознавание флага основной ветки
+            # Флаг-детектор основной ветки (General)
             is_general_topic = 'g' in raw_thread_str
             
-            # Извлечение цифрового ID ветки
+            # Очищаем строку от букв, оставляя цифры ID ветки
             clean_thread_digits = re.sub(r'[^\d]', '', raw_thread_str)
             thread_id = int(clean_thread_digits) if clean_thread_digits else 0
             
@@ -86,7 +81,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
                 }
             }
             
-            # Исключение message_thread_id при наличии флага 'g'
+            # Если есть флаг 'g' (основная ветка) — параметр message_thread_id полностью исключается из запроса!
             if thread_id > 0 and not is_general_topic:
                 payload["message_thread_id"] = thread_id
                 print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычную ветку #{thread_id}")
@@ -107,7 +102,6 @@ def send_public_notification(markdown_body, comment_url, public_config):
                     if response.getcode() == 200:
                         thread_log = f" (основная ветка)" if is_general_topic else f" (ветка #{thread_id})"
                         print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в чат {chat_id}{thread_log}!")
-                        successful_broadcasts += 1
                     else:
                         print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для чата {chat_id}")
             except Exception as e:
@@ -115,12 +109,8 @@ def send_public_notification(markdown_body, comment_url, public_config):
                 print(f"[БОТ РОДИТЕЛЕЙ] ❌ Ошибка сети в чате {chat_id}{thread_log}: {str(e)}")
                 send_errors += 1
 
-    # Финальный статус возврата на основе реальных фактов отправки
-    if total_broadcasts == 0:
-        # Если все ветки были закомментированы, это не ошибка
-        return True
-    elif successful_broadcasts > 0:
+    if total_broadcasts > 0 and send_errors < total_broadcasts:
         return True
     else:
-        print("[БОТ РОДИТЕЛЕЙ] ❌ Ни одно родительское уведомление не удалось доставить из-за ошибок сети.")
+        print("[БОТ РОДИТЕЛЕЙ] ❌ Ни одно родительское уведомление не удалось доставить.")
         return False

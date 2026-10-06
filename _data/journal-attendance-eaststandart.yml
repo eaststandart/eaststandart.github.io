@@ -20,7 +20,8 @@ config:
   tg_public_notify:
     - chat_id: -1002555901754 # ЧАТ №1 (@RadiotekhnikaClub)
       message_thread_id:    # Флаг 'g' указывает, что это главная ветка (General) чата!
-        - 45               # Общие вопросы
+        - 38g               # Общие вопросы
+        - 45
 
 суббота:
   "10:00":

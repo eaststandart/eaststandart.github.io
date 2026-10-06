@@ -28,17 +28,15 @@ def run_generator():
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
         return False, None
 
-    # 1. Ищем временные файлы журналов групп за сегодняшний день строго для текущего учителя
+    # 1. Ищем абсолютно все временные файлы журналов групп, которые есть в папке
     all_files = os.listdir(data_dir)
-    trigger_author = os.environ.get("GITHUB_ACTOR", "").strip().lower()
-    
-    group_files = [f for f in all_files if f'-journal-attendance-{trigger_author}.json' in f.lower()]
+    group_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
     
     if not group_files:
-        print(f"[ГЕНЕРАТОР] Временные файлы журналов групп для преподавателя '{trigger_author}' не найдены.")
+        print("[ГЕНЕРАТОР] Временные файлы журналов групп не найдены.")
         return False, None, None, None
 
-    # Читаем первый попавшийся JSON-файл с сайта, чтобы определить параметры дня
+    # Читаем самый первый JSON-файл из папки, чтобы узнать, кто именно отправил данные
     sample_path = os.path.join(data_dir, group_files[0])
     with open(sample_path, 'r', encoding='utf-8') as f:
         sample_data = json.load(f)
@@ -46,9 +44,10 @@ def run_generator():
     target_day = sample_data.get('day', '').lower().strip()
     date_str = sample_data.get('date', '')
     teacher_username = sample_data.get('teacher_username', 'Преподаватель')
-    teacher_login = sample_data.get('teacher_login', '')
+    teacher_login = sample_data.get('teacher_login', '').strip()
 
-    print(f"[ГЕНЕРАТОР] Обнаружена дата занятия: {date_str} ({target_day})")
+    print(f"[ГЕНЕРАТОР] Обнаружены данные от преподавателя: {teacher_username} ({teacher_login})")
+    print(f"[ГЕНЕРАТОР] Дата занятия: {date_str} ({target_day})")
 
     # 2. Считываем настройки из личного YAML-файла расписания учителя
     yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")

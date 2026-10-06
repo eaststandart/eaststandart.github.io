@@ -3,7 +3,7 @@
 """
 @module ja_tgbot_notify.py
 @about Отправка публичных анонсов для родителей
-@purpose Рассылка уведомлений по группам и веткам Телеграм со ссылкой на журнал посещений
+@purpose Рассылка уведомлений по каналам и чатам Телеграм со ссылкой на журнал посещений
 @author TechLab
 @version 1.0.0
 """
@@ -15,7 +15,7 @@ import re
 import urllib.request
 
 # Константа адреса Telegram API
-TELEGRAM_API_URL = "https://api.telegram.org"
+TELEGRAM_API_URL = "https://telegram.org"
 
 def send_public_notification(markdown_body, comment_url, public_config):
     print("\n=== [МОДУЛЬ JA_TGBOT_NOTIFY] ЗАПУСК РОДИТЕЛЬСКОГО ИНФОРМАТОРА ===")
@@ -42,42 +42,43 @@ def send_public_notification(markdown_body, comment_url, public_config):
         f'👀 <a href="{comment_url}">Посмотреть на GitHub Discussions</a>'
     )
 
-    # 3. Цикл рассылки по конфигурации групп и веток
-    print("[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
+    # 3. Цикл рассылки по конфигурации каналов и чатов (веток)
+    print("[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка каналов...")
     send_errors = 0
     total_broadcasts = 0
     successful_broadcasts = 0
 
     for group in public_config:
-        chat_id = str(group.get("chat_id", "")).strip()
-        thread_ids = group.get("message_thread_id", [])
+        channel_id = str(group.get("channel_id", "")).strip()
+        chat_ids = group.get("chat_id", [])
         
-        if not chat_id:
+        if not channel_id:
             continue
             
-        # Информирование о пропуске, если список веток пуст или закомментирован
-        if not thread_ids:
-            print(f"[БОТ РОДИТЕЛЕЙ] Пропуск чата {chat_id}: нет веток для отправки.")
+        # Информирование о пропуске, если список чатов (веток) пуст или закомментирован
+        if not chat_ids:
+            print(f"[БОТ РОДИТЕЛЕЙ] Пропуск канала {channel_id}: нет чатов для отправки.")
             continue
             
-        if isinstance(thread_ids, (int, str)):
-            thread_ids = [thread_ids]
+        if isinstance(chat_ids, (int, str)):
+            chat_ids = [chat_ids]
 
-        for thread in thread_ids:
-            raw_thread_str = str(thread).strip().lower()
+        for chat in chat_ids:
+            raw_chat_str = str(chat).strip().lower()
             total_broadcasts += 1
             
-            # Распознавание флага основной ветки
-            is_general_topic = 'g' in raw_thread_str
+            # Распознавание флага основной ветки (General)
+            is_general_topic = 'g' in raw_chat_str
             
-            # Извлечение цифрового ID ветки
-            clean_thread_digits = re.sub(r'[^\d]', '', raw_thread_str)
-            thread_id = int(clean_thread_digits) if clean_thread_digits else 0
+            # Извлечение цифрового ID чата (ветки)
+            clean_chat_digits = re.sub(r'[^\d]', '', raw_chat_str)
+            chat_id = int(clean_chat_digits) if clean_chat_digits else 0
             
             url_tg = f"{TELEGRAM_API_URL}/bot{token}/sendMessage"
             
+            # Сборка пакета с новыми именами переменных
             payload = {
-                "chat_id": chat_id,
+                "chat_id": channel_id,
                 "text": message_text,
                 "parse_mode": "HTML",
                 "link_preview_options": {
@@ -87,14 +88,14 @@ def send_public_notification(markdown_body, comment_url, public_config):
             }
             
             # Исключение message_thread_id при наличии флага 'g'
-            if thread_id > 0 and not is_general_topic:
-                payload["message_thread_id"] = thread_id
-                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычную ветку #{thread_id}")
+            if chat_id > 0 and not is_general_topic:
+                payload["message_thread_id"] = chat_id
+                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычный чат #{chat_id}")
             elif is_general_topic:
-                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг основной ветки ({raw_thread_str}). Идентификатор ветки исключен из запроса.")
-            elif thread_id == 0 and not is_general_topic:
+                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг основной ветки ({raw_chat_str}). Идентификатор чата исключен из запроса.")
+            elif chat_id == 0 and not is_general_topic:
                 payload["message_thread_id"] = 0
-                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в ветку №0")
+                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в чат №0")
 
             req_tg = urllib.request.Request(
                 url_tg, 
@@ -105,19 +106,17 @@ def send_public_notification(markdown_body, comment_url, public_config):
             try:
                 with urllib.request.urlopen(req_tg) as response:
                     if response.getcode() == 200:
-                        thread_log = f" (основная ветка)" if is_general_topic else f" (ветка #{thread_id})"
-                        print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в чат {chat_id}{thread_log}!")
+                        thread_log = f" (основная ветка)" if is_general_topic else f" (чат #{chat_id})"
+                        print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в канал {channel_id}{thread_log}!")
                         successful_broadcasts += 1
                     else:
-                        print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для чата {chat_id}")
+                        print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для канала {channel_id}")
             except Exception as e:
-                thread_log = f" (ветка #{thread_id})" if thread_id > 0 else ""
-                print(f"[БОТ РОДИТЕЛЕЙ] ❌ Ошибка сети в чате {chat_id}{thread_log}: {str(e)}")
+                thread_log = f" (чат #{chat_id})" if chat_id > 0 else ""
+                print(f"[БОТ РОДИТЕЛЕЙ] ❌ Ошибка сети в канале {channel_id}{thread_log}: {str(e)}")
                 send_errors += 1
 
-    # Финальный статус возврата на основе реальных фактов отправки
     if total_broadcasts == 0:
-        # Если все ветки были закомментированы, это не ошибка
         return True
     elif successful_broadcasts > 0:
         return True

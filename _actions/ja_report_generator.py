@@ -15,42 +15,70 @@ import yaml
 import requests
 import re
 
-# ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ АДРЕСА API GITHUB ДЛЯ ЗАЩИТЫ ОТ УРЕЗАНИЯ ССЫЛОК В ЧАТЕ
+# ГЛОБАЛЬНЫЕ НАСТРОЙКИ API GITHUB И РЕПОЗИТОРИЕВ
 GRAPHQL_URL = "https://api.github.com/graphql"
 BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
+
+# Изолированный репозиторий баз данных преподавателей
+DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
+# Базовый служебный API-путь для управления файлами базы данных
+BASE_API_CONTENTS_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+
 def run_generator():
-    print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК СБОРКИ ОТЧЕТА ===")
+    print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
     data_dir = os.path.join(os.getcwd(), '_data')
     if not os.path.exists(data_dir):
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
-        return False, None
-
-    # 1. Ищем абсолютно все временные файлы журналов групп, которые есть в папке
-    all_files = os.listdir(data_dir)
-    group_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
-    
-    if not group_files:
-        print("[ГЕНЕРАТОР] Временные файлы журналов групп не найдены.")
         return False, None, None, None
 
-    # Читаем самый первый JSON-файл из папки, чтобы узнать, кто именно отправил данные
-    sample_path = os.path.join(data_dir, group_files[0])
-    with open(sample_path, 'r', encoding='utf-8') as f:
-        sample_data = json.load(f)
+    # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
+    all_files = os.listdir(data_dir)
+    active_teachers = []
+    for f in all_files:
+        if f.startswith('journal-attendance-') and f.endswith('.yml'):
+            login = f.replace('journal-attendance-', '').replace('.yml', '').strip().lower()
+            if login:
+                active_teachers.append(login)
+
+    print(f"[ГЕНЕРАТОР] Список активных преподавателей из базы YML: {active_teachers}")
+
+    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ОТ ВСЕХ УЧИТЕЛЕЙ
+    all_json_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
+    if not all_json_files:
+        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
+        return False, None, None, None
+
+    # НАСТРОЙКА ПЕРЕМЕННЫХ ДЛЯ ОТВЕТА ДИСПЕТЧЕРУ (ПО ПОСЛЕДНЕМУ УСПЕШНОМУ ПРОГОНУ)
+    last_success = False
+    last_markdown = None
+    last_url = None
+    last_day = None
+
+    # ЗАПУСКАЕМ ИЗОЛИРОВАННЫЙ ЦИКЛ ПО КАЖДОМУ ПРЕПОДАВАТЕЛЮ
+    for current_teacher in active_teachers:
+        # Отбираем JSON-файлы строго текущего преподавателя из списка всех файлов
+        teacher_json_files = [f for f in all_json_files if f.lower().endswith(f"-journal-attendance-{current_teacher}.json")]
         
-    target_day = sample_data.get('day', '').lower().strip()
-    date_str = sample_data.get('date', '')
-    teacher_username = sample_data.get('teacher_username', 'Преподаватель')
-    teacher_login = sample_data.get('teacher_login', '').strip()
+        if not teacher_json_files:
+            continue
+            
+        print(f"\n👉 [ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
-    print(f"[ГЕНЕРАТОР] Обнаружены данные от преподавателя: {teacher_username} ({teacher_login})")
-    print(f"[ГЕНЕРАТОР] Дата занятия: {date_str} ({target_day})")
+        # Читаем первый файл этой пачки, чтобы узнать параметры текущего дня занятия
+        sample_path = os.path.join(data_dir, teacher_json_files[0])
+        with open(sample_path, 'r', encoding='utf-8') as f:
+            sample_data = json.load(f)
+            
+        target_day = sample_data.get('day', '').lower().strip()
+        date_str = sample_data.get('date', '')
+        teacher_username = sample_data.get('teacher_username', 'Преподаватель')
+        teacher_login = current_teacher  # Жестко фиксируем логин из нашего цикла
 
-    # 2. Считываем настройки из личного YAML-файла расписания учителя
-    yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")
+        # Формируем путь к личному расписанию преподавателя
+        yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")
     if not os.path.exists(yaml_path):
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Личный файл расписания не найден: {yaml_path}")
         return False, None
@@ -253,18 +281,17 @@ def run_generator():
             temp_journal[file_data["time"]] = file_data
 
     schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
-    print(f"[ГЕНЕРАТОР] Запланированные группы: {schedule_groups}")
+    print(f"[ГЕНЕРАТОР] Запланировано групп у {teacher_login} по YAML: {schedule_groups}")
     
     filled_times = sorted(list(temp_journal.keys()))
-    print(f"[ГЕНЕРАТОР] Полученные группы с сайта: {filled_times}")
+    print(f"[ГЕНЕРАТОР] Получено групп от {teacher_login} с сайта: {filled_times}")
 
-    # Проверка комплектности групп дня
+    # СРАВНИВАЕМ КОЛИЧЕСТВО ФАЙЛОВ С ПЛАНОМ ДЛЯ ТЕКУЩЕГО УЧИТЕЛЯ
     if len(filled_times) < len(schedule_groups):
-        print(f"[ГЕНЕРАТОР] Ожидаем остальные группы. Комплект не собран ({len(filled_times)} из {len(schedule_groups)}).")
-        # ИСПРАВЛЕНО: Возвращаем ровно четыре параметра для диспетчера!
-        return False, None, None, None
+        print(f"[ГЕНЕРАТОР] ⏳ Комплект для '{teacher_login}' не собран ({len(filled_times)} из {len(schedule_groups)}). Пропускаем его до следующего запуска.")
+        continue  # ИСПРАВЛЕНО: Мягко переходим к следующему учителю в цикле, не роняя диспетчер!
 
-    print("[ГЕНЕРАТОР] Все группы дня получены! Запускаем склейку отчета...")
+    print(f"[ГЕНЕРАТОР] 🟢 Полный комплект для '{teacher_login}' собран! Запускаем склейку отчета...")
 
     date_parts = date_str.split('-')
     formatted_date = f"{date_parts[2]}.{date_parts[1]}.{date_parts[0]} г."
@@ -440,14 +467,38 @@ def run_generator():
             f.write('\n'.join(new_lines))
         print("[ГЕНЕРАТОР] База YAML успешно отсортирована и сохранена!")
 
-        # === ЗАЧИСТКА ВРЕМЕННЫХ ФАЙЛОВ JSON ===
-        for file in todays_files:
-            os.remove(os.path.join(data_dir, file))
-        print(f"[ЗАЧИСТКА] Временные JSON файлы ({len(todays_files)} шт.) успешно удалены!")
+        # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API ===
+        print(f"[ЗАЧИСТКА] Удаляем отработанные файлы JSON для '{teacher_login}' из репозитория баз...")
+        for file_name in teacher_json_files:
+            file_api_url = f"{BASE_API_CONTENTS_URL}/{file_name}"
+            
+            # Шаг 1: Запрашиваем актуальный SHA-маркер файла в Git истории
+            res_info = requests.get(file_api_url, headers={"Authorization": f"token {admin_token}"})
+            if res_info.status_code == 200:
+                file_sha = res_info.json().get("sha")
+                
+                # Шаг 2: Отправляем официальный DELETE запрос на удаление из веб-интерфейса
+                delete_payload = {
+                    "message": f"cleanup: автоматическое удаление отработанного файла {file_name}",
+                    "sha": file_sha
+                }
+                res_del = requests.delete(file_api_url, json=delete_payload, headers={"Authorization": f"token {admin_token}"})
+                if res_del.status_code == 200:
+                    print(f"[ЗАЧИСТКА API] 🟢 Файл {file_name} успешно стёрт с GitHub!")
+                else:
+                    print(f"[ЗАЧИСТКА API] ⚠️ Не удалось стереть {file_name}: {res_del.status_code}")
+            else:
+                print(f"[ЗАЧИСТКА API] ⚠️ Файл {file_name} не найден на GitHub для удаления.")
 
-        # СИГНАЛ НАВЕРХ ДИСПЕТЧЕРУ: Возвращаем статус, текст отчета, ссылку и день недели!
-        return True, markdown_body, comment_url, target_day
+        # Фиксируем параметры текущего успешного учителя для передачи наверх в Телеграм
+        last_success = True
+        last_markdown = markdown_body
+        last_url = comment_url
+        last_day = target_day
 
     except Exception as err:
-        print(f"[ГЕНЕРАТОР] ❌ Ошибка в финальной публикации или зачистке: {str(err)}")
-        return False, None, None, None
+        print(f"[ГЕНЕРАТОР] ❌ Критический сбой в блоке учителя '{current_teacher}': {str(err)}")
+        continue
+
+    # ФИНАЛЬНЫЙ СИГНАЛ ДЛЯ ГЛАВНОГО ДИСПЕТЧЕРА КОНВЕЙЕРА ТЕЛЕГРАМА
+    return last_success, last_markdown, last_url, last_day

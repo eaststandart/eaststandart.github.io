@@ -16,6 +16,7 @@ config:
   # === СПИСОК ПОЛУЧАТЕЛЕЙ ПЕРСОНАЛЬНОГО ОТЧЕТА ===
   tg_personal_id:
     - 511009121                 # @eaststandart
+    - 8224683738                # @eastemitting
 #    - 759585583                 # @ValVodolaz
   # === СТРУКТУРА ЧАТОВ ===
   tg_public_notify:

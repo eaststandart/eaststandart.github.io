@@ -8,8 +8,8 @@
 
 // Настройки репозитория и проверка пароля преподавателя
 const repo_owner = "eaststandart";
-const repo_name = "eaststandart.github.io";
-const allowedTeachers = ["eaststandart"];
+const repo_name = "techlab-journal-attendance";
+const allowedTeachers = ["eaststandart", "eastemitting"];
 
 let accessToken = localStorage.getItem("github_journal_token");
 let studentsData = {};

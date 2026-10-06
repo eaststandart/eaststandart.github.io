@@ -21,6 +21,7 @@ config:
     - chat_id: -1002555901754 # ЧАТ №1 (@RadiotekhnikaClub)
       message_thread_id:    # Флаг 'g' указывает, что это главная ветка (General) чата!
         - 38g               # Общие вопросы
+        - 45
 
 суббота:
   "10:00":

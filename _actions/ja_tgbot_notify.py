@@ -3,7 +3,7 @@
 """
 @module ja_tgbot_notify.py
 @about Отправка публичных анонсов для родителей
-@purpose Рассылка уведомлений по группам и веткам Телеграм со ссылкой на журнал посещений
+@purpose Уведомление родителей в группах и ветках с умным распознаванием General-флага веток
 @author TechLab
 @version 1.0.0
 """
@@ -15,7 +15,7 @@ import re
 import urllib.request
 
 # Фиксируем базовый адрес Telegram API константой в шапке модуля
-TELEGRAM_API_URL = "https://api.telegram.org"
+TELEGRAM_API_URL = "https://telegram.org"
 
 def send_public_notification(markdown_body, comment_url, public_config):
     print("\n=== [МОДУЛЬ JA_TGBOT_NOTIFY] ЗАПУСК РОДИТЕЛЬСКОГО ИНФОРМАТОРА ===")
@@ -33,16 +33,16 @@ def send_public_notification(markdown_body, comment_url, public_config):
         import datetime
         formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
 
-    # 2. СБОРКА ШАБЛОНА СООБЩЕНИЯ (Невидимая ссылка ведет строго на коммент журнала)
+    # 2. СБОРКА УПРОЩЕННОГО ШАБЛОНА СООБЩЕНИЯ
     announcement_text = f"📢 Обновлён журнал посещений за {formatted_date}"
     
     message_text = (
-        f'<a href="{comment_url}">&#8203;</a><b>📅 Журнал посещений регулярных занятий #38</b>\n\n'
+        f'<a href="{comment_url}">&#8203;</a><b>📅 Детско-юношеский инженерный клуб</b>\n\n'
         f'{announcement_text}\n\n'
-        f'👀 <a href="{comment_url}">Посмотреть на GitHub Discussions</a>'
+        f'👀 <a href="{comment_url}">Посмотреть журнал на GitHub Discussions</a>'
     )
 
-    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ГРУППАМ И ВЕТКАМ РОДИТЕЛЕЙ
+    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ С ИНТЕЛЛЕКТУАЛЬНЫМ РАЗБОРОМ БУКВЕННЫХ ФЛАГОВ ВЕТОК
     print(f"[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
     send_errors = 0
     total_broadcasts = 0
@@ -60,25 +60,34 @@ def send_public_notification(markdown_body, comment_url, public_config):
             thread_ids = [0]
 
         for thread in thread_ids:
-            thread_id = int(str(thread).strip())
+            raw_thread_str = str(thread).strip().lower()
             total_broadcasts += 1
+            
+            # Флаг-детектор: проверяем, содержит ли строка букву 'g' (General)
+            is_general_topic = 'g' in raw_thread_str
+            
+            # Хирургически очищаем строку от любых букв, оставляя только чистые цифры ID ветки
+            clean_thread_digits = re.sub(r'[^\d]', '', raw_thread_str)
+            thread_id = int(clean_thread_digits) if clean_thread_digits else 0
             
             url_tg = f"{TELEGRAM_API_URL}/bot{token}/sendMessage"
             
-            # СТРУКТУРА ПАКЕТА ИСПРАВЛЕНА НАМЕРТВО ПО ТВОЕМУ СТАНДАРТУ
             payload = {
                 "chat_id": chat_id,
                 "text": message_text,
                 "parse_mode": "HTML",
-                # Заменяем устаревший disable_web_page_preview на современный рабочий объект
                 "link_preview_options": {
                     "is_disabled": False,
                     "prefer_small_media": True
                 }
             }
             
-            if thread_id > 0:
+            # УСЛОВИЕ УТВЕРЖДЕНО: Если есть флаг 'g', параметр message_thread_id полностью ИСКЛЮЧАЕТСЯ из JSON пакета!
+            if thread_id > 0 and not is_general_topic:
                 payload["message_thread_id"] = thread_id
+                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычную ветку #{thread_id}")
+            elif is_general_topic:
+                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг General ветки ({raw_thread_str}). Идентификатор ветки исключен из запроса.")
 
             req_tg = urllib.request.Request(
                 url_tg, 
@@ -89,7 +98,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
             try:
                 with urllib.request.urlopen(req_tg) as response:
                     if response.getcode() == 200:
-                        thread_log = f" (ветка #{thread_id})" if thread_id > 0 else ""
+                        thread_log = f" (главная ветка General)" if is_general_topic else f" (ветка #{thread_id})" if thread_id > 0 else ""
                         print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в чат {chat_id}{thread_log}!")
                     else:
                         print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для чата {chat_id}")

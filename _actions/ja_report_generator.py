@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 @module ja_report_generator.py
-@about 
-@purpose 
+@about Формирование Журнала посещений
+@purpose Сбор данных с сайта, интеграция с GraphQL API GitHub Discussions и обновление YAML базы расписания
 @author TechLab
 @version 1.0.0
 """

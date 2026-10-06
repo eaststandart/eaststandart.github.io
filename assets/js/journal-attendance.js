@@ -1,12 +1,12 @@
 /**
  * @module journal-attendance.js
- * @about
- * @purpose 
+ * @about Клиентский скрипт отправки данных Журнала посещений
+ * @purpose Сбор отметок посещаемости на сайте и отправка PUT-запросов JSON в репозиторий GitHub
  * @author TechLab
  * @version 1.0.0
  */
 
-// Часть 2: Настройки репозитория и проверка пароля преподавателя
+// Настройки репозитория и проверка пароля преподавателя
 const repo_owner = "eaststandart";
 const repo_name = "eaststandart.github.io";
 const allowedTeachers = ["eaststandart"];

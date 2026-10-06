@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 @module journalattendance.py
-@about 
-@purpose 
+@about Главный диспетчер конвейера Журнала посещений
+@purpose Координация работы модулей генерации отчетов и рассылки уведомлений в Телеграм
 @author TechLab
 @version 1.0.0
 """
@@ -50,7 +50,7 @@ def main():
             
         config_data = yaml_data.get('config', {})
         
-        # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ПРЕПОДАВАТЕЛЮ ---
+        # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ---
         personal_ids = config_data.get('tg_personal_id', [])
         if personal_ids:
             print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal...")
@@ -59,7 +59,7 @@ def main():
         else:
             print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_personal_id пустое, пропуск личного информирования.")
 
-        # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В ГРУППЫ РОДИТЕЛЕЙ ---
+        # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В КАНАЛЫ ---
         public_config = config_data.get('tg_public_notify', [])
         if public_config:
             print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify...")

@@ -1,3 +1,11 @@
+/* ==============================================================================
+ * @module  journal-attendance.css
+ * @about   Файл внешних стилей веб-страницы журнала посещений
+ * @purpose Оформление интерфейса авторизации, календарной сетки и списков групп
+ * @author  TechLab
+ * @version 1.0.0
+ * ============================================================================== */
+
 /* Основные контейнеры и шрифты страницы */
 .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; }
 .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; }

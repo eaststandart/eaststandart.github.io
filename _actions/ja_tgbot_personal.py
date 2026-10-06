@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 @module ja_tgbot_personal.py
-@about 
-@purpose 
+@about Отправка персональных отчетов Журнала посещений
+@purpose Формирование сжатого текста журнала и отправка личных уведомлений в Телеграм
 @author TechLab
 @version 1.0.0
 """

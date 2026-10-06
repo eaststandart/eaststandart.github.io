@@ -3,7 +3,7 @@
 """
 @module ja_tgbot_notify.py
 @about Отправка публичных анонсов для родителей
-@purpose Уведомление родителей в группах и ветках со ссылкой на журнал посещений
+@purpose Рассылка уведомлений по группам и веткам Телеграм со ссылкой на журнал посещений
 @author TechLab
 @version 1.0.0
 """
@@ -33,13 +33,13 @@ def send_public_notification(markdown_body, comment_url, public_config):
         import datetime
         formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
 
-    # 2. СБОРКА УПРОЩЕННОГО ШАБЛОНА (Невидимая ссылка ведет строго на коммент журнала)
+    # 2. СБОРКА ШАБЛОНА СООБЩЕНИЯ (Невидимая ссылка ведет строго на коммент журнала)
     announcement_text = f"📢 Обновлён журнал посещений за {formatted_date}"
     
     message_text = (
-        f'<a href="{comment_url}">&#8203;</a><b>📅 Детско-юношеский инженерный клуб</b>\n\n'
+        f'<a href="{comment_url}">&#8203;</a><b>📅 Журнал посещений регулярных занятий #38</b>\n\n'
         f'{announcement_text}\n\n'
-        f'👀 <a href="{comment_url}">Посмотреть журнал на GitHub Discussions</a>'
+        f'👀 <a href="{comment_url}">Посмотреть на GitHub Discussions</a>'
     )
 
     # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ГРУППАМ И ВЕТКАМ РОДИТЕЛЕЙ
@@ -57,7 +57,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
         if isinstance(thread_ids, (int, str)):
             thread_ids = [thread_ids]
         elif not thread_ids:
-            thread_ids = [0]
+            thread_ids =
 
         for thread in thread_ids:
             thread_id = int(str(thread).strip())
@@ -65,11 +65,16 @@ def send_public_notification(markdown_body, comment_url, public_config):
             
             url_tg = f"{TELEGRAM_API_URL}/bot{token}/sendMessage"
             
+            # СТРУКТУРА ПАКЕТА ИСПРАВЛЕНА НАМЕРТВО ПО ТВОЕМУ СТАНДАРТУ
             payload = {
                 "chat_id": chat_id,
                 "text": message_text,
                 "parse_mode": "HTML",
-                "disable_web_page_preview": False
+                # Заменяем устаревший disable_web_page_preview на современный рабочий объект
+                "link_preview_options": {
+                    "is_disabled": False,
+                    "prefer_small_media": True
+                }
             }
             
             if thread_id > 0:

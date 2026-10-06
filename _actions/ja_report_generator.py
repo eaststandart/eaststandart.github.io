@@ -18,6 +18,7 @@ import re
 # ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ АДРЕСА API GITHUB ДЛЯ ЗАЩИТЫ ОТ УРЕЗАНИЯ ССЫЛОК В ЧАТЕ
 GRAPHQL_URL = "https://api.github.com/graphql"
 BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
+DATA_REPO_NAME = "techlab-journal-attendance"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК СБОРКИ ОТЧЕТА ===")
@@ -378,7 +379,7 @@ def run_generator():
        
         if "errors" in res_mut:
             print(f"[ГЕНЕРАТОР] ❌ Ошибка мутации GraphQL: {json.dumps(res_mut['errors'])}")
-            return False, None, None
+            return False, None, None, None
             
         # Сборка прямой ссылки на созданный комментарий
         try:

@@ -57,7 +57,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
         if isinstance(thread_ids, (int, str)):
             thread_ids = [thread_ids]
         elif not thread_ids:
-            thread_ids =
+            thread_ids = [0]
 
         for thread in thread_ids:
             thread_id = int(str(thread).strip())

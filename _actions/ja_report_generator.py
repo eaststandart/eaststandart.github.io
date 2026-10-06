@@ -51,11 +51,8 @@ def run_generator():
         print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
         return False, None, None, None
 
-    # НАСТРОЙКА ПЕРЕМЕННЫХ ДЛЯ ОТВЕТА ДИСПЕТЧЕРУ (ПО ПОСЛЕДНЕМУ УСПЕШНОМУ ПРОГОНУ)
-    last_success = False
-    last_markdown = None
-    last_url = None
-    last_day = None
+    # Список для накопления пакетов отчетов каждого успешного учителя
+    all_generated_reports = []
 
     # ЗАПУСКАЕМ ИЗОЛИРОВАННЫЙ ЦИКЛ ПО КАЖДОМУ ПРЕПОДАВАТЕЛЮ
     for current_teacher in active_teachers:
@@ -412,11 +409,22 @@ def run_generator():
             else:
                 print(f"[ЗАЧИСТКА API] ⚠️ Файл {file_name} не найден на GitHub для удаления.")
 
-        # Фиксируем параметры для диспетчера Телеграма по последнему успешному прогону
-        last_success = True
-        last_markdown = markdown_body
-        last_url = comment_url
-        last_day = target_day
+        # Упаковываем все данные текущего учителя в изолированный пакет и добавляем в список
+        report_packet = {
+            "teacher_login": teacher_login,
+            "markdown": markdown_body,
+            "url": comment_url,
+            "day": target_day
+        }
+        all_generated_reports.append(report_packet)
+        print(f"[ГЕНЕРАТОР] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")
 
-    # ФИНАЛЬНЫЙ СИГНАЛ КОНВЕЙЕРА ДЛЯ ГЛАВНОГО ДИСПЕТЧЕРА ТЕЛЕГРАМА
-    return last_success, last_markdown, last_url, last_day
+    # ВОТ ЗДЕСЬ ИСПРАВЛЕНО (СДВИГ ВПРАВО): Теперь блок сидит внутри цикла for!
+    except Exception as err:
+        print(f"[ГЕНЕРАТОР] ❌ Критический сбой в блоке учителя '{current_teacher}': {str(err)}")
+        continue
+
+    # ФИНАЛЬНЫЙ СИГНАЛ (ОСТАЁТСЯ НА МЕСТЕ): Срабатывает строго ПОСЛЕ завершения всего цикла for
+    success_status = len(all_generated_reports) > 0
+    return success_status, all_generated_reports
+

@@ -25,51 +25,56 @@ def main():
     try:
         import ja_report_generator
         
-        # Принимаем четыре параметра от генератора (успех, отчет, ссылка, день недели)
-        success, markdown_body, comment_url, target_day = ja_report_generator.run_generator()
+        # Принимаем статус успеха и полный список сформированных пакетов отчетов
+        success, reports_list = ja_report_generator.run_generator()
         
-        if not success:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🛑 Формирующий block вернул False. Мягко завершаем конвейер.")
+        if not success or not reports_list:
+            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🛑 Формирующий блок не вернул готовых отчетов. Мягко завершаем конвейер.")
             return
             
-        print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🟢 УСПЕХ! Данные получены от генератора отчетов.")
-        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Ссылка для рассылки: '{comment_url}'")
-        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] День недели: '{target_day}'")
-
-        # Читаем конфигурацию чатов из YAML расписания преподавателя
+        print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] 🟢 УСПЕХ! Данные получены. Очередь на отправку: {len(reports_list)} отчетов.")
         data_dir = os.path.join(os.getcwd(), '_data')
-        yaml_files = [f for f in os.listdir(data_dir) if f.startswith('journal-attendance-') and f.endswith('.yml')]
-        
-        if not yaml_files:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Ошибка: Личный файл расписания YAML не найден для чтения настроек!")
-            return
-            
-        yaml_path = os.path.join(data_dir, yaml_files[0])
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            yaml_data = yaml.safe_load(f) or {}
-            
-        config_data = yaml_data.get('config', {})
-        
-        # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ---
-        personal_ids = config_data.get('tg_personal_id', [])
-        if personal_ids:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal...")
-            import ja_tgbot_personal
-            ja_tgbot_personal.send_personal_report(markdown_body, comment_url, target_day, personal_ids)
-        else:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_personal_id пустое, пропуск личного информирования.")
 
-        # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В КАНАЛЫ ---
-        public_config = config_data.get('tg_public_notify', [])
-        if public_config:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify...")
-            import ja_tgbot_notify
-            ja_tgbot_notify.send_public_notification(markdown_body, comment_url, public_config)
-        else:
-            print("[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое, пропуск родительских анонсов.")
+        # ЗАПУСКАЕМ ЦИКЛ ОТПРАВКИ ТЕЛЕГРАМ ДЛЯ КАЖДОГО ОТЧЕТА ИНДИВИДУАЛЬНО
+        for report_item in reports_list:
+            markdown_body = report_item["markdown"]
+            comment_url = report_item["url"]
+            target_day = report_item["day"]
+            teacher_login = report_item["teacher_login"]
             
-        print("=== [ГЛАВНЫЙ ДИСПЕТЧЕР] ВСЕ ЭТАПЫ КОНВЕЙЕРА УСПЕШНО ЗАВЕРШЕНЫ В 1 ШАГ! ===")
-        
+            print(f"\n🚀 [ДИСПЕТЧЕР ТГ] Начинаем рассылку отчета преподавателя: {teacher_login}")
+            
+            # Считываем конфигурацию Телеграм строго из личного YAML-файла текущего преподавателя
+            yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")
+            if not os.path.exists(yaml_path):
+                print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ⚠️ Файл расписания {yaml_path} не найден для чтения настроек чатов. Пропуск.")
+                continue
+                
+            with open(yaml_path, 'r', encoding='utf-8') as f:
+                yaml_data = yaml.safe_load(f) or {}
+            
+            config_data = yaml_data.get('config', {})
+            
+            # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ---
+            personal_ids = config_data.get('tg_personal_id', [])
+            if personal_ids:
+                print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal для {teacher_login}...")
+                import ja_tgbot_personal
+                ja_tgbot_personal.send_personal_report(markdown_body, comment_url, target_day, personal_ids)
+            else:
+                print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_personal_id пустое для {teacher_login}, пропуск.")
+
+            # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В КАНАЛЫ ---
+            public_config = config_data.get('tg_public_notify', [])
+            if public_config:
+                print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify для {teacher_login}...")
+                import ja_tgbot_notify
+                ja_tgbot_notify.send_public_notification(markdown_body, comment_url, public_config)
+            else:
+                print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое для {teacher_login}, пропуск.")
+                
+        print("=== [ГЛАВНЫЙ ДИСПЕТЧЕР] ВСЕ СФОРМИРОВАННЫЕ ОТЧЕТЫ УСПЕШНО РАЗОСЛАНЫ В ТЕЛЕГРАМ! ===")
+       
     except Exception as err:
         print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Критическая ошибка конвейера: {str(err)}")
 

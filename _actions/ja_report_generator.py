@@ -28,13 +28,17 @@ def run_generator():
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
         return False, None
 
-    # 1. Ищем временные файлы журналов групп за сегодняшний день
+    # 1. Ищем временные файлы журналов групп за сегодняшний день строго для текущего учителя
     all_files = os.listdir(data_dir)
-    group_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
+    
+    # Авто-перехват логина преподавателя, который вызвал push в этот репозиторий
+    trigger_author = os.environ.get("GITHUB_ACTOR", "").strip().lower()
+    
+    group_files = [f for f in all_files if f'-journal-attendance-{trigger_author}.json' in f.lower()]
     
     if not group_files:
-        print("[ГЕНЕРАТОР] Временные файлы журналов групп не найдены.")
-        return False, None
+        print(f"[ГЕНЕРАТОР] Временные файлы журналов групп для преподавателя '{trigger_author}' не найдены.")
+        return False, None, None, None
 
     # Читаем первый попавшийся JSON-файл с сайта, чтобы определить параметры дня
     sample_path = os.path.join(data_dir, group_files[0])

@@ -384,7 +384,7 @@ def run_generator():
                 
             with open(yaml_path, 'w', encoding='utf-8') as f:
                 f.write('\n'.join(new_lines))
-            print(f"[ГЕНЕРАТОР] База YAML для {teacher_login} успешно отсортирована и сохранена!")
+            print(f"[ГЕНЕNERАТОР] База YAML для {teacher_login} успешно отсортирована и сохранена!")
         except Exception as e:
             print(f"[ГЕНЕРАТОР] ⚠️ Ошибка сохранения YAML для {teacher_login}: {str(e)}")
 
@@ -419,12 +419,6 @@ def run_generator():
         all_generated_reports.append(report_packet)
         print(f"[ГЕНЕРАТОР] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")
 
-    # ВОТ ЗДЕСЬ ИСПРАВЛЕНО (СДВИГ ВПРАВО): Теперь блок сидит внутри цикла for!
-    except Exception as err:
-        print(f"[ГЕНЕРАТОР] ❌ Критический сбой в блоке учителя '{current_teacher}': {str(err)}")
-        continue
-
-    # ФИНАЛЬНЫЙ СИГНАЛ (ОСТАЁТСЯ НА МЕСТЕ): Срабатывает строго ПОСЛЕ завершения всего цикла for
+    # ФИНАЛЬНЫЙ СИГНАЛ КОНВЕЙЕРА ДЛЯ ГЛАВНОГО ДИСПЕТЧЕРА ТЕЛЕГРАМА (ВНЕ ЦИКЛА FOR)
     success_status = len(all_generated_reports) > 0
     return success_status, all_generated_reports
-

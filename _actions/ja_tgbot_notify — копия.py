@@ -3,7 +3,7 @@
 """
 @module ja_tgbot_notify.py
 @about Отправка публичных анонсов для родителей
-@purpose Рассылка уведомлений по группам и веткам Телеграм со ссылкой на журнал посещений
+@purpose Уведомление родителей в группах и ветках с умным распознаванием General-флага веток
 @author TechLab
 @version 1.0.0
 """
@@ -33,16 +33,16 @@ def send_public_notification(markdown_body, comment_url, public_config):
         import datetime
         formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
 
-    # 2. СБОРКА ШАБЛОНА СООБЩЕНИЯ (Невидимая ссылка ведет строго на коммент журнала)
+    # 2. СБОРКА УПРОЩЕННОГО ШАБЛОНА СООБЩЕНИЯ
     announcement_text = f"📢 Обновлён журнал посещений за {formatted_date}"
     
     message_text = (
-        f'<a href="{comment_url}">&#8203;</a><b>📅 Журнал посещений регулярных занятий #38</b>\n\n'
+        f'<a href="{comment_url}">&#8203;</a><b>📅 Детско-юношеский инженерный клуб</b>\n\n'
         f'{announcement_text}\n\n'
-        f'👀 <a href="{comment_url}">Посмотреть на GitHub Discussions</a>'
+        f'👀 <a href="{comment_url}">Посмотреть журнал на GitHub Discussions</a>'
     )
 
-    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ РАССЫЛКИ ПО ГРУППАМ И ВЕТКАМ РОДИТЕЛЕЙ
+    # 3. ДВОЙНОЙ ВЛОЖЕННЫЙ ЦИКЛ С ИНТЕЛЛЕКТУАЛЬНЫМ РАЗБОРОМ БУКВЕННЫХ ФЛАГОВ ВЕТОК
     print(f"[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка групп...")
     send_errors = 0
     total_broadcasts = 0
@@ -51,21 +51,22 @@ def send_public_notification(markdown_body, comment_url, public_config):
         chat_id = str(group.get("chat_id", "")).strip()
         thread_ids = group.get("message_thread_id", [])
         
-        # ИСПРАВЛЕНО: Если список веток пуст или закомментирован — полностью пропускаем чат! Нет веток — нет отправки!
-        if not chat_id or not thread_ids:
+        if not chat_id:
             continue
             
         if isinstance(thread_ids, (int, str)):
             thread_ids = [thread_ids]
+        elif not thread_ids:
+            thread_ids = [0]
 
         for thread in thread_ids:
             raw_thread_str = str(thread).strip().lower()
             total_broadcasts += 1
             
-            # Флаг-детектор основной ветки (General)
+            # Флаг-детектор: проверяем, содержит ли строка букву 'g' (General)
             is_general_topic = 'g' in raw_thread_str
             
-            # Очищаем строку от букв, оставляя цифры ID ветки
+            # Хирургически очищаем строку от любых букв, оставляя только чистые цифры ID ветки
             clean_thread_digits = re.sub(r'[^\d]', '', raw_thread_str)
             thread_id = int(clean_thread_digits) if clean_thread_digits else 0
             
@@ -81,15 +82,12 @@ def send_public_notification(markdown_body, comment_url, public_config):
                 }
             }
             
-            # Если есть флаг 'g' (основная ветка) — параметр message_thread_id полностью исключается из запроса!
+            # УСЛОВИЕ УТВЕРЖДЕНО: Если есть флаг 'g', параметр message_thread_id полностью ИСКЛЮЧАЕТСЯ из JSON пакета!
             if thread_id > 0 and not is_general_topic:
                 payload["message_thread_id"] = thread_id
                 print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычную ветку #{thread_id}")
             elif is_general_topic:
-                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг основной ветки ({raw_thread_str}). Идентификатор ветки исключен из запроса.")
-            elif thread_id == 0 and not is_general_topic:
-                payload["message_thread_id"] = 0
-                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в ветку №0")
+                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг General ветки ({raw_thread_str}). Идентификатор ветки исключен из запроса.")
 
             req_tg = urllib.request.Request(
                 url_tg, 
@@ -100,7 +98,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
             try:
                 with urllib.request.urlopen(req_tg) as response:
                     if response.getcode() == 200:
-                        thread_log = f" (основная ветка)" if is_general_topic else f" (ветка #{thread_id})"
+                        thread_log = f" (главная ветка General)" if is_general_topic else f" (ветка #{thread_id})" if thread_id > 0 else ""
                         print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в чат {chat_id}{thread_log}!")
                     else:
                         print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для чата {chat_id}")

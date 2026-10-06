@@ -30,8 +30,6 @@ def run_generator():
 
     # 1. Ищем временные файлы журналов групп за сегодняшний день строго для текущего учителя
     all_files = os.listdir(data_dir)
-    
-    # Авто-перехват логина преподавателя, который вызвал push в этот репозиторий
     trigger_author = os.environ.get("GITHUB_ACTOR", "").strip().lower()
     
     group_files = [f for f in all_files if f'-journal-attendance-{trigger_author}.json' in f.lower()]

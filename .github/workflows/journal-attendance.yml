@@ -1,16 +1,19 @@
 # ==============================================================================
 # @module  journal-attendance.yml
-# @about   Сценарий автоматизации конвейера журнала посещений в GitHub Actions
-# @purpose Запуск главного диспетчера при отправке JSON данных с сайта журнала
+# @about   Сценарий автоматизации конвейера журнала посещений на стороне сайта
+# @purpose Автоматический запуск по расписанию, сбор данных и публикация отчета
 # @author  TechLab
-# @version 1.0.0
+# @version 1.5.0
 # ==============================================================================
 
 name: Generate Attendance Report to Discussions 
 
 on:
-  repository_dispatch:
-    types: [journal_submission]
+  schedule:
+    # Робот будет автоматически просыпаться с понедельника по субботу 
+    # в 14:00 по всемирному времени UTC (в 17:00 по Москве / в 00:00 по Владивостоку)
+    - cron: '0 14 * * 1-6'
+  workflow_dispatch: # Позволяет запускать робота вручную кнопкой в интерфейсе!
 
 permissions:
   contents: write
@@ -20,6 +23,13 @@ jobs:
   build_report:
     runs-on: ubuntu-latest
     steps:
+      # 1. Скачиваем программные скрипты Python и код самого сайта
+      - name: Checkout Site Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Скачиваем файлы баз данных из изолированного приватного репозитория Журнала
       - name: Download Data From Isolated Repository
         uses: actions/checkout@v4
         with:
@@ -27,30 +37,24 @@ jobs:
           token: ${{ secrets.MY_ADMIN_TOKEN }}
           path: '_data_core'
 
+      # 3. Временно переносим папку _data в корень виртуальной машины для работы Python
       - name: Prepare Workspace Data
         run: cp -r _data_core/_data .
 
-      - name: Install Dependencies
-        run: |
-          pip install pyyaml requests
+      # 4. Настраиваем окружение Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
+      # 5. Устанавливаем библиотеки для работы скрипта
+      - name: Install Dependencies
+        run: pip install pyyaml requests
+
+      # 6. Запускаем Главный Диспетчер конвейера (Публикация от родного Бота сайта!)
       - name: Run Python Report Generator
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python _actions/journalattendance.py
-
-
-      # === ФИНАЛЬНЫЙ ШАГ: АВТО-КОММИТ И ФИКСАЦИЯ ИЗМЕНЕНИЙ БАЗЫ YAML НА GITHUB ===
-      - name: Commit Base Updates and Purge Temp Files
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "actions@github.com"
-          
-          # ИСПРАВЛЕНО: Возвращена твоя оригинальная хирургическая маска отслеживания файлов!
-          git add _data/*-journal-attendance-*.json || true
-          git add _data/journal-attendance-*.yml || true
-          
-          # Делаем пуш изменений с флагом [skip ci], чтобы робот не зацикливался сам на себя!
-          git commit -m "Сводный журнал за день от Робота [skip ci]" && git push || echo "Нет изменений для авто-коммита базы"

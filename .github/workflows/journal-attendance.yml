@@ -9,9 +9,8 @@
 name: Generate Attendance Report to Discussions 
 
 on:
-  push:
-    paths:
-      - '_data/*-journal-attendance-*.json'
+  repository_dispatch:
+    types: [journal_submission]
 
 permissions:
   contents: write
@@ -21,15 +20,15 @@ jobs:
   build_report:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Download Data From Isolated Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          repository: 'eaststandart/techlab-journal-attendance'
+          token: ${{ secrets.MY_ADMIN_TOKEN }}
+          path: '_data_core'
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+      - name: Prepare Workspace Data
+        run: cp -r _data_core/_data .
 
       - name: Install Dependencies
         run: |

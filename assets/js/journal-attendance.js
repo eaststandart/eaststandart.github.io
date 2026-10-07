@@ -337,7 +337,7 @@ function saveGroupAttendance(day, time) {
       probation: probationList
     };
 
-    const filePath = `_data/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
+    const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
     const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`;
 
     // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии

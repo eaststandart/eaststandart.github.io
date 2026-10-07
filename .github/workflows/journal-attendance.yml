@@ -1,19 +1,15 @@
 # ==============================================================================
 # @module  journal-attendance.yml
-# @about   Сценарий автоматизации конвейера журнала посещений на стороне сайта
-# @purpose Автоматический запуск по расписанию, сбор данных и публикация отчета
-# @author  TechLab
-# @version 1.5.0
+# @about   Робот-приёмник удалённых сигналов
+# @purpose Мгновенный запуск конвейера сборки отчётов по сигналу из базы данных
+# @version 1.0.0
 # ==============================================================================
 
-name: Generate Attendance Report to Discussions 
+name: Remote Journal Attendance Processor
 
 on:
-  schedule:
-    # Робот будет автоматически просыпаться с понедельника по субботу 
-    # в 14:00 по всемирному времени UTC (в 17:00 по Москве / в 00:00 по Владивостоку)
-    - cron: '0 14 * * 1-6'
-  workflow_dispatch: # Позволяет запускать робота вручную кнопкой в интерфейсе!
+  repository_dispatch:
+    types: [journal-notify]
 
 permissions:
   contents: write
@@ -23,13 +19,14 @@ jobs:
   build_report:
     runs-on: ubuntu-latest
     steps:
-      # 1. Скачиваем программные скрипты Python и код самого сайта
+      - name: Signal Received Successfully
+        run: echo "🚀 [УСПЕХ] Умный сигнал 'journal-notify' принят. Запускаем конвейер..."
+
       - name: Checkout Site Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2. Скачиваем файлы баз данных из изолированного приватного репозитория Журнала
       - name: Download Data From Isolated Repository
         uses: actions/checkout@v4
         with:
@@ -37,21 +34,17 @@ jobs:
           token: ${{ secrets.MY_ADMIN_TOKEN }}
           path: '_data_core'
 
-      # 3. Временно переносим папку _data в корень виртуальной машины для работы Python
       - name: Prepare Workspace Data
         run: cp -r _data_core/_data .
 
-      # 4. Настраиваем окружение Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 5. Устанавливаем библиотеки для работы скрипта
       - name: Install Dependencies
         run: pip install pyyaml requests
 
-      # 6. Запускаем Главный Диспетчер конвейера (Публикация от родного Бота сайта!)
       - name: Run Python Report Generator
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

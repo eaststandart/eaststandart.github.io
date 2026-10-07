@@ -1,26 +1,26 @@
 # ==============================================================================
-# @module  journal-attendance-signal-test.yml
-# @about   Изолированный клон-робот для отладки и приёма внешних сигналов
-# @purpose Поиск причин блокировки удаленного вызова repository_dispatch
+# @module  journal-attendance.yml
+# @about   Робот-приёмник удалённых сигналов
+# @purpose Мгновенный запуск конвейера сборки отчётов по сигналу из базы данных
 # @version 1.0.0
 # ==============================================================================
 
-name: DEBUG Signal Receiver Test
+name: Remote Journal Attendance Processor
 
 on:
   repository_dispatch:
-    types: [journal_submission]
+    types: [journal-notify]
 
 permissions:
   contents: write
   discussions: write
 
 jobs:
-  debug_build:
+  build_report:
     runs-on: ubuntu-latest
     steps:
       - name: Signal Received Successfully
-        run: echo "🚀 [УСПЕХ] Внешний сигнал пробил защиту GitHub и разбудил робота!"
+        run: echo "🚀 [УСПЕХ] Умный сигнал 'journal-notify' принят. Запускаем конвейер..."
 
       - name: Checkout Site Repository
         uses: actions/checkout@v4

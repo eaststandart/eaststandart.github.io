@@ -1,0 +1,53 @@
+# ==============================================================================
+# @module  journal-attendance-signal-test.yml
+# @about   Изолированный клон-робот для отладки и приёма внешних сигналов
+# @purpose Поиск причин блокировки удаленного вызова repository_dispatch
+# @version 1.0.0
+# ==============================================================================
+
+name: DEBUG Signal Receiver Test
+
+on:
+  repository_dispatch:
+    types: [journal_submission]
+
+permissions:
+  contents: write
+  discussions: write
+
+jobs:
+  debug_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Signal Received Successfully
+        run: echo "🚀 [УСПЕХ] Внешний сигнал пробил защиту GitHub и разбудил робота!"
+
+      - name: Checkout Site Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Data From Isolated Repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'eaststandart/techlab-journal-attendance'
+          token: ${{ secrets.MY_ADMIN_TOKEN }}
+          path: '_data_core'
+
+      - name: Prepare Workspace Data
+        run: cp -r _data_core/_data .
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install pyyaml requests
+
+      - name: Run Python Report Generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python _actions/journalattendance.py

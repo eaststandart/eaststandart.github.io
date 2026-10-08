@@ -24,7 +24,9 @@ DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
 # Базовый служебный API-путь для управления файлами базы данных
-BASE_API_CONTENTS_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+# Базовые служебные API-пути к двум разным папкам удалённого репозитория Журнала
+JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
@@ -32,7 +34,7 @@ def run_generator():
     data_dir = os.path.join(os.getcwd(), '_data')
     if not os.path.exists(data_dir):
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
-        return False, None, None, None
+        return False, []
 
     # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
     all_files = os.listdir(data_dir)
@@ -43,15 +45,32 @@ def run_generator():
             if login:
                 active_teachers.append(login)
 
-    print(f"[ГЕНЕРАТОР] Список активных преподавателей из базы YML: {active_teachers}")
+    print(f"[ГЕНЕРАТОР] Список active преподавателей из базы YML: {active_teachers}")
 
-    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ОТ ВСЕХ УЧИТЕЛЕЙ
-    all_json_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
+    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ИЗ СЕТИ ГИТХАБА ЧЕРЕЗ API
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
+    
+    try:
+        response = requests.get(JOURNAL_JSON_API_URL, headers=headers, timeout=30)
+        if response.status_code != 200:
+            print(f"[ГЕНЕРАТОР] Временные файлы журналов в папке _output отсутствуют (Код API: {response.status_code}). Выход.")
+            return False, []
+            
+        output_contents = response.json()
+        # Создаём словарь {имя_файла: url_скачивания} прямо из ответа API
+        json_download_urls = {item["name"]: item["download_url"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')}
+        all_json_files = list(json_download_urls.keys())
+        
+    except Exception as err:
+        print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого запроса к _output Журнала: {str(err)}")
+        return False, []
+
     if not all_json_files:
-        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
-        return False, None, None, None
+        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке _output отсутствуют. Выход.")
+        return False, []
 
-    # Список для накопления пакетов отчетов каждого успешного учителя
+    print(f"[ГЕНЕРАТОР] Обнаружено JSON-файлов в сети Журнала (_output): {len(all_json_files)} шт.")
     all_generated_reports = []
 
     # ЗАПУСКАЕМ ИЗОЛИРОВАННЫЙ ЦИКЛ ПО КАЖДОМУ ПРЕПОДАВАТЕЛЮ
@@ -63,9 +82,13 @@ def run_generator():
             
         print(f"\n👉 [ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
-        sample_path = os.path.join(data_dir, teacher_json_files[0])
-        with open(sample_path, 'r', encoding='utf-8') as f:
-            sample_data = json.load(f)
+        # Скачиваем содержимое пилотного JSON-файла напрямую из сети Гитхаба
+        try:
+            sample_download_url = json_download_urls[teacher_json_files[0]]
+            sample_data = requests.get(sample_download_url, headers=headers, timeout=30).json()
+        except Exception as e:
+            print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {teacher_json_files[0]}: {str(e)}")
+            continue
             
         target_day = sample_data.get('day', '').lower().strip()
         date_str = sample_data.get('date', '')
@@ -77,10 +100,32 @@ def run_generator():
             print(f"[ГЕНЕРАТОР] ❌ Пропуск: Личный файл расписания не найден: {yaml_path}")
             continue
 
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            yaml_text_orig = f.read()
-            f.seek(0)
-            yaml_data = yaml.safe_load(f) or {}
+        # Сетевой адрес конкретного YAML-файла в репозитории Журнала
+        file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
+
+        # Извлечение изолированного персонального токена, переданного специально для перезаписи YAML
+        write_token = os.environ.get("JOURNAL_WRITE_TOKEN")
+
+        # Подготовка сетевых заголовков авторизации для работы с приватным репозиторием Журнала
+        headers_pub = {
+            "Authorization": f"token {write_token if write_token else admin_token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+        }
+
+        res_info = requests.get(file_api_url, headers=headers_pub, timeout=30)
+        if res_info.status_code != 200:
+            print(f"[ГЕНЕРАТОР] ⚠️ Не удалось получить YAML с GitHub для {teacher_login}: {res_info.status_code}")
+            continue
+
+        res_json = res_info.json()
+        yaml_sha = res_json.get("sha")
+
+        # Декодируем текстовое содержимое файла из формата base64, в котором его отдал GitHub
+        import base64
+        yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
+        yaml_text_orig = yaml_content_bytes.decode('utf-8')
+        yaml_data = yaml.safe_load(yaml_text_orig) or {}
 
         # === ЖЕСТКИЙ ВХОДНОЙ ЩИТ: АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ В ФАЙЛЕ НА СТАРТЕ ===
         students_data = {}
@@ -225,9 +270,13 @@ def run_generator():
         # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ ===
         temp_journal = {}
         for file in teacher_json_files:
-            with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
-                file_data = json.load(f)
+            try:
+                file_url = json_download_urls[file]
+                file_data = requests.get(file_url, headers=headers, timeout=30).json()
                 temp_journal[file_data["time"]] = file_data
+            except Exception as e:
+                print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {file} при сборке таблицы: {str(e)}")
+                continue
 
         schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
         print(f"[ГЕНЕРАТОР] Запланировано групп у {teacher_login} по YAML: {schedule_groups}")
@@ -381,17 +430,56 @@ def run_generator():
                     
                 new_lines.append(line)
                 idx += 1
-                
-            with open(yaml_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(new_lines))
-            print(f"[ГЕНЕNERАТОР] База YAML для {teacher_login} успешно отсортирована и сохранена!")
+
+            # ==================================================================
+            # ДИАГНОСТИЧЕСКИЙ ЛОГ СЕТЕВОГО СОХРАНЕНИЯ YAML
+            # ==================================================================
+            updated_yaml_text = '\n'.join(new_lines)
+            encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
+            
+            put_payload = {
+                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
+                "content": encoded_content,
+                "sha": yaml_sha
+            }
+            
+            print(f"\n[ДИАГНОСТИКА YAML] Выполняем PUT-запрос сохранения расписания.")
+            print(f"[ДИАГНОСТИКА YAML] Целевой URL: {file_api_url}")
+            print(f"[ДИАГНОСТИКА YAML] Переданный SHA-хэш: {yaml_sha}")
+            
+            res_put = requests.put(file_api_url, json=put_payload, headers=headers_pub, timeout=30)
+            
+            print(f"[ДИАГНОСТИКА YAML] Код ответа сервера GitHub: {res_put.status_code}")
+            print(f"[ДИАГНОСТИКА YAML] Полный текст ответа GitHub: {res_put.text}")
+            
+            if res_put.status_code in (200, 201):
+                print(f"[ГЕНЕРАТОР] 🟢 База YAML для {teacher_login} успешно обновлена напрямую в репозитории Журнала!")
+            else:
+                print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого сохранения YAML для {teacher_login}: {res_put.status_code}")
+
         except Exception as e:
             print(f"[ГЕНЕРАТОР] ⚠️ Ошибка сохранения YAML для {teacher_login}: {str(e)}")
 
-        # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API (ОТКЛЮЧЕНО) ===
-        print(f"[ЗАЧИСТКА] Внимание: Локальное удаление в Генераторе отключено. Передаём файлы в ja_gate_closer.")
+        # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API ===
+        print(f"[ЗАЧИСТКА] Удаляем отработанные файлы JSON для '{teacher_login}' из репозитория баз...")
         for file_name in teacher_json_files:
-            continue  # Генератор больше не стирает файлы, они гарантированно дождутся Модуля Б!
+            file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
+            
+            res_info = requests.get(file_api_url, headers={"Authorization": f"token {admin_token}"})
+            if res_info.status_code == 200:
+                file_sha = res_info.json().get("sha")
+                
+                delete_payload = {
+                    "message": f"cleanup: удаление {file_name}",
+                    "sha": file_sha
+                }
+                res_del = requests.delete(file_api_url, json=delete_payload, headers={"Authorization": f"token {admin_token}"})
+                if res_del.status_code == 200:
+                    print(f"[ЗАЧИСТКА API] 🟢 Файл {file_name} успешно стёрт с GitHub!")
+                else:
+                    print(f"[ЗАЧИСТКА API] ⚠️ Не удалось стереть {file_name}: {res_del.status_code}")
+            else:
+                print(f"[ЗАЧИСТКА API] ⚠️ Файл {file_name} не найден на GitHub для удаления.")
 
         # Упаковываем все данные текущего учителя в изолированный пакет и добавляем в список
         report_packet = {

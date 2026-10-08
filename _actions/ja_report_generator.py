@@ -106,6 +106,7 @@ def run_generator():
         # Подготовка сетевых заголовков авторизации для работы с приватным репозиторием Журнала
         headers_pub = {
             "Authorization": f"token {admin_token}",
+            "Accept": "application/vnd.github+json",
             "Content-Type": "application/json"
         }
 
@@ -426,18 +427,28 @@ def run_generator():
                     
                 new_lines.append(line)
                 idx += 1
-                
-            # Кодируем обновлённый текст обратно в base64 для отправки через API
+
+            # ==================================================================
+            # ДИАГНОСТИЧЕСКИЙ ЛОГ СЕТЕВОГО СОХРАНЕНИЯ YAML
+            # ==================================================================
             updated_yaml_text = '\n'.join(new_lines)
             encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
-
+            
             put_payload = {
                 "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
                 "content": encoded_content,
                 "sha": yaml_sha
             }
-
+            
+            print(f"\n[ДИАГНОСТИКА YAML] Выполняем PUT-запрос сохранения расписания.")
+            print(f"[ДИАГНОСТИКА YAML] Целевой URL: {file_api_url}")
+            print(f"[ДИАГНОСТИКА YAML] Переданный SHA-хэш: {yaml_sha}")
+            
             res_put = requests.put(file_api_url, json=put_payload, headers=headers_pub, timeout=30)
+            
+            print(f"[ДИАГНОСТИКА YAML] Код ответа сервера GitHub: {res_put.status_code}")
+            print(f"[ДИАГНОСТИКА YAML] Полный текст ответа GitHub: {res_put.text}")
+            
             if res_put.status_code in (200, 201):
                 print(f"[ГЕНЕРАТОР] 🟢 База YAML для {teacher_login} успешно обновлена напрямую в репозитории Журнала!")
             else:

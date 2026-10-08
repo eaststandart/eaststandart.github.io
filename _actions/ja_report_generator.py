@@ -24,7 +24,9 @@ DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
 # Базовый служебный API-путь для управления файлами базы данных
-BASE_API_CONTENTS_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
+# Базовые служебные API-пути к двум разным папкам удалённого репозитория Журнала
+JOURNAL_YML_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+JOURNAL_JSON_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
@@ -32,7 +34,7 @@ def run_generator():
     data_dir = os.path.join(os.getcwd(), '_data')
     if not os.path.exists(data_dir):
         print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
-        return False, None, None, None
+        return False, []
 
     # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
     all_files = os.listdir(data_dir)
@@ -43,15 +45,30 @@ def run_generator():
             if login:
                 active_teachers.append(login)
 
-    print(f"[ГЕНЕРАТОР] Список активных преподавателей из базы YML: {active_teachers}")
+    print(f"[ГЕНЕРАТОР] Список active преподавателей из базы YML: {active_teachers}")
 
-    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ОТ ВСЕХ УЧИТЕЛЕЙ
-    all_json_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
+    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ИЗ СЕТИ ГИТХАБА ЧЕРЕЗ API
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
+    
+    try:
+        response = requests.get(JOURNAL_JSON_API_URL, headers=headers, timeout=30)
+        if response.status_code != 200:
+            print(f"[ГЕНЕРАТОР] Временные файлы журналов в папке _output отсутствуют (Код API: {response.status_code}). Выход.")
+            return False, []
+            
+        output_contents = response.json()
+        all_json_files = [item["name"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')]
+        
+    except Exception as err:
+        print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого запроса к _output Журнала: {str(err)}")
+        return False, []
+
     if not all_json_files:
-        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
-        return False, None, None, None
+        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке _output отсутствуют. Выход.")
+        return False, []
 
-    # Список для накопления пакетов отчетов каждого успешного учителя
+    print(f"[ГЕНЕРАТОР] Обнаружено JSON-файлов в сети Журнала (_output): {len(all_json_files)} шт.")
     all_generated_reports = []
 
     # ЗАПУСКАЕМ ИЗОЛИРОВАННЫЙ ЦИКЛ ПО КАЖДОМУ ПРЕПОДАВАТЕЛЮ
@@ -391,7 +408,7 @@ def run_generator():
         # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API ===
         print(f"[ЗАЧИСТКА] Удаляем отработанные файлы JSON для '{teacher_login}' из репозитория баз...")
         for file_name in teacher_json_files:
-            file_api_url = f"{BASE_API_CONTENTS_URL}/{file_name}"
+            file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
             
             res_info = requests.get(file_api_url, headers={"Authorization": f"token {admin_token}"})
             if res_info.status_code == 200:

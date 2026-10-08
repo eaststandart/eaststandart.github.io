@@ -103,6 +103,12 @@ def run_generator():
         # Сетевой адрес конкретного YAML-файла в репозитории Журнала
         file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
 
+        # Подготовка сетевых заголовков авторизации для работы с приватным репозиторием Журнала
+        headers_pub = {
+            "Authorization": f"token {admin_token}",
+            "Content-Type": "application/json"
+        }
+
         res_info = requests.get(file_api_url, headers=headers_pub, timeout=30)
         if res_info.status_code != 200:
             print(f"[ГЕНЕРАТОР] ⚠️ Не удалось получить YAML с GitHub для {teacher_login}: {res_info.status_code}")

@@ -24,6 +24,7 @@ DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
 # Базовый служебный API-путь для управления файлами базы данных
+# Базовые служебные API-пути к двум разным папкам удалённого репозитория Журнала
 JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
@@ -31,11 +32,9 @@ def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
     data_dir = os.path.join(os.getcwd(), '_data')
-    output_dir = os.path.join(os.getcwd(), '_output')
-    
-    if not os.path.exists(data_dir) or not os.path.exists(output_dir):
-        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Целевые папки _data или _output не найдены.")
-        return False, None, None, None
+    if not os.path.exists(data_dir):
+        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
+        return False, []
 
     # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
     all_files = os.listdir(data_dir)
@@ -46,15 +45,32 @@ def run_generator():
             if login:
                 active_teachers.append(login)
 
-    print(f"[ГЕНЕРАТОР] Список активных преподавателей из базы YML: {active_teachers}")
+    print(f"[ГЕНЕРАТОР] Список active преподавателей из базы YML: {active_teachers}")
 
-    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ОТ ВСЕХ УЧИТЕЛЕЙ
-    all_json_files = [f for f in os.listdir(output_dir) if '-journal-attendance-' in f and f.endswith('.json')]
+    # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ИЗ СЕТИ ГИТХАБА ЧЕРЕЗ API
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
+    
+    try:
+        response = requests.get(JOURNAL_JSON_API_URL, headers=headers, timeout=30)
+        if response.status_code != 200:
+            print(f"[ГЕНЕРАТОР] Временные файлы журналов в папке _output отсутствуют (Код API: {response.status_code}). Выход.")
+            return False, []
+            
+        output_contents = response.json()
+        # Создаём словарь {имя_файла: url_скачивания} прямо из ответа API
+        json_download_urls = {item["name"]: item["download_url"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')}
+        all_json_files = list(json_download_urls.keys())
+        
+    except Exception as err:
+        print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого запроса к _output Журнала: {str(err)}")
+        return False, []
+
     if not all_json_files:
-        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
-        return False, None, None, None
+        print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке _output отсутствуют. Выход.")
+        return False, []
 
-    # Список для накопления пакетов отчетов каждого успешного учителя
+    print(f"[ГЕНЕРАТОР] Обнаружено JSON-файлов в сети Журнала (_output): {len(all_json_files)} шт.")
     all_generated_reports = []
 
     # ЗАПУСКАЕМ ИЗОЛИРОВАННЫЙ ЦИКЛ ПО КАЖДОМУ ПРЕПОДАВАТЕЛЮ
@@ -66,9 +82,13 @@ def run_generator():
             
         print(f"\n👉 [ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
-        sample_path = os.path.join(output_dir, teacher_json_files[0])
-        with open(sample_path, 'r', encoding='utf-8') as f:
-            sample_data = json.load(f)
+        # Скачиваем содержимое пилотного JSON-файла напрямую из сети Гитхаба
+        try:
+            sample_download_url = json_download_urls[teacher_json_files[0]]
+            sample_data = requests.get(sample_download_url, headers=headers, timeout=30).json()
+        except Exception as e:
+            print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {teacher_json_files[0]}: {str(e)}")
+            continue
             
         target_day = sample_data.get('day', '').lower().strip()
         date_str = sample_data.get('date', '')
@@ -228,9 +248,13 @@ def run_generator():
         # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ ===
         temp_journal = {}
         for file in teacher_json_files:
-            with open(os.path.join(output_dir, file), 'r', encoding='utf-8') as f:
-                file_data = json.load(f)
+            try:
+                file_url = json_download_urls[file]
+                file_data = requests.get(file_url, headers=headers, timeout=30).json()
                 temp_journal[file_data["time"]] = file_data
+            except Exception as e:
+                print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {file} при сборке таблицы: {str(e)}")
+                continue
 
         schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
         print(f"[ГЕНЕРАТОР] Запланировано групп у {teacher_login} по YAML: {schedule_groups}")

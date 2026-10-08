@@ -36,27 +36,66 @@ def close_gate_pipeline(reports_list):
 
     for report_item in reports_list:
         teacher_login = report_item.get("teacher_login")
-        target_day = report_item.get("target_day")
-        yaml_group_updates = report_item.get("yaml_updates", {})
-        json_files_to_delete = report_item.get("json_files", [])
-
+        target_day = report_item.get("day")  # Берём имя дня напрямую из оригинального пакета
+        
+        # Автоматически восстанавливаем массивы обновлений из внутренностей генератора
+        yaml_group_updates = report_item.get("markdown") # Текст отчета
+        
         print(f"\n👉 [ШЛЮЗ] Обработка фиксации данных для преподавателя: '{teacher_login}'")
 
         # ----------------------------------------------------------------------
-        # ЭТАП 1: СЕТЕВАЯ ПЕРЕЗАПИСЬ YAML БАЗЫ РАСПИСАНИЯ
+        # ЭТАП 1: СЕТЕВАЯ ПЕРЕЗАПИСЬ YAML БАЗЫ РАСПИСАНИЯ ЧЕРЕЗ API
         # ----------------------------------------------------------------------
-        if yaml_group_updates:
-            yaml_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
-            print(f"[ШЛЮЗ] Запрос оригинального YAML по сети: {yaml_api_url}")
+        yaml_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
+        print(f"[ШЛЮЗ] Запрос оригинального YAML по сети: {yaml_api_url}")
+        
+        res_info = requests.get(yaml_api_url, headers=headers_admin, timeout=30)
+        if res_info.status_code == 200:
+            res_json = res_info.json()
+            yaml_sha = res_json.get("sha")
             
-            res_info = requests.get(yaml_api_url, headers=headers_admin, timeout=30)
-            if res_info.status_code == 200:
-                res_json = res_info.json()
-                yaml_sha = res_json.get("sha")
-                
-                yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
-                orig_lines = yaml_content_bytes.decode('utf-8').split('\n')
-                
+            yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
+            orig_lines = yaml_content_bytes.decode('utf-8').split('\n')
+            
+            # Сканируем репозиторий Журнала через API для сбора точного списка JSON
+            # Так как мы не меняли генератор, Модуль Б сам соберёт имена файлов из сети
+            try:
+                res_output = requests.get(JOURNAL_JSON_API_URL, headers=headers_admin, timeout=30)
+                if res_output.status_code == 200:
+                    json_files_to_delete = [item["name"] for item in res_output.json() if f"-journal-attendance-{teacher_login}.json" in item["name"].lower()]
+                else:
+                    json_files_to_delete = []
+            except Exception:
+                json_files_to_delete = []
+
+            # Если файлы найдены, извлекаем из них локальные структуры обновлений расписания
+            # Это позволяет Модулю Б работать автономно, вообще не трогая код старого генератора!
+            yaml_group_updates_local = {}
+            for file_name in json_files_to_delete:
+                try:
+                    file_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
+                    file_data = requests.get(file_url, headers=headers_admin, timeout=30).json()
+                    # Декодируем содержимое JSON из base64
+                    js_bytes = base64.b64decode(file_data.get("content", ""))
+                    js_obj = json.loads(js_bytes.decode('utf-8'))
+                    
+                    # Собираем строки учеников по маске оригинального редактора
+                    time_key = js_obj.get("time")
+                    present_kids = js_obj.get("present_permanent", [])
+                    newbies_kids = js_obj.get("newbies", [])
+                    
+                    current_group_rows = []
+                    for k in present_kids:
+                        current_group_rows.append(k.replace('"', '').strip())
+                    for n in newbies_kids:
+                        if n.strip():
+                            current_group_rows.append(f"{n.strip()} 🟡 Новичок")
+                            
+                    yaml_group_updates_local[time_key] = current_group_rows
+                except Exception:
+                    continue
+
+            if yaml_group_updates_local:
                 new_lines = []
                 inside_day = False
                 idx = 0
@@ -75,19 +114,19 @@ def close_gate_pipeline(reports_list):
                         group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
                         new_lines.append(line)
                         
-                        final_rows = yaml_group_updates.get(group_time_clean, [])
-                        for kid_line in final_rows:
-                            clean_row = kid_line.replace('"', '').replace("'", "").strip()
-                            new_lines.append(f'    - "{clean_row}"')
+                        final_rows = yaml_group_updates_local.get(group_time_clean, [])
+                        if final_rows:
+                            for kid_line in final_rows:
+                                new_lines.append(f'    - "{kid_line}"')
                             
-                        while idx + 1 < len(orig_lines):
-                            next_line = orig_lines[idx + 1]
-                            if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
-                                idx += 1
-                            else:
-                                break
-                        idx += 1
-                        continue
+                            while idx + 1 < len(orig_lines):
+                                next_line = orig_lines[idx + 1]
+                                if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
+                                    idx += 1
+                                else:
+                                    break
+                            idx += 1
+                            continue
                         
                     new_lines.append(line)
                     idx += 1
@@ -103,17 +142,15 @@ def close_gate_pipeline(reports_list):
                 
                 res_put = requests.put(yaml_api_url, json=put_payload, headers=headers_admin, timeout=30)
                 if res_put.status_code in (200, 201):
-                    print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена в репозитории Журнала.")
+                    print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена напрямую по сети!")
                 else:
                     print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code}")
-            else:
-                print(f"[ШЛЮЗ] ⚠️ Не удалось скачать YAML для обновления: {res_info.status_code}")
 
         # ----------------------------------------------------------------------
         # ЭТАП 2: СЕТЕВОЕ УДАЛЕНИЕ JSON ИЗ ПАПКИ _OUTPUT (РАЗМОРОЗКА ШЛЮЗА)
         # ----------------------------------------------------------------------
         if json_files_to_delete:
-            print(f"[ШЛЮЗ] Удаление {len(json_files_to_delete)} отработанных файлов JSON...")
+            print(f"[ШЛЮЗ] Найдено файлов для удаления: {len(json_files_to_delete)} шт. Запуск REST-зачистки...")
             for file_name in json_files_to_delete:
                 file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
                 
@@ -129,8 +166,6 @@ def close_gate_pipeline(reports_list):
                         print(f"[ШЛЮЗ] 🟢 Файл {file_name} успешно стёрт из _output Журнала!")
                     else:
                         print(f"[ШЛЮЗ] ⚠️ Не удалось стереть файл {file_name}: {res_del.status_code}")
-                else:
-                    print(f"[ШЛЮЗ] ⚠️ Файл {file_name} не найден в сети Журнала для удаления.")
 
     print("=== [МОДУЛЬ JA_GATE_CLOSER] ВСЕ СЕТЕВЫЕ ОПЕРАЦИИ ОЧИСТКИ ЗАВЕРШЕНЫ ===")
     return True

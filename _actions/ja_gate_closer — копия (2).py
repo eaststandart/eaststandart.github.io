@@ -71,68 +71,105 @@ def close_gate_pipeline(reports_list):
                 print(f"[ШЛЮЗ] ❌ Ошибка получения списка файлов: {res_output.status_code}")
                 json_files_to_delete = []
 
-            # Если файлы найдены, извлекаем из них локальные структуры обновлений расписания
-            # Это позволяет Модулю Б работать автономно, вообще не трогая код старого генератора!
-            yaml_group_updates_local = {}
+            # ВСПЛИВАЮЩИЕ ОРИГИНАЛЬНЫЕ ФУНКЦИИ ОБРАБОТКИ СТРОК YAML 1 В 1 ИЗ СТАРОГО ГЕНЕРАТОРА
+            def translit_rus_to_lat(text):
+                rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split()
+                lat = "a b v g d e yo zh z i y k l m n o p r s t у f kh ts ch sh shch  y  e yu ya".split()
+                res = ""
+                lower_text = text.lower()
+                for char in lower_text:
+                    if char in rus:
+                        res += lat[rus.index(char)]
+                    elif char in [" ", "-"]:
+                        res += "-"
+                    elif char.isalnum() or char == "_":
+                        res += char
+                return re.sub(r'-+', '-', res).strip('-')
+
+            def process_kid_row(raw_name, status_text):
+                track = ""
+                match_ready = re.search(r'(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)', raw_name)
+                target_tag = match_ready.group(0) if match_ready else ""
+                need_auto_generate = not target_tag and "#" in raw_name
+                normalized = raw_name.replace("[c]", "[с]").replace("[C]", "[с]").replace('"', '').strip()
+                if "[э]" in normalized.lower():
+                    track = "электроника"
+                elif "[с]" in normalized.lower():
+                    track = "столярное"
+                if need_auto_generate:
+                    name_for_tag = normalized.replace("[э]", "").replace("[с]", "").replace("[Э]", "").replace("[С]", "").replace("#", "").strip()
+                    name_for_tag = re.sub(r'\s+', ' ', name_for_tag).strip()
+                    target_tag = f"#techlab-{translit_rus_to_lat(name_for_tag)}"
+                    normalized = normalized.replace("#", target_tag).strip()
+                print_name = normalized.replace('"', '')
+                print_name = re.sub(r'\[э\]|\[с\]', '', print_name, flags=re.IGNORECASE)
+                print_name = re.sub(r'(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)', '', print_name)
+                print_name = re.sub(r'\s+', ' ', print_name).strip()
+                direction_suffix = " [э]" if track == "электроника" else " [с]" if track == "столярное" else ""
+                tag_suffix = f" {target_tag}" if target_tag else ""
+                final_yaml_line = f"{print_name}{direction_suffix}{tag_suffix}"
+                return {"name_for_sort": print_name, "yaml_line": final_yaml_line}
+
+            # Чтение внутренностей JSON из сети и сборка обновлений строго по оригинальному движку
+            temp_journal = {}
             for file_name in json_files_to_delete:
                 try:
                     file_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
                     file_data = requests.get(file_url, headers=headers_admin, timeout=30).json()
-                    # Декодируем содержимое JSON из base64
                     js_bytes = base64.b64decode(file_data.get("content", ""))
                     js_obj = json.loads(js_bytes.decode('utf-8'))
-                    
-                    # Собираем строки учеников по маске оригинального редактора
-                    time_key = js_obj.get("time")
-                    present_kids = js_obj.get("present_permanent", [])
-                    newbies_kids = js_obj.get("newbies", [])
-                    
-                    current_group_rows = []
-                    for k in present_kids:
-                        current_group_rows.append(k.replace('"', '').strip())
-                    for n in newbies_kids:
-                        if n.strip():
-                            current_group_rows.append(f"{n.strip()} 🟡 Новичок")
-                            
-                    yaml_group_updates_local[time_key] = current_group_rows
+                    temp_journal[js_obj["time"]] = js_obj
                 except Exception:
                     continue
 
-            if yaml_group_updates_local:
-                new_lines = []
-                inside_day = False
-                idx = 0
-                while idx < len(orig_lines):
-                    line = orig_lines[idx]
-                    trimmed = line.rstrip()
-                    indent = len(line) - len(line.lstrip())
-                    
-                    if indent == 0 and trimmed.endswith(':'):
-                        inside_day = (trimmed[:-1].lower().strip() == target_day)
-                        new_lines.append(line)
-                        idx += 1
-                        continue
-                        
-                    if inside_day and indent == 2 and trimmed.endswith(':'):
-                        group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
-                        new_lines.append(line)
-                        
-                        final_rows = yaml_group_updates_local.get(group_time_clean, [])
-                        if final_rows:
-                            for kid_line in final_rows:
-                                new_lines.append(f'    - "{kid_line}"')
-                            
-                            while idx + 1 < len(orig_lines):
-                                next_line = orig_lines[idx + 1]
-                                if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
-                                    idx += 1
-                                else:
-                                    break
-                            idx += 1
-                            continue
-                        
+            schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
+            yaml_group_updates = {}
+
+            # ОРИГИНАЛЬНАЯ ЛОГИКА СОРТИРОВКИ И УПАКОВКИ YAML 1 В 1 ИЗ СТАРОГО ГЕНЕРАТОРА
+            for time_key in schedule_groups:
+                group_payload = temp_journal.get(time_key, {"present_permanent": [], "newbies": [], "probation": []})
+                permanent_kids = students_data.get(target_day, {}).get(time_key, [])
+                current_group_yaml_rows = []
+                for kid in permanent_kids:
+                    processed = process_kid_row(kid, "")
+                    current_group_yaml_rows.append(processed["yaml_line"])
+                for newbie in group_payload.get("newbies", []):
+                    if newbie.strip():
+                        processed = process_kid_row(newbie, "🟡 Новичок")
+                        current_group_yaml_rows.append(processed["yaml_line"])
+                current_group_yaml_rows.sort(key=lambda x: re.sub(r'\[э\]|\[с\]|@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+', '', x, flags=re.IGNORECASE).strip().lower())
+                yaml_group_updates[time_key] = current_group_yaml_rows
+
+            # ОРИГИНАЛЬНЫЙ ЦИКЛ ПОСТРОЧНОЙ ПЕРЕЗАПИСИ ТЕКСТА YAML 1 В 1 ИЗ СТАРОГО ГЕНЕРАТОРА
+            new_lines = []
+            inside_day = False
+            idx = 0
+            while idx < len(orig_lines):
+                line = orig_lines[idx]
+                trimmed = line.rstrip()
+                indent = len(line) - len(line.lstrip())
+                if indent == 0 and trimmed.endswith(':'):
+                    inside_day = (trimmed[:-1].lower().strip() == target_day)
                     new_lines.append(line)
                     idx += 1
+                    continue
+                if inside_day and indent == 2 and trimmed.endswith(':'):
+                    group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
+                    new_lines.append(line)
+                    final_rows = yaml_group_updates.get(group_time_clean, students_data.get(target_day, {}).get(group_time_clean, []))
+                    for kid_line in final_rows:
+                        clean_row = kid_line.replace('"', '').replace("'", "").strip()
+                        new_lines.append(f'    - "{clean_row}"')
+                    while idx + 1 < len(orig_lines):
+                        next_line = orig_lines[idx + 1]
+                        if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
+                            idx += 1
+                        else:
+                            break
+                    idx += 1
+                    continue
+                new_lines.append(line)
+                idx += 1
 
                 updated_yaml_text = '\n'.join(new_lines)
                 encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')

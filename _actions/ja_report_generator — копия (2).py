@@ -30,26 +30,26 @@ JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_RE
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
-    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
-    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
+    data_dir = os.path.join(os.getcwd(), '_data')
+#    if not os.path.exists(data_dir):
+#        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
+#        return False, []
 
-    # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ НАПРЯМУЮ ИЗ СЕТИ ЖУРНАЛА ЧЕРЕЗ API
+    # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
+    all_files = os.listdir(data_dir)
     active_teachers = []
-    try:
-        res_yml_list = requests.get(JOURNAL_YML_API_URL, headers=headers, timeout=30)
-        if res_yml_list.status_code == 200:
-            for item in res_yml_list.json():
-                f = item["name"]
-                if f.startswith('journal-attendance-') and f.endswith('.yml'):
-                    login = f.replace('journal-attendance-', '').replace('.yml', '').strip().lower()
-                    if login:
-                        active_teachers.append(login)
-    except Exception as e_yml:
-        print(f"[ГЕНЕРАТОР] ⚠️ Не удалось собрать список преподавателей по сети: {str(e_yml)}")
+    for f in all_files:
+        if f.startswith('journal-attendance-') and f.endswith('.yml'):
+            login = f.replace('journal-attendance-', '').replace('.yml', '').strip().lower()
+            if login:
+                active_teachers.append(login)
 
     print(f"[ГЕНЕРАТОР] Список active преподавателей из базы YML: {active_teachers}")
 
     # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ИЗ СЕТИ ГИТХАБА ЧЕРЕЗ API
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
+    
     try:
         response = requests.get(JOURNAL_JSON_API_URL, headers=headers, timeout=30)
         if response.status_code != 200:
@@ -57,6 +57,7 @@ def run_generator():
             return False, []
             
         output_contents = response.json()
+        # Создаём словарь {имя_файла: url_скачивания} прямо из ответа API
         json_download_urls = {item["name"]: item["download_url"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')}
         all_json_files = list(json_download_urls.keys())
         

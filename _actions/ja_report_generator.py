@@ -30,7 +30,7 @@ JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_RE
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
-#    data_dir = os.path.join(os.getcwd(), '_data')
+    data_dir = os.path.join(os.getcwd(), '_data')
 #    if not os.path.exists(data_dir):
 #        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
 #        return False, []

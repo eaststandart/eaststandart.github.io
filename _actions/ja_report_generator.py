@@ -100,10 +100,22 @@ def run_generator():
             print(f"[ГЕНЕРАТОР] ❌ Пропуск: Личный файл расписания не найден: {yaml_path}")
             continue
 
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            yaml_text_orig = f.read()
-            f.seek(0)
-            yaml_data = yaml.safe_load(f) or {}
+        # Сетевой адрес конкретного YAML-файла в репозитории Журнала
+        file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
+
+        res_info = requests.get(file_api_url, headers=headers_pub, timeout=30)
+        if res_info.status_code != 200:
+            print(f"[ГЕНЕРАТОР] ⚠️ Не удалось получить YAML с GitHub для {teacher_login}: {res_info.status_code}")
+            continue
+
+        res_json = res_info.json()
+        yaml_sha = res_json.get("sha")
+
+        # Декодируем текстовое содержимое файла из формата base64, в котором его отдал GitHub
+        import base64
+        yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
+        yaml_text_orig = yaml_content_bytes.decode('utf-8')
+        yaml_data = yaml.safe_load(yaml_text_orig) or {}
 
         # === ЖЕСТКИЙ ВХОДНОЙ ЩИТ: АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ В ФАЙЛЕ НА СТАРТЕ ===
         students_data = {}
@@ -409,9 +421,22 @@ def run_generator():
                 new_lines.append(line)
                 idx += 1
                 
-            with open(yaml_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(new_lines))
-            print(f"[ГЕНЕNERАТОР] База YAML для {teacher_login} успешно отсортирована и сохранена!")
+            # Кодируем обновлённый текст обратно в base64 для отправки через API
+            updated_yaml_text = '\n'.join(new_lines)
+            encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
+
+            put_payload = {
+                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
+                "content": encoded_content,
+                "sha": yaml_sha
+            }
+
+            res_put = requests.put(file_api_url, json=put_payload, headers=headers_pub, timeout=30)
+            if res_put.status_code in (200, 201):
+                print(f"[ГЕНЕРАТОР] 🟢 База YAML для {teacher_login} успешно обновлена напрямую в репозитории Журнала!")
+            else:
+                print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого сохранения YAML для {teacher_login}: {res_put.status_code}")
+
         except Exception as e:
             print(f"[ГЕНЕРАТОР] ⚠️ Ошибка сохранения YAML для {teacher_login}: {str(e)}")
 
@@ -425,7 +450,7 @@ def run_generator():
                 file_sha = res_info.json().get("sha")
                 
                 delete_payload = {
-                    "message": f"cleanup: автоматическое удаление отработанного файла {file_name}",
+                    "message": f"cleanup: удаление {file_name}",
                     "sha": file_sha
                 }
                 res_del = requests.delete(file_api_url, json=delete_payload, headers={"Authorization": f"token {admin_token}"})

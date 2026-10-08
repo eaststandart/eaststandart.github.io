@@ -49,5 +49,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          JOURNAL_WRITE_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python _actions/journalattendance.py

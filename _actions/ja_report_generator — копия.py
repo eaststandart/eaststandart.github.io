@@ -23,7 +23,6 @@ BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/di
 DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
-# Базовый служебный API-путь для управления файлами базы данных
 # Базовые служебные API-пути к двум разным папкам удалённого репозитория Журнала
 JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
@@ -31,26 +30,26 @@ JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_RE
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
-    data_dir = os.path.join(os.getcwd(), '_data')
-    if not os.path.exists(data_dir):
-        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
-        return False, []
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
 
-    # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
-    all_files = os.listdir(data_dir)
+    # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ НАПРЯМУЮ ИЗ СЕТИ ЖУРНАЛА ЧЕРЕЗ API
     active_teachers = []
-    for f in all_files:
-        if f.startswith('journal-attendance-') and f.endswith('.yml'):
-            login = f.replace('journal-attendance-', '').replace('.yml', '').strip().lower()
-            if login:
-                active_teachers.append(login)
+    try:
+        res_yml_list = requests.get(JOURNAL_YML_API_URL, headers=headers, timeout=30)
+        if res_yml_list.status_code == 200:
+            for item in res_yml_list.json():
+                f = item["name"]
+                if f.startswith('journal-attendance-') and f.endswith('.yml'):
+                    login = f.replace('journal-attendance-', '').replace('.yml', '').strip().lower()
+                    if login:
+                        active_teachers.append(login)
+    except Exception as e_yml:
+        print(f"[ГЕНЕРАТОР] ⚠️ Не удалось собрать список преподавателей по сети: {str(e_yml)}")
 
     print(f"[ГЕНЕРАТОР] Список active преподавателей из базы YML: {active_teachers}")
 
     # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ИЗ СЕТИ ГИТХАБА ЧЕРЕЗ API
-    admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
-    headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
-    
     try:
         response = requests.get(JOURNAL_JSON_API_URL, headers=headers, timeout=30)
         if response.status_code != 200:
@@ -58,7 +57,6 @@ def run_generator():
             return False, []
             
         output_contents = response.json()
-        # Создаём словарь {имя_файла: url_скачивания} прямо из ответа API
         json_download_urls = {item["name"]: item["download_url"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')}
         all_json_files = list(json_download_urls.keys())
         
@@ -94,11 +92,6 @@ def run_generator():
         date_str = sample_data.get('date', '')
         teacher_username = sample_data.get('teacher_username', 'Преподаватель')
         teacher_login = current_teacher  
-
-        yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")
-        if not os.path.exists(yaml_path):
-            print(f"[ГЕНЕРАТОР] ❌ Пропуск: Личный файл расписания не найден: {yaml_path}")
-            continue
 
         # Сетевой адрес конкретного YAML-файла в репозитории Журнала
         file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
@@ -390,80 +383,6 @@ def run_generator():
         except Exception as e:
             print(f"[ГЕНЕРАТОР] ❌ Ошибка связи с API при публикации отчета {teacher_login}: {str(e)}")
             continue
-
-        # === ОБНОВЛЕНИЕ YAML БАЗЫ РАСПИСАНИЯ С АЛФАВИТНОЙ СОРТИРОВКОЙ ===
-        try:
-            with open(yaml_path, 'r', encoding='utf-8') as f:
-                orig_lines = f.read().split('\n')
-                
-            new_lines = []
-            inside_day = False
-            idx = 0
-            while idx < len(orig_lines):
-                line = orig_lines[idx]
-                trimmed = line.rstrip()
-                indent = len(line) - len(line.lstrip())
-                
-                if indent == 0 and trimmed.endswith(':'):
-                    inside_day = (trimmed[:-1].lower().strip() == target_day)
-                    new_lines.append(line)
-                    idx += 1
-                    continue
-                    
-                if inside_day and indent == 2 and trimmed.endswith(':'):
-                    group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
-                    new_lines.append(line)
-                    
-                    final_rows = yaml_group_updates.get(group_time_clean, students_data.get(target_day, {}).get(group_time_clean, []))
-                    for kid_line in final_rows:
-                        clean_row = kid_line.replace('"', '').replace("'", "").strip()
-                        new_lines.append(f'    - "{clean_row}"')
-                        
-                    while idx + 1 < len(orig_lines):
-                        next_line = orig_lines[idx + 1]
-                        if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
-                            idx += 1
-                        else:
-                            break
-                    idx += 1
-                    continue
-                    
-                new_lines.append(line)
-                idx += 1
-
-            # ==================================================================
-            # ДИАГНОСТИЧЕСКИЙ ЛОГ СЕТЕВОГО СОХРАНЕНИЯ YAML
-            # ==================================================================
-            updated_yaml_text = '\n'.join(new_lines)
-            encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
-            
-            put_payload = {
-                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
-                "content": encoded_content,
-                "sha": yaml_sha
-            }
-            
-            print(f"\n[ДИАГНОСТИКА YAML] Выполняем PUT-запрос сохранения расписания.")
-            print(f"[ДИАГНОСТИКА YAML] Целевой URL: {file_api_url}")
-            print(f"[ДИАГНОСТИКА YAML] Переданный SHA-хэш: {yaml_sha}")
-            
-            res_put = requests.put(file_api_url, json=put_payload, headers=headers_pub, timeout=30)
-            
-            print(f"[ДИАГНОСТИКА YAML] Код ответа сервера GitHub: {res_put.status_code}")
-            print(f"[ДИАГНОСТИКА YAML] Полный текст ответа GitHub: {res_put.text}")
-            
-            if res_put.status_code in (200, 201):
-                print(f"[ГЕНЕРАТОР] 🟢 База YAML для {teacher_login} успешно обновлена напрямую в репозитории Журнала!")
-            else:
-                print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого сохранения YAML для {teacher_login}: {res_put.status_code}")
-
-        except Exception as e:
-            print(f"[ГЕНЕРАТОР] ⚠️ Ошибка сохранения YAML для {teacher_login}: {str(e)}")
-
-        # === ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API (ОТКЛЮЧЕНО) ===
-        print(f"[ЗАЧИСТКА] Внимание: Локальное удаление в Генераторе отключено. Передаём файлы в ja_gate_closer.")
-        for file_name in teacher_json_files:
-            continue  # Генератор больше не стирает файлы, они гарантированно дождутся Модуля Б!
 
         # Упаковываем все данные текущего учителя в изолированный пакет и добавляем в список
         report_packet = {

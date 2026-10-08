@@ -149,9 +149,23 @@ def run_generator():
                         students_data[day_name][clean_time_str] = kids_list if isinstance(kids_list, list) else []
 
         if file_needs_repair:
-            with open(yaml_path, 'w', encoding='utf-8') as f:
-                f.write(updated_yaml_text)
-            print("[РЕДАКТОР] Файл расписания успешно вылечен!")
+            # Переводим лечение опечаток YAML на чистый сетевой PUT-запрос напрямую в Журнал
+            try:
+                encoded_repair = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
+                repair_payload = {
+                    "message": f"fix: автоматическое исправление опечаток времени для {teacher_login}",
+                    "content": encoded_content if 'encoded_content' in locals() else encoded_repair,
+                    "sha": yaml_sha
+                }
+                res_repair = requests.put(file_api_url, json=repair_payload, headers=headers_pub, timeout=30)
+                if res_repair.status_code in (200, 201):
+                    print(f"[РЕДАКТОР] 🟢 Файл расписания для {teacher_login} успешно вылечен от опечаток времени напрямую в сети Журнала!")
+                    # Обновляем SHA-хэш в памяти на случай, если этот же воркфлоу будет читать файл повторно
+                    yaml_sha = res_repair.json().get("content", {}).get("sha", yaml_sha)
+                else:
+                    print(f"[РЕДАКТОР] ❌ Не удалось отправить вылеченный YAML по сети: {res_repair.status_code}")
+            except Exception as e_repair:
+                print(f"[РЕДАКТОР] ⚠️ Исключение при сетевом лечении YAML: {str(e_repair)}")
         config_data = yaml_data.get('config', {})
         publish_as_bot = config_data.get('publish_as_bot', False)
         show_projects_column = config_data.get('show_projects_column', True)

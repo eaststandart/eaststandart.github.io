@@ -460,26 +460,10 @@ def run_generator():
         except Exception as e:
             print(f"[ГЕНЕРАТОР] ⚠️ Ошибка сохранения YAML для {teacher_login}: {str(e)}")
 
-        # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API ===
-        print(f"[ЗАЧИСТКА] Удаляем отработанные файлы JSON для '{teacher_login}' из репозитория баз...")
+        # === ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API (ОТКЛЮЧЕНО) ===
+        print(f"[ЗАЧИСТКА] Внимание: Локальное удаление в Генераторе отключено. Передаём файлы в ja_gate_closer.")
         for file_name in teacher_json_files:
-            file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
-            
-            res_info = requests.get(file_api_url, headers={"Authorization": f"token {admin_token}"})
-            if res_info.status_code == 200:
-                file_sha = res_info.json().get("sha")
-                
-                delete_payload = {
-                    "message": f"cleanup: удаление {file_name}",
-                    "sha": file_sha
-                }
-                res_del = requests.delete(file_api_url, json=delete_payload, headers={"Authorization": f"token {admin_token}"})
-                if res_del.status_code == 200:
-                    print(f"[ЗАЧИСТКА API] 🟢 Файл {file_name} успешно стёрт с GitHub!")
-                else:
-                    print(f"[ЗАЧИСТКА API] ⚠️ Не удалось стереть {file_name}: {res_del.status_code}")
-            else:
-                print(f"[ЗАЧИСТКА API] ⚠️ Файл {file_name} не найден на GitHub для удаления.")
+            continue  # Генератор больше не стирает файлы, они гарантированно дождутся Модуля Б!
 
         # Упаковываем все данные текущего учителя в изолированный пакет и добавляем в список
         report_packet = {

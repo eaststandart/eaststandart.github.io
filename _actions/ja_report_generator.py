@@ -105,7 +105,7 @@ def run_generator():
 
         # Подготовка сетевых заголовков авторизации для работы с приватным репозиторием Журнала
         headers_pub = {
-            "Authorization": f"token {admin_token}",
+            "Authorization": f"token {admin_token if admin_token else active_token}",
             "Accept": "application/vnd.github+json",
             "Content-Type": "application/json"
         }

@@ -16,8 +16,8 @@ import requests
 DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
-JOURNAL_YML_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
-JOURNAL_JSON_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
+JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def close_gate_pipeline(reports_list):
     print("\n=== [МОДУЛЬ JA_GATE_CLOSER] ЗАПУСК ЗАКРЫВАТЕЛЯ ШЛЮЗА ===")

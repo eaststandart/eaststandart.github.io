@@ -93,11 +93,6 @@ def run_generator():
         teacher_username = sample_data.get('teacher_username', 'Преподаватель')
         teacher_login = current_teacher  
 
-        yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")
-        if not os.path.exists(yaml_path):
-            print(f"[ГЕНЕРАТОР] ❌ Пропуск: Личный файл расписания не найден: {yaml_path}")
-            continue
-
         # Сетевой адрес конкретного YAML-файла в репозитории Журнала
         file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
 

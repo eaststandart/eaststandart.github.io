@@ -58,7 +58,9 @@ def run_generator():
             return False, []
             
         output_contents = response.json()
-        all_json_files = [item["name"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')]
+        # Создаём словарь {имя_файла: url_скачивания} прямо из ответа API
+        json_download_urls = {item["name"]: item["download_url"] for item in output_contents if '-journal-attendance-' in item["name"] and item["name"].endswith('.json')}
+        all_json_files = list(json_download_urls.keys())
         
     except Exception as err:
         print(f"[ГЕНЕРАТОР] ❌ Ошибка сетевого запроса к _output Журнала: {str(err)}")
@@ -80,9 +82,13 @@ def run_generator():
             
         print(f"\n👉 [ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
-        sample_path = os.path.join(data_dir, teacher_json_files[0])
-        with open(sample_path, 'r', encoding='utf-8') as f:
-            sample_data = json.load(f)
+        # Скачиваем содержимое пилотного JSON-файла напрямую из сети Гитхаба
+        try:
+            sample_download_url = json_download_urls[teacher_json_files[0]]
+            sample_data = requests.get(sample_download_url, headers=headers, timeout=30).json()
+        except Exception as e:
+            print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {teacher_json_files[0]}: {str(e)}")
+            continue
             
         target_day = sample_data.get('day', '').lower().strip()
         date_str = sample_data.get('date', '')
@@ -242,9 +248,13 @@ def run_generator():
         # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ ===
         temp_journal = {}
         for file in teacher_json_files:
-            with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
-                file_data = json.load(f)
+            try:
+                file_url = json_download_urls[file]
+                file_data = requests.get(file_url, headers=headers, timeout=30).json()
                 temp_journal[file_data["time"]] = file_data
+            except Exception as e:
+                print(f"[ГЕНЕРАТОР] ❌ Ошибка интернет-чтения файла {file} при сборке таблицы: {str(e)}")
+                continue
 
         schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
         print(f"[ГЕНЕРАТОР] Запланировано групп у {teacher_login} по YAML: {schedule_groups}")

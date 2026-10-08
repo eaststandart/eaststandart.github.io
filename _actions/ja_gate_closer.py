@@ -197,7 +197,7 @@ def close_gate_pipeline(reports_list):
         # ----------------------------------------------------------------------
         updated_yaml_text = '\n'.join(new_lines)
 
-        if updated_yaml_text.strip() == yaml_text_orig.strip():
+        if updated_yaml_text.strip() == yaml_content_bytes.decode('utf-8').strip():
             print(f"[ШЛЮЗ] ℹ️ Состав групп и порядок строк для {teacher_login} не изменились. Пропуск PUT-запроса YAML.")
         else:
             # Отправляем PUT-запрос в сеть Гитхаба только если текст реально изменился!

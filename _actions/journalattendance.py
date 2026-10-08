@@ -74,6 +74,13 @@ def main():
                 print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое для {teacher_login}, пропуск.")
                 
         print("=== [ГЛАВНЫЙ ДИСПЕТЧЕР] ВСЕ СФОРМИРОВАННЫЕ ОТЧЕТЫ УСПЕШНО РАЗОСЛАНЫ В ТЕЛЕГРАМ! ===")
+
+        # ВКЛЮЧЕНИЕ СЕТЕВОГО ЗАКРЫВАТЕЛЯ ШЛЮЗА ПОСЛЕ ПОЛНОГО ЗАВЕРШЕНИЯ ТЕЛЕГРАМА
+        try:
+            import ja_gate_closer
+            ja_gate_closer.close_gate_pipeline(reports_list)
+        except Exception as e_closer:
+            print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Ошибка выполнения модуля ja_gate_closer: {str(e_closer)}")
        
     except Exception as err:
         print(f"[ГЛАВНЫЙ ДИСПЕТЧЕР] ❌ Критическая ошибка конвейера: {str(err)}")

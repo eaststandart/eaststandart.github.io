@@ -24,14 +24,17 @@ DATA_REPO_OWNER = "eaststandart"
 DATA_REPO_NAME = "techlab-journal-attendance"
 
 # Базовый служебный API-путь для управления файлами базы данных
-BASE_API_CONTENTS_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
+JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")
     
     data_dir = os.path.join(os.getcwd(), '_data')
-    if not os.path.exists(data_dir):
-        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Папка с данными не найдена: {data_dir}")
+    output_dir = os.path.join(os.getcwd(), '_output')
+    
+    if not os.path.exists(data_dir) or not os.path.exists(output_dir):
+        print(f"[ГЕНЕРАТОР] ❌ КРИТИЧЕСКАЯ ОШИБКА: Целевые папки _data или _output не найдены.")
         return False, None, None, None
 
     # АВТО-ПОИСК ЖИВЫХ ЛОГИНОВ ПРЕПОДАВАТЕЛЕЙ ПО ФАЙЛАМ РАСПИСАНИЙ .YML
@@ -46,7 +49,7 @@ def run_generator():
     print(f"[ГЕНЕРАТОР] Список активных преподавателей из базы YML: {active_teachers}")
 
     # СБОР ВСЕХ ПРИЛЕТЕВШИХ JSON ФАЙЛОВ ГРУПП ОТ ВСЕХ УЧИТЕЛЕЙ
-    all_json_files = [f for f in all_files if '-journal-attendance-' in f and f.endswith('.json')]
+    all_json_files = [f for f in os.listdir(output_dir) if '-journal-attendance-' in f and f.endswith('.json')]
     if not all_json_files:
         print("[ГЕНЕРАТОР] Временные файлы журналов групп в папке отсутствуют. Выход.")
         return False, None, None, None
@@ -63,7 +66,7 @@ def run_generator():
             
         print(f"\n👉 [ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
-        sample_path = os.path.join(data_dir, teacher_json_files[0])
+        sample_path = os.path.join(output_dir, teacher_json_files[0])
         with open(sample_path, 'r', encoding='utf-8') as f:
             sample_data = json.load(f)
             
@@ -225,7 +228,7 @@ def run_generator():
         # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ ===
         temp_journal = {}
         for file in teacher_json_files:
-            with open(os.path.join(data_dir, file), 'r', encoding='utf-8') as f:
+            with open(os.path.join(output_dir, file), 'r', encoding='utf-8') as f:
                 file_data = json.load(f)
                 temp_journal[file_data["time"]] = file_data
 
@@ -391,7 +394,7 @@ def run_generator():
         # === ХИРУРГИЧЕСКАЯ ЗАЧИСТКА JSON В БАЗЕ ДАННЫХ ЧЕРЕЗ GITHUB REST API ===
         print(f"[ЗАЧИСТКА] Удаляем отработанные файлы JSON для '{teacher_login}' из репозитория баз...")
         for file_name in teacher_json_files:
-            file_api_url = f"{BASE_API_CONTENTS_URL}/{file_name}"
+            file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"
             
             res_info = requests.get(file_api_url, headers={"Authorization": f"token {admin_token}"})
             if res_info.status_code == 200:

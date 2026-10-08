@@ -103,9 +103,12 @@ def run_generator():
         # Сетевой адрес конкретного YAML-файла в репозитории Журнала
         file_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
 
+        # Извлечение изолированного персонального токена, переданного специально для перезаписи YAML
+        write_token = os.environ.get("JOURNAL_WRITE_TOKEN")
+
         # Подготовка сетевых заголовков авторизации для работы с приватным репозиторием Журнала
         headers_pub = {
-            "Authorization": f"token {admin_token}",
+            "Authorization": f"token {write_token if write_token else admin_token}",
             "Accept": "application/vnd.github+json",
             "Content-Type": "application/json"
         }

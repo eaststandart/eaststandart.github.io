@@ -25,8 +25,8 @@ DATA_REPO_NAME = "techlab-journal-attendance"
 
 # Базовый служебный API-путь для управления файлами базы данных
 # Базовые служебные API-пути к двум разным папкам удалённого репозитория Журнала
-JOURNAL_YML_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
-JOURNAL_JSON_API_URL = f"https://github.com{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
+JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_data"
+JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def run_generator():
     print("\n=== [МОДУЛЬ JA_REPORT_GENERATOR] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ ===")

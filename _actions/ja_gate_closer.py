@@ -59,13 +59,16 @@ def close_gate_pipeline(reports_list):
             
             # Сканируем репозиторий Журнала через API для сбора точного списка JSON
             # Так как мы не меняли генератор, Модуль Б сам соберёт имена файлов из сети
-            try:
-                res_output = requests.get(JOURNAL_JSON_API_URL, headers=headers_admin, timeout=30)
-                if res_output.status_code == 200:
-                    json_files_to_delete = [item["name"] for item in res_output.json() if f"-journal-attendance-{teacher_login}.json" in item["name"].lower()]
-                else:
-                    json_files_to_delete = []
-            except Exception:
+            # Открытый диагностический запрос списка файлов в сети Журнала
+            print(f"[ШЛЮЗ] Запрос списка JSON-файлов из _output Журнала...")
+            res_output = requests.get(JOURNAL_JSON_API_URL, headers=headers_admin, timeout=30)
+            print(f"[ШЛЮЗ] Ответ сервера GitHub: {res_output.status_code}")
+
+            if res_output.status_code == 200:
+                json_files_to_delete = [item["name"] for item in res_output.json() if f"-journal-attendance-{teacher_login}.json" in item["name"].lower()]
+                print(f"[ШЛЮЗ] Обнаружено файлов для обработки ({len(json_files_to_delete)} шт.): {json_files_to_delete}")
+            else:
+                print(f"[ШЛЮЗ] ❌ Ошибка получения списка файлов: {res_output.status_code}")
                 json_files_to_delete = []
 
             # Если файлы найдены, извлекаем из них локальные структуры обновлений расписания

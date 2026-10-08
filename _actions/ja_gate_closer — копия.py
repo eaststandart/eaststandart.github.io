@@ -193,25 +193,22 @@ def close_gate_pipeline(reports_list):
             idx += 1
 
         # ----------------------------------------------------------------------
-        # СОРТИРОВКА ЗАВЕРШЕНА: ПРОВЕРКА НА НАЛИЧИЕ РЕАЛЬНЫХ ИЗМЕНЕНИЙ В БАЗЕ
+        # СЕТЕВАЯ ОТПРАВКА ОБНОВЛЕННОГО YAML
         # ----------------------------------------------------------------------
         updated_yaml_text = '\n'.join(new_lines)
-
-        if updated_yaml_text.strip() == yaml_text_orig.strip():
-            print(f"[ШЛЮЗ] ℹ️ Состав групп и порядок строк для {teacher_login} не изменились. Пропуск PUT-запроса YAML.")
+        encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
+        
+        put_payload = {
+            "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
+            "content": encoded_content,
+            "sha": yaml_sha
+        }
+        
+        res_put = requests.put(yaml_api_url, json=put_payload, headers=headers_admin, timeout=30)
+        if res_put.status_code in (200, 201):
+            print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена напрямую по сети!")
         else:
-            # Отправляем PUT-запрос в сеть Гитхаба только если текст реально изменился!
-            encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
-            put_payload = {
-                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
-                "content": encoded_content,
-                "sha": yaml_sha
-            }
-            res_put = requests.put(yaml_api_url, json=put_payload, headers=headers_admin, timeout=30)
-            if res_put.status_code in (200, 201):
-                print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена напрямую по сети!")
-            else:
-                print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code}")
+            print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code}")
 
         # ----------------------------------------------------------------------
         # СЕТЕВОЕ УДАЛЕНИЕ JSON ИЗ ПАПКИ _OUTPUT (РАЗМОРОЗКА ШЛЮЗА)

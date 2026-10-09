@@ -329,7 +329,7 @@ function saveGroupAttendance(day, time) {
       }
 
       // 2. Ищем любые недопустимые ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
-      const slashMatches = rawKid.match(\(/\/\S*/\)g);
+      const slashMatches = rawKid.match((/\/\S*/g));
       if (slashMatches) {
         for (let sMatch of slashMatches) {
           const lowerKey = sMatch.toLowerCase();

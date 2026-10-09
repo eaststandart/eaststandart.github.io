@@ -319,8 +319,8 @@ function saveGroupAttendance(day, time) {
       // Шаг 1: Аппаратный вырез ломающих кавычек ' " и обратного слэша \
       rawKid = rawKid.replace(/['"\\]/g, '');
 
-      // Шаг 2: Валидация на бесхозные решётки (проверяем ДО конвертации слэшей)
-      // Ищем решётки, перед которыми нет слэша и после которых не идёт techlab-
+      // Шаг 2: ТОТАЛЬНАЯ ВАЛИДАЦИЯ СЛЭШЕЙ И РЕШЁТОК НА СТАРТЕ (ЖЕСТКИЙ БЕЛЫЙ СПИСК)
+      // 1. Ищем любые бесхозные решётки, перед которыми нет слэша и после которых не идёт techlab-
       const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
       if (badHashes) {
         isErrorFound = true;
@@ -328,12 +328,27 @@ function saveGroupAttendance(day, time) {
         return "";
       }
 
-      // Шаг 3: Сквозная последовательная замена ключей со слэшем на маркеры Журнала
+      // 2. Ищем любые недопустимые ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
+      // Проверяем все слэши в строке с помощью регулярного выражения
+      const slashMatches = rawKid.match(\(/\/\S*/\)g);
+      if (slashMatches) {
+        for (let sMatch of slashMatches) {
+          const lowerKey = sMatch.toLowerCase();
+          // Если ключ не равен ни одному из 5 эталонов — это жесткий брак!
+          if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
+            isErrorFound = true;
+            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
+            return "";
+          }
+        }
+      }
+
+      // Шаг 3: Сквозная последовательная замена ключей направления на маркеры Журнала
       rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
       rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
 
-      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько /#)
-      rawKid = rawKid.replace(/#(\s*#)+/g, '#');
+      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько законных /#)
+      rawKid = rawKid.replace(/\/#(\s*\/#)+/g, '/#');
 
       // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
       let directionMarker = "";
@@ -344,13 +359,13 @@ function saveGroupAttendance(day, time) {
       if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
       else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
 
-      // 2. Фиксируем наличие ключа автогенерации /# ДО того, как трогать решётки
+      // 2. Фиксируем и вырезаем ключ автогенерации /#
       if (rawKid.includes('/#')) {
         hasAutoHash = true;
-        rawKid = rawKid.replace(/\/#/g, ''); // Удаляем именно комбинацию со слэшем!
+        rawKid = rawKid.replace(/\/#/g, '');
       }
 
-      // 3. Вытаскиваем готовые интернет-теги, если они есть в строке
+      // 3. Вытаскиваем готовые интернет-теги
       const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
       const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
 
@@ -361,7 +376,7 @@ function saveGroupAttendance(day, time) {
         systemTag = techlabTagMatch[0];
         rawKid = rawKid.replace(techlabTagMatch[0], '');
       } else if (hasAutoHash) {
-        // Решётка автогенерации создаётся только если нет приоритетных @login и #techlab-
+        // Решётка создаётся только если нет приоритетных @login и #techlab-
         systemTag = "#";
       }
 
@@ -373,16 +388,7 @@ function saveGroupAttendance(day, time) {
       if (directionMarker) finalRow += ` ${directionMarker}`;
       if (systemTag) finalRow += ` ${systemTag}`;
 
-      rawKid = finalRow.replace(/\s+/g, ' ').trim();
-
-      // Шаг 6: Валидация на левые ключи. Если в строке остался какой-то другой нераспознанный слэш /
-      if (rawKid.includes('/')) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ после слэша. Разрешены только комбинации: /э, /e, /с, /c, /#`;
-        return "";
-      }
-
-      return rawKid;
+      return finalRow.replace(/\s+/g, ' ').trim();
     }).filter(n => n !== "");
 
     if (isErrorFound) {

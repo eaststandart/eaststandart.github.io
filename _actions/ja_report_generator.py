@@ -216,7 +216,7 @@ def run_generator():
                 print(f"[ГЕНЕРАТОР] ⚠️ Исключение при сборе поделок: {str(err)}")
         def translit_rus_to_lat(text):
             rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split()
-            lat = "a b v g d e yo zh z i y k l m n o p r s t у f kh ts ch sh shch  y  e yu ya".split()
+            lat = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch y e yu ya".split()
             res = ""
             lower_text = text.lower()
             for char in lower_text:

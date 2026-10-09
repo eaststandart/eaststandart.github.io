@@ -316,11 +316,19 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // Шаг 1: Аппаратный вырез ломающих кавычек ' " и обратного слэша \
-      rawKid = rawKid.replace(/['"\\]/g, '');
+      // Шаг 1: Приводим множественные пробелы к одному (кавычки, скобки и слэши НЕ ТРОГАЕМ для валидации)
+      rawKid = rawKid.replace(/\s+/g, ' ').trim();
 
-      // Шаг 2: ТОТАЛЬНАЯ ВАЛИДАЦИЯ СЛЭШЕЙ И РЕШЁТОК НА СТАРТЕ (ЖЕСТКИЙ БЕЛЫЙ СПИСОК)
-      // 1. Ищем любые бесхозные решётки, перед которыми нет слэша и после которых не идёт techlab-
+      // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
+      // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;
+      const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
+      if (forbiddenCharsMatch) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён! Используйте легитимные ключи: /э, /e, /с, /c, /#`;
+        return "";
+      }
+
+      // 2. Запрет на бесхозные решётки (разрешено только внутри слова #techlab-)
       const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
       if (badHashes) {
         isErrorFound = true;
@@ -328,8 +336,8 @@ function saveGroupAttendance(day, time) {
         return "";
       }
 
-      // 2. Ищем любые недопустимые ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
-      const slashMatches = rawKid.match((/\/\S*/g));
+      // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
+      const slashMatches = rawKid.match(\(/\/\S*/\)g);
       if (slashMatches) {
         for (let sMatch of slashMatches) {
           const lowerKey = sMatch.toLowerCase();
@@ -341,7 +349,7 @@ function saveGroupAttendance(day, time) {
         }
       }
 
-      // Шаг 3: Сквозная последовательная замена ключей направления на маркеры Журнала
+      // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
       rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
       rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
 
@@ -353,14 +361,17 @@ function saveGroupAttendance(day, time) {
       let systemTag = "";
       let hasAutoHash = false;
 
+      // Вытаскиваем маркер направления
       if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
       else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
 
+      // Вытаскиваем ключ автогенерации /#
       if (rawKid.includes('/#')) {
         hasAutoHash = true;
         rawKid = rawKid.replace(/\/#/g, '');
       }
 
+      // Вытаскиваем готовые интернет-теги Гитхаба
       const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
       const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
 
@@ -374,8 +385,10 @@ function saveGroupAttendance(day, time) {
         systemTag = "#";
       }
 
+      // Очищаем оставшееся имя ученика от лишних пробелов
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
+      // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
       let finalRow = cleanName;
       if (directionMarker) finalRow += ` ${directionMarker}`;
       if (systemTag) finalRow += ` ${systemTag}`;

@@ -319,23 +319,65 @@ function saveGroupAttendance(day, time) {
       // Шаг 1: Аппаратный вырез ломающих кавычек ' " и обратного слэша \
       rawKid = rawKid.replace(/['"\\]/g, '');
 
-      // Шаг 2: Сквозная последовательная замена ключей на эталонные маркеры Журнала
-      // Заменяем ключи электроники (/э, /Э, /e, /е, /Е)
+      // Шаг 2: Валидация на бесхозные решётки (проверяем ДО конвертации слэшей)
+      // Ищем решётки, перед которыми нет слэша и после которых не идёт techlab-
+      const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
+      if (badHashes) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен недопустимый символ "#". Вводить знак решётки без слэша разрешено только внутри системного слова "#techlab-"! Для автогенерации используйте ключ "/#"`;
+        return "";
+      }
+
+      // Шаг 3: Сквозная последовательная замена ключей со слэшем на маркеры Журнала
       rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
-      // Заменяем ключи столярки (/с, /С, /c, /C)
       rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
-      // Заменяем ключ автогенерации хэштегов (/#)
       rawKid = rawKid.replace(/\/#/g, ' #');
 
-      // Шаг 3: Жесткая валидация на левые ключи. Если в строке остался какой-то другой слэш /
+      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько /#)
+      rawKid = rawKid.replace(/#(\s*#)+/g, '#');
+
+      // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
+      let directionMarker = "";
+      let systemTag = "";
+
+      // Вытаскиваем маркер направления электроники или столярки
+      if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
+      else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
+
+      // Вытаскиваем системные интернет-теги
+      const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
+      const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
+      const autoHashMatch = rawKid.includes('#') && !techlabTagMatch;
+
+      if (githubLoginMatch) {
+        systemTag = githubLoginMatch[0];
+        rawKid = rawKid.replace(systemTag, '');
+      } else if (techlabTagMatch) {
+        systemTag = techlabTagMatch[0];
+        rawKid = rawKid.replace(systemTag, '');
+      } else if (autoHashMatch) {
+        systemTag = "#";
+        rawKid = rawKid.replace('#', '');
+      }
+
+      // Вычищаем из оставшегося тела строки лишние пробелы — получаем кристально чистое имя ученика
+      const cleanName = rawKid.replace(/\s+/g, ' ').trim();
+
+      // Собираем идеальную промышленную строку строго по цепочке: Имя ➔ Направление ➔ Тег
+      let finalRow = cleanName;
+      if (directionMarker) finalRow += ` ${directionMarker}`;
+      if (systemTag) finalRow += ` ${systemTag}`;
+
+      rawKid = finalRow.replace(/\s+/g, ' ').trim();
+
+      // Шаг 6: Валидация на левые ключи. Если в строке остался какой-то другой нераспознанный слэш /
       if (rawKid.includes('/')) {
         isErrorFound = true;
         errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ после слэша. Разрешены только комбинации: /э, /e, /с, /c, /#`;
         return "";
       }
 
-      // Возвращаем чистую строку. Системные теги @ и # внутри имени не пострадают!
-      return rawKid.replace(/\s+/g, ' ').trim();
+      return rawKid;
     }).filter(n => n !== "");
 
     if (isErrorFound) {

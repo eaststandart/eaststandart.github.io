@@ -203,15 +203,15 @@ function parseSimpleYaml(text) {
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
-      let rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      
-      // Стираем внешние кавычки YAML-строки, если они есть
-      if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
-      if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
-      
-      if (currentDay && currentGroup && rawName) {
-        // В массив отправки JSON сохраняем ПОЛНУЮ ОРИГИНАЛЬНУЮ СТРОКУ, чтобы Питон на сервере её распознал
-        result[currentDay][currentGroup].push(rawName);
+      const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+      const name = rawName.replace(/^["']|["']$/g, "")
+                    .replace(/\[э\]/i, "")
+                    .replace(/\[с\]/i, "")
+                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+      if (currentDay && currentGroup) {
+        result[currentDay][currentGroup].push(name);
       }
     }
   });
@@ -262,19 +262,11 @@ function selectDynamicDay(day) {
     
     kids.forEach((kid, index) => {
       const id = `kid-${time.replace(':', '-')}-${index}`;
-
-      // Безопасно отсекаем для экрана всё, что идёт после скобок или тегов, без использования ломающихся регулярок
-      let displayName = kid;
-      const cutIndex = kid.search(/\[|@|#/);
-      if (cutIndex !== -1) {
-        displayName = kid.substring(0, cutIndex).trim();
-      }
-
       groupHtml += `
         <div class="kid-row">
           <label class="lbl-big">
             <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
-            ${displayName}
+            ${kid}
           </label>
         </div>`;
     });
@@ -313,15 +305,36 @@ function saveGroupAttendance(day, time) {
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  let newbiesList = [];
-  if (newbiesInput !== "") {
-    newbiesList = newbiesInput.split(',').map(n => n.trim()).filter(n => n !== "");
-  }
+  // Функция-обработчик: превращает ключи со слэшем в эталонные маркеры и стирает остальной мусор
+  const convertKeysAndCleanValues = (inputStr) => {
+    if (!inputStr) return [];
+    return inputStr.split(',').map(item => {
+      let cleaned = item.trim();
+      if (!cleaned) return "";
 
-  let probationList = [];
-  if (probationInput !== "") {
-    probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
-  }
+      // 1. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ НАПРАВЛЕНИЙ
+      // Ищет ключ электроники /э, /слэши, кавычки, другие раскладки букв на конце строки
+      if (cleaned.match(/\/([eеЕЭ]|['"“])\s*\$/i)) {
+        cleaned = cleaned.replace(/\/([eеЕЭ]|['"“])\s*\$/i, '[э]');
+      }
+      // Ищет ключ столярки /с, /c латинскую на конце строки
+      else if (cleaned.match(/\/([cсСC])\s*\$/i)) {
+        cleaned = cleaned.replace(/\/([cсСC])\s*\$/i, '[с]');
+      }
+      // 2. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧА АВТОТЕГА ПРОЕКТОВ /#
+      else if (cleaned.match(/\/#\s*\$/)) {
+        cleaned = cleaned.replace(/\/#\s*\$/, '#');
+      }
+
+      // 3. ЖЕСТКИЙ ЩИТ: Тотальное стирание любых бесхозных кавычек ' " и слэшей \ / оставшихся в строке
+      cleaned = cleaned.replace(/['"\\/]/g, '').replace(/\s+/g, ' ').trim();
+      return cleaned;
+    }).filter(n => n !== "");
+  };
+
+  // Прогоняем оба поля ввода через наш умный конвертер
+  let newbiesList = convertKeysAndCleanValues(newbiesInput);
+  let probationList = convertKeysAndCleanValues(probationInput);
 
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 

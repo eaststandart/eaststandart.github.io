@@ -595,7 +595,7 @@ function sendRepairJsonSignal() {
     btn.innerText = "⏳ Запуск проверки на сервере...";
   }
 
-  const targetUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
+  const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
   
   // Пушим строго объектный формат со статусом "on"
   const payload = { status: "on", timestamp: new Date().toISOString() };
@@ -636,7 +636,7 @@ function sendRepairJsonSignal() {
 // Функция зрячего 5-секундного опроса файла статуса на Гитхабе
 function startRepairStatusPolling() {
   const btn = document.getElementById("btn-force-repair");
-  const targetUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
+  const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
 
   const intervalId = setInterval(() => {
     // Добавляем к ссылке случайный параметр для обхода жесткого кэша браузера

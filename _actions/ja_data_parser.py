@@ -131,12 +131,14 @@ def collect_and_parse_raw_data():
                 print(f"[ПАРСЕР РЕДАКТОР] 🔤 Найдена опечатка раскладки букв направления: '[{char}]' -> Исправляем на '[э]'")
             repaired_yaml_text = re.sub(r'\[[eеЕЭ]\]', '[э]', repaired_yaml_text)
 
-        # Раздельный поиск и фиксация опечаток кривых одинарных/двойных кавычек в скобках ['], ["]
-        bad_quotes_matches = re.findall(r'(\[\'\]|\[\"\])', repaired_yaml_text)
+        # Раздельный поиск и фиксация опечаток одинарных/двойных кавычек в скобках ['], ["]
+        bad_quotes_matches = re.findall(r'\[\'\]|\[\"\]', repaired_yaml_text)
         if bad_quotes_matches:
             for quote_item in bad_quotes_matches:
                 print(f"[ПАРСЕР РЕДАКТОР] 🛑 Найдена опечатка ложных кавычек в скобках: '{quote_item}' -> Исправляем на '[э]'")
-            repaired_yaml_text = re.sub(r'\[[\'\"]\]', '[э]', repaired_yaml_text)
+        
+        # Сквозное лечение ложных кавычек в скобках по всему тексту YAML
+        repaired_yaml_text = re.sub(r'\[\'\]|\[\"\]', '[э]', repaired_yaml_text)
 
         # Раsh_time_matches = re.findall(r'(\d{сация опечатки трипл-кавычек двойная-одиночная-двойная '"'
         if '\"\'\"' in repaired_yaml_text:
@@ -165,15 +167,11 @@ def collect_and_parse_raw_data():
                     if match_time:
                         normalized_time = f"{match_time.group(1)}:{match_time.group(2)}"
                         
-                        # Безопасная принудительная очистка строк учеников в карте памяти без разрушения тегов
+                        # Принудительно чистим строки учеников внутри массивов групп карты памяти
                         clean_kids = []
                         for kid in (kids_list if isinstance(kids_list, list) else []):
-                            k_str = str(kid).strip()
-                            # Заменяем опечатки раскладки букв
-                            k_str = re.sub(r'\[[eеЕЭ]\]', '[э]', k_str)
-                            # Хирургически точно изолируем и лечим кавычки ['], ["] внутри скобок
-                            k_str = k_str.replace("[']", "[э]").replace('["]', "[э]")
-                            # Лечим трипл-кавычки
+                            k_str = str(kid)
+                            k_str = re.sub(r'\[[eеЕЭ\'\"]\]', '[э]', k_str)
                             k_str = k_str.replace('\"\'\"', '[э]')
                             clean_kids.append(k_str)
                             

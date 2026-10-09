@@ -528,16 +528,16 @@ function saveGroupAttendance(day, time) {
       });
     };
 
-    // Собираем кристально чистый ОБЪЕКТНЫЙ пакет данных смены
+    // Собираем пакет данных смены
     const currentGroupPayload = {
       date: dateStr,
       day: day,
       time: time,
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
-      present_permanent: objectifyList(presentKids, true),
-      newbies: objectifyList(newbiesList),
-      probation: objectifyList(probationList)
+      present_permanent: presentKids, // Твоя родная логика: строго массив голых имён строк!
+      newbies: objectifyList(newbiesList),           // Новички пакуются объектами по ГОСТу
+      probation: objectifyList(probationList)        // Временные пакуются объектами по ГОСТу
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;

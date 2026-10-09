@@ -316,8 +316,8 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // 1. АППАРАТНЫЙ ПЕРЕХВАТ МУСОРА: вырезаем ломающие кавычки ' " и обратный слэш \
-      rawKid = rawKid.replace(/['"\\Direct]/g, '');
+      // 1. АППАРАТНЫЙ ПЕРЕХВАТ МУСОРА: вырезаем строго ломающие кавычки ' " и обратный слэш \
+      rawKid = rawKid.replace(/['"\\ ]/g, ' ').replace(/\s+/g, ' ').trim();
 
       // Ищем наличие любого слэша / внутри строки ученика
       const slashIndex = rawKid.lastIndexOf('/');

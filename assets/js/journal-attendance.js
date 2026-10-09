@@ -597,7 +597,7 @@ function sendRepairTriggerSignal() {
     btn.innerText = "⏳ Отправка запроса на сервер...";
   }
 
-  const targetUrl = "https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/trigger-repair.txt";
+  const targetUrl = 'https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/trigger-repair.txt';
   
   const commitBody = {
     message: "chore: принудительный запуск автоматического исправления расписания с сайта",

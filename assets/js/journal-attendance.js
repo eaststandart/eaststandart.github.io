@@ -295,6 +295,7 @@ function selectDynamicDay(day) {
   });
 }
 
+function saveGroupAttendance(day, time) {
   // Валидатор и объектный конвертер ручного ввода (Белый список ключей с полными именами)
   const convertAndValidateInputs = (inputStr, fieldLabel, isProbation = false) => {
     if (!inputStr) return [];

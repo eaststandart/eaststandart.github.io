@@ -339,31 +339,37 @@ function saveGroupAttendance(day, time) {
       // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
       let directionMarker = "";
       let systemTag = "";
+      let hasAutoHash = false;
 
-      // Вытаскиваем маркер направления электроники или столярки
+      // 1. Фиксируем и вырезаем маркер направления [э] или [с]
       if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
       else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
 
-      // Вытаскиваем системные интернет-теги
+      // 2. Фиксируем наличие ключа автогенерации /# ДО того, как трогать решётки
+      if (rawKid.includes('/#')) {
+        hasAutoHash = true;
+        rawKid = rawKid.replace(/\/#/g, ''); // Удаляем именно комбинацию со слэшем!
+      }
+
+      // 3. Вытаскиваем готовые интернет-теги, если они есть в строке
       const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
       const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
-      const autoHashMatch = rawKid.includes('#') && !techlabTagMatch;
 
       if (githubLoginMatch) {
         systemTag = githubLoginMatch[0];
-        rawKid = rawKid.replace(systemTag, '');
+        rawKid = rawKid.replace(githubLoginMatch[0], '');
       } else if (techlabTagMatch) {
         systemTag = techlabTagMatch[0];
-        rawKid = rawKid.replace(systemTag, '');
-      } else if (autoHashMatch) {
+        rawKid = rawKid.replace(techlabTagMatch[0], '');
+      } else if (hasAutoHash) {
+        // Решётка автогенерации создаётся только если нет приоритетных @login и #techlab-
         systemTag = "#";
-        rawKid = rawKid.replace('#', '');
       }
 
-      // Вычищаем из оставшегося тела строки лишние пробелы — получаем кристально чистое имя ученика
+      // Очищаем тело от лишних пробелов, получая кристально чистое имя ученика
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // Собираем идеальную промышленную строку строго по цепочке: Имя ➔ Направление ➔ Тег
+      // Финальная сборка строго по цепочке: Имя ➔ Направление ➔ Тег
       let finalRow = cleanName;
       if (directionMarker) finalRow += ` ${directionMarker}`;
       if (systemTag) finalRow += ` ${systemTag}`;

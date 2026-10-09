@@ -172,12 +172,11 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Объектный парсер под новую древовидную структуру базы расписания учеников
+// Прогрессивный объектный парсер YAML: забирает строго имена постоянных учеников
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
   let currentGroup = "";
-  let currentKidObj = null;
   
   const lines = text.split('\n');
 
@@ -209,58 +208,20 @@ function parseSimpleYaml(text) {
       currentGroup = cleanTime;
       result[currentDay][currentGroup] = [];
     } 
-    // 3. Считывание начала объекта постоянного ученика (- name:)
+    // 3. Считывание имени постоянного ученика строго из поля - name:
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
       if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
       if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
       
-      currentKidObj = {
-        name: rawName.replace(/\s+/g, " ").trim(),
-        direction: "",
-        tag: ""
-      };
+      const cleanName = rawName.replace(/\s+/g, " ").trim();
       
-      // Для обратной совместимости со старым кодом отправки чекбоксов 
-      // сразу собираем строку обратно в старый текстовый формат Журнала!
-      if (currentDay && currentGroup && currentKidObj.name) {
-        result[currentDay][currentGroup].push(currentKidObj.name);
+      // Кладываем в массив чекбоксов строго одно голое имя-строку!
+      if (currentDay && currentGroup && cleanName) {
+        result[currentDay][currentGroup].push(cleanName);
       }
     }
-    // 4. Считывание направления и тегов ученика (если пригодятся в будущем)
-    else if (indent === 6 && currentKidObj) {
-      const colonIndex = cleanText.indexOf(':');
-      if (colonIndex !== -1) {
-        const key = cleanText.substring(0, colonIndex).trim().toLowerCase();
-        let val = cleanText.substring(colonIndex + 1).trim();
-        
-        if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1).trim();
-        if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1).trim();
-        
-        if (key === 'direction') {
-          currentKidObj.direction = val.trim();
-        } else if (key === 'tag') {
-          currentKidObj.tag = val.trim();
-        }
-        
-        // Обновляем запись в массиве, если у постоянного ребенка есть тег или направление
-        const currentGroupList = result[currentDay][currentGroup];
-        if (currentGroupList && currentGroupList.length > 0) {
-          let lastIndex = currentGroupList.length - 1;
-          let rowStr = currentKidObj.name;
-          
-          if (currentKidObj.direction) {
-            let shortDir = "э";
-            if (currentKidObj.direction.toLowerCase().includes("столяр")) shortDir = "с";
-            rowStr += " [" + shortDir + "]";
-          }
-          if (currentKidObj.tag) {
-            rowStr += " " + currentKidObj.tag;
-          }
-          currentGroupList[lastIndex] = rowStr;
-        }
-      }
-    }
+    // Строки с отступом 6 (direction и tag) робот просто пропускает, они не забивают память сайта!
   });
   return result;
 }
@@ -535,9 +496,9 @@ function saveGroupAttendance(day, time) {
       time: time,
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
-      present_permanent: presentKids, // Твоя родная логика: строго массив голых имён строк!
-      newbies: objectifyList(newbiesList),           // Новички пакуются объектами по ГОСТу
-      probation: objectifyList(probationList)        // Временные пакуются объектами по ГОСТу
+      present_permanent: presentKids,
+      newbies: objectifyList(newbiesList),           // Новички пакуются объектами
+      probation: objectifyList(probationList)        // Временные пакуются объектами
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;

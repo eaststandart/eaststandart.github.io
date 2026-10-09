@@ -178,11 +178,18 @@ function parseSimpleYaml(text) {
       currentDay = cleanText.slice(0, -1).toLowerCase().trim();
       result[currentDay] = {};
     } 
-   else if (indent === 2 && cleanText.endsWith(':')) {
-     // Просто забираем чистое время из строки YAML без ломающихся матчей
-     currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-     result[currentDay][currentGroup] = [];
-   }
+    else if (indent === 2 && cleanText.endsWith(':')) {
+      let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+      
+      // Всеядный фильтр: вытаскивает часы и минуты из любых форматов (10-00, 10/00, 10\00, 10=00)
+      let matchTime = rawTimeStr.match(/(\d{1,2})\D*(\d{2})/);
+      if (matchTime && matchTime[1] && matchTime[2]) {
+        currentGroup = matchTime[1] + ":" + matchTime[2];
+      } else {
+        currentGroup = rawTimeStr;
+      }
+      result[currentDay][currentGroup] = [];
+    } 
     // Считывание начала объекта ученика (- name:)
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();

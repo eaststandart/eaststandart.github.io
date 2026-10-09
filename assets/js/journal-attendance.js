@@ -319,7 +319,7 @@ function saveGroupAttendance(day, time) {
       // Шаг 1: Аппаратный вырез ломающих кавычек ' " и обратного слэша \
       rawKid = rawKid.replace(/['"\\]/g, '');
 
-      // Шаг 2: ТОТАЛЬНАЯ ВАЛИДАЦИЯ СЛЭШЕЙ И РЕШЁТОК НА СТАРТЕ (ЖЕСТКИЙ БЕЛЫЙ СПИСК)
+      // Шаг 2: ТОТАЛЬНАЯ ВАЛИДАЦИЯ СЛЭШЕЙ И РЕШЁТОК НА СТАРТЕ (ЖЕСТКИЙ БЕЛЫЙ СПИСОК)
       // 1. Ищем любые бесхозные решётки, перед которыми нет слэша и после которых не идёт techlab-
       const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
       if (badHashes) {
@@ -329,7 +329,6 @@ function saveGroupAttendance(day, time) {
       }
 
       // 2. Ищем любые недопустимые ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
-      // Проверяем все слэши в строке с помощью регулярного выражения
       const slashMatches = rawKid.match(\(/\/\S*/\)g);
       if (slashMatches) {
         for (let sMatch of slashMatches) {
@@ -376,7 +375,6 @@ function saveGroupAttendance(day, time) {
         systemTag = techlabTagMatch[0];
         rawKid = rawKid.replace(techlabTagMatch[0], '');
       } else if (hasAutoHash) {
-        // Решётка создаётся только если нет приоритетных @login и #techlab-
         systemTag = "#";
       }
 

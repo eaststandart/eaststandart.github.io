@@ -312,18 +312,17 @@ function saveGroupAttendance(day, time) {
       let cleaned = item.trim();
       if (!cleaned) return "";
 
-      // 1. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ НАПРАВЛЕНИЙ
-      // Ищет ключ электроники /э, /слэши, кавычки, другие раскладки букв на конце строки
-      if (cleaned.match(/\/([eеЕЭ]|['"“])\s*\$/i)) {
-        cleaned = cleaned.replace(/\/([eеЕЭ]|['"“])\s*\$/i, '[э]');
+      // 1. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ ЭЛЕКТРОНИКИ (ищет /э, /е, /e, /Э, /', /")
+      if (cleaned.endsWith('/э') || cleaned.endsWith('/Э') || cleaned.endsWith('/e') || cleaned.endsWith('/е') || cleaned.endsWith('/Е') || cleaned.endsWith('/\'') || cleaned.endsWith('/"')) {
+        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' [э]';
       }
-      // Ищет ключ столярки /с, /c латинскую на конце строки
-      else if (cleaned.match(/\/([cсСC])\s*\$/i)) {
-        cleaned = cleaned.replace(/\/([cсСC])\s*\$/i, '[с]');
+      // 2. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ СТОЛЯРКИ (ищет /с, /с русскую, /c латинскую, /С, /C)
+      else if (cleaned.endsWith('/с') || cleaned.endsWith('/С') || cleaned.endsWith('/c') || cleaned.endsWith('/C')) {
+        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' [с]';
       }
-      // 2. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧА АВТОТЕГА ПРОЕКТОВ /#
-      else if (cleaned.match(/\/#\s*\$/)) {
-        cleaned = cleaned.replace(/\/#\s*\$/, '#');
+      // 3. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧА АВТОТЕГА ПРОЕКТОВ (ищет /#)
+      else if (cleaned.endsWith('/#')) {
+        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' #';
       }
 
       // 3. ЖЕСТКИЙ ЩИТ: Тотальное стирание любых бесхозных кавычек ' " и слэшей \ / оставшихся в строке

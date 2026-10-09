@@ -44,3 +44,4 @@ exclude:
   - LICENSE.txt
   - README.mdROADMAP.md
   - ROADMAP.md
+  - \assets\js\journal-attendance.js

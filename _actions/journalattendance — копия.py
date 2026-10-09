@@ -22,10 +22,12 @@ def main():
         
     print("[ГЛАВНЫЙ ДИСПЕТЧЕР] Запуск формирующего блока отчетов...")
     
-    try:   
-        import ja_report_builder
-        success, reports_list = ja_report_builder.run_generator()
-
+    try:
+        import ja_report_generator
+        
+        # Принимаем статус успеха и полный список сформированных пакетов отчетов
+        success, reports_list = ja_report_generator.run_generator()
+        
         if not success or not reports_list:
             print("[ГЛАВНЫЙ ДИСПЕТЧЕР] 🛑 Формирующий блок не вернул готовых отчетов. Мягко завершаем конвейер.")
             return

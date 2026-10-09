@@ -74,7 +74,7 @@ def close_gate_pipeline(reports_list):
         # 2. ТЕПЕРЬ ОБЪЯВЛЯЕМ ОРИГИНАЛЬНЫЕ ФУНКЦИИ ОБРАБОТКИ СТРОК YAML 1 В 1 ИЗ ГЕНЕРАТОРА
         def translit_rus_to_lat(text):
             rus = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split()
-            lat = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch y e yu ya".split()
+            lat = "a b v g d e yo zh z i y k l m n o p r s t у f kh ts ch sh shch  y  e yu ya".split()
             res = ""
             lower_text = text.lower()
             for char in lower_text:
@@ -211,7 +211,7 @@ def close_gate_pipeline(reports_list):
             if res_put.status_code in (200, 201):
                 print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена напрямую по сети!")
             else:
-                print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code} — {res_put.text}")
+                print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code}")
 
         # ----------------------------------------------------------------------
         # СЕТЕВОЕ УДАЛЕНИЕ JSON ИЗ ПАПКИ _OUTPUT (РАЗМОРОЗКА ШЛЮЗА)

@@ -331,7 +331,6 @@ function saveGroupAttendance(day, time) {
       // Шаг 3: Сквозная последовательная замена ключей со слэшем на маркеры Журнала
       rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
       rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
-      rawKid = rawKid.replace(/\/#/g, ' #');
 
       // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько /#)
       rawKid = rawKid.replace(/#(\s*#)+/g, '#');

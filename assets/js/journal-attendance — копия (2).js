@@ -203,15 +203,15 @@ function parseSimpleYaml(text) {
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
-      let rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      
-      // Снимаем внешние кавычки YAML-строки, если они есть
-      if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
-      if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
-      
-      const cleanRaw = rawName.replace(/\s+/g, ' ').trim();
-      if (currentDay && currentGroup && cleanRaw) {
-        result[currentDay][currentGroup].push(cleanRaw);
+      const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+      const name = rawName.replace(/^["']|["']$/g, "")
+                    .replace(/\[э\]/i, "")
+                    .replace(/\[с\]/i, "")
+                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+      if (currentDay && currentGroup) {
+        result[currentDay][currentGroup].push(name);
       }
     }
   });
@@ -262,19 +262,11 @@ function selectDynamicDay(day) {
     
     kids.forEach((kid, index) => {
       const id = `kid-${time.replace(':', '-')}-${index}`;
-      
-      // Зряче отсекаем для экрана всё, что идёт после скобок или интернет-тегов
-      let displayName = kid;
-      const cutIndex = kid.search(/\[|@|#/);
-      if (cutIndex !== -1) {
-        displayName = kid.substring(0, cutIndex).trim();
-      }
-      
       groupHtml += `
         <div class="kid-row">
           <label class="lbl-big">
             <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
-            ${displayName}
+            ${kid}
           </label>
         </div>`;
     });

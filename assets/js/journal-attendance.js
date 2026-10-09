@@ -337,7 +337,7 @@ function saveGroupAttendance(day, time) {
       }
 
       // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
-      const slashMatches = rawKid.match(\(/\/\S*/\)g);
+      const slashMatches = rawKid.match((/\/\S*/g));
       if (slashMatches) {
         for (let sMatch of slashMatches) {
           const lowerKey = sMatch.toLowerCase();

@@ -112,20 +112,40 @@ def collect_and_parse_raw_data():
         students_data = {}
         file_needs_repair = False
         
-        # 1. СКВОЗНОЙ РЕДАКТОР ТЕКСТА YAML: ПЕРЕХВАТ ВСЕХ ВИДОВ БРАКА ДО ПАРСИНГА КАРТЫ
+        # 1. СКВОЗНОЙ РЕДАКТОР ТЕКСТА YAML С ДЕТАЛЬНЫМ РАЗДЕЛЬНЫМ ЛОГИРОВАНИЕМ
         repaired_yaml_text = yaml_text_orig
         
-        # ЗОНА №1: Лечение времени со слэшем между цифрами (например, 11\00 -> 11:00)
-        repaired_yaml_text = re.sub(r'(\d{1,2})\\(\d{2})', r'\1:\2', repaired_yaml_text)
-        
-        # ЗОНА №2: Лечение направлений электроники (буквы e/е/Э, кавычки ['], ["], а также двойная-одиночная-двойная '"')
-        # Превращаем [e], [е], [Э], ['], ["] в [э]
-        repaired_yaml_text = re.sub(r'\[[eеЕЭ\'\"]\]', '[э]', repaired_yaml_text)
-        # Превращаем три кавычки подряд '"' (двойная, одиночная, двойная) в [э]
-        repaired_yaml_text = repaired_yaml_text.replace('\"\'\"', '[э]')
+        # Раздельный поиск и фиксация опечаток времени
+        slash_time_matches = re.findall(r'(\d{1,2})\\(\d{2})|(\d{1,2})/(\d{2})', repaired_yaml_text)
+        if slash_time_matches:
+            for match in slash_time_matches:
+                # Фильтруем пустые группы из регулярки
+                clean_match = [m for m in match if m]
+                print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена сетевая опечатка слэша во времени: '{clean_match[0]}\\{clean_match[1]}' -> Исправляем на '{clean_match[0]}:{clean_match[1]}'")
+            repaired_yaml_text = re.sub(r'(\d{1,2})\\(\d{2})', r'\1:\2', repaired_yaml_text)
+            repaired_yaml_text = re.sub(r'(\d{1,2})/(\d{2})', r'\1:\2', repaired_yaml_text)
+
+        # Раздельный поиск и фиксация опечаток неверной раскладки букв электроники [e],[е],[Э]
+        bad_chars_matches = re.findall(r'\[([eеЕЭ])\]', repaired_yaml_text)
+        if bad_chars_matches:
+            for char in bad_chars_matches:
+                print(f"[ПАРСЕР РЕДАКТОР] 🔤 Найдена опечатка раскладки букв направления: '[{char}]' -> Исправляем на '[э]'")
+            repaired_yaml_text = re.sub(r'\[[eеЕЭ]\]', '[э]', repaired_yaml_text)
+
+        # Раздельный поиск и фиксация опечаток кривых одинарных/двойных кавычек в скобках ['], ["]
+        bad_quotes_matches = re.findall(r'(\[\'\]|\[\"\])', repaired_yaml_text)
+        if bad_quotes_matches:
+            for quote_item in bad_quotes_matches:
+                print(f"[ПАРСЕР РЕДАКТОР] 🛑 Найдена опечатка ложных кавычек в скобках: '{quote_item}' -> Исправляем на '[э]'")
+            repaired_yaml_text = re.sub(r'\[[\'\"]\]', '[э]', repaired_yaml_text)
+
+        # Раздельный поиск и фиксация опечатки трипл-кавычек двойная-одиночная-двойная '"'
+        if '\"\'\"' in repaired_yaml_text:
+            count_triple = repaired_yaml_text.count('\"\'\"')
+            print(f"[ПАРСЕР РЕДАКТОР] 💥 Найдена критическая опечатка тройных кавычек '\"'\"' ({count_triple} шт.) -> Принудительно заменяем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace('\"\'\"', '[э]')
         
         if repaired_yaml_text != yaml_text_orig:
-            print("[ПАРСЕР РЕДАКТОР] Обнаружены и успешно устранены опечатки слэшей или тегов электроники по сети!")
             yaml_text_orig = repaired_yaml_text
             yaml_data = yaml.safe_load(yaml_text_orig) or {}
             file_needs_repair = True

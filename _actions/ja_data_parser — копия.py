@@ -108,31 +108,11 @@ def collect_and_parse_raw_data():
         yaml_text_orig = yaml_content_bytes.decode('utf-8')
         yaml_data = yaml.safe_load(yaml_text_orig) or {}
 
-        # === АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ И ОПЕЧАТОК НАПРАВЛЕНИЙ ===
+        # === ЖЕСТКИЙ ВХОДНОЙ ЩИТ: АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ В ФАЙЛЕ НА СТАРТЕ ===
         students_data = {}
         file_needs_repair = False
-        
-        # 1. СКВОЗНОЙ РЕДАКТОР ТЕКСТА YAML: ПЕРЕХВАТ ВСЕХ ВИДОВ БРАКА ДО ПАРСИНГА КАРТЫ
-        repaired_yaml_text = yaml_text_orig
-        
-        # ЗОНА №1: Лечение времени со слэшем между цифрами (например, 11\00 -> 11:00)
-        repaired_yaml_text = re.sub(r'(\d{1,2})\\(\d{2})', r'\1:\2', repaired_yaml_text)
-        
-        # ЗОНА №2: Лечение направлений электроники (буквы e/е/Э, кавычки ['], ["], а также двойная-одиночная-двойная '"')
-        # Превращаем [e], [е], [Э], ['], ["] в [э]
-        repaired_yaml_text = re.sub(r'\[[eеЕЭ\'\"]\]', '[э]', repaired_yaml_text)
-        # Превращаем три кавычки подряд '"' (двойная, одиночная, двойная) в [э]
-        repaired_yaml_text = repaired_yaml_text.replace('\"\'\"', '[э]')
-        
-        if repaired_yaml_text != yaml_text_orig:
-            print("[ПАРСЕР РЕДАКТОР] Обнаружены и успешно устранены опечатки слэшей или тегов электроники по сети!")
-            yaml_text_orig = repaired_yaml_text
-            yaml_data = yaml.safe_load(yaml_text_orig) or {}
-            file_needs_repair = True
-
         updated_yaml_text = yaml_text_orig
 
-        # 2. ПОСТРОЧНЫЙ СБОР КАРТЫ РАСПИСАНИЯ В ПАМЯТЬ PYTHON С ОЧИСТКОЙ МАССИВОВ СТРОК
         for key, value in yaml_data.items():
             if key == 'config':
                 continue
@@ -141,23 +121,14 @@ def collect_and_parse_raw_data():
             
             if isinstance(value, dict):
                 for raw_time, kids_list in value.items():
-                    clean_time_str = str(raw_time).strip().replace('\\', ':')
+                    clean_time_str = str(raw_time).strip()
                     match_time = re.search(r'(\d{1,2})\D*(\d{2})', clean_time_str)
                     if match_time:
                         normalized_time = f"{match_time.group(1)}:{match_time.group(2)}"
-                        
-                        # Принудительно чистим строки учеников внутри массивов групп карты памяти
-                        clean_kids = []
-                        for kid in (kids_list if isinstance(kids_list, list) else []):
-                            k_str = str(kid)
-                            k_str = re.sub(r'\[[eеЕЭ\'\"]\]', '[э]', k_str)
-                            k_str = k_str.replace('\"\'\"', '[э]')
-                            clean_kids.append(k_str)
-                            
-                        students_data[day_name][normalized_time] = clean_kids
+                        students_data[day_name][normalized_time] = kids_list if isinstance(kids_list, list) else []
                         
                         if clean_time_str != normalized_time:
-                            print(f"[ПАРСЕР РЕДАКТОР] Найдена опечатка формата времени '{clean_time_str}'. Заменяем на '{normalized_time}'")
+                            print(f"[ПАРСЕР РЕДАКТОР] Найдена опечатка '{clean_time_str}'. Заменяем на '{normalized_time}'")
                             updated_yaml_text = updated_yaml_text.replace(f"'{clean_time_str}':", f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f'"{clean_time_str}":', f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f"{clean_time_str}:", f'"{normalized_time}":')

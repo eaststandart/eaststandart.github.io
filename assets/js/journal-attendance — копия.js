@@ -443,13 +443,6 @@ function saveGroupAttendance(day, time) {
       // Очищаем оставшееся имя ученика от лишних пробелов
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // АППАРАТНЫЙ ЩИТ: Если имя ученика оказалось пустым после извлечения тегов/ключей — блок ввода!
-      if (!cleanName) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружена строка без имени ученика! Ввод одиночных ключей (например, "/#") без указания самого имени строго запрещён.`;
-        return "";
-      }
-
       // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
       let finalRow = cleanName;
       if (directionMarker) finalRow += ` ${directionMarker}`;

@@ -172,26 +172,29 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Обновленный парсер YAML под структуру с правильными отступами
+// Обновленный объектный парсер YAML под новую древовидную структуру базы расписания
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
   let currentGroup = "";
+  let currentKidObj = null;
+  
   const lines = text.split('\n');
 
   lines.forEach(line => {
     const trimmed = line.trimEnd();
     if (!trimmed || trimmed.startsWith('#')) return;
 
-    const indent = line.search(/\S/);
+    const indent = line.search\((/\S/);\)
     const cleanText = trimmed.trim();
     
+    // 1. Определение дня недели (отступ 0, строка заканчивается на колоны)
     if (indent === 0 && cleanText.endsWith(':')) {
       currentDay = cleanText.slice(0, -1).toLowerCase().trim();
       result[currentDay] = {};
     } 
+    // 2. Определение времени группы (отступ 2, строка заканчивается на колоны)
     else if (indent === 2 && cleanText.endsWith(':')) {
-      // ИСПРАВЛЕНО НАЧИСТО: возвращены правильные индексы массива matchTime для JavaScript!
       let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
       let matchTime = rawTimeStr.match(/(\d{1,2})\D*(\d{2})/);
       
@@ -202,23 +205,37 @@ function parseSimpleYaml(text) {
       }
       result[currentDay][currentGroup] = [];
     } 
-    else if (indent === 4 && cleanText.startsWith('-')) {
-      let rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      
-      // Вычищаем внешние кавычки YAML-строки
+    // 3. Начало объекта нового ученика (отступ 4, строка начинается с дефиса '- name:')
+    else if (indent === 4 && cleanText.startsWith('- name:')) {
+      let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
       if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
       if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
       
-      // КРИСТАЛЬНАЯ ОЧИСТКА ОТ ЛЮБЫХ ОПЕЧАТОК НАПРАВЛЕНИЙ ПРИ ВЫВОДЕ БАЗЫ В ЧЕКБОКСЫ
-      let cleanName = rawName
-                    .replace(/\[[eеЕЭ'"]\]/gi, "") // Стирает [э], [е], [e], [Э], а также ломающие ["] и [']
-                    .replace(/"'"/g, "")           // Стирает тройные кавычки
-                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/gi, "") // Стирает любые интернет-теги Гитхаба
-                    .replace(/\s+/g, " ")
-                    .trim();
-
-      if (currentDay && currentGroup && cleanName) {
-        result[currentDay][currentGroup].push(cleanName);
+      currentKidObj = {
+        name: rawName.replace(/\s+/g, " ").trim(),
+        direction: "",
+        tag: ""
+      };
+      
+      if (currentDay && currentGroup && currentKidObj.name) {
+        result[currentDay][currentGroup].push(currentKidObj);
+      }
+    }
+    // 4. Считывание свойств текущего ученика (отступ 6, поля direction или tag)
+    else if (indent === 6 && currentKidObj) {
+      const colonIndex = cleanText.indexOf(':');
+      if (colonIndex !== -1) {
+        const key = cleanText.substring(0, colonIndex).trim().toLowerCase();
+        let val = cleanText.substring(colonIndex + 1).trim();
+        
+        if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1).trim();
+        if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1).trim();
+        
+        if (key === 'direction') {
+          currentKidObj.direction = val.trim();
+        } else if (key === 'tag') {
+          currentKidObj.tag = val.trim();
+        }
       }
     }
   });

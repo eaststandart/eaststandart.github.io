@@ -305,35 +305,65 @@ function saveGroupAttendance(day, time) {
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  // Функция-обработчик: превращает ключи со слэшем в эталонные маркеры и стирает остальной мусор
-  const convertKeysAndCleanValues = (inputStr) => {
+  // Функция-обработчик: проверяет ключи, защищает теги, блокирует левый ввод
+  const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
-    return inputStr.split(',').map(item => {
-      let cleaned = item.trim();
-      if (!cleaned) return "";
+    
+    let isErrorFound = false;
+    let errorMessage = "";
 
-      // 1. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ ЭЛЕКТРОНИКИ (ищет /э, /е, /e, /Э, /', /")
-      if (cleaned.endsWith('/э') || cleaned.endsWith('/Э') || cleaned.endsWith('/e') || cleaned.endsWith('/е') || cleaned.endsWith('/Е') || cleaned.endsWith('/\'') || cleaned.endsWith('/"')) {
-        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' [э]';
-      }
-      // 2. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧЕЙ СТОЛЯРКИ (ищет /с, /с русскую, /c латинскую, /С, /C)
-      else if (cleaned.endsWith('/с') || cleaned.endsWith('/С') || cleaned.endsWith('/c') || cleaned.endsWith('/C')) {
-        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' [с]';
-      }
-      // 3. ПЕРЕХВАТ И ПРЕВРАЩЕНИЕ КЛЮЧА АВТОТЕГА ПРОЕКТОВ (ищет /#)
-      else if (cleaned.endsWith('/#')) {
-        cleaned = cleaned.substring(0, cleaned.lastIndexOf('/')).trim() + ' #';
+    const cleanList = inputStr.split(',').map(item => {
+      let rawKid = item.trim();
+      if (!rawKid) return "";
+
+      // 1. АППАРАТНЫЙ ПЕРЕХВАТ МУСОРА: вырезаем ломающие кавычки ' " и обратный слэш \
+      rawKid = rawKid.replace(/['"\\Direct]/g, '');
+
+      // Ищем наличие любого слэша / внутри строки ученика
+      const slashIndex = rawKid.lastIndexOf('/');
+      if (slashIndex !== -1) {
+        const namePart = rawKid.substring(0, slashIndex).trim();
+        const keyPart = rawKid.substring(slashIndex + 1).trim().toLowerCase();
+
+        // Если после слэша вообще ничего нет — это ошибка
+        if (!keyPart) {
+          isErrorFound = true;
+          errorMessage = `В поле "${fieldLabel}" найден пустой слэш у ученика "${namePart}". Укажите ключ (/э, /с, /#) или удалите слэш!`;
+          return "";
+        }
+
+        // ПРОВЕРКА ПО БЕЛОМУ СПИСКУ КЛЮЧЕЙ
+        if (keyPart === 'э' || keyPart === 'e') {
+          return `${namePart} [э]`;
+        } else if (keyPart === 'с' || keyPart === 'c') {
+          return `${namePart} [с]`;
+        } else if (keyPart === '#') {
+          return `${namePart} #`;
+        } else {
+          // Обнаружен левый незаконный ключ (например, /о, /а) -> блокировка!
+          isErrorFound = true;
+          errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "/${keyPart}" у ученика "${namePart}". Разрешены только: /э, /e, /с, /c, /#`;
+          return "";
+        }
       }
 
-      // 3. ЖЕСТКИЙ ЩИТ: Тотальное стирание любых бесхозных кавычек ' " и слэшей \ / оставшихся в строке
-      cleaned = cleaned.replace(/['"\\/]/g, '').replace(/\s+/g, ' ').trim();
-      return cleaned;
+      // Если слэша нет — строка возвращается как есть (системные теги @ и # внутри имени остаются нетронутыми!)
+      return rawKid.replace(/\s+/g, ' ').trim();
     }).filter(n => n !== "");
+
+    if (isErrorFound) {
+      alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
+      return null;
+    }
+    return cleanList;
   };
 
-  // Прогоняем оба поля ввода через наш умный конвертер
-  let newbiesList = convertKeysAndCleanValues(newbiesInput);
-  let probationList = convertKeysAndCleanValues(probationInput);
+  // Прогоняем оба поля ввода через наш зрячий валидатор
+  let newbiesList = convertAndValidateInputs(newbiesInput, "Новые постоянные ученики");
+  if (newbiesList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+
+  let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
+  if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 

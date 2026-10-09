@@ -303,6 +303,12 @@ function selectDynamicDay(day) {
 }
 
 function saveGroupAttendance(day, time) {
+  // Инициализируем обязательные переменные даты и ручного ввода полей на самом старте функции
+  const dateStr = document.getElementById("global-journal-date").value.trim(); 
+  const timeId = time.replace(':', '-');
+  const newbiesInput = document.getElementById("newbies-" + time).value.trim();
+  const probationInput = document.getElementById("probation-" + time).value.trim();
+
   // Валидатор и объектный конвертер ручного ввода (Белый список ключей с полными именами)
   const convertAndValidateInputs = (inputStr, fieldLabel, isProbation = false) => {
     if (!inputStr) return [];

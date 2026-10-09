@@ -476,15 +476,61 @@ function saveGroupAttendance(day, time) {
     const teacherUsername = userData.name || userData.login || "Преподаватель";
     const teacherLogin = userData.login; // Используем оригинальную переменную логина
 
+    // Функция-трансформатор текстовых строк Журнала в объектный формат JSON
+    const objectifyList = (list, isPermanent = false) => {
+      return list.map(kidStr => {
+        let name = kidStr;
+        let direction = "";
+        let tag = "";
+
+        // 1. Извлекаем маркер направления
+        if (name.includes('[э]')) { 
+          direction = "электронное конструирование"; 
+          name = name.replace('[э]', ''); 
+        } else if (name.includes('[с]')) { 
+          direction = "столярное дело"; 
+          name = name.replace('[с]', ''); 
+        } else if (isPermanent) { 
+          // Дефолт-предохранитель для постоянных учеников
+          direction = "электронное конструирование"; 
+        }
+
+        // 2. Извлекаем интернет-теги
+        const parts = name.split(' ');
+        for (let p of parts) {
+          const trimmedPart = p.trim();
+          if (trimmedPart.indexOf('@') === 0 || trimmedPart.indexOf('#techlab-') === 0 || trimmedPart === '#') {
+            tag = trimmedPart;
+            name = name.replace(tag, '');
+            break;
+          }
+        }
+
+        // 3. Сборка объекта ученика новой эпохи
+        let kidObj = {
+          name: name.replace(/\s+/g, ' ').trim(),
+          direction: direction
+        };
+        
+        // Поле tag добавляется строго при его физическом наличии
+        if (tag) {
+          kidObj.tag = tag;
+        }
+
+        return kidObj;
+      });
+    };
+
+    // Собираем кристально чистый ОБЪЕКТНЫЙ пакет данных смены
     const currentGroupPayload = {
       date: dateStr,
       day: day,
       time: time,
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
-      present_permanent: presentKids,
-      newbies: newbiesList,
-      probation: probationList
+      present_permanent: objectifyList(presentKids, true),
+      newbies: objectifyList(newbiesList),
+      probation: objectifyList(probationList)
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;

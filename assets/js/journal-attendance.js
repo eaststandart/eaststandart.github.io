@@ -203,15 +203,22 @@ function parseSimpleYaml(text) {
       result[currentDay][currentGroup] = [];
     } 
     else if (indent === 4 && cleanText.startsWith('-')) {
-      const rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
-      const name = rawName.replace(/^["']|["']$/g, "")
-                    .replace(/\[э\]/i, "")
-                    .replace(/\[с\]/i, "")
-                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/i, "")
+      let rawName = cleanText.substring(cleanText.indexOf('-') + 1).trim();
+      
+      // Вычищаем внешние кавычки YAML-строки
+      if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
+      if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
+      
+      // КРИСТАЛЬНАЯ ОЧИСТКА ОТ ЛЮБЫХ ОПЕЧАТОК НАПРАВЛЕНИЙ ПРИ ВЫВОДЕ БАЗЫ В ЧЕКБОКСЫ
+      let cleanName = rawName
+                    .replace(/\[[eеЕЭ'"]\]/gi, "") // Стирает [э], [е], [e], [Э], а также ломающие ["] и [']
+                    .replace(/"'"/g, "")           // Стирает тройные кавычки
+                    .replace(/(@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+)/gi, "") // Стирает любые интернет-теги Гитхаба
                     .replace(/\s+/g, " ")
                     .trim();
-      if (currentDay && currentGroup) {
-        result[currentDay][currentGroup].push(name);
+
+      if (currentDay && currentGroup && cleanName) {
+        result[currentDay][currentGroup].push(cleanName);
       }
     }
   });
@@ -305,15 +312,110 @@ function saveGroupAttendance(day, time) {
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  let newbiesList = [];
-  if (newbiesInput !== "") {
-    newbiesList = newbiesInput.split(',').map(n => n.trim()).filter(n => n !== "");
-  }
+  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку
+  const convertAndValidateInputs = (inputStr, fieldLabel) => {
+    if (!inputStr) return [];
+    
+    let isErrorFound = false;
+    let errorMessage = "";
 
-  let probationList = [];
-  if (probationInput !== "") {
-    probationList = probationInput.split(',').map(n => n.trim()).filter(n => n !== "");
-  }
+    const cleanList = inputStr.split(',').map(item => {
+      let rawKid = item.trim();
+      if (!rawKid) return "";
+
+      // Шаг 1: Приводим множественные пробелы к одному (кавычки, скобки и слэши НЕ ТРОГАЕМ для валидации)
+      rawKid = rawKid.replace(/\s+/g, ' ').trim();
+
+      // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
+      // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;
+      const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
+      if (forbiddenCharsMatch) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён! Используйте легитимные ключи: /э, /e, /с, /c, /#`;
+        return "";
+      }
+
+      // 2. Запрет на бесхозные решётки (разрешено только внутри слова #techlab-)
+      const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
+      if (badHashes) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен недопустимый символ "#". Вводить знак решётки без слэша разрешено только внутри системного слова "#techlab-"! Для автогенерации используйте ключ "/#"`;
+        return "";
+      }
+
+      // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
+      const slashMatches = rawKid.match((/\/\S*/g));
+      if (slashMatches) {
+        for (let sMatch of slashMatches) {
+          const lowerKey = sMatch.toLowerCase();
+          if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
+            isErrorFound = true;
+            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
+            return "";
+          }
+        }
+      }
+
+      // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
+      rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
+      rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
+
+      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько законных /#)
+      rawKid = rawKid.replace(/\/#(\s*\/#)+/g, '/#');
+
+      // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
+      let directionMarker = "";
+      let systemTag = "";
+      let hasAutoHash = false;
+
+      // Вытаскиваем маркер направления
+      if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
+      else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
+
+      // Вытаскиваем ключ автогенерации /#
+      if (rawKid.includes('/#')) {
+        hasAutoHash = true;
+        rawKid = rawKid.replace(/\/#/g, '');
+      }
+
+      // Вытаскиваем готовые интернет-теги Гитхаба
+      const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
+      const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
+
+      if (githubLoginMatch) {
+        systemTag = githubLoginMatch[0];
+        rawKid = rawKid.replace(githubLoginMatch[0], '');
+      } else if (techlabTagMatch) {
+        systemTag = techlabTagMatch[0];
+        rawKid = rawKid.replace(techlabTagMatch[0], '');
+      } else if (hasAutoHash) {
+        systemTag = "#";
+      }
+
+      // Очищаем оставшееся имя ученика от лишних пробелов
+      const cleanName = rawKid.replace(/\s+/g, ' ').trim();
+
+      // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
+      let finalRow = cleanName;
+      if (directionMarker) finalRow += ` ${directionMarker}`;
+      if (systemTag) finalRow += ` ${systemTag}`;
+
+      return finalRow.replace(/\s+/g, ' ').trim();
+    }).filter(n => n !== "");
+
+    if (isErrorFound) {
+      alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
+      return null;
+    }
+    return cleanList;
+  };
+
+  // Прогоняем оба поля ввода через наш зрячий валидатор
+  let newbiesList = convertAndValidateInputs(newbiesInput, "Новые постоянные ученики");
+  if (newbiesList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+
+  let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
+  if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 

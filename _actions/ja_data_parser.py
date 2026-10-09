@@ -115,13 +115,12 @@ def collect_and_parse_raw_data():
         # 1. СКВОЗНОЙ РЕДАКТОР ТЕКСТА YAML С ДЕТАЛЬНЫМ РАЗДЕЛЬНЫМ ЛОГИРОВАНИЕМ
         repaired_yaml_text = yaml_text_orig
         
-        # Раздельный поиск и фиксация опечаток времени
-        slash_time_matches = re.findall(r'(\d{1,2})\\(\d{2})|(\d{1,2})/(\d{2})', repaired_yaml_text)
-        if slash_time_matches:
-            for match in slash_time_matches:
-                # Фильтруем пустые группы из регулярки
-                clean_match = [m for m in match if m]
-                print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена сетевая опечатка слэша во времени: '{clean_match[0]}\\{clean_match[1]}' -> Исправляем на '{clean_match[0]}:{clean_match[1]}'")
+        # Раздельный поиск и фиксация опечаток времени (сбор точного оригинального написания опечатки)
+        raw_slash_matches = re.findall(r'\d{1,2}\\\d{2}|\d{1,2}/\d{2}', repaired_yaml_text)
+        if raw_slash_matches:
+            for bad_time_str in raw_slash_matches:
+                good_time_str = bad_time_str.replace('\\', ':').replace('/', ':')
+                print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена опечатка формата времени: '{bad_time_str}' -> Исправляем на '{good_time_str}'")
             repaired_yaml_text = re.sub(r'(\d{1,2})\\(\d{2})', r'\1:\2', repaired_yaml_text)
             repaired_yaml_text = re.sub(r'(\d{1,2})/(\d{2})', r'\1:\2', repaired_yaml_text)
 
@@ -139,7 +138,7 @@ def collect_and_parse_raw_data():
                 print(f"[ПАРСЕР РЕДАКТОР] 🛑 Найдена опечатка ложных кавычек в скобках: '{quote_item}' -> Исправляем на '[э]'")
             repaired_yaml_text = re.sub(r'\[[\'\"]\]', '[э]', repaired_yaml_text)
 
-        # Раздельный поиск и фиксация опечатки трипл-кавычек двойная-одиночная-двойная '"'
+        # Раsh_time_matches = re.findall(r'(\d{сация опечатки трипл-кавычек двойная-одиночная-двойная '"'
         if '\"\'\"' in repaired_yaml_text:
             count_triple = repaired_yaml_text.count('\"\'\"')
             print(f"[ПАРСЕР РЕДАКТОР] 💥 Найдена критическая опечатка тройных кавычек '\"'\"' ({count_triple} шт.) -> Принудительно заменяем на '[э]'")
@@ -177,7 +176,7 @@ def collect_and_parse_raw_data():
                         students_data[day_name][normalized_time] = clean_kids
                         
                         if clean_time_str != normalized_time:
-                            print(f"[ПАРСЕР РЕДАКТОР] Найдена опечатка формата времени '{clean_time_str}'. Заменяем на '{normalized_time}'")
+                            print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена опечатка формата времени '{clean_time_str}'. Заменяем на '{normalized_time}'")
                             updated_yaml_text = updated_yaml_text.replace(f"'{clean_time_str}':", f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f'"{clean_time_str}":', f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f"{clean_time_str}:", f'"{normalized_time}":')
@@ -195,7 +194,7 @@ def collect_and_parse_raw_data():
                 }
                 res_repair = requests.put(file_api_url, json=repair_payload, headers=headers_pub, timeout=30)
                 if res_repair.status_code in (200, 201):
-                    print(f"[ПАРСЕР РЕДАКТОР] 🟢 Файл расписания для {teacher_login} успешно вылечен напрямую по сети!")
+                    print(f"[ПАРСЕР РЕДАКТОР] 🟢 Файл расписания для {teacher_login} успешно отредактирован!")
                     yaml_sha = res_repair.json().get("content", {}).get("sha", yaml_sha)
                 else:
                     print(f"[ПАРСЕР РЕДАКТОР] ❌ Не удалось отправить вылеченный YAML по сети: {res_repair.status_code}")

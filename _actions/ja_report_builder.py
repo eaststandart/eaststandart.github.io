@@ -21,7 +21,7 @@ GRAPHQL_URL = "https://api.github.com/graphql"
 BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
 
 def run_generator():
-    print("\n=== [МОДУЛЬ 2: СБОРЩИК ОТЧЕТОВ] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ МАРКДАУН ===")
+    print("\n=== [МОДУЛЬ: СБОРЩИК ОТЧЕТОВ] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ МАРКДАУН ===")
     
     # Вызываем Сетевой Парсер и забираем карту уже проверенных и вылеченных данных
     raw_packages = ja_data_parser.collect_and_parse_raw_data()
@@ -34,7 +34,7 @@ def run_generator():
 
     # РАБОТАЕМ С ИЗОЛИРОВАННЫМИ ДАННЫМИ КАЖДОГО ПРЕПОДАВАТЕЛЯ ИЗ СЕТЕВОГО ПАКЕТА
     for teacher_login, pack in raw_packages.items():
-        print(f"\n👉 [СТРОИТЕЛЬ ЦИКЛ] Построение Маркдаун-отчёта для: '{teacher_login}'")
+        print(f"\n[СТРОИТЕЛЬ] Построение Маркдаун-отчёта для: '{teacher_login}'")
         
         target_day = pack["target_day"]
         date_str = pack["date_str"]
@@ -47,7 +47,7 @@ def run_generator():
         temp_journal = pack["temp_journal"]
         teacher_json_files = pack["teacher_json_files"]
 
-        print(f"\n=== ЛОГ РОБОТА PYTHON: СТРОИТЕЛЬ НАСТРОЕК ДЛЯ {teacher_login} ===")
+        print(f"\n[СТРОИТЕЛЬ] НАСТРОЙКИ ДЛЯ {teacher_login}:")
         print(f"Режим публикации через Бота: {publish_as_bot}")
         print(f"Показывать колонку проектов: {show_projects_column}")
         print(f"Целевой номер Дискуссии: #{discussion_number}")
@@ -58,7 +58,7 @@ def run_generator():
         discussions = []
         
         if show_projects_column:
-            print("\n=== [РАДАР КАТЕГОРИЙ GITHUB НА PYTHON] ===")
+            print("\n=== [РАДАР КАТЕГОРИЙ GITHUB DISCUSSIONS] ===")
             query_gql = """
             query($owner: String!, $repo: String!) {
               repository(owner: $owner, name: $repo) {

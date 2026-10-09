@@ -22,7 +22,7 @@ JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REP
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def collect_and_parse_raw_data():
-    print("\n=== [МОДУЛЬ 1: СЕТЕВОЙ ПАРСЕР] СБОР СЫРЫХ ДАННЫХ ИЗ API ===")
+    print("\n=== [МОДУЛЬ: СЕТЕВОЙ ПАРСЕР] СБОР СЫРЫХ ДАННЫХ ИЗ API ===")
     
     admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
     headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
@@ -73,7 +73,7 @@ def collect_and_parse_raw_data():
         if not teacher_json_files:
             continue
             
-        print(f"\n👉 [ПАРСЕР ЦИКЛ] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
+        print(f"\n[ПАРСЕР] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
         try:
             sample_download_url = json_download_urls[teacher_json_files[0]]

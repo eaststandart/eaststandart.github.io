@@ -40,7 +40,7 @@ def main():
             target_day = report_item["day"]
             teacher_login = report_item["teacher_login"]
             
-            print(f"\n🚀 [ДИСПЕТЧЕР ТГ] Начинаем рассылку отчета преподавателя: {teacher_login}")
+            print(f"\n[ДИСПЕТЧЕР] Начинаем рассылку в ТГ отчета преподавателя: {teacher_login} 🚀")
             
             # Считываем конфигурацию Телеграм строго из личного YAML-файла текущего преподавателя
             yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")

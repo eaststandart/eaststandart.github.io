@@ -22,7 +22,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
     
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
-        print("[БОТ РОДИТЕЛЕЙ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден!")
+        print("[БОТ ТГ ГРУППЫ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден!")
         return False
 
     # 1. Перехват даты занятия из заголовка Markdown
@@ -43,7 +43,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
     )
 
     # 3. Цикл рассылки по конфигурации каналов и чатов (веток)
-    print("[БОТ РОДИТЕЛЕЙ] Начинаем вещание для древовидного списка каналов...")
+    print("[БОТ ТГ ГРУППЫ] Начинаем вещание для древовидного списка каналов...")
     send_errors = 0
     total_broadcasts = 0
     successful_broadcasts = 0
@@ -57,7 +57,7 @@ def send_public_notification(markdown_body, comment_url, public_config):
             
         # Информирование о пропуске, если список чатов (веток) пуст или закомментирован
         if not chat_ids:
-            print(f"[БОТ РОДИТЕЛЕЙ] Пропуск канала {channel_id}: нет чатов для отправки.")
+            print(f"[БОТ ТГ ГРУППЫ] Пропуск канала {channel_id}: нет чатов для отправки.")
             continue
             
         if isinstance(chat_ids, (int, str)):
@@ -90,12 +90,12 @@ def send_public_notification(markdown_body, comment_url, public_config):
             # Исключение message_thread_id при наличии флага 'g'
             if chat_id > 0 and not is_general_topic:
                 payload["message_thread_id"] = chat_id
-                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в обычный чат #{chat_id}")
+                print(f"[БОТ ТГ ГРУППЫ] Подготовка отправки в обычный чат #{chat_id}")
             elif is_general_topic:
-                print(f"[БОТ РОДИТЕЛЕЙ] Обнаружен флаг основной ветки ({raw_chat_str}). Идентификатор чата исключен из запроса.")
+                print(f"[БОТ ТГ ГРУППЫ] Обнаружен флаг основной ветки ({raw_chat_str}). Идентификатор чата исключен из запроса.")
             elif chat_id == 0 and not is_general_topic:
                 payload["message_thread_id"] = 0
-                print(f"[БОТ РОДИТЕЛЕЙ] Подготовка отправки в чат №0")
+                print(f"[БОТ ТГ ГРУППЫ] Подготовка отправки в чат №0")
 
             req_tg = urllib.request.Request(
                 url_tg, 
@@ -107,13 +107,13 @@ def send_public_notification(markdown_body, comment_url, public_config):
                 with urllib.request.urlopen(req_tg) as response:
                     if response.getcode() == 200:
                         thread_log = f" (основная ветка)" if is_general_topic else f" (чат #{chat_id})"
-                        print(f"[БОТ РОДИТЕЛЕЙ] 🚀 УСПЕХ: Анонс доставлен в канал {channel_id}{thread_log}!")
+                        print(f"[БОТ ТГ ГРУППЫ] 🚀 УСПЕХ: Анонс доставлен в канал {channel_id}{thread_log}!")
                         successful_broadcasts += 1
                     else:
-                        print(f"[БОТ РОДИТЕЛЕЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для канала {channel_id}")
+                        print(f"[БОТ ТГ ГРУППЫ] ⚠️ Предупреждение: Получен статус {response.getcode()} для канала {channel_id}")
             except Exception as e:
                 thread_log = f" (чат #{chat_id})" if chat_id > 0 else ""
-                print(f"[БОТ РОДИТЕЛЕЙ] ❌ Ошибка сети в канале {channel_id}{thread_log}: {str(e)}")
+                print(f"[БОТ ТГ ГРУППЫ] ❌ Ошибка сети в канале {channel_id}{thread_log}: {str(e)}")
                 send_errors += 1
 
     if total_broadcasts == 0:
@@ -121,5 +121,5 @@ def send_public_notification(markdown_body, comment_url, public_config):
     elif successful_broadcasts > 0:
         return True
     else:
-        print("[БОТ РОДИТЕЛЕЙ] ❌ Ни одно родительское уведомление не удалось доставить из-за ошибок сети.")
+        print("[БОТ ТГ ГРУППЫ] ❌ Ни одно родительское уведомление не удалось доставить из-за ошибок сети.")
         return False

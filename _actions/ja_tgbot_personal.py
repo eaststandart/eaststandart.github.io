@@ -21,7 +21,7 @@ def send_personal_report(markdown_body, comment_url, target_day, personal_ids):
     
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
-        print("[ЛИЧНЫЙ БОТ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден в окружении!")
+        print("[БОТ ТГ ЛИЧНЫЙ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден в окружении!")
         return False
 
     # 1. Сопоставление и урезание полных дней недели до короткого формата
@@ -73,11 +73,11 @@ def send_personal_report(markdown_body, comment_url, target_day, personal_ids):
     message_text = "\n".join([l for l in clean_lines if l.strip()]).strip()
 
     if not message_text:
-        print("[ЛИЧНЫЙ БОТ] ℹ️ Сформированный текст сжатого отчета пуст. Выходим.")
+        print("[БОТ ТГ ЛИЧНЫЙ] ℹ️ Сформированный текст сжатого отчета пуст. Выходим.")
         return False
 
     # 3. ЦИКЛ РАССЫЛКИ ПО ОТКРЫТОМУ СПИСКУ ID ИЗ YAML (Твой движок отправки)
-    print(f"[ЛИЧНЫЙ БОТ] Начинаем отправку для списка пользователей: {personal_ids}")
+    print(f"[БОТ ТГ ЛИЧНЫЙ] Начинаем отправку для списка пользователей: {personal_ids}")
     send_errors = 0
 
     for chat_id in personal_ids:
@@ -105,16 +105,16 @@ def send_personal_report(markdown_body, comment_url, target_day, personal_ids):
         try:
             with urllib.request.urlopen(req_tg) as response:
                 if response.getcode() == 200:
-                    print(f"[ЛИЧНЫЙ БОТ] 🚀 Успех: Отчёт успешно доставлен пользователю {target_id}!")
+                    print(f"[БОТ ТГ ЛИЧНЫЙ] 🚀 Успех: Отчёт успешно доставлен пользователю {target_id}!")
                 else:
-                    print(f"[ЛИЧНЫЙ БОТ] ⚠️ Предупреждение: Получен статус {response.getcode()} для {target_id}")
+                    print(f"[БОТ ТГ ЛИЧНЫЙ] ⚠️ Предупреждение: Получен статус {response.getcode()} для {target_id}")
         except Exception as e:
-            print(f"[ЛИЧНЫЙ БОТ] ❌ Ошибка сети при отправке пользователю {target_id}: {str(e)}")
+            print(f"[БОТ ТГ ЛИЧНЫЙ] ❌ Ошибка сети при отправке пользователю {target_id}: {str(e)}")
             send_errors += 1
 
     # Возвращаем True диспетчеру, если хотя бы одно сообщение улетело успешно
     if send_errors < len(personal_ids):
         return True
     else:
-        print("[ЛИЧНЫЙ БОТ] ❌ Ни одно личное сообщение не удалось доставить.")
+        print("[БОТ ТГ ЛИЧНЫЙ] ❌ Ни одно личное сообщение не удалось доставить.")
         return False

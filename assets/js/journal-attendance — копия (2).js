@@ -173,7 +173,6 @@ function loadStudentsFromYaml() {
 }
 
 // Прогрессивный объектный парсер YAML: забирает строго имена постоянных учеников
-// Объектный парсер YAML с жестким ловушечником синтаксических кавычек и кнопкой ремонта
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
@@ -181,10 +180,9 @@ function parseSimpleYaml(text) {
   
   const lines = text.split('\n');
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  lines.forEach(line => {
     const trimmed = line.trimEnd();
-    if (!trimmed || trimmed.startsWith('#')) continue;
+    if (!trimmed || trimmed.startsWith('#')) return;
 
     let indent = 0;
     while (indent < line.length && line.charAt(indent) === ' ') {
@@ -213,42 +211,18 @@ function parseSimpleYaml(text) {
     // 3. Считывание имени постоянного ученика строго из поля - name:
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
-      
-      // Считаем количество кавычек в строке через надежный текстовый сплит без match
-      const doubleQuotesCount = rawName.split('"').length - 1;
-      const singleQuotesCount = rawName.split("'").length - 1;
-      
-      // Если количество кавычек нечетно или их больше двух — взрываем выполнение!
-      if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-        // Блокируем центральный контейнер групп и выводим красную плашку с кнопкой
-        document.getElementById("groups-container").innerHTML = 
-          "<div class='notify-error' style='padding:20px; border-radius:6px; margin-top:20px; font-weight:bold; font-size:16px; background-color:#ffeef0; color:#d73a49; border:1px solid #ced4da;'>" +
-            "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
-            "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
-              "В строке №" + (i + 1) + " обнаружены лишние или несбалансированные кавычки в поле имени: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
-              "<b>Генерация отчетов полностью заблокирована!</b> Запустите автоматическое исправление базы на сервере:<br><br>" +
-              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendRepairTriggerSignal()'>🛠️ Исправить базу данных на сервере</button>" +
-            "</span>" +
-          "</div>";
-        
-        // Отключаем кнопки дней недели
-        const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
-        allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
-        
-        showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
-        return {};
-      }
-
       if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
       if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
       
       const cleanName = rawName.replace(/\s+/g, " ").trim();
       
+      // Кладываем в массив чекбоксов строго одно голое имя-строку!
       if (currentDay && currentGroup && cleanName) {
         result[currentDay][currentGroup].push(cleanName);
       }
     }
-  }
+    // Строки с отступом 6 (direction и tag) робот просто пропускает, они не забивают память сайта!
+  });
   return result;
 }
 
@@ -589,40 +563,3 @@ function showNotify(text, type) {
   el.innerText = text;
 }
 
-// Функция отправки файла-сигнала для принудительного запуска сервера проверки
-function sendRepairTriggerSignal() {
-  const btn = document.getElementById("btn-force-repair");
-  if (btn) {
-    btn.disabled = true;
-    btn.innerText = "⏳ Отправка запроса на сервер...";
-  }
-
-  const targetUrl = "https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/trigger-repair.txt";
-  
-  const commitBody = {
-    message: "chore: принудительный запуск автоматического исправления расписания с сайта",
-    content: btoa(unescape(encodeURIComponent("trigger")))
-  };
-
-  fetch(targetUrl, {
-    method: "PUT",
-    headers: {
-      "Authorization": "token " + accessToken,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(commitBody)
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    showNotify("🟢 Сигнал принят! Робот на сервере приступил к исправлению файлов. Подождите 1 минуту и обновите страницу.", "success");
-    if (btn) btn.innerText = "✅ Робот запущен. Обновите страницу через минуту";
-  })
-  .catch(err => {
-    console.error(err);
-    showNotify("❌ Не удалось запустить ремонт сервера. Проверьте сеть.", "error");
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "🛠️ Попробовать запустить ремонт снова";
-    }
-  });
-}

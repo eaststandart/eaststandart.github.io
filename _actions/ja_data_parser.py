@@ -106,6 +106,14 @@ def collect_and_parse_raw_data():
 
         yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
         yaml_text_orig = yaml_content_bytes.decode('utf-8')
+        
+        # === ВРЕМЕННЫЙ ЖЕСТКИЙ ЛОГ ДЛЯ СВЕРКИ СИМВОЛОВ И ОПЕЧАТОК ===
+        print("\n==================================================")
+        print(f"[ОТЛАДКА YAML] ЗАПУСК СКАНИРОВАНИЯ ДЛЯ ПРЕПОДАВАТЕЛЯ: {teacher_login}")
+        print("--- СЫРОЙ ТЕКСТ YAML НАПРАВЛЕННЫЙ ИЗ СЕТИ ГИТХАБА:")
+        print(yaml_text_orig)
+        print("==================================================\n")
+
         yaml_data = yaml.safe_load(yaml_text_orig) or {}
 
         # === АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ И ОПЕЧАТОК НАПРАВЛЕНИЙ ===
@@ -131,14 +139,14 @@ def collect_and_parse_raw_data():
                 print(f"[ПАРСЕР РЕДАКТОР] 🔤 Найдена опечатка раскладки букв направления: '[{char}]' -> Исправляем на '[э]'")
             repaired_yaml_text = re.sub(r'\[[eеЕЭ]\]', '[э]', repaired_yaml_text)
 
-        # Раздельный поиск и фиксация опечаток одинарных/двойных кавычек в скобках ['], ["]
-        bad_quotes_matches = re.findall(r'\[\'\]|\[\"\]', repaired_yaml_text)
-        if bad_quotes_matches:
-            for quote_item in bad_quotes_matches:
-                print(f"[ПАРСЕР РЕДАКТОР] 🛑 Найдена опечатка ложных кавычек в скобках: '{quote_item}' -> Исправляем на '[э]'")
-        
-        # Сквозное лечение ложных кавычек в скобках по всему тексту YAML
-        repaired_yaml_text = re.sub(r'\[\'\]|\[\"\]', '[э]', repaired_yaml_text)
+        # Раздельный прямолинейный поиск опечаток кавычек без использования ломающихся регулярок
+        if "[']" in repaired_yaml_text:
+            print("[ПАРСЕР РЕДАКТОР] 🛑 Найдена сетевая опечатка ложных одинарных кавычек в скобках: '[\']' -> Исправляем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace("[']", "[э]")
+            
+        if '["]' in repaired_yaml_text:
+            print("[ПАРСЕР РЕДАКТОР] 🛑 Найдена сетевая опечатка ложных двойных кавычек в скобках: '[\"]' -> Исправляем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace('["]', '[э]')
 
         # Раsh_time_matches = re.findall(r'(\d{сация опечатки трипл-кавычек двойная-одиночная-двойная '"'
         if '\"\'\"' in repaired_yaml_text:

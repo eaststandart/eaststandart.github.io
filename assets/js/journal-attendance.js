@@ -329,10 +329,8 @@ function saveGroupAttendance(day, time) {
 
       // Шаг 3: Жесткая валидация на левые ключи. Если в строке остался какой-то другой слэш /
       if (rawKid.includes('/')) {
-        const badKeyMatch = rawKid.match\((/\/\S+/);\)
-        const badKey = badKeyMatch ? badKeyMatch[0] : '/';
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${badKey}". Разрешены только комбинации: /э, /e, /с, /c, /#`;
+        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ после слэша. Разрешены только комбинации: /э, /e, /с, /c, /#`;
         return "";
       }
 

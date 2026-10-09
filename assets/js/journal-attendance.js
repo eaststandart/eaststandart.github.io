@@ -3,7 +3,7 @@
  * @about Клиентский скрипт отправки данных Журнала посещений
  * @purpose Сбор отметок посещаемости на сайте и отправка PUT-запросов JSON в репозиторий GitHub
  * @author TechLab
- * @version 10.0.0
+ * @version 1.0.0
  */
 
 // Настройки репозитория и проверка пароля преподавателя
@@ -32,6 +32,7 @@ function submitToken() {
   document.getElementById("btn-login").disabled = true;
   document.getElementById("btn-login").innerText = "Проверка пароля...";
 
+  // Ссылка запроса: https://github.com
   fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${tokenValue}` }
   })
@@ -58,6 +59,7 @@ function showJournal() {
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("journal-section").classList.remove("hidden");
 
+  // СКРЫВАЕМ ИНСТРУКЦИЮ ПОСЛЕ УСПЕШНОГО ВХОДА
   const instr = document.getElementById("instructions-section");
   if (instr) instr.classList.add("hidden");
 
@@ -69,6 +71,7 @@ function logoutTeacher() {
     localStorage.removeItem("github_journal_token");
     accessToken = null;
 
+    // ПОКАЗЫВАЕМ ИНСТРУКЦИЮ ПРИ ВЫХОДЕ
     const instr = document.getElementById("instructions-section");
     if (instr) instr.classList.remove("hidden");
 
@@ -80,15 +83,17 @@ function logoutTeacher() {
 function loadStudentsFromYaml() {
   showNotify("Идентификация пользователя...", "success");
   
+  // Сначала узнаем логин учителя, чтобы понять какой личный файл скачивать
   fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
   .then(userData => {
-    const userLogin = userData.login;
+    const userLogin = userData.login; // Например, "TechLab"
     localStorage.setItem("github_journal_logged_user", userLogin);
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
     
+    // Динамический адрес личного файла: journal-attendance-ЛОГИН.yml
     return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml`, {
       headers: { "Authorization": `token ${accessToken}` }
     });
@@ -104,6 +109,7 @@ function loadStudentsFromYaml() {
     
     studentsData = parseSimpleYaml(yamlText);
     
+    // Генерация сетки дней недели + 8-я кнопка ВЫХОД
     const daysContainer = document.getElementById("days-buttons-container");
     daysContainer.innerHTML = "";
     
@@ -122,6 +128,7 @@ function loadStudentsFromYaml() {
       const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
       const disabledAttr = isAvailable ? "" : "disabled";
       
+      // ТОТАЛЬНО ОЧИЩЕНО: Параметр цвета удален, вызываем только имя дня недели
       daysContainer.innerHTML += `
         <button id="${btnId}" class="btn-big btn-day btn-day-transition day-border-${dayInfo.key}" ${disabledAttr} 
                 onclick="selectDynamicDay('${dayInfo.key}')">
@@ -129,6 +136,7 @@ function loadStudentsFromYaml() {
         </button>`;
     });
 
+    // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД С КЛАССОМ btn-logout
     daysContainer.innerHTML += `
       <button class="btn-big btn-day btn-logout" onclick="logoutTeacher()">
         ВЫХОД
@@ -139,11 +147,17 @@ function loadStudentsFromYaml() {
   })
   .catch(err => {
     console.error(err);
+    
+    // ПРОВЕРКА: Извлекаем сохранённый логин и сверяем с белым списком
     const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
     
     if (allowedTeachers.includes(enteredLogin)) {
+      // СИТУАЦИЯ 1: Это наш официальный преподаватель, но у него отсутствует файл базы.
+      // Поведение строго как в старом коде: оставляем в журнале и просто пишем ошибку!
       showNotify("Ошибка загрузки личного журнала. Проверьте наличие файла на GitHub.", "error");
     } else {
+      // СИТУАЦИЯ 2: Это посторонний человек с левым токеном.
+      // Только в этом случае жестко выкидываем на экран ввода ключа и блокируем!
       document.getElementById("auth-section").classList.remove("hidden");
       document.getElementById("journal-section").classList.add("hidden");
       
@@ -158,7 +172,7 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Обновленный объектный парсер YAML под новую древовидную структуру базы расписания
+// Объектный парсер под новую древовидную структуру базы расписания учеников
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
@@ -171,26 +185,31 @@ function parseSimpleYaml(text) {
     const trimmed = line.trimEnd();
     if (!trimmed || trimmed.startsWith('#')) return;
 
-    const indent = line.search(/\S/);
+    let indent = 0;
+    while (indent < line.length && line.charAt(indent) === ' ') {
+      indent++;
+    }
     const cleanText = trimmed.trim();
     
+    // 1. Определение дня недели
     if (indent === 0 && cleanText.endsWith(':')) {
       currentDay = cleanText.slice(0, -1).toLowerCase().trim();
       result[currentDay] = {};
     } 
+    // 2. Определение времени группы с жесткой нормализацией любого брака знаков
     else if (indent === 2 && cleanText.endsWith(':')) {
       let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
       
-      // Всеядный фильтр: вытаскивает часы и минуты из любых форматов (10-00, 10/00, 10\00, 10=00)
-      let matchTime = rawTimeStr.match(/(\d{1,2})\D*(\d{2})/);
-      if (matchTime && matchTime[1] && matchTime[2]) {
-        currentGroup = matchTime[1] + ":" + matchTime[2];
-      } else {
-        currentGroup = rawTimeStr;
+      let cleanTime = rawTimeStr;
+      let digits = rawTimeStr.replace(/[^0-9]/g, '');
+      if (digits.length === 4) {
+        cleanTime = digits.substring(0, 2) + ":" + digits.substring(2, 4);
       }
+      
+      currentGroup = cleanTime;
       result[currentDay][currentGroup] = [];
     } 
-    // Считывание начала объекта ученика (- name:)
+    // 3. Считывание начала объекта постоянного ученика (- name:)
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
       if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
@@ -202,11 +221,13 @@ function parseSimpleYaml(text) {
         tag: ""
       };
       
+      // Для обратной совместимости со старым кодом отправки чекбоксов 
+      // сразу собираем строку обратно в старый текстовый формат Журнала!
       if (currentDay && currentGroup && currentKidObj.name) {
-        result[currentDay][currentGroup].push(currentKidObj);
+        result[currentDay][currentGroup].push(currentKidObj.name);
       }
     }
-    // Считывание полей direction и tag внутри объекта ученика
+    // 4. Считывание направления и тегов ученика (если пригодятся в будущем)
     else if (indent === 6 && currentKidObj) {
       const colonIndex = cleanText.indexOf(':');
       if (colonIndex !== -1) {
@@ -221,6 +242,23 @@ function parseSimpleYaml(text) {
         } else if (key === 'tag') {
           currentKidObj.tag = val.trim();
         }
+        
+        // Обновляем запись в массиве, если у постоянного ребенка есть тег или направление
+        const currentGroupList = result[currentDay][currentGroup];
+        if (currentGroupList && currentGroupList.length > 0) {
+          let lastIndex = currentGroupList.length - 1;
+          let rowStr = currentKidObj.name;
+          
+          if (currentKidObj.direction) {
+            let shortDir = "э";
+            if (currentKidObj.direction.toLowerCase().includes("столяр")) shortDir = "с";
+            rowStr += " [" + shortDir + "]";
+          }
+          if (currentKidObj.tag) {
+            rowStr += " " + currentKidObj.tag;
+          }
+          currentGroupList[lastIndex] = rowStr;
+        }
       }
     }
   });
@@ -228,89 +266,102 @@ function parseSimpleYaml(text) {
 }
 
 function selectDynamicDay(day) {
-  const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
+  // 1. Сбрасываем CSS-класс active у абсолютно всех кнопок дней
+  const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);
   allDayButtons.forEach(btn => {
     btn.classList.remove("active");
   });
 
-  const activeBtn = document.getElementById("btn-day-" + day);
+  // 2. Подсвечиваем выбранную кнопку, добавляя чистый CSS-класс active
+  const activeBtn = document.getElementById(`btn-day-${day}`);
   if (activeBtn) {
     activeBtn.classList.add("active");
   }
   
+  // 3. Выводим ОДНО ЕДИНСТВЕННОЕ общее поле даты под календарь
   const localToday = new Date();
   const offset = localToday.getTimezoneOffset();
   const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
   const defaultDateStr = correctedDate.toISOString().split('T')[0];
 
-  document.getElementById("global-date-container").innerHTML = 
-    "📅 Дата проведения занятий: " +
-    "<input type='text' id='global-journal-date' value='" + defaultDateStr + "' class='global-date-input'>";
+  document.getElementById("global-date-container").innerHTML = `
+    📅 Дата проведения занятий: 
+    <input type="text" id="global-journal-date" value="${defaultDateStr}" class="global-date-input">
+  `;
 
+  // 4. Генерируем группы для выбранного дня недели
   const container = document.getElementById("groups-container");
   container.innerHTML = "";
 
   if (!studentsData[day] || Object.keys(studentsData[day]).length === 0) {
-    container.innerHTML = "<p class='empty-group-msg'>В этот день групп нет.</p>";
+    container.innerHTML = `<p class="empty-group-msg">В этот день групп нет.</p>`;
     return;
   }
 
   Object.keys(studentsData[day]).sort().forEach(time => {
     const kids = studentsData[day][time];
     
-    let groupHtml = "<div class='group-block' id='block-" + time.replace(':', '-') + "'>" +
-      "<div class='group-header-flex'>" +
-        "<h3 class='group-title-clean'>⏰ Группа " + time + "</h3>" +
-      "</div>";
+    // Чистый заголовок группы использует класс макета вместо инлайн-стилей
+    let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
+      <div class="group-header-flex">
+        <h3 class="group-title-clean">⏰ Группа ${time}</h3>
+      </div>`;
     
-    kids.forEach((kidObj, index) => {
-      const id = "kid-" + time.replace(':', '-') + "-" + index;
-      const displayName = kidObj.name;
-      const serializedKid = encodeURIComponent(JSON.stringify(kidObj));
-
-      groupHtml += 
-        "<div class='kid-row'>" +
-          "<label class='lbl-big'>" +
-            "<input type='checkbox' id='" + id + "' class='chk-big' value='" + serializedKid + "'>" +
-            displayName +
-          "</label>" +
-        "</div>";
+    kids.forEach((kid, index) => {
+      const id = `kid-${time.replace(':', '-')}-${index}`;
+      
+      // Зряче отсекаем для экрана всё, что идёт после скобок или интернет-тегов
+      let displayName = kid;
+      const cutIndex = kid.search(/\[|@|#/);
+      if (cutIndex !== -1) {
+        displayName = kid.substring(0, cutIndex).trim();
+      }
+      
+      groupHtml += `
+        <div class="kid-row">
+          <label class="lbl-big">
+            <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
+            ${displayName}
+          </label>
+        </div>`;
     });
 
-    let cleanBtnTextTime = time;
-    const timeParts = time.split(':');
-    if (timeParts.length === 2) {
-      const hh = timeParts[0].trim();
-      const mm = timeParts[1].trim();
-      if (hh && mm) {
-        cleanBtnTextTime = hh + ":" + mm;
-      }
-    }
+    // Локальный фильтр всеядности времени для вывода идеального текста на саму кнопку занятия
+    let matchBtnTime = time.match(/(\d{1,2})\D*(\d{2})/);
+    let cleanBtnTextTime = (matchBtnTime && matchBtnTime[1] && matchBtnTime[2]) ? `${matchBtnTime[1]}:${matchBtnTime[2]}` : time;
 
-    groupHtml += 
-      "<div class='margin-top-15'>" +
-        "<label class='field-label'>➕ Новые постоянные ученики (войдут в базу):</label>" +
-        "<input type='text' id='newbies-" + time + "' class='input-text' placeholder='Имена через запятую'>" +
+    // Текстовые блоки разметки переведены на чистые классы отступов и цветов
+    groupHtml += `
+      <div class="margin-top-15">
+        <label class="field-label">➕ Новые постоянные ученики (войдут в базу):</label>
+        <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую">
         
-        "<label class='field-label-probation'>⏳ Временные ученики (только на сегодня):</label>" +
-        "<input type='text' id='probation-" + time + "' class='input-text input-probation' placeholder='Имена через запятую'>" +
-      "</div>" +
-      "<button class='btn-big btn-save' id='btn-save-" + time.replace(':', '-') + "' onclick=\"saveGroupAttendance('" + day + "', '" + time + "')\">💾 Отправить группу " + cleanBtnTextTime + "</button>" +
-    "</div>";
+        <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
+        <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
+      </div>
+      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст кнопки полностью защищен от знаков равенства, дефисов и слэшей! -->
+      <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${cleanBtnTextTime}</button>
+    </div>`;
   
     container.innerHTML += groupHtml;
   });
 }
 
 function saveGroupAttendance(day, time) {
-  // Инициализируем обязательные переменные даты и ручного ввода полей на самом старте функции
   const dateStr = document.getElementById("global-journal-date").value.trim(); 
   const timeId = time.replace(':', '-');
-  const newbiesInput = document.getElementById("newbies-" + time).value.trim();
-  const probationInput = document.getElementById("probation-" + time).value.trim();
 
-  // Валидатор и объектный конвертер ручного ввода (Белый список ключей с полными именами)
-  const convertAndValidateInputs = (inputStr, fieldLabel, isProbation = false) => {
+  let presentKids = [];
+  const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
+  checkboxes.forEach(chk => {
+    if (chk.checked) presentKids.push(chk.value);
+  });
+
+  const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
+  const probationInput = document.getElementById(`probation-${time}`).value.trim();
+
+  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку
+  const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
     
     let isErrorFound = false;
@@ -320,167 +371,152 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // Шаг 1: Жесткая блокировка мусора. Запрещены скобки, кавычки и точка с запятой
-      if (rawKid.includes('[') || rawKid.includes(']') || rawKid.includes("'") || rawKid.includes('"') || rawKid.includes('\\') || rawKid.includes(';')) {
+      // Шаг 1: Приводим множественные пробелы к одному (кавычки, скобки и слэши НЕ ТРОГАЕМ для валидации)
+      rawKid = rawKid.replace(/\s+/g, ' ').trim();
+
+      // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
+      // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;
+      const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
+      if (forbiddenCharsMatch) {
         isErrorFound = true;
-        errorMessage = "В поле '" + fieldLabel + "' у ученика '" + rawKid + "' обнаружен запрещённый символ. Ввод квадратных скобок [, ], кавычек и точек с запятой строго запрещён!";
-        return null;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён! Используйте легитимные ключи: /э, /e, /с, /c, /#`;
+        return "";
       }
 
-      // Шаг 2: Проверка на бесхозные знаки решётки (без слэша разрешено только внутри #techlab-)
-      if (rawKid.includes('#') && !rawKid.includes('#techlab-')) {
-        // Проверяем, что перед решёткой нет слэша
-        const checkIndex = rawKid.indexOf('#');
-        if (checkIndex === 0 || rawKid.charAt(checkIndex - 1) !== '/') {
-          isErrorFound = true;
-          errorMessage = "В поле '" + fieldLabel + "' у ученика '" + rawKid + "' обнаружен недопустимый символ '#'. Вводить решётку без слэша разрешено только внутри слова '#techlab-'! Для автогенерации используйте ключ '/#'";
-          return null;
+      // 2. Запрет на бесхозные решётки (разрешено только внутри слова #techlab-)
+      const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
+      if (badHashes) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен недопустимый символ "#". Вводить знак решётки без слэша разрешено только внутри системного слова "#techlab-"! Для автогенерации используйте ключ "/#"`;
+        return "";
+      }
+
+      // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
+      const slashMatches = rawKid.match((/\/\S*/g));
+      if (slashMatches) {
+        for (let sMatch of slashMatches) {
+          const lowerKey = sMatch.toLowerCase();
+          if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
+            isErrorFound = true;
+            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
+            return "";
+          }
         }
       }
 
-      let directionValue = "";
-      let tagValue = "";
+      // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
+      rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
+      rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
+
+      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько законных /#)
+      rawKid = rawKid.replace(/\/#(\s*\/#)+/g, '/#');
+
+      // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
+      let directionMarker = "";
+      let systemTag = "";
       let hasAutoHash = false;
 
-      // Шаг 3: Анализируем и вырезаем ключ автогенерации /#
+      // Вытаскиваем маркер направления
+      if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
+      else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
+
+      // Вытаскиваем ключ автогенерации /#
       if (rawKid.includes('/#')) {
         hasAutoHash = true;
-        rawKid = rawKid.replace('/#', '').trim();
+        rawKid = rawKid.replace(/\/#/g, '');
       }
 
-      // Шаг 4: Вытаскиваем готовые интернет-теги
-      if (rawKid.includes('@')) {
-        const parts = rawKid.split(' ');
-        for (let p of parts) {
-          if (p.startsWith('@')) {
-            tagValue = p.trim();
-            rawKid = rawKid.replace(tagValue, '').trim();
-            break;
-          }
-        }
-      } 
-      
-      if (rawKid.includes('#techlab-')) {
-        const parts = rawKid.split(' ');
-        for (let p of parts) {
-          if (p.startsWith('#techlab-')) {
-            tagValue = p.trim();
-            rawKid = rawKid.replace(tagValue, '').trim();
-            break;
-          }
-        }
+      // Вытаскиваем готовые интернет-теги Гитхаба
+      const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
+      const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
+
+      if (githubLoginMatch) {
+        systemTag = githubLoginMatch[0];
+        rawKid = rawKid.replace(githubLoginMatch[0], '');
+      } else if (techlabTagMatch) {
+        systemTag = techlabTagMatch[0];
+        rawKid = rawKid.replace(techlabTagMatch[0], '');
       } else if (hasAutoHash) {
-        tagValue = "#";
+        systemTag = "#";
       }
 
-      // Шаг 5: Вытаскиваем и сопоставляем ключи направлений
-      if (rawKid.includes('/')) {
-        const parts = rawKid.split(' ');
-        for (let p of parts) {
-          if (p.startsWith('/')) {
-            const lowerKey = p.toLowerCase().trim();
-            if (lowerKey === '/э' || lowerKey === '/e') {
-              directionValue = "электронное конструирование";
-              rawKid = rawKid.replace(p, '').trim();
-            } else if (lowerKey === '/с' || lowerKey === '/c') {
-              directionValue = "столярное дело";
-              rawKid = rawKid.replace(p, '').trim();
-            } else {
-              isErrorFound = true;
-              errorMessage = "В поле '" + fieldLabel + "' обнаружен недопустимый ключ '" + p + "' у ученика '" + rawKid + "'. Разрешены строго одиночные ключи: /э, /e, /с, /c, /#";
-              return null;
-            }
-            break;
-          }
-        }
-      }
-
-      // Шаг 6: Если направление не указано — это жесткая ошибка для новичков
-      if (!directionValue) {
-        isErrorFound = true;
-        errorMessage = "В поле '" + fieldLabel + "' у ученика '" + rawKid + "' не указано направление занятия! Допишите ключ курса через косую черту (например: /э или /с)";
-        return null;
-      }
-
-      // Очищаем имя от лишних внутренних пробелов
+      // Очищаем оставшееся имя ученика от лишних пробелов
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // Собираем чистый объект ученика
-      let kidObj = {
-        name: cleanName,
-        direction: directionValue
-      };
-      
-      if (tagValue) {
-        kidObj.tag = tagValue;
-      }
+      // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
+      let finalRow = cleanName;
+      if (directionMarker) finalRow += ` ${directionMarker}`;
+      if (systemTag) finalRow += ` ${systemTag}`;
 
-      return kidObj;
-    }).filter(n => n !== null && n !== "");
+      return finalRow.replace(/\s+/g, ' ').trim();
+    }).filter(n => n !== "");
 
     if (isErrorFound) {
-      alert("⚠️ СБОЙ ВАЛИДАЦИИ:\n" + errorMessage);
+      alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
       return null;
     }
     return cleanList;
   };
 
-  // Прогоняем оба поля ввода через наш новый объектный валидатор
+  // Прогоняем оба поля ввода через наш зрячий валидатор
   let newbiesList = convertAndValidateInputs(newbiesInput, "Новые постоянные ученики");
-  if (newbiesList === null) return; 
+  if (newbiesList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  let probationList = convertAndValidateInputs(probationInput, "Временные ученики", true);
-  if (probationList === null) return; 
+  let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
+  if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  showNotify("Подготовка объектного отчета для группы " + time + "...", "success");
+  showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
-  // Шаг 3: Отправка сформированного объектного Payload на GitHub через официальный API
+  // Шаг 1: Узнаем логин преподавателя
   fetch("https://api.github.com/user", {
-    headers: { "Authorization": "token " + accessToken }
+    headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
   .then(userData => {
     const teacherUsername = userData.name || userData.login || "Преподаватель";
-    const teacherLogin = userData.login;
+    const teacherLogin = userData.login; // Используем оригинальную переменную логина
 
-    // КРИСТАЛЬНО ЧИСТЫЙ ОБЪЕКТНЫЙ ПАКЕТ ДАННЫХ СМЕНЫ ПЕРЕД ОТПРАВКОЙ В СЕТЬ
     const currentGroupPayload = {
       date: dateStr,
       day: day,
       time: time,
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
-      present_permanent: presentKids, 
-      newbies: newbiesList,           
-      probation: probationList        
+      present_permanent: presentKids,
+      newbies: newbiesList,
+      probation: probationList
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
     const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`;
 
+    // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии
     return fetch(targetUrl, {
-      headers: { "Authorization": "token " + accessToken }
+      headers: { "Authorization": `token ${accessToken}` }
     })
     .then(checkRes => {
       if (checkRes.ok) {
+        // Файл уже существует на сервере! Извлекаем его sha маркера
         return checkRes.json().then(existingFile => existingFile.sha);
       }
-      return null; 
+      return null; // Файла нет, создаем с чистого листа
     })
     .then(sha => {
       let commitBody = {
-        message: "Отчет: объектная группа " + time + " (" + day + ") от " + teacherUsername,
+        message: `Отчет: группа ${time} (${day}) от ${teacherUsername}`,
         content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
       };
 
+      // Если маркер sha найден, обязательно прикрепляем его к запросу для перезаписи мусора!
       if (sha) {
         commitBody.sha = sha;
       }
 
+      // Отправляем чистый PUT-запрос (создание или безопасное обновление поверх старого)
       return fetch(targetUrl, {
         method: "PUT",
         headers: {
-          "Authorization": "token " + accessToken,
+          "Authorization": `token ${accessToken}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(commitBody)
@@ -492,16 +528,13 @@ function saveGroupAttendance(day, time) {
     return response.json();
   })
   .then(data => {
-    showNotify("Объектная группа " + time + " успешно отправлена в общую сборку дня!", "success");
+    showNotify(`Группа ${time} успешно отправлена в общую сборку дня!`, "success");
     
-    const block = document.getElementById("block-" + timeId);
-    if (block) block.style.opacity = "0.6";
-    
-    const btn = document.getElementById("btn-save-" + timeId);
-    if (btn) {
-      btn.innerText = "✅ Группа " + time + " сохранена";
-      btn.disabled = true;
-    }
+    const block = document.getElementById(`block-${timeId}`);
+    block.style.opacity = "0.6";
+    const btn = document.getElementById(`btn-save-${timeId}`);
+    btn.innerText = `✅ Группа ${time} сохранена`;
+    btn.disabled = true;
   })
   .catch(err => {
     console.error(err);
@@ -511,9 +544,8 @@ function saveGroupAttendance(day, time) {
 
 function showNotify(text, type) {
   const el = document.getElementById("notification");
-  if (el) {
-    el.classList.remove("hidden", "notify-success", "notify-error");
-    el.classList.add(type === "success" ? "notify-success" : "notify-error");
-    el.innerText = text;
-  }
+  el.classList.remove("hidden", "notify-success", "notify-error");
+  el.classList.add(type === "success" ? "notify-success" : "notify-error");
+  el.innerText = text;
 }
+

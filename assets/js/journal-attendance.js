@@ -333,7 +333,6 @@ function saveGroupAttendance(day, time) {
       if (slashMatches) {
         for (let sMatch of slashMatches) {
           const lowerKey = sMatch.toLowerCase();
-          // Если ключ не равен ни одному из 5 эталонов — это жесткий брак!
           if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
             isErrorFound = true;
             errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
@@ -354,17 +353,14 @@ function saveGroupAttendance(day, time) {
       let systemTag = "";
       let hasAutoHash = false;
 
-      // 1. Фиксируем и вырезаем маркер направления [э] или [с]
       if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
       else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
 
-      // 2. Фиксируем и вырезаем ключ автогенерации /#
       if (rawKid.includes('/#')) {
         hasAutoHash = true;
         rawKid = rawKid.replace(/\/#/g, '');
       }
 
-      // 3. Вытаскиваем готовые интернет-теги
       const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
       const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
 
@@ -378,10 +374,8 @@ function saveGroupAttendance(day, time) {
         systemTag = "#";
       }
 
-      // Очищаем тело от лишних пробелов, получая кристально чистое имя ученика
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // Финальная сборка строго по цепочке: Имя ➔ Направление ➔ Тег
       let finalRow = cleanName;
       if (directionMarker) finalRow += ` ${directionMarker}`;
       if (systemTag) finalRow += ` ${systemTag}`;

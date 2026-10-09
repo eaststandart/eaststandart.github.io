@@ -305,7 +305,7 @@ function saveGroupAttendance(day, time) {
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  // Функция-обработчик: проверяет ключи, защищает теги, блокирует левый ввод
+  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку
   const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
     
@@ -316,38 +316,27 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // 1. АППАРАТНЫЙ ПЕРЕХВАТ МУСОРА: вырезаем строго ломающие кавычки ' " и обратный слэш \
-      rawKid = rawKid.replace(/['"\\ ]/g, ' ').replace(/\s+/g, ' ').trim();
+      // Шаг 1: Аппаратный вырез ломающих кавычек ' " и обратного слэша \
+      rawKid = rawKid.replace(/['"\\]/g, '');
 
-      // Ищем наличие любого слэша / внутри строки ученика
-      const slashIndex = rawKid.lastIndexOf('/');
-      if (slashIndex !== -1) {
-        const namePart = rawKid.substring(0, slashIndex).trim();
-        const keyPart = rawKid.substring(slashIndex + 1).trim().toLowerCase();
+      // Шаг 2: Сквозная последовательная замена ключей на эталонные маркеры Журнала
+      // Заменяем ключи электроники (/э, /Э, /e, /е, /Е)
+      rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
+      // Заменяем ключи столярки (/с, /С, /c, /C)
+      rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
+      // Заменяем ключ автогенерации хэштегов (/#)
+      rawKid = rawKid.replace(/\/#/g, ' #');
 
-        // Если после слэша вообще ничего нет — это ошибка
-        if (!keyPart) {
-          isErrorFound = true;
-          errorMessage = `В поле "${fieldLabel}" найден пустой слэш у ученика "${namePart}". Укажите ключ (/э, /с, /#) или удалите слэш!`;
-          return "";
-        }
-
-        // ПРОВЕРКА ПО БЕЛОМУ СПИСКУ КЛЮЧЕЙ
-        if (keyPart === 'э' || keyPart === 'e') {
-          return `${namePart} [э]`;
-        } else if (keyPart === 'с' || keyPart === 'c') {
-          return `${namePart} [с]`;
-        } else if (keyPart === '#') {
-          return `${namePart} #`;
-        } else {
-          // Обнаружен левый незаконный ключ (например, /о, /а) -> блокировка!
-          isErrorFound = true;
-          errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "/${keyPart}" у ученика "${namePart}". Разрешены только: /э, /e, /с, /c, /#`;
-          return "";
-        }
+      // Шаг 3: Жесткая валидация на левые ключи. Если в строке остался какой-то другой слэш /
+      if (rawKid.includes('/')) {
+        const badKeyMatch = rawKid.match\((/\/\S+/);\)
+        const badKey = badKeyMatch ? badKeyMatch[0] : '/';
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${badKey}". Разрешены только комбинации: /э, /e, /с, /c, /#`;
+        return "";
       }
 
-      // Если слэша нет — строка возвращается как есть (системные теги @ и # внутри имени остаются нетронутыми!)
+      // Возвращаем чистую строку. Системные теги @ и # внутри имени не пострадают!
       return rawKid.replace(/\s+/g, ' ').trim();
     }).filter(n => n !== "");
 

@@ -348,7 +348,7 @@ function saveGroupAttendance(day, time) {
       const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
       if (forbiddenCharsMatch) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён! Используйте легитимные ключи: /э, /e, /с, /c, /#`;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Используйте легитимные ключи: /э, /с, /#`;
         return "";
       }
 

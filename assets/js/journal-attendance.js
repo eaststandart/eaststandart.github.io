@@ -220,18 +220,16 @@ function parseSimpleYaml(text) {
       
       // Если количество кавычек нечетно или их больше двух — взрываем выполнение!
       if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-        // Блокируем центральный контейнер групп и выводим красную плашку с кнопкой
         document.getElementById("groups-container").innerHTML = 
           "<div class='notify-error' style='padding:20px; border-radius:6px; margin-top:20px; font-weight:bold; font-size:16px; background-color:#ffeef0; color:#d73a49; border:1px solid #ced4da;'>" +
             "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
             "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
               "В строке №" + (i + 1) + " обнаружены лишние или несбалансированные кавычки в поле имени: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
               "<b>Генерация отчетов полностью заблокирована!</b> Запустите автоматическое исправление базы на сервере:<br><br>" +
-              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendRepairTriggerSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendRepairJsonSignal()'>🛠️ Исправить базу данных на сервере</button>" +
             "</span>" +
           "</div>";
         
-        // Отключаем кнопки дней недели
         const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
         allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
         
@@ -589,40 +587,90 @@ function showNotify(text, type) {
   el.innerText = text;
 }
 
-// Функция отправки файла-сигнала для принудительного запуска сервера проверки
-function sendRepairTriggerSignal() {
+// Функция отправки сигнала "on" в файл статуса для запуска воркфлоу
+function sendRepairJsonSignal() {
   const btn = document.getElementById("btn-force-repair");
   if (btn) {
     btn.disabled = true;
-    btn.innerText = "⏳ Отправка запроса на сервер...";
+    btn.innerText = "⏳ Запуск проверки на сервере...";
   }
 
-  const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/trigger-repair.txt`;
+  const targetUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
   
+  // Пушим строго объектный формат со статусом "on"
+  const payload = { status: "on", timestamp: new Date().toISOString() };
   const commitBody = {
-    message: "chore: принудительный запуск автоматического исправления расписания с сайта",
-    content: btoa(unescape(encodeURIComponent("trigger")))
+    message: "chore: принудительный запрос исправления расписания с сайта (status: on)",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
   };
 
-  fetch(targetUrl, {
-    method: "PUT",
-    headers: {
-      "Authorization": "token " + accessToken,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(commitBody)
+  // Сначала проверяем файл, чтобы забрать его SHA (если файл уже существует на сервере)
+  fetch(targetUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(existingFile => {
+    if (existingFile && existingFile.sha) {
+      commitBody.sha = existingFile.sha;
+    }
+    return fetch(targetUrl, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(commitBody)
+    });
   })
   .then(res => {
-    if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    showNotify("🟢 Сигнал принят! Робот на сервере приступил к исправлению файлов. Подождите 1 минуту и обновите страницу.", "success");
-    if (btn) btn.innerText = "✅ Робот запущен. Обновите страницу через минуту";
+    if (!res.ok) throw new Error("Ошибка записи файла статуса");
+    showNotify("🟢 Запрос отправлен! Сервер выполняет исправление. Ожидайте...", "success");
+    // Запускаем 5-секундный цикл зрячего опроса светофора
+    startRepairStatusPolling();
   })
   .catch(err => {
     console.error(err);
-    showNotify("❌ Не удалось запустить ремонт сервера. Проверьте сеть.", "error");
+    showNotify("❌ Не удалось связаться с сервером.", "error");
     if (btn) {
       btn.disabled = false;
       btn.innerText = "🛠️ Попробовать запустить ремонт снова";
     }
   });
+}
+
+// Функция зрячего 5-секундного опроса файла статуса на Гитхабе
+function startRepairStatusPolling() {
+  const btn = document.getElementById("btn-force-repair");
+  const targetUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
+
+  const intervalId = setInterval(() => {
+    // Добавляем к ссылке случайный параметр для обхода жесткого кэша браузера
+    fetch(targetUrl + "?nocache=" + new Date().getTime(), {
+      headers: { "Authorization": "token " + accessToken }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Файл статуса временно недоступен");
+      return res.json();
+    })
+    .then(data => {
+      // Нативно декодируем содержимое JSON без ручных парсеров
+      const jsonText = decodeURIComponent(atob(data.content).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonText);
+      console.log("📍 Текущий статус сервера ремонта:", payload.status);
+
+      if (btn) {
+        btn.innerText = "⏳ Сервер обрабатывает файлы расписаний...";
+      }
+
+      // Если робот на сервере закончил работу и переключил тумблер в "off"
+      if (payload.status === "off") {
+        clearInterval(intervalId); // Стоп опрос
+        showNotify("🟢 База данных успешно исправлена сервером! Страница перезагружается...", "success");
+        if (btn) btn.innerText = "✅ Исправлено! Перезапуск...";
+        
+        setTimeout(() => { window.location.reload(); }, 2000);
+      }
+    })
+    .catch(err => {
+      console.warn("Ожидание обновления файла статуса:", err.message);
+    });
+  }, 5000); // Строго каждые 5 секунд
 }

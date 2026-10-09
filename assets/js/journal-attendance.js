@@ -243,19 +243,19 @@ function parseSimpleYaml(text) {
 }
 
 function selectDynamicDay(day) {
-  // 1. Сбрасываем CSS-класс active у абсолютно всех кнопок дней
+  // 1. Сбрасываем CSS-класс active у всех кнопок дней недели
   const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);
   allDayButtons.forEach(btn => {
     btn.classList.remove("active");
   });
 
-  // 2. Подсвечиваем выбранную кнопку, добавляя чистый CSS-класс active
+  // 2. Подсвечиваем выбранную кнопку
   const activeBtn = document.getElementById(`btn-day-${day}`);
   if (activeBtn) {
     activeBtn.classList.add("active");
   }
   
-  // 3. Выводим ОДНО ЕДИНСТВЕННОЕ общее поле даты под календарь
+  // 3. Выводим поле общей даты под календарь
   const localToday = new Date();
   const offset = localToday.getTimezoneOffset();
   const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
@@ -266,7 +266,7 @@ function selectDynamicDay(day) {
     <input type="text" id="global-journal-date" value="${defaultDateStr}" class="global-date-input">
   `;
 
-  // 4. Генерируем группы для выбранного дня недели
+  // 4. Генерируем блоки групп для выбранного дня недели
   const container = document.getElementById("groups-container");
   container.innerHTML = "";
 
@@ -276,30 +276,36 @@ function selectDynamicDay(day) {
   }
 
   Object.keys(studentsData[day]).sort().forEach(time => {
+    // В массиве kids теперь лежат объекты: { name, direction, tag }
     const kids = studentsData[day][time];
     
-    // Чистый заголовок группы использует класс макета вместо инлайн-стилей
     let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
       <div class="group-header-flex">
         <h3 class="group-title-clean">⏰ Группа ${time}</h3>
       </div>`;
     
-    kids.forEach((kid, index) => {
+    kids.forEach((kidObj, index) => {
       const id = `kid-${time.replace(':', '-')}-${index}`;
+      
+      // КРИСТАЛЬНАЯ ЗРЯЧЕСТЬ: Берем чистое имя напрямую из объекта расписания!
+      const displayName = kidObj.name;
+      
+      // Для чекбокса сериализуем объект обратно в JSON-строку, чтобы при сохранении 
+      // функция saveGroupAttendance получила полные данные ученика без обрезки
+      const serializedKid = encodeURIComponent(JSON.stringify(kidObj));
+
       groupHtml += `
         <div class="kid-row">
           <label class="lbl-big">
-            <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
-            ${kid}
+            <input type="checkbox" id="${id}" class="chk-big" value="${serializedKid}">
+            ${displayName}
           </label>
         </div>`;
     });
 
-    // Локальный фильтр всеядности времени для вывода идеального текста на саму кнопку занятия
     let matchBtnTime = time.match(/(\d{1,2})\D*(\d{2})/);
     let cleanBtnTextTime = (matchBtnTime && matchBtnTime[1] && matchBtnTime[2]) ? `${matchBtnTime[1]}:${matchBtnTime[2]}` : time;
 
-    // Текстовые блоки разметки переведены на чистые классы отступов и цветов
     groupHtml += `
       <div class="margin-top-15">
         <label class="field-label">➕ Новые постоянные ученики (войдут в базу):</label>
@@ -308,7 +314,6 @@ function selectDynamicDay(day) {
         <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
         <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
       </div>
-      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст кнопки полностью защищен от знаков равенства, дефисов и слэшей! -->
       <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${cleanBtnTextTime}</button>
     </div>`;
   
@@ -320,17 +325,29 @@ function saveGroupAttendance(day, time) {
   const dateStr = document.getElementById("global-journal-date").value.trim(); 
   const timeId = time.replace(':', '-');
 
+  // 1. СБОР ОТМЕЧЕННЫХ ПОСТОЯННЫХ УЧЕНИКОВ (Раскодируем скрытые JSON-объекты из чекбоксов)
   let presentKids = [];
   const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
   checkboxes.forEach(chk => {
-    if (chk.checked) presentKids.push(chk.value);
+    if (chk.checked) {
+      try {
+        const decodedObj = JSON.parse(decodeURIComponent(chk.value));
+        presentKids.push({
+          name: decodedObj.name,
+          direction: decodedObj.direction,
+          tag: decodedObj.tag || ""
+        });
+      } catch (e) {
+        console.error("Ошибка парсинга объекта чекбокса:", e);
+      }
+    }
   });
 
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку
-  const convertAndValidateInputs = (inputStr, fieldLabel) => {
+  // 2. ВАЛИДАТОР И ОБЪЕКТНЫЙ КОНВЕРТЕР РУЧНОГО ВВОДА (БЕЛЫЙ СПИСОК КЛЮЧЕЙ С ПОЛНЫМИ ИМЕНАМИ)
+  const convertAndValidateInputs = (inputStr, fieldLabel, isProbation = false) => {
     if (!inputStr) return [];
     
     let isErrorFound = false;
@@ -340,85 +357,88 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // Шаг 1: Приводим множественные пробелы к одному (кавычки, скобки и слэши НЕ ТРОГАЕМ для валидации)
-      rawKid = rawKid.replace(/\s+/g, ' ').trim();
-
-      // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
-      // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;
+      // Жесткая блокировка любого мусора на старте: запрещены скобки, кавычки и точка с запятой
       const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
       if (forbiddenCharsMatch) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Используйте легитимные ключи: /э, /с, /#`;
-        return "";
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён!`;
+        return null;
       }
 
-      // 2. Запрет на бесхозные решётки (разрешено только внутри слова #techlab-)
+      // Проверка на бесхозные знаки решётки (вводить решётку без слэша разрешено строго внутри #techlab-)
       const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
       if (badHashes) {
         isErrorFound = true;
         errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен недопустимый символ "#". Вводить знак решётки без слэша разрешено только внутри системного слова "#techlab-"! Для автогенерации используйте ключ "/#"`;
-        return "";
+        return null;
       }
 
-      // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
-      const slashMatches = rawKid.match((/\/\S*/g));
-      if (slashMatches) {
-        for (let sMatch of slashMatches) {
-          const lowerKey = sMatch.toLowerCase();
-          if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
-            isErrorFound = true;
-            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
-            return "";
-          }
-        }
-      }
-
-      // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
-      rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
-      rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
-
-      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько законных /#)
-      rawKid = rawKid.replace(/\/#(\s*\/#)+/g, '/#');
-
-      // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
-      let directionMarker = "";
-      let systemTag = "";
+      let directionValue = "";
+      let tagValue = "";
       let hasAutoHash = false;
 
-      // Вытаскиваем маркер направления
-      if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
-      else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
-
-      // Вытаскиваем ключ автогенерации /#
+      // Анализируем и вырезаем ключ автогенерации /#
       if (rawKid.includes('/#')) {
         hasAutoHash = true;
-        rawKid = rawKid.replace(/\/#/g, '');
+        rawKid = rawKid.replace(/\/#/g, '').trim();
       }
 
-      // Вытаскиваем готовые интернет-теги Гитхаба
+      // Вытаскиваем готовые интернет-теги, если преподаватель ввел их руками
       const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
       const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
 
       if (githubLoginMatch) {
-        systemTag = githubLoginMatch[0];
-        rawKid = rawKid.replace(githubLoginMatch[0], '');
+        tagValue = githubLoginMatch[0];
+        rawKid = rawKid.replace(tagValue, '').trim();
       } else if (techlabTagMatch) {
-        systemTag = techlabTagMatch[0];
-        rawKid = rawKid.replace(techlabTagMatch[0], '');
+        tagValue = techlabTagMatch[0];
+        rawKid = rawKid.replace(tagValue, '').trim();
       } else if (hasAutoHash) {
-        systemTag = "#";
+        tagValue = "#"; // Одиночный маркер автогенерации для Питона
       }
 
-      // Очищаем оставшееся имя ученика от лишних пробелов
+      // Вытаскиваем и сопоставляем ключи направлений
+      const slashMatches = rawKid.match(\(/\/\S*/\)g);
+      if (slashMatches) {
+        for (let sMatch of slashMatches) {
+          const lowerKey = sMatch.toLowerCase();
+          if (lowerKey === '/э' || lowerKey === '/e') {
+            directionValue = "электронное конструирование";
+            rawKid = rawKid.replace(sMatch, '').trim();
+          } else if (lowerKey === '/с' || lowerKey === '/c') {
+            directionValue = "столярное дело";
+            rawKid = rawKid.replace(sMatch, '').trim();
+          } else {
+            isErrorFound = true;
+            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
+            return null;
+          }
+        }
+      }
+
+      // Если направление не указано — это жесткая ошибка для новичков
+      if (!directionValue) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" не указано направление занятия! Допишите ключ курса через косую черту (например: /э или /с)`;
+        return null;
+      }
+
+      // Очищаем имя от лишних внутренних пробелов
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
-      let finalRow = cleanName;
-      if (directionMarker) finalRow += ` ${directionMarker}`;
-      if (systemTag) finalRow += ` ${systemTag}`;
+      // Собираем идеальный чистый объект ученика новой эпохи!
+      let kidObj = {
+        name: cleanName,
+        direction: directionValue
+      };
+      
+      // Поле tag прикрепляем только если оно необходимо
+      if (tagValue) {
+        kidObj.tag = tagValue;
+      }
 
-      return finalRow.replace(/\s+/g, ' ').trim();
-    }).filter(n => n !== "");
+      return kidObj;
+    }).filter(n => n !== null && n !== "");
 
     if (isErrorFound) {
       alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
@@ -427,61 +447,58 @@ function saveGroupAttendance(day, time) {
     return cleanList;
   };
 
-  // Прогоняем оба поля ввода через наш зрячий валидатор
+  // Прогоняем оба поля ввода через наш новый объектный валидатор
   let newbiesList = convertAndValidateInputs(newbiesInput, "Новые постоянные ученики");
-  if (newbiesList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+  if (newbiesList === null) return; 
 
-  let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
-  if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+  let probationList = convertAndValidateInputs(probationInput, "Временные ученики", true);
+  if (probationList === null) return; 
 
-  showNotify(`Подготовка отчета для группы ${time}...`, "success");
+  showNotify(`Подготовка объектного отчета для группы ${time}...`, "success");
 
-  // Шаг 1: Узнаем логин преподавателя
-  fetch("https://api.github.com/user", {
+  // Шаг 3: Отправка сформированного объектного Payload на GitHub
+  fetch("https://github.com", {
     headers: { "Authorization": `token ${accessToken}` }
   })
   .then(r => r.json())
   .then(userData => {
     const teacherUsername = userData.name || userData.login || "Преподаватель";
-    const teacherLogin = userData.login; // Используем оригинальную переменную логина
+    const teacherLogin = userData.login;
 
+    // КРИСТАЛЬНО ЧИСТЫЙ ОБЪЕКТНЫЙ ПАКЕТ ДАННЫХ СМЕНЫ
     const currentGroupPayload = {
       date: dateStr,
       day: day,
       time: time,
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
-      present_permanent: presentKids,
-      newbies: newbiesList,
-      probation: probationList
+      present_permanent: presentKids, // Массив объектов!
+      newbies: newbiesList,           // Массив объектов!
+      probation: probationList        // Массив объектов!
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
-    const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`;
+    const targetUrl = `https://github.com{repo_owner}/${repo_name}/contents/${filePath}`;
 
-    // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии
     return fetch(targetUrl, {
       headers: { "Authorization": `token ${accessToken}` }
     })
     .then(checkRes => {
       if (checkRes.ok) {
-        // Файл уже существует на сервере! Извлекаем его sha маркера
         return checkRes.json().then(existingFile => existingFile.sha);
       }
-      return null; // Файла нет, создаем с чистого листа
+      return null; 
     })
     .then(sha => {
       let commitBody = {
-        message: `Отчет: группа ${time} (${day}) от ${teacherUsername}`,
+        message: `Отчет: объектная группа ${time} (${day}) от ${teacherUsername}`,
         content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
       };
 
-      // Если маркер sha найден, обязательно прикрепляем его к запросу для перезаписи мусора!
       if (sha) {
         commitBody.sha = sha;
       }
 
-      // Отправляем чистый PUT-запрос (создание или безопасное обновление поверх старого)
       return fetch(targetUrl, {
         method: "PUT",
         headers: {
@@ -497,7 +514,7 @@ function saveGroupAttendance(day, time) {
     return response.json();
   })
   .then(data => {
-    showNotify(`Группа ${time} успешно отправлена в общую сборку дня!`, "success");
+    showNotify(`Объектная группа ${time} успешно отправлена в общую сборку дня!`, "success");
     
     const block = document.getElementById(`block-${timeId}`);
     block.style.opacity = "0.6";
@@ -513,8 +530,9 @@ function saveGroupAttendance(day, time) {
 
 function showNotify(text, type) {
   const el = document.getElementById("notification");
-  el.classList.remove("hidden", "notify-success", "notify-error");
-  el.classList.add(type === "success" ? "notify-success" : "notify-error");
-  el.innerText = text;
+  if (el) {
+    el.classList.remove("hidden", "notify-success", "notify-error");
+    el.classList.add(type === "success" ? "notify-success" : "notify-error");
+    el.innerText = text;
+  }
 }
-

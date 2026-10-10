@@ -713,12 +713,12 @@ function startRepairStatusPolling() {
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
   document.getElementById("groups-container").innerHTML = 
-    "<div class='notify-error' style='padding:20px; border-radius:6px; margin-top:20px; font-weight:bold; font-size:16px; background-color:#ffeef0; color:#d73a49; border:1px solid #ced4da;'>" +
+    "<div class='emergency-banner'>" +
       "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
-      "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
-        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
+      "<span class='emergency-banner-sub'>" +
+        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
         "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере Гитхаб:<br><br>" +
-        "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
       "</span>" +
     "</div>";
   

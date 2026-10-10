@@ -7,7 +7,7 @@
  * ============================================================================== */
 
 /* Основные контейнеры и шрифты страницы */
-.admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; padding-top: 0px; padding-bottom: 0px;}
+.admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; padding-top: 0px; padding-bottom: 0px;}
 .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; }
 .group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin: 1rem 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 .group-title { font-size: 18px; margin-top: 0; color: #212529; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; }

@@ -296,7 +296,7 @@ function selectDynamicDay(day) {
     // Аппаратно активируем рамки и тени карточки строго в момент отрисовки дня
     dateContainer.className = "global-date-box";
     dateContainer.innerHTML = 
-      "<span>📅 Дата проведения занятий:</span>" +
+      "<span>📅 Дата занятий:</span>" +
       "<input type='text' id='global-journal-date' value='" + defaultDateStr + "' class='global-date-input'>";
   }
 

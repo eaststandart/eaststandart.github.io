@@ -596,8 +596,8 @@ function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;
   
-  // АППАРАТНЫЙ ПРОБОЙ: Стираем класс скрытия hidden, чтобы плашка физически ожила на экране!
-  el.classList.remove("hidden", "notify-success", "notify-error", "notify-blue");
+  // Очищаем строго цветовые классы фона
+  el.classList.remove("notify-success", "notify-error", "notify-blue");
   
   if (type === "success") el.classList.add("notify-success");      // Зеленый фон
   else if (type === "error") el.classList.add("notify-error");      // Красный фон

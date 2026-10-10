@@ -9,7 +9,7 @@
 /* Основные контейнеры и шрифты страницы */
 .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; padding-top: 0px; padding-bottom: 0px;}
 .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; }
-.group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 20px 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin: 1rem 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 .group-title { font-size: 18px; margin-top: 0; color: #212529; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; }
 .kid-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f3f5; }
 .kid-row:last-child { border-bottom: none; }
@@ -46,8 +46,8 @@
 .global-date-box { 
   border: 1px solid #dee2e6; 
   border-radius: 8px; 
-  padding: 15px; 
-  margin: 20px 0; 
+  padding: 12px; 
+  margin: 1rem 0; 
   background-color: #fff; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   font-weight: bold; 
@@ -90,8 +90,8 @@
 .btn-day.active.day-border-воскресенье { background-color: #1c7ed6 !important; color: white !important; }
 
 /* Макет заголовочной части групп */
-.group-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px; }
-.group-title-clean { margin: 0; border: none; padding: 0; }
+.group-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 4px; }
+.group-title-clean { margin-top: 0 !important; border: none; padding: 0; }
 
 /* Дополнительные стили, извлеченные из JavaScript-шаблонов */
 .btn-day-transition { transition: 0.2s; }

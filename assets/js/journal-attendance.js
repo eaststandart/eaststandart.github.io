@@ -93,9 +93,10 @@ function loadStudentsFromYaml() {
     localStorage.setItem("github_journal_logged_user", userLogin);
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
     
-    // Динамический адрес личного файла: journal-attendance-ЛОГИН.yml
-    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml`, {
-      headers: { "Authorization": `token ${accessToken}` }
+    // Динамический адрес личного файла с жестким кэш-брейкером
+    const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
+    return fetch(yamlUrl, {
+      headers: { "Authorization": "token " + accessToken }
     });
   })
   .then(response => {

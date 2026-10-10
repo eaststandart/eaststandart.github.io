@@ -110,11 +110,6 @@ function loadStudentsFromYaml() {
     
     studentsData = parseSimpleYaml(yamlText);
     
-    // АППАРАТНЫЙ ЩИТ: Если парсер взорвался и вернул пустоту, намертво гасим цепочку загрузки
-    if (!studentsData || Object.keys(studentsData).length === 0) {
-      return;
-    }
-    
     // Генерация сетки дней недели + 8-я кнопка ВЫХОД
     const daysContainer = document.getElementById("days-buttons-container");
     daysContainer.innerHTML = "";

@@ -660,13 +660,22 @@ function startRepairStatusPolling() {
         btn.innerText = "⏳ Сервер обрабатывает файлы расписаний...";
       }
 
-      // Если робот на сервере закончил работу и переключил тумблер в "off"
+      // 1. Успешное завершение ремонта
       if (payload.status === "off") {
-        clearInterval(intervalId); // Стоп опрос
-        showNotify("🟢 База данных успешно исправлена сервером! Страница перезагружается...", "success");
+        clearInterval(intervalId);
+        showNotify("🟢 База данных успешно исправлена сервером!", "success");
         if (btn) btn.innerText = "✅ Исправлено! Перезапуск...";
-        
         setTimeout(() => { window.location.reload(); }, 2000);
+      }
+      
+      // 2. Фатальный сбой структуры — выводим твой короткий текст
+      if (payload.status === "error") {
+        clearInterval(intervalId); // Намертво стопим ребуты
+        showNotify("❌ Ошибка. Исправьте файл расписания вручную.", "error");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "❌ Сбой ремонта. Исправьте вручную";
+        }
       }
     })
     .catch(err => {

@@ -605,9 +605,17 @@ function showNotify(text, type) {
   
   if (type === "success") el.classList.add("notify-success");      // Зеленый фон
   else if (type === "error") el.classList.add("notify-error");      // Красный фон
-  else if (type === "info") el.classList.add("notify-blue");       // Голубой фон
+  else if (type === "info") {
+    el.classList.add("notify-blue");
+    el.innerHTML = "<div style='display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;'>" +
+                     "<span>" + text.replace("Журнал посещаемости преподавателя:", "Журнал преподавателя:") + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-door' title='Выйти'>🚪</button>" +
+                   "</div>";
+    return;
+  }
   
   el.innerText = text;
+
 }
 
 // Финальная двухфайловая функция запуска адресного ремонта расписания преподавателя

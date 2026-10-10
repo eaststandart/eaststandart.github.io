@@ -173,7 +173,7 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Объектный парсер YAML с жестким ловушечником синтаксических кавычек и кнопкой ремонта
+// Прогрессивный объектный парсер YAML с монолитным входным блоком валидации структуры
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
@@ -184,46 +184,67 @@ function parseSimpleYaml(text) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimmed = line.trimEnd();
-    if (!trimmed || trimmed.startsWith('#')) continue;
+    
+    // Игнорируем законные пустые строки и строки комментариев
+    if (!trimmed || trimmed.trim().startsWith('#')) continue;
 
+    // Считаем количество отступов пробелами
     let indent = 0;
     while (indent < line.length && line.charAt(indent) === ' ') {
       indent++;
     }
     const cleanText = trimmed.trim();
+
+    // =========================================================================
+    // 🛑 МНОГОУРОВНЕВЫЙ ЕДИНЫЙ БЛОК ВАЛИДАЦИИ СИНТАКСИСА И СТРУКТУРЫ СТРОКИ
+    // =========================================================================
     
-    // 1. Определение дня недели
+    // Проверка 1: Несбалансированные или лишние кавычки в любой строке данных
+    const doubleQuotesCount = cleanText.split('"').length - 1;
+    const singleQuotesCount = cleanText.split("'").length - 1;
+    if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
+      triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в данных.");
+      return {};
+    }
+
+    // Проверка 2: Наличие опасных ломающих спецсимволов в строке данных
+    // Запрещены: квадратные скобки [ ], обратный слэш \, знак равенства =, точка с запятой ;, прямой слэш /
+    const forbiddenChars = ["[", "]", "\\", "=", ";", "/"];
+    for (let char of forbiddenChars) {
+      if (cleanText.includes(char)) {
+        triggerEmergencyBlock(i + 1, cleanText, "обнаружен запрещённый спецсимвол '" + char + "' в структуре данных.");
+        return {};
+      }
+    }
+
+    // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
+    if (indent === 2 && cleanText.endsWith(':')) {
+      let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+      if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
+        triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+        return {};
+      }
+    }
+    
+    // =========================================================================
+    // 🧱 БЛОК ИСПОЛНИТЕЛЬНОЙ СБОРКИ ОБЪЕКТА (СИНТАКСИС ГАРАНТИРОВАННО ЧИСТ)
+    // =========================================================================
+    
+    // 1. Фиксация дня недели
     if (indent === 0 && cleanText.endsWith(':')) {
       currentDay = cleanText.slice(0, -1).toLowerCase().trim();
       result[currentDay] = {};
     } 
-    // 2. Определение времени группы с жестким ловушечником формата ЧЧ:ММ
+    // 2. Фиксация времени группы
     else if (indent === 2 && cleanText.endsWith(':')) {
-      let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-      
-      // Блокировка при отклонении от эталона времени ЧЧ:ММ (длина 5, двоеточие посередине)
-      if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
-        triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Допускается строго стандарт ЧЧ:ММ (например, 10:00).");
-        return {};
-      }
-      
-      currentGroup = rawTimeStr;
+      currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
       result[currentDay][currentGroup] = [];
-    }
-    // 3. Считывание имени постоянного ученика строго из поля - name:
+    } 
+    // 3. Извлечение голого имени постоянного ученика
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
       
-      // Считаем количество кавычек в строке через надежный текстовый сплит без match
-      const doubleQuotesCount = rawName.split('"').length - 1;
-      const singleQuotesCount = rawName.split("'").length - 1;
-      
-      // Если количество кавычек нечетно или их больше двух — взрываем выполнение!
-      if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-        triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в поле имени.");
-        return {};
-      }
-
+      // Снимаем внешние кавычки YAML разметки, если они есть
       if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
       if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
       
@@ -233,6 +254,7 @@ function parseSimpleYaml(text) {
         result[currentDay][currentGroup].push(cleanName);
       }
     }
+    // свойства отступа 6 пробелов (direction и tag) проходят мимо и не засоряют оперативную память сайта
   }
   return result;
 }

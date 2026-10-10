@@ -22,7 +22,7 @@
 .field-label-probation { font-size: 14px; font-weight: bold; display: block; margin-top: 10px; color: #1c7ed6; }
 .input-probation { border-color: #a5d8ff; }
 .chk-big { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
-.lbl-big { font-size: 16px; cursor: pointer; user-select: none; flex-grow: 1; }
+.lbl-big { font-size: 16px; cursor: pointer; user-select: none; flex-grow: 1; display: inline-flex; align-items: center; }
 
 /* Уведомления и служебные классы */
 .hidden { display: none; }

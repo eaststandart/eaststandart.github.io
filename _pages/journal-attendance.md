@@ -48,7 +48,7 @@ custom_css: "/assets/css/journal-attendance.css"
 
 </div>
 
-
+{%- comment -%}
 <div id="repair-rules-section" class="auth-box margin-top-15" markdown="1">
 #### 💡 Регламент заполнения полей ввода
 
@@ -75,3 +75,4 @@ custom_css: "/assets/css/journal-attendance.css"
 * **@логин** — Логин GitHub (Пример: Фамилия Имя /с @eaststandart)
 * **#techlab-familiya-imya** — Тег платформы (Пример: Фамилия Имя /с #techlab-familiya-imya)
 </div>
+{%- endcomment -%}

@@ -172,7 +172,6 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Прогрессивный объектный парсер YAML: забирает строго имена постоянных учеников
 // Объектный парсер YAML с жестким ловушечником синтаксических кавычек и кнопкой ремонта
 function parseSimpleYaml(text) {
   let result = {};
@@ -226,7 +225,7 @@ function parseSimpleYaml(text) {
             "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
               "В строке №" + (i + 1) + " обнаружены лишние или несбалансированные кавычки в поле имени: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
               "<b>Генерация отчетов полностью заблокирована!</b> Запустите автоматическое исправление базы на сервере:<br><br>" +
-              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendRepairJsonSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
             "</span>" +
           "</div>";
         
@@ -587,40 +586,58 @@ function showNotify(text, type) {
   el.innerText = text;
 }
 
-// Функция отправки сигнала "on" в файл статуса для запуска воркфлоу
-function sendRepairJsonSignal() {
+// Финальная двухфайловая функция запуска адресного ремонта расписания преподавателя
+function sendTargetedRepairSignal() {
   const btn = document.getElementById("btn-force-repair");
   if (btn) {
     btn.disabled = true;
     btn.innerText = "⏳ Запуск проверки на сервере...";
   }
 
-  const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   
-  // Пушим строго объектный формат со статусом "on"
-  const payload = { status: "on", timestamp: new Date().toISOString() };
-  const commitBody = {
-    message: "chore: принудительный запрос исправления расписания с сайта (status: on)",
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
+  const statusUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
+  const signalUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/signal-repair.json";
+
+  const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+  const statusBody = {
+    message: "chore: сброс светофора в положение on [skip ci]",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
   };
 
-  // Сначала проверяем файл, чтобы забрать его SHA (если файл уже существует на сервере)
-  fetch(targetUrl, { headers: { "Authorization": "token " + accessToken } })
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
   .then(res => res.ok ? res.json() : null)
-  .then(existingFile => {
-    if (existingFile && existingFile.sha) {
-      commitBody.sha = existingFile.sha;
-    }
-    return fetch(targetUrl, {
+  .then(existingStatus => {
+    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+    return fetch(statusUrl, {
       method: "PUT",
       headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-      body: JSON.stringify(commitBody)
+      body: JSON.stringify(statusBody)
     });
   })
   .then(res => {
-    if (!res.ok) throw new Error("Ошибка записи файла статуса");
-    showNotify("🟢 Запрос отправлен! Сервер выполняет исправление. Ожидайте...", "success");
-    // Запускаем 5-секундный цикл зрячего опроса светофора
+    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
+    
+    const signalPayload = { teacher_login: currentTeacher };
+    const signalBody = {
+      message: "chore: запрос адресного исправления расписания для " + currentTeacher,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Ошибка отправки сигнала");
+    showNotify("🟢 Запрос отправлен! Сервер выполняет исправление файла расписания...", "success");
     startRepairStatusPolling();
   })
   .catch(err => {
@@ -628,49 +645,40 @@ function sendRepairJsonSignal() {
     showNotify("❌ Не удалось связаться с сервером.", "error");
     if (btn) {
       btn.disabled = false;
-      btn.innerText = "🛠️ Попробовать запустить ремонт снова";
+      btn.innerText = "🛠️ Попробуй запустить ремонт снова";
     }
   });
 }
 
-// Функция зрячего 5-секундного опроса файла статуса на Гитхабе
+// Функция зрячего 5-секундного опроса файла статуса
 function startRepairStatusPolling() {
   const btn = document.getElementById("btn-force-repair");
-  const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const statusUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
 
   const intervalId = setInterval(() => {
-    // Добавляем к ссылке случайный параметр для обхода жесткого кэша браузера
-    fetch(targetUrl + "?nocache=" + new Date().getTime(), {
+    fetch(statusUrl + "?nocache=" + new Date().getTime(), {
       headers: { "Authorization": "token " + accessToken }
     })
     .then(res => {
-      if (!res.ok) throw new Error("Файл статуса временно недоступен");
+      if (!res.ok) throw new Error("Ожидание файла...");
       return res.json();
     })
     .then(data => {
-      // Нативно декодируем содержимое JSON без ручных парсеров
       const jsonText = decodeURIComponent(atob(data.content).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       
       const payload = JSON.parse(jsonText);
-      console.log("📍 Текущий статус сервера ремонта:", payload.status);
+      if (btn) btn.innerText = "⏳ Сервер обрабатывает файл расписания...";
 
-      if (btn) {
-        btn.innerText = "⏳ Сервер обрабатывает файлы расписаний...";
-      }
-
-      // 1. Успешное завершение ремонта
       if (payload.status === "off") {
         clearInterval(intervalId);
         showNotify("🟢 База данных успешно исправлена сервером!", "success");
-        if (btn) btn.innerText = "✅ Исправлено! Перезапуск...";
         setTimeout(() => { window.location.reload(); }, 2000);
       }
       
-      // 2. Фатальный сбой структуры — выводим твой короткий текст
       if (payload.status === "error") {
-        clearInterval(intervalId); // Намертво стопим ребуты
+        clearInterval(intervalId);
         showNotify("❌ Ошибка. Исправьте файл расписания вручную.", "error");
         if (btn) {
           btn.disabled = false;
@@ -678,8 +686,6 @@ function startRepairStatusPolling() {
         }
       }
     })
-    .catch(err => {
-      console.warn("Ожидание обновления файла статуса:", err.message);
-    });
-  }, 5000); // Строго каждые 5 секунд
+    .catch(err => { console.warn("Опрос статуса:", err.message); });
+  }, 5000);
 }

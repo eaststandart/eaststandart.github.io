@@ -218,11 +218,21 @@ function parseSimpleYaml(text) {
     // Если мы находимся внутри секции config:, проверки синтаксиса расписания полностью игнорируются!
     if (!isInsideConfig) {
       
-      // Вызов Единого Монолитного Щита Валидации
-      const structureError = validateRawText(cleanText);
-      if (structureError) {
-        triggerEmergencyBlock(i + 1, cleanText, structureError);
+      // Проверка 1: Несбалансированные или лишние кавычки в строке данных
+      const doubleQuotesCount = cleanText.split('"').length - 1;
+      const singleQuotesCount = cleanText.split("'").length - 1;
+      if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
+        triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в данных.");
         return {};
+      }
+
+      // Проверка 2: Наличие опасных ломающих спецсимволов в строке данных
+      const forbiddenChars = ["[", "]", "\\", "=", ";", "/"];
+      for (let char of forbiddenChars) {
+        if (cleanText.includes(char)) {
+          triggerEmergencyBlock(i + 1, cleanText, "обнаружен запрещённый спецсимвол '" + char + "' в структуре данных.");
+          return {};
+        }
       }
 
       // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
@@ -232,6 +242,12 @@ function parseSimpleYaml(text) {
           triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
           return {};
         }
+      }
+
+      // Проверка 4: Контроль избыточных пробелов (запрещено два и более пробела подряд)
+      if (cleanText.includes("  ")) {
+        triggerEmergencyBlock(i + 1, cleanText, "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.");
+        return {};
       }
 
     }
@@ -372,26 +388,41 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // Вызов Единого Монолитного Щита Валидации для ручного ввода
-      const cleanNameForCheck = rawKid.replace(/\/\S*/g, '').trim();
-      const inputError = validateRawText(cleanNameForCheck);
-      if (inputError) {
+      // АППАРАТНЫЙ ЩИТ: Запрет двойных пробелов в ручном вводе на сайте
+      if (rawKid.includes("  ")) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" ошибка: ${inputError}`;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружены множественные пробелы подряд! Допускается строго один пробел между словами.`;
         return "";
       }
 
-      // Проверка индивидуального слэш-мусора для ручного ввода
-      if (rawKid.includes("/") && !rawKid.match(/\/(э|e|с|c|#)/i)) {
+      // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
+      // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;
+      const forbiddenCharsMatch = rawKid.match(/[\[\]'"\\;]/);
+      if (forbiddenCharsMatch) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ слэша у ученика "${rawKid}".`;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен запрещённый символ "${forbiddenCharsMatch[0]}". Ввод квадратных скобок, кавычек, обратных слэшей и точек с запятой строго запрещён! Используйте легитимные ключи: /э, /e, /с, /c, /#`;
         return "";
       }
 
-      if (rawKid.includes("/") && !rawKid.match(/\/(э|e|с|c|#)/i)) {
+      // 2. Запрет на бесхозные решётки (разрешено только внутри слова #techlab-)
+      const badHashes = rawKid.match(/(?<!\/)#(?!techlab-)/g);
+      if (badHashes) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ слэша у ученика "${rawKid}". Допускаются строго одиночные ключи: /э, /e, /с, /c, /#`;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружен недопустимый символ "#". Вводить знак решётки без слэша разрешено только внутри системного слова "#techlab-"! Для автогенерации используйте ключ "/#"`;
         return "";
+      }
+
+      // 3. Запрет на левые и грязные ключи после слэша (разрешены строго одиночные: /э, /e, /с, /c, /#)
+      const slashMatches = rawKid.match((/\/\S*/g));
+      if (slashMatches) {
+        for (let sMatch of slashMatches) {
+          const lowerKey = sMatch.toLowerCase();
+          if (lowerKey !== '/э' && lowerKey !== '/e' && lowerKey !== '/с' && lowerKey !== '/c' && lowerKey !== '/#') {
+            isErrorFound = true;
+            errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ "${sMatch}" у ученика "${rawKid}". Разрешены строго одиночные ключи: /э, /e, /с, /c, /#`;
+            return "";
+          }
+        }
       }
 
       // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
@@ -713,30 +744,3 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
   
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }
-
-// ЕДИНЫЙ ЩИТ ВАЛИДАЦИИ СТРОК ДЛЯ ВСЕГО ПРОЕКТА
-// Возвращает текст ошибки, если найден брак, или null, если строка чиста
-function validateRawText(cleanText) {
-  // 1. Проверка на несбалансированные или лишние кавычки
-  const doubleQuotesCount = cleanText.split('"').length - 1;
-  const singleQuotesCount = cleanText.split("'").length - 1;
-  if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-    return "обнаружены лишние или несбалансированные кавычки.";
-  }
-
-  // 2. Проверка на опасные ломающие спецсимволы
-  const forbiddenChars = ["[", "]", "\\", "=", ";"];
-  for (let char of forbiddenChars) {
-    if (cleanText.includes(char)) {
-      return "обнаружен запрещённый спецсимвол '" + char + "'.";
-    }
-  }
-
-  // 3. Проверка на избыточные пробелы подряд
-  if (cleanText.includes("  ")) {
-    return "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.";
-  }
-
-  return null; // Строка полностью соответствует стандарту безопасности
-}
-

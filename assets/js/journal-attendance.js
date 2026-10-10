@@ -674,7 +674,7 @@ function sendTargetedRepairSignal() {
   })
   .then(res => {
     if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    showNotify("🟢 Запрос отправлен! Сервер выполняет исправление файла расписания...", "success");
+    showNotify("🟢 Запрос на исправление файла расписания отправлен!", "success");
     startRepairStatusPolling();
   })
   .catch(err => {

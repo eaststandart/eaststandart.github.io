@@ -57,18 +57,7 @@
   justify-content: space-between;
   box-sizing: border-box;
 }
-.global-date-input { 
-  width: 130px; 
-  padding: 8px; 
-  font-size: 15px; 
-  font-weight: bold; 
-  text-align: center; 
-  border: 1px solid #ced4da; 
-  border-radius: 6px; 
-  color: #495057;
-  background-color: #f1f3f5;
-  cursor: pointer;
-}
+.global-date-input { width: 130px; padding: 5px; font-size: 15px; font-weight: bold; text-align: center; border: 1px solid #ced4da; border-radius: 6px; color: #495057; background-color: #f1f3f5; cursor: pointer; }
 
 /* Индивидуальные цветные каёмки и кнопка выхода */
 .day-border-понедельник { border-left: 4px solid #e63946; }

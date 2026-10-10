@@ -243,6 +243,13 @@ function parseSimpleYaml(text) {
           return {};
         }
       }
+
+      // Проверка 4: Контроль избыточных пробелов (запрещено два и более пробела подряд)
+      if (cleanText.includes("  ")) {
+        triggerEmergencyBlock(i + 1, cleanText, "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.");
+        return {};
+      }
+
     }
     
     // =========================================================================
@@ -265,11 +272,9 @@ function parseSimpleYaml(text) {
         
         if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
         if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
-        
-        const cleanName = rawName.replace(/\s+/g, " ").trim();
-        
-        if (currentDay && currentGroup && cleanName) {
-          result[currentDay][currentGroup].push(cleanName);
+      
+        if (currentDay && currentGroup && rawName) {
+          result[currentDay][currentGroup].push(rawName);
         }
       }
     }
@@ -383,8 +388,12 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return "";
 
-      // Шаг 1: Приводим множественные пробелы к одному (кавычки, скобки и слэши НЕ ТРОГАЕМ для валидации)
-      rawKid = rawKid.replace(/\s+/g, ' ').trim();
+      // АППАРАТНЫЙ ЩИТ: Запрет двойных пробелов в ручном вводе на сайте
+      if (rawKid.includes("  ")) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" обнаружены множественные пробелы подряд! Допускается строго один пробел между словами.`;
+        return "";
+      }
 
       // Шаг 2: ТОТАЛЬНАЯ БЛОКИРОВКА МУСОРА И ЛОЖНЫХ СИМВОЛОВ НА СТАРТЕ
       // 1. Запрет на квадратные скобки [ ], кавычки ' ", обратный слэш \ и точку с запятой ;

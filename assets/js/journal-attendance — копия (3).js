@@ -197,19 +197,19 @@ function parseSimpleYaml(text) {
       currentDay = cleanText.slice(0, -1).toLowerCase().trim();
       result[currentDay] = {};
     } 
-    // 2. Определение времени группы с жестким ловушечником формата ЧЧ:ММ
+    // 2. Определение времени группы с жесткой нормализацией любого брака знаков
     else if (indent === 2 && cleanText.endsWith(':')) {
       let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
       
-      // Блокировка при отклонении от эталона времени ЧЧ:ММ (длина 5, двоеточие посередине)
-      if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
-        triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Допускается строго стандарт ЧЧ:ММ (например, 10:00).");
-        return {};
+      let cleanTime = rawTimeStr;
+      let digits = rawTimeStr.replace(/[^0-9]/g, '');
+      if (digits.length === 4) {
+        cleanTime = digits.substring(0, 2) + ":" + digits.substring(2, 4);
       }
       
-      currentGroup = rawTimeStr;
+      currentGroup = cleanTime;
       result[currentDay][currentGroup] = [];
-    }
+    } 
     // 3. Считывание имени постоянного ученика строго из поля - name:
     else if (indent === 4 && cleanText.startsWith('- name:')) {
       let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
@@ -220,7 +220,20 @@ function parseSimpleYaml(text) {
       
       // Если количество кавычек нечетно или их больше двух — взрываем выполнение!
       if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-        triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в поле имени.");
+        document.getElementById("groups-container").innerHTML = 
+          "<div class='notify-error' style='padding:20px; border-radius:6px; margin-top:20px; font-weight:bold; font-size:16px; background-color:#ffeef0; color:#d73a49; border:1px solid #ced4da;'>" +
+            "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+            "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
+              "В строке №" + (i + 1) + " обнаружены лишние или несбалансированные кавычки в поле имени: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
+              "<b>Генерация отчетов полностью заблокирована!</b> Запустите автоматическое исправление базы на сервере:<br><br>" +
+              "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+            "</span>" +
+          "</div>";
+        
+        const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
+        allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
+        
+        showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
         return {};
       }
 
@@ -676,22 +689,4 @@ function startRepairStatusPolling() {
     })
     .catch(err => { console.warn("Опрос статуса:", err.message); });
   }, 5000);
-}
-
-// Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
-  document.getElementById("groups-container").innerHTML = 
-    "<div class='notify-error' style='padding:20px; border-radius:6px; margin-top:20px; font-weight:bold; font-size:16px; background-color:#ffeef0; color:#d73a49; border:1px solid #ced4da;'>" +
-      "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
-      "<span style='font-size:14px; font-weight:normal; margin-top:10px; display:block;'>" +
-        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code style='background:#fff; padding:2px 4px; border-radius:4px;'>" + cleanText + "</code>.<br><br>" +
-        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере Гитхаб:<br><br>" +
-        "<button id='btn-force-repair' class='btn-big btn-save' style='background-color:#d73a49;' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
-      "</span>" +
-    "</div>";
-  
-  const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
-  allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
-  
-  showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }

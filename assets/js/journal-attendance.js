@@ -96,7 +96,7 @@ function loadStudentsFromYaml() {
     // Динамический адрес личного файла с жестким кэш-брейкером
     const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
     return fetch(yamlUrl, {
-      headers: { "Authorization": "token " + accessToken }
+      headers: { "Authorization": `token ${accessToken}` }
     });
   })
   .then(response => {

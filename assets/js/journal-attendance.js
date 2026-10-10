@@ -173,11 +173,12 @@ function loadStudentsFromYaml() {
   });
 }
 
-// Прогрессивный объектный парсер YAML с монолитным входным блоком валидации структуры
+// Объектный парсер YAML с монолитным Блоком Валидации и защитой от секции config
 function parseSimpleYaml(text) {
   let result = {};
   let currentDay = "";
   let currentGroup = "";
+  let isInsideConfig = false; // Зрячий предохранитель секции конфигурации
   
   const lines = text.split('\n');
 
@@ -195,66 +196,78 @@ function parseSimpleYaml(text) {
     }
     const cleanText = trimmed.trim();
 
+    // Перехват входа в секцию конфигурации config:
+    if (indent === 0 && cleanText.toLowerCase() === 'config:') {
+      isInsideConfig = true;
+      continue;
+    }
+
+    // Фиксация выхода из config:, если начался реальный день недели с отступом 0
+    if (indent === 0 && cleanText.endsWith(':') && cleanText.toLowerCase() !== 'config:') {
+      isInsideConfig = false;
+    }
+
     // =========================================================================
     // 🛑 МНОГОУРОВНЕВЫЙ ЕДИНЫЙ БЛОК ВАЛИДАЦИИ СИНТАКСИСА И СТРУКТУРЫ СТРОКИ
     // =========================================================================
-    
-    // Проверка 1: Несбалансированные или лишние кавычки в любой строке данных
-    const doubleQuotesCount = cleanText.split('"').length - 1;
-    const singleQuotesCount = cleanText.split("'").length - 1;
-    if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
-      triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в данных.");
-      return {};
-    }
-
-    // Проверка 2: Наличие опасных ломающих спецсимволов в строке данных
-    // Запрещены: квадратные скобки [ ], обратный слэш \, знак равенства =, точка с запятой ;, прямой слэш /
-    const forbiddenChars = ["[", "]", "\\", "=", ";", "/"];
-    for (let char of forbiddenChars) {
-      if (cleanText.includes(char)) {
-        triggerEmergencyBlock(i + 1, cleanText, "обнаружен запрещённый спецсимвол '" + char + "' в структуре данных.");
+    // Если мы находимся внутри секции config:, проверки синтаксиса расписания полностью игнорируются!
+    if (!isInsideConfig) {
+      
+      // Проверка 1: Несбалансированные или лишние кавычки в строке данных
+      const doubleQuotesCount = cleanText.split('"').length - 1;
+      const singleQuotesCount = cleanText.split("'").length - 1;
+      if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
+        triggerEmergencyBlock(i + 1, cleanText, "обнаружены лишние или несбалансированные кавычки в данных.");
         return {};
       }
-    }
 
-    // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
-    if (indent === 2 && cleanText.endsWith(':')) {
-      let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-      if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
-        triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
-        return {};
+      // Проверка 2: Наличие опасных ломающих спецсимволов в строке данных
+      const forbiddenChars = ["[", "]", "\\", "=", ";", "/"];
+      for (let char of forbiddenChars) {
+        if (cleanText.includes(char)) {
+          triggerEmergencyBlock(i + 1, cleanText, "обнаружен запрещённый спецсимвол '" + char + "' в структуре данных.");
+          return {};
+        }
+      }
+
+      // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
+      if (indent === 2 && cleanText.endsWith(':')) {
+        let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
+          triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+          return {};
+        }
       }
     }
     
     // =========================================================================
     // 🧱 БЛОК ИСПОЛНИТЕЛЬНОЙ СБОРКИ ОБЪЕКТА (СИНТАКСИС ГАРАНТИРОВАННО ЧИСТ)
     // =========================================================================
-    
-    // 1. Фиксация дня недели
-    if (indent === 0 && cleanText.endsWith(':')) {
-      currentDay = cleanText.slice(0, -1).toLowerCase().trim();
-      result[currentDay] = {};
-    } 
-    // 2. Фиксация времени группы
-    else if (indent === 2 && cleanText.endsWith(':')) {
-      currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-      result[currentDay][currentGroup] = [];
-    } 
-    // 3. Извлечение голого имени постоянного ученика
-    else if (indent === 4 && cleanText.startsWith('- name:')) {
-      let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
-      
-      // Снимаем внешние кавычки YAML разметки, если они есть
-      if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
-      if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
-      
-      const cleanName = rawName.replace(/\s+/g, " ").trim();
-      
-      if (currentDay && currentGroup && cleanName) {
-        result[currentDay][currentGroup].push(cleanName);
+    if (!isInsideConfig) {
+      // 1. Фиксация дня недели
+      if (indent === 0 && cleanText.endsWith(':')) {
+        currentDay = cleanText.slice(0, -1).toLowerCase().trim();
+        result[currentDay] = {};
+      } 
+      // 2. Фиксация времени группы
+      else if (indent === 2 && cleanText.endsWith(':')) {
+        currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        result[currentDay][currentGroup] = [];
+      } 
+      // 3. Извлечение голого имени постоянного ученика
+      else if (indent === 4 && cleanText.startsWith('- name:')) {
+        let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
+        
+        if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
+        if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
+        
+        const cleanName = rawName.replace(/\s+/g, " ").trim();
+        
+        if (currentDay && currentGroup && cleanName) {
+          result[currentDay][currentGroup].push(cleanName);
+        }
       }
     }
-    // свойства отступа 6 пробелов (direction и tag) проходят мимо и не засоряют оперативную память сайта
   }
   return result;
 }

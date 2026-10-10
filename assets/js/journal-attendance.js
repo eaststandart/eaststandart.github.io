@@ -342,17 +342,17 @@ function selectDynamicDay(day) {
     let cleanBtnTextTime = (matchBtnTime && matchBtnTime[1] && matchBtnTime[2]) ? `${matchBtnTime[1]}:${matchBtnTime[2]}` : time;
 
     // Текстовые блоки разметки переведены на чистые классы отступов и цветов
-    groupHtml += `
-      <div class="margin-top-15">
-        <label class="field-label">➕ Новые постоянные ученики (войдут в базу):</label>
-        <input type="text" id="newbies-${time}" class="input-text" placeholder="Имена через запятую">
-        
-        <label class="field-label-probation">⏳ Временные ученики (только на сегодня):</label>
-        <input type="text" id="probation-${time}" class="input-text input-probation" placeholder="Имена через запятую">
-      </div>
-      <!-- ИСПРАВЛЕНО НАМЕРТВО: Текст кнопки полностью защищен от знаков равенства, дефисов и слэшей! -->
-      <button class="btn-big btn-save" id="btn-save-${time.replace(':', '-')}" onclick="saveGroupAttendance('${day}', '${time}')">💾 Отправить группу ${cleanBtnTextTime}</button>
-    </div>`;
+    groupHtml += 
+      "<div class='inputs-inline-row'>" +
+        "<div class='input-container-half'>" +
+          "<input type='text' id='newbies-" + time + "' class='input-text' placeholder='➕ Новые постоянные ученики...'>" +
+        "</div>" +
+        "<div class='input-container-half'>" +
+          "<input type='text' id='probation-" + time + "' class='input-text input-probation' placeholder='⏳ Временные ученики (только сегодня)...'>" +
+        "</div>" +
+      "</div>" +
+      "<button class='btn-big btn-save' id='btn-save-" + time.replace(':', '-') + "' onclick='saveGroupAttendance(\"" + day + "\", \"" + time + "\")'>💾 Отправить группу " + cleanBtnTextTime + "</button>" +
+    "</div>";
   
     container.innerHTML += groupHtml;
   });

@@ -291,9 +291,14 @@ function selectDynamicDay(day) {
   const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
   const defaultDateStr = correctedDate.toISOString().split('T')[0];
 
-  document.getElementById("global-date-container").innerHTML = 
-    "<span>📅 Дата проведения занятий:</span>" +
-    "<input type='text' id='global-journal-date' value='" + defaultDateStr + "' class='global-date-input'>";
+  const dateContainer = document.getElementById("global-date-container");
+  if (dateContainer) {
+    // Аппаратно активируем рамки и тени карточки строго в момент отрисовки дня
+    dateContainer.className = "global-date-box";
+    dateContainer.innerHTML = 
+      "<span>📅 Дата проведения занятий:</span>" +
+      "<input type='text' id='global-journal-date' value='" + defaultDateStr + "' class='global-date-input'>";
+  }
 
   // 4. Генерируем группы для выбранного дня недели
   const container = document.getElementById("groups-container");

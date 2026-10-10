@@ -601,7 +601,7 @@ function showNotify(text, type) {
   
   if (type === "success") el.classList.add("notify-success");      // Зеленый фон
   else if (type === "error") el.classList.add("notify-error");      // Красный фон
-  else if (type === "info") el.classList.add("notify-blue");        // Голубой фон
+  else if (type === "info") el.classList.add("notify-blue");       // Голубой фон
   
   el.innerText = text;
 }

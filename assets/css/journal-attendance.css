@@ -29,6 +29,7 @@
 .notify { padding: 12px; margin: 10px 0; border-radius: 6px; font-size: 14px; text-align: center; font-weight: bold; }
 .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
 .notify-error { background-color: #ffe3e3; color: #c92a2a; }
+.notify-blue { background-color: #e7f5ff; color: #1c7ed6; }
 .empty-group-msg { text-align: center; color: #868e96; }
 
 /* Кнопки авторизации и сохранения */

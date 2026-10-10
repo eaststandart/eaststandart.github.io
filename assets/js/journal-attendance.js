@@ -596,8 +596,8 @@ function sendTargetedRepairSignal() {
 
   const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   
-  const statusUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
-  const signalUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/signal-repair.json";
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
 
   const statusPayload = { status: "on", timestamp: new Date().toISOString() };
   const statusBody = {
@@ -653,7 +653,7 @@ function sendTargetedRepairSignal() {
 // Функция зрячего 5-секундного опроса файла статуса
 function startRepairStatusPolling() {
   const btn = document.getElementById("btn-force-repair");
-  const statusUrl = "https://github.com" + repo_owner + "/" + repo_name + "/contents/_data/repair-status.json";
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
 
   const intervalId = setInterval(() => {
     fetch(statusUrl + "?nocache=" + new Date().getTime(), {

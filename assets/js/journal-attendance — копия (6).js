@@ -148,14 +148,8 @@ function loadStudentsFromYaml() {
         ВЫХОД
       </button>`;
 
-    // Выводим твою законную победную строку на зеленом фоне
     showNotify("Журнал успешно загружен!", "success");
-    
-    // Ровно через 2 секунды переводим блок в постоянный голубой статус-бар преподавателя
-    setTimeout(() => {
-      const loggedUserLogin = localStorage.getItem("github_journal_logged_user") || "";
-      showNotify("📋 Журнал посещаемости преподавателя: " + loggedUserLogin, "info");
-    }, 2000);
+    setTimeout(() => { document.getElementById("notification").classList.add("hidden"); }, 2000);
   })
   .catch(err => {
     console.error(err);
@@ -591,18 +585,10 @@ function saveGroupAttendance(day, time) {
   });
 }
 
-// Функция управления постоянным статус-баром без прыжков интерфейса
 function showNotify(text, type) {
   const el = document.getElementById("notification");
-  if (!el) return;
-  
-  // Очищаем цветовые стили, но НЕ скрываем сам элемент через hidden!
-  el.classList.remove("notify-success", "notify-error", "notify-blue");
-  
-  if (type === "success") el.classList.add("notify-success");      // Зеленый фон
-  else if (type === "error") el.classList.add("notify-error");      // Красный фон
-  else if (type === "info") el.classList.add("notify-blue");        // Голубой фон
-  
+  el.classList.remove("hidden", "notify-success", "notify-error");
+  el.classList.add(type === "success" ? "notify-success" : "notify-error");
   el.innerText = text;
 }
 

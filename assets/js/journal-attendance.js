@@ -378,7 +378,6 @@ function saveGroupAttendance(day, time) {
       if (!rawKid) return null;
 
       // 1. ЭТАП №1: Разбиваем сырую запись пробелами на отдельные чистые слова
-      // Метод filter(Boolean) автоматически уничтожает проблему любых двойных или тройных пробелов!
       const words = rawKid.split(' ').map(w => w.trim()).filter(Boolean);
       if (words.length === 0) return null;
 
@@ -438,7 +437,7 @@ function saveGroupAttendance(day, time) {
         return null;
       }
 
-      // Изолированный Белый список символов для ИМЕНИ: только русские/английские буквы, пробел и дефис. Без цифр и спецсимволов!
+      // Изолированный Белый список символов для ИМЕНИ: только русские/английские буквы, пробел и дефис. Без цифр!
       const nameWhitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+\$/;
       if (!nameWhitelistRegex.test(cleanName)) {
         isErrorFound = true;
@@ -446,14 +445,7 @@ function saveGroupAttendance(day, time) {
         return null;
       }
 
-      // Проверка на множественные пробелы внутри имени (на всякий случай, если упал Щит)
-      if (cleanName.includes("  ")) {
-        isErrorFound = true;
-        errorMessage = `В имени "${cleanName}" обнаружены множественные пробелы подряд.`;
-        return null;
-      }
-
-      // Финальная конвертация Ключа направления в полное текстовое название
+      // Финальная конвертация Ключа из кармана в полное текстовое название
       let direction = "";
       if (keysArray.length === 1) {
         const k = keysArray[0].toLowerCase();
@@ -463,7 +455,7 @@ function saveGroupAttendance(day, time) {
 
       let finalTag = tagsArray.length === 1 ? tagsArray[0] : "";
 
-      // Сборка идеального плоского объекта JSON
+      // Сборка идеального плоского объекта JSON строго по своим полям
       let studentObj = { name: cleanName, direction: direction };
       if (finalTag) studentObj.tag = finalTag;
       return studentObj;

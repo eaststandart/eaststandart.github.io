@@ -147,7 +147,7 @@ function loadStudentsFromYaml() {
 
     // ВТОРОЙ КОНТУР: Робот отработал, теперь безопасно качаем чистый файл расписания
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
-    const yamlUrl = `https://github.com{repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
+    const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
     return fetch(yamlUrl, { headers: { "Authorization": `token ${accessToken}` } });
   })
   .then(response => {

@@ -369,10 +369,20 @@ function saveGroupAttendance(day, time) {
   const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
     
+    // Шаг 1. Тотальное схлопывание множественных пробелов до одного во всей строке
+    let processedStr = inputStr.replace(/\s+/g, ' ').trim();
+    
+    // Шаг 2. Аппаратный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
+    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+$/;
+    if (!whitelistRegex.test(processedStr)) {
+      alert("⚠️ СБОЙ ВАЛИДАЦИИ:\nВ поле \"" + fieldLabel + "\" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы, дефис, запятая и знаки /, #, @");
+      return null;
+    }
+    
     let isErrorFound = false;
     let errorMessage = "";
 
-    const cleanList = inputStr.split(',').map(item => {
+    const cleanList = processedStr.split(',').map(item => {
       let rawKid = item.trim();
       if (!rawKid) return "";
 

@@ -142,19 +142,13 @@ function loadStudentsFromYaml() {
         </button>`;
     });
 
-    // ДОБАВЛЯЕМ 8-Ю КНОПКУ ВЫХОД С КЛАССОМ btn-logout
-    daysContainer.innerHTML += `
-      <button class="btn-big btn-day btn-logout" onclick="logoutTeacher()">
-        ВЫХОД
-      </button>`;
-
     // Выводим твою законную победную строку на зеленом фоне
     showNotify("Журнал успешно загружен!", "success");
     
     // Ровно через 2 секунды переводим блок в постоянный голубой статус-бар преподавателя
     setTimeout(() => {
       const loggedUserLogin = localStorage.getItem("github_journal_logged_user") || "";
-      showNotify("📋 Журнал посещаемости преподавателя: " + loggedUserLogin, "info");
+      showNotify("👨‍🎓 Преподаватель: " + loggedUserLogin, "info");
     }, 2000);
   })
   .catch(err => {
@@ -600,22 +594,35 @@ function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;
   
-  // Очищаем строго цветовые классы фона
   el.classList.remove("notify-success", "notify-error", "notify-blue");
   
-  if (type === "success") el.classList.add("notify-success");      // Зеленый фон
-  else if (type === "error") el.classList.add("notify-error");      // Красный фон
+  // Строка SVG-кода иконки Bootstrap Icons box-arrow-right
+  const svgIcon = "<svg xmlns='http://w3.org' width='21' height='21' fill='currentColor' class='bi bi-box-arrow-right' viewBox='0 0 16 16'>" +
+                    "<path fill-rule='evenodd' d='M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z'/>" +
+                    "<path fill-rule='evenodd' d='M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z'/>" +
+                  "</svg>";
+
+  if (type === "success") {
+    el.classList.add("notify-success");
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
+                   "</div>";
+  } 
+  else if (type === "error") {
+    el.classList.add("notify-error");
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
+                   "</div>";
+  } 
   else if (type === "info") {
     el.classList.add("notify-blue");
-    el.innerHTML = "<div style='display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;'>" +
-                     "<span>" + text.replace("Журнал посещаемости преподавателя:", "Журнал преподавателя:") + "</span>" +
-                     "<button onclick='logoutTeacher()' class='btn-logout-door' title='Выйти'>🚪</button>" +
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
                    "</div>";
-    return;
   }
-  
-  el.innerText = text;
-
 }
 
 // Финальная двухфайловая функция запуска адресного ремонта расписания преподавателя
@@ -669,7 +676,7 @@ function sendTargetedRepairSignal() {
   })
   .then(res => {
     if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    showNotify("🟢 Запрос отправлен! Сервер выполняет исправление файла расписания...", "success");
+    showNotify("🟢 Запрос на исправление файла расписания отправлен!", "success");
     startRepairStatusPolling();
   })
   .catch(err => {

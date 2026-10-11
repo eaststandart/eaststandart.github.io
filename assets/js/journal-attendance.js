@@ -438,7 +438,7 @@ function saveGroupAttendance(day, time) {
       }
 
       // Изолированный Белый список символов для ИМЕНИ: только русские/английские буквы, пробел и дефис. Без цифр!
-      const nameWhitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+\$/;
+      const nameWhitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
       if (!nameWhitelistRegex.test(cleanName)) {
         isErrorFound = true;
         errorMessage = `В поле "${fieldLabel}" у имени "${cleanName}" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы и дефис.`;

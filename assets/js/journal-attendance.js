@@ -207,8 +207,9 @@ function parseSimpleYaml(text) {
       continue;
     }
 
-    // Фиксация выхода из config:, если начался реальный день недели с отступом 0
-    if (indent === 0 && cleanText.endsWith(':') && cleanText.toLowerCase() !== 'config:') {
+    // Фиксация выхода из config:, если начался реальный день недели (даже со сдвигом пробелов)
+    const checkConfigDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+    if (checkConfigDays.includes(cleanText.toLowerCase())) {
       isInsideConfig = false;
     }
 
@@ -241,8 +242,7 @@ function parseSimpleYaml(text) {
     // =========================================================================
     if (!isInsideConfig) {
       const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
-      // Проверяем наличие дня недели в исходной строке ДО её очистки пробелами
-      const isDayLine = validYamlDays.some(day => trimmed.toLowerCase().includes(day));
+      const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
       const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
 
       // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)

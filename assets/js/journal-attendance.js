@@ -429,20 +429,29 @@ function saveGroupAttendance(day, time) {
 
       // --- 🧱 СТЕРИЛЬНАЯ ЭКСТРАКЦИЯ ПОСЛЕ ПРОВЕРКИ КОЛИЧЕСТВА ---
       
-      // 1. Вычеркиваем Теги
-      const techlabMatch = rawKid.match(/#techlab-[a-zA-Zа-яА-ЯёЁ0-9_\-]+/);
-      const githubMatch = rawKid.match(/@[a-zA-Zа-яА-ЯёЁ0-9_\-]+/);
+      // 1. Вычеркиваем Теги из массива слов без использования ломающих регулярок
+      let cleanWords = [];
+      words.forEach(w => {
+        if (w === '#' || w.startsWith('@') || w.startsWith('#techlab-')) {
+          tag = w; // Запоминаем наш единственный легитимный тег
+        } else {
+          cleanWords.push(w); // Все остальные слова (Имя Фамилия) собираем обратно
+        }
+      });
       
-      if (techlabMatch) {
-        tag = techlabMatch[0];
-        rawKid = rawKid.replace(tag, ' ');
-      } else if (githubMatch) {
-        tag = githubMatch[0];
-        rawKid = rawKid.replace(tag, ' ');
-      } else if (words.includes('#')) {
-        tag = "#";
-        // Безопасно вырезаем одиночный знак решетки как отдельное слово
-        rawKid = rawKid.replace(/(?:^|\s)#(?:\s|\$)/, ' ');
+      // Собираем строку обратно без тега
+      rawKid = cleanWords.join(' ');
+
+      // 2. Вычеркиваем Ключи направления из оставшегося текста
+      const electMatch = rawKid.match(/\/([eеЕЭ])(?:\s|\$)/i);
+      const joinMatch = rawKid.match(/\/([cсСC])(?:\s|\$)/i);
+
+      if (electMatch) {
+        direction = "электронное конструирование";
+        rawKid = rawKid.replace(electMatch[0], ' ');
+      } else if (joinMatch) {
+        direction = "столярное дело";
+        rawKid = rawKid.replace(joinMatch[0], ' ');
       }
 
       // 2. Вычеркиваем Ключи направления

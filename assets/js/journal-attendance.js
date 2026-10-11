@@ -373,7 +373,7 @@ function saveGroupAttendance(day, time) {
     let processedStr = inputStr.replace(/\s+/g, ' ').trim();
     
     // Шаг 2. Первичный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
-    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+\$/;
+    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+$/;
     if (!whitelistRegex.test(processedStr)) {
       alert("⚠️ СБОЙ ВАЛИДАЦИИ:\nВ поле \"" + fieldLabel + "\" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы, дефис, запятая и знаки /, #, @");
       return null;

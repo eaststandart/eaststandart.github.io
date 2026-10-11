@@ -241,7 +241,8 @@ function parseSimpleYaml(text) {
     // =========================================================================
     if (!isInsideConfig) {
       const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
-      const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
+      // Проверяем наличие дня недели в исходной строке ДО её очистки пробелами
+      const isDayLine = validYamlDays.some(day => trimmed.toLowerCase().includes(day));
       const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
 
       // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)

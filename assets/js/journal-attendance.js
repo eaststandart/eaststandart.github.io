@@ -365,7 +365,7 @@ function saveGroupAttendance(day, time) {
   const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
   const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
-  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку
+  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку по Регламенту
   const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
     
@@ -373,7 +373,7 @@ function saveGroupAttendance(day, time) {
     let processedStr = inputStr.replace(/\s+/g, ' ').trim();
     
     // Шаг 2. Аппаратный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
-    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+$/;
+    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+\$/;
     if (!whitelistRegex.test(processedStr)) {
       alert("⚠️ СБОЙ ВАЛИДАЦИИ:\nВ поле \"" + fieldLabel + "\" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы, дефис, запятая и знаки /, #, @");
       return null;
@@ -384,83 +384,62 @@ function saveGroupAttendance(day, time) {
 
     const cleanList = processedStr.split(',').map(item => {
       let rawKid = item.trim();
-      if (!rawKid) return "";
+      if (!rawKid) return null;
 
-      // Вызов Единого Монолитного Щита Валидации для ручного ввода
-      const cleanNameForCheck = rawKid.replace(/\/\S*/g, '').trim();
-      const inputError = validateRawText(cleanNameForCheck);
-      if (inputError) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" у ученика "${rawKid}" ошибка: ${inputError}`;
-        return "";
+      let direction = "";
+      let tag = "";
+
+      // 1. Экстракция Групп тегов (Ищем слова строго со знака @ или # на старте, без диких слэшей перед ними!)
+      const githubMatch = rawKid.match(/(?:^|\s)@([a-zA-Zа-яА-ЯёЁ0-9_\-]+)/);
+      const techlabMatch = rawKid.match(/(?:^|\s)#(techlab-[a-zA-Zа-яА-ЯёЁ0-9_\-]+)/);
+      const autoHashMatch = rawKid.match(/(?:^|\s)\/#(?:\s|\$)/);
+
+      if (githubMatch) {
+        tag = "@" + githubMatch[1];
+        rawKid = rawKid.replace(githubMatch[0], ' ');
+      } else if (techlabMatch) {
+        tag = "#" + techlabMatch[1];
+        rawKid = rawKid.replace(techlabMatch[0], ' ');
+      } else if (autoHashMatch) {
+        tag = "#";
+        rawKid = rawKid.replace(autoHashMatch[0], ' ');
       }
 
-      // Проверка индивидуального слэш-мусора для ручного ввода
-      if (rawKid.includes("/") && !rawKid.match(/\/(э|e|с|c|#)/i)) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ слэша у ученика "${rawKid}".`;
-        return "";
+      // 2. Экстракция Ключей направления (Строго одиночные слэш-ключи, без хвостов текста)
+      const electMatch = rawKid.match(/(?:^|\s)\/([eеЕЭ])(?:\s|\$)/i);
+      const joinMatch = rawKid.match(/(?:^|\s)\/([cсСC])(?:\s|\$)/i);
+
+      if (electMatch) {
+        direction = "электронное конструирование";
+        rawKid = rawKid.replace(electMatch[0], ' ');
+      } else if (joinMatch) {
+        direction = "столярное дело";
+        rawKid = rawKid.replace(joinMatch[0], ' ');
       }
 
-      if (rawKid.includes("/") && !rawKid.match(/\/(э|e|с|c|#)/i)) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружен недопустимый ключ слэша у ученика "${rawKid}". Допускаются строго одиночные ключи: /э, /e, /с, /c, /#`;
-        return "";
-      }
-
-      // Шаг 3: Сквозная последовательная замена легитимных ключей на временные маркеры
-      rawKid = rawKid.replace(/\/([eеЕЭ])/g, ' [э]');
-      rawKid = rawKid.replace(/\/([cсСC])/g, ' [с]');
-
-      // Шаг 4: Схлопывание дубликатов решёток (если ввели несколько законных /#)
-      rawKid = rawKid.replace(/\/#(\s*\/#)+/g, '/#');
-
-      // Шаг 5: ИЗОЛИРОВАНИЕ И ХИРУРГИЧЕСКАЯ СБОРКА СТРОКИ ПО ПРАВИЛУ (Имя ➔ Направление ➔ Тег)
-      let directionMarker = "";
-      let systemTag = "";
-      let hasAutoHash = false;
-
-      // Вытаскиваем маркер направления
-      if (rawKid.includes('[э]')) { directionMarker = "[э]"; rawKid = rawKid.replace('[э]', ''); }
-      else if (rawKid.includes('[с]')) { directionMarker = "[с]"; rawKid = rawKid.replace('[с]', ''); }
-
-      // Вытаскиваем ключ автогенерации /#
-      if (rawKid.includes('/#')) {
-        hasAutoHash = true;
-        rawKid = rawKid.replace(/\/#/g, '');
-      }
-
-      // Вытаскиваем готовые интернет-теги Гитхаба
-      const githubLoginMatch = rawKid.match(/@([a-zA-Z0-9_\-]+)/);
-      const techlabTagMatch = rawKid.match(/#techlab-([a-zA-Z0-9_\-]+)/);
-
-      if (githubLoginMatch) {
-        systemTag = githubLoginMatch[0];
-        rawKid = rawKid.replace(githubLoginMatch[0], '');
-      } else if (techlabTagMatch) {
-        systemTag = techlabTagMatch[0];
-        rawKid = rawKid.replace(techlabTagMatch[0], '');
-      } else if (hasAutoHash) {
-        systemTag = "#";
-      }
-
-      // Очищаем оставшееся имя ученика от лишних пробелов
+      // 3. Сборка голого Имени (Всё, что осталось в строке после удаления ключей и тегов)
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
-      // АППАРАТНЫЙ ЩИТ: Если имя ученика оказалось пустым после извлечения тегов/ключей — блок ввода!
-      if (!cleanName) {
+      // Вызов Единого Монолитного Щита Валидации для очищенного имени
+      const inputError = validateRawText(cleanName);
+      if (inputError) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружена строка без имени ученика! Ввод одиночных ключей (например, "/#") без указания самого имени строго запрещён.`;
-        return "";
+        errorMessage = `В поле "${fieldLabel}" у "${cleanName}" ошибка: ${inputError}`;
+        return null;
       }
 
-      // Собираем идеальную строку строго по цепочке: Имя ➔ Направление ➔ Тег
-      let finalRow = cleanName;
-      if (directionMarker) finalRow += ` ${directionMarker}`;
-      if (systemTag) finalRow += ` ${systemTag}`;
+      if (!cleanName) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" обнаружена строка без Фамилии и Имени учащегося!`;
+        return null;
+      }
 
-      return finalRow.replace(/\s+/g, ' ').trim();
-    }).filter(n => n !== "");
+      // Возвращаем упакованный плоский объект смены для этого учащегося
+      let studentObj = { name: cleanName, direction: direction };
+      if (tag) studentObj.tag = tag;
+      return studentObj;
+
+    }).filter(n => n !== null);
 
     if (isErrorFound) {
       alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
@@ -540,8 +519,8 @@ function saveGroupAttendance(day, time) {
       teacher_username: teacherUsername,
       teacher_login: teacherLogin,
       present_permanent: presentKids,
-      newbies: objectifyList(newbiesList),           // Новички пакуются объектами
-      probation: objectifyList(probationList)        // Временные пакуются объектами
+      newbies: newbiesList,
+      probation: probationList
     };
 
     const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;

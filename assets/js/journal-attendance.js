@@ -508,8 +508,8 @@ function saveGroupAttendance(day, time) {
     showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
 
     const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-    const statusUrl = `https://api.github.com/repos/{repo_owner}/${repo_name}/contents/_data/repair-status.json`;
-    const signalUrl = `https://api.github.com/repos/{repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
 
     // 2. Включаем светофор repair-status.json на положение "on"
     const statusPayload = { status: "on", timestamp: new Date().toISOString() };

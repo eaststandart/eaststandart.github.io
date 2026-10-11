@@ -372,8 +372,8 @@ function saveGroupAttendance(day, time) {
     // Шаг 1. Тотальное схлопывание множественных пробелов до одного во всей строке
     let processedStr = inputStr.replace(/\s+/g, ' ').trim();
     
-    // Шаг 2. Аппаратный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
-    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+$/;
+    // Шаг 2. Первичный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
+    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+\$/;
     if (!whitelistRegex.test(processedStr)) {
       alert("⚠️ СБОЙ ВАЛИДАЦИИ:\nВ поле \"" + fieldLabel + "\" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы, дефис, запятая и знаки /, #, @");
       return null;
@@ -386,28 +386,68 @@ function saveGroupAttendance(day, time) {
       let rawKid = item.trim();
       if (!rawKid) return null;
 
+      // --- 🧪 ЖЕСТКИЙ РАЗДЕЛЬНЫЙ ПОДГРУППОВОЙ КОНТРОЛЬ ПО КОЛИЧЕСТВУ ---
+      
+      // 1. Подсчет Ключей (Ищем знаки слэша)
+      const slashMatches = rawKid.match(/\//g) || [];
+      if (slashMatches.length > 1) {
+        isErrorFound = true;
+        errorMessage = `В записи "${rawKid}" обнаружено более одного ключа направления! Разрешен строго один слэш-ключ.`;
+        return null;
+      }
+
+      // 2. Подсчет Тегов (Ищем слова на знаки @ и #)
+      // Разбиваем запись на отдельные слова для точной инспекции
+      const words = rawKid.split(' ');
+      let tagCount = 0;
+      let hasInvalidHash = false;
+
+      words.forEach(w => {
+        if (w.startsWith('@') || w.startsWith('#')) {
+          tagCount++;
+          // Если слово начинается на #, но это не одиночный знак # и не системный тег платформы #techlab-
+          if (w.startsWith('#') && w !== '#' && !w.startsWith('#techlab-')) {
+            hasInvalidHash = true;
+          }
+        }
+      });
+
+      if (hasInvalidHash) {
+        isErrorFound = true;
+        errorMessage = `В записи "${rawKid}" обнаружен недопустимый тег! Допускаются строго: одиночный "#" или системный "#techlab-"`;
+        return null;
+      }
+
+      if (tagCount > 1) {
+        isErrorFound = true;
+        errorMessage = `В записи "${rawKid}" обнаружено более одного тега! Разрешен строго один тег: либо "#", либо "#techlab-", либо "@логин".`;
+        return null;
+      }
+
       let direction = "";
       let tag = "";
 
-      // 1. Экстракция Групп тегов (Ищем слова строго со знака @ или # на старте, без диких слэшей перед ними!)
-      const githubMatch = rawKid.match(/(?:^|\s)@([a-zA-Zа-яА-ЯёЁ0-9_\-]+)/);
-      const techlabMatch = rawKid.match(/(?:^|\s)#(techlab-[a-zA-Zа-яА-ЯёЁ0-9_\-]+)/);
-      const autoHashMatch = rawKid.match(/(?:^|\s)\/#(?:\s|\$)/);
-
-      if (githubMatch) {
-        tag = "@" + githubMatch[1];
-        rawKid = rawKid.replace(githubMatch[0], ' ');
-      } else if (techlabMatch) {
-        tag = "#" + techlabMatch[1];
-        rawKid = rawKid.replace(techlabMatch[0], ' ');
-      } else if (autoHashMatch) {
+      // --- 🧱 СТЕРИЛЬНАЯ ЭКСТРАКЦИЯ ПОСЛЕ ПРОВЕРКИ КОЛИЧЕСТВА ---
+      
+      // 1. Вычеркиваем Теги
+      const techlabMatch = rawKid.match(/#techlab-[a-zA-Zа-яА-ЯёЁ0-9_\-]+/);
+      const githubMatch = rawKid.match(/@[a-zA-Zа-яА-ЯёЁ0-9_\-]+/);
+      
+      if (techlabMatch) {
+        tag = techlabMatch[0];
+        rawKid = rawKid.replace(tag, ' ');
+      } else if (githubMatch) {
+        tag = githubMatch[0];
+        rawKid = rawKid.replace(tag, ' ');
+      } else if (words.includes('#')) {
         tag = "#";
-        rawKid = rawKid.replace(autoHashMatch[0], ' ');
+        // Безопасно вырезаем одиночный знак решетки как отдельное слово
+        rawKid = rawKid.replace(/(?:^|\s)#(?:\s|\$)/, ' ');
       }
 
-      // 2. Экстракция Ключей направления (Строго одиночные слэш-ключи, без хвостов текста)
-      const electMatch = rawKid.match(/(?:^|\s)\/([eеЕЭ])(?:\s|\$)/i);
-      const joinMatch = rawKid.match(/(?:^|\s)\/([cсСC])(?:\s|\$)/i);
+      // 2. Вычеркиваем Ключи направления
+      const electMatch = rawKid.match(/\/([eеЕЭ])(?:\s|\$)/i);
+      const joinMatch = rawKid.match(/\/([cсСC])(?:\s|\$)/i);
 
       if (electMatch) {
         direction = "электронное конструирование";
@@ -417,7 +457,7 @@ function saveGroupAttendance(day, time) {
         rawKid = rawKid.replace(joinMatch[0], ' ');
       }
 
-      // 3. Сборка голого Имени (Всё, что осталось в строке после удаления ключей и тегов)
+      // 3. Финальная сборка Фамилии Имени
       const cleanName = rawKid.replace(/\s+/g, ' ').trim();
 
       // Вызов Единого Монолитного Щита Валидации для очищенного имени
@@ -430,11 +470,11 @@ function saveGroupAttendance(day, time) {
 
       if (!cleanName) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружена строка без Фамилии и Имени учащегося!`;
+        errorMessage = `В поле "${fieldLabel}" обнаружена запись без Фамилии и Имени учащегося!`;
         return null;
       }
 
-      // Возвращаем упакованный плоский объект смены для этого учащегося
+      // Сборка идеального плоского объекта JSON
       let studentObj = { name: cleanName, direction: direction };
       if (tag) studentObj.tag = tag;
       return studentObj;

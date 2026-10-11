@@ -369,123 +369,103 @@ function saveGroupAttendance(day, time) {
   const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
     
-    // Шаг 1. Тотальное схлопывание множественных пробелов до одного во всей строке
-    let processedStr = inputStr.replace(/\s+/g, ' ').trim();
-    
-    // Шаг 2. Первичный Белый список (Буквы ру/ен, пробел, дефис, запятая, слэш, решетка, собачка). Без цифр!
-    const whitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s,\/\-#@]+$/;
-    if (!whitelistRegex.test(processedStr)) {
-      alert("⚠️ СБОЙ ВАЛИДАЦИИ:\nВ поле \"" + fieldLabel + "\" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы, дефис, запятая и знаки /, #, @");
-      return null;
-    }
-    
     let isErrorFound = false;
     let errorMessage = "";
 
-    const cleanList = processedStr.split(',').map(item => {
+    // Режем всю строку ввода по запятым на отдельные записи учащихся
+    const cleanList = inputStr.split(',').map(item => {
       let rawKid = item.trim();
       if (!rawKid) return null;
 
-      // --- 🧪 ЖЕСТКИЙ РАЗДЕЛЬНЫЙ ПОДГРУППОВОЙ КОНТРОЛЬ ПО КОЛИЧЕСТВУ ---
-      
-      // 1. Подсчет Ключей (Ищем знаки слэша)
-      const slashMatches = rawKid.match(/\//g) || [];
-      if (slashMatches.length > 1) {
-        isErrorFound = true;
-        errorMessage = `В записи "${rawKid}" обнаружено более одного ключа направления! Разрешен строго один слэш-ключ.`;
-        return null;
-      }
+      // 1. ЭТАП №1: Разбиваем сырую запись пробелами на отдельные чистые слова
+      // Метод filter(Boolean) автоматически уничтожает проблему любых двойных или тройных пробелов!
+      const words = rawKid.split(' ').map(w => w.trim()).filter(Boolean);
+      if (words.length === 0) return null;
 
-      // 2. Подсчет Тегов (Ищем слова на знаки @ и #)
-      // Разбиваем запись на отдельные слова для точной инспекции
-      const words = rawKid.split(' ');
-      let tagCount = 0;
-      let hasInvalidHash = false;
+      let keysArray = [];
+      let tagsArray = [];
+      let nameWordsArray = [];
 
-      words.forEach(w => {
-        if (w.startsWith('@') || w.startsWith('#')) {
-          tagCount++;
-          // Если слово начинается на #, но это не одиночный знак # и не системный тег платформы #techlab-
-          if (w.startsWith('#') && w !== '#' && !w.startsWith('#techlab-')) {
-            hasInvalidHash = true;
+      // 2. ЭТАП №2: Распределяем слова по трем независимым карманам
+      for (let w of words) {
+        // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
+        if (w.startsWith('/')) {
+          if (w === '/э' || w === '/e' || w === '/с' || w === '/c') {
+            keysArray.push(w);
+          } else {
+            isErrorFound = true;
+            errorMessage = `В записи "${rawKid}" обнаружен недопустимый ключ направления "${w}"!`;
+            return null;
           }
         }
-      });
+        // Проверяем карман ТЕГОВ (всё, что является одиночным #, начинается на @ или на #techlab-)
+        else if (w === '#' || w.startsWith('@') || w.startsWith('#techlab-')) {
+          tagsArray.push(w);
+        }
+        // Ошибочные левые хэштеги, не соответствующие платформе
+        else if (w.startsWith('#')) {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружен недопустимый тег "${w}"! Допускаются строго: одиночный "#" или системный "#techlab-"`;
+          return null;
+        }
+        // Все остальные слова отправляются в карман ИМЕНИ
+        else {
+          nameWordsArray.push(w);
+        }
+      }
 
-      if (hasInvalidHash) {
+      // Жёсткий контроль количества: максимум 1 ключ на запись учащегося
+      if (keysArray.length > 1) {
         isErrorFound = true;
-        errorMessage = `В записи "${rawKid}" обнаружен недопустимый тег! Допускаются строго: одиночный "#" или системный "#techlab-"`;
+        errorMessage = `В записи "${rawKid}" обнаружено более одного ключа направления! Разрешен строго один ключ.`;
         return null;
       }
 
-      if (tagCount > 1) {
+      // Жёсткий контроль количества: максимум 1 тег на запись учащегося
+      if (tagsArray.length > 1) {
         isErrorFound = true;
         errorMessage = `В записи "${rawKid}" обнаружено более одного тега! Разрешен строго один тег: либо "#", либо "#techlab-", либо "@логин".`;
         return null;
       }
 
-      let direction = "";
-      let tag = "";
+      // 3. ЭТАП №3: Склеиваем Фамилию Имя из кармана и проверяем её Whitelist
+      const cleanName = nameWordsArray.join(' ').trim();
 
-      // --- 🧱 СТЕРИЛЬНАЯ ЭКСТРАКЦИЯ ПОСЛЕ ПРОВЕРКИ КОЛИЧЕСТВА ---
-      
-      // 1. Вычеркиваем Теги из массива слов без использования ломающих регулярок
-      let cleanWords = [];
-      words.forEach(w => {
-        if (w === '#' || w.startsWith('@') || w.startsWith('#techlab-')) {
-          tag = w; // Запоминаем наш единственный легитимный тег
-        } else {
-          cleanWords.push(w); // Все остальные слова (Имя Фамилия) собираем обратно
-        }
-      });
-      
-      // Собираем строку обратно без тега
-      rawKid = cleanWords.join(' ');
-
-      // 2. Вычеркиваем Ключи направления из оставшегося текста
-      const electMatch = rawKid.match(/\/([eеЕЭ])(?:\s|\$)/i);
-      const joinMatch = rawKid.match(/\/([cсСC])(?:\s|\$)/i);
-
-      if (electMatch) {
-        direction = "электронное конструирование";
-        rawKid = rawKid.replace(electMatch[0], ' ');
-      } else if (joinMatch) {
-        direction = "столярное дело";
-        rawKid = rawKid.replace(joinMatch[0], ' ');
-      }
-
-      // 2. Вычеркиваем Ключи направления
-      const electMatch = rawKid.match(/\/([eеЕЭ])(?:\s|\$)/i);
-      const joinMatch = rawKid.match(/\/([cсСC])(?:\s|\$)/i);
-
-      if (electMatch) {
-        direction = "электронное конструирование";
-        rawKid = rawKid.replace(electMatch[0], ' ');
-      } else if (joinMatch) {
-        direction = "столярное дело";
-        rawKid = rawKid.replace(joinMatch[0], ' ');
-      }
-
-      // 3. Финальная сборка Фамилии Имени
-      const cleanName = rawKid.replace(/\s+/g, ' ').trim();
-
-      // Вызов Единого Монолитного Щита Валидации для очищенного имени
-      const inputError = validateRawText(cleanName);
-      if (inputError) {
-        isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" у "${cleanName}" ошибка: ${inputError}`;
-        return null;
-      }
-
+      // Проверка обязательного наличия Фамилии и Имени учащегося в строке
       if (!cleanName) {
         isErrorFound = true;
-        errorMessage = `В поле "${fieldLabel}" обнаружена запись без Фамилии и Имени учащегося!`;
+        errorMessage = `В поле "${fieldLabel}" обнаружена запись без Фамилии и Имени учащегося! Ввод голых ключей и тегов строго запрещён.`;
         return null;
       }
+
+      // Изолированный Белый список символов для ИМЕНИ: только русские/английские буквы, пробел и дефис. Без цифр и спецсимволов!
+      const nameWhitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+\$/;
+      if (!nameWhitelistRegex.test(cleanName)) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у имени "${cleanName}" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы и дефис.`;
+        return null;
+      }
+
+      // Проверка на множественные пробелы внутри имени (на всякий случай, если упал Щит)
+      if (cleanName.includes("  ")) {
+        isErrorFound = true;
+        errorMessage = `В имени "${cleanName}" обнаружены множественные пробелы подряд.`;
+        return null;
+      }
+
+      // Финальная конвертация Ключа направления в полное текстовое название
+      let direction = "";
+      if (keysArray.length === 1) {
+        const k = keysArray[0].toLowerCase();
+        if (k === '/э' || k === '/e') direction = "электронное конструирование";
+        if (k === '/с' || k === '/c') direction = "столярное дело";
+      }
+
+      let finalTag = tagsArray.length === 1 ? tagsArray[0] : "";
 
       // Сборка идеального плоского объекта JSON
       let studentObj = { name: cleanName, direction: direction };
-      if (tag) studentObj.tag = tag;
+      if (finalTag) studentObj.tag = finalTag;
       return studentObj;
 
     }).filter(n => n !== null);

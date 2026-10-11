@@ -237,21 +237,37 @@ function parseSimpleYaml(text) {
     }
     
     // =========================================================================
-    // 🧱 БЛОК ИСПОЛНИТЕЛЬНОЙ СБОРКИ ОБЪЕКТА (СИНТАКСИС ГАРАНТИРОВАННО ЧИСТ)
+    // 🧱 БЛОК ИСПОЛНИТЕЛЬНОЙ СБОРКИ ОБЪЕКТА И ГЕОМЕТРИЧЕСКОГО КОНТРОЛЯ
     // =========================================================================
     if (!isInsideConfig) {
-      // 1. Фиксация дня недели
-      if (indent === 0 && cleanText.endsWith(':')) {
+      const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+      const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
+      const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
+
+      // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)
+      if (isDayLine) {
+        if (indent !== 0) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).");
+          return {};
+        }
         currentDay = cleanText.slice(0, -1).toLowerCase().trim();
         result[currentDay] = {};
       } 
-      // 2. Фиксация времени группы
-      else if (indent === 2 && cleanText.endsWith(':')) {
+      // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
+      else if (isTimeLine) {
+        if (indent !== 2) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.");
+          return {};
+        }
         currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
         result[currentDay][currentGroup] = [];
       } 
-      // 3. Извлечение голого имени постоянного ученика
-      else if (indent === 4 && cleanText.startsWith('- name:')) {
+      // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
+      else if (cleanText.startsWith('- name:')) {
+        if (indent !== 4) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.");
+          return {};
+        }
         let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
         
         if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
@@ -259,6 +275,13 @@ function parseSimpleYaml(text) {
       
         if (currentDay && currentGroup && rawName) {
           result[currentDay][currentGroup].push(rawName);
+        }
+      } 
+      // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
+      else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
+        if (indent !== 6) {
+          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`);
+          return {};
         }
       }
     }
@@ -499,7 +522,7 @@ function saveGroupAttendance(day, time) {
       "<div class='emergency-banner'>" +
         "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "Запрос на удаление отправлен на сервер Гитхаб.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
+          "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
           "<b>Генерация отчетов заблокирована до окончания перестройки расписания!</b>" +
         "</span>" +
       "</div>";
@@ -792,7 +815,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
       "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
       "<span class='emergency-banner-sub'>" +
         "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере Гитхаб:<br><br>" +
+        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере GitHub:<br><br>" +
         "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
       "</span>" +
     "</div>";

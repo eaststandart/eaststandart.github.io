@@ -389,7 +389,7 @@ function saveGroupAttendance(day, time) {
       for (let w of words) {
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         if (w.startsWith('/')) {
-          if (w === '/э' || w === '/e' || w === '/с' || w === '/c') {
+          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d') {
             keysArray.push(w);
           } else {
             isErrorFound = true;
@@ -413,7 +413,16 @@ function saveGroupAttendance(day, time) {
         }
       }
 
-      // Жёсткий контроль количества: максимум 1 ключ на запись учащегося
+      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
+      if (keysArray.includes('/d')) {
+        if (keysArray.length > 1 || tagsArray.length > 0) {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
+          return null;
+        }
+      }
+
+      // Контроль количества: максимум 1 ключ на запись учащегося
       if (keysArray.length > 1) {
         isErrorFound = true;
         errorMessage = `В записи "${rawKid}" обнаружено более одного ключа направления! Разрешен строго один ключ.`;
@@ -456,8 +465,13 @@ function saveGroupAttendance(day, time) {
       let finalTag = tagsArray.length === 1 ? tagsArray[0] : "";
 
       // Сборка идеального плоского объекта JSON строго по своим полям
-      let studentObj = { name: cleanName, direction: direction };
-      if (finalTag) studentObj.tag = finalTag;
+      let studentObj = { name: cleanName };
+      if (keysArray.includes('/d')) {
+        studentObj.delete = true;
+      } else {
+        studentObj.direction = direction;
+        if (finalTag) studentObj.tag = finalTag;
+      }
       return studentObj;
 
     }).filter(n => n !== null);

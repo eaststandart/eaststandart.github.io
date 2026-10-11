@@ -490,6 +490,83 @@ function saveGroupAttendance(day, time) {
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
+  // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
+  const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
+
+  if (deleteNames.length > 0) {
+    // 1. Принудительно вызываем красный экран аварийной блокировки изменения базы
+    document.getElementById("groups-container").innerHTML = 
+      "<div class='emergency-banner'>" +
+        "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "Запрос на удаление отправлен на сервер Гитхаб.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
+          "<b>Генерация отчетов заблокирована до окончания перестройки расписания!</b>" +
+        "</span>" +
+      "</div>";
+    
+    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
+    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
+
+    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+    const statusUrl = `https://github.com{repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+    const signalUrl = `https://github.com{repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+
+    // 2. Включаем светофор repair-status.json на положение "on"
+    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusBody = {
+      message: "chore: запуск светофора для модерации базы [skip ci]",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+    };
+
+    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(res => res.ok ? res.json() : null)
+    .then(existingStatus => {
+      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+      return fetch(statusUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(statusBody)
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Не удалось взвести статус изменения базы");
+      
+      // 3. Записываем сигнал удаления, день недели и время группы в signal-repair.json
+      const deleteSignalPayload = { 
+        teacher_login: currentTeacher,
+        day: day,
+        time: time,
+        delete: deleteNames 
+      };
+      const signalBody = {
+        message: "chore: запрос автоматического удаления учеников из расписания " + currentTeacher,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(deleteSignalPayload, null, 2))))
+      };
+      
+      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+      .then(r => r.ok ? r.json() : null)
+      .then(existingSignal => {
+        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+        return fetch(signalUrl, {
+          method: "PUT",
+          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+          body: JSON.stringify(signalBody)
+        });
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Ошибка отправки сигнала удаления");
+      showNotify("❌ Запрос отправлен! Сервер выполняет удаление учеников...", "error");
+      startRepairStatusPolling(); // Запускаем опрос сервера до переключения в off
+    })
+    .catch(err => {
+      console.error(err);
+      showNotify("❌ Не удалось связаться с сервером при изменении базы.", "error");
+    });
+
+    return; // ЖЕСТКАЯ ОТМЕНА отправки стандартного отчета посещаемости!
+  }
+
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
   // Шаг 1: Узнаем логин преподавателя

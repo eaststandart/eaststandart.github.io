@@ -85,7 +85,6 @@ function logoutTeacher() {
 }
 
 // Чтение базы детей с правильным парсером, два поля ввода и отправка порций
-// Чтение базы детей с правильным парсером, два поля ввода и отправка порций
 function loadStudentsFromYaml() {
   const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
   
@@ -94,7 +93,7 @@ function loadStudentsFromYaml() {
     if (enteredLogin) {
       showNotify(`Загрузка журнала для ${enteredLogin}...`, "success");
       executeUprezhdaushiyRobot(enteredLogin);
-      return; // Выходим, не запуская скачивание файла расписания!
+      return; // Жестко выходим, не запуская скачивание файла расписания!
     }
   }
 
@@ -210,49 +209,6 @@ function executeUprezhdaushiyRobot(userLogin) {
   .catch(err => {
     console.error("Сбой авторемонта:", err);
     isRobotChecked = true;
-    loadStudentsFromYaml();
-  });
-}
-  const statusBody = {
-    message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-  };
-
-  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-  .then(res => res.ok ? res.json() : null)
-  .then(existingStatus => {
-    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-    return fetch(statusUrl, {
-      method: "PUT",
-      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-      body: JSON.stringify(statusBody)
-    });
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Не удалось взвести статус");
-    const signalPayload = { teacher_login: userLogin };
-    const signalBody = {
-      message: "chore: упреждающий запрос проверки расписания для " + userLogin,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
-    };
-    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-    .then(r => r.ok ? r.json() : null)
-    .then(existingSignal => {
-      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-      return fetch(signalUrl, {
-        method: "PUT",
-        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-        body: JSON.stringify(signalBody)
-      });
-    });
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    startRepairStatusPolling(); // Уходим на 5-секундный опрос светофора
-  })
-  .catch(err => {
-    console.error("Сбой авторемонта:", err);
-    isRobotChecked = true; // Разрешаем аварийный проход, если Гитхаб лежит
     loadStudentsFromYaml();
   });
 }

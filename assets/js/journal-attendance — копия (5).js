@@ -1,0 +1,956 @@
+/**
+ * @module  journal-attendance.js
+ * @about   Клиентский скрипт отправки данных Журнала посещений
+ * @purpose Сбор отметок посещаемости на сайте и отправка PUT-запросов JSON в репозиторий GitHub
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
+// Настройки репозитория и проверка пароля преподавателя
+const repo_owner = "eaststandart";
+const repo_name = "techlab-journal-attendance";
+const allowedTeachers = ["eaststandart", "eastemitting"];
+
+let accessToken = localStorage.getItem("github_journal_token");
+let studentsData = {};
+let isRobotChecked = false; // Флаг-предохранитель проверки базы роботом TechLab
+
+// Автоматический вход, если ключ уже сохранен в браузере
+document.addEventListener("DOMContentLoaded", () => {
+  if (accessToken) {
+    showJournal();
+  }
+});
+
+// Функция проверки введенного пароля
+function submitToken() {
+  const tokenValue = document.getElementById("token-input").value.trim();
+  if (!tokenValue) {
+    alert("Пожалуйста, введите ключ доступа!");
+    return;
+  }
+
+  document.getElementById("btn-login").disabled = true;
+  document.getElementById("btn-login").innerText = "Проверка пароля...";
+
+  fetch("https://api.github.com/user", {
+    headers: { "Authorization": `token ${tokenValue}` }
+  })
+  .then(response => {
+    if (response.ok) {
+      localStorage.setItem("github_journal_token", tokenValue);
+      accessToken = tokenValue;
+      
+      // Забираем логин пользователя прямо из ответа Гитхаба и сохраняем его в кэш браузера
+      response.json().then(userData => {
+        localStorage.setItem("github_journal_logged_user", userData.login);
+        showJournal();
+      });
+    } else {
+      alert("Неверный ключ доступа! Проверьте символы.");
+      document.getElementById("btn-login").disabled = false;
+      document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Ошибка сети. Проверьте интернет-соединение.");
+    document.getElementById("btn-login").disabled = false;
+    document.getElementById("btn-login").innerText = "🔓 Подключить журнал";
+  });
+}
+
+function showJournal() {
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("journal-section").classList.remove("hidden");
+
+  // СКРЫВАЕМ ИНСТРУКЦИЮ ПОСЛЕ УСПЕШНОГО ВХОДА
+  const instr = document.getElementById("instructions-section");
+  if (instr) instr.classList.add("hidden");
+
+  loadStudentsFromYaml();
+}
+
+function logoutTeacher() {
+  if (confirm("Вы уверены, что хотите выйти из журнала и сменить ключ доступа?")) {
+    localStorage.removeItem("github_journal_token");
+    accessToken = null;
+
+    // ПОКАЗЫВАЕМ ИНСТРУКЦИЮ ПРИ ВЫХОДЕ
+    const instr = document.getElementById("instructions-section");
+    if (instr) instr.classList.remove("hidden");
+
+    window.location.reload();
+  }
+}
+
+// Чтение базы детей с правильным парсером, два поля ввода и отправка порций
+function loadStudentsFromYaml() {
+  // ЭТАП №1: Реальная Идентификация (Горит не менее 2 секунд)
+  showNotify("Идентификация пользователя...", "success");
+
+  // Запускаем параллельно таймер на 2000 мс и реальный fetch-запрос к GitHub
+  const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
+  const networkPromise = fetch("https://api.github.com/user", {
+    headers: { "Authorization": `token ${accessToken}` }
+  }).then(r => {
+    if (!r.ok) throw new Error("AUTH_FAILED");
+    return r.json();
+  });
+
+  // Переходим к следующему этапу строго по окончании ОБОИХ процессов
+  Promise.all([timerPromise, networkPromise])
+  .then(([_, userData]) => {
+    const userLogin = userData.login;
+    localStorage.setItem("github_journal_logged_user", userLogin);
+
+    // --- ЭТАП №2: ЗАГРУЗКА И ПРОВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ ---
+    if (!isRobotChecked) {
+      showNotify(`Загрузка журнала для ${userLogin}...`, "success");
+      
+      const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+      const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+      const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+      const statusBody = {
+        message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+      };
+
+      fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+      .then(res => res.ok ? res.json() : null)
+      .then(existingStatus => {
+        if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+        return fetch(statusUrl, {
+          method: "PUT",
+          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+          body: JSON.stringify(statusBody)
+        });
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Не удалось взвести статус");
+        const signalPayload = { teacher_login: userLogin };
+        const signalBody = {
+          message: "chore: упреждающий запрос проверки расписания для " + userLogin,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+        };
+        return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+        .then(r => r.ok ? r.json() : null)
+        .then(existingSignal => {
+          if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+          return fetch(signalUrl, {
+            method: "PUT",
+            headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+            body: JSON.stringify(signalBody)
+          });
+        });
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Ошибка отправки сигнала");
+        startRepairStatusPolling(); // Уходим на 5-секундный опрос светофора
+      })
+      .catch(err => {
+        console.error("Сбой авторемонта:", err);
+        isRobotChecked = true; // Разрешаем аварийный проход, если Гитхаб лежит
+        loadStudentsFromYaml();
+      });
+      
+      return; // Замораживаем поток, управление передано опросу статуса
+    }
+
+    // --- ЭТАП №3: ОТРИСОВКА И ЛОКАЛЬНЫЕ БЛОКИРОВКИ ЖУРНАЛА ---
+    showNotify("Загрузка данных расписания...", "success");
+    const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
+    
+    return fetch(yamlUrl, { headers: { "Authorization": `token ${accessToken}` } })
+    .then(response => {
+      if (!response.ok) throw new Error("Личный файл журнала не найден в папке _data");
+      return response.json();
+    })
+    .then(data => {
+      const yamlText = decodeURIComponent(atob(data.content).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      studentsData = parseSimpleYaml(yamlText);
+      if (!studentsData || Object.keys(studentsData).length === 0) return;
+      
+      const daysContainer = document.getElementById("days-buttons-container");
+      daysContainer.innerHTML = "";
+      
+      const calendarOrder = [
+        { key: "понедельник", label: "ПН" }, { key: "вторник", label: "ВТ" },
+        { key: "среда", label: "СР" }, { key: "четверг", label: "ЧТ" },
+        { key: "пятница", label: "ПТ" }, { key: "суббота", label: "СБ" },
+        { key: "воскресенье", label: "ВС" }
+      ];
+      
+      calendarOrder.forEach(dayInfo => {
+        const btnId = `btn-day-${dayInfo.key}`;
+        const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
+        const disabledAttr = isAvailable ? "" : "disabled";
+        daysContainer.innerHTML += `
+          <button id="${btnId}" class="btn-big btn-day btn-day-transition day-border-${dayInfo.key}" ${disabledAttr} onclick="selectDynamicDay('${dayInfo.key}')">
+            ${dayInfo.label}
+          </button>`;
+      });
+
+      showNotify("Журнал успешно загружен!", "success");
+      setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 2000);
+    });
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("Ошибка идентификации токена. Проверьте соединение или ключ на GitHub.", "error");
+  });
+}
+
+// Изолированная функция упреждающего запуска робота, полностью исключающая обрывы Promise
+function executeUprezhdaushiyRobot(userLogin) {
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json?nocache=` + new Date().getTime();
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+
+  // Сначала зряче проверяем, не запущен ли уже ремонт другим окном/преподавателем
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(data => {
+    if (data) {
+      const jsonText = decodeURIComponent(atob(data.content).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      const payload = JSON.parse(jsonText);
+      
+      // Аппаратный замок: робот уже работает! Не плодим мусорные коммиты, просто уходим в опрос!
+      if (payload.status === "on") {
+        console.log("[ЗАМОК] Робот уже выполняет проверку базы. Подключаемся к сессии.");
+        startRepairStatusPolling();
+        return null;
+      }
+    }
+    
+    // Если сервер свободен, запускаем штатную процедуру взвода светофора
+    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusBody = {
+      message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+    };
+    if (data && data.sha) statusBody.sha = data.sha;
+    
+    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(statusBody)
+    });
+  })
+  .then(res => {
+    if (res === null) return; // Выход по замку
+    if (!res.ok) throw new Error("Не удалось взвести статус");
+    
+    const signalPayload = { teacher_login: userLogin };
+    const signalBody = {
+      message: "chore: запрос проверки расписания для " + userLogin,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (res === undefined) return;
+    if (!res.ok) throw new Error("Ошибка отправки сигнала");
+    startRepairStatusPolling();
+  })
+  .catch(err => {
+    console.error("Сбой авторемонта:", err);
+    isRobotChecked = true;
+    loadStudentsFromYaml();
+  });
+}
+
+// Объектный парсер YAML с монолитным Блоком Валидации и защитой от секции config
+function parseSimpleYaml(text) {
+  let result = {};
+  let currentDay = "";
+  let currentGroup = "";
+  let isInsideConfig = false; // Зрячий предохранитель секции конфигурации
+  
+  const lines = text.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trimEnd();
+    
+    // Игнорируем законные пустые строки и строки комментариев
+    if (!trimmed || trimmed.trim().startsWith('#')) continue;
+
+    // Считаем количество отступов пробелами
+    let indent = 0;
+    while (indent < line.length && line.charAt(indent) === ' ') {
+      indent++;
+    }
+    const cleanText = trimmed.trim();
+
+    // Перехват входа в секцию конфигурации config:
+    if (indent === 0 && cleanText.toLowerCase() === 'config:') {
+      isInsideConfig = true;
+      continue;
+    }
+
+    // Фиксация выхода из config:, если начался реальный день недели (даже со сдвигом пробелов)
+    const checkConfigDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+    if (checkConfigDays.includes(cleanText.toLowerCase())) {
+      isInsideConfig = false;
+    }
+
+    // =========================================================================
+    // 🛑 МНОГОУРОВНЕВЫЙ ЕДИНЫЙ БЛОК ВАЛИДАЦИИ СИНТАКСИСА И СТРУКТУРЫ СТРОКИ
+    // =========================================================================
+    // Если мы находимся внутри секции config:, проверки синтаксиса расписания полностью игнорируются!
+    if (!isInsideConfig) {
+      
+      // Вызов Единого Монолитного Щита Валидации
+      const structureError = validateRawText(cleanText);
+      if (structureError) {
+        triggerEmergencyBlock(i + 1, cleanText, structureError);
+        return {};
+      }
+
+      // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
+      if (indent === 2 && cleanText.endsWith(':')) {
+        let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
+          triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+          return {};
+        }
+      }
+
+    }
+    
+    // =========================================================================
+    // 🧱 БЛОК ИСПОЛНИТЕЛЬНОЙ СБОРКИ ОБЪЕКТА И ГЕОМЕТРИЧЕСКОГО КОНТРОЛЯ
+    // =========================================================================
+    if (!isInsideConfig) {
+      const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+      const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
+      const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
+
+      // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)
+      if (isDayLine) {
+        if (indent !== 0) {
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).");
+          return {};
+        }
+        currentDay = cleanText.slice(0, -1).toLowerCase().trim();
+        result[currentDay] = {};
+      } 
+      // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
+      else if (isTimeLine) {
+        if (indent !== 2) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.");
+          return {};
+        }
+        currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        result[currentDay][currentGroup] = [];
+      } 
+      // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
+      else if (cleanText.startsWith('- name:')) {
+        if (indent !== 4) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.");
+          return {};
+        }
+        let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
+        
+        if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
+        if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
+      
+        if (currentDay && currentGroup && rawName) {
+          result[currentDay][currentGroup].push(rawName);
+        }
+      } 
+      // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
+      else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
+        if (indent !== 6) {
+          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`);
+          return {};
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function selectDynamicDay(day) {
+  // 1. Сбрасываем CSS-класс active у абсолютно всех кнопок дней
+  const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);
+  allDayButtons.forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  // 2. Подсвечиваем выбранную кнопку, добавляя чистый CSS-класс active
+  const activeBtn = document.getElementById(`btn-day-${day}`);
+  if (activeBtn) {
+    activeBtn.classList.add("active");
+  }
+  
+  // 3. Выводим ОДНО ЕДИНСТВЕННОЕ общее поле даты под календарь
+  const localToday = new Date();
+  const offset = localToday.getTimezoneOffset();
+  const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
+  const defaultDateStr = correctedDate.toISOString().split('T')[0];
+
+  const dateContainer = document.getElementById("global-date-container");
+  if (dateContainer) {
+    // Аппаратно активируем рамки и тени карточки строго в момент отрисовки дня
+    dateContainer.className = "global-date-box";
+    dateContainer.innerHTML = 
+      "<span>📅 Дата занятий:</span>" +
+      "<input type='text' id='global-journal-date' value='" + defaultDateStr + "' class='global-date-input'>";
+  }
+
+  // 4. Генерируем группы для выбранного дня недели
+  const container = document.getElementById("groups-container");
+  container.innerHTML = "";
+
+  if (!studentsData[day] || Object.keys(studentsData[day]).length === 0) {
+    container.innerHTML = `<p class="empty-group-msg">В этот день групп нет.</p>`;
+    return;
+  }
+
+  Object.keys(studentsData[day]).sort().forEach(time => {
+    const kids = studentsData[day][time];
+    
+    // Чистый заголовок группы использует класс макета вместо инлайн-стилей
+    let groupHtml = `<div class="group-block" id="block-${time.replace(':', '-')}">
+      <div class="group-header-flex">
+        <h3 class="group-title-clean">⏰ Группа ${time}</h3>
+      </div>`;
+    
+    kids.forEach((kid, index) => {
+      const id = `kid-${time.replace(':', '-')}-${index}`;
+      
+      // Зряче отсекаем для экрана всё, что идёт после скобок или интернет-тегов
+      let displayName = kid;
+      const cutIndex = kid.search(/\[|@|#/);
+      if (cutIndex !== -1) {
+        displayName = kid.substring(0, cutIndex).trim();
+      }
+      
+      groupHtml += `
+        <div class="kid-row">
+          <label class="lbl-big">
+            <input type="checkbox" id="${id}" class="chk-big" value="${kid}">
+            ${displayName}
+          </label>
+        </div>`;
+    });
+
+    // Локальный фильтр всеядности времени для вывода идеального текста на саму кнопку занятия
+    let matchBtnTime = time.match(/(\d{1,2})\D*(\d{2})/);
+    let cleanBtnTextTime = (matchBtnTime && matchBtnTime[1] && matchBtnTime[2]) ? `${matchBtnTime[1]}:${matchBtnTime[2]}` : time;
+
+    // Текстовые блоки разметки переведены на чистые классы отступов и цветов
+    groupHtml += 
+      "<div class='inputs-inline-row'>" +
+        "<div class='input-container-half'>" +
+          "<input type='text' id='newbies-" + time + "' class='input-text' placeholder='➕ Новые постоянные ученики...'>" +
+        "</div>" +
+        "<div class='input-container-half'>" +
+          "<input type='text' id='probation-" + time + "' class='input-text input-probation' placeholder='⏳ Временные ученики (только сегодня)...'>" +
+        "</div>" +
+      "</div>" +
+      "<button class='btn-big btn-save' id='btn-save-" + time.replace(':', '-') + "' onclick='saveGroupAttendance(\"" + day + "\", \"" + time + "\")'>💾 Отправить группу " + cleanBtnTextTime + "</button>" +
+    "</div>";
+  
+    container.innerHTML += groupHtml;
+  });
+}
+
+function saveGroupAttendance(day, time) {
+  const dateStr = document.getElementById("global-journal-date").value.trim(); 
+  const timeId = time.replace(':', '-');
+
+  let presentKids = [];
+  const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
+  checkboxes.forEach(chk => {
+    if (chk.checked) presentKids.push(chk.value);
+  });
+
+  const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
+  const probationInput = document.getElementById(`probation-${time}`).value.trim();
+
+  // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку по Регламенту
+  const convertAndValidateInputs = (inputStr, fieldLabel) => {
+    if (!inputStr) return [];
+    
+    let isErrorFound = false;
+    let errorMessage = "";
+
+    // Режем всю строку ввода по запятым на отдельные записи учащихся
+    const cleanList = inputStr.split(',').map(item => {
+      let rawKid = item.trim();
+      if (!rawKid) return null;
+
+      // 1. ЭТАП №1: Разбиваем сырую запись пробелами на отдельные чистые слова
+      const words = rawKid.split(' ').map(w => w.trim()).filter(Boolean);
+      if (words.length === 0) return null;
+
+      let keysArray = [];
+      let tagsArray = [];
+      let nameWordsArray = [];
+
+      // 2. ЭТАП №2: Распределяем слова по трем независимым карманам
+      for (let w of words) {
+        // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
+        if (w.startsWith('/')) {
+          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d') {
+            keysArray.push(w);
+          } else {
+            isErrorFound = true;
+            errorMessage = `В записи "${rawKid}" обнаружен недопустимый ключ направления "${w}"!`;
+            return null;
+          }
+        }
+        // Проверяем карман ТЕГОВ (всё, что является одиночным #, начинается на @ или на #techlab-)
+        else if (w === '#' || w.startsWith('@') || w.startsWith('#techlab-')) {
+          tagsArray.push(w);
+        }
+        // Ошибочные левые хэштеги, не соответствующие платформе
+        else if (w.startsWith('#')) {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружен недопустимый тег "${w}"! Допускаются строго: одиночный "#" или системный "#techlab-"`;
+          return null;
+        }
+        // Все остальные слова отправляются в карман ИМЕНИ
+        else {
+          nameWordsArray.push(w);
+        }
+      }
+
+      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
+      if (keysArray.includes('/d')) {
+        if (keysArray.length > 1 || tagsArray.length > 0) {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
+          return null;
+        }
+      }
+
+      // Контроль количества: максимум 1 ключ на запись учащегося
+      if (keysArray.length > 1) {
+        isErrorFound = true;
+        errorMessage = `В записи "${rawKid}" обнаружено более одного ключа направления! Разрешен строго один ключ.`;
+        return null;
+      }
+
+      // Жёсткий контроль количества: максимум 1 тег на запись учащегося
+      if (tagsArray.length > 1) {
+        isErrorFound = true;
+        errorMessage = `В записи "${rawKid}" обнаружено более одного тега! Разрешен строго один тег: либо "#", либо "#techlab-", либо "@логин".`;
+        return null;
+      }
+
+      // 3. ЭТАП №3: Склеиваем Фамилию Имя из кармана и проверяем её Whitelist
+      const cleanName = nameWordsArray.join(' ').trim();
+
+      // Проверка обязательного наличия Фамилии и Имени учащегося в строке
+      if (!cleanName) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" обнаружена запись без Фамилии и Имени учащегося! Ввод голых ключей и тегов строго запрещён.`;
+        return null;
+      }
+
+      // Изолированный Белый список символов для ИМЕНИ: только русские/английские буквы, пробел и дефис. Без цифр!
+      const nameWhitelistRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
+      if (!nameWhitelistRegex.test(cleanName)) {
+        isErrorFound = true;
+        errorMessage = `В поле "${fieldLabel}" у имени "${cleanName}" обнаружены недопустимые символы или цифры! Разрешены только буквы, пробелы и дефис.`;
+        return null;
+      }
+
+      // Финальная конвертация Ключа из кармана в полное текстовое название
+      let direction = "";
+      if (keysArray.length === 1) {
+        const k = keysArray[0].toLowerCase();
+        if (k === '/э' || k === '/e') direction = "электронное конструирование";
+        if (k === '/с' || k === '/c') direction = "столярное дело";
+      }
+
+      let finalTag = tagsArray.length === 1 ? tagsArray[0] : "";
+
+      // Сборка идеального плоского объекта JSON строго по своим полям
+      let studentObj = { name: cleanName };
+      if (keysArray.includes('/d')) {
+        studentObj.delete = true;
+      } else {
+        studentObj.direction = direction;
+        if (finalTag) studentObj.tag = finalTag;
+      }
+      return studentObj;
+
+    }).filter(n => n !== null);
+
+    if (isErrorFound) {
+      alert(`⚠️ СБОЙ ВАЛИДАЦИИ:\n${errorMessage}`);
+      return null;
+    }
+    return cleanList;
+  };
+
+  // Прогоняем оба поля ввода через наш зрячий валидатор
+  let newbiesList = convertAndValidateInputs(newbiesInput, "Новые постоянные ученики");
+  if (newbiesList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+
+  let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
+  if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+
+  // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
+  const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
+
+  if (deleteNames.length > 0) {
+    // 1. Принудительно вызываем красный экран аварийной блокировки изменения базы
+    document.getElementById("groups-container").innerHTML = 
+      "<div class='emergency-banner'>" +
+        "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
+          "<b>Генерация отчетов заблокирована до окончания перестройки расписания!</b>" +
+        "</span>" +
+      "</div>";
+    
+    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
+    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
+
+    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+
+    // 2. Включаем светофор repair-status.json на положение "on"
+    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusBody = {
+      message: "chore: запуск светофора для модерации базы [skip ci]",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+    };
+
+    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(res => res.ok ? res.json() : null)
+    .then(existingStatus => {
+      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+      return fetch(statusUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(statusBody)
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Не удалось взвести статус изменения базы");
+      
+      // 3. Записываем сигнал удаления, день недели и время группы в signal-repair.json
+      const deleteSignalPayload = { 
+        teacher_login: currentTeacher,
+        day: day,
+        time: time,
+        delete: deleteNames 
+      };
+      const signalBody = {
+        message: "chore: запрос удаления учеников из расписания " + currentTeacher,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(deleteSignalPayload, null, 2))))
+      };
+      
+      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+      .then(r => r.ok ? r.json() : null)
+      .then(existingSignal => {
+        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+        return fetch(signalUrl, {
+          method: "PUT",
+          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+          body: JSON.stringify(signalBody)
+        });
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Ошибка отправки сигнала удаления");
+      showNotify("❌ Запрос отправлен! Сервер выполняет удаление учеников...", "error");
+      startRepairStatusPolling(); // Запускаем опрос сервера до переключения в off
+    })
+    .catch(err => {
+      console.error(err);
+      showNotify("❌ Не удалось связаться с сервером при изменении базы.", "error");
+    });
+
+    return; // ЖЕСТКАЯ ОТМЕНА отправки стандартного отчета посещаемости!
+  }
+
+  showNotify(`Подготовка отчета для группы ${time}...`, "success");
+
+  // Шаг 1: Узнаем логин преподавателя
+  fetch("https://api.github.com/user", {
+    headers: { "Authorization": `token ${accessToken}` }
+  })
+  .then(r => r.json())
+  .then(userData => {
+    const teacherUsername = userData.name || userData.login || "Преподаватель";
+    const teacherLogin = userData.login; // Используем оригинальную переменную логина
+
+    // Собираем пакет данных смены
+    const currentGroupPayload = {
+      date: dateStr,
+      day: day,
+      time: time,
+      teacher_username: teacherUsername,
+      teacher_login: teacherLogin,
+      present_permanent: presentKids,
+      newbies: newbiesList,
+      probation: probationList
+    };
+
+    const filePath = `_input/${dateStr}-${timeId}-journal-attendance-${teacherLogin}.json`;
+    const targetUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/${filePath}`;
+
+    // АВТОМАТИЧЕСКАЯ ПЕРЕЗАПИСЬ: Сначала проверяем файл на GitHub, чтобы забрать SHA при его наличии
+    return fetch(targetUrl, {
+      headers: { "Authorization": `token ${accessToken}` }
+    })
+    .then(checkRes => {
+      if (checkRes.ok) {
+        // Файл уже существует на сервере! Извлекаем его sha маркера
+        return checkRes.json().then(existingFile => existingFile.sha);
+      }
+      return null; // Файла нет, создаем с чистого листа
+    })
+    .then(sha => {
+      let commitBody = {
+        message: `Отчет: группа ${time} (${day}) от ${teacherUsername}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(currentGroupPayload, null, 2))))
+      };
+
+      // Если маркер sha найден, обязательно прикрепляем его к запросу для перезаписи мусора!
+      if (sha) {
+        commitBody.sha = sha;
+      }
+
+      // Отправляем чистый PUT-запрос (создание или безопасное обновление поверх старого)
+      return fetch(targetUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(commitBody)
+      });
+    });
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Ошибка записи файла на GitHub");
+    return response.json();
+  })
+  .then(data => {
+    showNotify(`Группа ${time} успешно отправлена в общую сборку дня!`, "success");
+    
+    const block = document.getElementById(`block-${timeId}`);
+    block.style.opacity = "0.6";
+    const btn = document.getElementById(`btn-save-${timeId}`);
+    btn.innerText = `✅ Группа ${time} сохранена`;
+    btn.disabled = true;
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("Не удалось сохранить группу. Ошибка синхронизации данных.", "error");
+  });
+}
+
+// Функция управления постоянным статус-баром без прыжков интерфейса
+function showNotify(text, type) {
+  const el = document.getElementById("notification");
+  if (!el) return;
+  
+  el.classList.remove("notify-success", "notify-error", "notify-blue");
+  
+  // Строка SVG-кода иконки Bootstrap Icons box-arrow-right
+  const svgIcon = "<svg xmlns='http://w3.org' width='21' height='21' fill='currentColor' class='bi bi-box-arrow-right' viewBox='0 0 16 16'>" +
+                    "<path fill-rule='evenodd' d='M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z'/>" +
+                    "<path fill-rule='evenodd' d='M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z'/>" +
+                  "</svg>";
+
+  if (type === "success") {
+    el.classList.add("notify-success");
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
+                   "</div>";
+  } 
+  else if (type === "error") {
+    el.classList.add("notify-error");
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
+                   "</div>";
+  } 
+  else if (type === "info") {
+    el.classList.add("notify-blue");
+    el.innerHTML = "<div class='notify-flex-content'>" +
+                     "<span>" + text + "</span>" +
+                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из журнала'>" + svgIcon + "</button>" +
+                   "</div>";
+  }
+}
+
+// Финальная двухфайловая функция запуска адресного ремонта расписания преподавателя
+function sendTargetedRepairSignal() {
+  const btn = document.getElementById("btn-force-repair");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "⏳ Запуск проверки на сервере...";
+  }
+
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+  
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+
+  const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+  const statusBody = {
+    message: "chore: сброс светофора в положение on [skip ci]",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+  };
+
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(existingStatus => {
+    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+    return fetch(statusUrl, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(statusBody)
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
+    
+    const signalPayload = { teacher_login: currentTeacher };
+    const signalBody = {
+      message: "chore: запрос адресного исправления расписания для " + currentTeacher,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Ошибка отправки сигнала");
+    showNotify("🟢 Запрос на исправление файла расписания отправлен!", "success");
+    startRepairStatusPolling();
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("❌ Не удалось связаться с сервером.", "error");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "🛠️ Попробуй запустить ремонт снова";
+    }
+  });
+}
+
+// Функция зрячего 5-секундного опроса файла статуса
+function startRepairStatusPolling() {
+  const btn = document.getElementById("btn-force-repair");
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+
+  const intervalId = setInterval(() => {
+    fetch(statusUrl + "?nocache=" + new Date().getTime(), {
+      headers: { "Authorization": "token " + accessToken }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Ожидание файла...");
+      return res.json();
+    })
+    .then(data => {
+      const jsonText = decodeURIComponent(atob(data.content).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonText);
+      if (btn) btn.innerText = "⏳ Сервер обрабатывает файл расписания...";
+
+      if (payload.status === "off") {
+        clearInterval(intervalId);
+        showNotify("🟢 База данных успешно проверена сервером!", "success");
+        
+        isRobotChecked = true; // Переключаем флаг: робот проверил структуру!
+        loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
+      }
+      
+      if (payload.status === "error") {
+        clearInterval(intervalId);
+        const serverErrorText = payload.message || "Обнаружена критическая ошибка синтаксиса или отступов.";
+        
+        // Принудительно вызываем красный экран Аварийной Блокировки, передавая текст ошибки от Питона
+        triggerEmergencyBlock("GitHub", "Ремонт заблокирован во избежание порчи базы.", serverErrorText);
+        showNotify("❌ Критическая ошибка структуры расписания на сервере!", "error");
+        
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "❌ Сбой структуры. Исправьте вручную";
+        }
+      }
+    })
+    .catch(err => { console.warn("Опрос статуса:", err.message); });
+  }, 5000);
+}
+
+// Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
+  document.getElementById("groups-container").innerHTML = 
+    "<div class='emergency-banner'>" +
+      "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+      "<span class='emergency-banner-sub'>" +
+        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере GitHub:<br><br>" +
+        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+      "</span>" +
+    "</div>";
+  
+  const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
+  allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
+  
+  showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
+}
+
+// ЕДИНЫЙ ЩИТ ВАЛИДАЦИИ СТРОК ДЛЯ ВСЕГО ПРОЕКТА
+// Возвращает текст ошибки, если найден брак, или null, если строка чиста
+function validateRawText(cleanText) {
+  // 1. Проверка на несбалансированные или лишние кавычки
+  const doubleQuotesCount = cleanText.split('"').length - 1;
+  const singleQuotesCount = cleanText.split("'").length - 1;
+  if (doubleQuotesCount > 2 || singleQuotesCount > 2 || doubleQuotesCount % 2 !== 0 || singleQuotesCount % 2 !== 0) {
+    return "обнаружены лишние или несбалансированные кавычки.";
+  }
+
+  // 2. Проверка на опасные ломающие спецсимволы
+  const forbiddenChars = ["[", "]", "\\", "=", ";"];
+  for (let char of forbiddenChars) {
+    if (cleanText.includes(char)) {
+      return "обнаружен запрещённый спецсимвол '" + char + "'.";
+    }
+  }
+
+  // 3. Проверка на избыточные пробелы подряд
+  if (cleanText.includes("  ")) {
+    return "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.";
+  }
+
+  return null; // Строка полностью соответствует стандарту безопасности
+}
+

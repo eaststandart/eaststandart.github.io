@@ -245,7 +245,7 @@ function executeUprezhdaushiyRobot(userLogin) {
     
     const signalPayload = { teacher_login: userLogin };
     const signalBody = {
-      message: "chore: упреждающий запрос проверки расписания для " + userLogin,
+      message: "chore: запрос проверки расписания для " + userLogin,
       content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
     };
     
@@ -612,6 +612,15 @@ function saveGroupAttendance(day, time) {
   const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
 
   if (deleteNames.length > 0) {
+    // Зрячая проверка: есть ли удаляемые ученики в текущей базе этой группы?
+    const currentGroupStudents = studentsData[day][time] || [];
+    for (let nameToDelete of deleteNames) {
+      if (!currentGroupStudents.includes(nameToDelete)) {
+        alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${nameToDelete}" нет в базе этой группы!\nПроверьте буквы. Запрос отклонён.`);
+        return; // Мгновенно прерываем выполнение, страница НЕ блокируется баннером!
+      }
+    }
+
     // 1. Принудительно вызываем красный экран аварийной блокировки изменения базы
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" +
@@ -657,7 +666,7 @@ function saveGroupAttendance(day, time) {
         delete: deleteNames 
       };
       const signalBody = {
-        message: "chore: запрос автоматического удаления учеников из расписания " + currentTeacher,
+        message: "chore: запрос удаления учеников из расписания " + currentTeacher,
         content: btoa(unescape(encodeURIComponent(JSON.stringify(deleteSignalPayload, null, 2))))
       };
       

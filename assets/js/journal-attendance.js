@@ -69,6 +69,16 @@ function showJournal() {
   if (instr) instr.classList.add("hidden");
 
   loadStudentsFromYaml();
+}function showJournal() {
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("journal-section").classList.remove("hidden");
+
+  // СКРЫВАЕМ ИНСТРУКЦИЮ ПОСЛЕ УСПЕШНОГО ВХОДА
+  const instr = document.getElementById("instructions-section");
+  if (instr) instr.classList.add("hidden");
+
+  // При входе сначала запускаем жесткий однократный контур физической идентификации токена
+  checkTeacherAuthorization();
 }
 
 function logoutTeacher() {
@@ -84,12 +94,11 @@ function logoutTeacher() {
   }
 }
 
-// Чтение базы детей с правильным парсером, два поля ввода и отправка порций
-function loadStudentsFromYaml() {
-  // ЭТАП №1: Реальная Идентификация (Горит не менее 2 секунд)
+// ФУНКЦИЯ №1: Физическая идентификация токена преподавателя (Срабатывает СТРОГО 1 раз на старте)
+function checkTeacherAuthorization() {
   showNotify("Идентификация пользователя...", "success");
 
-  // Запускаем параллельно таймер на 2000 мс и реальный fetch-запрос к GitHub
+  // Параллельный замок: таймер не менее 2 секунд и реальный сетевой fetch-запрос к GitHub
   const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
   const networkPromise = fetch("https://api.github.com/user", {
     headers: { "Authorization": `token ${accessToken}` }
@@ -98,109 +107,120 @@ function loadStudentsFromYaml() {
     return r.json();
   });
 
-  // Переходим к следующему этапу строго по окончании ОБОИХ процессов
   Promise.all([timerPromise, networkPromise])
   .then(([_, userData]) => {
     const userLogin = userData.login;
     localStorage.setItem("github_journal_logged_user", userLogin);
-
-    // --- ЭТАП №2: ЗАГРУЗКА И ПРОВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ ---
-    if (!isRobotChecked) {
-      showNotify(`Загрузка журнала для ${userLogin}...`, "success");
-      
-      const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
-      const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
-      const statusPayload = { status: "on", mode: "", timestamp: new Date().toISOString() };
-      const statusBody = {
-        message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-      };
-
-      fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-      .then(res => res.ok ? res.json() : null)
-      .then(existingStatus => {
-        if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-        return fetch(statusUrl, {
-          method: "PUT",
-          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-          body: JSON.stringify(statusBody)
-        });
-      })
-      .then(res => {
-        if (!res.ok) throw new Error("Не удалось взвести статус");
-        const signalPayload = { teacher_login: userLogin };
-        const signalBody = {
-          message: "chore: упреждающая проверка расписания для " + userLogin,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
-        };
-        return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-        .then(r => r.ok ? r.json() : null)
-        .then(existingSignal => {
-          if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-          return fetch(signalUrl, {
-            method: "PUT",
-            headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-            body: JSON.stringify(signalBody)
-          });
-        });
-      })
-      .then(res => {
-        if (!res.ok) throw new Error("Ошибка отправки сигнала");
-        startRepairStatusPolling(); // Уходим на 5-секундный опрос светофора
-      })
-      .catch(err => {
-        console.error("Сбой авторемонта:", err);
-        isRobotChecked = true; // Разрешаем аварийный проход, если Гитхаб лежит
-        loadStudentsFromYaml();
-      });
-      
-      return; // Замораживаем поток, управление передано опросу статуса
-    }
-
-    // --- ЭТАП №3: ОТРИСОВКА И ЛОКАЛЬНЫЕ БЛОКИРОВКИ ЖУРНАЛА ---
-    showNotify("Загрузка данных расписания...", "success");
-    const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
     
-    return fetch(yamlUrl, { headers: { "Authorization": `token ${accessToken}` } })
-    .then(response => {
-      if (!response.ok) throw new Error("Личный файл журнала не найден в папке _data");
-      return response.json();
-    })
-    .then(data => {
-      const yamlText = decodeURIComponent(atob(data.content).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
-      studentsData = parseSimpleYaml(yamlText);
-      if (!studentsData || Object.keys(studentsData).length === 0) return;
-      
-      const daysContainer = document.getElementById("days-buttons-container");
-      daysContainer.innerHTML = "";
-      
-      const calendarOrder = [
-        { key: "понедельник", label: "ПН" }, { key: "вторник", label: "ВТ" },
-        { key: "среда", label: "СР" }, { key: "четверг", label: "ЧТ" },
-        { key: "пятница", label: "ПТ" }, { key: "суббота", label: "СБ" },
-        { key: "воскресенье", label: "ВС" }
-      ];
-      
-      calendarOrder.forEach(dayInfo => {
-        const btnId = `btn-day-${dayInfo.key}`;
-        const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
-        const disabledAttr = isAvailable ? "" : "disabled";
-        daysContainer.innerHTML += `
-          <button id="${btnId}" class="btn-big btn-day btn-day-transition day-border-${dayInfo.key}" ${disabledAttr} onclick="selectDynamicDay('${dayInfo.key}')">
-            ${dayInfo.label}
-          </button>`;
-      });
-
-      showNotify("Журнал успешно загружен!", "success");
-      setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 2000);
-    });
+    // Идентификация успешно завершена! Передаем управление контуру многократной загрузки данных
+    loadStudentsFromYaml();
   })
   .catch(err => {
     console.error(err);
     showNotify("Ошибка идентификации токена. Проверьте соединение или ключ на GitHub.", "error");
+  });
+}
+
+// ФУНКЦИЯ №2: Контур многократной загрузки расписания и работы с роботом сервера
+function loadStudentsFromYaml() {
+  const userLogin = localStorage.getItem("github_journal_logged_user") || repo_owner;
+
+  // --- ЭТАП №2: ЗАГРУЗКА И ПРРВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ НА СЕРВЕРЕ ---
+  if (!isRobotChecked) {
+    showNotify(`Загрузка журнала для ${userLogin}...`, "success");
+    
+    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusBody = {
+      message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+    };
+
+    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(res => res.ok ? res.json() : null)
+    .then(existingStatus => {
+      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+      return fetch(statusUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(statusBody)
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Не удалось взвести status");
+      const signalPayload = { teacher_login: userLogin };
+      const signalBody = {
+        message: "chore: упреждающая проверка расписания для " + userLogin,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+      };
+      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+      .then(r => r.ok ? r.json() : null)
+      .then(existingSignal => {
+        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+        return fetch(signalUrl, {
+          method: "PUT",
+          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+          body: JSON.stringify(signalBody)
+        });
+      });
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Ошибка отправки сигнала");
+      startRepairStatusPolling(); // Уходим на 5-секундный фоновый опрос светофора
+    })
+    .catch(err => {
+      console.error("Сбой авторемонта:", err);
+      isRobotChecked = true;
+      loadStudentsFromYaml();
+    });
+    
+    return; // Замораживаем поток, управление полностью передано опросу статуса Питона!
+  }
+
+  // --- ЭТАП №3: ОТРИСОВКА И ЛОКАЛЬНЫЕ БЛОКИРОВКИ ЖУРНАЛА НА САЙТЕ (При многократных перезагрузках)
+  showNotify("Загрузка данных расписания...", "success");
+  const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
+  
+  fetch(yamlUrl, { headers: { "Authorization": `token ${accessToken}` } })
+  .then(response => {
+    if (!response.ok) throw new Error("Личный файл журнала не найден в папке _data");
+    return response.json();
+  })
+  .then(data => {
+    const yamlText = decodeURIComponent(atob(data.content).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    studentsData = parseSimpleYaml(yamlText);
+    if (!studentsData || Object.keys(studentsData).length === 0) return;
+    
+    const daysContainer = document.getElementById("days-buttons-container");
+    daysContainer.innerHTML = "";
+    
+    const calendarOrder = [
+      { key: "понедельник", label: "ПН" }, { key: "вторник", label: "ВТ" },
+      { key: "среда", label: "СР" }, { key: "четверг", label: "ЧТ" },
+      { key: "пятница", label: "ПТ" }, { key: "суббота", label: "СБ" },
+      { key: "воскресенье", label: "ВС" }
+    ];
+    
+    calendarOrder.forEach(dayInfo => {
+      const btnId = `btn-day-${dayInfo.key}`;
+      const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
+      const disabledAttr = isAvailable ? "" : "disabled";
+      daysContainer.innerHTML += `
+        <button id="${btnId}" class="btn-big btn-day btn-day-transition day-border-${dayInfo.key}" ${disabledAttr} onclick="selectDynamicDay('${dayInfo.key}')">
+          ${dayInfo.label}
+        </button>`;
+    });
+
+    showNotify("Журнал успешно загружен!", "success");
+    setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 2000);
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("Ошибка загрузки личного файла журнала расписания.", "error");
   });
 }
 

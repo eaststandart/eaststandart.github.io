@@ -88,11 +88,14 @@ function logoutTeacher() {
 function loadStudentsFromYaml() {
   const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
   
-  // --- КОНТУР АВТОМАТИЧЕСКОГО ПИНКА РОБОТА ПРИ ВХОДЕ ---
+  // --- КОНТУР АВТОМАТИЧЕСКОГО ЗАПУСКА РОБОТА ПРИ ВХОДЕ ---
   if (!isRobotChecked) {
     if (enteredLogin) {
-      showNotify(`Загрузка журнала для ${enteredLogin}...`, "success");
-      executeUprezhdaushiyRobot(enteredLogin);
+      // Даем преподавателю зряче прочитать первый статус в течение 2 секунд
+      setTimeout(() => {
+        showNotify(`Загрузка журнала для ${enteredLogin}...`, "success");
+        executeUprezhdaushiyRobot(enteredLogin);
+      }, 2000);
       return; // Жестко выходим, не запуская скачивание файла расписания!
     }
   }

@@ -85,14 +85,16 @@ function logoutTeacher() {
 }
 
 // Чтение базы детей с правильным парсером, два поля ввода и отправка порций
+// Чтение базы детей с правильным парсером, два поля ввода и отправка порций
 function loadStudentsFromYaml() {
+  const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
+  
   // --- КОНТУР АВТОМАТИЧЕСКОГО ПИНКА РОБОТА ПРИ ВХОДЕ ---
   if (!isRobotChecked) {
-    const enteredLogin = localStorage.getItem("github_journal_logged_user") || "";
     if (enteredLogin) {
-      showNotify(`⏳ Робот проверяет структуру расписания...`, "success");
+      showNotify(`Загрузка журнала для ${enteredLogin}...`, "success");
       executeUprezhdaushiyRobot(enteredLogin);
-      return; // Жестко выходим, не запуская скачивание файла расписания!
+      return; // Выходим, не запуская скачивание файла расписания!
     }
   }
 
@@ -146,9 +148,71 @@ function loadStudentsFromYaml() {
 
 // Изолированная функция упреждающего пинка робота, полностью исключающая обрывы Promise
 function executeUprezhdaushiyRobot(userLogin) {
-  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json?nocache=` + new Date().getTime();
   const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
-  const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+
+  // Сначала зряче проверяем, не запущен ли уже ремонт другим окном/преподавателем
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(data => {
+    if (data) {
+      const jsonText = decodeURIComponent(atob(data.content).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      const payload = JSON.parse(jsonText);
+      
+      // Аппаратный замок: робот уже работает! Не плодим мусорные коммиты, просто уходим в опрос!
+      if (payload.status === "on") {
+        console.log("[ЗАМОК] Робот уже выполняет проверку базы. Подключаемся к сессии.");
+        startRepairStatusPolling();
+        return null;
+      }
+    }
+    
+    // Если сервер свободен, запускаем штатную процедуру взвода светофора
+    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusBody = {
+      message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+    };
+    if (data && data.sha) statusBody.sha = data.sha;
+    
+    return fetch(`https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(statusBody)
+    });
+  })
+  .then(res => {
+    if (res === null) return; // Выход по замку
+    if (!res.ok) throw new Error("Не удалось взвести статус");
+    
+    const signalPayload = { teacher_login: userLogin };
+    const signalBody = {
+      message: "chore: упреждающий запрос проверки расписания для " + userLogin,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (res === undefined) return;
+    if (!res.ok) throw new Error("Ошибка отправки сигнала");
+    startRepairStatusPolling();
+  })
+  .catch(err => {
+    console.error("Сбой авторемонта:", err);
+    isRobotChecked = true;
+    loadStudentsFromYaml();
+  });
+}
   const statusBody = {
     message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
     content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))

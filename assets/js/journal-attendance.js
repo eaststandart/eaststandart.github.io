@@ -13,7 +13,8 @@ const allowedTeachers = ["eaststandart", "eastemitting"];
 
 let accessToken = localStorage.getItem("github_journal_token");
 let studentsData = {};
-let isRobotChecked = false; // Флаг-предохранитель проверки базы роботом TechLab
+// Считываем флаг проверки робота из постоянной памяти браузера, чтобы он не сбрасывался при Ctrl+F5
+let isRobotChecked = localStorage.getItem("github_journal_robot_ok") === "true"; 
 
 // Автоматический вход, если ключ уже сохранен в браузере
 document.addEventListener("DOMContentLoaded", () => {
@@ -84,6 +85,7 @@ function showJournal() {
 function logoutTeacher() {
   if (confirm("Вы уверены, что хотите выйти из журнала и сменить ключ доступа?")) {
     localStorage.removeItem("github_journal_token");
+    localStorage.removeItem("github_journal_robot_ok"); // Полная зачистка кэша
     accessToken = null;
 
     // ПОКАЗЫВАЕМ ИНСТРУКЦИЮ ПРИ ВЫХОДЕ
@@ -917,10 +919,12 @@ function startRepairStatusPolling() {
         clearInterval(intervalId);
         showNotify("🟢 База данных успешно проверена сервером!", "success");
         
-        // Аппаратно счищаем красный аварийный баннер удаления с экрана перед обновлением данных
         document.getElementById("groups-container").innerHTML = "";
         
-        isRobotChecked = true; // Переключаем флаг: робот проверил структуру!
+        // Фиксируем успех в постоянный кэш браузера, защищая от сбросов при Ctrl+F5
+        localStorage.setItem("github_journal_robot_ok", "true");
+        isRobotChecked = true; 
+        
         loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
       }
       

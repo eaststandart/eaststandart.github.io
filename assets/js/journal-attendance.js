@@ -130,7 +130,7 @@ function loadStudentsFromYaml() {
         if (!res.ok) throw new Error("Не удалось взвести статус");
         const signalPayload = { teacher_login: userLogin };
         const signalBody = {
-          message: "chore: упреждающий запрос проверки расписания для " + userLogin,
+          message: "chore: упреждающая проверка расписания для " + userLogin,
           content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
         };
         return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
@@ -896,6 +896,9 @@ function startRepairStatusPolling() {
       if (payload.status === "off") {
         clearInterval(intervalId);
         showNotify("🟢 База данных успешно проверена сервером!", "success");
+        
+        // Аппаратно счищаем красный аварийный баннер удаления с экрана перед обновлением данных
+        document.getElementById("groups-container").innerHTML = "";
         
         isRobotChecked = true; // Переключаем флаг: робот проверил структуру!
         loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания

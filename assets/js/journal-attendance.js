@@ -13,8 +13,7 @@ const allowedTeachers = ["eaststandart", "eastemitting"];
 
 let accessToken = localStorage.getItem("github_journal_token");
 let studentsData = {};
-// Считываем флаг проверки робота из постоянной памяти браузера, чтобы он не сбрасывался при Ctrl+F5
-let isRobotChecked = localStorage.getItem("github_journal_robot_ok") === "true"; 
+let isRobotChecked = false; // Возвращаем в оперативную память для корректного сброса при Ctrl+F5
 
 // Автоматический вход, если ключ уже сохранен в браузере
 document.addEventListener("DOMContentLoaded", () => {

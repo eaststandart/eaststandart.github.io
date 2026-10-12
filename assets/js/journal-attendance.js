@@ -126,13 +126,13 @@ function checkTeacherAuthorization() {
 function loadStudentsFromYaml() {
   const userLogin = localStorage.getItem("github_journal_logged_user") || repo_owner;
 
-  // --- ЭТАП №2: ЗАГРУЗКА И ПРРВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ НА СЕРВЕРЕ ---
+  // --- ЭТАП №2: ЗАГРУЗКА И ПРОВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ НА СЕРВЕРЕ ---
   if (!isRobotChecked) {
     showNotify(`Загрузка журнала для ${userLogin}...`, "success");
     
     const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
     const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
-    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusPayload = { status: "on", mode: "", timestamp: new Date().toISOString() };
     const statusBody = {
       message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))

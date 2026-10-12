@@ -226,7 +226,7 @@ function executeUprezhdaushiyRobot(userLogin) {
     }
     
     // Если сервер свободен, запускаем штатную процедуру взвода светофора
-    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    const statusPayload = { status: "on", mode: "", timestamp: new Date().toISOString() };
     const statusBody = {
       message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
@@ -638,8 +638,8 @@ function saveGroupAttendance(day, time) {
     const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
     const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
 
-    // 2. Включаем светофор repair-status.json на положение "on"
-    const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+    // 2. Включаем светофор repair-status.json на положение "on" с флагом repair
+    const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
     const statusBody = {
       message: "chore: запуск светофора для модерации базы [skip ci]",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
@@ -821,7 +821,7 @@ function sendTargetedRepairSignal() {
   const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
   const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
 
-  const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+  const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
   const statusBody = {
     message: "chore: сброс светофора в положение on [skip ci]",
     content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))

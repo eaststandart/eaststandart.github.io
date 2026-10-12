@@ -110,7 +110,7 @@ function loadStudentsFromYaml() {
       
       const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
       const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
-      const statusPayload = { status: "on", timestamp: new Date().toISOString() };
+      const statusPayload = { status: "on", mode: "", timestamp: new Date().toISOString() };
       const statusBody = {
         message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
         content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))

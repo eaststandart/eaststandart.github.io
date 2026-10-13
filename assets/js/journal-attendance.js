@@ -979,7 +979,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
             "<span class='emergency-separator'>:</span>" +
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
           "</div>" +
-          "<b>Генерация отчетов полностью заблокирована!</b><br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "')\">🛠️ Починить время на сервере</button>" +
         "</span>" +
       "</div>";

@@ -973,12 +973,12 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
         "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
-          "Исправьте время прямо в полях ниже:<br><br>" +
+          "Исправьте время прямо в полях ниже:<br>" +
           "<div class='emergency-inputs-row'>" +
             "<input type='text' id='repair-hour' class='global-date-input emergency-time-input' maxlength='2' value='" + badH + "'>" +
             "<span class='emergency-separator'>:</span>" +
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
-          "</div><br>" +
+          "</div>" +
           "<b>Генерация отчетов полностью заблокирована!</b><br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "')\">🛠️ Починить время на сервере</button>" +
         "</span>" +

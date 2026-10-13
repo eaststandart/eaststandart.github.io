@@ -119,6 +119,6 @@
 }
 
 /* Интерактивная консоль починки времени на красном экране */
-.emergency-inputs-row { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.emergency-inputs-row { display: flex; align-items: center; justify-content: center; gap: 5px; padding-top: 10px; padding-bottom: 10px; }
 .emergency-time-input { width: 40px; text-align: center; }
 .emergency-separator { font-weight: bold; font-size: 18px; }

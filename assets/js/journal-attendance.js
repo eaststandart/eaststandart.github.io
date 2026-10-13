@@ -610,15 +610,15 @@ function saveGroupAttendance(day, time) {
   const hasRepairCommand = newbiesList.some(item => item.repair === true);
 
   if (hasRepairCommand) {
-    // Парсим сырую строку ввода, чтобы извлечь параметры: journal [день] [старое] [новое] /m
+    // Парсим компактную текстовую команду: journal [старое_время] [новое_время] /m
     const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
     
     let oldTimeStr = "0000";
     let newTimeStr = "0000";
     
     if (cmdWords.length >= 4) {
-      oldTimeStr = cmdWords[2].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
-      newTimeStr = cmdWords[3].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+      oldTimeStr = cmdWords[1].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+      newTimeStr = cmdWords[2].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
     }
 
     document.getElementById("groups-container").innerHTML = 
@@ -1014,7 +1014,7 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
 
   let newTimeDigits = explicitNewTime;
 
-  # Если новое время не передано текстом напрямую, считываем его из инпутов баннера
+  // Если новое время не передано текстом напрямую, считываем его из инпутов баннера
   if (!newTimeDigits) {
     const repairHourEl = document.getElementById("repair-hour");
     const repairMinuteEl = document.getElementById("repair-minute");

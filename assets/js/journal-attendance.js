@@ -126,60 +126,7 @@ function checkTeacherAuthorization() {
 function loadStudentsFromYaml() {
   const userLogin = localStorage.getItem("github_journal_logged_user") || repo_owner;
 
-  // --- ЭТАП №2: ЗАГРУЗКА И ПРОВЕРКА КОРРЕКТНОСТИ БАЗЫ РОБОТОМ НА СЕРВЕРЕ ---
-  if (!isRobotChecked) {
-    showNotify(`Загрузка журнала для ${userLogin}...`, "success");
-    
-    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
-    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
-    const statusPayload = { status: "on", mode: "", timestamp: new Date().toISOString() };
-    const statusBody = {
-      message: "chore: упреждающий запуск светофора при загрузке журнала [skip ci]",
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-    };
-
-    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-    .then(res => res.ok ? res.json() : null)
-    .then(existingStatus => {
-      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-      return fetch(statusUrl, {
-        method: "PUT",
-        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-        body: JSON.stringify(statusBody)
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Не удалось взвести status");
-      const signalPayload = { teacher_login: userLogin };
-      const signalBody = {
-        message: "chore: упреждающая проверка расписания для " + userLogin,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
-      };
-      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-      .then(r => r.ok ? r.json() : null)
-      .then(existingSignal => {
-        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-        return fetch(signalUrl, {
-          method: "PUT",
-          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-          body: JSON.stringify(signalBody)
-        });
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Ошибка отправки сигнала");
-      startRepairStatusPolling(); // Уходим на 5-секундный фоновый опрос светофора
-    })
-    .catch(err => {
-      console.error("Сбой авторемонта:", err);
-      isRobotChecked = true;
-      loadStudentsFromYaml();
-    });
-    
-    return; // Замораживаем поток, управление полностью передано опросу статуса Питона!
-  }
-
-  // --- ЭТАП №3: ОТРИСОВКА И ЛОКАЛЬНЫЕ БЛОКИРОВКИ ЖУРНАЛА НА САЙТЕ (При многократных перезагрузках)
+  // --- ЭТАП №3: ОТРИСОВКА И ЗАГРУЗКА ДАННЫХ РАСПИСАНИЯ ПРЕПОДАВАТЕЛЯ НАПРЯМУЮ ---
   showNotify("Загрузка данных расписания...", "success");
   const yamlUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/journal-attendance-${userLogin}.yml?nocache=${new Date().getTime()}`;
   
@@ -527,8 +474,9 @@ function saveGroupAttendance(day, time) {
       // 2. ЭТАП №2: Распределяем слова по трем независимым карманам
       for (let w of words) {
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
+        // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         if (w.startsWith('/')) {
-          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d') {
+          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d' || w === '/r') {
             keysArray.push(w);
           } else {
             isErrorFound = true;
@@ -557,6 +505,15 @@ function saveGroupAttendance(day, time) {
         if (keysArray.length > 1 || tagsArray.length > 0) {
           isErrorFound = true;
           errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
+          return null;
+        }
+      }
+
+      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА РЕМОНТА /r (БЕЗ ТЕГОВ И СТРОГО ДЛЯ СЛОВА JOURNAL)
+      if (keysArray.includes('/r')) {
+        if (keysArray.length > 1 || tagsArray.length > 0 || cleanName.toLowerCase() !== 'journal') {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Команда ремонта должна вводиться строго как "journal /r" без других слов, ключей и тегов.`;
           return null;
         }
       }
@@ -602,11 +559,12 @@ function saveGroupAttendance(day, time) {
       }
 
       let finalTag = tagsArray.length === 1 ? tagsArray[0] : "";
-
       // Сборка идеального плоского объекта JSON строго по своим полям
       let studentObj = { name: cleanName };
       if (keysArray.includes('/d')) {
         studentObj.delete = true;
+      } else if (keysArray.includes('/r')) {
+        studentObj.repair = true;
       } else {
         studentObj.direction = direction;
         if (finalTag) studentObj.tag = finalTag;
@@ -628,6 +586,27 @@ function saveGroupAttendance(day, time) {
 
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
+
+  # АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО РЕМОНТА TECHLAB ИЗ ПОЛЯ ВВОДА СТУДЕНТОВ
+  const hasRepairCommand = newbiesList.some(item => item.repair === true);
+
+  if (hasRepairCommand) {
+    // Выводим зрячую аварийную индикацию блокировки интерфейса на экране
+    document.getElementById("groups-container").innerHTML = 
+      "<div class='emergency-banner'>" +
+        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована до окончания инспекции геометрии!</b>" +
+        "</span>" +
+      "</div>";
+    
+    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
+    showNotify("🛠️ Запущен принудительный ремонт расписания на сервере!", "error");
+    
+    sendTargetedRepairSignal(); // Вызываем штатный запуск персонального светофора ремонта
+    return; // МГНОВЕННО КУПИРУЕМ отправку стандартного отчета посещаемости!
+  }
 
   // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
   const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
@@ -656,8 +635,10 @@ function saveGroupAttendance(day, time) {
     showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
 
     const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
-    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+
+    // Переводим экстренные адреса удаления на строго персональные файлы преподавателя
+    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
+    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
 
     // 2. Включаем светофор repair-status.json на положение "on" с флагом repair
     const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
@@ -839,8 +820,8 @@ function sendTargetedRepairSignal() {
 
   const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   
-  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
-  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair.json`;
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
 
   const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
   const statusBody = {
@@ -896,7 +877,8 @@ function sendTargetedRepairSignal() {
 // Функция зрячего 5-секундного опроса файла статуса
 function startRepairStatusPolling() {
   const btn = document.getElementById("btn-force-repair");
-  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status.json`;
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
 
   const intervalId = setInterval(() => {
     fetch(statusUrl + "?nocache=" + new Date().getTime(), {

@@ -959,7 +959,7 @@ function startRepairStatusPolling() {
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
-  const isTimeError = errorDetails.includes("времени");
+  const isTimeError = errorDetails.toLowerCase().includes("времени");
   let bannerHtml = "";
 
   if (isTimeError) {

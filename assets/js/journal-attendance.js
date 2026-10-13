@@ -633,8 +633,8 @@ function saveGroupAttendance(day, time) {
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
     showNotify("🛠️ Запущено принудительное изменение структуры расписания!", "error");
     
-    // Передаем старые цифры времени в исполнительную функцию (она сама дособерет день и отправит пуш)
-    sendInteractiveModifySignal(oldTimeStr); 
+    // Передаем старые и новые цифры времени напрямую из текстовой команды
+    sendInteractiveModifySignal(oldTimeStr, newTimeStr); 
     return; // МГНОВЕННО КУПИРУЕМ отправку стандартного отчета посещаемости!
   }
 
@@ -1005,21 +1005,23 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
 }
 
 // Функция сборки плоской команды модификации времени и отправки персонального сигнала
-function sendInteractiveModifySignal(oldTimeDigits) {
+function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
   const btn = document.getElementById("btn-force-repair");
   if (btn) {
     btn.disabled = true;
     btn.innerText = "⏳ Отправка команды починки времени...";
   }
 
-  // Считываем измененные преподом цифры из полей ввода
-  const rawH = document.getElementById("repair-hour").value.trim();
-  const rawM = document.getElementById("repair-minute").value.trim();
-  
-  // Принудительное приведение к двухзначному стандарту XX XX
-  const newH = rawH.padStart(2, '0').substring(0, 2);
-  const newM = rawM.padStart(2, '0').substring(0, 2);
-  const newTimeDigits = newH + newM;
+  let newTimeDigits = explicitNewTime;
+
+  # Если новое время не передано текстом напрямую, считываем его из инпутов баннера
+  if (!newTimeDigits) {
+    const repairHourEl = document.getElementById("repair-hour");
+    const repairMinuteEl = document.getElementById("repair-minute");
+    const rawH = repairHourEl ? repairHourEl.value.trim() : "00";
+    const rawM = repairMinuteEl ? repairMinuteEl.value.trim() : "00";
+    newTimeDigits = rawH.padStart(2, '0').substring(0, 2) + rawM.padStart(2, '0').substring(0, 2);
+  }
 
   // Автоматически определяем сокращение сломанного дня недели на основе URL или кэша
   // Если день не определен, по умолчанию ставим безопасный маркер "вс"

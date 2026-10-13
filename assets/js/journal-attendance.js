@@ -509,11 +509,23 @@ function saveGroupAttendance(day, time) {
         }
       }
 
+      // 3. ЭТАП №3: Склеиваем Фамилию Имя из кармана и проверяем её Whitelist
+      const cleanName = nameWordsArray.join(' ').trim();
+
       // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА РЕМОНТА /r (БЕЗ ТЕГОВ И СТРОГО ДЛЯ СЛОВА JOURNAL)
       if (keysArray.includes('/r')) {
         if (keysArray.length > 1 || tagsArray.length > 0 || cleanName.toLowerCase() !== 'journal') {
           isErrorFound = true;
-          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Команда ремонта должна вводиться строго как "journal /r" без других слов, ключей и тегов.`;
+          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ ремонта /r должен вводиться строго отдельно от других ключей направлений и тегов.`;
+          return null;
+        }
+      }
+
+      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
+      if (keysArray.includes('/d')) {
+        if (keysArray.length > 1 || tagsArray.length > 0) {
+          isErrorFound = true;
+          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
           return null;
         }
       }
@@ -531,9 +543,6 @@ function saveGroupAttendance(day, time) {
         errorMessage = `В записи "${rawKid}" обнаружено более одного тега! Разрешен строго один тег: либо "#", либо "#techlab-", либо "@логин".`;
         return null;
       }
-
-      // 3. ЭТАП №3: Склеиваем Фамилию Имя из кармана и проверяем её Whitelist
-      const cleanName = nameWordsArray.join(' ').trim();
 
       // Проверка обязательного наличия Фамилии и Имени учащегося в строке
       if (!cleanName) {

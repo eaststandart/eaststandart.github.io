@@ -610,15 +610,15 @@ function saveGroupAttendance(day, time) {
   const hasRepairCommand = newbiesList.some(item => item.repair === true);
 
   if (hasRepairCommand) {
-    // Парсим компактную текстовую команду: journal [старое_время] [новое_время] /m
+    // Парсим ультра-компактную текстовую команду: [новое_время] /m (например, 1200 /m)
     const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
     
-    let oldTimeStr = "0000";
+    // Исходное ломаное время берем прямо из текущих координат открытой группы
+    let oldTimeStr = time.replace(/\D/g, ""); 
     let newTimeStr = "0000";
     
-    if (cmdWords.length >= 4) {
-      oldTimeStr = cmdWords[1].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
-      newTimeStr = cmdWords[2].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+    if (cmdWords.length >= 1) {
+      newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
     }
 
     document.getElementById("groups-container").innerHTML = 
@@ -695,6 +695,7 @@ function saveGroupAttendance(day, time) {
         teacher_login: currentTeacher,
         day: day,
         time: time,
+        command: "delete",
         delete: deleteNames 
       };
       const signalBody = {
@@ -1065,14 +1066,25 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
   .then(res => {
     if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
     
-    // Формируем зрячий персональный файл сигнала модификации для Питона
+    // Автоматически вычисляем эталонное имя активного дня недели с экрана
+    const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
+    const currentDayName = daySelectBtn ? daySelectBtn.id.replace("btn-day-", "") : "воскресенье";
+
+    // Принудительно форматируем старое и новое время в стандарт ЧЧ:ММ для Питона
+    const cleanOldTime = oldTimeDigits.substring(0, 2) + ":" + oldTimeDigits.substring(2, 4);
+    const cleanNewTime = newTimeDigits.substring(0, 2) + ":" + newTimeDigits.substring(2, 4);
+
+    // Формируем монолитный однотипный JSON-сигнал по регламенту TechLab
     const signalPayload = { 
       teacher_login: currentTeacher,
-      mode: "repair",
-      command: generatedCommand
+      day: currentDayName,
+      time: cleanOldTime,
+      command: "modify",
+      modify_time: cleanNewTime
     };
+    
     const signalBody = {
-      message: "chore: интерактивная команда починки времени для " + currentTeacher,
+      message: "chore: запрос изменения времени группы для " + currentTeacher,
       content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
     };
     

@@ -964,9 +964,9 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
 
   if (isTimeError) {
     // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
-    const digitsMatch = cleanText.replace(/['"]/g, "").match(/(\d{1,2})\D*(\d{2})/);
-    const badH = (digitsMatch && digitsMatch[1]) ? digitsMatch[1] : "00";
-    const badM = (digitsMatch && digitsMatch[2]) ? digitsMatch[2] : "00";
+    const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
+    const badH = onlyDigits.substring(0, 2) || "00";
+    const badM = onlyDigits.substring(2, 4) || "00";
 
     bannerHtml = 
       "<div class='emergency-banner'>" +

@@ -1016,7 +1016,6 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
 }
 
 // Функция сборки плоской команды модификации времени и отправки персонального сигнала
-// Функция сборки плоской команды модификации времени и отправки персонального сигнала
 function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forcedDay = "") {
   const btn = document.getElementById("btn-force-repair");
   if (btn) {
@@ -1104,6 +1103,8 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
       command: "modify",
       modify_time: cleanNewTime
     };
+
+    console.log("JSON перед отправкой:", JSON.stringify(signalPayload));
     
     const signalBody = {
       message: "chore: запрос изменения времени группы для " + currentTeacher,

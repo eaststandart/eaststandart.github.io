@@ -606,24 +606,35 @@ function saveGroupAttendance(day, time) {
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО РЕМОНТА TECHLAB ИЗ ПОЛЯ ВВОДА СТУДЕНТОВ
+  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО ИЗМЕНЕНИЯ БАЗЫ ПО КЛЮЧУ /m ИЗ ТЕКСТОВОГО ПОЛЯ
   const hasRepairCommand = newbiesList.some(item => item.repair === true);
 
   if (hasRepairCommand) {
-    // Выводим зрячую аварийную индикацию блокировки интерфейса на экране
+    // Парсим сырую строку ввода, чтобы извлечь параметры: journal [день] [старое] [новое] /m
+    const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
+    
+    let oldTimeStr = "0000";
+    let newTimeStr = "0000";
+    
+    if (cmdWords.length >= 4) {
+      oldTimeStr = cmdWords[2].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+      newTimeStr = cmdWords[3].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+    }
+
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" +
-        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!<br>" +
+        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована до окончания инспекции геометрии!</b>" +
+          "Команда изменения структуры успешно принята валидатором.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
     
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("🛠️ Запущен принудительный ремонт расписания на сервере!", "error");
+    showNotify("🛠️ Запущено принудительное изменение структуры расписания!", "error");
     
-    sendTargetedRepairSignal(); // Вызываем штатный запуск персонального светофора ремонта
+    // Передаем старые цифры времени в исполнительную функцию (она сама дособерет день и отправит пуш)
+    sendInteractiveModifySignal(oldTimeStr); 
     return; // МГНОВЕННО КУПИРУЕМ отправку стандартного отчета посещаемости!
   }
 
@@ -948,20 +959,145 @@ function startRepairStatusPolling() {
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
-  document.getElementById("groups-container").innerHTML = 
-    "<div class='emergency-banner'>" +
-      "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
-      "<span class='emergency-banner-sub'>" +
-        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере GitHub:<br><br>" +
-        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
-      "</span>" +
-    "</div>";
+  const isTimeError = errorDetails.includes("времени");
+  let bannerHtml = "";
+
+  if (isTimeError) {
+    // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
+    const digitsMatch = cleanText.replace(/['"]/g, "").match(/(\d{1,2})\D*(\d{2})/);
+    const badH = digitsMatch ? digitsMatch[1] : "00";
+    const badM = digitsMatch ? digitsMatch[2] : "00";
+
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
+          "Исправьте время прямо в полях ниже:<br><br>" +
+          "<div class='emergency-inputs-row' style='display: flex; align-items: center; justify-content: center; gap: 5px;'>" +
+            "<input type='text' id='repair-hour' class='global-date-input' style='width: 40px; text-align: center;' maxlength='2' value='" + badH + "'>" +
+            "<span style='font-weight: bold; font-size: 18px;'>:</span>" +
+            "<input type='text' id='repair-minute' class='global-date-input' style='width: 40px; text-align: center;' maxlength='2' value='" + badM + "'>" +
+          "</div><br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b><br><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendInteractiveModifySignal(\"" + badH + badM + "\")'>🛠️ Починить время на сервере</button>" +
+        "</span>" +
+      "</div>";
+  } else {
+    // ВЕТКА Б: Классический баннер для любых других синтаксических ошибок и геометрии отступов
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление геометрии на сервере GitHub:<br><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+        "</span>" +
+      "</div>";
+  }
+
+  document.getElementById("groups-container").innerHTML = bannerHtml;
   
   const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
   allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
   
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
+}
+
+// Функция сборки плоской команды модификации времени и отправки персонального сигнала
+function sendInteractiveModifySignal(oldTimeDigits) {
+  const btn = document.getElementById("btn-force-repair");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "⏳ Отправка команды починки времени...";
+  }
+
+  // Считываем измененные преподом цифры из полей ввода
+  const rawH = document.getElementById("repair-hour").value.trim();
+  const rawM = document.getElementById("repair-minute").value.trim();
+  
+  // Принудительное приведение к двухзначному стандарту XX XX
+  const newH = rawH.padStart(2, '0').substring(0, 2);
+  const newM = rawM.padStart(2, '0').substring(0, 2);
+  const newTimeDigits = newH + newM;
+
+  // Автоматически определяем сокращение сломанного дня недели на основе URL или кэша
+  // Если день не определен, по умолчанию ставим безопасный маркер "вс"
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+  const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
+  let shortDay = "вс";
+  
+  if (daySelectBtn) {
+    const fullDayKey = daySelectBtn.id.replace("btn-day-", "");
+    const shortcuts = {
+      "понедельник": "пн", "вторник": "вт", "среда": "ср",
+      "четверг": "чт", "пятница": "пт", "суббота": "сб", "воскресенье": "вс"
+    };
+    shortDay = shortcuts[fullDayKey] || "вс";
+  }
+
+  // Генерируем плоскую эталонную текстовую команду по канону TechLab
+  const generatedCommand = "journal " + shortDay + " " + oldTimeDigits + " " + newTimeDigits + " /m";
+  console.log("[МОДЕРАЦИЯ] Сгенерирована интерактивная команда: " + generatedCommand);
+
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
+
+  // Взводим персональный светофор в режим принудительного ремонта
+  const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
+  const statusBody = {
+    message: "chore: взвод светофора для интерактивного ремонта времени [skip ci]",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+  };
+
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(existingStatus => {
+    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+    return fetch(statusUrl, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(statusBody)
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
+    
+    // Формируем зрячий персональный файл сигнала модификации для Питона
+    const signalPayload = { 
+      teacher_login: currentTeacher,
+      mode: "repair",
+      command: generatedCommand
+    };
+    const signalBody = {
+      message: "chore: интерактивная команда починки времени для " + currentTeacher,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Ошибка отправки сигнала команды");
+    showNotify("🟢 Команда починки времени отправлена на сервер!", "success");
+    startRepairStatusPolling(); // Уходим в фоновый 5-секундный опрос светофора
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("❌ Не удалось связаться с сервером при отправке команды.", "error");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "🛠️ Попробовать починить снова";
+    }
+  });
 }
 
 // ЕДИНЫЙ ЩИТ ВАЛИДАЦИИ СТРОК ДЛЯ ВСЕГО ПРОЕКТА

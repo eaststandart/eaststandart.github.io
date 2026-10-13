@@ -287,6 +287,11 @@ function parseSimpleYaml(text) {
         triggerEmergencyBlock(i + 1, cleanText, structureError);
         return {};
       }
+      // Упреждающе обновляем имя дня, если прошли строку отступа 0
+      const checkDaysInline = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+      if (indent === 0 && checkDaysInline.includes(cleanText.toLowerCase())) {
+        currentDay = cleanText.slice(0, -1).toLowerCase().trim();
+      }
 
       // Проверка 3: Контроль формата времени группы (отступ строго 2 пробела)
       if (indent === 2 && cleanText.endsWith(':')) {
@@ -302,7 +307,7 @@ function parseSimpleYaml(text) {
         const m = parseInt(timeParts[1], 10);
         
         if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено " + rawTimeStr + ").");
+          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено " + rawTimeStr + ").", currentDay);
           return {};
         }
       }
@@ -959,7 +964,7 @@ function startRepairStatusPolling() {
 }
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
   const isTimeError = errorDetails.toLowerCase().includes("врем");
   let bannerHtml = "";
 
@@ -981,7 +986,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
           "</div>" +
           "<b>Генерация отчетов полностью заблокирована!</b><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "')\">🛠️ Починить время на сервере</button>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "', '', '" + forcedDay + "')\">🛠️ Починить время на сервере</button>" +
         "</span>" +
       "</div>";
   } else {
@@ -1006,7 +1011,8 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
 }
 
 // Функция сборки плоской команды модификации времени и отправки персонального сигнала
-function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
+// Функция сборки плоской команды модификации времени и отправки персонального сигнала
+function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forcedDay = "") {
   const btn = document.getElementById("btn-force-repair");
   if (btn) {
     btn.disabled = true;
@@ -1024,24 +1030,14 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
     newTimeDigits = rawH.padStart(2, '0').substring(0, 2) + rawM.padStart(2, '0').substring(0, 2);
   }
 
-  // Автоматически определяем сокращение сломанного дня недели на основе URL или кэша
-  // Если день не определен, по умолчанию ставим безопасный маркер "вс"
   const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-  const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
-  let shortDay = "вс";
   
-  if (daySelectBtn) {
-    const fullDayKey = daySelectBtn.id.replace("btn-day-", "");
-    const shortcuts = {
-      "понедельник": "пн", "вторник": "вт", "среда": "ср",
-      "четверг": "чт", "пятница": "пт", "суббота": "сб", "воскресенье": "вс"
-    };
-    shortDay = shortcuts[fullDayKey] || "вс";
+  // Зряче определяем полный эталонный день недели
+  let currentDayName = forcedDay;
+  if (!currentDayName) {
+    const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
+    currentDayName = daySelectBtn ? daySelectBtn.id.replace("btn-day-", "") : "воскресенье";
   }
-
-  // Генерируем плоскую эталонную текстовую команду по канону TechLab
-  const generatedCommand = "journal " + shortDay + " " + oldTimeDigits + " " + newTimeDigits + " /m";
-  console.log("[МОДЕРАЦИЯ] Сгенерирована интерактивная команда: " + generatedCommand);
 
   const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
   const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
@@ -1066,11 +1062,7 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "") {
   .then(res => {
     if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
     
-    // Автоматически вычисляем эталонное имя активного дня недели с экрана
-    const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
-    const currentDayName = daySelectBtn ? daySelectBtn.id.replace("btn-day-", "") : "воскресенье";
-
-    // Принудительно форматируем старое и новое время в стандарт ЧЧ:ММ для Питона
+    // Формируем чистый синтаксический вид времени ЧЧ:ММ для Питона
     const cleanOldTime = oldTimeDigits.substring(0, 2) + ":" + oldTimeDigits.substring(2, 4);
     const cleanNewTime = newTimeDigits.substring(0, 2) + ":" + newTimeDigits.substring(2, 4);
 

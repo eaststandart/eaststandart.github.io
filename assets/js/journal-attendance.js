@@ -297,7 +297,12 @@ function parseSimpleYaml(text) {
       if (indent === 2 && cleanText.endsWith(':')) {
         let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
         if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
-          triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+          triggerEmergencyBlock(
+            i + 1,
+            cleanText,
+            "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).",
+            currentDay
+          );
           return {};
         }
         
@@ -1032,11 +1037,29 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
 
   const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   
-  // Зряче определяем полный эталонный день недели
+  // Определяем полный эталонный день недели
+
   let currentDayName = forcedDay;
+
   if (!currentDayName) {
     const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
-    currentDayName = daySelectBtn ? daySelectBtn.id.replace("btn-day-", "") : "воскресенье";
+
+    if (daySelectBtn) {
+      currentDayName = daySelectBtn.id.replace("btn-day-", "");
+    } else {
+      console.error(
+        "Не удалось определить день недели для ремонта времени."
+      );
+      showNotify(
+        "Не удалось определить день недели. Ремонт не отправлен.",
+        "error"
+      );
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = "🛠️ Попробовать починить снова";
+      }
+      return;
+    }
   }
 
   const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
@@ -1065,6 +1088,13 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
     // Формируем чистый синтаксический вид времени ЧЧ:ММ для Питона
     const cleanOldTime = oldTimeDigits.substring(0, 2) + ":" + oldTimeDigits.substring(2, 4);
     const cleanNewTime = newTimeDigits.substring(0, 2) + ":" + newTimeDigits.substring(2, 4);
+
+    console.log("Проверка ремонта:", {
+      forcedDay,
+      currentDayName,
+      oldTimeDigits,
+      cleanOldTime
+    });
 
     // Формируем монолитный однотипный JSON-сигнал по регламенту TechLab
     const signalPayload = { 

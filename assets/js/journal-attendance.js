@@ -1115,6 +1115,7 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
     .then(r => r.ok ? r.json() : null)
     .then(existingSignal => {
       if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      console.log("Содержимое сигнала перед PUT:", decodeURIComponent(escape(atob(signalBody.content))));
       return fetch(signalUrl, {
         method: "PUT",
         headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },

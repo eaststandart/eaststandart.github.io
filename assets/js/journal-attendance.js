@@ -974,11 +974,11 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
           "Исправьте время прямо в полях ниже:<br><br>" +
-          "<div class='emergency-inputs-row' style='display: flex; align-items: center; justify-content: center; gap: 5px;'>" +
-            "<input type='text' id='repair-hour' class='global-date-input' style='width: 40px; text-align: center;' maxlength='2' value='" + badH + "'>" +
-            "<span style='font-weight: bold; font-size: 18px;'>:</span>" +
-            "<input type='text' id='repair-minute' class='global-date-input' style='width: 40px; text-align: center;' maxlength='2' value='" + badM + "'>" +
-          "</div><br><br>" +
+          "<div class='emergency-inputs-row'>" +
+            "<input type='text' id='repair-hour' class='global-date-input emergency-time-input' maxlength='2' value='" + badH + "'>" +
+            "<span class='emergency-separator'>:</span>" +
+            "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
+          "</div>" +
           "<b>Генерация отчетов полностью заблокирована!</b><br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "')\">🛠️ Починить время на сервере</button>" +
         "</span>" +

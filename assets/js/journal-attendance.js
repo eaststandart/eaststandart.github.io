@@ -288,11 +288,21 @@ function parseSimpleYaml(text) {
         return {};
       }
 
-      // Проверка 3: Жесткий контроль формата времени группы (отступ строго 2 пробела)
+      // Проверка 3: Контроль формата времени группы (отступ строго 2 пробела)
       if (indent === 2 && cleanText.endsWith(':')) {
         let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
         if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
           triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+          return {};
+        }
+        
+        // Математический фильтр реальности часов и минут
+        const timeParts = rawTimeStr.split(':');
+        const h = parseInt(timeParts[0], 10);
+        const m = parseInt(timeParts[1], 10);
+        
+        if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено " + rawTimeStr + ").");
           return {};
         }
       }

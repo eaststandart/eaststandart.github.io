@@ -587,7 +587,7 @@ function saveGroupAttendance(day, time) {
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  # АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО РЕМОНТА TECHLAB ИЗ ПОЛЯ ВВОДА СТУДЕНТОВ
+  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО РЕМОНТА TECHLAB ИЗ ПОЛЯ ВВОДА СТУДЕНТОВ
   const hasRepairCommand = newbiesList.some(item => item.repair === true);
 
   if (hasRepairCommand) {

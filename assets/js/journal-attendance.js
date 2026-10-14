@@ -559,7 +559,7 @@ function saveGroupAttendance(day, time) {
     if (!inputStr) return [];
 
     // ЭТАП №1: ГЛОБАЛЬНЫЙ БРОНЕЩИТ ВСЕГО ПОЛЯ ВВОДА — ОТСЕКАЕМ ЛЮБОЙ БРАК НА СТАРТЕ
-    const globalInputWhitelist = /^[a-zA-Zа-яА-ЯёЁ0-9\s,/#@-]+\$/;
+    const globalInputWhitelist = /^[a-zA-Zа-яА-ЯёЁ0-9\s,/#@-]+$/;
     if (!globalInputWhitelist.test(inputStr)) {
       alert(`⚠️ СБОЙ СИНТАКСИСА TECHLAB:\nВ поле "${fieldLabel}" обнаружены запрещённые или ломающие структуру спецсимволы!\nРазрешены строго только буквы, цифры, пробелы, запятые и знаки: / , # , @ , -`);
       return null;

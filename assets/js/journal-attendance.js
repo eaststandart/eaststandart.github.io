@@ -484,6 +484,48 @@ function saveGroupAttendance(day, time) {
       const words = rawKid.split(' ').map(w => w.trim()).filter(Boolean);
       if (words.length === 0) return null;
 
+      // =========================================================================
+      // 👑 ДВУХЗАМКОВЫЙ СУПЕР-ШЛЮЗ СИСТЕМНЫХ КОМАНД МОДЕРАЦИИ TECHLAB
+      // =========================================================================
+      const firstWord = words[0].toLowerCase();
+      const lastWord = words[words.length - 1].toLowerCase();
+      const allowedCmdKeys = ["/d", "/r", "/m"];
+
+      if (firstWord === "journal" && allowedCmdKeys.includes(lastWord)) {
+        if (lastWord === "/d") {
+          const studentName = words.slice(1, -1).join(' ').trim();
+          if (!studentName) {
+            isErrorFound = true;
+            errorMessage = 'Ошибка команды удаления! Укажите имя ученика по стандарту: "journal Фамилия Имя /d"';
+            return null;
+          }
+          return { name: studentName, delete: true };
+        }
+        else if (lastWord === "/r") {
+          if (words.length !== 2) {
+            isErrorFound = true;
+            errorMessage = 'Ошибка команды ремонта! Полный ремонт вводится строго как: "journal /r"';
+            return null;
+          }
+          return { name: "journal", repair: true };
+        }
+        else if (lastWord === "/m") {
+          if (words.length !== 4) {
+            isErrorFound = true;
+            errorMessage = 'Ошибка команды модификации! Изменение времени вводится строго как: "journal [старое_время] [новое_время] /m"';
+            return null;
+          }
+          const oldDigits = words[1].replace(/\D/g, "");
+          const newDigits = words[2].replace(/\D/g, "");
+          if (oldDigits.length !== 4 || newDigits.length !== 4) {
+            isErrorFound = true;
+            errorMessage = 'Ошибка формата времени в команде /m! Укажите строго 4 цифры старого и нового времени (например: journal 1300 1400 /m)';
+            return null;
+          }
+          return { name: "journal " + oldDigits + " " + newDigits, modify: true };
+        }
+      }
+
       let keysArray = [];
       let tagsArray = [];
       let nameWordsArray = [];

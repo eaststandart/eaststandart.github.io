@@ -557,6 +557,13 @@ function saveGroupAttendance(day, time) {
   // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку по Регламенту
   const convertAndValidateInputs = (inputStr, fieldLabel) => {
     if (!inputStr) return [];
+
+    // ЭТАП №1: ГЛОБАЛЬНЫЙ БРОНЕЩИТ ВСЕГО ПОЛЯ ВВОДА — ОТСЕКАЕМ ЛЮБОЙ БРАК НА СТАРТЕ
+    const globalInputWhitelist = /^[a-zA-Zа-яА-ЯёЁ0-9\s,/#@-]+\$/;
+    if (!globalInputWhitelist.test(inputStr)) {
+      alert(`⚠️ СБОЙ СИНТАКСИСА TECHLAB:\nВ поле "${fieldLabel}" обнаружены запрещённые или ломающие структуру спецсимволы!\nРазрешены строго только буквы, цифры, пробелы, запятые и знаки: / , # , @ , -`);
+      return null;
+    }
     
     let isErrorFound = false;
     let errorMessage = "";

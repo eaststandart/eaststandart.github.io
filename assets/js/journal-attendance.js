@@ -458,15 +458,101 @@ function selectDynamicDay(day) {
 function saveGroupAttendance(day, time) {
   const dateStr = document.getElementById("global-journal-date").value.trim(); 
   const timeId = time.replace(':', '-');
+  const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
+  const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
+  // =========================================================================
+  // 👑 ЕДИНЫЙ МОНОЛИТНЫЙ БЛОК ОБРАБОТКИ СИСТЕМНЫХ КОМАНД JOURNAL TECHLAB
+  // =========================================================================
+  const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
+  const allowedCmdKeys = ["/d", "/r", "/m"];
+  
+  const hasJournal = cmdWords.length > 0 && cmdWords[0].toLowerCase() === "journal";
+  const hasCmdKey = cmdWords.length > 0 && allowedCmdKeys.includes(cmdWords[cmdWords.length - 1].toLowerCase());
+
+  // ЕСЛИ СТРОКА НАЧИНАЕТСЯ НА JOURNAL И СОДЕРЖИТ РАЗРЕШЕННЫЙ КЛЮЧ:
+  if (hasJournal && hasCmdKey) {
+    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+    const lastWordKey = cmdWords[cmdWords.length - 1].toLowerCase();
+    
+    let universalPayload = {
+      teacher_login: currentTeacher,
+      day: day,
+      time: time.replace(/"/g, '').replace(/'/g, '').trim()
+    };
+
+    let bannerTitle = "";
+    let bannerText = "";
+
+    // Внутри этого единого блока зряче отделяем одни ключи от других:
+    if (lastWordKey === "/d") {
+      const studentName = cmdWords.slice(1, -1).join(' ').trim();
+      if (!studentName) {
+        alert('⚠️ СБОЙ КОМАНДЫ:\nУкажите имя ученика по стандарту: "journal Фамилия Имя /d"');
+        return;
+      }
+      universalPayload.command = "delete";
+      universalPayload.delete = [studentName];
+      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!";
+      bannerText = `Запрос на удаление отправлен на сервер GitHub.<br>Цель: <code>${studentName}</code>.`;
+    } 
+    else if (lastWordKey === "/r") {
+      if (cmdWords.length !== 2) {
+        alert('⚠️ СБОЙ КОМАНДЫ:\nКоманда ремонта вводится строго по стандарту: "journal /r"');
+        return;
+      }
+      universalPayload.command = "repair";
+      universalPayload.repair = "";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!";
+      bannerText = "Команда полного ремонта успешно принята конвейером.";
+    } 
+    else if (lastWordKey === "/m") {
+      if (cmdWords.length !== 4) {
+        alert('⚠️ СБОЙ КОМАНДЫ:\nКоманда изменения времени вводится строго по стандарту: "journal [старое_время] [новое_время] /m"');
+        return;
+      }
+      const oldDigits = cmdWords[1].replace(/\D/g, "");
+      const newDigits = cmdWords[2].replace(/\D/g, "");
+      if (oldDigits.length !== 4 || newDigits.length !== 4) {
+        alert('⚠️ СБОЙ КОМАНДЫ:\nУкажите строго 4 цифры старого и нового времени суток (например: journal 1300 1200 /m)!');
+        return;
+      }
+      universalPayload.command = "modify";
+      universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
+      universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
+      bannerText = `Команда изменения структуры времени <code>${universalPayload.time} -> ${universalPayload.modify_time}</code> успешно принята.`;
+    }
+
+    // Блокируем экран Красным баннером перестройки расписания
+    document.getElementById("groups-container").innerHTML = 
+      "<div class='emergency-banner'>" + bannerTitle + "<br>" +
+        "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
+        "</span>" +
+      "</div>";
+    
+    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
+    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
+
+    sendUniversalRepairSignal(universalPayload);
+    return; // Жестко прерываем выполнение, не пуская команду в Поток Б!
+  }
+  
+  // ЗРЯЧИЙ ПРЕДОХРАНИТЕЛЬ ОПЕЧАТОК ПРЕПОДАВАТЕЛЯ
+  if (hasJournal || hasCmdKey) {
+    alert('⚠️ СБОЙ СИНТАКСИСА TECHLAB:\nНарушен канон системных команд!\nСлово "journal" и ключи /d, /r, /m обязаны использоваться строго вместе в одной строке.');
+    return;
+  }
+
+  // =========================================================================
+  // 🧱 ИНАЧЕ - ВСЁ ОСТАЛЬНОЕ: ШТАТНЫЙ КОНВЕЙЕР СБОРА ПОСЕЩАЕМОСТИ УЧЕНИКОВ
+  // =========================================================================
   let presentKids = [];
   const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
   checkboxes.forEach(chk => {
     if (chk.checked) presentKids.push(chk.value);
   });
-
-  const newbiesInput = document.getElementById(`newbies-${time}`).value.trim();
-  const probationInput = document.getElementById(`probation-${time}`).value.trim();
 
   // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку по Регламенту
   const convertAndValidateInputs = (inputStr, fieldLabel) => {

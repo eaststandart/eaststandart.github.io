@@ -68,15 +68,6 @@ function showJournal() {
   const instr = document.getElementById("instructions-section");
   if (instr) instr.classList.add("hidden");
 
-  loadStudentsFromYaml();
-}function showJournal() {
-  document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("journal-section").classList.remove("hidden");
-
-  // СКРЫВАЕМ ИНСТРУКЦИЮ ПОСЛЕ УСПЕШНОГО ВХОДА
-  const instr = document.getElementById("instructions-section");
-  if (instr) instr.classList.add("hidden");
-
   // При входе сначала запускаем жесткий однократный контур физической идентификации токена
   checkTeacherAuthorization();
 }
@@ -263,6 +254,12 @@ function parseSimpleYaml(text) {
     }
     const cleanText = trimmed.trim();
 
+    // Фиксируем день по содержимому строки до проверки отступа.
+    const weekdayHeaders = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+    if (weekdayHeaders.includes(cleanText.toLowerCase())) {
+      currentDay = cleanText.slice(0, -1).toLowerCase().trim();
+    }
+
     // Перехват входа в секцию конфигурации config:
     if (indent === 0 && cleanText.toLowerCase() === 'config:') {
       isInsideConfig = true;
@@ -284,7 +281,7 @@ function parseSimpleYaml(text) {
       // Вызов Единого Монолитного Щита Валидации
       const structureError = validateRawText(cleanText);
       if (structureError) {
-        triggerEmergencyBlock(i + 1, cleanText, structureError);
+        triggerEmergencyBlock(i + 1, cleanText, structureError, currentDay);
         return {};
       }
       // Упреждающе обновляем имя дня, если прошли строку отступа 0
@@ -322,12 +319,12 @@ function parseSimpleYaml(text) {
     if (!isInsideConfig) {
       const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
       const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
-      const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
+      const isTimeLine = cleanText.endsWith(':') && /^(["\']?)\d{1,2}:\d{2}\1:$/.test(cleanText);
 
       // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)
       if (isDayLine) {
         if (indent !== 0) {
-          triggerEmergencyBlock(i + 1, cleanText, "сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).");
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).", currentDay);
           return {};
         }
         currentDay = cleanText.slice(0, -1).toLowerCase().trim();
@@ -336,16 +333,23 @@ function parseSimpleYaml(text) {
       // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
       else if (isTimeLine) {
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.");
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", currentDay);
           return {};
         }
-        currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-        result[currentDay][currentGroup] = [];
+        const rawGroupTime = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        const timeParts = rawGroupTime.match(/^(\d{1,2}):(\d{2})$/);
+        currentGroup = timeParts
+          ? timeParts[1].padStart(2, "0") + ":" + timeParts[2]
+          : rawGroupTime;
+        if (currentDay) {
+          if (!result[currentDay]) result[currentDay] = {};
+          result[currentDay][currentGroup] = [];
+        }
       } 
       // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
       else if (cleanText.startsWith('- name:')) {
         if (indent !== 4) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.");
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", currentDay);
           return {};
         }
         let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
@@ -360,7 +364,7 @@ function parseSimpleYaml(text) {
       // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
       else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
         if (indent !== 6) {
-          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`);
+          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, currentDay);
           return {};
         }
       }
@@ -626,7 +630,6 @@ function saveGroupAttendance(day, time) {
       // 2. ЭТАП №2: Распределяем слова по трем независимым карманам
       for (let w of words) {
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
-        // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         if (w.startsWith('/')) {
           if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d' || w === '/r' || w === '/m') {
             keysArray.push(w);
@@ -669,15 +672,6 @@ function saveGroupAttendance(day, time) {
         if (keysArray.length > 1 || tagsArray.length > 0 || cleanName.toLowerCase() !== 'journal') {
           isErrorFound = true;
           errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ ремонта /r должен вводиться строго отдельно от других ключей направлений и тегов.`;
-          return null;
-        }
-      }
-
-      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
-      if (keysArray.includes('/d')) {
-        if (keysArray.length > 1 || tagsArray.length > 0) {
-          isErrorFound = true;
-          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
           return null;
         }
       }
@@ -752,7 +746,7 @@ function saveGroupAttendance(day, time) {
   const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   const isDelete = newbiesList.some(item => item.delete === true);
   const isRepair = newbiesList.some(item => item.repair === true);
-  const isModify = newbiesList.some(item => item.repair === false && newbiesInput.includes('/m'));
+  const isModify = newbiesList.some(item => item.modify === true);
 
   if (isDelete || isRepair || isModify) {
     let universalPayload = {
@@ -785,13 +779,17 @@ function saveGroupAttendance(day, time) {
       bannerText = "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.";
     } 
     else if (isModify) {
-      const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
-      let newTimeStr = "0000";
-      if (cmdWords.length >= 1) {
-        newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+      const modifyEntry = newbiesList.find(item => item.modify === true);
+      const cmdWords = modifyEntry ? modifyEntry.name.split(/\s+/) : [];
+      const oldDigits = (cmdWords[1] || "").replace(/\D/g, "");
+      const newDigits = (cmdWords[2] || "").replace(/\D/g, "");
+      if (oldDigits.length !== 4 || newDigits.length !== 4) {
+        alert("⚠️ СБОЙ КОМАНДЫ: старое и новое время должны содержать по 4 цифры.");
+        return;
       }
       universalPayload.command = "modify";
-      universalPayload.modify_time = newTimeStr.substring(0, 2) + ":" + newTimeStr.substring(2, 4);
+      universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
+      universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
       bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
       bannerText = "Команда изменения структуры времени успешно принята валидатором.";
     }
@@ -810,95 +808,7 @@ function saveGroupAttendance(day, time) {
     return;
   }
 
-  // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
-  const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
-
-  if (deleteNames.length > 0) {
-    // Зрячая проверка: есть ли удаляемые ученики в текущей базе этой группы?
-    const currentGroupStudents = studentsData[day][time] || [];
-    for (let nameToDelete of deleteNames) {
-      if (!currentGroupStudents.includes(nameToDelete)) {
-        alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${nameToDelete}" нет в базе этой группы!\nПроверьте буквы. Запрос отклонён.`);
-        return; // Мгновенно прерываем выполнение, страница НЕ блокируется баннером!
-      }
-    }
-
-    // 1. Принудительно вызываем красный экран аварийной блокировки изменения базы
-    document.getElementById("groups-container").innerHTML = 
-      "<div class='emergency-banner'>" +
-        "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!<br>" +
-        "<span class='emergency-banner-sub'>" +
-          "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
-          "<b>Генерация отчетов заблокирована до окончания перестройки расписания!</b>" +
-        "</span>" +
-      "</div>";
-    
-    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
-
-    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-
-    // Переводим экстренные адреса удаления на строго персональные файлы преподавателя
-    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
-    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
-
-    // 2. Включаем светофор repair-status.json на положение "on" с флагом repair
-    const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
-    const statusBody = {
-      message: "chore: запуск светофора для модерации базы [skip ci]",
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-    };
-
-    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-    .then(res => res.ok ? res.json() : null)
-    .then(existingStatus => {
-      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-      return fetch(statusUrl, {
-        method: "PUT",
-        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-        body: JSON.stringify(statusBody)
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Не удалось взвести статус изменения базы");
-      
-      // 3. Записываем сигнал удаления, день недели и время группы в signal-repair.json
-      const deleteSignalPayload = { 
-        teacher_login: currentTeacher,
-        day: day,
-        time: time,
-        command: "delete",
-        delete: deleteNames 
-      };
-      const signalBody = {
-        message: "chore: запрос удаления учеников из расписания " + currentTeacher,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(deleteSignalPayload, null, 2))))
-      };
-      
-      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-      .then(r => r.ok ? r.json() : null)
-      .then(existingSignal => {
-        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-        return fetch(signalUrl, {
-          method: "PUT",
-          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-          body: JSON.stringify(signalBody)
-        });
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Ошибка отправки сигнала удаления");
-      showNotify("❌ Запрос отправлен! Сервер выполняет удаление учеников...", "error");
-      startRepairStatusPolling(); // Запускаем опрос сервера до переключения в off
-    })
-    .catch(err => {
-      console.error(err);
-      showNotify("❌ Не удалось связаться с сервером при изменении базы.", "error");
-    });
-
-    return; // ЖЕСТКАЯ ОТМЕНА отправки стандартного отчета посещаемости!
-  }
-
+  // Удаление уже обработано единым конвейером выше; далее идут обычные отчёты.
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 
   // Шаг 1: Узнаем логин преподавателя
@@ -1069,17 +979,44 @@ function startRepairStatusPolling() {
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
-  const isTimeError = errorDetails.toLowerCase().includes("врем");
+  const validDays = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"];
+  const safeDay = validDays.includes(String(forcedDay || "").trim().toLowerCase())
+    ? String(forcedDay).trim().toLowerCase()
+    : "";
+  const isTimeError = String(errorDetails || "").toLowerCase().includes("врем");
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
   let bannerHtml = "";
 
   if (isTimeError) {
-    // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
-    const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
-    const badH = onlyDigits.substring(0, 2) || "00";
-    const badM = onlyDigits.substring(2, 4) || "00";
+    const onlyDigits = String(cleanText || "").replace(/\D/g, "");
+    const badH = (onlyDigits.substring(0, 2) || "00").padStart(2, "0");
+    const badM = (onlyDigits.substring(2, 4) || "00").padStart(2, "0");
     const cleanOldTime = badH + ":" + badM;
 
-    bannerHtml = 
+    let repairControl = "";
+    if (safeDay) {
+      repairControl =
+        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
+          "const rawH = document.getElementById('repair-hour').value.trim(); " +
+          "const rawM = document.getElementById('repair-minute').value.trim(); " +
+          "if (!/^\\d{1,2}$/.test(rawH) || !/^\\d{1,2}$/.test(rawM)) { alert('Введите часы и минуты цифрами.'); return; } " +
+          "const h = parseInt(rawH, 10); const m = parseInt(rawM, 10); " +
+          "if (h < 0 || h > 23 || m < 0 || m > 59) { alert('Укажите время от 00:00 до 23:59.'); return; } " +
+          "const newTimeStr = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'); " +
+          "sendUniversalRepairSignal({ " +
+            "teacher_login: '" + currentTeacher.replace(/[^a-zA-Z0-9_-]/g, "") + "', " +
+            "day: '" + safeDay + "', " +
+            "time: '" + cleanOldTime + "', " +
+            "command: 'modify', " +
+            "modify_time: newTimeStr " +
+          "}); " +
+        "})()\">🛠️ Починить время на сервере</button>";
+    } else {
+      repairControl =
+        "<div class='emergency-day-warning'>Не удалось однозначно определить день недели. Команда заблокирована, чтобы не изменить другой день. Исправьте заголовок дня и перезагрузите журнал.</div>";
+    }
+
+    bannerHtml =
       "<div class='emergency-banner'>" +
         "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
@@ -1091,49 +1028,45 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
           "</div>" +
           "<b>Генерация отчетов полностью заблокирована!</b><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
-            "const rawH = document.getElementById('repair-hour').value.trim(); " +
-            "const rawM = document.getElementById('repair-minute').value.trim(); " +
-            "const newTimeStr = rawH.padStart(2, '0').substring(0, 2) + ':' + rawM.padStart(2, '0').substring(0, 2); " +
-            "const currentTeacher = localStorage.getItem('github_journal_logged_user') || repo_owner; " +
-            "sendUniversalRepairSignal({ " +
-              "teacher_login: currentTeacher, " +
-              "day: '" + (forcedDay || "воскресенье") + "', " +
-              "time: '" + cleanOldTime + "', " +
-              "command: 'modify', " +
-              "modify_time: newTimeStr " +
-            "}); " +
-          "})()\">🛠️ Починить время на сервере</button>" +
+          repairControl +
         "</span>" +
       "</div>";
   } else {
-    // ВЕТКА Б: Классический баннер для любых других синтаксических ошибок и геометрии отступов
-    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-    const classicPayload = {
-      teacher_login: currentTeacher,
-      day: forcedDay || "воскресенье",
-      time: "00:00",
-      command: "repair",
-      repair: ""
-    };
-    const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
+    let repairControl = "";
+    if (safeDay) {
+      const classicPayload = {
+        teacher_login: currentTeacher,
+        day: safeDay,
+        time: "00:00",
+        command: "repair",
+        repair: ""
+      };
+      const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
+      repairControl =
+        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" +
+        payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>";
+    } else {
+      repairControl =
+        "<div class='emergency-day-warning'>День недели не определён. Автоматическая команда не отправлена, чтобы исключить изменение неверного дня. Исправьте структуру вручную и перезагрузите журнал.</div>";
+    }
 
-    bannerHtml = 
+    bannerHtml =
       "<div class='emergency-banner'>" +
         "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление геометрии на сервере GitHub:<br><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
+          "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b><br>" +
+          repairControl +
         "</span>" +
       "</div>";
   }
 
   document.getElementById("groups-container").innerHTML = bannerHtml;
-  
-  const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
-  allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
-  
+  document.querySelectorAll('[id^="btn-day-"]').forEach(btn => {
+    btn.disabled = true;
+    btn.classList.remove("active");
+  });
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }
 
@@ -1223,4 +1156,3 @@ function validateRawText(cleanText) {
 
   return null; // Строка полностью соответствует стандарту безопасности
 }
-

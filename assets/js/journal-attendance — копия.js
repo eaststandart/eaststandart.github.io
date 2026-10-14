@@ -287,22 +287,29 @@ function parseSimpleYaml(text) {
         triggerEmergencyBlock(i + 1, cleanText, structureError);
         return {};
       }
+      // Упреждающе обновляем имя дня, если прошли строку отступа 0
+      const checkDaysInline = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
+      if (indent === 0 && checkDaysInline.includes(cleanText.toLowerCase())) {
+        currentDay = cleanText.slice(0, -1).toLowerCase().trim();
+      }
 
-      // Проверка 3: Контроль формата времени группы (отступ строго 2 пробела)
-      if (indent === 2 && cleanText.endsWith(':')) {
-        let rawTimeStr = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-        if (rawTimeStr.length !== 5 || rawTimeStr.charAt(2) !== ':') {
-          triggerEmergencyBlock(i + 1, cleanText, "неверный формат времени группы. Требуется строго стандарт ЧЧ:ММ (например, 10:00).");
+      // Проверка 3: Всеядный контроль геометрии и формата времени группы при любом количестве пробелов
+      const cleanTimeContent = cleanText.replace(/"/g, '').replace(/'/g, '').trim().replace(/:$/, '').trim();
+      if (cleanText.endsWith(':') && /^\d{1,2}\s*[:\\/.\=–—-]?\s*\d{2}$/.test(cleanTimeContent)) {
+        
+        // Фильтр геометрии отступов расписания TechLab
+        if (indent !== 2) {
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + currentDay + " " + indent + " пробелов).", currentDay);
           return {};
         }
-        
+
         // Математический фильтр реальности часов и минут
-        const timeParts = rawTimeStr.split(':');
-        const h = parseInt(timeParts[0], 10);
-        const m = parseInt(timeParts[1], 10);
+        const digitsMatch = cleanTimeContent.match(/(\d{1,2})\D*(\d{2})/);
+        const h = digitsMatch ? parseInt(digitsMatch[1], 10) : -1;
+        const m = digitsMatch ? parseInt(digitsMatch[2], 10) : -1;
         
         if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено " + rawTimeStr + ").");
+          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + currentDay + " " + cleanTimeContent + ").", currentDay);
           return {};
         }
       }
@@ -606,24 +613,35 @@ function saveGroupAttendance(day, time) {
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО РЕМОНТА TECHLAB ИЗ ПОЛЯ ВВОДА СТУДЕНТОВ
+  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО ИЗМЕНЕНИЯ БАЗЫ ПО КЛЮЧУ /m ИЗ ТЕКСТОВОГО ПОЛЯ
   const hasRepairCommand = newbiesList.some(item => item.repair === true);
 
   if (hasRepairCommand) {
-    // Выводим зрячую аварийную индикацию блокировки интерфейса на экране
+    // Парсим ультра-компактную текстовую команду: [новое_время] /m (например, 1200 /m)
+    const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
+    
+    // Исходное ломаное время берем прямо из текущих координат открытой группы
+    let oldTimeStr = time.replace(/\D/g, ""); 
+    let newTimeStr = "0000";
+    
+    if (cmdWords.length >= 1) {
+      newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+    }
+
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" +
-        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!<br>" +
+        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована до окончания инспекции геометрии!</b>" +
+          "Команда изменения структуры успешно принята валидатором.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
     
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("🛠️ Запущен принудительный ремонт расписания на сервере!", "error");
+    showNotify("🛠️ Запущено принудительное изменение структуры расписания!", "error");
     
-    sendTargetedRepairSignal(); // Вызываем штатный запуск персонального светофора ремонта
+    // Передаем старые и новые цифры времени напрямую из текстовой команды
+    sendInteractiveModifySignal(oldTimeStr, newTimeStr); 
     return; // МГНОВЕННО КУПИРУЕМ отправку стандартного отчета посещаемости!
   }
 
@@ -684,6 +702,7 @@ function saveGroupAttendance(day, time) {
         teacher_login: currentTeacher,
         day: day,
         time: time,
+        command: "delete",
         delete: deleteNames 
       };
       const signalBody = {
@@ -947,21 +966,173 @@ function startRepairStatusPolling() {
 }
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails) {
-  document.getElementById("groups-container").innerHTML = 
-    "<div class='emergency-banner'>" +
-      "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
-      "<span class='emergency-banner-sub'>" +
-        "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-        "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление на сервере GitHub:<br><br>" +
-        "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
-      "</span>" +
-    "</div>";
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
+  const isTimeError = errorDetails.toLowerCase().includes("врем");
+  let bannerHtml = "";
+
+  if (isTimeError) {
+    // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
+    const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
+    const badH = onlyDigits.substring(0, 2) || "00";
+    const badM = onlyDigits.substring(2, 4) || "00";
+
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
+          "Исправьте время прямо в полях ниже:<br>" +
+          "<div class='emergency-inputs-row'>" +
+            "<input type='text' id='repair-hour' class='global-date-input emergency-time-input' maxlength='2' value='" + badH + "'>" +
+            "<span class='emergency-separator'>:</span>" +
+            "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
+          "</div>" +
+          "<b>Генерация отчетов полностью заблокирована!</b><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "', '', '" + forcedDay + "')\">🛠️ Починить время на сервере</button>" +
+        "</span>" +
+      "</div>";
+  } else {
+    // ВЕТКА Б: Классический баннер для любых других синтаксических ошибок и геометрии отступов
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление геометрии на сервере GitHub:<br><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+        "</span>" +
+      "</div>";
+  }
+
+  document.getElementById("groups-container").innerHTML = bannerHtml;
   
   const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
   allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });
   
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
+}
+
+// Функция сборки плоской команды модификации времени и отправки персонального сигнала
+function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forcedDay = "") {
+  const btn = document.getElementById("btn-force-repair");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "⏳ Отправка команды починки времени...";
+  }
+
+  let newTimeDigits = explicitNewTime;
+
+  // Если новое время не передано текстом напрямую, считываем его из инпутов баннера
+  if (!newTimeDigits) {
+    const repairHourEl = document.getElementById("repair-hour");
+    const repairMinuteEl = document.getElementById("repair-minute");
+    const rawH = repairHourEl ? repairHourEl.value.trim() : "00";
+    const rawM = repairMinuteEl ? repairMinuteEl.value.trim() : "00";
+    newTimeDigits = rawH.padStart(2, '0').substring(0, 2) + rawM.padStart(2, '0').substring(0, 2);
+  }
+
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+  
+  // Определяем полный эталонный день недели
+
+  let currentDayName = forcedDay;
+
+  if (!currentDayName) {
+    const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
+
+    if (daySelectBtn) {
+      currentDayName = daySelectBtn.id.replace("btn-day-", "");
+    } else {
+      console.error(
+        "Не удалось определить день недели для ремонта времени."
+      );
+      showNotify(
+        "Не удалось определить день недели. Ремонт не отправлен.",
+        "error"
+      );
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = "🛠️ Попробовать починить снова";
+      }
+      return;
+    }
+  }
+
+  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
+  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
+
+  // Взводим персональный светофор в режим принудительного ремонта
+  const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
+  const statusBody = {
+    message: "chore: взвод светофора для интерактивного ремонта времени [skip ci]",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
+  };
+
+  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
+  .then(res => res.ok ? res.json() : null)
+  .then(existingStatus => {
+    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
+    return fetch(statusUrl, {
+      method: "PUT",
+      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(statusBody)
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
+    
+    // Формируем чистый синтаксический вид времени ЧЧ:ММ для Питона
+    const cleanOldTime = oldTimeDigits.substring(0, 2) + ":" + oldTimeDigits.substring(2, 4);
+    const cleanNewTime = newTimeDigits.substring(0, 2) + ":" + newTimeDigits.substring(2, 4);
+
+    console.log("Проверка ремонта:", {
+      forcedDay,
+      currentDayName,
+      oldTimeDigits,
+      cleanOldTime
+    });
+
+    // Формируем монолитный однотипный JSON-сигнал по регламенту TechLab
+    const signalPayload = { 
+      teacher_login: currentTeacher,
+      day: currentDayName,
+      time: cleanOldTime,
+      command: "modify",
+      modify_time: cleanNewTime
+    };
+
+    console.log("JSON перед отправкой:", JSON.stringify(signalPayload));
+    
+    const signalBody = {
+      message: "chore: запрос изменения времени группы для " + currentTeacher,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+    };
+    
+    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
+    .then(r => r.ok ? r.json() : null)
+    .then(existingSignal => {
+      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
+      console.log("Содержимое сигнала перед PUT:", decodeURIComponent(escape(atob(signalBody.content))));
+      return fetch(signalUrl, {
+        method: "PUT",
+        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
+        body: JSON.stringify(signalBody)
+      });
+    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Ошибка отправки сигнала команды");
+    showNotify("🟢 Команда починки времени отправлена на сервер!", "success");
+    startRepairStatusPolling(); // Уходим в фоновый 5-секундный опрос светофора
+  })
+  .catch(err => {
+    console.error(err);
+    showNotify("❌ Не удалось связаться с сервером при отправке команды.", "error");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "🛠️ Попробовать починить снова";
+    }
+  });
 }
 
 // ЕДИНЫЙ ЩИТ ВАЛИДАЦИИ СТРОК ДЛЯ ВСЕГО ПРОЕКТА

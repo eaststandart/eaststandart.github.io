@@ -493,7 +493,7 @@ function saveGroupAttendance(day, time) {
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         if (w.startsWith('/')) {
-          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d' || w === '/r') {
+          if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d' || w === '/r' || w === '/m') {
             keysArray.push(w);
           } else {
             isErrorFound = true;
@@ -613,36 +613,66 @@ function saveGroupAttendance(day, time) {
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
 
-  // АППАРАТНЫЙ ПЕРЕХВАТ ПРИНУДИТЕЛЬНОГО ИЗМЕНЕНИЯ БАЗЫ ПО КЛЮЧУ /m ИЗ ТЕКСТОВОГО ПОЛЯ
-  const hasRepairCommand = newbiesList.some(item => item.repair === true);
+  // ЕДИНЫЙ МАСШТАБИРУЕМЫЙ КОНВЕЙЕР ПЕРЕХВАТА СИСТЕМНЫХ КОМАНД МОДЕРАЦИИ БАЗЫ TECHLAB
+  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+  const isDelete = newbiesList.some(item => item.delete === true);
+  const isRepair = newbiesList.some(item => item.repair === true);
+  const isModify = newbiesList.some(item => item.repair === false && newbiesInput.includes('/m'));
 
-  if (hasRepairCommand) {
-    // Парсим ультра-компактную текстовую команду: [новое_время] /m (например, 1200 /m)
-    const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
-    
-    // Исходное ломаное время берем прямо из текущих координат открытой группы
-    let oldTimeStr = time.replace(/\D/g, ""); 
-    let newTimeStr = "0000";
-    
-    if (cmdWords.length >= 1) {
-      newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+  if (isDelete || isRepair || isModify) {
+    let universalPayload = {
+      teacher_login: currentTeacher,
+      day: day,
+      time: time.replace(/"/g, '').replace(/'/g, '').trim()
+    };
+
+    let bannerTitle = "";
+    let bannerText = "";
+
+    if (isDelete) {
+      const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
+      const currentGroupStudents = studentsData[day][time] || [];
+      for (let nameToDelete of deleteNames) {
+        if (!currentGroupStudents.includes(nameToDelete)) {
+          alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${nameToDelete}" нет в базе этой группы!\nПроверьте буквы. Запрос отклонён.`);
+          return;
+        }
+      }
+      universalPayload.command = "delete";
+      universalPayload.delete = deleteNames;
+      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!";
+      bannerText = "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.";
+    } 
+    else if (isRepair) {
+      universalPayload.command = "repair";
+      universalPayload.repair = "";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!";
+      bannerText = "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.";
+    } 
+    else if (isModify) {
+      const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
+      let newTimeStr = "0000";
+      if (cmdWords.length >= 1) {
+        newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
+      }
+      universalPayload.command = "modify";
+      universalPayload.modify_time = newTimeStr.substring(0, 2) + ":" + newTimeStr.substring(2, 4);
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
+      bannerText = "Команда изменения структуры времени успешно принята валидатором.";
     }
 
     document.getElementById("groups-container").innerHTML = 
-      "<div class='emergency-banner'>" +
-        "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!<br>" +
-        "<span class='emergency-banner-sub'>" +
-          "Команда изменения структуры успешно принята валидатором.<br><br>" +
+      "<div class='emergency-banner'>" + bannerTitle + "<br>" +
+        "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
           "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
     
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("🛠️ Запущено принудительное изменение структуры расписания!", "error");
-    
-    // Передаем старые и новые цифры времени напрямую из текстовой команды
-    sendInteractiveModifySignal(oldTimeStr, newTimeStr); 
-    return; // МГНОВЕННО КУПИРУЕМ отправку стандартного отчета посещаемости!
+    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
+
+    sendUniversalRepairSignal(universalPayload);
+    return;
   }
 
   // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
@@ -848,69 +878,6 @@ function showNotify(text, type) {
   }
 }
 
-// Финальная двухфайловая функция запуска адресного ремонта расписания преподавателя
-function sendTargetedRepairSignal() {
-  const btn = document.getElementById("btn-force-repair");
-  if (btn) {
-    btn.disabled = true;
-    btn.innerText = "⏳ Запуск проверки на сервере...";
-  }
-
-  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-  
-  const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
-  const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
-
-  const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
-  const statusBody = {
-    message: "chore: сброс светофора в положение on [skip ci]",
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-  };
-
-  fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-  .then(res => res.ok ? res.json() : null)
-  .then(existingStatus => {
-    if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-    return fetch(statusUrl, {
-      method: "PUT",
-      headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-      body: JSON.stringify(statusBody)
-    });
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
-    
-    const signalPayload = { teacher_login: currentTeacher };
-    const signalBody = {
-      message: "chore: запрос адресного исправления расписания для " + currentTeacher,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
-    };
-    
-    return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-    .then(r => r.ok ? r.json() : null)
-    .then(existingSignal => {
-      if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-      return fetch(signalUrl, {
-        method: "PUT",
-        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-        body: JSON.stringify(signalBody)
-      });
-    });
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Ошибка отправки сигнала");
-    showNotify("🟢 Запрос на исправление файла расписания отправлен!", "success");
-    startRepairStatusPolling();
-  })
-  .catch(err => {
-    console.error(err);
-    showNotify("❌ Не удалось связаться с сервером.", "error");
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "🛠️ Попробуй запустить ремонт снова";
-    }
-  });
-}
 
 // Функция зрячего 5-секундного опроса файла статуса
 function startRepairStatusPolling() {
@@ -975,6 +942,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
     const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
     const badH = onlyDigits.substring(0, 2) || "00";
     const badM = onlyDigits.substring(2, 4) || "00";
+    const cleanOldTime = badH + ":" + badM;
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
@@ -988,18 +956,40 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
           "</div>" +
           "<b>Генерация отчетов полностью заблокирована!</b><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendInteractiveModifySignal('" + onlyDigits + "', '', '" + forcedDay + "')\">🛠️ Починить время на сервере</button>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
+            "const rawH = document.getElementById('repair-hour').value.trim(); " +
+            "const rawM = document.getElementById('repair-minute').value.trim(); " +
+            "const newTimeStr = rawH.padStart(2, '0').substring(0, 2) + ':' + rawM.padStart(2, '0').substring(0, 2); " +
+            "const currentTeacher = localStorage.getItem('github_journal_logged_user') || repo_owner; " +
+            "sendUniversalRepairSignal({ " +
+              "teacher_login: currentTeacher, " +
+              "day: '" + (forcedDay || "воскресенье") + "', " +
+              "time: '" + cleanOldTime + "', " +
+              "command: 'modify', " +
+              "modify_time: newTimeStr " +
+            "}); " +
+          "})()\">🛠️ Починить время на сервере</button>" +
         "</span>" +
       "</div>";
   } else {
     // ВЕТКА Б: Классический баннер для любых других синтаксических ошибок и геометрии отступов
+    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+    const classicPayload = {
+      teacher_login: currentTeacher,
+      day: forcedDay || "воскресенье",
+      time: "00:00",
+      command: "repair",
+      repair: ""
+    };
+    const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
+
     bannerHtml = 
       "<div class='emergency-banner'>" +
         "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
           "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление геометрии на сервере GitHub:<br><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick='sendTargetedRepairSignal()'>🛠️ Исправить базу данных на сервере</button>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
         "</span>" +
       "</div>";
   }
@@ -1012,59 +1002,24 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }
 
-// Функция сборки плоской команды модификации времени и отправки персонального сигнала
-function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forcedDay = "") {
-  const btn = document.getElementById("btn-force-repair");
-  if (btn) {
-    btn.disabled = true;
-    btn.innerText = "⏳ Отправка команды починки времени...";
-  }
+// Единая универсальная функция отправки любых сигналов модерации базы данных TechLab
+function sendUniversalRepairSignal(payload) {
+  // Твои фирменные логи инспекции TechLab перед отправкой пакета на сайт
+  console.log("Проверка ремонта:", {
+    forcedDay: payload.day,
+    currentDayName: payload.day,
+    oldTimeDigits: payload.time ? payload.time.replace(/\D/g, "") : "0000",
+    cleanOldTime: payload.time
+  });
+  console.log("JSON перед отправкой:", JSON.stringify(payload));
 
-  let newTimeDigits = explicitNewTime;
-
-  // Если новое время не передано текстом напрямую, считываем его из инпутов баннера
-  if (!newTimeDigits) {
-    const repairHourEl = document.getElementById("repair-hour");
-    const repairMinuteEl = document.getElementById("repair-minute");
-    const rawH = repairHourEl ? repairHourEl.value.trim() : "00";
-    const rawM = repairMinuteEl ? repairMinuteEl.value.trim() : "00";
-    newTimeDigits = rawH.padStart(2, '0').substring(0, 2) + rawM.padStart(2, '0').substring(0, 2);
-  }
-
-  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-  
-  // Определяем полный эталонный день недели
-
-  let currentDayName = forcedDay;
-
-  if (!currentDayName) {
-    const daySelectBtn = document.querySelector('[id^="btn-day-"].active');
-
-    if (daySelectBtn) {
-      currentDayName = daySelectBtn.id.replace("btn-day-", "");
-    } else {
-      console.error(
-        "Не удалось определить день недели для ремонта времени."
-      );
-      showNotify(
-        "Не удалось определить день недели. Ремонт не отправлен.",
-        "error"
-      );
-      if (btn) {
-        btn.disabled = false;
-        btn.innerText = "🛠️ Попробовать починить снова";
-      }
-      return;
-    }
-  }
-
+  const currentTeacher = payload.teacher_login;
   const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
   const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
 
-  // Взводим персональный светофор в режим принудительного ремонта
   const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
   const statusBody = {
-    message: "chore: взвод светофора для интерактивного ремонта времени [skip ci]",
+    message: "chore: взвод светофора для сессии " + payload.command + " [skip ci]",
     content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
   };
 
@@ -1079,40 +1034,17 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
     });
   })
   .then(res => {
-    if (!res.ok) throw new Error("Не удалось сбросить файл статуса");
-    
-    // Формируем чистый синтаксический вид времени ЧЧ:ММ для Питона
-    const cleanOldTime = oldTimeDigits.substring(0, 2) + ":" + oldTimeDigits.substring(2, 4);
-    const cleanNewTime = newTimeDigits.substring(0, 2) + ":" + newTimeDigits.substring(2, 4);
-
-    console.log("Проверка ремонта:", {
-      forcedDay,
-      currentDayName,
-      oldTimeDigits,
-      cleanOldTime
-    });
-
-    // Формируем монолитный однотипный JSON-сигнал по регламенту TechLab
-    const signalPayload = { 
-      teacher_login: currentTeacher,
-      day: currentDayName,
-      time: cleanOldTime,
-      command: "modify",
-      modify_time: cleanNewTime
-    };
-
-    console.log("JSON перед отправкой:", JSON.stringify(signalPayload));
+    if (!res.ok) throw new Error("Не удалось взвести файл статуса");
     
     const signalBody = {
-      message: "chore: запрос изменения времени группы для " + currentTeacher,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(signalPayload, null, 2))))
+      message: "chore: универсальный сигнал команды " + payload.command + " для " + currentTeacher,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
     };
     
     return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
     .then(r => r.ok ? r.json() : null)
     .then(existingSignal => {
       if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-      console.log("Содержимое сигнала перед PUT:", decodeURIComponent(escape(atob(signalBody.content))));
       return fetch(signalUrl, {
         method: "PUT",
         headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
@@ -1121,17 +1053,13 @@ function sendInteractiveModifySignal(oldTimeDigits, explicitNewTime = "", forced
     });
   })
   .then(res => {
-    if (!res.ok) throw new Error("Ошибка отправки сигнала команды");
-    showNotify("🟢 Команда починки времени отправлена на сервер!", "success");
-    startRepairStatusPolling(); // Уходим в фоновый 5-секундный опрос светофора
+    if (!res.ok) throw new Error("Ошибка отправки файла сигнала");
+    showNotify("🟢 Команда " + payload.command + " успешно отправлена на сервер!", "success");
+    startRepairStatusPolling();
   })
   .catch(err => {
     console.error(err);
-    showNotify("❌ Не удалось связаться с сервером при отправке команды.", "error");
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "🛠️ Попробовать починить снова";
-    }
+    showNotify("❌ Не удалось связаться с сервером при отправке сигнала.", "error");
   });
 }
 

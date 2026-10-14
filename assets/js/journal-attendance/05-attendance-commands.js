@@ -1,3 +1,11 @@
+/**
+ * @module  05-attendance-commands.js
+ * @about   Посещаемость и команды /d, /r, /m.
+ * @purpose Сохранение посещаемости и обработка команд.
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
 function saveGroupAttendance(day, time) {
   const dateStr = document.getElementById("global-journal-date").value.trim(); 
   const timeId = time.replace(':', '-');
@@ -169,7 +177,6 @@ function saveGroupAttendance(day, time) {
       // 2. ЭТАП №2: Распределяем слова по трем независимым карманам
       for (let w of words) {
         // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
-        // Проверяем карман КЛЮЧЕЙ (всё, что начинается на слэш /)
         if (w.startsWith('/')) {
           if (w === '/э' || w === '/e' || w === '/с' || w === '/c' || w === '/d' || w === '/r' || w === '/m') {
             keysArray.push(w);
@@ -329,12 +336,12 @@ function saveGroupAttendance(day, time) {
     } 
     else if (isModify) {
       const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
-      let newTimeStr = "0000";
-      if (cmdWords.length >= 1) {
-        newTimeStr = cmdWords[0].replace(/\D/g, "").padStart(4, '0').substring(0, 4);
-      }
+      const oldDigits = (cmdWords[1] || "").replace(/\D/g, "");
+      const newDigits = (cmdWords[2] || "").replace(/\D/g, "");
+      
       universalPayload.command = "modify";
-      universalPayload.modify_time = newTimeStr.substring(0, 2) + ":" + newTimeStr.substring(2, 4);
+      universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
+      universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
       bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
       bannerText = "Команда изменения структуры времени успешно принята валидатором.";
     }
@@ -351,95 +358,6 @@ function saveGroupAttendance(day, time) {
 
     sendUniversalRepairSignal(universalPayload);
     return;
-  }
-
-  // --- АППАРАТНЫЙ ПЕРЕХВАТ УДАЛЕНИЯ СТРОГО ИЗ ПОЛЯ НОВЫХ ПОСТОЯННЫХ УЧЕНИКОВ ---
-  const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
-
-  if (deleteNames.length > 0) {
-    // Зрячая проверка: есть ли удаляемые ученики в текущей базе этой группы?
-    const currentGroupStudents = studentsData[day][time] || [];
-    for (let nameToDelete of deleteNames) {
-      if (!currentGroupStudents.includes(nameToDelete)) {
-        alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${nameToDelete}" нет в базе этой группы!\nПроверьте буквы. Запрос отклонён.`);
-        return; // Мгновенно прерываем выполнение, страница НЕ блокируется баннером!
-      }
-    }
-
-    // 1. Принудительно вызываем красный экран аварийной блокировки изменения базы
-    document.getElementById("groups-container").innerHTML = 
-      "<div class='emergency-banner'>" +
-        "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!<br>" +
-        "<span class='emergency-banner-sub'>" +
-          "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.<br><br>" +
-          "<b>Генерация отчетов заблокирована до окончания перестройки расписания!</b>" +
-        "</span>" +
-      "</div>";
-    
-    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
-
-    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-
-    // Переводим экстренные адреса удаления на строго персональные файлы преподавателя
-    const statusUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/repair-status-${currentTeacher}.json`;
-    const signalUrl = `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_data/signal-repair-${currentTeacher}.json`;
-
-    // 2. Включаем светофор repair-status.json на положение "on" с флагом repair
-    const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
-    const statusBody = {
-      message: "chore: запуск светофора для модерации базы [skip ci]",
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
-    };
-
-    fetch(statusUrl, { headers: { "Authorization": "token " + accessToken } })
-    .then(res => res.ok ? res.json() : null)
-    .then(existingStatus => {
-      if (existingStatus && existingStatus.sha) statusBody.sha = existingStatus.sha;
-      return fetch(statusUrl, {
-        method: "PUT",
-        headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-        body: JSON.stringify(statusBody)
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Не удалось взвести статус изменения базы");
-      
-      // 3. Записываем сигнал удаления, день недели и время группы в signal-repair.json
-      const deleteSignalPayload = { 
-        teacher_login: currentTeacher,
-        day: day,
-        time: time,
-        command: "delete",
-        delete: deleteNames 
-      };
-      const signalBody = {
-        message: "chore: запрос удаления учеников из расписания " + currentTeacher,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(deleteSignalPayload, null, 2))))
-      };
-      
-      return fetch(signalUrl, { headers: { "Authorization": "token " + accessToken } })
-      .then(r => r.ok ? r.json() : null)
-      .then(existingSignal => {
-        if (existingSignal && existingSignal.sha) signalBody.sha = existingSignal.sha;
-        return fetch(signalUrl, {
-          method: "PUT",
-          headers: { "Authorization": "token " + accessToken, "Content-Type": "application/json" },
-          body: JSON.stringify(signalBody)
-        });
-      });
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Ошибка отправки сигнала удаления");
-      showNotify("❌ Запрос отправлен! Сервер выполняет удаление учеников...", "error");
-      startRepairStatusPolling(); // Запускаем опрос сервера до переключения в off
-    })
-    .catch(err => {
-      console.error(err);
-      showNotify("❌ Не удалось связаться с сервером при изменении базы.", "error");
-    });
-
-    return; // ЖЕСТКАЯ ОТМЕНА отправки стандартного отчета посещаемости!
   }
 
   showNotify(`Подготовка отчета для группы ${time}...`, "success");

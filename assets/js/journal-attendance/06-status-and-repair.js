@@ -1,3 +1,11 @@
+/**
+ * @module  06-status-and-repair.js
+ * @about   Статусы и ремонт.
+ * @purpose Уведомления, опрос статуса и сигналы ремонта.
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
 function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;

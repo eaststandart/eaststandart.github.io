@@ -1,3 +1,11 @@
+/**
+ * @module  03-yaml-parser.js
+ * @about   Разбор и проверка YAML.
+ * @purpose Разбор и проверка YAML.
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
 // Объектный парсер YAML с монолитным Блоком Валидации и защитой от секции config
 function parseSimpleYaml(text) {
   let result = {};
@@ -42,7 +50,7 @@ function parseSimpleYaml(text) {
       // Вызов Единого Монолитного Щита Валидации
       const structureError = validateRawText(cleanText);
       if (structureError) {
-        triggerEmergencyBlock(i + 1, cleanText, structureError);
+        triggerEmergencyBlock(i + 1, cleanText, structureError, currentDay);
         return {};
       }
       // Упреждающе обновляем имя дня, если прошли строку отступа 0
@@ -85,7 +93,7 @@ function parseSimpleYaml(text) {
       // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)
       if (isDayLine) {
         if (indent !== 0) {
-          triggerEmergencyBlock(i + 1, cleanText, "сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).");
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг дня недели! Название дня недели обязано стоять в самом начале строки (отступ 0 пробелов).", currentDay);
           return {};
         }
         currentDay = cleanText.slice(0, -1).toLowerCase().trim();
@@ -94,7 +102,7 @@ function parseSimpleYaml(text) {
       // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
       else if (isTimeLine) {
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.");
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", currentDay);
           return {};
         }
         currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
@@ -103,7 +111,7 @@ function parseSimpleYaml(text) {
       // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
       else if (cleanText.startsWith('- name:')) {
         if (indent !== 4) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.");
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", currentDay);
           return {};
         }
         let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
@@ -118,7 +126,7 @@ function parseSimpleYaml(text) {
       // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
       else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
         if (indent !== 6) {
-          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`);
+          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, currentDay);
           return {};
         }
       }

@@ -1,3 +1,11 @@
+/**
+ * @module  04-journal-ui.js
+ * @about   Отображение дней и групп.
+ * @purpose Отображение дней и групп.
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
 function selectDynamicDay(day) {
   // 1. Сбрасываем CSS-класс active у абсолютно всех кнопок дней
   const allDayButtons = document.querySelectorAll(`[id^="btn-day-"]`);

@@ -1,7 +1,7 @@
 /**
- * @module  journal-attendance.js
- * @about   Клиентский скрипт отправки данных Журнала посещений
- * @purpose Сбор отметок посещаемости на сайте и отправка PUT-запросов JSON в репозиторий GitHub
+ * @module  01-core-auth.js
+ * @about   Настройки и авторизация.
+ * @purpose Настройки, вход, авторизация и выход.
  * @author  TechLab
  * @version 1.0.0
  */

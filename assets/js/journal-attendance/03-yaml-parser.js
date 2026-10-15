@@ -75,7 +75,7 @@ function parseSimpleYaml(text) {
         const m = parseInt(timeMatch[2], 10);
         
         if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + cleanTimeContent + ").", "modify_time", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + (currentDay || "неизвестный день") + " " + cleanTimeContent + ").", "modify_time", currentDay);
           return {};
         }
       }

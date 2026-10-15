@@ -130,7 +130,13 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
             "const rawH = document.getElementById('repair-hour').value.trim(); " +
             "const rawM = document.getElementById('repair-minute').value.trim(); " +
-            "const newTimeStr = rawH.padStart(2, '0').substring(0, 2) + ':' + rawM.padStart(2, '0').substring(0, 2); " +
+            "const h = parseInt(rawH, 10); " +
+            "const m = parseInt(rawM, 10); " +
+            "if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59 || rawH.length === 0 || rawM.length === 0) { " +
+              "alert('⚠️ ОШИБКА ВВОДА:\\nНекорректное время суток!\\nЧасы должны быть от 00 до 23, минуты от 00 до 59.\\nЗапрос отклонён.'); " +
+              "return; " +
+            "} " +
+            "const newTimeStr = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'); " +
             "const currentTeacher = localStorage.getItem('github_journal_logged_user') || repo_owner; " +
             "sendUniversalRepairSignal({ " +
               "teacher_login: currentTeacher, " +

@@ -81,17 +81,9 @@ function startRepairStatusPolling() {
         clearInterval(intervalId);
         const serverErrorText = payload.message || "Обнаружена критическая ошибка синтаксиса или отступов.";
         
-        // Зрячий командный детектор статуса сервера: если упало время - шлём modify, иначе - полный repair
-        let serverErrorType = "repair";
-        if (serverErrorText.toLowerCase().includes("врем") || serverErrorText.toLowerCase().includes("time")) {
-          // Но только если в логе сервера нет слова "отступ" или "геометрия" (высший приоритет!)
-          if (!serverErrorText.toLowerCase().includes("отступ") && !serverErrorText.toLowerCase().includes("сдвиг")) {
-            serverErrorType = "modify_time";
-          }
-        }
+        // При падении сервера Питона принудительно включаем Ветку В (manual) для вывода текста
+        triggerEmergencyBlock("Сервер GitHub", "Отказ выполнения воркфлоу Actions", serverErrorText, "manual", currentTeacher);
 
-        // Передаем координаты явно по нашей новой пятиаргументной сигнатуре
-        triggerEmergencyBlock("GitHub", "⏳ Группа " + (payload.time || "00:00") + ":", serverErrorText, serverErrorType, currentTeacher);
         showNotify("❌ Критическая ошибка структуры расписания на сервере!", "error");
         
         if (btn) {

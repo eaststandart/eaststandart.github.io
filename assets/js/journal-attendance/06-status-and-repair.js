@@ -79,7 +79,7 @@ function startRepairStatusPolling() {
       
       if (payload.status === "error") {
         clearInterval(intervalId);
-        const serverDetails = payload.errorDetails || "Критический сбой интерпретатора или рассинхронизация веток репозитория.";
+        const serverDetails = payload.errorDetails || "Критический сбой интерпретатора или рассинхронизация веток репозитория";
         
         // Передаем в чистый баннер Ветки В статус отказа воркфлоу и живой лог из Питона
         triggerEmergencyBlock("GitHub Actions", "Отказ выполнения воркфлоу сессии ремонта", serverDetails, "manual", currentTeacher);

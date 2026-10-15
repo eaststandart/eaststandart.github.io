@@ -82,15 +82,12 @@ function saveGroupAttendance(day, time) {
           "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
-
-    // Скрываем поле даты при любой системной команде (/d, /r, /m)
-    document.getElementById("global-date-container").style.display = "none";
     
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
     showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
 
     sendUniversalRepairSignal(universalPayload);
-    return; // Прерываем выполнение, не пуская команду в Поток Б!
+    return; // Жестко прерываем выполнение, не пуская команду в Поток Б!
   }
   
   // ЗРЯЧИЙ ПРЕДОХРАНИТЕЛЬ ОПЕЧАТОК ПРЕПОДАВАТЕЛЯ

@@ -82,6 +82,13 @@ function saveGroupAttendance(day, time) {
           "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
+
+    // Скрываем весь родительский ряд глобального инпута даты занятий
+    const cmdDateInput = document.getElementById("global-journal-date");
+    if (cmdDateInput) {
+      const cmdParentRow = cmdDateInput.closest('div');
+      if (cmdParentRow) cmdParentRow.style.display = "none";
+    }
     
     document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
     showNotify("❌ Обнаружено изменение базы данных журнала!", "error");

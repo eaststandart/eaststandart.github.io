@@ -69,12 +69,9 @@ function startRepairStatusPolling() {
         showNotify("🟢 База данных успешно проверена сервером!", "success");
         
         document.getElementById("groups-container").innerHTML = "";
-        // Возвращаем глобальное поле выбора даты занятий в штатный режим отображения
-        const dateCont = document.getElementById("global-journal-date");
-        if (dateCont) {
-          const parentRow = dateCont.closest('div');
-          if (parentRow) parentRow.style.display = "block";
-        }
+        
+        // Разблокируем кнопки верхнего меню дней недели для зрячего выбора преподавателем
+        document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = false; });
         
         localStorage.setItem("github_journal_robot_ok", "true");
         isRobotChecked = true; 

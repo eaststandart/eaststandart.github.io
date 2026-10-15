@@ -26,7 +26,7 @@
 
 /* Уведомления и служебные классы */
 .hidden { display: none; }
-.notify { padding: 12px; margin: 0.7rem 0; border-radius: 6px; text-align: center; font-weight: bold; }
+.notify { padding: 12px; margin: 1rem 0; border-radius: 6px; text-align: center; font-weight: bold; }
 .notify-success { background-color: #d3f9d8; color: #2b8a3e; }
 .notify-error { background-color: #ffe3e3; color: #c92a2a; }
 .notify-blue { background-color: #e7f5ff; color: #1c7ed6; }
@@ -90,7 +90,7 @@
 .group-title-clean { margin: 0; border: none; padding: 0; }
 
 /* Дополнительные классы для фиксации стилей из JavaScript-кода */
-.emergency-banner { padding: 20px; border-radius: 6px; margin-top: 5px; font-weight: bold; font-size: 16px; background-color: #ffeef0; color: #d73a49; border: 1px solid #ced4da; }
+.emergency-banner { padding: 20px; border-radius: 6px; margin-top: 1rem; font-weight: bold; font-size: 16px; background-color: #ffeef0; color: #d73a49; border: 1px solid #ced4da; }
 .emergency-banner-sub { font-size: 14px; font-weight: normal; margin-top: 10px; display: block; }
 .btn-emergency-repair { background-color: #d73a49; }
 .emergency-banner code { background-color: #fff; padding: 2px 4px; border-radius: 4px; font-family: monospace; }

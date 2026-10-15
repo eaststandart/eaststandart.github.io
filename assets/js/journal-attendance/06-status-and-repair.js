@@ -96,13 +96,12 @@ function startRepairStatusPolling() {
 }
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
-  const isTimeError = errorDetails.toLowerCase().includes("врем");
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forcedDay = "") {
   let bannerHtml = "";
 
-  if (isTimeError) {
-    // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
-    const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
+  // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
+  if (errorType === "modify_time") {
+    const onlyDigits = cleanText.replace(/\D/g, "");
     const badH = onlyDigits.substring(0, 2) || "00";
     const badM = onlyDigits.substring(2, 4) || "00";
     const cleanOldTime = badH + ":" + badM;
@@ -134,8 +133,9 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
           "})()\">🛠️ Починить время на сервере</button>" +
         "</span>" +
       "</div>";
-  } else {
-    // ВЕТКА Б: Классический баннер для любых других синтаксических ошибок и геометрии отступов
+  } 
+  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов (Абсолютный приоритет "repair")
+  else if (errorType === "repair") {
     const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
     const classicPayload = {
       teacher_login: currentTeacher,
@@ -148,11 +148,24 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ГЕОМЕТРИИ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована!</b> Вы можете запустить автоматическое исправление геометрии на сервере GitHub:<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b> Требуется выравнивание отступов базы на сервере GitHub.<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
+        "</span>" +
+      "</div>";
+  }
+  // ВЕТКА В: Непредусмотренный глобальный брак расписания - строго ручная починка
+  else {
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: НЕПРЕДУСМОТРЕННЫЙ БРАК СИНТАКСИСА!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена критическая ошибка: " + errorDetails + "<br>" +
+          "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Автоматическое исправление невозможно!</b><br>" +
+          "Пожалуйста, откройте файл расписания в репозитории и <b>исправьте базу руками!</b>" +
         "</span>" +
       "</div>";
   }
@@ -165,7 +178,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "")
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }
 
-// Единая универсальная функция отправки любых сигналов модерации базы данных TechLab
+// Функция отправки сигналов модерации в базу данных
 function sendUniversalRepairSignal(payload) {
   // Твои фирменные логи инспекции TechLab перед отправкой пакета на сайт
   console.log("Проверка ремонта:", {

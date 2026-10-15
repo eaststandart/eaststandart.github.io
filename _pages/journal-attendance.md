@@ -15,7 +15,7 @@ custom_css: "/assets/css/journal-attendance.css"
 
 <div id="instructions-section" markdown="1">
 
---- 
+---
 
 ### 📋 Инструкция для преподавателей
 

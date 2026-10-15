@@ -43,10 +43,18 @@ function saveGroupAttendance(day, time) {
         alert('⚠️ СБОЙ КОМАНДЫ:\nУкажите имя ученика по стандарту: "journal Фамилия Имя /d"');
         return;
       }
+      
+      // СИЛОВОЙ УПРЕЖДАЮЩИЙ ФИЛЬТР БАЗЫ ДАННЫХ TECHLAB ПРЯМО НА САЙТЕ
+      const currentGroupStudents = (studentsData[day] && studentsData[day][time]) || [];
+      if (!currentGroupStudents.includes(studentName)) {
+        alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${studentName}" нет в базе этой группы!\nПроверьте буквы и регистр. Запрос отклонён.`);
+        return;
+      }
+
       universalPayload.command = "delete";
       universalPayload.delete = [studentName];
-      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ РАСПИСАНИЯ!";
-      bannerText = `Запрос на удаление отправлен на сервер GitHub.<br>Цель: <code>${studentName}</code>.`;
+      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ РАСПИСАНИЯ!";
+      bannerText = `Запрос на удаление отправлен на сервер GitHub.<br><br>Цель: <code>${studentName}</code>.`;
     } 
     else if (lastWordKey === "/r") {
       if (cmdWords.length !== 2) {
@@ -72,7 +80,7 @@ function saveGroupAttendance(day, time) {
       universalPayload.command = "modify";
       universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
       universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ БАЗЫ РАСПИСАНИЯ!";
       bannerText = `Команда изменения структуры времени <code>${universalPayload.time} -> ${universalPayload.modify_time}</code> успешно принята.`;
     }
 
@@ -324,13 +332,6 @@ function saveGroupAttendance(day, time) {
 
     if (isDelete) {
       const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
-      const currentGroupStudents = studentsData[day][time] || [];
-      for (let nameToDelete of deleteNames) {
-        if (!currentGroupStudents.includes(nameToDelete)) {
-          alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${nameToDelete}" нет в базе этой группы!\nПроверьте буквы. Запрос отклонён.`);
-          return;
-        }
-      }
       universalPayload.command = "delete";
       universalPayload.delete = deleteNames;
       bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ РАСПИСАНИЯ!";
@@ -350,7 +351,7 @@ function saveGroupAttendance(day, time) {
       universalPayload.command = "modify";
       universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
       universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ БАЗЫ РАСПИСАНИЯ!";
       bannerText = "Команда изменения структуры времени успешно принята валидатором.";
     }
 

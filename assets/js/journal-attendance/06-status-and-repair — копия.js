@@ -95,7 +95,7 @@ function startRepairStatusPolling() {
   }, 5000);
 }
 
-// Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
+// Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера 
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
   const isTimeError = errorDetails.toLowerCase().includes("несуществующее время");
   let bannerHtml = "";

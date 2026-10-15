@@ -74,7 +74,6 @@ function startRepairStatusPolling() {
         const mainDateBox = document.getElementById("global-date-container");
         if (mainDateBox) {
           mainDateBox.style.display = "none";
-          mainDateBox.className = "";
         }
         
         // Возвращаем активность кнопкам верхнего меню дней недели

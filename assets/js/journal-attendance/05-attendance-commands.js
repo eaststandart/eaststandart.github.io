@@ -36,7 +36,7 @@ function saveGroupAttendance(day, time) {
     let bannerTitle = "";
     let bannerText = "";
 
-    // Внутри этого единого блока зряче отделяем одни ключи от других:
+    // Внутри этого единого блока отделяем одни ключи от других:
     if (lastWordKey === "/d") {
       const studentName = cmdWords.slice(1, -1).join(' ').trim();
       if (!studentName) {
@@ -44,7 +44,7 @@ function saveGroupAttendance(day, time) {
         return;
       }
       
-      // СИЛОВОЙ УПРЕЖДАЮЩИЙ ФИЛЬТР БАЗЫ ДАННЫХ TECHLAB ПРЯМО НА САЙТЕ
+      // УПРЕЖДАЮЩИЙ ФИЛЬТР БАЗЫ ДАННЫХ ПРЯМО НА САЙТЕ
       const currentGroupStudents = (studentsData[day] && studentsData[day][time]) || [];
       if (!currentGroupStudents.includes(studentName)) {
         alert(`⚠️ СБОЙ УДАЛЕНИЯ:\nУченика "${studentName}" нет в базе этой группы!\nПроверьте буквы и регистр. Запрос отклонён.`);
@@ -93,7 +93,7 @@ function saveGroupAttendance(day, time) {
       const checkOldTimeStr = String(oldH).padStart(2, '0') + ":" + String(oldM).padStart(2, '0');
       const checkNewTimeStr = String(newH).padStart(2, '0') + ":" + String(newM).padStart(2, '0');
       
-      // 2. СНАЙПЕРСКИЙ ФИЛЬТР СЕТКИ ЧАСОВ РАСПИСАНИЯ — ПРОВЕРЯЕМ НАЛИЧИЕ ГРУППЫ В БАЗЕ ДНЯ
+      // 2. ФИЛЬТР СЕТКИ ЧАСОВ РАСПИСАНИЯ — ПРОВЕРЯЕМ НАЛИЧИЕ ГРУППЫ В БАЗЕ ДНЯ
       const existingDayGroups = (studentsData[day] && Object.keys(studentsData[day])) || [];
       if (!existingDayGroups.includes(checkOldTimeStr)) {
         alert(`⚠️ СБОЙ МОДИФИКАЦИИ:\nГруппы со временем "${checkOldTimeStr}" в расписании на ${day} физически НЕТ!\nПроверьте цифры. Запрос отклонён.`);
@@ -166,48 +166,6 @@ function saveGroupAttendance(day, time) {
       // 1. ЭТАП №1: Разбиваем сырую запись пробелами на отдельные чистые слова
       const words = rawKid.split(' ').map(w => w.trim()).filter(Boolean);
       if (words.length === 0) return null;
-
-      // =========================================================================
-      // 👑 ДВУХЗАМКОВЫЙ СУПЕР-ШЛЮЗ СИСТЕМНЫХ КОМАНД МОДЕРАЦИИ TECHLAB
-      // =========================================================================
-      const firstWord = words[0].toLowerCase();
-      const lastWord = words[words.length - 1].toLowerCase();
-      const allowedCmdKeys = ["/d", "/r", "/m"];
-
-      if (firstWord === "journal" && allowedCmdKeys.includes(lastWord)) {
-        if (lastWord === "/d") {
-          const studentName = words.slice(1, -1).join(' ').trim();
-          if (!studentName) {
-            isErrorFound = true;
-            errorMessage = 'Ошибка команды удаления! Укажите имя ученика по стандарту: "journal Фамилия Имя /d"';
-            return null;
-          }
-          return { name: studentName, delete: true };
-        }
-        else if (lastWord === "/r") {
-          if (words.length !== 2) {
-            isErrorFound = true;
-            errorMessage = 'Ошибка команды ремонта! Полный ремонт вводится строго как: "journal /r"';
-            return null;
-          }
-          return { name: "journal", repair: true };
-        }
-        else if (lastWord === "/m") {
-          if (words.length !== 4) {
-            isErrorFound = true;
-            errorMessage = 'Ошибка команды модификации! Изменение времени вводится строго как: "journal [старое_время] [новое_время] /m"';
-            return null;
-          }
-          const oldDigits = words[1].replace(/\D/g, "");
-          const newDigits = words[2].replace(/\D/g, "");
-          if (oldDigits.length !== 4 || newDigits.length !== 4) {
-            isErrorFound = true;
-            errorMessage = 'Ошибка формата времени в команде /m! Укажите строго 4 цифры старого и нового времени (например: journal 1300 1400 /m)';
-            return null;
-          }
-          return { name: "journal " + oldDigits + " " + newDigits, modify: true };
-        }
-      }
 
       let keysArray = [];
       let tagsArray = [];
@@ -336,61 +294,6 @@ function saveGroupAttendance(day, time) {
 
   let probationList = convertAndValidateInputs(probationInput, "Временные ученики");
   if (probationList === null) return; // Жестко прерываем отправку формы при ошибке ключа!
-
-  // ЕДИНЫЙ МАСШТАБИРУЕМЫЙ КОНВЕЙЕР ПЕРЕХВАТА СИСТЕМНЫХ КОМАНД МОДЕРАЦИИ БАЗЫ TECHLAB
-  const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
-  const isDelete = newbiesList.some(item => item.delete === true);
-  const isRepair = newbiesList.some(item => item.repair === true);
-  const isModify = newbiesList.some(item => item.repair === false && newbiesInput.includes('/m'));
-
-  if (isDelete || isRepair || isModify) {
-    let universalPayload = {
-      teacher_login: currentTeacher,
-      day: day,
-      time: time.replace(/"/g, '').replace(/'/g, '').trim()
-    };
-
-    let bannerTitle = "";
-    let bannerText = "";
-
-    if (isDelete) {
-      const deleteNames = newbiesList.filter(item => item.delete === true).map(item => item.name);
-      universalPayload.command = "delete";
-      universalPayload.delete = deleteNames;
-      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ РАСПИСАНИЯ!";
-      bannerText = "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.";
-    } 
-    else if (isRepair) {
-      universalPayload.command = "repair";
-      universalPayload.repair = "";
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ РАСПИСАНИЯ!";
-      bannerText = "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.";
-    } 
-    else if (isModify) {
-      const cmdWords = newbiesInput.split(' ').map(w => w.trim()).filter(Boolean);
-      const oldDigits = (cmdWords[1] || "").replace(/\D/g, "");
-      const newDigits = (cmdWords[2] || "").replace(/\D/g, "");
-      
-      universalPayload.command = "modify";
-      universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
-      universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ БАЗЫ РАСПИСАНИЯ!";
-      bannerText = "Команда изменения структуры времени успешно принята валидатором.";
-    }
-
-    document.getElementById("groups-container").innerHTML = 
-      "<div class='emergency-banner'>" + bannerTitle + "<br>" +
-        "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
-          "<b>Генерация отчетов заблокирована до окончания перестройки базы!</b>" +
-        "</span>" +
-      "</div>";
-    
-    document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = true; btn.classList.remove("active"); });
-    showNotify("❌ Обнаружено изменение базы данных журнала!", "error");
-
-    sendUniversalRepairSignal(universalPayload);
-    return;
-  }
 
   showNotify(`Подготовка отчета для группы ${time}...`, "success");
 

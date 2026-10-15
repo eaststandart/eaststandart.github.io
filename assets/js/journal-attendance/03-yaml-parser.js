@@ -66,7 +66,7 @@ function parseSimpleYaml(text) {
         
         // Фильтр геометрии отступов расписания TechLab
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + indent + " пробелов).", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг времени группы! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + indent + " пробелов).", "repair", currentDay);
           return {};
         }
 
@@ -102,7 +102,7 @@ function parseSimpleYaml(text) {
       // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
       else if (isTimeLine) {
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", "repair", currentDay);
           return {};
         }
         currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();

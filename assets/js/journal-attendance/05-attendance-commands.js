@@ -54,7 +54,7 @@ function saveGroupAttendance(day, time) {
       }
       universalPayload.command = "repair";
       universalPayload.repair = "";
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ РАСПИСАНИЯ!";
       bannerText = "Команда полного ремонта успешно принята конвейером.";
     } 
     else if (lastWordKey === "/m") {
@@ -71,7 +71,7 @@ function saveGroupAttendance(day, time) {
       universalPayload.command = "modify";
       universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
       universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ!";
       bannerText = `Команда изменения структуры времени <code>${universalPayload.time} -> ${universalPayload.modify_time}</code> успешно принята.`;
     }
 
@@ -338,7 +338,7 @@ function saveGroupAttendance(day, time) {
     else if (isRepair) {
       universalPayload.command = "repair";
       universalPayload.repair = "";
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ ДАННЫХ РАСПИСАНИЯ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА БАЗЫ РАСПИСАНИЯ!";
       bannerText = "Команда полного ремонта <code>journal /r</code> успешно принята валидатором.";
     } 
     else if (isModify) {
@@ -349,7 +349,7 @@ function saveGroupAttendance(day, time) {
       universalPayload.command = "modify";
       universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
       universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
-      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ ПЛАТФОРМЫ!";
+      bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ РАСПИСАНИЯ!";
       bannerText = "Команда изменения структуры времени успешно принята валидатором.";
     }
 

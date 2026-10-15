@@ -111,7 +111,7 @@ function parseSimpleYaml(text) {
       // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
       else if (cleanText.startsWith('- name:')) {
         if (indent !== 4) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", "repair", currentDay);
           return {};
         }
         let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
@@ -126,7 +126,7 @@ function parseSimpleYaml(text) {
       // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
       else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
         if (indent !== 6) {
-          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, `сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, "repair", currentDay);
           return {};
         }
       }

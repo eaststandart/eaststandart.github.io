@@ -112,7 +112,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ВРЕМЕНИ ГРУППЫ!<br>" +
+        "⚠️ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ВРЕМЕНИ ГРУППЫ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружено " + errorDetails + "<br>" +
           "Исправьте время прямо в полях ниже:<br>" +
@@ -158,7 +158,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ РАСПИСАНИЯ!<br>" +
+        "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
@@ -171,7 +171,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
   else {
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: ОТКАЗ СЕРВЕРА GITHUB ACTIONS!<br>" +
+        "⚠️ БЛОКИРОВКА: ОТКАЗ СЕРВЕРА GITHUB ACTIONS!<br>" +
         "<span class='emergency-banner-sub'>" +
           "Статус воркфлоу: <b>" + cleanText + "</b>.<br>" +
           "Логгер сервера: <code>" + errorDetails + "</code>.<br><br>" +

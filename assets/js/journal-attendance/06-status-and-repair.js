@@ -103,28 +103,6 @@ function startRepairStatusPolling() {
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "", forcedDay = "") {
   let bannerHtml = "";
-
-  // ТОТАЛЬНЫЙ ИНСПЕКТОР СТРУКТУРЫ КАЛЕНДАРЯ TECHLAB В КОНСОЛИ
-  console.log("=== [ОТЛАДКА ИНТЕРФЕЙСА] АНАЛИЗ ПОЛЯ ДАТЫ ===");
-  const testInput = document.getElementById("global-journal-date");
-  if (!testInput) {
-    console.log("🚨 КРИТИЧЕСКИЙ СБОЙ: Элемент с ID 'global-journal-date' ФИЗИЧЕСКИ НЕ НАЙДЕН в DOM дерева сайта!");
-  } else {
-    console.log("✅ Элемент найден:", testInput);
-    console.log("Текущий inline-стиль display инпута:", testInput.style.display);
-    console.log("Вычисленный (computed) стиль display инпута:", window.getComputedStyle(testInput).display);
-    
-    // Проверяем всю цепочку родителей вверх на 3 уровня
-    let currentParent = testInput.parentElement;
-    let depth = 1;
-    while (currentParent && depth <= 3) {
-      console.log(`Родитель Уровня №${depth}: тег=<${currentParent.tagName.toLowerCase()}>, id='${currentParent.id}', class='${currentParent.className}'`);
-      currentParent = currentParent.parentElement;
-      depth++;
-    }
-  }
-  console.log("=================================================");
-
   // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
   if (errorType === "modify_time") {
     const onlyDigits = cleanText.replace(/\D/g, "");
@@ -205,11 +183,10 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
   document.getElementById("groups-container").innerHTML = bannerHtml;
   
-  // Жестко скрываем глобальное поле даты занятий, исключая наложение интерфейса
-  const dateCont = document.getElementById("global-journal-date");
-  if (dateCont) {
-    const parentRow = dateCont.closest('div');
-    if (parentRow) parentRow.style.display = "none";
+  // Скрываем глобальную карточку контейнера даты занятий по прямому ID
+  const mainDateBox = document.getElementById("global-date-container");
+  if (mainDateBox) {
+    mainDateBox.style.display = "none";
   }
   
   const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');

@@ -70,7 +70,7 @@ function startRepairStatusPolling() {
         
         document.getElementById("groups-container").innerHTML = "";
         // Возвращаем глобальное поле выбора даты занятий в штатный режим отображения
-        const dateCont = document.getElementById("global-date-container");
+        const dateCont = document.getElementById("global-journal-date");
         if (dateCont) dateCont.style.display = "block";
         
         localStorage.setItem("github_journal_robot_ok", "true");
@@ -182,7 +182,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
   document.getElementById("groups-container").innerHTML = bannerHtml;
   
   // Жестко скрываем глобальное поле даты занятий, исключая наложение интерфейса
-  const dateCont = document.getElementById("global-date-container");
+  const dateCont = document.getElementById("global-journal-date");
   if (dateCont) dateCont.style.display = "none";
   
   const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');

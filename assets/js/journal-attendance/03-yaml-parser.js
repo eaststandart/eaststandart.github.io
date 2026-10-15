@@ -60,22 +60,22 @@ function parseSimpleYaml(text) {
       }
 
       // Проверка 3: Всеядный контроль геометрии и формата времени группы при любом количестве пробелов
-      const cleanTimeContent = cleanText.replace(/"/g, '').replace(/'/g, '').trim().replace(/:$/, '').trim();
-      if (cleanText.endsWith(':') && /^\d{1,2}\s*[:\\/.\=–—-]?\s*\d{2}$/.test(cleanTimeContent)) {
+      const cleanTimeContent = cleanText.replace(/"/g, '').replace(/'/g, '').trim().replace(/:\$/, '').trim();
+      if (cleanText.endsWith(':') && /^\d{1,2}\s*[:\\/.\=–—-]?\s*\d{2}\$/.test(cleanTimeContent)) {
         
-        // Фильтр геометрии отступов расписания TechLab
+        // ЭТАЖ №1: ГЕОМЕТРИЯ ОТСТУПОВ (ВЫСШИЙ ПРИОРИТЕТ)
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + currentDay + " " + indent + " пробелов).", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "кривая геометрия отступов строки времени! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + indent + " пробелов).", currentDay);
           return {};
         }
 
-        // Математический фильтр реальности часов и минут
+        // ЭТАЖ №2: РЕАЛЬНОСТЬ СУТОК (НИЗШИЙ ПРИОРИТЕТ - СРАБОТАЕТ ТОЛЬКО ЕСЛИ ИНДЕНТ ИДЕАЛЕН)
         const digitsMatch = cleanTimeContent.match(/(\d{1,2})\D*(\d{2})/);
-        const h = digitsMatch ? parseInt(digitsMatch[1], 10) : -1;
-        const m = digitsMatch ? parseInt(digitsMatch[2], 10) : -1;
+        const h = digitsMatch ? parseInt(digitsMatch, 10) : -1;
+        const m = digitsMatch ? parseInt(digitsMatch, 10) : -1;
         
         if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + currentDay + " " + cleanTimeContent + ").", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + cleanTimeContent + ").", currentDay);
           return {};
         }
       }

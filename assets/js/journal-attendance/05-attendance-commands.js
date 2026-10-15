@@ -151,7 +151,7 @@ function saveGroupAttendance(day, time) {
     // ЭТАП №1: ГЛОБАЛЬНЫЙ БРОНЕЩИТ ВСЕГО ПОЛЯ ВВОДА — ОТСЕКАЕМ ЛЮБОЙ БРАК НА СТАРТЕ
     const globalInputWhitelist = /^[a-zA-Zа-яА-ЯёЁ0-9\s,/#@-]+$/;
     if (!globalInputWhitelist.test(inputStr)) {
-      alert(`⚠️ СБОЙ СИНТАКСИСА TECHLAB:\nВ поле "${fieldLabel}" обнаружены запрещённые или ломающие структуру спецсимволы!\nРазрешены строго только буквы, цифры, пробелы, запятые и знаки: / , # , @ , -`);
+      alert(`⚠️ СБОЙ СИНТАКСИСА:\nВ поле "${fieldLabel}" обнаружены запрещённые или ломающие структуру спецсимволы!\nРазрешены строго только буквы, цифры, пробелы, запятые и знаки: / , # , @ , -`);
       return null;
     }
     
@@ -199,35 +199,8 @@ function saveGroupAttendance(day, time) {
         }
       }
 
-      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
-      if (keysArray.includes('/d')) {
-        if (keysArray.length > 1 || tagsArray.length > 0) {
-          isErrorFound = true;
-          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
-          return null;
-        }
-      }
-
       // 3. ЭТАП №3: Склеиваем Фамилию Имя из кармана и проверяем её Whitelist
       const cleanName = nameWordsArray.join(' ').trim();
-
-      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА РЕМОНТА /r (БЕЗ ТЕГОВ И СТРОГО ДЛЯ СЛОВА JOURNAL)
-      if (keysArray.includes('/r')) {
-        if (keysArray.length > 1 || tagsArray.length > 0 || cleanName.toLowerCase() !== 'journal') {
-          isErrorFound = true;
-          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ ремонта /r должен вводиться строго отдельно от других ключей направлений и тегов.`;
-          return null;
-        }
-      }
-
-      // КОНТРОЛЬ МОНОПОЛИИ КЛЮЧА УДАЛЕНИЯ /d (БЕЗ ТЕГОВ И ДРУГИХ КЛЮЧЕЙ)
-      if (keysArray.includes('/d')) {
-        if (keysArray.length > 1 || tagsArray.length > 0) {
-          isErrorFound = true;
-          errorMessage = `В записи "${rawKid}" обнаружена ошибка! Ключ удаления /d должен вводиться строго отдельно от других ключей направлений и тегов.`;
-          return null;
-        }
-      }
 
       // Контроль количества: максимум 1 ключ на запись учащегося
       if (keysArray.length > 1) {

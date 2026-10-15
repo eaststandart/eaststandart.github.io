@@ -5,7 +5,7 @@ about: "Веб-интерфейс журнала посещаемости"
 purpose: "Страница для отметки в Журнал посещений преподавателями клуба присутствия учеников."
 author: "TechLab"
 layout: page
-title: Журнал посещаемости регулярных занятий
+title: Журнал посещаемости
 permalink: /journal-attendance/
 emoji: "📅"
 custom_css: "/assets/css/journal-attendance.css"

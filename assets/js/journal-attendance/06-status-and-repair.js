@@ -79,11 +79,10 @@ function startRepairStatusPolling() {
       
       if (payload.status === "error") {
         clearInterval(intervalId);
-        const serverErrorText = payload.message || "Обнаружена критическая ошибка синтаксиса или отступов.";
+        const serverDetails = payload.errorDetails || "Критический сбой интерпретатора или рассинхронизация веток репозитория.";
         
-        // При падении сервера Питона принудительно включаем Ветку В (manual) для вывода текста
-        triggerEmergencyBlock("Сервер GitHub", "Отказ выполнения воркфлоу Actions", serverErrorText, "manual", currentTeacher);
-
+        // Передаем в чистый баннер Ветки В статус отказа воркфлоу и живой лог из Питона
+        triggerEmergencyBlock("GitHub Actions", "Отказ выполнения воркфлоу сессии ремонта", serverDetails, "manual", currentTeacher);
         showNotify("❌ Критическая ошибка структуры расписания на сервере!", "error");
         
         if (btn) {
@@ -109,9 +108,9 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ВРЕМЕНИ ГРУППЫ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
+          "В строке №" + lineNum + " обнаружено " + errorDetails + "<br>" +
           "Исправьте время прямо в полях ниже:<br>" +
           "<div class='emergency-inputs-row'>" +
             "<input type='text' id='repair-hour' class='global-date-input emergency-time-input' maxlength='2' value='" + badH + "'>" +
@@ -155,24 +154,25 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ГЕОМЕТРИИ РАСПИСАНИЯ!<br>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована!</b> Требуется выравнивание отступов базы на сервере GitHub.<br><br>" +
+          "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br>" +
+          "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b> Требуется принудительное выравнивание пробелов базы на сервере GitHub.<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
         "</span>" +
       "</div>";
   }
-  // ВЕТКА В: Непредусмотренный глобальный брак расписания - строго ручная починка (Команда "manual")
+  // ВЕТКА В: Аварийный сбой или отказ выполнения на стороне сервера GitHub Actions (Команда "manual")
   else {
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: НЕПРЕДУСМОТРЕННЫЙ БРАК СИНТАКСИСА!<br>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: ОТКАЗ СЕРВЕРА GITHUB ACTIONS!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена критическая ошибка: " + errorDetails + "<br>" +
-          "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Автоматическое исправление невозможно!</b><br>" +
-          "Пожалуйста, откройте файл расписания в репозитории и <b>исправьте базу руками!</b>" +
+          "Статус воркфлоу: <b>" + cleanText + "</b>.<br>" +
+          "Логгер сервера: <code>" + errorDetails + "</code>.<br><br>" +
+          "<b>Автоматическое исправление в Журнале полностью заблокировано!</b><br>" +
+          "Робот Питона не смог обработать файл расписания. Пожалуйста, откройте репозиторий и <b>исправьте базу руками.</b>" +
         "</span>" +
       "</div>";
   }

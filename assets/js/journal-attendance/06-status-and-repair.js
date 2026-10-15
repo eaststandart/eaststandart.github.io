@@ -69,8 +69,10 @@ function startRepairStatusPolling() {
         showNotify("🟢 База данных успешно проверена сервером!", "success");
         
         document.getElementById("groups-container").innerHTML = "";
+        // Возвращаем глобальное поле выбора даты занятий в штатный режим отображения
+        const dateCont = document.getElementById("global-date-container");
+        if (dateCont) dateCont.style.display = "block";
         
-        // Фиксируем успех в постоянный кэш браузера, защищая от сбросов при Ctrl+F5
         localStorage.setItem("github_journal_robot_ok", "true");
         isRobotChecked = true; 
         
@@ -178,6 +180,10 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
   }
 
   document.getElementById("groups-container").innerHTML = bannerHtml;
+  
+  // Жестко скрываем глобальное поле даты занятий, исключая наложение интерфейса
+  const dateCont = document.getElementById("global-date-container");
+  if (dateCont) dateCont.style.display = "none";
   
   const allDayButtons = document.querySelectorAll('[id^="btn-day-"]');
   allDayButtons.forEach(function(btn) { btn.disabled = true; btn.classList.remove("active"); });

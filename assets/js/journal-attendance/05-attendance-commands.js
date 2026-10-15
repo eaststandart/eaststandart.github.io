@@ -44,7 +44,7 @@ function saveGroupAttendance(day, time) {
       }
       universalPayload.command = "delete";
       universalPayload.delete = [studentName];
-      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!";
+      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ РАСПИСАНИЯ!";
       bannerText = `Запрос на удаление отправлен на сервер GitHub.<br>Цель: <code>${studentName}</code>.`;
     } 
     else if (lastWordKey === "/r") {
@@ -332,7 +332,7 @@ function saveGroupAttendance(day, time) {
       }
       universalPayload.command = "delete";
       universalPayload.delete = deleteNames;
-      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ ДАННЫХ!";
+      bannerTitle = "⚠️ ЗАПУЩЕНА ПРОЦЕДУРА ИЗМЕНЕНИЯ БАЗЫ РАСПИСАНИЯ!";
       bannerText = "Запрос на удаление отправлен на сервер GitHub.<br>Список: <code>" + deleteNames.join(', ') + "</code>.";
     } 
     else if (isRepair) {

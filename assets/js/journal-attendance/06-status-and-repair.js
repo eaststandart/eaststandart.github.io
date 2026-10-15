@@ -99,6 +99,15 @@ function startRepairStatusPolling() {
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forcedDay = "") {
   let bannerHtml = "";
 
+  // СНАЙПЕРСКИЙ ИНСПЕКТОР АРГУМЕНТОВ TECHLAB В КОНСОЛИ БРАУЗЕРА
+  console.log("=== [БРАУЗЕР] ВЫЗОВ TRIGGER_EMERGENCY_BLOCK ===");
+  console.log("1. lineNum:", lineNum, "| тип:", typeof lineNum);
+  console.log("2. cleanText:", JSON.stringify(cleanText));
+  console.log("3. errorDetails:", JSON.stringify(errorDetails));
+  console.log("4. errorType:", JSON.stringify(errorType), "| тип:", typeof errorType);
+  console.log("5. forcedDay:", JSON.stringify(forcedDay));
+  console.log("===============================================");
+
   // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
   if (errorType === "modify_time") {
     const onlyDigits = cleanText.replace(/\D/g, "");

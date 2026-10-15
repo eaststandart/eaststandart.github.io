@@ -76,12 +76,6 @@ function startRepairStatusPolling() {
           mainDateBox.style.display = "none";
         }
         
-        // Возвращаем активность кнопкам верхнего меню дней недели
-        document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { 
-          btn.disabled = false; 
-          btn.classList.remove("active"); 
-        });
-        
         localStorage.setItem("github_journal_robot_ok", "true");
         isRobotChecked = true; 
         

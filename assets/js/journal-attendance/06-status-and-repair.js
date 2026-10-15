@@ -160,7 +160,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
       "<div class='emergency-banner'>" +
         "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br>" +
+          "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br><br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
           "<b>Генерация отчетов заблокирована!</b> Требуется принудительное выравнивание пробелов базы на сервере GitHub.<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +

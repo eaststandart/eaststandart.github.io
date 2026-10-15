@@ -28,7 +28,7 @@ function selectDynamicDay(day) {
   const dateContainer = document.getElementById("global-date-container");
   if (dateContainer) {
     // Принудительно сбрасываем любые аварийные инлайновые блокировки none, возвращая карточке полную видимость
-    dateContainer.style.display = "block";
+    dateContainer.style.display = "flex";
     // Аппаратно активируем рамки и тени карточки строго в момент отрисовки дня
     dateContainer.className = "global-date-box";
     dateContainer.innerHTML = 

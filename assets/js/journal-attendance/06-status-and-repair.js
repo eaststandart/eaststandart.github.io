@@ -70,11 +70,24 @@ function startRepairStatusPolling() {
         
         document.getElementById("groups-container").innerHTML = "";
         
-        // Разблокируем кнопки верхнего меню дней недели для зрячего выбора преподавателем
-        document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { btn.disabled = false; });
+        // Наглухо скрываем общую карточку контейнера даты до тех пор, пока препод сам не кликнет по кнопке дня
+        const mainDateBox = document.getElementById("global-date-container");
+        if (mainDateBox) {
+          mainDateBox.style.display = "none";
+          mainDateBox.className = "";
+        }
+        
+        // Возвращаем активность кнопкам верхнего меню дней недели
+        document.querySelectorAll('[id^="btn-day-"]').forEach(btn => { 
+          btn.disabled = false; 
+          btn.classList.remove("active"); 
+        });
         
         localStorage.setItem("github_journal_robot_ok", "true");
         isRobotChecked = true; 
+        
+        loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
+      }
         
         loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
       }

@@ -143,7 +143,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
             "<span class='emergency-separator'>:</span>" +
             "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
           "</div>" +
-          "<b>Генерация отчетов полностью заблокирована!</b><br>" +
+          "<b>Генерация отчетов заблокирована!</b><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
             "const rawH = document.getElementById('repair-hour').value.trim(); " +
             "const rawM = document.getElementById('repair-minute').value.trim(); " +
@@ -184,7 +184,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована!</b> Требуется принудительное выравнивание пробелов базы на сервере GitHub.<br><br>" +
+          "<b>Генерация отчетов заблокирована!</b> Требуется принудительное выравнивание пробелов базы на сервере GitHub.<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
         "</span>" +
       "</div>";

@@ -79,7 +79,7 @@ function saveGroupAttendance(day, time) {
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" + bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
+          "<b>Генерация отчетов заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
 
@@ -99,7 +99,7 @@ function saveGroupAttendance(day, time) {
   
   // ЗРЯЧИЙ ПРЕДОХРАНИТЕЛЬ ОПЕЧАТОК ПРЕПОДАВАТЕЛЯ
   if (hasJournal || hasCmdKey) {
-    alert('⚠️ СБОЙ СИНТАКСИСА TECHLAB:\nНарушен канон системных команд!\nСлово "journal" и ключи /d, /r, /m обязаны использоваться строго вместе в одной строке.');
+    alert('⚠️ ОШИБКА ВВОДА:\nНарушен синтаксис системных команд!\nСлово "journal" и ключи /d, /r, /m обязаны использоваться строго вместе в одной строке.');
     return;
   }
 
@@ -356,7 +356,7 @@ function saveGroupAttendance(day, time) {
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" + bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
-          "<b>Генерация отчетов полностью заблокирована до окончания перестройки файлов!</b>" +
+          "<b>Генерация отчетов заблокирована до окончания перестройки файлов!</b>" +
         "</span>" +
       "</div>";
     

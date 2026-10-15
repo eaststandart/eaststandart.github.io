@@ -96,12 +96,80 @@ function startRepairStatusPolling() {
 }
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails, forcedDay = "") {
-  const isTimeError = !errorDetails.toLowerCase().includes("геометрия");
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forcedDay = "") {
   let bannerHtml = "";
 
-  if (isTimeError) {
-    // ВЕТКА А: Интерактивный баннер строго для исправления времени суток
+  // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
+  if (errorType === "modify_time") {
+    const onlyDigits = cleanText.replace(/\D/g, "");
+    const badH = onlyDigits.substring(0, 2) || "00";
+    const badM = onlyDigits.substring(2, 4) || "00";
+    const cleanOldTime = badH + ":" + badM;
+
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ СТРУКТУРЫ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>" +
+          "Исправьте время прямо в полях ниже:<br>" +
+          "<div class='emergency-inputs-row'>" +
+            "<input type='text' id='repair-hour' class='global-date-input emergency-time-input' maxlength='2' value='" + badH + "'>" +
+            "<span class='emergency-separator'>:</span>" +
+            "<input type='text' id='repair-minute' class='global-date-input emergency-time-input' maxlength='2' value='" + badM + "'>" +
+          "</div>" +
+          "<b>Генерация отчетов полностью заблокирована!</b><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"(function(){ " +
+            "const rawH = document.getElementById('repair-hour').value.trim(); " +
+            "const rawM = document.getElementById('repair-minute').value.trim(); " +
+            "const newTimeStr = rawH.padStart(2, '0').substring(0, 2) + ':' + rawM.padStart(2, '0').substring(0, 2); " +
+            "const currentTeacher = localStorage.getItem('github_journal_logged_user') || repo_owner; " +
+            "sendUniversalRepairSignal({ " +
+              "teacher_login: currentTeacher, " +
+              "day: '" + forcedDay + "', " +
+              "time: '" + cleanOldTime + "', " +
+              "command: 'modify', " +
+              "modify_time: newTimeStr " +
+            "}); " +
+          "})()\">🛠️ Починить время на сервере</button>" +
+        "</span>" +
+      "</div>";
+  } 
+  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов (Абсолютный приоритет "repair")
+  elif (errorType === "repair") {
+    const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
+    const classicPayload = {
+      teacher_login: currentTeacher,
+      day: forcedDay,
+      time: "00:00",
+      command: "repair",
+      repair: ""
+    };
+    const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
+
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: КРИТИЧЕСКИЙ СБОЙ ГЕОМЕТРИИ РАСПИСАНИЯ!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br>Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Генерация отчетов полностью заблокирована!</b> Требуется выравнивание отступов базы на сервере GitHub.<br><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
+        "</span>" +
+      "</div>";
+  }
+  // ВЕТКА В: Непредусмотренный глобальный брак расписания - строго ручная починка
+  else {
+    bannerHtml = 
+      "<div class='emergency-banner'>" +
+        "⚠️ АВАРИЙНАЯ БЛОКИРОВКА: НЕПРЕДУСМОТРЕННЫЙ БРАК СИНТАКСИСА!<br>" +
+        "<span class='emergency-banner-sub'>" +
+          "В строке №" + lineNum + " обнаружена критическая ошибка: " + errorDetails + "<br>" +
+          "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
+          "<b>Автоматическое исправление невозможно!</b><br>" +
+          "Пожалуйста, откройте файл расписания в репозитории и <b>исправьте базу руками!</b>" +
+        "</span>" +
+      "</div>";
+  }
+
     const onlyDigits = cleanText.replace(/\D/g, ""); // Оставляем строго цифры из строки "2800"
     const badH = onlyDigits.substring(0, 2) || "00";
     const badM = onlyDigits.substring(2, 4) || "00";

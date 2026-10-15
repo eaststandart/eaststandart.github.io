@@ -77,9 +77,32 @@ function saveGroupAttendance(day, time) {
         alert('⚠️ СБОЙ КОМАНДЫ:\nУкажите строго 4 цифры старого и нового времени суток (например: journal 1300 1200 /m)!');
         return;
       }
+
+      // 1. МАТЕМАТИЧЕСКИЙ РАЗБОР И ФИЛЬТР РЕАЛЬНОСТИ СУТОК ТЕCHLAB
+      const oldH = parseInt(oldDigits.substring(0, 2), 10);
+      const oldM = parseInt(oldDigits.substring(2, 4), 10);
+      const newH = parseInt(newDigits.substring(0, 2), 10);
+      const newM = parseInt(newDigits.substring(2, 4), 10);
+
+      if (isNaN(oldH) || isNaN(oldM) || oldH < 0 || oldH > 23 || oldM < 0 || oldM > 59 ||
+          isNaN(newH) || isNaN(newM) || newH < 0 || newH > 23 || newM < 0 || newM > 59) {
+        alert('⚠️ СБОЙ СИНТАКСИСА:\nОбнаружено несуществующее время суток!\nЧасы должны быть от 00 до 23, минуты от 00 до 59.\nЗапрос отклонён.');
+        return;
+      }
+
+      const checkOldTimeStr = String(oldH).padStart(2, '0') + ":" + String(oldM).padStart(2, '0');
+      const checkNewTimeStr = String(newH).padStart(2, '0') + ":" + String(newM).padStart(2, '0');
+      
+      // 2. СНАЙПЕРСКИЙ ФИЛЬТР СЕТКИ ЧАСОВ РАСПИСАНИЯ — ПРОВЕРЯЕМ НАЛИЧИЕ ГРУППЫ В БАЗЕ ДНЯ
+      const existingDayGroups = (studentsData[day] && Object.keys(studentsData[day])) || [];
+      if (!existingDayGroups.includes(checkOldTimeStr)) {
+        alert(`⚠️ СБОЙ МОДИФИКАЦИИ:\nГруппы со временем "${checkOldTimeStr}" в расписании на ${day} физически НЕТ!\nПроверьте цифры. Запрос отклонён.`);
+        return;
+      }
+
       universalPayload.command = "modify";
-      universalPayload.time = oldDigits.substring(0, 2) + ":" + oldDigits.substring(2, 4);
-      universalPayload.modify_time = newDigits.substring(0, 2) + ":" + newDigits.substring(2, 4);
+      universalPayload.time = checkOldTimeStr;
+      universalPayload.modify_time = checkNewTimeStr;
       bannerTitle = "🛠️ ЗАПУЩЕНА ПРИНУДИТЕЛЬНАЯ МОДИФИКАЦИЯ БАЗЫ РАСПИСАНИЯ!";
       bannerText = `Команда изменения структуры времени <code>${universalPayload.time} -> ${universalPayload.modify_time}</code> успешно принята.`;
     }
@@ -358,7 +381,7 @@ function saveGroupAttendance(day, time) {
     document.getElementById("groups-container").innerHTML = 
       "<div class='emergency-banner'>" + bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" + bannerText + "<br><br>" +
-          "<b>Генерация отчетов заблокирована до окончания перестройки файлов!</b>" +
+          "<b>Генерация отчетов заблокирована до окончания перестройки базы!</b>" +
         "</span>" +
       "</div>";
     

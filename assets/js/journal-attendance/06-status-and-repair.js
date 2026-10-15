@@ -87,7 +87,7 @@ function startRepairStatusPolling() {
         const serverDetails = payload.errorDetails || "Критический сбой интерпретатора или рассинхронизация веток репозитория";
         
         // Передаем в чистый баннер Ветки В статус отказа воркфлоу и живой лог из Питона
-        triggerEmergencyBlock("GitHub Actions", "Отказ выполнения воркфлоу сессии ремонта", serverDetails, "manual", currentTeacher);
+        triggerEmergencyBlock("GitHub Actions", "Отказ выполнения workflow сессии ремонта", serverDetails, "manual", currentTeacher);
         showNotify("❌ Критическая ошибка структуры расписания на сервере!", "error");
         
         if (btn) {
@@ -173,7 +173,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
       "<div class='emergency-banner'>" +
         "⚠️ БЛОКИРОВКА: ОТКАЗ СЕРВЕРА GITHUB ACTIONS!<br>" +
         "<span class='emergency-banner-sub'>" +
-          "Статус воркфлоу: <b>" + cleanText + "</b>.<br><br>" +
+          "Статус: <b>" + cleanText + "</b>.<br><br>" +
           "Логгер сервера: <code>" + errorDetails + "</code>.<br><br>" +
           "<b>Автоматическое исправление в Журнале заблокировано!</b><br>" +
           "Робот не смог обработать файл расписания. <b>Исправьте базу</b> непосредственно в репозитории." +
@@ -197,7 +197,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
 // Единая универсальная функция отправки любых сигналов модерации базы данных TechLab
 function sendUniversalRepairSignal(payload) {
-  // Твои фирменные логи инспекции TechLab перед отправкой пакета на сайт
+  // Логи инспекции перед отправкой пакета на сайт
   console.log("Проверка ремонта:", {
     forcedDay: payload.day,
     currentDayName: payload.day,
@@ -230,7 +230,7 @@ function sendUniversalRepairSignal(payload) {
     if (!res.ok) throw new Error("Не удалось взвести файл статуса");
     
     const signalBody = {
-      message: "сигнал: команда " + payload.command + " для " + currentTeacher,
+      message: "сигнал: команда " + payload.command + " от " + currentTeacher,
       content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
     };
     

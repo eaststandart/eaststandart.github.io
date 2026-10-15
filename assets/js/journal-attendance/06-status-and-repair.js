@@ -104,6 +104,27 @@ function startRepairStatusPolling() {
 function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "", forcedDay = "") {
   let bannerHtml = "";
 
+  // ТОТАЛЬНЫЙ ИНСПЕКТОР СТРУКТУРЫ КАЛЕНДАРЯ TECHLAB В КОНСОЛИ
+  console.log("=== [ОТЛАДКА ИНТЕРФЕЙСА] АНАЛИЗ ПОЛЯ ДАТЫ ===");
+  const testInput = document.getElementById("global-journal-date");
+  if (!testInput) {
+    console.log("🚨 КРИТИЧЕСКИЙ СБОЙ: Элемент с ID 'global-journal-date' ФИЗИЧЕСКИ НЕ НАЙДЕН в DOM дерева сайта!");
+  } else {
+    console.log("✅ Элемент найден:", testInput);
+    console.log("Текущий inline-стиль display инпута:", testInput.style.display);
+    console.log("Вычисленный (computed) стиль display инпута:", window.getComputedStyle(testInput).display);
+    
+    // Проверяем всю цепочку родителей вверх на 3 уровня
+    let currentParent = testInput.parentElement;
+    let depth = 1;
+    while (currentParent && depth <= 3) {
+      console.log(`Родитель Уровня №${depth}: тег=<${currentParent.tagName.toLowerCase()}>, id='${currentParent.id}', class='${currentParent.className}'`);
+      currentParent = currentParent.parentElement;
+      depth++;
+    }
+  }
+  console.log("=================================================");
+
   // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
   if (errorType === "modify_time") {
     const onlyDigits = cleanText.replace(/\D/g, "");

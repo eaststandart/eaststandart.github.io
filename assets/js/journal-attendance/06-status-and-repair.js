@@ -88,9 +88,6 @@ function startRepairStatusPolling() {
         
         loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
       }
-        
-        loadStudentsFromYaml(); // Запускаем загрузку чистого файла расписания
-      }
       
       if (payload.status === "error") {
         clearInterval(intervalId);

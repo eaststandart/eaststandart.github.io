@@ -30,6 +30,7 @@ function saveGroupAttendance(day, time) {
       teacher_login: currentTeacher,
       day: day,
       time: time.replace(/"/g, '').replace(/'/g, '').trim()
+      timestamp: new Date().toISOString()
     };
 
     let bannerTitle = "";

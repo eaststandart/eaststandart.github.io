@@ -60,19 +60,19 @@ function parseSimpleYaml(text) {
       }
 
       // Проверка 3: Всеядный контроль геометрии и формата времени группы при любом количестве пробелов
-      const cleanTimeContent = cleanText.replace(/"/g, '').replace(/'/g, '').trim().replace(/:\$/, '').trim();
-      if (cleanText.endsWith(':') && /^\d{1,2}\s*[:\\/.\=–—-]?\s*\d{2}\$/.test(cleanTimeContent)) {
+      const cleanTimeContent = cleanText.replace(/[\"']/g, '').trim().replace(/:\s*$/, '').trim();
+      const timeMatch = cleanTimeContent.match(/^(\d{1,2})\s*[:\/ .=–—-]?\s*(\d{2})$/);
+      if (cleanText.endsWith(':') && timeMatch) {
         
-        // ЭТАЖ №1: ГЕОМЕТРИЯ ОТСТУПОВ (ВЫСШИЙ ПРИОРИТЕТ)
+        // Фильтр геометрии отступов расписания TechLab
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "кривая геометрия отступов строки времени! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + indent + " пробелов).", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы должно иметь отступ строго 2 пробела (обнаружено: " + indent + " пробелов).", "repair", currentDay);
           return {};
         }
 
-        // ЭТАЖ №2: РЕАЛЬНОСТЬ СУТОК (НИЗШИЙ ПРИОРИТЕТ - СРАБОТАЕТ ТОЛЬКО ЕСЛИ ИНДЕНТ ИДЕАЛЕН)
-        const digitsMatch = cleanTimeContent.match(/(\d{1,2})\D*(\d{2})/);
-        const h = digitsMatch ? parseInt(digitsMatch, 10) : -1;
-        const m = digitsMatch ? parseInt(digitsMatch, 10) : -1;
+        // Математический фильтр реальности часов и минут
+        const h = parseInt(timeMatch[1], 10);
+        const m = parseInt(timeMatch[2], 10);
         
         if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
           triggerEmergencyBlock(i + 1, cleanText, "несуществующее время суток! Часы должны быть от 00 до 23, минуты от 00 до 59 (обнаружено: " + cleanTimeContent + ").", "modify_time", currentDay);
@@ -88,7 +88,7 @@ function parseSimpleYaml(text) {
     if (!isInsideConfig) {
       const validYamlDays = ["понедельник:", "вторник:", "среда:", "четверг:", "пятница:", "суббота:", "воскресенье:"];
       const isDayLine = validYamlDays.includes(cleanText.toLowerCase());
-      const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{2}:\d{2}\1:$/.test(cleanText);
+      const isTimeLine = cleanText.endsWith(':') && /^(["']?)\d{1,2}\s*[:\/ .=–—-]?\s*\d{2}\1:$/.test(cleanText);
 
       // 1. Фиксация и тотальный контроль сдвига Дней недели (Строго отступ 0)
       if (isDayLine) {
@@ -102,25 +102,23 @@ function parseSimpleYaml(text) {
       // 2. Фиксация и тотальный контроль сдвига Времени группы (Строго отступ 2)
       else if (isTimeLine) {
         if (indent !== 2) {
-          triggerEmergencyBlock(i + 1, cleanText, "сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг времени группы! Время группы (например, \"10:00\":) должно иметь отступ строго 2 пробела.", "repair", currentDay);
           return {};
         }
-        const rawGroupTime = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
-        currentGroup = rawGroupTime;
-        if (currentDay) {
-          if (!result[currentDay]) result[currentDay] = {};
-          result[currentDay][currentGroup] = [];
-        }
+        currentGroup = cleanText.slice(0, -1).replace(/"/g, '').replace(/'/g, '').trim();
+        result[currentDay][currentGroup] = [];
       } 
       // 3. Извлечение и тотальный контроль сдвига Имени ученика (Строго отступ 4)
       else if (cleanText.startsWith('- name:')) {
         if (indent !== 4) {
-          triggerEmergencyBlock(i + 1, cleanText, "сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, "кривой сдвиг строки ученика! Поле '- name:' должно иметь отступ строго 4 пробела.", "repair", currentDay);
           return {};
         }
         let rawName = cleanText.substring(cleanText.indexOf(':') + 1).trim();
+        
         if (rawName.startsWith('"') && rawName.endsWith('"')) rawName = rawName.slice(1, -1).trim();
         if (rawName.startsWith("'") && rawName.endsWith("'")) rawName = rawName.slice(1, -1).trim();
+      
         if (currentDay && currentGroup && rawName) {
           result[currentDay][currentGroup].push(rawName);
         }
@@ -128,7 +126,7 @@ function parseSimpleYaml(text) {
       // Точечный контроль сдвига параметров ученика direction и tag (Строго отступ 6)
       else if (cleanText.startsWith('direction:') || cleanText.startsWith('tag:')) {
         if (indent !== 6) {
-          triggerEmergencyBlock(i + 1, cleanText, `сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, "repair", currentDay);
+          triggerEmergencyBlock(i + 1, cleanText, `кривой сдвиг параметра ученика! Поле должно иметь отступ строго 6 пробелов.`, "repair", currentDay);
           return {};
         }
       }

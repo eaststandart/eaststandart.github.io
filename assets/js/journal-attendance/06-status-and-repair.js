@@ -81,8 +81,17 @@ function startRepairStatusPolling() {
         clearInterval(intervalId);
         const serverErrorText = payload.message || "Обнаружена критическая ошибка синтаксиса или отступов.";
         
-        // Принудительно вызываем красный экран Аварийной Блокировки, передавая текст ошибки от Питона
-        triggerEmergencyBlock("GitHub", "Ремонт заблокирован во избежание порчи базы.", serverErrorText);
+        // Зрячий командный детектор статуса сервера: если упало время - шлём modify, иначе - полный repair
+        let serverErrorType = "repair";
+        if (serverErrorText.toLowerCase().includes("врем") || serverErrorText.toLowerCase().includes("time")) {
+          // Но только если в логе сервера нет слова "отступ" или "геометрия" (высший приоритет!)
+          if (!serverErrorText.toLowerCase().includes("отступ") && !serverErrorText.toLowerCase().includes("сдвиг")) {
+            serverErrorType = "modify_time";
+          }
+        }
+
+        // Передаем координаты явно по нашей новой пятиаргументной сигнатуре
+        triggerEmergencyBlock("GitHub", "⏳ Группа " + (payload.time || "00:00") + ":", serverErrorText, serverErrorType, currentTeacher);
         showNotify("❌ Критическая ошибка структуры расписания на сервере!", "error");
         
         if (btn) {
@@ -96,17 +105,8 @@ function startRepairStatusPolling() {
 }
 
 // Единая функция для вывода баннера аварийной блокировки и кнопки ремонта сервера
-function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forcedDay = "") {
+function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "", forcedDay = "") {
   let bannerHtml = "";
-
-  // СНАЙПЕРСКИЙ ИНСПЕКТОР АРГУМЕНТОВ TECHLAB В КОНСОЛИ БРАУЗЕРА
-  console.log("=== [БРАУЗЕР] ВЫЗОВ TRIGGER_EMERGENCY_BLOCK ===");
-  console.log("1. lineNum:", lineNum, "| тип:", typeof lineNum);
-  console.log("2. cleanText:", JSON.stringify(cleanText));
-  console.log("3. errorDetails:", JSON.stringify(errorDetails));
-  console.log("4. errorType:", JSON.stringify(errorType), "| тип:", typeof errorType);
-  console.log("5. forcedDay:", JSON.stringify(forcedDay));
-  console.log("===============================================");
 
   // ВЕТКА А: Точечная модификация цифр времени суток при идеальных отступах
   if (errorType === "modify_time") {
@@ -143,7 +143,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forc
         "</span>" +
       "</div>";
   } 
-  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов (Абсолютный приоритет "repair")
+  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов (Команда "repair")
   else if (errorType === "repair") {
     const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
     const classicPayload = {
@@ -165,7 +165,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forc
         "</span>" +
       "</div>";
   }
-  // ВЕТКА В: Непредусмотренный глобальный брак расписания - строго ручная починка
+  // ВЕТКА В: Непредусмотренный глобальный брак расписания - строго ручная починка (Команда "manual")
   else {
     bannerHtml = 
       "<div class='emergency-banner'>" +
@@ -187,7 +187,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType, forc
   showNotify("❌ Обнаружена критическая ошибка синтаксиса в файле!", "error");
 }
 
-// Функция отправки сигналов модерации в базу данных
+// Единая универсальная функция отправки любых сигналов модерации базы данных TechLab
 function sendUniversalRepairSignal(payload) {
   // Твои фирменные логи инспекции TechLab перед отправкой пакета на сайт
   console.log("Проверка ремонта:", {

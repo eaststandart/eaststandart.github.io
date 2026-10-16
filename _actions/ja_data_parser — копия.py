@@ -22,7 +22,7 @@ JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REP
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def collect_and_parse_raw_data():
-    print("\n=== [МОДУЛЬ: СЕТЕВОЙ ПАРСЕР] СБОР СЫРЫХ ДАННЫХ ИЗ API ===")
+    print("\n=== [МОДУЛЬ: ПАРСЕР] СБОР СЫРЫХ ДАННЫХ ИЗ API ===")
     
     admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
     headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
@@ -106,13 +106,62 @@ def collect_and_parse_raw_data():
 
         yaml_content_bytes = base64.b64decode(res_json.get("content", ""))
         yaml_text_orig = yaml_content_bytes.decode('utf-8')
+        
+        # === ВРЕМЕННЫЙ ЖЕСТКИЙ ЛОГ ДЛЯ СВЕРКИ СИМВОЛОВ И ОПЕЧАТОК ===
+        print("\n==================================================")
+        print(f"[ОТЛАДКА YAML] ЗАПУСК СКАНИРОВАНИЯ ДЛЯ ПРЕПОДАВАТЕЛЯ: {teacher_login}")
+        print("--- СЫРОЙ ТЕКСТ YAML НАПРАВЛЕННЫЙ ИЗ СЕТИ ГИТХАБА:")
+        print(yaml_text_orig)
+        print("==================================================\n")
+
         yaml_data = yaml.safe_load(yaml_text_orig) or {}
 
-        # === ЖЕСТКИЙ ВХОДНОЙ ЩИТ: АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ В ФАЙЛЕ НА СТАРТЕ ===
+        # === АВТО-ИСПРАВЛЕНИЕ ВРЕМЕНИ И ОПЕЧАТОК НАПРАВЛЕНИЙ ===
         students_data = {}
         file_needs_repair = False
+        
+        # 1. СКВОЗНОЙ РЕДАКТОР ТЕКСТА YAML С ДЕТАЛЬНЫМ РАЗДЕЛЬНЫМ ЛОГИРОВАНИЕМ
+        repaired_yaml_text = yaml_text_orig
+        
+        # Раздельный поиск и фиксация опечаток времени (сбор точного оригинального написания опечатки)
+        raw_slash_matches = re.findall(r'\d{1,2}\\\d{2}|\d{1,2}/\d{2}', repaired_yaml_text)
+        if raw_slash_matches:
+            for bad_time_str in raw_slash_matches:
+                good_time_str = bad_time_str.replace('\\', ':').replace('/', ':')
+                print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена опечатка формата времени: '{bad_time_str}' -> Исправляем на '{good_time_str}'")
+            repaired_yaml_text = re.sub(r'(\d{1,2})\\(\d{2})', r'\1:\2', repaired_yaml_text)
+            repaired_yaml_text = re.sub(r'(\d{1,2})/(\d{2})', r'\1:\2', repaired_yaml_text)
+
+        # Раздельный поиск и фиксация опечаток неверной раскладки букв электроники [e],[е],[Э]
+        bad_chars_matches = re.findall(r'\[([eеЕЭ])\]', repaired_yaml_text)
+        if bad_chars_matches:
+            for char in bad_chars_matches:
+                print(f"[ПАРСЕР РЕДАКТОР] 🔤 Найдена опечатка раскладки букв направления: '[{char}]' -> Исправляем на '[э]'")
+            repaired_yaml_text = re.sub(r'\[[eеЕЭ]\]', '[э]', repaired_yaml_text)
+
+        # Раздельный прямолинейный поиск опечаток кавычек без использования ломающихся регулярок
+        if "[']" in repaired_yaml_text:
+            print("[ПАРСЕР РЕДАКТОР] 🛑 Найдена сетевая опечатка ложных одинарных кавычек в скобках: '[\']' -> Исправляем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace("[']", "[э]")
+            
+        if '["]' in repaired_yaml_text:
+            print("[ПАРСЕР РЕДАКТОР] 🛑 Найдена сетевая опечатка ложных двойных кавычек в скобках: '[\"]' -> Исправляем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace('["]', '[э]')
+
+        # Раsh_time_matches = re.findall(r'(\d{сация опечатки трипл-кавычек двойная-одиночная-двойная '"'
+        if '\"\'\"' in repaired_yaml_text:
+            count_triple = repaired_yaml_text.count('\"\'\"')
+            print(f"[ПАРСЕР РЕДАКТОР] 💥 Найдена критическая опечатка тройных кавычек '\"'\"' ({count_triple} шт.) -> Принудительно заменяем на '[э]'")
+            repaired_yaml_text = repaired_yaml_text.replace('\"\'\"', '[э]')
+        
+        if repaired_yaml_text != yaml_text_orig:
+            yaml_text_orig = repaired_yaml_text
+            yaml_data = yaml.safe_load(yaml_text_orig) or {}
+            file_needs_repair = True
+
         updated_yaml_text = yaml_text_orig
 
+        # 2. ПОСТРОЧНЫЙ СБОР КАРТЫ РАСПИСАНИЯ В ПАМЯТЬ PYTHON С ОЧИСТКОЙ МАССИВОВ СТРОК
         for key, value in yaml_data.items():
             if key == 'config':
                 continue
@@ -121,14 +170,23 @@ def collect_and_parse_raw_data():
             
             if isinstance(value, dict):
                 for raw_time, kids_list in value.items():
-                    clean_time_str = str(raw_time).strip()
+                    clean_time_str = str(raw_time).strip().replace('\\', ':')
                     match_time = re.search(r'(\d{1,2})\D*(\d{2})', clean_time_str)
                     if match_time:
                         normalized_time = f"{match_time.group(1)}:{match_time.group(2)}"
-                        students_data[day_name][normalized_time] = kids_list if isinstance(kids_list, list) else []
+                        
+                        # Принудительно чистим строки учеников внутри массивов групп карты памяти
+                        clean_kids = []
+                        for kid in (kids_list if isinstance(kids_list, list) else []):
+                            k_str = str(kid)
+                            k_str = re.sub(r'\[[eеЕЭ\'\"]\]', '[э]', k_str)
+                            k_str = k_str.replace('\"\'\"', '[э]')
+                            clean_kids.append(k_str)
+                            
+                        students_data[day_name][normalized_time] = clean_kids
                         
                         if clean_time_str != normalized_time:
-                            print(f"[ПАРСЕР РЕДАКТОР] Найдена опечатка '{clean_time_str}'. Заменяем на '{normalized_time}'")
+                            print(f"[ПАРСЕР РЕДАКТОР] ⏰ Найдена опечатка формата времени '{clean_time_str}'. Заменяем на '{normalized_time}'")
                             updated_yaml_text = updated_yaml_text.replace(f"'{clean_time_str}':", f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f'"{clean_time_str}":', f'"{normalized_time}":')
                             updated_yaml_text = updated_yaml_text.replace(f"{clean_time_str}:", f'"{normalized_time}":')
@@ -146,7 +204,7 @@ def collect_and_parse_raw_data():
                 }
                 res_repair = requests.put(file_api_url, json=repair_payload, headers=headers_pub, timeout=30)
                 if res_repair.status_code in (200, 201):
-                    print(f"[ПАРСЕР РЕДАКТОР] 🟢 Файл расписания для {teacher_login} успешно вылечен напрямую по сети!")
+                    print(f"[ПАРСЕР РЕДАКТОР] 🟢 Файл расписания для {teacher_login} успешно отредактирован!")
                     yaml_sha = res_repair.json().get("content", {}).get("sha", yaml_sha)
                 else:
                     print(f"[ПАРСЕР РЕДАКТОР] ❌ Не удалось отправить вылеченный YAML по сети: {res_repair.status_code}")
@@ -187,6 +245,6 @@ def collect_and_parse_raw_data():
         }
         print(f"[ПАРСЕР] 🟢 Данные для '{teacher_login}' успешно собраны по сети и упакованы.")
 
-    print("=== [МОДУЛЬ 1: ПАРСЕР] СБОР ДАННЫХ ПО ВСЕМ УЧИТЕЛЯМ ЗАВЕРШЕН ===")
+    print("=== [МОДУЛЬ: ПАРСЕР] СБОР ДАННЫХ ПО ВСЕМ УЧИТЕЛЯМ ЗАВЕРШЕН ===")
     return parsed_teachers_package
 

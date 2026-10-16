@@ -122,10 +122,10 @@ def run_generator():
         
         markdown_body = f"### 📅 Журнал посещений за {formatted_date} ({pack.get('target_day', '')})\n\n"
         if show_projects_column:
-            markdown_body += "| Группа / Ученик | Status | Направление | Чем занят |\n"
+            markdown_body += "| Группа / Ученик | Статус | Направление | Чем занят |\n"
             markdown_body += "| :--- | :--- | :--- | :--- |\n"
         else:
-            markdown_body += "| Группа / Ученик | Status | Направление |\n"
+            markdown_body += "| Группа / Ученик | Статус | Направление |\n"
             markdown_body += "| :--- | :--- | :--- |\n"
 
         yaml_group_updates = {}
@@ -186,20 +186,26 @@ def run_generator():
                     newbie_name = newbie["name"].strip()
                     raw_dir = newbie.get("direction", "").strip().lower()
                     
+                    print(f"\n  [ЛОГ НОВИЧКА] Имя: {newbie_name!r} | Сырой тег с сайта: {newbie.get('tag')!r}", flush=True)
                     newbie_track = "электроника" if "электронное конструирование" in raw_dir else "столярное" if "столярное дело" in raw_dir else ""
                     newbie_tag = newbie.get("tag", "").strip()
 
-                    # ЛОГИКА 1 В 1: Автогенерация транслит-тега, если препод передал одиночный знак '#'
                     if newbie_tag == "#":
+                        print("  [ЛОГ НОВИЧКА] Обнаружен одиночный знак #. Запуск транслитератора...", flush=True)
                         newbie_tag = f"#techlab-{translit_rus_to_lat(newbie_name)}"
+                        print(f"  [ЛОГ НОВИЧКА] Сгенерирован тег: {newbie_tag!r}", flush=True)
 
-                    # ЛОГИКА 1 В 1: Радар проектов в Discussions по хэштегу ученика
                     project_link = ""
                     if show_projects_column and newbie_tag:
+                        print(f"  [ЛОГ НОВИЧКА] Радар проектов ищет тег: {newbie_tag!r} в {len(global_gallery_comments)} комментах...", flush=True)
                         matches = [c for c in global_gallery_comments if c.get("body") and newbie_tag in c["body"]]
-                        if matches:
+                        print(f"  [ЛОГ НОВИЧКА] Найдено совпадений в Discussions: {len(matches)} шт.", flush=True)
+                        if len(matches) > 0:
+                            print(f"  [ЛОГ НОВИЧКА] Массив не пустой. Извлекаем URL первого проекта: {matches[0].get('url')}", flush=True)
                             matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
                             project_link = f"🗂️ [Проект]({matches[0]['url']})"
+                        else:
+                            print("  [ЛОГ НОВИЧКА] Массив совпадений пуст. Пропуск генерации ссылки проекта.", flush=True)
 
                     direction_suffix = " [э]" if newbie_track == "электроника" else " [с]" if newbie_track == "столярное" else ""
                     tag_suffix = f" {newbie_tag}" if newbie_tag else ""

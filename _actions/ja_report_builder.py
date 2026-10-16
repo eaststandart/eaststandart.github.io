@@ -194,7 +194,7 @@ def run_generator():
                 processed = process_kid_row(kid, "")
                 is_present = False
                 for p in group_payload.get("present_permanent", []):
-                    if p.replace('"', '').replace("'", "").strip().lower() == processed["name_for_sort"].lower():
+                    if isinstance(p, dict) and p.get("name", "").strip().lower() == processed["name_for_sort"].lower():
                         is_present = True
                         break
                 processed["status"] = "🟢 Присутствовал" if is_present else "🔴 Отсутствовал"
@@ -202,14 +202,26 @@ def run_generator():
                 current_group_yaml_rows.append(processed["yaml_line"])
 
             for newbie in group_payload.get("newbies", []):
-                if newbie.strip():
-                    processed = process_kid_row(newbie, "🟡 Новичок")
+                if isinstance(newbie, dict) and newbie.get("name", "").strip():
+                    # Собираем сырую виртуальную строку для старого движка process_kid_row
+                    raw_newbie_str = newbie["name"]
+                    if newbie.get("direction") == "электронное конструирование": raw_newbie_str += " [э]"
+                    if newbie.get("direction") == "столярное дело": raw_newbie_str += " [с]"
+                    if newbie.get("tag"): raw_newbie_str += f" {newbie['tag']}"
+                    
+                    processed = process_kid_row(raw_newbie_str, "🟡 Новичок")
                     block_newbies.append(processed)
                     current_group_yaml_rows.append(processed["yaml_line"])
 
             for prob in group_payload.get("probation", []):
-                if prob.strip():
-                    processed = process_kid_row(prob, "🔵 Пробное")
+                if isinstance(prob, dict) and prob.get("name", "").strip():
+                    # Собираем сырую виртуальную строку для старого движка process_kid_row
+                    raw_prob_str = prob["name"]
+                    if prob.get("direction") == "электронное конструирование": raw_prob_str += " [э]"
+                    if prob.get("direction") == "столярное дело": raw_prob_str += " [с]"
+                    if prob.get("tag"): raw_prob_str += f" {prob['tag']}"
+                    
+                    processed = process_kid_row(raw_prob_str, "🔵 Пробное")
                     block_probation.append(processed)
 
             block_permanent.sort(key=lambda x: x["name_for_sort"].lower())

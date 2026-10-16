@@ -161,7 +161,7 @@ def collect_and_parse_raw_data():
         print(f"  • Найдено заполненных групп с сайта: {list(temp_journal.keys())}")
         for t_key, t_val in temp_journal.items():
             print(f"    --- Группа {t_key} ---")
-            print(f"    Permanent (present): {t_val.get('present_permanent', [])}")
+            print(f"    Permanent (present): {json.dumps(t_val.get('present_permanent', []), ensure_ascii=False)}")
             print(f"    Newbies (плоский массив): {json.dumps(t_val.get('newbies', []), ensure_ascii=False)}")
             print(f"    Probation (плоский массив): {json.dumps(t_val.get('probation', []), ensure_ascii=False)}")
         print("==================================================\n")

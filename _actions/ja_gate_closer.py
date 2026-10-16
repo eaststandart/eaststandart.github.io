@@ -39,7 +39,7 @@ def close_gate_pipeline(reports_list):
         teacher_login = report_item.get("teacher_login")
         target_day = report_item.get("day")
         
-        print(f"\n[ШЛЮЗ] Обработка фиксации данных для преподавателя: '{teacher_login}'")
+        print(f"[ШЛЮЗ] Обработка фиксации данных для преподавателя: '{teacher_login}'")
 
         yaml_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
         

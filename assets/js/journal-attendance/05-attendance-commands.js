@@ -141,7 +141,11 @@ function saveGroupAttendance(day, time) {
   let presentKids = [];
   const checkboxes = document.querySelectorAll(`[id^="kid-${time.replace(':', '-')}-"]`);
   checkboxes.forEach(chk => {
-    if (chk.checked) presentKids.push(chk.value);
+    if (chk.checked) {
+      const parentLabel = chk.closest('label');
+      let cleanName = parentLabel ? parentLabel.innerText.trim() : chk.value.trim();
+      presentKids.push({ name: cleanName });
+    }
   });
 
   // Функция-обработчик: выполняет сквозной перевод комбинаций ключей по белому списку по Регламенту

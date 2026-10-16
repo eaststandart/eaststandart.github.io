@@ -158,7 +158,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
     const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
 
     bannerHtml = 
-      "<div class='emergency-banner' style='margin-top: 0px !important;'>" +
+      "<div class='emergency-banner'>" +
         "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!<br>" +
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br><br>" +

@@ -21,7 +21,15 @@
     <div id="notification" class="notify"></div>
 
     <!-- 2. Контейнер для динамических кнопок дней недели -->
-    <div id="days-buttons-container" class="days-flex-container"></div>
+    <div id="days-buttons-container" class="days-flex-container">
+      <button id="btn-day-понедельник" class="btn-big btn-day btn-day-transition day-border-понедельник" disabled onclick="selectDynamicDay('понедельник')">ПН</button>
+      <button id="btn-day-вторник" class="btn-big btn-day btn-day-transition day-border-вторник" disabled onclick="selectDynamicDay('вторник')">ВТ</button>
+      <button id="btn-day-среда" class="btn-big btn-day btn-day-transition day-border-среда" disabled onclick="selectDynamicDay('среда')">СР</button>
+      <button id="btn-day-четверг" class="btn-big btn-day btn-day-transition day-border-четверг" disabled onclick="selectDynamicDay('четверг')">ЧТ</button>
+      <button id="btn-day-пятница" class="btn-big btn-day btn-day-transition day-border-пятница" disabled onclick="selectDynamicDay('пятница')">ПТ</button>
+      <button id="btn-day-суббота" class="btn-big btn-day btn-day-transition day-border-суббота" disabled onclick="selectDynamicDay('суббота')">СБ</button>
+      <button id="btn-day-воскресенье" class="btn-big btn-day btn-day-transition day-border-воскресенье" disabled onclick="selectDynamicDay('воскресенье')">ВС</button>
+    </div>
 
     <!-- 3. Единый контейнер для управляемой даты дня --> 
     <div id="global-date-container"></div>

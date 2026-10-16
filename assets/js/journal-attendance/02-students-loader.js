@@ -27,24 +27,12 @@ function loadStudentsFromYaml() {
     studentsData = parseSimpleYaml(yamlText);
     if (!studentsData || Object.keys(studentsData).length === 0) return;
     
-    const daysContainer = document.getElementById("days-buttons-container");
-    daysContainer.innerHTML = "";
-    
-    const calendarOrder = [
-      { key: "понедельник", label: "ПН" }, { key: "вторник", label: "ВТ" },
-      { key: "среда", label: "СР" }, { key: "четверг", label: "ЧТ" },
-      { key: "пятница", label: "ПТ" }, { key: "суббота", label: "СБ" },
-      { key: "воскресенье", label: "ВС" }
-    ];
-    
-    calendarOrder.forEach(dayInfo => {
-      const btnId = `btn-day-${dayInfo.key}`;
-      const isAvailable = studentsData[dayInfo.key] && Object.keys(studentsData[dayInfo.key]).length > 0;
-      const disabledAttr = isAvailable ? "" : "disabled";
-      daysContainer.innerHTML += `
-        <button id="${btnId}" class="btn-big btn-day btn-day-transition day-border-${dayInfo.key}" ${disabledAttr} onclick="selectDynamicDay('${dayInfo.key}')">
-          ${dayInfo.label}
-        </button>`;
+    // Разблокируем только кнопки дней, которые есть в расписании YML
+    Object.keys(studentsData).forEach(dayKey => {
+      const targetBtn = document.getElementById(`btn-day-${dayKey.toLowerCase()}`);
+      if (targetBtn && Object.keys(studentsData[dayKey]).length > 0) {
+        targetBtn.disabled = false;
+      }
     });
 
     showNotify("Журнал успешно загружен!", "success");

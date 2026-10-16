@@ -103,7 +103,7 @@ def run_generator():
                     res += char
             return re.sub(r'-+', '-', res).strip('-')
 
-        # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ (1 В 1 ОРИГИНАЛ) ===
+        # === СБОРКА ИТОГОВОЙ МАРКДАУН ТАБЛИЦЫ ДЛЯ ПРЕПОДАВАТЕЛЯ ===
         schedule_groups = sorted(list(students_data.get(target_day, {}).keys()))
         print(f"[СТРОИТЕЛЬ] Запланировано групп у {teacher_login} по YAML: {schedule_groups}")
         
@@ -117,9 +117,7 @@ def run_generator():
 
         print(f"[СТРОИТЕЛЬ] 🟢 Полный комплект для '{teacher_login}' собран! Запускаем склейку...", flush=True)
 
-        print(f"[ОТЛАДКА ДАТЫ] Значение date_str: {date_str!r} | Тип: {type(date_str)}", flush=True)
         date_parts = date_str.split('-')
-        print(f"[ОТЛАДКА ДАТЫ] Результат split: {date_parts!r}", flush=True)
         formatted_date = f"{date_parts[2]}.{date_parts[1]}.{date_parts[0]} г."
         
         markdown_body = f"### 📅 Журнал посещений за {formatted_date} ({pack.get('target_day', '')})\n\n"
@@ -133,7 +131,6 @@ def run_generator():
         yaml_group_updates = {}
 
         for time in schedule_groups:
-            print(f"\n[ОТЛАДКА ГРУППЫ] Обработка времени: {time!r}", flush=True)
             if show_projects_column:
                 markdown_body += f"| **⏰ ГРУППА {time}** | | | |\n"
             else:
@@ -141,37 +138,44 @@ def run_generator():
 
             group_payload = temp_journal.get(time, {"present_permanent": [], "newbies": [], "probation": []})
             permanent_kids = students_data.get(target_day, {}).get(time, [])
-            
-            print(f"[ОТЛАДКА payload] Ключи group_payload: {list(group_payload.keys())}", flush=True)
-            print(f"[ОТЛАДКА YML] permanent_kids из базы YML: {permanent_kids!r} | Тип: {type(permanent_kids)}", flush=True)
 
             block_permanent = []
             block_newbies = []
             block_probation = []
             current_group_yaml_rows = []
 
-            # 1. КОНТУР РЕГУЛЯРНЫХ УЧЕНИКОВ ИЗ YAML БАЗЫ РАСПИСАНИЯ
+            # 1. КОНТУР РЕГУЛЯРНЫХ УЧЕНИКОВ ИЗ YAML БАЗЫ РАСПИСАНИЯ (ЧИТАЕМ КАК СЛОВАРЬ)
             for kid in permanent_kids:
-                print(f"  • Опрос kid: {kid!r} | Тип: {type(kid)}", flush=True)
-                kid_clean = str(kid).strip()
-                kid_track = ""
-                kid_tag = ""
-
-                # Проверяем структуру элементов внутри входящего массива с сайта перед сверкой
-                present_list = group_payload.get("present_permanent", [])
-                print(f"  • Содержимое present_permanent с сайта: {present_list!r}", flush=True)
-                for index, p_item in enumerate(present_list):
-                    print(f"    - Элемент JSON [{index}]: {p_item!r} | Тип: {type(p_item)}", flush=True)
+                if not isinstance(kid, dict):
+                    continue
+                    
+                kid_clean = kid.get("name", "").strip()
+                raw_dir = kid.get("direction", "").strip().lower()
+                kid_track = "электроника" if "электронное конструирование" in raw_dir else "столярное" if "столярное дело" in raw_dir else ""
+                kid_tag = kid.get("tag", "").strip()
 
                 # Намертво защищённая сверка факта присутствия по плоскому ключу name из JSON с сайта
-                is_present = any(isinstance(p, dict) and p.get("name", "").strip().lower() == kid_clean.lower() for p in present_list)
-               
+                is_present = any(isinstance(p, dict) and p.get("name", "").strip().lower() == kid_clean.lower() for p in group_payload.get("present_permanent", []))
+                
+                # ЛОГИКА 1 В 1: Радар проектов в Discussions по хэштегу постоянного ученика
+                project_link = ""
+                if show_projects_column and kid_tag:
+                    matches = [c for c in global_gallery_comments if c.get("body") and kid_tag in c["body"]]
+                    if matches:
+                        matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
+                        project_link = f"🗂️ [Проект]({matches[0]['url']})"
+
+                # Сборка канонической строки для сохранения в YAML-базу расписания преподавателя
+                direction_suffix = " [э]" if kid_track == "электроника" else " [с]" if kid_track == "столярное" else ""
+                tag_suffix = f" {kid_tag}" if kid_tag else ""
+                final_yaml_line = f"{kid_clean}{direction_suffix}{tag_suffix}"
+
                 processed = {
                     "name_for_sort": kid_clean,
                     "track": kid_track,
                     "status": "🟢 Присутствовал" if is_present else "🔴 Отсутствовал",
-                    "project": "",
-                    "yaml_line": kid_clean
+                    "project": project_link,
+                    "yaml_line": final_yaml_line
                 }
                 block_permanent.append(processed)
                 current_group_yaml_rows.append(processed["yaml_line"])
@@ -185,9 +189,11 @@ def run_generator():
                     newbie_track = "электроника" if "электронное конструирование" in raw_dir else "столярное" if "столярное дело" in raw_dir else ""
                     newbie_tag = newbie.get("tag", "").strip()
 
+                    # ЛОГИКА 1 В 1: Автогенерация транслит-тега, если препод передал одиночный знак '#'
                     if newbie_tag == "#":
                         newbie_tag = f"#techlab-{translit_rus_to_lat(newbie_name)}"
 
+                    # ЛОГИКА 1 В 1: Радар проектов в Discussions по хэштегу ученика
                     project_link = ""
                     if show_projects_column and newbie_tag:
                         matches = [c for c in global_gallery_comments if c.get("body") and newbie_tag in c["body"]]
@@ -297,7 +303,8 @@ def run_generator():
             "teacher_login": teacher_login,
             "markdown": markdown_body,
             "url": comment_url,
-            "day": target_day
+            "day": target_day,
+            "yaml_group_updates": yaml_group_updates
         }
         all_generated_reports.append(report_packet)
         print(f"[СТРОИТЕЛЬ] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")

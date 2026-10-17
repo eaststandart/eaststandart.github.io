@@ -46,6 +46,13 @@ function parseSimpleYaml(text) {
     // =========================================================================
     // Если мы находимся внутри секции config:, проверки синтаксиса расписания полностью игнорируются!
     if (!isInsideConfig) {
+
+      // ПЕРЕХВАТ ОШИБОК ПРОБЕЛОВ С ВЫДАЧЕЙ СТАТУСА "space"
+      if (cleanText.includes("  ") || (cleanText.includes("tag:") && cleanText.replace("tag:", "").trim().includes(" "))) {
+        const spaceMsg = "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.";
+        triggerEmergencyBlock(i + 1, cleanText, spaceMsg, "space", currentDay);
+        return {};
+      }
       
       // Вызов Единого Монолитного Щита Валидации
       const structureError = validateRawText(cleanText);

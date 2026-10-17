@@ -157,19 +157,18 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
     };
     const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
 
-    // Снайперски адаптируем все текстовые переменные под конкретный тип дефекта расписания
+    // Адаптируем все текстовые переменные под конкретный тип дефекта расписания
     const bannerTitle = (errorType === "space") ? "⚠️ ПРЕДУПРЕЖДЕНИЕ: ЛИШНИЕ ПРОБЕЛЫ В ПОЛЯХ РАСПИСАНИЯ!" : "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!";
-    const bannerDesc = (errorType === "space") ? "В строке №" + lineNum + " обнаружены избыточные пробелы: " + errorDetails : "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails;
-    const actionText = (errorType === "space") ? "Требуется удаление лишних пробелов из базы на сервере GitHub." : "Требуется выравнивание геометрии отступов базы на сервере GitHub.";
-    const buttonLabel = (errorType === "space") ? "🛠️ Исправить базу данных на сервере" : "🛠️ Исправить базу данных на сервере";
+    const actionText = (errorType === "space") ? "<b>Генерация отчетов приостановлена!</b> Требуется автоматическое сжатие лишних пробелов и очистка тегов на сервере GitHub." : "<b>Генерация отчетов заблокирована!</b> Требуется принудительное выравнивание геометрии отступов базы на сервере GitHub.";
+    const buttonLabel = (errorType === "space") ? "🛠️ Вылечить пробелы и теги на сервере" : "🛠️ Выровнять геометрию базы на сервере";
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
         bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" +
-          bannerDesc + "<br><br>" +
+          "В строке №" + lineNum + " " + errorDetails + "<br><br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов приостановлена!</b> " + actionText + "<br><br>" +
+          actionText + "<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">" + buttonLabel + "</button>" +
         "</span>" +
       "</div>";
@@ -182,7 +181,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
         "<span class='emergency-banner-sub'>" +
           "Статус: <b>" + cleanText + "</b>.<br><br>" +
           "Логгер сервера: <code>" + errorDetails + "</code>.<br><br>" +
-          "<b>Автоматическое исправление в Журнале заблокировано!</b> " +
+          "<b>Автоматическое исправление Расписания заблокировано!</b> " +
           "Робот не смог обработать файл расписания. <b>Исправьте базу</b> непосредственно в репозитории." +
         "</span>" +
       "</div>";

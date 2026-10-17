@@ -35,7 +35,7 @@
 /* Кнопки авторизации и сохранения */
 .btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
 .btn-auth { background-color: #24292e; color: white; }
-.btn-save { background-color: #37b24d; color: white; margin-top: 15px; }
+.btn-save { background-color: #37b24d; color: white; }
 
 /* Календарная сетка и контейнеры дней */
 .days-flex-container { display: flex; gap: 10px; flex-wrap: wrap; }

@@ -168,7 +168,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
         "<span class='emergency-banner-sub'>" +
           "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br><br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов приостановлена!</b> " + actionText + "<br>" +
+          "<b>Генерация отчетов приостановлена!</b> " + actionText + "<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">" + buttonLabel + "</button>" +
         "</span>" +
       "</div>";

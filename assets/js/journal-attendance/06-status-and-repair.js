@@ -176,7 +176,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
         "<span class='emergency-banner-sub'>" +
           "Статус: <b>" + cleanText + "</b>.<br><br>" +
           "Логгер сервера: <code>" + errorDetails + "</code>.<br><br>" +
-          "<b>Автоматическое исправление в Журнале заблокировано!</b>" +
+          "<b>Автоматическое исправление в Журнале заблокировано!</b> " +
           "Робот не смог обработать файл расписания. <b>Исправьте базу</b> непосредственно в репозитории." +
         "</span>" +
       "</div>";

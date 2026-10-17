@@ -154,19 +154,6 @@ def collect_and_parse_raw_data():
             "yaml_text_orig": yaml_text_orig,
             "yaml_sha": res_json.get("sha", "")
         }
-        
-        # === ТОТАЛЬНЫЙ СНАЙПЕРСКИЙ ИНСПЕКТОР СТРУКТУРЫ ПЕРЕДАВАЕМОГО ПАКЕТА TECHLAB ===
-        print("\n==================================================")
-        print(f"📡 [ИНСПЕКЦИЯ ТРАНЗИТА] ПАКЕТ ПЕРЕДАВАЕМЫЙ В JA_REPORT_BUILDER ДЛЯ: {teacher_login}")
-        print(f"  • День: {target_day} | Дата: {date_str}")
-        print(f"  • Преподаватель (Имя): {teacher_username}")
-        print(f"  • Найдено заполненных групп с сайта: {list(temp_journal.keys())}")
-        for t_key, t_val in temp_journal.items():
-            print(f"    --- Группа {t_key} ---")
-            print(f"    Permanent (present): {json.dumps(t_val.get('present_permanent', []), ensure_ascii=False)}")
-            print(f"    Newbies (плоский массив): {json.dumps(t_val.get('newbies', []), ensure_ascii=False)}")
-            print(f"    Probation (плоский массив): {json.dumps(t_val.get('probation', []), ensure_ascii=False)}")
-        print("==================================================\n")
 
     print("=== [МОДУЛЬ: ПАРСЕР] СБОР ДАННЫХ ПО ВСЕМ УЧИТЕЛЯМ ЗАВЕРШЕН ===")
     return parsed_teachers_package

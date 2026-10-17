@@ -196,7 +196,7 @@ def run_generator():
                             matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
                             project_link = f"🗂️ [Проект]({matches[0]['url']})"
 
-                    # Строим кристально чистую объектную структуру TechLab для YAML базы расписания
+                    # Строим кристально чистую объектную структуру для YAML базы расписания
                     new_yaml_obj = {"name": newbie_name}
                     if newbie_track:
                         new_yaml_obj["direction"] = "электронное конструирование" if newbie_track == "электроника" else "столярное дело"

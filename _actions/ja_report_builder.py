@@ -144,7 +144,7 @@ def run_generator():
             block_probation = []
             current_group_yaml_rows = []
 
-            # 1. КОНТУР РЕГУЛЯРНЫХ УЧЕНИКОВ ИЗ YAML БАЗЫ РАСПИСАНИЯ (ЧИТАЕМ КАК СЛОВАРЬ)
+            # 1. КОНТУР РЕГУЛЯРНЫХ УЧЕНИКОВ ИЗ YAML БАЗЫ РАСПИСАНИЯ (СОХРАНЯЕМ ИСХОДНЫЙ ОБЪЕКТ)
             for kid in permanent_kids:
                 if not isinstance(kid, dict):
                     continue
@@ -165,61 +165,53 @@ def run_generator():
                         matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
                         project_link = f"🗂️ [Проект]({matches[0]['url']})"
 
-                # Сборка канонической строки для сохранения в YAML-базу расписания преподавателя
-                direction_suffix = " [э]" if kid_track == "электроника" else " [с]" if kid_track == "столярное" else ""
-                tag_suffix = f" {kid_tag}" if kid_tag else ""
-                final_yaml_line = f"{kid_clean}{direction_suffix}{tag_suffix}"
-
                 processed = {
                     "name_for_sort": kid_clean,
                     "track": kid_track,
                     "status": "🟢 Присутствовал" if is_present else "🔴 Отсутствовал",
                     "project": project_link,
-                    "yaml_line": final_yaml_line
+                    "yaml_obj": kid  # Транзитом сохраняем исходный чистый объект расписания
                 }
                 block_permanent.append(processed)
-                current_group_yaml_rows.append(processed["yaml_line"])
+                current_group_yaml_rows.append(processed["yaml_obj"])
 
-            # 2. КОНТУР НОВИЧКОВ ИЗ JSON ОБЪЕКТОВ С САЙТА
+            # 2. КОНТУР НОВИЧКОВ ИЗ JSON ОБЪЕКТОВ С САЙТА (ФОРМИРУЕМ ЧИСТЫЙ ОБЪЕКТ ДЛЯ БАЗЫ)
             for newbie in group_payload.get("newbies", []):
                 if isinstance(newbie, dict) and newbie.get("name", "").strip():
                     newbie_name = newbie["name"].strip()
                     raw_dir = newbie.get("direction", "").strip().lower()
                     
-                    print(f"\n  [ЛОГ НОВИЧКА] Имя: {newbie_name!r} | Сырой тег с сайта: {newbie.get('tag')!r}", flush=True)
                     newbie_track = "электроника" if "электронное конструирование" in raw_dir else "столярное" if "столярное дело" in raw_dir else ""
                     newbie_tag = newbie.get("tag", "").strip()
 
+                    # ЛОГИКА 1 В 1: Автогенерация транслит-тега, если препод передал одиночный знак '#'
                     if newbie_tag == "#":
-                        print("  [ЛОГ НОВИЧКА] Обнаружен одиночный знак #. Запуск транслитератора...", flush=True)
                         newbie_tag = f"#techlab-{translit_rus_to_lat(newbie_name)}"
-                        print(f"  [ЛОГ НОВИЧКА] Сгенерирован тег: {newbie_tag!r}", flush=True)
 
+                    # ЛОГИКА 1 В 1: Радар проектов в Discussions по хэштегу ученика
                     project_link = ""
                     if show_projects_column and newbie_tag:
-                        print(f"  [ЛОГ НОВИЧКА] Радар проектов ищет тег: {newbie_tag!r} в {len(global_gallery_comments)} комментах...", flush=True)
                         matches = [c for c in global_gallery_comments if c.get("body") and newbie_tag in c["body"]]
-                        print(f"  [ЛОГ НОВИЧКА] Найдено совпадений в Discussions: {len(matches)} шт.", flush=True)
-                        if len(matches) > 0:
-                            print(f"  [ЛОГ НОВИЧКА] Массив не пустой. Извлекаем URL первого проекта: {matches[0].get('url')}", flush=True)
+                        if matches:
                             matches.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
                             project_link = f"🗂️ [Проект]({matches[0]['url']})"
-                        else:
-                            print("  [ЛОГ НОВИЧКА] Массив совпадений пуст. Пропуск генерации ссылки проекта.", flush=True)
 
-                    direction_suffix = " [э]" if newbie_track == "электроника" else " [с]" if newbie_track == "столярное" else ""
-                    tag_suffix = f" {newbie_tag}" if newbie_tag else ""
-                    final_yaml_line = f"{newbie_name}{direction_suffix}{tag_suffix}"
+                    # Строим кристально чистую объектную структуру TechLab для YAML базы расписания
+                    new_yaml_obj = {"name": newbie_name}
+                    if newbie_track:
+                        new_yaml_obj["direction"] = "электронное конструирование" if newbie_track == "электроника" else "столярное дело"
+                    if newbie_tag:
+                        new_yaml_obj["tag"] = newbie_tag
 
                     processed = {
                         "name_for_sort": newbie_name,
                         "track": newbie_track,
                         "status": "🟡 Новичок",
                         "project": project_link,
-                        "yaml_line": final_yaml_line
+                        "yaml_obj": new_yaml_obj
                     }
                     block_newbies.append(processed)
-                    current_group_yaml_rows.append(processed["yaml_line"])
+                    current_group_yaml_rows.append(processed["yaml_obj"])
 
             # 3. КОНТУР ПРОБНЫХ ЗАНЯТИЙ ИЗ JSON ОБЪЕКТОВ С САЙТА
             for prob in group_payload.get("probation", []):
@@ -245,9 +237,13 @@ def run_generator():
                         "track": prob_track,
                         "status": "🔵 Пробное",
                         "project": project_link,
-                        "yaml_line": ""
+                        "yaml_obj": None
                     }
                     block_probation.append(processed)
+
+            # Алфавитная сортировка объектов для обновления YAML-файла базы расписания
+            current_group_yaml_rows.sort(key=lambda x: x.get("name", "").lower())
+            yaml_group_updates[time] = current_group_yaml_rows
 
             # Алфавитная сортировка карточек учеников для вывода в Маркдаун
             block_permanent.sort(key=lambda x: x["name_for_sort"].lower())

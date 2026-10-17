@@ -144,8 +144,8 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
         "</span>" +
       "</div>";
   } 
-  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов (Команда "repair")
-  else if (errorType === "repair") {
+  // ВЕТКА Б: Полная принудительная перестройка геометрии отступов или авто-лечение пробелов полей (Команда "repair")
+  else if (errorType === "repair" || errorType === "space") {
     const currentTeacher = localStorage.getItem("github_journal_logged_user") || repo_owner;
     const classicPayload = {
       teacher_login: currentTeacher,
@@ -157,14 +157,20 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
     };
     const payloadJsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(classicPayload))));
 
+    // Снайперски адаптируем все текстовые переменные под конкретный тип дефекта расписания
+    const bannerTitle = (errorType === "space") ? "⚠️ ПРЕДУПРЕЖДЕНИЕ: ЛИШНИЕ ПРОБЕЛЫ В ПОЛЯХ РАСПИСАНИЯ!" : "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!";
+    const bannerDesc = (errorType === "space") ? "В строке №" + lineNum + " обнаружены избыточные пробелы: " + errorDetails : "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails;
+    const actionText = (errorType === "space") ? "Требуется удаление лишних пробелов из базы на сервере GitHub." : "Требуется выравнивание геометрии отступов базы на сервере GitHub.";
+    const buttonLabel = (errorType === "space") ? "🛠️ Исправить базу данных на сервере" : "🛠️ Исправить базу данных на сервере";
+
     bannerHtml = 
       "<div class='emergency-banner'>" +
-        "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!<br>" +
+        bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " обнаружена ошибка отступов: " + errorDetails + "<br><br>" +
+          bannerDesc + "<br><br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          "<b>Генерация отчетов заблокирована!</b> Требуется принудительное выравнивание пробелов базы на сервере GitHub.<br><br>" +
-          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">🛠️ Исправить базу данных на сервере</button>" +
+          "<b>Генерация отчетов приостановлена!</b> " + actionText + "<br><br>" +
+          "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">" + buttonLabel + "</button>" +
         "</span>" +
       "</div>";
   }

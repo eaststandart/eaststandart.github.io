@@ -138,7 +138,7 @@ def collect_and_parse_raw_data():
                 print(f"[ПАРСЕР] ❌ Ошибка интернет-чтения файла {file}: {str(e)}")
                 continue
 
-        # УПАКОВКА АБСОЛЮТНО ЧИСТЫХ ДАННЫХ ПРЕПОДАВАТЕЛЯ В ПАКЕТ
+        # УПАКОВКА ДАННЫХ ПРЕПОДАВАТЕЛЯ В ПАКЕТ
         parsed_teachers_package[teacher_login] = {
             "teacher_login": teacher_login,
             "teacher_username": teacher_username,
@@ -150,7 +150,9 @@ def collect_and_parse_raw_data():
             "project_categories": project_categories,
             "students_data": students_data,
             "temp_journal": temp_journal,
-            "teacher_json_files": teacher_json_files
+            "teacher_json_files": teacher_json_files,
+            "yaml_text_orig": yaml_text_orig,
+            "yaml_sha": res_json.get("sha", "")
         }
         
         # === ТОТАЛЬНЫЙ СНАЙПЕРСКИЙ ИНСПЕКТОР СТРУКТУРЫ ПЕРЕДАВАЕМОГО ПАКЕТА TECHLAB ===

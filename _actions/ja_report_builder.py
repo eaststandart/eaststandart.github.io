@@ -304,13 +304,15 @@ def run_generator():
             print(f"[СТРОИТЕЛЬ] ❌ Ошибка связи с API при публикации отчета {teacher_login}: {str(e)}")
             continue
 
-        # Упаковываем данные текущего учителя в изолированный пакет и добавляем в список
+        # Упаковываем все данные в изолированный пакет и добавляем в список
         report_packet = {
             "teacher_login": teacher_login,
             "markdown": markdown_body,
             "url": comment_url,
             "day": target_day,
-            "yaml_group_updates": yaml_group_updates
+            "yaml_group_updates": yaml_group_updates,
+            "yaml_text_orig": pack["yaml_text_orig"],
+            "yaml_sha": pack["yaml_sha"]
         }
         all_generated_reports.append(report_packet)
         print(f"[СТРОИТЕЛЬ] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")

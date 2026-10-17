@@ -39,7 +39,7 @@ def close_gate_pipeline(reports_list):
         teacher_login = report_item.get("teacher_login")
         target_day = report_item.get("day")
         
-        # 1. ТОТАЛЬНЫЙ ЗРЯЧИЙ ИМПОРТ ИЗ ПАМЯТИ PYTHON БЕЗ ПОВТОРНЫХ ЗАПРОСОВ В СЕТЬ
+        # 1. СНАЙПЕРСКИЙ ИМПОРТ ИЗ ОПЕРАТИВНОЙ ПАМЯТИ PYTHON БЕЗ ПОВТОРНЫХ ЗАПРОСОВ В СЕТЬ
         yaml_group_updates = report_item.get("yaml_group_updates", {})
         yaml_text_orig = report_item.get("yaml_text_orig", "")
         yaml_sha = report_item.get("yaml_sha", "")
@@ -48,22 +48,12 @@ def close_gate_pipeline(reports_list):
             print(f"[ШЛЮЗ] ⚠️ Оригинальные строки YAML или SHA отсутствуют в памяти для {teacher_login}. Пропуск.")
             continue
 
-        print(f"[ШЛЮЗ] Локальная фиксация данных базы расписания преподавателя: '{teacher_login}'")
+        print(f"[ШЛЮЗ] Построчно обновляем базу расписания преподавателя: '{teacher_login}'")
         yaml_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
         orig_lines = yaml_text_orig.split('\n')
 
-        # === ИНСПЕКТОР КАРТЫ ШЛЮЗА TECHLAB ===
-        print("\n==================================================")
-        print(f"🔮 [ИНСПЕКЦИЯ ШЛЮЗА] АНАЛИЗ ОЧЕРЕДИ ОБНОВЛЕНИЯ ДЛЯ: {teacher_login}")
-        print(f"  • Исходный текст YAML расписания (первые 5 строк): {orig_lines[:5]!r}")
-        print(f"  • Содержимое карты yaml_group_updates из памяти:")
-        for t_slot, r_lines in yaml_group_updates.items():
-            print(f"    - Время {t_slot}: {r_lines!r} | Количество: {len(r_lines)}")
-        print("==================================================\n", flush=True)
-
-        # 2. ОРИГИНАЛЬНЫЙ ЦИКЛ ПОСТРОЧНОЙ ПЕРЕЗАПИСИ ТЕКСТА YAML 1 В 1 ИЗ СТАРОГО ГЕНЕРАТОРА
+        # 2. ЗРЯЧИЙ ПОСТРОЧНЫЙ ЦИКЛ ОБНОВЛЕНИЯ С СОХРАНЕНИЕМ 100% КОММЕНТАРИЕВ И ОТСТУПОВ
         new_lines = []
-
         inside_day = False
         idx = 0
         while idx < len(orig_lines):
@@ -81,8 +71,13 @@ def close_gate_pipeline(reports_list):
                 group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
                 new_lines.append(line)
                 
-                # Подставляем уже готовые, отсортированные на этапе сборщика объекты из памяти
+                # Забираем отсортированные объекты из памяти и формируем идеальный многострочный YAML
                 final_rows = yaml_group_updates.get(group_time_clean, [])
+                
+                # Принудительная алфавитная сортировка объектов Журнала прямо перед записью в файл
+                if isinstance(final_rows, list):
+                    final_rows.sort(key=lambda x: x.get("name", "").lower() if isinstance(x, dict) else str(x).lower())
+
                 for kid_obj in final_rows:
                     if isinstance(kid_obj, dict):
                         new_lines.append(f"    - name: \"{kid_obj.get('name', '').strip()}\"")
@@ -90,7 +85,8 @@ def close_gate_pipeline(reports_list):
                             new_lines.append(f"      direction: \"{kid_obj.get('direction').strip()}\"")
                         if kid_obj.get("tag"):
                             new_lines.append(f"      tag: \"{kid_obj.get('tag').strip()}\"")
-                    
+                
+                # Полностью вычищаем и пропускаем весь старый блок многострочной структуры группы
                 while idx + 1 < len(orig_lines):
                     next_line = orig_lines[idx + 1]
                     next_trimmed = next_line.rstrip()
@@ -98,7 +94,6 @@ def close_gate_pipeline(reports_list):
                         idx += 1
                         continue
                     next_indent = len(next_line) - len(next_line.lstrip())
-                    # Зряче пропускаем и стираем любые вложенные строки объектов с отступом >= 4 пробелов
                     if next_indent >= 4:
                         idx += 1
                     else:
@@ -109,35 +104,33 @@ def close_gate_pipeline(reports_list):
             new_lines.append(line)
             idx += 1
 
-        # ----------------------------------------------------------------------
-        # СОРТИРОВКА ЗАВЕРШЕНА: ПРОВЕРКА НА НАЛИЧИЕ РЕАЛЬНЫХ ИЗМЕНЕНИЙ В БАЗЕ
-        # ----------------------------------------------------------------------
         updated_yaml_text = '\n'.join(new_lines)
 
+        # ----------------------------------------------------------------------
+        # ПРОВЕРКА НА ИЗМЕНЕНИЯ И СЕТЕВАЯ ОТПРАВКА PUT
+        # ----------------------------------------------------------------------
         if updated_yaml_text.strip() == yaml_text_orig.strip():
-            print(f"[ШЛЮЗ] ℹ️ Состав групп и порядок строк для {teacher_login} не изменились. Пропуск PUT-запроса YAML.")
+            print(f"[ШЛЮЗ] ℹ️ Состав групп для {teacher_login} не изменился. Пропуск PUT-запроса YAML.")
         else:
-            # Отправляем PUT-запрос в сеть Гитхаба только если текст реально изменился!
             encoded_content = base64.b64encode(updated_yaml_text.encode('utf-8')).decode('utf-8')
             put_payload = {
-                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта",
+                "message": f"chore: автоматическое обновление расписания {teacher_login} с сайта Журнала",
                 "content": encoded_content,
                 "sha": yaml_sha
             }
             res_put = requests.put(yaml_api_url, json=put_payload, headers=headers_admin, timeout=30)
             if res_put.status_code in (200, 201):
-                print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена напрямую по сети из памяти!")
+                print(f"[ШЛЮЗ] 🟢 База YAML для {teacher_login} успешно обновлена построечно с сохранением структуры!")
             else:
                 print(f"[ШЛЮЗ] ❌ Ошибка PUT-запроса YAML: {res_put.status_code} — {res_put.text}")
 
         # ----------------------------------------------------------------------
-        # СЕТЕВОЕ УДАЛЕНИЕ JSON ИЗ ПАПКИ _OUTPUT (РАЗМОРОЗКА ШЛЮЗА)
+        # REST-УДАЛЕНИЕ ОБРАБОТАННЫХ JSON ИЗ ПАПКИ _OUTPUT (РАЗМОРОЗКА ШЛЮЗА)
         # ----------------------------------------------------------------------
-        print(f"[ШЛЮЗ] Запрос списка временных файлов из _output для зачистки...")
         res_output = requests.get(JOURNAL_JSON_API_URL, headers=headers_admin, timeout=30)
         if res_output.status_code == 200:
             json_files_to_delete = [item["name"] for item in res_output.json() if f"-journal-attendance-{teacher_login}.json" in item["name"].lower()]
-            print(f"[ШЛЮЗ] Запуск REST-зачистки {len(json_files_to_delete)} файлов JSON...")
+            print(f"[ШЛЮЗ] Запуск REST-зачистки {len(json_files_to_delete)} файлов JSON из папки _output...")
             
             for file_name in json_files_to_delete:
                 file_api_url = f"{JOURNAL_JSON_API_URL}/{file_name}"

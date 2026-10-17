@@ -305,7 +305,7 @@ def run_generator():
             "yaml_sha": pack["yaml_sha"]
         }
         all_generated_reports.append(report_packet)
-        print(f"[СТРОИТЕЛЬ] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")
+        print(f"\n[СТРОИТЕЛЬ] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")
     
     print("=== [МОДУЛЬ: СТРОИТЕЛЬ] СБОРКА ОТЧЕТА ЗАВЕРШЕНА ===")
 

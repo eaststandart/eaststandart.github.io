@@ -56,7 +56,7 @@ def main():
             # --- ПОТОК 1: ЛИЧНЫЕ УВЕДОМЛЕНИЯ ---
             personal_ids = config_data.get('tg_personal_id', [])
             if personal_ids:
-                print(f"[ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal для {teacher_login}...")
+                print(f"\n[ДИСПЕТЧЕР] Запуск модуля ja_tgbot_personal для {teacher_login}...")
                 import ja_tgbot_personal
                 ja_tgbot_personal.send_personal_report(markdown_body, comment_url, target_day, personal_ids)
             else:
@@ -71,7 +71,7 @@ def main():
             else:
                 print(f"[ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое для {teacher_login}, пропуск.")
                 
-        print("[ДИСПЕТЧЕР] ВСЕ СФОРМИРОВАННЫЕ ОТЧЕТЫ УСПЕШНО РАЗОСЛАНЫ В ТЕЛЕГРАМ!")
+        print("\n[ДИСПЕТЧЕР] ВСЕ СФОРМИРОВАННЫЕ ОТЧЕТЫ УСПЕШНО РАЗОСЛАНЫ В ТЕЛЕГРАМ!")
 
         # ВКЛЮЧЕНИЕ СЕТЕВОГО ЗАКРЫВАТЕЛЯ ШЛЮЗА ПОСЛЕ ПОЛНОГО ЗАВЕРШЕНИЯ ТЕЛЕГРАМА
         try:
@@ -82,6 +82,8 @@ def main():
        
     except Exception as err:
         print(f"[ДИСПЕТЧЕР] ❌ Критическая ошибка конвейера: {str(err)}")
+
+    print("=== [ДИСПЕТЧЕР] ЗАВЕРШЕНИЕ УПРАВЛЯЮЩЕГО КОНВЕЙЕРА ===")
 
 if __name__ == "__main__":
     main()

@@ -81,11 +81,15 @@ def close_gate_pipeline(reports_list):
                 group_time_clean = trimmed.strip().strip(':').strip('"').strip("'").strip()
                 new_lines.append(line)
                 
-                # Подставляем уже готовые, отсортированные на этапе сборщика строки из памяти
+                # Подставляем уже готовые, отсортированные на этапе сборщика объекты из памяти
                 final_rows = yaml_group_updates.get(group_time_clean, [])
-                for kid_line in final_rows:
-                    clean_row = kid_line.replace('"', '').replace("'", "").strip()
-                    new_lines.append(f'    - "{clean_row}"')
+                for kid_obj in final_rows:
+                    if isinstance(kid_obj, dict):
+                        new_lines.append(f"    - name: \"{kid_obj.get('name', '').strip()}\"")
+                        if kid_obj.get("direction"):
+                            new_lines.append(f"      direction: \"{kid_obj.get('direction').strip()}\"")
+                        if kid_obj.get("tag"):
+                            new_lines.append(f"      tag: \"{kid_obj.get('tag').strip()}\"")
                     
                 while idx + 1 < len(orig_lines):
                     next_line = orig_lines[idx + 1]

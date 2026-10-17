@@ -49,7 +49,7 @@ function parseSimpleYaml(text) {
 
       // ПЕРЕХВАТ ОШИБОК ПРОБЕЛОВ С ВЫДАЧЕЙ СТАТУСА "space"
       if (cleanText.includes("  ") || (cleanText.includes("tag:") && cleanText.replace("tag:", "").trim().includes(" "))) {
-        const spaceMsg = "обнаружены множественные пробелы подряд. Допускается строго один пробел между словами.";
+        const spaceMsg = "множественные пробелы подряд. Допускается строго один пробел между словами.";
         triggerEmergencyBlock(i + 1, cleanText, spaceMsg, "space", currentDay);
         return {};
       }

@@ -159,16 +159,16 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
 
     // Адаптируем все текстовые переменные под конкретный тип дефекта расписания
     const bannerTitle = (errorType === "space") ? "⚠️ ПРЕДУПРЕЖДЕНИЕ: ЛИШНИЕ ПРОБЕЛЫ В ПОЛЯХ РАСПИСАНИЯ!" : "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!";
-    const actionText = (errorType === "space") ? "<b>Генерация отчетов приостановлена!</b> Требуется автоматическое сжатие лишних пробелов и очистка тегов на сервере GitHub." : "<b>Генерация отчетов заблокирована!</b> Требуется принудительное выравнивание геометрии отступов базы на сервере GitHub.";
-    const buttonLabel = (errorType === "space") ? "🛠️ Вылечить пробелы и теги на сервере" : "🛠️ Выровнять геометрию базы на сервере";
+    const actionText = (errorType === "space") ? "Требуется удаление лишних пробелов из базы на сервере GitHub." : "Требуется выравнивание геометрии отступов базы на сервере GitHub.";
+    const buttonLabel = (errorType === "space") ? "🛠️ Исправить базу данных расписания" : "🛠️ Исправить базу данных расписания";
 
     bannerHtml = 
       "<div class='emergency-banner'>" +
         bannerTitle + "<br>" +
         "<span class='emergency-banner-sub'>" +
-          "В строке №" + lineNum + " " + errorDetails + "<br><br>" +
+          "В строке №" + lineNum + " обнаружена ошибка: " + errorDetails + "<br><br>" +
           "Проблемный текст базы: <code>" + cleanText + "</code>.<br><br>" +
-          actionText + "<br><br>" +
+          "<b>Генерация отчетов приостановлена!</b> " + actionText + "<br><br>" +
           "<button id='btn-force-repair' class='btn-big btn-save btn-emergency-repair' onclick=\"sendUniversalRepairSignal(JSON.parse(decodeURIComponent(escape(atob('" + payloadJsonStr + "')))))\">" + buttonLabel + "</button>" +
         "</span>" +
       "</div>";

@@ -65,7 +65,7 @@ def main():
             # --- ПОТОК 2: ОБЩИЕ АНОНСЫ В КАНАЛЫ ---
             public_config = config_data.get('tg_public_notify', [])
             if public_config:
-                print(f"[ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify для {teacher_login}...")
+                print(f"\n[ДИСПЕТЧЕР] Запуск модуля ja_tgbot_notify для {teacher_login}...")
                 import ja_tgbot_notify
                 ja_tgbot_notify.send_public_notification(markdown_body, comment_url, public_config)
             else:

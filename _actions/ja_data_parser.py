@@ -21,7 +21,7 @@ JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REP
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def collect_and_parse_raw_data():
-    print("\n=== [МОДУЛЬ: ПАРСЕР] СБОР СЫРЫХ ДАННЫХ ИЗ API ===")
+    print("\n=== [МОДУЛЬ: ПАРСЕР] СБОР ДАННЫХ ИЗ API ===")
     
     admin_token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
     headers = {"Authorization": f"token {admin_token}", "Accept": "application/vnd.github+json"}
@@ -155,5 +155,5 @@ def collect_and_parse_raw_data():
             "yaml_sha": res_json.get("sha", "")
         }
 
-    print("=== [МОДУЛЬ: ПАРСЕР] СБОР ДАННЫХ ПО ВСЕМ УЧИТЕЛЯМ ЗАВЕРШЕН ===")
+    print("=== [МОДУЛЬ: ПАРСЕР] СБОР ДАННЫХ ЗАВЕРШЕН ===")
     return parsed_teachers_package

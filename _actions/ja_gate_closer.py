@@ -22,7 +22,7 @@ JOURNAL_YML_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REP
 JOURNAL_JSON_API_URL = f"https://api.github.com/repos/{DATA_REPO_OWNER}/{DATA_REPO_NAME}/contents/_output"
 
 def close_gate_pipeline(reports_list):
-    print("\n=== [МОДУЛЬ JA_GATE_CLOSER] ЗАПУСК ЗАКРЫВАТЕЛЯ ШЛЮЗА ===")
+    print("\n=== [МОДУЛЬ: ШЛЮЗ] ЗАПУСК ЗАКРЫВАТЕЛЯ ШЛЮЗА ===")
     
     admin_token = os.environ.get("MY_ADMIN_TOKEN")
     if not admin_token:
@@ -147,5 +147,5 @@ def close_gate_pipeline(reports_list):
         else:
             print(f"[ШЛЮЗ] ⚠️ Не удалось собрать список файлов _output для удаления: {res_output.status_code}")
 
-    print("=== [МОДУЛЬ JA_GATE_CLOSER] ВСЕ СЕТЕВЫЕ ОПЕРАЦИИ ОЧИСТКИ ЗАВЕРШЕНЫ ===")
+    print("=== [МОДУЛЬ: ШЛЮЗ] ВСЕ СЕТЕВЫЕ ОПЕРАЦИИ ОЧИСТКИ ЗАВЕРШЕНЫ ===")
     return True

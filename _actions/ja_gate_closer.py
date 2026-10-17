@@ -93,7 +93,13 @@ def close_gate_pipeline(reports_list):
                     
                 while idx + 1 < len(orig_lines):
                     next_line = orig_lines[idx + 1]
-                    if (len(next_line) - len(next_line.lstrip())) == 4 and next_line.strip().startswith('-'):
+                    next_trimmed = next_line.rstrip()
+                    if not next_trimmed:
+                        idx += 1
+                        continue
+                    next_indent = len(next_line) - len(next_line.lstrip())
+                    # Зряче пропускаем и стираем любые вложенные строки объектов с отступом >= 4 пробелов
+                    if next_indent >= 4:
                         idx += 1
                     else:
                         break

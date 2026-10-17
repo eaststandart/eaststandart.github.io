@@ -52,8 +52,18 @@ def close_gate_pipeline(reports_list):
         yaml_api_url = f"{JOURNAL_YML_API_URL}/journal-attendance-{teacher_login}.yml"
         orig_lines = yaml_text_orig.split('\n')
 
+        # === ИНСПЕКТОР КАРТЫ ШЛЮЗА TECHLAB ===
+        print("\n==================================================")
+        print(f"🔮 [ИНСПЕКЦИЯ ШЛЮЗА] АНАЛИЗ ОЧЕРЕДИ ОБНОВЛЕНИЯ ДЛЯ: {teacher_login}")
+        print(f"  • Исходный текст YAML расписания (первые 5 строк): {orig_lines[:5]!r}")
+        print(f"  • Содержимое карты yaml_group_updates из памяти:")
+        for t_slot, r_lines in yaml_group_updates.items():
+            print(f"    - Время {t_slot}: {r_lines!r} | Количество: {len(r_lines)}")
+        print("==================================================\n", flush=True)
+
         # 2. ОРИГИНАЛЬНЫЙ ЦИКЛ ПОСТРОЧНОЙ ПЕРЕЗАПИСИ ТЕКСТА YAML 1 В 1 ИЗ СТАРОГО ГЕНЕРАТОРА
         new_lines = []
+
         inside_day = False
         idx = 0
         while idx < len(orig_lines):

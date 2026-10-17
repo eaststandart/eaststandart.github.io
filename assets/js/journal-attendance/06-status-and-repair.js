@@ -160,7 +160,7 @@ function triggerEmergencyBlock(lineNum, cleanText, errorDetails, errorType = "",
     // Адаптируем все текстовые переменные под конкретный тип дефекта расписания
     const bannerTitle = (errorType === "space") ? "⚠️ ПРЕДУПРЕЖДЕНИЕ: ЛИШНИЕ ПРОБЕЛЫ В ПОЛЯХ РАСПИСАНИЯ!" : "⚠️ БЛОКИРОВКА: НАРУШЕНА ГЕОМЕТРИЯ БАЗЫ РАСПИСАНИЯ!";
     const actionText = (errorType === "space") ? "Требуется удаление лишних пробелов из базы на сервере GitHub." : "Требуется выравнивание геометрии отступов базы на сервере GitHub.";
-    const buttonLabel = (errorType === "space") ? "🛠️ Исправить базу данных расписания" : "🛠️ Исправить базу данных расписания";
+    const buttonLabel = (errorType === "space") ? "🛠️ Исправить базу данных на сервере" : "🛠️ Исправить базу данных на сервере";
 
     bannerHtml = 
       "<div class='emergency-banner'>" +

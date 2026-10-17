@@ -13,7 +13,7 @@ custom_css: "/assets/css/journal-attendance.css"
 
 {% include journal-attendance.liquid %}
 
-<div id="instructions-section" markdown="1">
+<div id="instructions-section" markdown="1"> 
 
 ---
 

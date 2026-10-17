@@ -241,10 +241,6 @@ def run_generator():
                     }
                     block_probation.append(processed)
 
-            # Алфавитная сортировка объектов для обновления YAML-файла базы расписания
-            current_group_yaml_rows.sort(key=lambda x: x.get("name", "").lower())
-            yaml_group_updates[time] = current_group_yaml_rows
-
             # Алфавитная сортировка карточек учеников для вывода в Маркдаун
             block_permanent.sort(key=lambda x: x["name_for_sort"].lower())
             block_newbies.sort(key=lambda x: x["name_for_sort"].lower())
@@ -258,8 +254,6 @@ def run_generator():
             for row in block_probation:
                 markdown_body += f"| {row['name_for_sort']} | {row['status']} | {row['track']} | {row['project'] if row['project'] else ' '} |\n" if show_projects_column else f"| {row['name_for_sort']} | {row['status']} | {row['track']} |\n"
 
-            # Алфавитная сортировка строк для обновления YAML-файла базы расписания
-            current_group_yaml_rows.sort(key=lambda x: re.sub(r'\[э\]|\[с\]|@[a-zA-Z0-9_\-]+|#[a-zA-Z0-9_\-]+', '', x, flags=re.IGNORECASE).strip().lower())
             yaml_group_updates[time] = current_group_yaml_rows
 
         markdown_body += f"\n*Проверил и отправил преподаватель: **{teacher_username}***\n"

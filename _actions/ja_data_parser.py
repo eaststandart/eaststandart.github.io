@@ -72,7 +72,7 @@ def collect_and_parse_raw_data():
         if not teacher_json_files:
             continue
             
-        print(f"\n[ПАРСЕР] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
+        print(f"[ПАРСЕР] Найдена пачка файлов для преподавателя: '{current_teacher}' ({len(teacher_json_files)} шт.)")
 
         try:
             sample_download_url = json_download_urls[teacher_json_files[0]]

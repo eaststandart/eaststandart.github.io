@@ -21,7 +21,7 @@ GRAPHQL_URL = "https://api.github.com/graphql"
 BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
 
 def run_generator():
-    print("\n=== [МОДУЛЬ: СБОРЩИК ОТЧЕТОВ] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ МАРКДАУН ===")
+    print("\n=== [МОДУЛЬ JA_REPORT_BUILDER] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ МАРКДАУН ===")
     
     # Вызываем Сетевой Парсер и забираем карту уже проверенных данных
     raw_packages = ja_data_parser.collect_and_parse_raw_data()
@@ -47,7 +47,7 @@ def run_generator():
         temp_journal = pack["temp_journal"]
         teacher_json_files = pack["teacher_json_files"]
 
-        print(f"\n[СТРОИТЕЛЬ] НАСТРОЙКИ ДЛЯ {teacher_login}:")
+        print(f"[СТРОИТЕЛЬ] НАСТРОЙКИ ДЛЯ {teacher_login}:")
         print(f"Режим публикации через Бота: {publish_as_bot}")
         print(f"Показывать колонку проектов: {show_projects_column}")
         print(f"Целевой номер Дискуссии: #{discussion_number}")
@@ -306,6 +306,8 @@ def run_generator():
         }
         all_generated_reports.append(report_packet)
         print(f"[СТРОИТЕЛЬ] 📦 Пакет отчета для '{teacher_login}' успешно добавлен в очередь Телеграма.")
+    
+    print("=== [МОДУЛЬ JA_REPORT_BUILDER] СБОРКА ОТЧЕТА ЗАВЕРШЕНА ===")
 
     # ФИНАЛЬНЫЙ СИГНАЛ КОНВЕЙЕРА ДЛЯ ГЛАВНОГО ДИСПЕТЧЕРА ТЕЛЕГРАМА (ВНЕ ЦИКЛА FOR)
     success_status = len(all_generated_reports) > 0

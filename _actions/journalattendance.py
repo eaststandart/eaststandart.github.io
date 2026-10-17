@@ -30,7 +30,7 @@ def main():
             print("[ДИСПЕТЧЕР] 🛑 Формирующий блок не вернул готовых отчетов. Мягко завершаем конвейер.")
             return
             
-        print(f"[ДИСПЕТЧЕР] 🟢 УСПЕХ! Данные получены. Очередь на отправку: {len(reports_list)} отчетов.")
+        print(f"\n[ДИСПЕТЧЕР] 🟢 УСПЕХ! Данные получены. Очередь на отправку: {len(reports_list)} отчетов.")
         data_dir = os.path.join(os.getcwd(), '_data')
 
         # ЗАПУСКАЕМ ЦИКЛ ОТПРАВКИ ТЕЛЕГРАМ ДЛЯ КАЖДОГО ОТЧЕТА ИНДИВИДУАЛЬНО
@@ -40,7 +40,7 @@ def main():
             target_day = report_item["day"]
             teacher_login = report_item["teacher_login"]
             
-            print(f"\n[ДИСПЕТЧЕР] Начинаем рассылку в ТГ отчета преподавателя: {teacher_login} 🚀")
+            print(f"[ДИСПЕТЧЕР] Начинаем рассылку в ТГ отчета преподавателя: {teacher_login} 🚀")
             
             # Считываем конфигурацию Телеграм строго из личного YAML-файла текущего преподавателя
             yaml_path = os.path.join(data_dir, f"journal-attendance-{teacher_login}.yml")

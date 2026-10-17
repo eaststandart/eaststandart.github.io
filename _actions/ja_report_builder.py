@@ -21,7 +21,7 @@ GRAPHQL_URL = "https://api.github.com/graphql"
 BASE_DISCUSSION_URL = "https://github.com/eaststandart/eaststandart.github.io/discussions"
 
 def run_generator():
-    print("\n=== [МОДУЛЬ: СТРОИТЕЛЬ] ЗАПУСК ЦИКЛИЧЕСКОЙ СБОРКИ МАРКДАУН ===")
+    print("\n=== [МОДУЛЬ: СТРОИТЕЛЬ] ЗАПУСК СБОРКИ МАРКДАУН ===")
     
     # Вызываем Сетевой Парсер и забираем карту уже проверенных данных
     raw_packages = ja_data_parser.collect_and_parse_raw_data()
@@ -58,7 +58,7 @@ def run_generator():
         discussions = []
         
         if show_projects_column:
-            print("\n=== [РАДАР КАТЕГОРИЙ GITHUB DISCUSSIONS] ===")
+            print("\n[СТРОИТЕЛЬ] === РАДАР КАТЕГОРИЙ GITHUB DISCUSSIONS ===")
             query_gql = """
             query($owner: String!, $repo: String!) {
               repository(owner: $owner, name: $repo) {

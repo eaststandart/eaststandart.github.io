@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module journalattendance.py
-@about Главный диспетчер конвейера Журнала посещений
+@module  journal_attendance.py
+@about   Модуль управления сборкой отчета посещений
 @purpose Координация работы модулей генерации отчетов и рассылки уведомлений в Телеграм
-@author TechLab
+@author  TechLab
 @version 1.0.0
 """
 
@@ -15,7 +15,7 @@ import yaml
 def main():
     print("=== [ДИСПЕТЧЕР] ЗАПУСК УПРАВЛЯЮЩЕГО КОНВЕЙЕРА ===")
     
-    # Жестко прописываем путь к папке _actions, чтобы модули импортировались без сбоев
+    # Прописываем путь к папке _actions, чтобы модули импортировались без сбоев
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
         sys.path.append(current_dir)

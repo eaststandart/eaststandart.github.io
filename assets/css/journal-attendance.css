@@ -9,7 +9,7 @@
 /* Основные контейнеры и шрифты страницы */
 .admin-container { font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; padding-top: 0px; padding-bottom: 0px;}
 .auth-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; margin-bottom: 1rem; }
-.group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin: 1rem 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.group-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 1rem; margin: 1rem 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 .group-title { font-size: 18px; margin-top: 0; color: #212529; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; }
 .kid-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f3f5; }
 .kid-row:last-child { border-bottom: none; }
@@ -17,9 +17,9 @@
 /* Тексты, формы ввода и подписи */
 .auth-title { margin-top: 0; color: #24292e; }
 .auth-desc { font-size: 14px; color: #6c757d; margin-bottom: 15px; }
-.input-text { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
 .field-label { font-weight: bold; color: #495057; display: block; margin-top: 10px; }
 .field-label-probation { font-size: 14px; font-weight: bold; display: block; margin-top: 10px; color: #1c7ed6; }
+.input-text { width: 100%; padding: 0.75rem; margin-top: 1rem; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
 .input-probation { border-color: #a5d8ff; }
 .chk-big { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
 .lbl-big { cursor: pointer; user-select: none; flex-grow: 1; display: inline-flex; align-items: center; }
@@ -33,7 +33,7 @@
 .empty-group-msg { text-align: center; color: #868e96; }
 
 /* Кнопки авторизации и сохранения */
-.btn-big { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
+.btn-big { display: block; width: 100%; padding: 0.75rem; margin-top: 1rem; font-size: 16px; font-weight: bold; text-align: center; border: none; border-radius: 8px; cursor: pointer; }
 .btn-auth { background-color: #24292e; color: white; }
 .btn-save { background-color: #37b24d; color: white; }
 

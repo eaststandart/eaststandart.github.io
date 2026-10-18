@@ -43,20 +43,7 @@
 .btn-day:disabled { background-color: #e9ecef; color: #adb5bd; border-color: #dee2e6; cursor: not-allowed; opacity: 0.6; border-left: none !important; }
 
 /* Единый стандартизированный блок даты проведения занятий */
-.global-date-box { 
-  border: 1px solid #dee2e6; 
-  border-radius: 8px; 
-  padding: 12px; 
-  margin: 1rem 0; 
-  background-color: #fff; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  font-weight: bold; 
-  color: #212529; 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
+.global-date-box { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin: 1rem 0; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: bold; color: #212529; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; }
 .global-date-input { width: 130px; padding: 5px; font-size: 15px; font-weight: bold; text-align: center; border: 1px solid #ced4da; border-radius: 6px; color: #495057; background-color: #f1f3f5; cursor: pointer; }
 
 /* Индивидуальные цветные каёмки и кнопка выхода */
@@ -80,14 +67,14 @@
 
 /* Макет заголовочной части групп */
 .group-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 4px; }
-.group-title-clean { margin-top: 0 !important; border: none; padding: 0; }
+.group-title-clean { border: none; padding: 0; }
+.main-content h3.group-title-clean { margin: 5px 0px 10px 0px !important;}
 
 /* Дополнительные стили, извлеченные из JavaScript-шаблонов */
 .btn-day-transition { transition: 0.2s; }
 .margin-top-15 { margin-top: 1rem; }
 .input-probation-blue { border-color: #a5d8ff; }
 .group-block-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 10px; }
-.group-title-clean { margin: 0; border: none; padding: 0; }
 
 /* Дополнительные классы для фиксации стилей из JavaScript-кода */
 .emergency-banner { padding: 1rem; border-radius: 6px; margin-top: 1rem; font-weight: bold; font-size: 16px; background-color: #ffeef0; color: #d73a49; border: 1px solid #ced4da; }
@@ -110,13 +97,7 @@
 }
 
 /* Флекс-контейнер для содержимого верхнего статус-бара */
-.notify-flex-content { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  width: 100%; 
-  box-sizing: border-box; 
-}
+.notify-flex-content { display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; }
 
 /* Интерактивная консоль починки времени на красном экране */
 .emergency-inputs-row { display: flex; align-items: center; justify-content: center; gap: 5px; padding-top: 10px; padding-bottom: 10px; }

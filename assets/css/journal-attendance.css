@@ -68,7 +68,7 @@
 /* Макет заголовочной части групп */
 .group-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 4px; }
 .group-title-clean { border: none; padding: 0; }
-.group-header-flex h3.group-title-clean { margin: 0 !important;}
+div.group-block .group-header-flex h3.group-title-clean { margin: 0 !important;}
 
 /* Дополнительные стили, извлеченные из JavaScript-шаблонов */
 .btn-day-transition { transition: 0.2s; }

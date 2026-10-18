@@ -86,14 +86,15 @@ def close_gate_pipeline(reports_list):
                         if kid_obj.get("tag"):
                             new_lines.append(f"      tag: \"{kid_obj.get('tag').strip()}\"")
                 
-                # Полностью вычищаем и пропускаем весь старый блок многострочной структуры группы
+                # Вычищаем и пропускаем весь блок многострочной структуры группы
                 while idx + 1 < len(orig_lines):
                     next_line = orig_lines[idx + 1]
                     next_trimmed = next_line.rstrip()
+                    # Если строка пустая — это конец блока группы, не имеем права её стирать!
                     if not next_trimmed:
-                        idx += 1
-                        continue
+                        break
                     next_indent = len(next_line) - len(next_line.lstrip())
+                    # Стираем строго строки структуры учеников с вложенным отступом
                     if next_indent >= 4:
                         idx += 1
                     else:

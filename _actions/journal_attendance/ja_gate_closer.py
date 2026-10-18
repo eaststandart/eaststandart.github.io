@@ -90,11 +90,29 @@ def close_gate_pipeline(reports_list):
                 while idx + 1 < len(orig_lines):
                     next_line = orig_lines[idx + 1]
                     next_trimmed = next_line.rstrip()
-                    # Если строка пустая — это конец блока группы, не имеем права её стирать!
+                    
+                    # Если строка пустая, смотрим, что идёт строго за ней
                     if not next_trimmed:
-                        break
+                        look_ahead_idx = idx + 2
+                        is_end_of_group = True
+                        while look_ahead_idx < len(orig_lines):
+                            future_line = orig_lines[look_ahead_idx]
+                            if future_line.rstrip():
+                                future_indent = len(future_line) - len(future_line.lstrip())
+                                # Если дальше идут строки учеников (отступ >= 4), группа ещё не кончилась!
+                                if future_indent >= 4:
+                                    is_end_of_group = False
+                                break
+                            look_ahead_idx += 1
+                        
+                        if is_end_of_group:
+                            break
+                        else:
+                            idx += 1
+                            continue
+                            
                     next_indent = len(next_line) - len(next_line.lstrip())
-                    # Стираем строго строки структуры учеников с вложенным отступом
+                    # Стираем строго строки структуры учеников текущей группы
                     if next_indent >= 4:
                         idx += 1
                     else:

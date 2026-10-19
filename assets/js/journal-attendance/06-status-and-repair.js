@@ -218,7 +218,7 @@ function sendUniversalRepairSignal(payload) {
 
   const statusPayload = { status: "on", mode: "repair", timestamp: new Date().toISOString() };
   const statusBody = {
-    message: "chore: взвод светофора для сессии " + payload.command + " [skip ci]",
+    message: "сигнал: вызов сессии " + payload.command + " [skip ci]",
     content: btoa(unescape(encodeURIComponent(JSON.stringify(statusPayload, null, 2))))
   };
 

@@ -13,6 +13,8 @@ on:
       - 'ROADMAP.md'
       - '.github/workflows/**'
       - '_actions/**'
+      - 'assets/js/**/*.js'
+      - 'assets/batchfiles/**'
   workflow_dispatch:
 
 permissions:

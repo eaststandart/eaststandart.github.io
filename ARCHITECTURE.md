@@ -1,4 +1,4 @@
-# Полная структура репозитория eaststandart.github.io 
+# Полная структура репозитория eaststandart.github.io
 
 ```text
 eaststandart.github.io/ 

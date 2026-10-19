@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths-ignore:
       - 'README.md'
+      - '**/README.md'
       - 'CODE_OF_CONDUCT.md'
       - 'LICENSE.txt'
       - 'CHANGELOG.md'

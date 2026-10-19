@@ -10,7 +10,7 @@
     <picture>
         <img alt="Logo" src="https://eaststandart.github.io/assets/icons/logo-readme.svg" width="120">
     </picture><br/>-->
-    Творческая лаборатория познавательного развития+
+    Творческая лаборатория познавательного развития
 </h1>
 
 <p align="center"> 

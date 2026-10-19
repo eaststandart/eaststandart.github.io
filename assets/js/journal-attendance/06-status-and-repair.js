@@ -236,7 +236,7 @@ function sendUniversalRepairSignal(payload) {
     if (!res.ok) throw new Error("Не удалось взвести файл статуса");
     
     const signalBody = {
-      message: "команда: " + payload.command + " от " + currentTeacher,
+      message: "обработка: команда " + payload.command + " от " + currentTeacher,
       content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
     };
     

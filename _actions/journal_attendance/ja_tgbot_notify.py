@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@module ja_tgbot_notify.py
-@about Отправка публичных анонсов для родителей
-@purpose Рассылка уведомлений по каналам и чатам Телеграм со ссылкой на журнал посещений
-@author TechLab
+@module  ja_tgbot_notify.py
+@about   Модуль отправки отчетов в каналы и группы Телеграм.
+@purpose Рассылка уведомлений по каналам и чатам Телеграм со ссылкой на журнал посещений.
+@author  TechLab
 @version 1.0.0
 """
 

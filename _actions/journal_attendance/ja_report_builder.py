@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 @module  ja_report_builder.py
-@about   Маркдаун-дизайнер и GraphQL-публикатор отчётов Журнала
-@purpose Импорт сырых данных из парсера, сборка таблиц и отправка в Discussions
+@about   Маркдаун-дизайнер и GraphQL-публикатор отчётов Журнала.
+@purpose Импорт сырых данных из парсера, сборка таблиц и отправка в Discussions.
 @author  TechLab
 @version 1.0.0
 """

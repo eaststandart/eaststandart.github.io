@@ -1,7 +1,7 @@
 /**
  * @module  05-attendance-commands.js
- * @about   Посещаемость и команды /d, /r, /m.
- * @purpose Сохранение посещаемости и обработка команд.
+ * @about   Посещаемость и команды.
+ * @purpose Сохранение посещаемости и обработка команд /d, /r, /m.
  * @author  TechLab
  * @version 1.0.0
  */

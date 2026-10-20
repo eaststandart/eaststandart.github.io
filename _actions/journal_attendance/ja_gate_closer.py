@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @module  ja_gate_closer.py
-@about   Шлюзовой модуль закрытия смены.
+@about   Модуль шлюзового обновления данных и очистки.
 @purpose Сетевое обновление YAML базы расписания и удаление отработанных JSON.
 @author  TechLab
 @version 1.0.0

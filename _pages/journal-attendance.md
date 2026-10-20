@@ -1,10 +1,11 @@
 ---
 workflow: "добавть padding-bottom: 0px; в div class=content-wrapper чтобы внизу страницы не ыло пустого поля - это глобальное свойство для всех."
 module: _pages/journal-attendance.md
-about: "Веб-интерфейс журнала посещаемости"
+about: "Веб-интерфейс страницы Журнала посещаемости"
 purpose: "Страница для отметки в Журнал посещений преподавателями клуба присутствия учеников."
 author: "TechLab"
 layout: page
+description: Расписание регулярных занятий в детско-юношеском инженерном клубе во Владивостоке.
 title: Журнал посещаемости
 permalink: /journal-attendance/
 emoji: "📅"

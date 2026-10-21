@@ -44,5 +44,8 @@ exclude:
   - README.mdROADMAP.md
   - ROADMAP.md
 
+# Plug-ins
 plugins:
   - jekyll-sitemap
+  - jekyll-email-protect
+  - jekyll-minifier

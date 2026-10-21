@@ -23,12 +23,14 @@ keywords: ["project/management", "documentation"]
 ## [v1.0.0-ja] — 2026-10-21
 ### Добавлено
 * **Система Журнала посещений:** Развернута и зафиксирована первая стабильная GitOps-архитектура автоматизации Журнала.
-* **Фронтенд сайта:** Интегрирован Jekyll-модуль страницы `_pages/journal-attendance.md` с подробной инструкцией для учителей и Liquid-разметка интерфейса.
-* **Логика и бэкенд:** Подключена сквозная цепочка из 7 JavaScript-модулей управления формой и Python-скрипты сборки отчетов с Телеграм-ботами.
+* **Клиентский дистрибутив:** Сформирована и прикреплена к релизу стабильная сборка фронтенда (`journal-frontend-v1.0.0.zip`) для интеграции в репозиторий основного сайта.
 
-*Примечание: Исходный код автоматизации, база данных расписания и скомпилированный ZIP-архив фронтенда этой версии официально перенесены и версионируются в изолированном инженерном репозитории. Раздел релизов сайта не затрагивается.*
+👉 [Страница официального релиза этой версии на GitHub](https://github.com/eaststandart/techlab-journal-attendance/releases/tag/v1.0.0-ja)
 
-👉 [Изучить официальный релиз системы Журнала посещений v1.0.0-ja](https://github.com/eaststandart/techlab-journal-attendance/releases/tag/v1.0.0-ja).
+**Примечание**: Исходный код автоматизации, база данных расписания и скомпилированный ZIP-архив фронтенда этой версии официально перенесены и версионируются в изолированном инженерном репозитории [techlab-journal-attendance](https://github.com/eaststandart/techlab-journal-attendance):
+ - Все последующие релизы тоже будут публиковаться [здесь](https://github.com/eaststandart/techlab-journal-attendance/releases).
+- О дальнейших изменениях системы можно узнать [здесь](https://github.com/eaststandart/techlab-journal-attendance/blob/main/CHANGELOG.md).* 
+- О планах развития системы можно узнать [здесь](https://github.com/eaststandart/techlab-journal-attendance/blob/main/ROADMAP.md).
 
 ---
 

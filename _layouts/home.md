@@ -9,6 +9,7 @@ purpose: Отображение интерфейса главной страни
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
+    <meta name="keywords" content=" творческая лаборатория, техническое творчество учащихся, юные техники, младший конструктор, электроника, владивосток">
     {% seo %}
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 

@@ -2,7 +2,7 @@
 workflow: "Вывести на страницу сайта, например, `eaststandart.github.io/changelog` или в раздел «Новости». сделать так, чтобы файл CHANGELOG.md автоматически превратился в красивую страницу новостей на  сайте GitHub Pages. вывести картинкой в строку что нового на главной!!!"
 repo: eaststandart.github.io
 type: changelog
-description: "Все заметные изменения в проекте «Лаборатории» будут фиксироваться в этом файле."
+description: "Все значимые изменения в этом проекте будут фиксироваться в данном файле."
 title: Журнал изменений проекта
 last_updated: 2026-10-21
 keywords: ["project/management", "documentation"]

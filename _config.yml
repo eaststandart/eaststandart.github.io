@@ -6,10 +6,14 @@ title: "Творческая лаборатория познавательног
 description: "Познавательное развитие через техническое творчество учащихся. Детско-юношеский инженерный клуб во Владивостоке."
 keywords: творческая лаборатория, техническое творчество учащихся, юные техники, младший конструктор, электроника, владивосток
 lang: ru
-icon: "https://eaststandart.github.io/assets/icons/favicon.svg"
-image: "https://eaststandart.github.io/assets/icons/logo.svg"
+icon: /assets/icons/favicon.svg
+image: /assets/icons/logo.svg
 url: "https://eaststandart.github.io"
 telegram: "https://t.me/RadiotekhnikaClub"
+
+social:
+  name: "eaststandart"
+  links: https://github.com/eaststandart
 
 author:
   name: "TechLab"
@@ -54,3 +58,12 @@ plugins:
   - jekyll-seo-tag
   - jekyll-email-protect
   - jekyll-minifier
+
+# Sitemap settings
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/icons/logo.svg
+        alt: "Радиотехника: техническое творчество учащихся" 

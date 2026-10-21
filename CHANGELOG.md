@@ -25,7 +25,7 @@ keywords: ["project/management", "documentation"]
 * **Система Журнала посещений:** Развернута и зафиксирована первая стабильная GitOps-архитектура автоматизации Журнала.
 * **Клиентский дистрибутив:** Сформирована и прикреплена к релизу стабильная сборка фронтенда (`journal-frontend-v1.0.0.zip`) для интеграции в репозиторий основного сайта.
 
-👉 [Страница официального релиза этой версии на GitHub](https://github.com/eaststandart/techlab-journal-attendance/releases/tag/v1.0.0-ja)
+👉 [Страница официального релиза этой версии на GitHub](https://github.com/eaststandart/techlab-journal-attendance/releases/tag/v1.0.0)
 
 **Примечание**: Исходный код автоматизации, база данных расписания и скомпилированный ZIP-архив фронтенда этой версии официально перенесены и версионируются в изолированном инженерном репозитории [techlab-journal-attendance](https://github.com/eaststandart/techlab-journal-attendance):
  - Все последующие релизы тоже будут публиковаться [здесь](https://github.com/eaststandart/techlab-journal-attendance/releases).

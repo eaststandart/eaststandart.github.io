@@ -12,12 +12,13 @@ purpose: Отображение интерфейса главной страни
     <meta name="description" content="Детско-юношеский инженерный клуб во Владивостоке">
     <meta name="keywords" content="github, творческая лаборатория, техническое творчество учащихся, юные техники, электроника, владивосток">
     <meta property="og:title" content="Творческая лаборатория познавательного развития | Владивосток" />
-    <meta property="og:description" content="Детско-юношеский клуб технического творчества во Владивостоке." />
+    <meta property="og:description" content="Творческая лаборатория познавательного развития во Владивостоке. Официальный сайт детско-юношеского инженерного клуба во Владивостоке. Изучаем электронику и схемотехнику, радиоэлектронику, кибернетику, автоматику, робототехнику." />
     <meta property="og:url" content="https://eaststandart.github.io/" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://eaststandart.github.io/assets/icons/logo.svg" />
     <title>{{ page.seo }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-       
+
     <!-- Глобальные базовые стили сайта (остаются всегда) -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <!-- Подключение центральных модулей стилей сайта -->

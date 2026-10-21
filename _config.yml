@@ -3,14 +3,16 @@
 # -----------------------------------------------------------------------------
 
 title: "Творческая лаборатория познавательного развития"
-description: "Познавательное развитие через техническое творчество учащихся"
+description: "Познавательное развитие через техническое творчество учащихся."
 keywords: творческая лаборатория, техническое творчество учащихся, юные техники, младший конструктор, электроника, владивосток
 lang: ru
 icon: /assets/icons/favicon.svg
 image: /assets/icons/logo.svg
 url: "https://eaststandart.github.io"
+twitter:
+  username: eaststandart
+  card: summary_large_image 
 telegram: "https://t.me/RadiotekhnikaClub"
-
 social:
   name: "eaststandart"
   links: https://github.com/eaststandart
@@ -18,7 +20,6 @@ social:
 author:
   name: "TechLab"
   github: "eaststandart"
-  twitter: "eaststandart"
   profile: https://github.com/eaststandart
   email: "eaststandart@gmail.com"
   bio: "Детско-юношеский инженерный клуб"

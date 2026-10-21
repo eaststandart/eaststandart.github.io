@@ -4,6 +4,9 @@
 [![CHANGELOG](https://img.shields.io/badge/История-Changelog-informational.svg?style=flat-square)](CHANGELOG.md)
 [![ROADMAP](https://img.shields.io/badge/Планы-Roadmap-cyan.svg?style=flat-square)](ROADMAP.md)
 
+[![Планы развития](https://img.shields.io/badge/Планы-Roadmap-yellow.svg?style=flat-square)](ROADMAP.md)
+[![Лицензия проекта](https://img.shields.io/badge/Лицензия-CC%20BY%204.0-teal.svg?style=flat-square)](https://github.com/eaststandart/techlab-journal-attendance/blob/main/LICENSE.txt)
+
 ---
 
 <h1 align="center"><!--

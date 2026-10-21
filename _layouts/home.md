@@ -286,7 +286,7 @@ purpose: Отображение интерфейса главной страни
 
     <!-- Нижняя контентная кнопка перехода в Telegram -->
     <footer class="main-footer">
-        <a href="https://t.me/eaststandart" target="_blank" class="tg-button">
+        <a href="https://t.me/eaststandart" target="_blank" class="tg-button" rel="noopener noreferrer">
             <span>✈️</span> Написать в Telegram
         </a>        
     </footer>

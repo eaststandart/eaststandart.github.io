@@ -2,6 +2,7 @@
 workflow: "попробовать избавиться от скрипта внизу - Прокидываем квантованную бэкенд-базу Питона напрямую в оперативную память фронтенда"
 about: Шаблон главной страницы сайта.
 purpose: Отображение интерфейса главной страницы с широкой сеткой карточек. Работает полностью независимо от default.md, сохраняя собственную геометрию в 1000px. Внутренний тег <\style> содержит правила, которые нужны ТОЛЬКО для главной страницы.
+titlet: "Творческая лаборатория познавательного развития | Детско юношеский инженерный клуб г. Владивосток"
 ---
 <!DOCTYPE html>
 <html lang="ru">
@@ -9,7 +10,7 @@ purpose: Отображение интерфейса главной страни
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
-    <title>{{ page.title }}</title>
+    <title>{{ page.titlet }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
        
     <!-- Глобальные базовые стили сайта (остаются всегда) -->

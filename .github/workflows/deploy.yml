@@ -4,12 +4,13 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
+      - 'ARCHITECTURE.md'
+      - 'CHANGELOG.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'CONTRIBUTING.md'
+      - 'LICENSE.txt'
       - 'README.md'
       - '**/README.md'
-      - 'CODE_OF_CONDUCT.md'
-      - 'LICENSE.txt'
-      - 'CHANGELOG.md'
-      - 'ARCHITECTURE.md'
       - 'ROADMAP.md'
       - '.github/workflows/**'
       - '_actions/**'

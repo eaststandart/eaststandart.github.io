@@ -47,5 +47,6 @@ exclude:
 # Plug-ins
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
   - jekyll-email-protect
   - jekyll-minifier

@@ -10,7 +10,9 @@ titlet: "Творческая лаборатория познавательно�
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
-    <title>{{ page.titlet }}</title>
+    <meta name="description" content="Детско-юношеский инженерный клуб во Владивостоке">
+    <meta name="keywords" content="творческая лаборатория, владивосток, github, юные техники, электроника">
+    <title>{{ page.seo }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
        
     <!-- Глобальные базовые стили сайта (остаются всегда) -->

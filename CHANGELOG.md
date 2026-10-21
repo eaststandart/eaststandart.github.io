@@ -8,7 +8,7 @@ last_updated: 2026-10-21
 keywords: ["project/management", "documentation"]
 ---
 
-# Журнал изменений 
+# Журнал изменений
 
 Формат основан на [Keep a Changelog](https://keepachangelog.com).
 <!--

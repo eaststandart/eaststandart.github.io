@@ -9,7 +9,7 @@ purpose: Отображение интерфейса главной страни
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
-    <meta name="description" content="Детско-юношеский инженерный клуб во Владивостоке. Официальный сайт детско-юношеского инженерного клуба во Владивостоке. Изучаем электронику и схемотехнику, радиоэлектронику, кибернетику, автоматику, робототехнику, конструирование и моделирование. Программы обучения электронное конструирование, радиотехническое конструирование.">
+    <meta name="description" content="Детско-юношеский инженерный клуб во Владивостоке. Официальный сайт детско-юношеского инженерного клуба во Владивостоке. Изучаем электронику и схемотехнику, радиоэлектронику, кибернетику, автоматику, робототехнику, конструирование и моделирование. Программы обучения включают электронное конструирование, радиотехническое конструирование.">
     <meta name="keywords" content="github, творческая лаборатория, техническое творчество учащихся, юные техники, электроника, владивосток">
     <meta property="og:title" content="Творческая лаборатория познавательного развития | Владивосток" />
     <meta property="og:description" content="Творческая лаборатория познавательного развития во Владивостоке." />
@@ -17,6 +17,7 @@ purpose: Отображение интерфейса главной страни
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://eaststandart.github.io/assets/icons/logo.svg" />
     <title>{{ page.seo }}</title>
+    <link rel="canonical" href="https://eaststandart.github.io/" />
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Глобальные базовые стили сайта (остаются всегда) -->

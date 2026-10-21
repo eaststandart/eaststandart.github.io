@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://eaststandart.github.io / sitemap.xml
+Sitemap: https://eaststandart.github.io/sitemap.xml

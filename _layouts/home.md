@@ -10,6 +10,7 @@ purpose: Отображение интерфейса главной страни
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
     {% seo %}
+    <title>{{ page.seo }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Глобальные базовые стили сайта (остаются всегда) -->

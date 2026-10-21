@@ -10,7 +10,11 @@ purpose: Отображение интерфейса главной страни
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
     <meta name="description" content="Детско-юношеский инженерный клуб во Владивостоке">
-    <meta name="keywords" content="творческая лаборатория, владивосток, github, юные техники, электроника">
+    <meta name="keywords" content="github, творческая лаборатория, техническое творчество учащихся, юные техники, электроника, владивосток">
+    <meta property="og:title" content="Творческая лаборатория познавательного развития | Владивосток" />
+    <meta property="og:description" content="Детско-юношеский клуб технического творчества во Владивостоке." />
+    <meta property="og:url" content="https://eaststandart.github.io/" />
+    <meta property="og:type" content="website" />
     <title>{{ page.seo }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
        

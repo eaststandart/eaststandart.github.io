@@ -49,6 +49,6 @@ keywords: ["project/management", "documentation"]
 
 * 🔐 **Контроль доступа:** Для работы с журналом преподавателю необходимо пройти авторизацию: войти под своим аккаунтом на GitHub и сгенерировать персональный токен доступа (`Personal access token classic`) с правами на запись в репозиторий. После этого открывается доступ к [форме отправки данных](https://eaststandart.github.io/journal-attendance/).
 
-[1.0.0]: https://github.com/eaststandart/techlab-journal-attendance/compare/v0.1.0...v1.0.0
-[0.1.0]: https://github.com/eaststandart/eaststandart.github.io/compare/v0.0.1...v0.1.0
-[0.0.1]: https://github.com/eaststandart/eaststandart.github.io/releases/tag/v0.0.1
+[1.0.0]: https://github.com/eaststandart/techlab-journal-attendance/compare/v0.1.0-ja...v1.0.0
+[0.1.0]: https://github.com/eaststandart/eaststandart.github.io/compare/v0.0.1-ja...v0.1.0-ja
+[0.0.1]: https://github.com/eaststandart/eaststandart.github.io/releases/tag/v0.0.1-ja

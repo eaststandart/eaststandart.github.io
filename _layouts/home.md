@@ -8,6 +8,7 @@ purpose: Отображение интерфейса главной страни
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
     <title>{{ page.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
        

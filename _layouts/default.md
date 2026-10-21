@@ -8,6 +8,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
+     {% seo %}
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Базовые стили для всего сайта -->

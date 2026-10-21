@@ -10,7 +10,7 @@ keywords: ["project/management", "documentation"]
 
 # Журнал изменений
 
-## [1.0.0-ja] – 2026-10-21
+## [1.0.0] – 2026-10-21
 
 ### Добавлено
 
@@ -24,7 +24,7 @@ keywords: ["project/management", "documentation"]
 - О дальнейших изменениях системы можно узнать [здесь](https://github.com/eaststandart/techlab-journal-attendance/blob/main/CHANGELOG.md).* 
 - О планах развития системы можно узнать [здесь](https://github.com/eaststandart/techlab-journal-attendance/blob/main/ROADMAP.md).
 
-## [0.1.0-ja] – 2026-10-07
+## [0.1.0] – 2026-10-07
 
 ### Добавлено
 
@@ -33,7 +33,7 @@ keywords: ["project/management", "documentation"]
 ### Системный бэкап
 * 📦 **Архив монолитной сборки перед разделением репозиториев:** Резервная копия скриптов отчётов и Телеграм-рассылки до выноса данных в приватное хранилище `techlab-journal-attendance`.
 
-## [0.0.1-ja] – 2026-09-29
+## [0.0.1] – 2026-09-29
 
 ### Добавлено
 
@@ -49,6 +49,6 @@ keywords: ["project/management", "documentation"]
 
 * 🔐 **Контроль доступа:** Для работы с журналом преподавателю необходимо пройти авторизацию: войти под своим аккаунтом на GitHub и сгенерировать персональный токен доступа (`Personal access token classic`) с правами на запись в репозиторий. После этого открывается доступ к [форме отправки данных](https://eaststandart.github.io/journal-attendance/).
 
-[1.0.0-ja]: https://github.com/eaststandart/techlab-journal-attendance/compare/v0.1.0-ja...v1.0.0-ja
-[0.1.0-ja]: https://github.com/eaststandart/techlab-journal-attendance/compare/v0.0.1-ja...v0.1.0-ja
-[0.0.1-ja]: https://github.com/eaststandart/techlab-journal-attendance/releases/tag/v0.0.1-ja
+[1.0.0-ja]: https://github.com/eaststandart/techlab-journal-attendance/compare/v0.1.0...v1.0.0
+[0.1.0-ja]: https://github.com/eaststandart/eaststandart.github.io/compare/v0.0.1...v0.1.0
+[0.0.1-ja]: https://github.com/eaststandart/eaststandart.github.io/releases/tag/v0.0.1

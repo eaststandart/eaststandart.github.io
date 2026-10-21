@@ -30,6 +30,21 @@ purpose: Отображение интерфейса главной страни
 	    <link rel="stylesheet" href="{{ '/assets/css/header-classic.css' | relative_url }}">
 	{%- endif -%}
 
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalOrganization",
+	  "name": "Творческая лаборатория познавательного развития",
+	  "address": {
+	    "@type": "PostalAddress",
+	    "addressLocality": "Владивосток",
+	    "addressRegion": "Приморский край",
+	    "addressCountry": "RU"
+	  },
+	  "url": "https://eaststandart.github.io/"
+	}
+	</script>
+
     <style>
     
         /* ==========================================================================

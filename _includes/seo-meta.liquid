@@ -1,22 +1,27 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Исключение дублирования тегов, каскадный выбор дескрипшенов (metadescription) и ключевых слов (metakeywords), интеграция Twitter Cards и автоматическая генерация микроразметки Schema.org. Название клуба и геопривязка централизованно наследуются из _config.yml.
+@purpose Исключение дублирования тегов с точечным сохранением оригинальных переменных и альтов из _config.yml.
 @author  TechLab
-@version 1.3.0
+@version 1.5.0
 {%- endcomment -%}
-{%- comment -%} 1. ОПРЕДЕЛЯЕМ ИЕРАРХИЮ ОПИСАНИЙ, КЛЮЧЕВЫХ СЛОВ И БРЕНДИНГА {%- endcomment -%}
-{%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
+
+{%- comment -%} 1. ОПРЕДЕЛЯЕМ ИЕРАРХИЮ ОПИСАНИЙ И БРЕНДИНГА {%- endcomment -%}
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
-{%- comment -%} 2. АВТОМАТИЧЕСКАЯ СБОРКА ТЕГА TITLE ДЛЯ ЗАЩИТЫ ОТ УРЕЗАНИЯ {%- endcomment -%}
+{%- assign default_alt = "Радиотехника: техническое творчество учащихся" -%}
+{%- comment -%} Особая логика описания и тайтла для Главной страницы {%- endcomment -%}
 {%- if page.url == '/' or page.url == '/index.html' -%}
-<title>{{ site.title }} | {{ club_footer }}</title>
+  {%- assign final_title = site.title | append: " | " | append: club_footer -%}
+  {%- assign final_desc = page.description | append: " " | append: site.description -%}
 {%- else -%}
-<title>{{ page.title }} | {{ club_footer }}</title>
+  {%- assign final_title = page.title | append: " | " | append: club_footer -%}
+  {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- endif -%}
-{%- comment -%} 3. БАЗОВЫЕ МЕТА-ТЕГИ И SEO ДЛЯ ПОИСКОВИКОВ {%- endcomment -%}
-<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+{%- comment -2. ВЫВОД TITLE И CANONICAL {%- endcomment -%}
+<title>{{ final_title }}</title>
+<link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
 <meta name="generator" content="Jekyll v{{ jekyll.version }}" />
 <meta name="author" content="{{ site.author.name | default: 'TechLab' }}" />
 {%- if final_desc %}
@@ -25,21 +30,21 @@
 {%- if final_keywords %}
 <meta name="keywords" content="{{ final_keywords | strip_html | strip_newlines | escape }}">
 {%- endif -%}
-{%- comment -%} 4. OPEN GRAPH ДЛЯ СОЦСЕТЕЙ И МЕССЕНДЖЕРОВ {%- endcomment -%}
+{%- comment -%} 3. OPEN GRAPH {%- endcomment -%}
 <meta property="og:locale" content="ru" />
 <meta property="og:site_name" content="{{ site.title }}" />
 <meta property="og:title" content="{{ page.title | default: site.title }}" />
-<meta property="og:url" content="{{ page.url | absolute_url }}" />
+<meta property="og:url" content="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
 <meta property="og:type" content="{% if page.url == '/' %}website{% else %}article{% endif %}" />
 {%- if final_desc %}
 <meta property="og:description" content="{{ final_desc | strip_html | strip_newlines | escape }} | {{ club_footer }}." />
 {%- endif -%}
 {%- if site.image %}
 <meta property="og:image" content="{{ site.image | absolute_url }}" />
-<meta property="og:image:alt" content="{{ site.title }}" />
+<meta property="og:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
 
-{%- comment -%} 5. TWITTER CARDS {%- endcomment -%}
+{%- comment -%} 4. TWITTER CARDS {%- endcomment -%}
 <meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
 <meta name="twitter:title" content="{{ page.title | default: site.title }}" />
 {%- if final_desc %}
@@ -47,13 +52,15 @@
 {%- endif -%}
 {%- if site.twitter.username %}
 <meta name="twitter:site" content="@{{ site.twitter.username }}" />
-<meta name="twitter:creator" content="@{{ site.twitter.username }}" />
+{%- endif -%}
+{%- if site.author.name %}
+<meta name="twitter:creator" content="@{{ site.author.name }}" />
 {%- endif -%}
 {%- if site.image %}
 <meta name="twitter:image" content="{{ site.image | absolute_url }}" />
-<meta name="twitter:image:alt" content="{{ site.title }}" />
+<meta name="twitter:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
-{%- comment -%} 6. АВТОМАТИЧЕСКАЯ МИКРОРАЗМЕТКА SCHEMA.ORG ДЛЯ ЯНДЕКСА И GOOGLE {%- endcomment -%}
+{%- comment -%} 5. МИКРОРАЗМЕТКА {%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

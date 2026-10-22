@@ -6,6 +6,7 @@ author: ["TechLab"]
 sources: 
 date: 2026-05-10
 keywords: [электроникаисхемотехника, проектучебный, 4класс, проект, электрическоеискусство, electronicsart]
+metaimage: "/faire/metronom-signalnyj/metronom-signalnyj-01.webp"
 ---
 
 ### Описание проекта

@@ -1,11 +1,10 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины строк на основе Unicode (лимит 70) с синхронизацией правильных заголовков в <title>, og:title и twitter:title.
+@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины строк (Unicode, лимит 70), синхронизация <title> и og:title, а также каскадная поддержка индивидуальных картинок страниц через metaimage (включая форматы webp/png/jpg).
 @author  TechLab
-@version 1.0.0
+@version 2.3.0
 {%- endcomment -%}
-
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
@@ -15,24 +14,29 @@
 {%- if page.url == '/' or page.url == '/index.html' -%}
   {%- assign final_title = site.title -%}
   {%- assign final_desc = page.description | append: " " | append: site.description -%}
-{%- elsif page.url contains '/faire/' -%}
-  {%- assign full_title_test = page.title | append: " | " | append: club_footer -%}
-  {%- assign string_length = full_title_test | size -%}
-  {%- if string_length > 70 -%}
-    {%- assign final_title = page.title | append: " | " | append: club_short -%}
-  {%- else -%}
-    {%- assign final_title = full_title_test -%}
-  {%- endif -%}
-  {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
+  {%- assign final_og_image = site.image | absolute_url -%}
 {%- else -%}
   {%- assign full_title_test = page.title | append: " | " | append: site.title -%}
   {%- assign string_length = full_title_test | size -%}
-  {%- if string_length > 70 -%}
-    {%- assign final_title = page.title | append: " | " | append: title_short -%}
+  {%- if page.url contains '/faire/' -%}
+    {%- assign full_title_test = page.title | append: " | " | append: club_footer -%}
+    {%- assign string_length = full_title_test | size -%}
+    {%- if string_length > 70 -%}
+      {%- assign final_title = page.title | append: " | " | append: club_short -%}
+    {%- else -%}
+      {%- assign final_title = full_title_test -%}
+    {%- endif -%}
   {%- else -%}
-    {%- assign final_title = full_title_test -%}
+    {%- if string_length > 70 -%}
+      {%- assign final_title = page.title | append: " | " | append: title_short -%}
+    {%- else -%}
+      {%- assign final_title = full_title_test -%}
+    {%- endif -%}
   {%- endif -%}
-  {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
+  {%- assign page_pure_desc = page.metadescription | default: page.description | default: site.description -%}
+  {%- assign final_desc = page_pure_desc | append: " | " | append: club_footer -%}
+  {%- assign selected_image = page.metaimage | default: site.image -%}
+  {%- assign final_og_image = selected_image | absolute_url -%}
 {%- endif -%}
 <title>{{ final_title }}</title>
 <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
@@ -52,11 +56,8 @@
 {%- if final_desc %}
 <meta property="og:description" content="{{ final_desc | strip_html | strip_newlines | escape }}" />
 {%- endif -%}
-{%- if site.image %}
-<meta property="og:image" content="{{ site.image | absolute_url }}" />
+<meta property="og:image" content="{{ final_og_image }}" />
 <meta property="og:image:alt" content="{{ default_alt }}" />
-{%- endif -%}
-
 <meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
 <meta name="twitter:title" content="{{ final_title }}" />
 {%- if final_desc %}
@@ -68,11 +69,8 @@
 {%- if site.author.name %}
 <meta name="twitter:creator" content="@{{ site.author.name }}" />
 {%- endif -%}
-{%- if site.image %}
-<meta name="twitter:image" content="{{ site.image | absolute_url }}" />
+<meta name="twitter:image" content="{{ final_og_image }}" />
 <meta name="twitter:image:alt" content="{{ default_alt }}" />
-{%- endif -%}
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

@@ -9,8 +9,8 @@ club: "Детско-юношеский инженерный клуб г. Вла�
 club_short: "Инженерный клуб г. Владивосток"
 keywords: "творческая лаборатория, инженерный клуб, техническое творчество учащихся, юные техники, юный инженер, младший конструктор, электроника, электроника и схемотехника, радиоэлектроника, кибернетика, автоматика, робототехника, конструирование и моделирование, электронное конструирование, радиотехническое конструирование, приморский край, владивосток"
 lang: ru
-icon: /assets/icons/favicon.svg
-image: /assets/icons/logo.svg
+icon: "/assets/icons/favicon.svg"
+image: "/assets/icons/logo.svg"
 url: "https://eaststandart.github.io"
 twitter:
   username: eaststandart
@@ -18,12 +18,12 @@ twitter:
 telegram: "https://t.me/RadiotekhnikaClub"
 social:
   name: "eaststandart"
-  links: https://github.com/eaststandart
+  links: "https://github.com/eaststandart"
 
 author:
   name: "TechLab"
   github: "eaststandart"
-  profile: https://github.com/eaststandart
+  profile: "https://github.com/eaststandart"
   email: "eaststandart@gmail.com"
   bio: "Детско-юношеский инженерный клуб"
   location: "г. Владивосток"
@@ -52,9 +52,11 @@ collections:
 include: ["_pages"]
 exclude:
   - ARCHITECTURE.md
+  - CHANGELOG.md
   - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
   - LICENSE.txt
-  - README.mdROADMAP.md
+  - README.md
   - ROADMAP.md
 
 # Plug-ins
@@ -69,5 +71,5 @@ defaults:
       path: ""
     values:
       image:
-        path: /assets/icons/logo.svg
+        path: "/assets/icons/logo.svg"
         alt: "Радиотехника: техническое творчество учащихся" 

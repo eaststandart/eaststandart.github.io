@@ -1,11 +1,10 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины заголовков (фильтр .size > 60) для динамического переключения на короткие версии брендов из _config.yml.
+@purpose Каскадный выбор тегов без дублирования. Корректный подсчет длины русских символов (Unicode) через перевод строки фильтром strip_html для автопереключения брендов.
 @author  TechLab
-@version 1.0.0
+@version 1.9.1
 {%- endcomment -%}
-
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
@@ -17,7 +16,9 @@
   {%- assign final_desc = page.description | append: " " | append: site.description -%}
 {%- elsif page.url contains '/faire/' -%}
   {%- assign full_title_test = page.title | append: " | " | append: club_footer -%}
-  {%- if full_title_test.size > 60 -%}
+  {%- comment -%} Переводим в Unicode-счетчик букв через strip_html {%- endcomment -%}
+  {%- assign string_length = full_title_test | strip_html | size -%}
+  {%- if string_length > 60 -%}
     {%- assign final_title = page.title | append: " | " | append: club_short -%}
   {%- else -%}
     {%- assign final_title = full_title_test -%}
@@ -25,7 +26,9 @@
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- else -%}
   {%- assign full_title_test = page.title | append: " | " | append: site.title -%}
-  {%- if full_title_test.size > 60 -%}
+  {%- comment -%} Переводим в Unicode-счетчик букв через strip_html {%- endcomment -%}
+  {%- assign string_length = full_title_test | strip_html | size -%}
+  {%- if string_length > 60 -%}
     {%- assign final_title = page.title | append: " | " | append: title_short -%}
   {%- else -%}
     {%- assign final_title = full_title_test -%}

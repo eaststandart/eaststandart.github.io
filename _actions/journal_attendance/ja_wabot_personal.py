@@ -87,8 +87,8 @@ def send_whatsapp_report(markdown_body, target_day, wa_personal_ids):
         chat_id = f"{clean_phone}@c.us" if "@c.us" not in clean_phone else clean_phone
         
         # URL метода sendMessage в GREEN API
-        url_wa = f"https://green-api.com{id_instance}/sendMessage/{api_token}"
-        
+        url_wa = f"https://api.green-api.com/waInstance{id_instance}/sendMessage/{api_token}"
+      
         payload = {
             "chatId": chat_id,
             "message": message_text

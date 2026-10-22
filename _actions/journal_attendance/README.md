@@ -23,15 +23,15 @@
 
 ```text
 [journal_attendance.py] (Диспетчер)
-       │
-       ├──► 1. [ja_data_parser.py]   (Сбор сырых JSON из сети и чтение базы YAML)
-       ├──► 2. [ja_report_builder.py] (Проверка комплектности, сборка таблиц и GraphQL-публикация)
-       ├──► 3. [Рассылка уведомлений]
-       │       ├──► [Телеграм] ──► [ja_tgbot_personal.py] (Личные отчеты по ID)
-       │       │               └── [ja_tgbot_notify.py]   (Анонсы в каналы/чаты)
-       │       └──► [WhatsApp] ──► [ja_wabot_personal.py] (Личные отчеты по номерам)
-       │
-       └──► 4. [ja_gate_closer.py]   (Обновление YAML базы и REST-очистка шлюза)
+│
+├──► 1. [ja_data_parser.py]   (Сбор сырых JSON из сети и чтение базы YAML)
+├──► 2. [ja_report_builder.py] (Проверка комплектности, сборка таблиц и GraphQL-публикация)
+├──► 3. [Рассылка уведомлений]
+│       ├──► [Телеграм] ──► [ja_tgbot_personal.py] (Личные отчеты по ID)
+│       │               └── [ja_tgbot_notify.py]   (Анонсы в каналы/чаты)
+│       └──► [WhatsApp] ──► [ja_wabot_personal.py] (Личные отчеты по номерам)
+│
+└──► 4. [ja_gate_closer.py]   (Обновление YAML базы и REST-очистка шлюза)
 ```
 
 ### Спецификация модулей подсистемы

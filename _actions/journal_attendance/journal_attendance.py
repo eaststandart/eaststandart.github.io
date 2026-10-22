@@ -70,6 +70,15 @@ def main():
                 ja_tgbot_notify.send_public_notification(markdown_body, comment_url, public_config)
             else:
                 print(f"[ДИСПЕТЧЕР] ℹ️ Поле tg_public_notify пустое для {teacher_login}, пропуск.")
+
+            # --- ПОТОК 3: ЛИЧНЫЕ УВЕДОМЛЕНИЯ WHATSAPP ---
+            wa_personal_ids = config_data.get('wa_personal_id', [])
+            if wa_personal_ids:
+                print(f"\n[ДИСПЕТЧЕР] Запуск модуля ja_wabot_personal для {teacher_login}...")
+                import ja_wabot_personal
+                ja_wabot_personal.send_whatsapp_report(markdown_body, target_day, wa_personal_ids)
+            else:
+                print(f"[ДИСПЕТЧЕР] ℹ️ Поле wa_personal_id пустое для {teacher_login}, пропуск.")
                 
         print("\n[ДИСПЕТЧЕР] ВСЕ СФОРМИРОВАННЫЕ ОТЧЕТЫ УСПЕШНО РАЗОСЛАНЫ В ТЕЛЕГРАМ!")
 

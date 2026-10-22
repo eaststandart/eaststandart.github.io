@@ -85,21 +85,23 @@
   {% if site.author.email %}"email": "{{ site.author.email }}",{% endif %}
   "sameAs": [
     "{{ site.author.github_profile }}",
-    "{{ site.author.telegram_contact }}",
-    "{{ site.club.telegram_channel }}"
+    "{{ site.author.telegram_contact }}"
   ],
   "department": {
     "@type": "EducationalOrganization",
     "name": "{{ club_footer }}",
-    "alternateName": "{{ site.club.title_alternate | default: 'Детский инженерный клуб г. Владивосток' }}",
+    "alternateName": "{{ site.club.title_alternate | default: 'Детский инженерный club г. Владивосток' }}",
     "description": "{{ site.club.description }}",
     "url": "{{ site.url }}",
     "address": {
       "@type": "PostalAddress",
-      "addressRegion": "{{ site.club.region | default: 'Приморский край' }}",
       "addressLocality": "{{ site.club.location | default: 'г. Владивосток' }}",
+      "addressRegion": "{{ site.club.region | default: 'Приморский край' }}",
       "addressCountry": "RU"
-    }
+    },
+    "sameAs": [
+      "{{ site.club.telegram_channel }}"
+    ]
   }
 }
 </script>

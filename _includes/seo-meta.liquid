@@ -82,10 +82,20 @@
   "alternativeName": "{{ site.title }}",
   "description": "{{ site.description }}",
   "url": "{{ site.url }}",
+  "logo": "{{ site.image | absolute_url }}",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
+    "addressRegion": "{{ site.author.region | default: 'Приморский край' }}",
     "addressCountry": "RU"
-  }
+  },
+  {% if site.author.email %}"email": "{{ site.author.email }}",{% endif %}
+  "sameAs": [
+    "{{ site.author.githubProfile }}",
+    "{{ site.author.telegram }}",
+    "{{ site.author.telegramGroup }}"
+  ]
 }
 </script>
+
+

@@ -15,18 +15,17 @@ url: "https://eaststandart.github.io"
 twitter:
   username: eaststandart
   card: summary_large_image 
-telegram: "https://t.me/RadiotekhnikaClub"
-social:
-  name: "eaststandart"
-  links: "https://github.com/eaststandart"
 
 author:
   name: "TechLab"
-  github: "eaststandart"
-  profile: "https://github.com/eaststandart"
-  email: "eaststandart@gmail.com"
   bio: "Детско-юношеский инженерный клуб"
+  region: "Приморский край"
   location: "г. Владивосток"
+  email: "eaststandart@gmail.com"
+  github: "eaststandart"
+  githubProfile: "https://github.com/eaststandart"
+  telegram: "https://t.me/eaststandart"
+  telegramGroup: "https://t.me/RadiotekhnikaClub"
 
 # -----------------------------------------------------------------------------
 # Collections

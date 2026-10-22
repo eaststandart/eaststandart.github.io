@@ -1,5 +1,5 @@
 ---
-workflow: "добавть padding-bottom: 0px; в div class=content-wrapper чтобы внизу страницы не ыло пустого поля - это глобальное свойство для всех."
+workflow: "добавть padding-bottom: 0px; в div class=content-wrapper чтобы внизу страницы не ыло пустого поля - это глобальное свойство для всех"
 module: _pages/journal-attendance.md
 about: "Веб-страница Журнала посещений"
 purpose: "Страница для отметки в Журнал посещений преподавателями клуба присутствия учеников."

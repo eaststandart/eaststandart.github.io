@@ -78,24 +78,30 @@
 {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
-  "name": "{{ club_footer }}",
-  "alternateName": "{{ site.title }}",
+  "name": "{{ site.title }}",
   "description": "{{ site.description }}",
   "url": "{{ site.url }}",
   "logo": "{{ site.image | absolute_url }}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressRegion": "{{ site.author.region | default: 'Приморский край' }}",
-    "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
-    "addressCountry": "RU"
-  },
   {% if site.author.email %}"email": "{{ site.author.email }}",{% endif %}
   "sameAs": [
     "{{ site.author.githubProfile }}",
     "{{ site.author.telegram }}",
     "{{ site.author.telegramGroup }}"
-  ]
+  ],
+  "department": {
+    "@type": "EducationalOrganization",
+    "name": "{{ club_footer }}",
+    "description": "{{ site.author.bio | default: 'Детско-юношеский инженерный клуб' }}",
+    "url": "{{ site.url }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressRegion": "{{ site.author.region | default: 'Приморский край' }}",
+      "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
+      "addressCountry": "RU"
+    }
+  }
 }
 </script>
+
 
 

@@ -9,8 +9,7 @@ purpose: Отображение интерфейса главной страни
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
-    <meta name="keywords" content=" творческая лаборатория, инженерный клуб, техническое творчество учащихся, юные техники, юный инженер, младший конструктор, электроника, электроника и схемотехника, радиоэлектроника, кибернетика, автоматика, робототехника, конструирование и моделирование, электронное конструирование, радиотехническое конструирование, приморский край, владивосток">
-    {% seo %}
+    {% include seo-meta.liquid %}   
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Глобальные базовые стили сайта (остаются всегда) -->
@@ -263,21 +262,6 @@ purpose: Отображение интерфейса главной страни
 
     </style>
     
-	<script type="application/ld+json">
-	{
-	  "@context": "https://schema.org",
-	  "@type": "EducationalOrganization",
-	  "name": "Творческая лаборатория познавательного развития",
-	  "address": {
-	    "@type": "PostalAddress",
-	    "addressLocality": "Владивосток",
-	    "addressRegion": "Приморский край",
-	    "addressCountry": "RU"
-	  },
-	  "url": "https://eaststandart.github.io/"
-	}
-	</script>
-
 </head>
 <body>
 

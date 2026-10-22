@@ -7,7 +7,7 @@ purpose: Базовый скелет для всего сайта (шапка, �
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% include seo-meta.liquid %} }
+    {% include seo-meta.liquid %} 
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Базовые стили для всего сайта -->

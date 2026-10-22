@@ -51,4 +51,6 @@ jobs:
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           JOURNAL_WRITE_TOKEN: ${{ secrets.MY_FINE_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          GREEN_API_ID: ${{ secrets.GREEN_API_ID }}
+          GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
         run: python _actions/journal_attendance/journal_attendance.py

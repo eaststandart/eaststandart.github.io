@@ -1,23 +1,35 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Разделение структуры <title> по URL-адресам разделов сайта (содержит гибкий фильтр для раздела /faire/).
+@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины заголовков (фильтр .size > 60) для динамического переключения на короткие версии брендов из _config.yml.
 @author  TechLab
-@version 1.8.1
+@version 1.0.0
 {%- endcomment -%}
+
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
+{%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
+{%- assign title_short = site.title_short | default: "Творческая лаборатория" -%}
 {%- assign default_alt = "Радиотехника: техническое творчество учащихся" -%}
-{%- comment -%} АВТОМАТИЧЕСКОЕ ВЫЧИСЛЕНИЕ РАЗДЕЛОВ ПО URL СТРАНИЦЫ {%- endcomment -%}
+{%- comment -%} АВТОМАТИЧЕСКОЕ ВЫЧИСЛЕНИЕ ДЛИНЫ И ФОРМИРОВАНИЕ ЗАГОЛОВКОВ {%- endcomment -%}
 {%- if page.url == '/' or page.url == '/index.html' -%}
   {%- assign final_title = site.title -%}
   {%- assign final_desc = page.description | append: " " | append: site.description -%}
 {%- elsif page.url contains '/faire/' -%}
-  {%- comment -%} ИСПРАВЛЕНО: 'elif' заменен на правильный в Liquid 'elsif' {%- endcomment -%}
-  {%- assign final_title = page.title | append: " | " | append: club_footer -%}
+  {%- assign full_title_test = page.title | append: " | " | append: club_footer -%}
+  {%- if full_title_test.size > 60 -%}
+    {%- assign final_title = page.title | append: " | " | append: club_short -%}
+  {%- else -%}
+    {%- assign final_title = full_title_test -%}
+  {%- endif -%}
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- else -%}
-  {%- assign final_title = page.title | append: " | " | append: site.title -%}
+  {%- assign full_title_test = page.title | append: " | " | append: site.title -%}
+  {%- if full_title_test.size > 60 -%}
+    {%- assign final_title = page.title | append: " | " | append: title_short -%}
+  {%- else -%}
+    {%- assign final_title = full_title_test -%}
+  {%- endif -%}
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- endif -%}
 <title>{{ final_title }}</title>

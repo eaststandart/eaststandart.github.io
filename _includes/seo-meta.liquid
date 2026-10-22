@@ -1,16 +1,16 @@
 {%- comment -%}
 @module  seo-meta.liquid
-@about   Автоматизированный module сборки SEO и Open Graph мета-тегов.
+@about   Модуль сборки SEO и Open Graph мета-тегов.
 @purpose Формирование мета-тегов поисковых систем и превью для соцсетей. Исключает дублирование дескрипшенов, автоматически подбирает ключевые слова и адаптирует заголовки в мессенджерах по длине. Сохраняет оригинальный <title> страниц для стабильной работы комментариев и GitHub Discussions.
 @author  TechLab
 @version 1.0.0
 {%- endcomment -%}
 
-{%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords %}
-{%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" %}
-{%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" %}
+{%- assign final_keywords = page.metakeywords | default: site.keywords %}
+{%- assign club_footer = site.club.title | default: "Детско-юношеский инженерный клуб г. Владивосток" %}
+{%- assign club_short = site.club.title_short | default: "Инженерный клуб г. Владивосток" %}
 {%- assign title_short = site.title_short | default: "Творческая лаборатория" %}
-{%- assign default_alt = "Радиотехника: техническое творчество учащихся" %}
+{%- assign default_alt = site.defaults[0].values.image.alt | default: "Радиотехника: техническое творчество учащихся" %}
 {%- if page.url == '/' or page.url == '/index.html' %}
   {%- assign final_title = site.title %}
   {%- assign final_desc = page.description | append: " " | append: site.description %}
@@ -84,24 +84,22 @@
   "logo": "{{ site.image | absolute_url }}",
   {% if site.author.email %}"email": "{{ site.author.email }}",{% endif %}
   "sameAs": [
-    "{{ site.author.githubProfile }}",
-    "{{ site.author.telegram }}",
-    "{{ site.author.telegramGroup }}"
+    "{{ site.author.github_profile }}",
+    "{{ site.author.telegram_contact }}",
+    "{{ site.club.telegram_channel }}"
   ],
   "department": {
     "@type": "EducationalOrganization",
     "name": "{{ club_footer }}",
-    "description": "{{ site.author.bio | default: 'Детско-юношеский инженерный клуб г. Владивосток' }}",
+    "alternateName": "{{ site.club.title_alternate | default: 'Детский инженерный клуб г. Владивосток' }}",
+    "description": "{{ site.club.description }}",
     "url": "{{ site.url }}",
     "address": {
       "@type": "PostalAddress",
-      "addressRegion": "{{ site.author.region | default: 'Приморский край' }}",
-      "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
+      "addressRegion": "{{ site.club.region | default: 'Приморский край' }}",
+      "addressLocality": "{{ site.club.location | default: 'г. Владивосток' }}",
       "addressCountry": "RU"
     }
   }
 }
 </script>
-
-
-

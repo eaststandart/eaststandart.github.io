@@ -3,8 +3,9 @@
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
 @purpose Исключение дублирования тегов с точечным сохранением оригинальных переменных и альтов из _config.yml.
 @author  TechLab
-@version 1.5.0
+@version 1.5.1
 {%- endcomment -%}
+
 {%- comment -%} 1. ОПРЕДЕЛЯЕМ ИЕРАРХИЮ ОПИСАНИЙ И БРЕНДИНГА {%- endcomment -%}
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
@@ -17,7 +18,8 @@
   {%- assign final_title = page.title | append: " | " | append: club_footer -%}
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- endif -%}
-{%- comment -2. ВЫВОД TITLE И CANONICAL {%- endcomment -%}
+
+{%- comment -%} 2. ВЫВОД TITLE И CANONICAL {%- endcomment -%}
 <title>{{ final_title }}</title>
 <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
 <meta name="generator" content="Jekyll v{{ jekyll.version }}" />
@@ -41,6 +43,7 @@
 <meta property="og:image" content="{{ site.image | absolute_url }}" />
 <meta property="og:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
+
 {%- comment -%} 4. TWITTER CARDS {%- endcomment -%}
 <meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
 <meta name="twitter:title" content="{{ page.title | default: site.title }}" />

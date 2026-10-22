@@ -3,9 +3,8 @@
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
 @purpose Каскадный выбор тегов без дублирования. Разделение структуры <title> по URL-адресам разделов сайта (содержит гибкий фильтр для раздела /faire/).
 @author  TechLab
-@version 1.0.0
+@version 1.8.1
 {%- endcomment -%}
-
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign default_alt = "Радиотехника: техническое творчество учащихся" -%}
@@ -13,7 +12,8 @@
 {%- if page.url == '/' or page.url == '/index.html' -%}
   {%- assign final_title = site.title -%}
   {%- assign final_desc = page.description | append: " " | append: site.description -%}
-{%- elif page.url contains '/faire/' -%}
+{%- elsif page.url contains '/faire/' -%}
+  {%- comment -%} ИСПРАВЛЕНО: 'elif' заменен на правильный в Liquid 'elsif' {%- endcomment -%}
   {%- assign final_title = page.title | append: " | " | append: club_footer -%}
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- else -%}

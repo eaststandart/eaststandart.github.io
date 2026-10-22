@@ -1,89 +1,53 @@
 {%- comment -%}
-@module  seo-meta.liquid
-@about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Корректный подсчет длины русских символов (Unicode) через перевод строки фильтром strip_html для автопереключения брендов.
+@module  seo-meta.liquid (TEST LOG EDITION)
+@about   Тестовый модуль для замера реального поведения счетчика .size на GitHub Pages.
 @author  TechLab
-@version 1.9.1
+@version 9.9.9
 {%- endcomment -%}
-{%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
+
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
 {%- assign title_short = site.title_short | default: "Творческая лаборатория" -%}
-{%- assign default_alt = "Радиотехника: техническое творчество учащихся" -%}
-{%- comment -%} АВТОМАТИЧЕСКОЕ ВЫЧИСЛЕНИЕ ДЛИНЫ И ФОРМИРОВАНИЕ ЗАГОЛОВКОВ {%- endcomment -%}
-{%- if page.url == '/' or page.url == '/index.html' -%}
-  {%- assign final_title = site.title -%}
-  {%- assign final_desc = page.description | append: " " | append: site.description -%}
-{%- elsif page.url contains '/faire/' -%}
-  {%- assign full_title_test = page.title | append: " | " | append: club_footer -%}
-  {%- comment -%} Переводим в Unicode-счетчик букв через strip_html {%- endcomment -%}
-  {%- assign string_length = full_title_test | strip_html | size -%}
-  {%- if string_length > 60 -%}
-    {%- assign final_title = page.title | append: " | " | append: club_short -%}
-  {%- else -%}
-    {%- assign final_title = full_title_test -%}
-  {%- endif -%}
-  {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
-{%- else -%}
-  {%- assign full_title_test = page.title | append: " | " | append: site.title -%}
-  {%- comment -%} Переводим в Unicode-счетчик букв через strip_html {%- endcomment -%}
-  {%- assign string_length = full_title_test | strip_html | size -%}
-  {%- if string_length > 60 -%}
-    {%- assign final_title = page.title | append: " | " | append: title_short -%}
-  {%- else -%}
-    {%- assign final_title = full_title_test -%}
-  {%- endif -%}
-  {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
-{%- endif -%}
-<title>{{ final_title }}</title>
-<link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
-<meta name="generator" content="Jekyll v{{ jekyll.version }}" />
-<meta name="author" content="{{ site.author.name | default: 'TechLab' }}" />
-{%- if final_desc %}
-<meta name="description" content="{{ final_desc | strip_html | strip_newlines | escape }}" />
-{%- endif -%}
-{%- if final_keywords %}
-<meta name="keywords" content="{{ final_keywords | strip_html | strip_newlines | escape }}">
-{%- endif -%}
-<meta property="og:locale" content="ru" />
-<meta property="og:site_name" content="{{ site.title }}" />
-<meta property="og:title" content="{{ page.title | default: site.title }}" />
-<meta property="og:url" content="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
-<meta property="og:type" content="{% if page.url == '/' %}website{% else %}article{% endif %}" />
-{%- if final_desc %}
-<meta property="og:description" content="{{ final_desc | strip_html | strip_newlines | escape }}" />
-{%- endif -%}
-{%- if site.image %}
-<meta property="og:image" content="{{ site.image | absolute_url }}" />
-<meta property="og:image:alt" content="{{ default_alt }}" />
-{%- endif -%}
-<meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
-<meta name="twitter:title" content="{{ page.title | default: site.title }}" />
-{%- if final_desc %}
-<meta name="twitter:description" content="{{ final_desc | strip_html | strip_newlines | escape }}" />
-{%- endif -%}
-{%- if site.twitter.username %}
-<meta name="twitter:site" content="@{{ site.twitter.username }}" />
-{%- endif -%}
-{%- if site.author.name %}
-<meta name="twitter:creator" content="@{{ site.author.name }}" />
-{%- endif -%}
-{%- if site.image %}
-<meta name="twitter:image" content="{{ site.image | absolute_url }}" />
-<meta name="twitter:image:alt" content="{{ default_alt }}" />
-{%- endif -%}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  "name": "{{ club_footer }}",
-  "alternativeName": "{{ site.title }}",
-  "description": "{{ site.description }}",
-  "url": "{{ site.url }}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
-    "addressCountry": "RU"
-  }
-}
-</script>
+
+{%- comment -%} 1. ЗАМЕРЫ ЧИСТЫХ СТРОК {%- endcomment -%}
+{%- assign len_page_title = page.title | size -%}
+{%- assign len_club_footer = club_footer | size -%}
+{%- assign len_site_title = site.title | size -%}
+
+{%- comment -%} 2. ЗАМЕРЫ СТРОК ПОСЛЕ СТАНДАРТНОЙ СЛИВНОЙ ОЧИСТКИ {%- endcomment -%}
+{%- assign clean_page_title = page.title | strip_html -%}
+{%- assign len_clean_title = clean_page_title | size -%}
+
+{%- comment -%} 3. СБОРКА ТЕСТОВЫХ СУММАРНЫХ СТРОК {%- endcomment -%}
+{%- assign full_title_faire = page.title | append: " | " | append: club_footer -%}
+{%- assign len_full_faire = full_title_faire | size -%}
+
+{%- assign full_title_other = page.title | append: " | " | append: site.title -%}
+{%- assign len_full_other = full_title_other | size -%}
+
+<!-- 
+    ======================================================================
+    ТЕХНИЧЕСКИЙ ЛОГ РАБОТЫ LIQUID ДЛЯ СТРАНИЦЫ: "{{ page.title }}"
+    ======================================================================
+    [ЧИСТЫЕ СТРОКИ И ИХ .SIZE]:
+    - Длина page.title: {{ len_page_title }}
+    - Длина site.title: {{ len_site_title }}
+    - Длина club_footer: {{ len_club_footer }}
+    
+    [ПОСЛЕ ФИЛЬТРА STRIP_HTML]:
+    - Длина page.title (| strip_html): {{ len_clean_title }}
+    
+    [СУММАРНЫЕ СТРОКИ ДЛЯ СРАВНЕНИЯ]:
+    - Полная строка для FAIRE (Заголовок + Клуб): "{{ full_title_faire }}"
+    - Ее итоговый .size: {{ len_full_faire }}
+    
+    - Полная строка для ОСТАЛЬНЫХ (Заголовок + Сайт): "{{ full_title_other }}"
+    - Ее итоговый .size: {{ len_full_other }}
+    ======================================================================
+-->
+
+{%- comment -%} ПОДСТАНОВКА ВРЕМЕННЫХ ТЕГОВ, ЧТОБЫ СБОРКА НЕ ПАДАЛА {%- endcomment -%}
+<title>TEST LOG | {{ page.title }}</title>
+<meta name="x-test-page-title-size" content="{{ len_page_title }}" />
+<meta name="x-test-full-faire-size" content="{{ len_full_faire }}" />
+<meta name="x-test-full-other-size" content="{{ len_full_other }}" />

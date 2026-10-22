@@ -85,8 +85,8 @@
   "logo": "{{ site.image | absolute_url }}",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
     "addressRegion": "{{ site.author.region | default: 'Приморский край' }}",
+    "addressLocality": "{{ site.author.location | default: 'г. Владивосток' }}",
     "addressCountry": "RU"
   },
   {% if site.author.email %}"email": "{{ site.author.email }}",{% endif %}

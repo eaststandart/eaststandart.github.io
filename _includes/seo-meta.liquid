@@ -1,10 +1,11 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Корректный подсчет длины строк на основе реальных данных Unicode-лога с лимитом переключения в 70 символов.
+@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины строк на основе Unicode (лимит 70) с синхронизацией правильных заголовков в <title>, og:title и twitter:title.
 @author  TechLab
-@version 2.1.0
+@version 1.0.0
 {%- endcomment -%}
+
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
@@ -45,7 +46,7 @@
 {%- endif -%}
 <meta property="og:locale" content="ru" />
 <meta property="og:site_name" content="{{ site.title }}" />
-<meta property="og:title" content="{{ page.title | default: site.title }}" />
+<meta property="og:title" content="{{ final_title }}" />
 <meta property="og:url" content="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
 <meta property="og:type" content="{% if page.url == '/' %}website{% else %}article{% endif %}" />
 {%- if final_desc %}
@@ -55,8 +56,9 @@
 <meta property="og:image" content="{{ site.image | absolute_url }}" />
 <meta property="og:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
+
 <meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
-<meta name="twitter:title" content="{{ page.title | default: site.title }}" />
+<meta name="twitter:title" content="{{ final_title }}" />
 {%- if final_desc %}
 <meta name="twitter:description" content="{{ final_desc | strip_html | strip_newlines | escape }}" />
 {%- endif -%}
@@ -70,6 +72,7 @@
 <meta name="twitter:image" content="{{ site.image | absolute_url }}" />
 <meta name="twitter:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

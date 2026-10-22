@@ -9,7 +9,7 @@ purpose: Отображение интерфейса главной страни
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="B4VTiTjxOA6NvcOS33nVnnEiltJqjWeBm1vjiZr5dq0" />
-    {% include seo-meta.liquid %}   
+    {% include seo-meta.liquid %}
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
     <!-- Глобальные базовые стили сайта (остаются всегда) -->

@@ -1,17 +1,15 @@
 {%- comment -%}
 @module  seo-meta.liquid
 @about   Автоматизированный модуль сборки SEO и Open Graph мета-тегов.
-@purpose Каскадный выбор тегов без дублирования. Автоматический подсчет длины строк на основе Unicode (лимит 70) с синхронизацией правильных заголовков в <title>, og:title и twitter:title.
+@purpose Формирование мета-тегов поисковых систем и превью для соцсетей. Автоматически подбирает ключевые слова и адаптирует заголовки в мессенджерах по длине.
 @author  TechLab
 @version 1.0.0
 {%- endcomment -%}
-
 {%- assign final_keywords = page.metakeywords | default: page.keywords | default: site.keywords -%}
 {%- assign club_footer = site.club | default: "Детско-юношеский инженерный клуб г. Владивосток" -%}
 {%- assign club_short = site.club_short | default: "Инженерный клуб г. Владивосток" -%}
 {%- assign title_short = site.title_short | default: "Творческая лаборатория" -%}
 {%- assign default_alt = "Радиотехника: техническое творчество учащихся" -%}
-
 {%- comment -%} АВТОМАТИЧЕСКОЕ ВЫЧИСЛЕНИЕ ДЛИНЫ И ФОРМИРОВАНИЕ ЗАГОЛОВКОВ {%- endcomment -%}
 {%- if page.url == '/' or page.url == '/index.html' -%}
   {%- assign final_title = site.title -%}
@@ -35,7 +33,12 @@
   {%- endif -%}
   {%- assign final_desc = page.metadescription | default: page.description | default: site.description -%}
 {%- endif -%}
-<title>{{ final_title }}</title>
+{%- comment -%} ТЕГ TITLE ДЛЯ САЙТА И ДИСКУССИЙ (БЕЗ ИЗМЕНЕНИЙ НА ПОДСТРАНИЦАХ) {%- endcomment -%}
+{%- if page.url == '/' or page.url == '/index.html' -%}
+<title>{{ site.title }}</title>
+{%- else -%}
+<title>{{ page.title }}</title>
+{%- endif -%}
 <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}" />
 <meta name="generator" content="Jekyll v{{ jekyll.version }}" />
 <meta name="author" content="{{ site.author.name | default: 'TechLab' }}" />
@@ -57,7 +60,6 @@
 <meta property="og:image" content="{{ site.image | absolute_url }}" />
 <meta property="og:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
-
 <meta name="twitter:card" content="{{ site.twitter.card | default: 'summary_large_image' }}" />
 <meta name="twitter:title" content="{{ final_title }}" />
 {%- if final_desc %}
@@ -73,7 +75,6 @@
 <meta name="twitter:image" content="{{ site.image | absolute_url }}" />
 <meta name="twitter:image:alt" content="{{ default_alt }}" />
 {%- endif -%}
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

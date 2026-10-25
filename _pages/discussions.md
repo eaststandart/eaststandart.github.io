@@ -11,20 +11,21 @@ emoji: ""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конструктор Отчетов TechLab v6</title>
+    <title>Конструктор Отчетов TechLab v7</title>
     <style>
         body { font-family: sans-serif; max-width: 480px; margin: 10px auto; padding: 10px; background: #f4f4f4; color: #333; }
         .block { background: #fff; border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         h3 { margin-top: 0; margin-bottom: 10px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 16px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
-        input[type="text"], textarea, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; background: #fff; }
+        input[type="text"], textarea, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; background: #fff; margin-bottom: 10px; }
+        input[type="text"]:last-child, textarea:last-child { margin-bottom: 0; }
         
-        /* ТРЁХЛИНЕЙНАЯ СТРУКТУРА ШАПКИ ДЛЯ МОБИЛЬНЫХ ЭКРАНОВ */
+        /* СТРУКТУРА ШАПКИ УПРАВЛЕНИЯ CMS */
         .header-line { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
         .header-line:last-child { margin-bottom: 0; }
         .inline-label { font-weight: bold; font-size: 14px; color: #444; white-space: nowrap; }
         
-        /* Строгие фиксированные размеры полей по лимитам CMS */
+        /* Калибровка размеров полей ввода под лимиты данных */
         .input-date { width: 120px !important; text-align: center; font-family: monospace; }
         .input-disc { width: 55px !important; text-align: center; font-family: monospace; }
         .input-commit { width: 95px !important; text-align: center; font-family: monospace; }
@@ -38,19 +39,20 @@ emoji: ""
 </head>
 <body>
 
-    <h3 style="text-align: center; color: #0076ff; font-size: 18px; margin-bottom: 15px;">Унифицированная форма TechLab v6</h3>
+    <h3 style="text-align: center; color: #0076ff; font-size: 18px; margin-bottom: 15px;">Унифицированная форма TechLab v7</h3>
 
     <!-- БЛОК 1: ТРЁХЛИНЕЙНАЯ УПРАВЛЯЮЩАЯ ШАПКА CMS -->
     <div class="block">
         <h3>1. Параметры публикации</h3>
         
-        <!-- ЛИНИЯ 1: Дата + Черновик с бестекстовой галочкой -->
+        <!-- ЛИНИЯ 1: Дата + Чекбокс переключения в режим черновика -->
         <div class="header-line">
             <span class="inline-label">Дата:</span>
             <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="currentNormalDate=this.value">
             
-            
-            <label class="draft-trigger"><span class="inline-label">Черновик:</span><input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()"></label>
+            <label class="draft-trigger">
+                <span class="inline-label">Черновик:</span><input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
+            </label>
         </div>
 
         <!-- ЛИНИЯ 2: Дискуссия № (3 цифры) + Коммит (8 цифр) -->
@@ -62,48 +64,45 @@ emoji: ""
             <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
         </div>
 
-        <!-- ЛИНИЯ 3: Поле черновиков на всю ширину экрана -->
+        <!-- ЛИНИЯ 3: Поле черновиков на всю ширину мобильного экрана -->
         <div class="header-line" style="margin-top: 12px;">
             <div id="dynamic-field-container" style="width: 100%;">
-                <!-- Изначально заблокировано скриптом: "черновиков нет" -->
+                <!-- Контейнер для списка набросков -->
             </div>
         </div>
     </div>
 
-    <!-- БЛОК 2: ЗАГОЛОВОК КОММЕНТАРИЯ -->
+    <!-- ОБЪЕДИНЕННЫЙ БЛОК 2: КОНТЕКСТ ОТЧЕТА (ВСЕ ТЕКСТОВЫЕ ПОЛЯ БЕЗ ВНЕШНИХ ПОДПИСЕЙ) -->
     <div class="block">
-        <label for="post-title">2. Заголовок комментария</label>
-        <input type="text" id="post-title" placeholder="Введите заголовок (если есть)">
+        <h3>2. Контекст комментария</h3>
+        
+        <!-- Заголовок комментария -->
+        <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
+        
+        <!-- Описание занятия -->
+        <textarea id="post-text" rows="5" placeholder="Описание: Основной текст отчета (Что было сделано на занятии...)"></textarea>
+        
+        <!-- Подвал комментария -->
+        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, метки, информация о подмене..."></textarea>
     </div>
 
-    <!-- БЛОК 3: СОДЕРЖАТЕЛЬНАЯ ЧАСТЬ -->
+    <!-- БЛОК 3: 📸 ФОТОМАТЕРИАЛЫ -->
     <div class="block">
-        <label for="post-text">3. Описание (Основной текст отчета)</label>
-        <textarea id="post-text" rows="5" placeholder="Что было сделано на занятии..."></textarea>
-    </div>
-
-    <!-- БЛОК 4: 📸 ФОТОМАТЕРИАЛЫ -->
-    <div class="block">
-        <h3>4. 📸 Фотоматериалы</h3>
+        <h3>3. 📸 Фотоматериалы</h3>
         <div class="drop-zone">Нажмите для выбора или перетащите фото</div>
     </div>
 
-    <!-- БЛОК 5: 🎥 ВИДЕОМАТЕРИАЛЫ -->
+    <!-- БЛОК 4: 🎥 ВИДЕОМАТЕРИАЛЫ -->
     <div class="block">
-        <h3>5. 🎥 Видеоматериалы</h3>
+        <h3>4. 🎥 Видеоматериалы</h3>
         <div class="drop-zone">Нажмите для выбора или перетащите видео</div>
     </div>
 
-    <!-- БЛОК 6: НАСТРАИВАЕМЫЙ ПОДВАЛ -->
-    <div class="block">
-        <label for="post-footer">6. Подвал комментария (Обычный текст)</label>
-        <textarea id="post-footer" rows="3" placeholder="Дополнительные сведения, метки, информация о подмене..."></textarea>
-    </div>
-
-    <!-- БЛОК КОНТРОЛЯ: ОПУБЛИКОВАТЬ / СОХРАНИТЬ КАК ЧЕРНОВИК -->
+    <!-- БЛОК КОНТРОЛЯ С ДИНАМИЧЕСКИМ ТЕКСТОМ ГАЛОЧКИ -->
     <div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
         <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
-            <input type="checkbox" id="publish-now-flag" checked style="width: 18px; height: 18px; margin: 0;"> 🔥 Опубликовать сейчас (published: true)
+            <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()" style="width: 18px; height: 18px; margin: 0;"> 
+            <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
         </div>
         <button class="btn" onclick="generateMarkdownOutput()">Сформировать .md манифест</button>
     </div>
@@ -122,14 +121,25 @@ emoji: ""
             container.innerHTML = `<select id="draft-select" disabled><option value="">черновиков нет</option></select>`;
         }
 
-        // ЛИНИЯ 1 В ДЕЙСТВИИ: Логика управления Линией 3 по клику на бестекстовую галочку
+        // ДИНАМИЧЕСКАЯ СМЕНА ТЕКСТА ГАЛОЧКИ КОНТРОЛЯ СТРОГО ПО ТЗ
+        function updatePublishLabel() {
+            const isChecked = document.getElementById("publish-now-flag").checked;
+            const labelText = document.getElementById("publish-label-text");
+            
+            if (isChecked) {
+                labelText.innerText = "🔥 Опубликовать сейчас (published: true)";
+            } else {
+                labelText.innerText = "📁 Сохранить как черновик (published: false)";
+            }
+        }
+
+        // ЛИНИЯ 1 В ДЕЙСТВИИ: Переключение режима работы Линии 3 по клику на бестекстовую галочку
         function toggleDraftBehavior() {
             const isDraftMode = document.getElementById("is-draft-mode").checked;
             const container = document.getElementById("dynamic-field-container");
-            const publishFlag = document.getElementById("publish-now-flag");
-
+            
             if (isDraftMode) {
-                // АКТИВНЫЙ РЕЖИМ: Линия 3 разворачивает список черновиков на всю ширину экрана
+                // АКТИВНЫЙ РЕЖИМ: Линия 3 открывает список черновиков на всю ширину
                 let selectHtml = `<select id="draft-select" onchange="loadDraftData(this.value)">`;
                 selectHtml += `<option value="">-- Выберите сохраненный черновик --</option>`;
                 mockDrafts.forEach(draft => {
@@ -138,12 +148,14 @@ emoji: ""
                 selectHtml += `</select>`;
                 container.innerHTML = selectHtml;
                 
-                // Перевод флага контроля в режим черновика
-                publishFlag.checked = false;
+                // Переключаем нижний флаг в положение черновика и обновляем текст надписи
+                document.getElementById("publish-now-flag").checked = false;
+                updatePublishLabel();
             } else {
-                // ДЕФОЛТНЫЙ РЕЖИМ: Линия 3 переходит в состояние заблокировано строго по ТЗ
+                // ДЕФОЛТНЫЙ РЕЖИМ: Линия 3 переходит в состояние заблокировано
                 container.innerHTML = `<select id="draft-select" disabled><option value="">черновиков нет</option></select>`;
-                publishFlag.checked = true;
+                document.getElementById("publish-now-flag").checked = true;
+                updatePublishLabel();
                 
                 // Полный сброс всей формы под новый чистый отчет
                 document.getElementById("target-date").value = "2026-10-25";
@@ -156,18 +168,18 @@ emoji: ""
             }
         }
 
-        // ЛИНИИ 1 И 2 В ДЕЙСТВИИ: Наполнение шапки оригинальными данными выбранного черновика
+        // ОБЪЕДИНЕННЫЙ БЛОК 2 В ДЕЙСТВИИ: Загрузка старых данных черновика без лишних подписей
         function loadDraftData(draftId) {
             if (!draftId) return;
             const selectedDraft = mockDrafts.find(d => d.id === draftId);
             if (selectedDraft) {
-                // Синхронизируем Линию 1 и Линию 2 без принудительных дописок текста
+                // Синхронизируем Линию 1 и Линию 2 шапки
                 document.getElementById("target-date").value = selectedDraft.date;
                 currentNormalDate = selectedDraft.date;
                 document.getElementById("discussion-number").value = selectedDraft.discussion;
                 document.getElementById("commit-id").value = selectedDraft.commit;
                 
-                // Обновляем описание, заголовок и подвал отчета один в один
+                // Наполняем три текстовых поля объединенного Блока 2 один в один
                 document.getElementById("post-title").value = selectedDraft.title;
                 document.getElementById("post-text").value = selectedDraft.text;
                 document.getElementById("post-footer").value = selectedDraft.footer;
@@ -185,7 +197,7 @@ emoji: ""
             const footer = document.getElementById("post-footer").value;
             const publishNow = document.getElementById("publish-now-flag").checked;
 
-            // БЛОК 1: Сборка оригинального Front Matter
+            // Сборка Front Matter
             let md = `---\n`;
             md += `discussion_number: ${discussion}\n`;
             if (commitId) md += `comment_id: ${commitId}\n`;
@@ -193,15 +205,14 @@ emoji: ""
             md += `published: ${publishNow}\n`;
             md += `---\n\n`;
             
-            // БЛОК 2 И 3: Заголовок и Текст описания
+            // Наполнение контентом
             if (title) md += `## ${title}\n\n`;
             if (text) md += `${text}\n\n`;
             
-            // БЛОК 4 И 5: Жестко заданные Markdown-заголовки медиаматериалов
             md += `### 📸 Фотоматериалы\n![[photo_01.jpg]]\n\n`;
             md += `### 🎥 Видеоматериалы\n\n`;
             
-            // БЛОК 6: Обычный текст подвала, приписываемый через черту
+            // Если подвал заполнен, приписываем его чистый текст вниз через черту
             if (footer) {
                 md += `---\n${footer}\n`;
             }
@@ -209,7 +220,7 @@ emoji: ""
             alert("Сформирован следующий Markdown-текст:\n\n" + md);
         }
 
-        // Запуск инициализации при загрузке страницы
+        // Стартовая инициализация при загрузке страницы
         initForm();
     </script>
 </body>

@@ -83,7 +83,7 @@ emoji: ""
         <textarea id="post-text" rows="5" placeholder="Описание: Основной текст отчета (Что было сделано на занятии...)"></textarea>
         
         <!-- Подвал комментария -->
-        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, метки, информация о подмене..."></textarea>
+        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, метки ..."></textarea>
     </div>
 
     <!-- БЛОК 3: 📸 ФОТОМАТЕРИАЛЫ -->
@@ -104,7 +104,7 @@ emoji: ""
             <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()" style="width: 18px; height: 18px; margin: 0;"> 
             <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
         </div>
-        <button class="btn" onclick="generateMarkdownOutput()">Сформировать .md манифест</button>
+        <button class="btn" onclick="generateMarkdownOutput()">Создать комментарий</button>
     </div>
     <script>
         // Имитация базы данных черновиков, полученных из папки _input медиа-репозитория

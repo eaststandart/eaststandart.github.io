@@ -83,7 +83,7 @@ emoji: ""
         <textarea id="post-text" rows="5" placeholder="Описание: Основной текст отчета (Что было сделано на занятии...)"></textarea>
         
         <!-- Подвал комментария -->
-        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, метки ..."></textarea>
+        <textarea id="post-footer" rows="4" placeholder="Подвал комментария: дополнительные сведения, метки ..."></textarea>
     </div>
 
     <!-- БЛОК 3: 📸 ФОТОМАТЕРИАЛЫ -->

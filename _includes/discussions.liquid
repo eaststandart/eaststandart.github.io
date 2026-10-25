@@ -1,0 +1,71 @@
+{%- comment -%}
+@module  discussions.liquid
+@about   Модуль шаблона интерфейса Конструктора Отчетов и Дискуссий.
+@purpose Отображение блочной формы, ведение черновиков и отправка медиа-пакетов в репозиторий.
+@author  TechLab
+@version 1.0.0
+{%- endcomment -%}
+
+<div class="block">
+  <h3>1. Параметры публикации</h3>
+  
+  <!-- ЛИНИЯ 1: Дата: Поле даты -->
+  <div class="header-line">
+    <span class="inline-label">Дата:</span>
+    <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="updateNormalDateValue(this.value)">           
+  </div>
+
+  <!-- ЛИНИЯ 2: Дискуссия: [№-коммит] + Черновик: [Галочка] -->
+  <div class="header-line">
+    <span class="inline-label">Дискуссия:</span>
+    <input type="text" id="discussion-combo" class="input-combo" maxlength="11" value="" placeholder="№-коммит">       
+    
+    <label class="draft-trigger">
+      <span class="inline-label">Черновик:</span>
+      <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
+    </label>
+  </div>
+
+  <!-- ЛИНИЯ 3: Поле черновиков на всю ширину экрана -->
+  <div class="header-line">
+    <div id="dynamic-field-container" style="width: 100%;">
+      <select id="draft-select" onchange="loadDraftData(this.value)">
+        <!-- Наполняется скриптом из discussions.js -->
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- БЛОК 2: КОНТЕКСТ ОТЧЕТА (ОБЪЕДИНЕННЫЙ) -->
+<div class="block">
+  <h3>2. Контекст отчета</h3>
+  <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
+  <textarea id="post-text" rows="5" placeholder="Описание комментария: основной текст, например, что было сделано или создано на занятии..."></textarea>
+  <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, автор, метки, ссылки..."></textarea>
+</div>
+
+<!-- БЛОК 3: ФОТОМАТЕРИАЛЫ -->
+<div class="block">
+  <h3>3. 📸 Фотоматериалы</h3>
+  <div id="photos-meta-container"></div>
+  <button type="button" class="btn-add" onclick="addPhotoBlock()">+ Добавить блок фото</button>
+</div>
+
+<!-- БЛОК 4: ВИДЕОМАТЕРИАЛЫ -->
+<div class="block">
+  <h3>4. 🎥 Видеоматериалы</h3>
+  <div id="videos-meta-container"></div>
+  <button type="button" class="btn-add btn-add-video" onclick="addVideoBlock()">+ Добавить блок видео</button>
+</div>
+
+<!-- БЛОК КОНТРОЛЯ И ДИНАМИЧЕСКАЯ ГАЛОЧКА -->
+<div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
+  <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
+    <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()"> 
+    <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
+  </div>
+  <button type="button" class="btn" id="submit-btn" onclick="generateMarkdownOutput()">Создать комментарий</button>
+</div>
+
+<!-- ПОДКЛЮЧЕНИЕ ВЫДЕЛЕННОГО СКРИПТА СТРОГО ПО РЕГЛАМЕНТУ CMS TECHLAB -->
+<script src="{{ '/assets/js/discussions.js' | relative_url }}"></script>

@@ -135,7 +135,7 @@ emoji: ""
             
             // Внутрь блока закладываем поле заголовка H3 и собственную Drag&Drop зону
             subBlock.innerHTML = `
-                <input type="text" class="photo-h3-title" placeholder="Заголовок(например: Фотоматериалы фундамент)">
+                <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериала">
                 <div class="drop-zone">Нажмите для выбора или перетащите фото в этот блок</div>
             `;
             container.appendChild(subBlock);
@@ -151,7 +151,7 @@ emoji: ""
             subBlock.id = `video-sub-block-${videoBlockIdx}`;
             
             subBlock.innerHTML = `
-                <input type="text" class="video-h3-title" placeholder="Заголовок (например: Видеоматериалы стены)">
+                <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериала">
                 <div class="drop-zone">Нажмите для выбора или перетащите видео в этот блок</div>
             `;
             container.appendChild(subBlock);

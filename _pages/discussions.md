@@ -7,173 +7,192 @@ permalink: /discussions/
 emoji: ""
 ---
 
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конструктор Отчетов TechLab</title>
+    <title>Конструктор Отчетов TechLab v5</title>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 10px; background: #f9f9f9; color: #333; }
-        .block { background: #fff; border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
-        h3 { margin-top: 0; color: #555; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input[type="text"], textarea, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .row { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
-        .checkbox-container { display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer; }
-        .drop-zone { border: 2px dashed #bbb; padding: 20px; text-align: center; color: #777; background: #fafafa; border-radius: 4px; margin-top: 5px; }
-        .btn { background: #0076ff; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
-        .btn:hover { background: #0060d6; }
+        body { font-family: sans-serif; max-width: 480px; margin: 10px auto; padding: 10px; background: #f4f4f4; color: #333; }
+        .block { background: #fff; border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; margin-bottom: 10px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 16px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
+        input[type="text"], textarea, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; background: #fff; }
+        
+        /* СВЕРХКОМПАКТНАЯ СТРОКА УПРАВЛЕНИЯ */
+        .control-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .input-date { width: 115px !important; text-align: center; font-family: monospace; letter-spacing: 0.5px; padding: 10px 5px !important; }
+        .label-num { font-weight: bold; font-size: 16px; color: #444; }
+        .input-num { width: 55px !important; text-align: center; font-family: monospace; padding: 10px 5px !important; }
+        .draft-trigger { display: flex; align-items: center; gap: 4px; font-size: 18px; cursor: pointer; user-select: none; margin-left: auto; }
+        .draft-trigger input { width: 20px; height: 20px; cursor: pointer; margin: 0; }
+        
+        .drop-zone { border: 2px dashed #bbb; padding: 15px; text-align: center; color: #777; background: #fafafa; border-radius: 4px; font-size: 14px; }
+        .btn { background: #0076ff; color: #fff; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <h2>Унифицированная форма ввода TechLab</h2>
+    <h3 style="text-align: center; color: #0076ff; font-size: 18px; margin-bottom: 15px;">Унифицированная форма TechLab v5</h3>
 
-    <!-- БЛОК 1: ДАТА И ЧЕРНОВИКИ -->
+    <!-- БЛОК 1: СВЕРХКОМПАКТНАЯ ОДНОСТРОЧНАЯ ШАПКА + ПОЛЕ ЧЕРНОВИКОВ СНИЗУ -->
     <div class="block">
-        <h3>1. Дата публикации и Режим</h3>
-        <div class="row">
-            <div style="flex: 1;" id="date-field-container">
-                <!-- Сюда JS будет подставлять либо ввод даты, либо выпадающий список черновиков -->
-            </div>
-            <div>
-                <label class="checkbox-container">
-                    <input type="checkbox" id="is-draft-mode" onchange="toggleDraftMode()"> 📂 Черновик
-                </label>
+        <div class="control-row">
+            <!-- Поле даты (ровно 10 символов YYYY-MM-DD) -->
+            <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="currentNormalDate=this.value">
+            
+            <span class="label-num">№:</span>
+            
+            <!-- Поле дискуссии (макс 3 символа) -->
+            <input type="text" id="discussion-number" class="input-num" maxlength="3" value="83" placeholder="№">
+            
+            <!-- Эмодзи черновика и сама бестекстовая галочка -->
+            <label class="draft-trigger">
+                📂 <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
+            </label>
+        </div>
+
+        <!-- ПОЛЕ ЧЕРНОВИКОВ НА ВСЮ ШИРИНУ ПОД НИМИ -->
+        <div>
+            <div id="dynamic-field-container">
+                <!-- Сюда JS подставит либо заблокированный селект "черновиков нет", либо активный список -->
             </div>
         </div>
     </div>
 
-    <!-- БЛОК 2: ДИСКУССИЯ (НОМЕР ОБСУЖДЕНИЯ НА САЙТЕ) -->
+    <!-- БЛОК 2: ЗАГОЛОВОК КОММЕНТАРИЯ -->
     <div class="block">
-        <label for="discussion-number">2. Целевая дискуссия (Номер обсуждения на сайте)</label>
-        <input type="text" id="discussion-number" placeholder="Например: 83" value="83">
+        <label for="post-title">2. Заголовок комментария</label>
+        <input type="text" id="post-title" placeholder="Введите заголовок (если есть)">
     </div>
 
-    <!-- БЛОК 3: ЗАГОЛОВОК КОММЕНТАРИЯ -->
+    <!-- БЛОК 3: СОДЕРЖАТЕЛЬНАЯ ЧАСТЬ -->
     <div class="block">
-        <label for="post-title">3. Заголовок комментария</label>
-        <input type="text" id="post-title" placeholder="Введите заголовок (необязательно)">
+        <label for="post-text">3. Описание (Основной текст отчета)</label>
+        <textarea id="post-text" rows="5" placeholder="Что было сделано на занятии..."></textarea>
     </div>
 
-    <!-- БЛОК 4: СОДЕРЖАТЕЛЬНАЯ ЧАСТЬ -->
+    <!-- БЛОК 4: 📸 ФОТОМАТЕРИАЛЫ -->
     <div class="block">
-        <label for="post-text">4. Описание (Основной текст отчета)</label>
-        <textarea id="post-text" rows="6" placeholder="Что было сделано на занятии..."></textarea>
+        <h3>4. 📸 Фотоматериалы</h3>
+        <div class="drop-zone">Нажмите для выбора или перетащите фото</div>
     </div>
 
-    <!-- БЛОК 5: ФОТОМАТЕРИАЛЫ -->
+    <!-- БЛОК 5: 🎥 ВИДЕОМАТЕРИАЛЫ -->
     <div class="block">
-        <h3>5. 📸 Фотоматериалы</h3>
-        <div class="drop-zone">Нажмите или перетащите сюда фотографии (.jpg, .png)</div>
+        <h3>5. 🎥 Видеоматериалы</h3>
+        <div class="drop-zone">Нажмите для выбора или перетащите видео</div>
     </div>
 
-    <!-- БЛОК 6: ВИДЕОМАТЕРИАЛЫ -->
+    <!-- БЛОК 6: НАСТРАИВАЕМЫЙ ПОДВАЛ -->
     <div class="block">
-        <h3>6. 🎥 Видеоматериалы</h3>
-        <div class="drop-zone">Нажмите или перетащите сюда видеоролики (.mp4, .mov)</div>
+        <label for="post-footer">6. Подвал комментария (Обычный текст)</label>
+        <textarea id="post-footer" rows="3" placeholder="Дополнительные сведения, метки, информация о подмене..."></textarea>
     </div>
 
     <!-- БЛОК КОНТРОЛЯ: ОПУБЛИКОВАТЬ / СОХРАНИТЬ КАК ЧЕРНОВИК -->
     <div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
-        <div class="row" style="justify-content: space-between; margin-bottom: 15px;">
-            <label class="checkbox-container" style="color: #0056b3;">
-                <input type="checkbox" id="publish-now-flag" checked> 🔥 Опубликовать сейчас (published: true)
-            </label>
+        <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
+            <input type="checkbox" id="publish-now-flag" checked style="width: 18px; height: 18px; margin: 0;"> 🔥 Опубликовать сейчас (published: true)
         </div>
         <button class="btn" onclick="generateMarkdownOutput()">Сформировать .md манифест</button>
     </div>
 
     <script>
-        // Имитация базы данных черновиков, полученных с Гитхаба из папки _input
+        // Имитация базы данных черновиков с Гитхаба
         const mockDrafts = [
-            { id: "draft1", date: "2026-10-20", title: "Сборка каркаса корабля", text: "Сегодня собирали палубу и шпангоуты. Использовали клей и зажимы.", discussion: "83" },
-            { id: "draft2", date: "2026-10-22", title: "Тест сервоприводов робота", text: "Программировали контроллер, проверили углы поворота манипулятора.", discussion: "45" }
+            { id: "draft1", date: "2026-10-20", title: "Сборка каркаса корабля", text: "Сегодня собирали палубу и шпангоуты.", discussion: "83", footer: "Преподаватель: Иванов И.И.\nВ кадре: Младшая группа" },
+            { id: "draft2", date: "2026-10-22", title: "Тест сервоприводов робота", text: "Программировали контроллер, проверили углы поворота манипулятора.", discussion: "45", footer: "В кадре: Робототехники" }
         ];
 
-        // Функция инициализации: при загрузке ставит текущую дату
+        let currentNormalDate = "2026-10-25";
+
+        // По умолчанию выводим заблокированное поле "черновиков нет"
         function initForm() {
-            const container = document.getElementById("date-field-container");
-            // Устанавливаем текущую дату по умолчанию в формате YYYY-MM-DD
-            const today = new Date().toISOString().split('T')[0];
-            container.innerHTML = `<input type="text" id="target-date" value="${today}" placeholder="YYYY-MM-DD">`;
+            const container = document.getElementById("dynamic-field-container");
+            container.innerHTML = `<select id="draft-select" disabled><option value="">черновиков нет</option></select>`;
         }
 
-        // БЛОК 1 В ДЕЙСТВИИ: Переключение режима работы поля Даты при клике на галочку "Черновик"
-        function toggleDraftMode() {
+        // БЛОК 1 В ДЕЙСТВИИ: Логика управления полем черновиков по клику на бестекстовую галочку
+        function toggleDraftBehavior() {
             const isDraftMode = document.getElementById("is-draft-mode").checked;
-            const container = document.getElementById("date-field-container");
+            const container = document.getElementById("dynamic-field-container");
             const publishFlag = document.getElementById("publish-now-flag");
 
             if (isDraftMode) {
-                // РЕЖИМ ЧЕРНОВИКА: Поле даты превращается в список существующих черновиков
-                let selectHtml = `<select id="target-date" onchange="loadDraftData(this.value)">`;
-                selectHtml += `<option value="">-- Выберите черновик для редактирования --</option>`;
+                // АКТИВНЫЙ РЕЖИМ: Разворачиваем выпадающий список со всеми черновиками на всю ширину
+                let selectHtml = `<select id="draft-select" onchange="loadDraftData(this.value)">`;
+                selectHtml += `<option value="">-- Выберите сохраненный черновик --</option>`;
                 mockDrafts.forEach(draft => {
-                    selectHtml += `<option value="${draft.id}">Черновик от ${draft.date} [${draft.title}]</option>`;
+                    selectHtml += `<option value="${draft.id}">[${draft.date}] ${draft.title}</option>`;
                 });
                 selectHtml += `</select>`;
                 container.innerHTML = selectHtml;
                 
-                // Снимаем галочку публикации, так как мы открыли черновик
                 publishFlag.checked = false;
             } else {
-                // ОБЫЧНЫЙ РЕЖИМ: Поле превращается обратно в текстовый ввод даты
-                const today = new Date().toISOString().split('T')[0];
-                container.innerHTML = `<input type="text" id="target-date" value="${today}" placeholder="YYYY-MM-DD">`;
+                // ДЕФОЛТНЫЙ РЕЖИМ: Возвращаем заблокированное "черновиков нет" строго по условию
+                container.innerHTML = `<select id="draft-select" disabled><option value="">черновиков нет</option></select>`;
                 publishFlag.checked = true;
                 
-                // Очищаем форму под новый чистый отчет
+                // Сброс формы в исходное чистое состояние
+                document.getElementById("target-date").value = "2026-10-25";
+                currentNormalDate = "2026-10-25";
                 document.getElementById("post-title").value = "";
                 document.getElementById("post-text").value = "";
+                document.getElementById("post-footer").value = "";
                 document.getElementById("discussion-number").value = "83";
             }
         }
 
-        // БЛОК 2 И 4 В ДЕЙСТВИИ: Загрузка СТАРЫХ данных выбранного черновика для редактирования
+        // Загрузка СТАРЫХ данных черновика для чистого редактирования
         function loadDraftData(draftId) {
             if (!draftId) return;
             const selectedDraft = mockDrafts.find(d => d.id === draftId);
             if (selectedDraft) {
-                // Переносим старое содержание в поля формы без каких-либо принудительных дописок
+                // Автоматически обновляем данные в компактной строке шапки
+                document.getElementById("target-date").value = selectedDraft.date;
+                currentNormalDate = selectedDraft.date;
+                document.getElementById("discussion-number").value = selectedDraft.discussion;
+                
+                // Обновляем описание, заголовок и подвал отчета один в один
                 document.getElementById("post-title").value = selectedDraft.title;
                 document.getElementById("post-text").value = selectedDraft.text;
-                document.getElementById("discussion-number").value = selectedDraft.discussion;
+                document.getElementById("post-footer").value = selectedDraft.footer;
             }
         }
 
-        // Системная сборка итогового .md файла для проверки
         function generateMarkdownOutput() {
-            const dateField = document.getElementById("target-date");
-            let finalDate = dateField.value;
-            
-            // Если выбран черновик, вытаскиваем его реальную дату
-            if (document.getElementById("is-draft-mode").checked) {
-                const selectedDraft = mockDrafts.find(d => d.id === dateField.value);
-                finalDate = selectedDraft ? selectedDraft.date : "2026-10-25";
-            }
-
+            const isDraftMode = document.getElementById("is-draft-mode").checked;
+            const date = document.getElementById("target-date").value;
             const discussion = document.getElementById("discussion-number").value;
             const title = document.getElementById("post-title").value;
             const text = document.getElementById("post-text").value;
+            const footer = document.getElementById("post-footer").value;
             const publishNow = document.getElementById("publish-now-flag").checked;
 
-            // Конструируем итоговый вид текстового файла манифеста
+            // Сборка манифеста по нашей жесткой 5-блочной схеме
             let md = `---\n`;
             md += `discussion_number: ${discussion}\n`;
-            md += `date: ${finalDate}\n`;
+            md += `date: ${date}\n`;
             md += `published: ${publishNow}\n`;
             md += `---\n\n`;
+            
             if (title) md += `## ${title}\n\n`;
-            md += `${text}\n\n`;
+            if (text) md += `${text}\n\n`;
+            
             md += `### 📸 Фотоматериалы\n![[photo_01.jpg]]\n\n`;
-            md += `### 🎥 Видеоматериалы\n`;
+            md += `### 🎥 Видеоматериалы\n\n`;
+            
+            if (footer) {
+                md += `---\n${footer}\n`;
+            }
 
-            alert("Сформирован следующий Markdown-текст для отправки в репозиторий:\n\n" + md);
+            alert("Сформирован следующий Markdown-текст:\n\n" + md);
         }
 
-        // Запуск при старте страницы
+
+        // Инициализация при старте
         initForm();
     </script>
 </body>

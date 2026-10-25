@@ -73,8 +73,8 @@ emoji: ""
     <div class="block">
         <h3>2. Контекст отчета</h3>
         <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
-        <textarea id="post-text" rows="5" placeholder="Описание: Основной текст отчета (Что было сделано на занятии...)"></textarea>
-        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, метки, информация о подмене..."></textarea>
+        <textarea id="post-text" rows="5" placeholder="Описание комментария: основной текст, например, что было сделано или создано на занятии..."></textarea>
+        <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, автор, метки, ссылки..."></textarea>
     </div>
 
     <!-- БЛОК 3: ДИНАМИЧЕСКИЕ ФОТОМАТЕРИАЛЫ -->

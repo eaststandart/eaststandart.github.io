@@ -80,7 +80,7 @@ emoji: ""
         <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
         
         <!-- Описание занятия -->
-        <textarea id="post-text" rows="5" placeholder="Описание: Основной текст отчета (Что было сделано на занятии...)"></textarea>
+        <textarea id="post-text" rows="5" placeholder="Описание: основной текст комментария, например,  что было сделано на занятии..."></textarea>
         
         <!-- Подвал комментария -->
         <textarea id="post-footer" rows="4" placeholder="Подвал комментария: дополнительные сведения, метки ..."></textarea>

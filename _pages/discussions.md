@@ -11,7 +11,7 @@ emoji: ""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конструктор Отчетов TechLab v8</title>
+    <title>Конструктор Отчетов TechLab v9</title>
     <style>
         body { font-family: sans-serif; max-width: 480px; margin: 10px auto; padding: 10px; background: #f4f4f4; color: #333; }
         .block { background: #fff; border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -31,13 +31,12 @@ emoji: ""
         .draft-trigger { display: flex; align-items: center; gap: 4px; font-size: 18px; cursor: pointer; user-select: none; margin-left: auto; }
         .draft-trigger input { width: 20px; height: 20px; cursor: pointer; margin: 0; }
         
-        /* СТИЛИ ДИНАМИЧЕСКИХ МЕДИА-БЛОКОВ */
-        .media-sub-block { border-left: 3px solid #0076ff; padding-left: 10px; margin-bottom: 15px; }
+        /* СТИЛИ ДИНАМИЧЕСКИХ МЕДИА-БЛОКОВ С ПОЛЯМИ КРАТКОГО ОПИСАНИЯ */
+        .media-sub-block { border-left: 3px solid #0076ff; padding-left: 10px; margin-bottom: 15px; background: #fbfbfb; padding-top: 5px; padding-bottom: 5px; border-radius: 0 4px 4px 0; }
         .media-sub-block:last-child { margin-bottom: 0; }
-        .video-block-border { border-left-color: #ff9500; } /* Видео выделим оранжевым */
+        .video-block-border { border-left-color: #ff9500; }
         .drop-zone { border: 2px dashed #bbb; padding: 15px; text-align: center; color: #777; background: #fafafa; border-radius: 4px; font-size: 14px; margin-top: 5px; }
         
-        /* КНОПКИ ДОБАВЛЕНИЯ БЛОКОВ */
         .btn-add { background: #fff; color: #0076ff; border: 1px dashed #0076ff; padding: 8px; font-size: 14px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 5px; margin-bottom: 5px; }
         .btn-add-video { color: #ff9500; border-color: #ff9500; }
         .btn { background: #0076ff; color: #fff; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 5px; }
@@ -45,15 +44,14 @@ emoji: ""
 </head>
 <body>
 
-    <h3 style="text-align: center; color: #0076ff; font-size: 18px; margin-bottom: 15px;">Унифицированная форма TechLab v8</h3>
+    <h3 style="text-align: center; color: #0076ff; font-size: 18px; margin-bottom: 15px;">Унифицированная форма TechLab v9</h3>
 
     <!-- БЛОК 1: ТРЁХЛИНЕЙНАЯ УПРАВЛЯЮЩАЯ ШАПКА CMS -->
     <div class="block">
         <h3>1. Параметры публикации</h3>
         <div class="header-line">
             <span class="inline-label">Дата:</span>
-            <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="currentNormalDate=this.value">
-            
+            <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="currentNormalDate=this.value">           
             <label class="draft-trigger">
                 <span class="inline-label">Черновик:</span><input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
             </label>
@@ -81,7 +79,7 @@ emoji: ""
     <div class="block">
         <h3>3. 📸 Фотоматериалы</h3>
         <div id="photos-meta-container">
-            <!-- Сюда JS будет дописывать новые блоки фото под своими заголовками H3 -->
+            <!-- Сюда JS допишет новые блоки фото -->
         </div>
         <button class="btn-add" onclick="addPhotoBlock()">+ Добавить блок фото</button>
     </div>
@@ -90,7 +88,7 @@ emoji: ""
     <div class="block">
         <h3>4. 🎥 Видеоматериалы</h3>
         <div id="videos-meta-container">
-            <!-- Сюда JS будет дописывать новые блоки видео под своими заголовками H3 -->
+            <!-- Сюда JS допишет новые блоки видео -->
         </div>
         <button class="btn-add btn-add-video" onclick="addVideoBlock()">+ Добавить блок видео</button>
     </div>
@@ -111,7 +109,7 @@ emoji: ""
 
         let currentNormalDate = "2026-10-25";
         
-        // Счётчики для генерации уникальных ID динамических блоков
+        // Счётчики динамических блоков
         let photoBlockIdx = 0;
         let videoBlockIdx = 0;
 
@@ -119,12 +117,12 @@ emoji: ""
             const container = document.getElementById("dynamic-field-container");
             container.innerHTML = `<select id="draft-select" disabled><option value="">черновиков нет</option></select>`;
             
-            // Генерируем по одному дефолтному блоку при старте, чтобы форма не была пустой
+            // Инициализируем по одному начальному блоку
             addPhotoBlock();
             addVideoBlock();
         }
 
-        // ДИНАМИЧЕСКОЕ ДОБАВЛЕНИЕ БЛОКОВ ФОТО (Пункт 1 вашего вопроса)
+        // ДОБАВЛЕНИЕ БЛОКА ФОТО (С заголовком и кратким описанием!)
         function addPhotoBlock() {
             photoBlockIdx++;
             const container = document.getElementById("photos-meta-container");
@@ -133,15 +131,15 @@ emoji: ""
             subBlock.className = "media-sub-block";
             subBlock.id = `photo-sub-block-${photoBlockIdx}`;
             
-            // Внутрь блока закладываем поле заголовка H3 и собственную Drag&Drop зону
             subBlock.innerHTML = `
-                <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериала">
+                <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериалов">
+                <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока фото..."></textarea>
                 <div class="drop-zone">Нажмите для выбора или перетащите фото в этот блок</div>
             `;
             container.appendChild(subBlock);
         }
 
-        // ДИНАМИЧЕСКОЕ ДОБАВЛЕНИЕ БЛОКОВ ВИДЕО (Пункт 2 вашего вопроса)
+        // ДОБАВЛЕНИЕ БЛОКА ВИДЕО (С заголовком и кратким описанием!)
         function addVideoBlock() {
             videoBlockIdx++;
             const container = document.getElementById("videos-meta-container");
@@ -151,7 +149,8 @@ emoji: ""
             subBlock.id = `video-sub-block-${videoBlockIdx}`;
             
             subBlock.innerHTML = `
-                <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериала">
+                <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериалов">
+                <textarea class="video-block-desc" rows="2" placeholder="Краткое описание блока видео..."></textarea>
                 <div class="drop-zone">Нажмите для выбора или перетащите видео в этот блок</div>
             `;
             container.appendChild(subBlock);
@@ -207,7 +206,7 @@ emoji: ""
             }
         }
 
-        // УМНАЯ СБОРКА ПОТОКА СВЕРХУ ВНИЗ
+        // СБОРКА СТРУКТУРИРОВАННОГО MARKDOWN С КРАТКИМИ ОПИСАНИЯМИ БЛОКОВ
         function generateMarkdownOutput() {
             const date = document.getElementById("target-date").value;
             const discussion = document.getElementById("discussion-number").value;
@@ -227,22 +226,34 @@ emoji: ""
             if (title) md += `## ${title}\n\n`;
             if (text) md += `${text}\n\n`;
             
-            // 🔄 Сканируем и собираем все созданные блоки ФОТО
-            const photoInputs = document.querySelectorAll(".photo-h3-title");
-            photoInputs.forEach((input, index) => {
-                // Если преподаватель не написал свой заголовок, ставим стандартный по ТЗ
-                const h3Text = input.value.trim() || `📸 Фотоматериалы`;
+            // 🔄 Сборка динамических блоков ФОТО
+            const photoBlocks = document.querySelectorAll("#photos-meta-container .media-sub-block");
+            photoBlocks.forEach((block, index) => {
+                const h3Input = block.querySelector(".photo-h3-title");
+                const descInput = block.querySelector(".photo-block-desc");
+                
+                const h3Text = h3Input.value.trim() || `📸 Фотоматериалы`;
+                const descText = descInput.value.trim();
+                
                 md += `### ${h3Text}\n`;
-                // Имитируем прикрепленные файлы конкретно этого подблока
+                if (descText) md += `${descText}\n\n`; // Вставляем краткое описание абзацем
+                
                 md += `![[photo_block_${index + 1}_01.jpg]]\n`;
                 md += `![[photo_block_${index + 1}_02.jpg]]\n\n`;
             });
 
-            // 🔄 Сканируем и собираем все созданные блоки ВИДЕО
-            const videoInputs = document.querySelectorAll(".video-h3-title");
-            videoInputs.forEach((input, index) => {
-                const h3Text = input.value.trim() || `🎥 Видеоматериалы`;
+            // 🔄 Сборка динамических блоков ВИДЕО
+            const videoBlocks = document.querySelectorAll("#videos-meta-container .media-sub-block");
+            videoBlocks.forEach((block, index) => {
+                const h3Input = block.querySelector(".video-h3-title");
+                const descInput = block.querySelector(".video-block-desc");
+                
+                const h3Text = h3Input.value.trim() || `🎥 Видеоматериалы`;
+                const descText = descInput.value.trim();
+                
                 md += `### ${h3Text}\n`;
+                if (descText) md += `${descText}\n\n`;
+                
                 md += `![[video_block_${index + 1}_01.mp4]]\n\n`;
             });
             

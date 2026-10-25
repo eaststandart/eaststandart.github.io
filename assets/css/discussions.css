@@ -1,11 +1,4 @@
-body {
-    font-family: sans-serif;
-    max-width: 480px;
-    margin: 10px auto;
-    padding: 10px;
-    background: #f4f4f4;
-    color: #333;
-}
+
 .block {
     background: #fff;
     border: 1px solid #ccc;

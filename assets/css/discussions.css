@@ -60,8 +60,8 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 
 /* КАЛИБРОВКА НОВОЙ ДВУХЛИНЕЙНОЙ ШАПКИ */
 .input-date {
-    width: 95px !important;
-    max-width: 95px !important;
+    width: 100px !important;
+    max-width: 100px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;
@@ -76,8 +76,8 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     padding: 10px 2px !important;
 }
 .input-commit {
-    width: 78px !important;
-    max-width: 78px !important;
+    width: 85px !important;
+    max-width: 85px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;

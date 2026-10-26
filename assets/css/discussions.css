@@ -76,8 +76,8 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     padding: 10px 2px !important;
 }
 .input-commit {
-    width: 85px !important;
-    max-width: 85px !important;
+    width: 80px !important;
+    max-width: 80px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;

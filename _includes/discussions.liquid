@@ -1,42 +1,40 @@
 {%- comment -%}
 @module  discussions.liquid
 @about   Модуль шаблона интерфейса Конструктора Отчетов и Дискуссий.
-@purpose Отображение блочной формы, ведение черновиков и отправка медиа-пакетов в репозиторий.
+@purpose Двухлинейная компактная CMS-шапка публикации, ведение черновиков и отправка медиа-пакетов.
 @author  TechLab
-@version 1.0.0
+@version 2.0.0
 {%- endcomment -%}
 
 <div class="block">
   <h3>1. Параметры публикации</h3>
   
-  <!-- ЛИНИЯ 1: Дата: Поле даты -->
+  <!-- ЛИНИЯ 1: Монолитная строка параметров публикации (Дата + Дискуссия-Коммит через дефис) -->
   <div class="header-line">
-    <span class="inline-label">Дата:</span>
+    <span class="inline-label">📅:</span>
     <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="updateNormalDateValue(this.value)">           
-  </div>
-
-  <!-- ЛИНИЯ 2: Дискуссия: [№-коммит] + Черновик: [Галочка] -->
-  <div class="header-line">
-    <span class="inline-label">Дискуссия:</span>
-    <input type="text" id="discussion-combo" class="input-combo" maxlength="11" value="" placeholder="№-коммит">       
     
-    <label class="draft-trigger">
-      <span class="inline-label">📝:</span>
-      <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
-    </label>
+    <span class="inline-label" style="margin-left: auto;">🗣️:</span>
+    <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№">
+    <span class="inline-label">-</span>
+    <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
   </div>
 
-  <!-- ЛИНИЯ 3: Поле черновиков на всю ширину экрана -->
+  <!-- ЛИНИЯ 2: Поле черновиков на всю ширину + Бестекстовая галочка-индикатор -->
   <div class="header-line">
-    <div id="dynamic-field-container" style="width: 100%;">
+    <div class="draft-select-container">
       <select id="draft-select" onchange="loadDraftData(this.value)">
         <!-- Наполняется скриптом из discussions.js -->
       </select>
     </div>
+    
+    <label class="draft-trigger">
+      <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
+    </label>
   </div>
 </div>
 
-<!-- БЛОК 2: КОНТЕКСТ ОТЧЕТА (ОБЪЕДИНЕННЫЙ) -->
+<!-- БЛОК 2: КОНТЕКСТ ОТЧЕТА -->
 <div class="block">
   <h3>2. Контекст отчета</h3>
   <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
@@ -58,7 +56,7 @@
   <button type="button" class="btn-add btn-add-video" onclick="addVideoBlock()">+ Добавить блок видео</button>
 </div>
 
-<!-- БЛОК КОНТРОЛЯ И ДИНАМИЧЕСКАЯ ГАЛОЧКА -->
+<!-- БЛОК КОНТРОЛЯ -->
 <div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
   <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
     <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()"> 

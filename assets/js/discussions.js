@@ -1,9 +1,9 @@
 /**
  * @module  discussions.js
  * @about   Ядро логики Конструктора Отчетов и взаимодействия с медиа-шлюзом.
- * @purpose Сквозная перенумерация блоков, парсинг комбо-полей, управление семафором защиты сессии.
+ * @purpose Сквозная перенумерация блоков, раздельный парсинг полей, управление семафором защиты сессии.
  * @author  TechLab
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 // Имитация базы данных черновиков, полученных из папки _input медиа-репозитория
@@ -164,14 +164,14 @@ function updatePublishLabel() {
     }
 }
 
-// ЛИНИЯ 2 В ДЕЙСТВИИ: Включение и отключение селекта Линии 3
+// ЛИНИЯ 2 В ДЕЙСТВИИ: Включение и отключение селекта Линии 2
 function toggleDraftBehavior() {
     const isDraftMode = document.getElementById("is-draft-mode").checked;
     const select = document.getElementById("draft-select");
     const publishFlag = document.getElementById("publish-now-flag");
 
     if (isDraftMode) {
-        let html = `<option value="">-- Сохраненный черновик --</option>`;
+        let html = `<option value="">-- Выберите сохраненный черновик --</option>`;
         mockDrafts.forEach(draft => {
             html += `<option value="${draft.id}">[${draft.date}] ${draft.title}</option>`;
         });
@@ -183,7 +183,7 @@ function toggleDraftBehavior() {
         updatePublishLabel();
     } else {
         if (select) {
-            select.innerHTML = `<option value="">Черновиков нет</option>`;
+            select.innerHTML = `<option value="">черновиков нет</option>`;
             select.disabled = true;
         }
         if (publishFlag) publishFlag.checked = true;
@@ -197,49 +197,45 @@ function toggleDraftBehavior() {
         document.getElementById("post-text").value = "";
         document.getElementById("post-footer").value = "";
         document.getElementById("discussion-combo").value = "";
+        document.getElementById("commit-id").value = "";
     }
 }
 
-// ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Моментальное наполнение полей и даты без скрытых сбоев
+// ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Моментальное наполнение раздельных полей Номера и Коммита на Линии 1
 function loadDraftData(draftId) {
     if (!draftId) return;
     const selectedDraft = mockDrafts.find(d => d.id === draftId);
     if (selectedDraft) {
+        // Обновляем Дату на Линии 1
         const dateInput = document.getElementById("target-date");
         if (dateInput) dateInput.value = selectedDraft.date;
         currentNormalDate = selectedDraft.date;
         
-        const comboInput = document.getElementById("discussion-combo");
-        if (comboInput) {
-            if (selectedDraft.commit) {
-                comboInput.value = `${selectedDraft.discussion}-${selectedDraft.commit}`;
-            } else {
-                comboInput.value = selectedDraft.discussion;
-            }
-        }
+        // Точечно раскидываем значения по двум раздельным полям Линии 1
+        const discInput = document.getElementById("discussion-combo");
+        const commitInput = document.getElementById("commit-id");
         
+        if (discInput) discInput.value = selectedDraft.discussion;
+        if (commitInput) commitInput.value = selectedDraft.commit || "";
+        
+        // Наполняем контекст Блока 2
         document.getElementById("post-title").value = selectedDraft.title;
         document.getElementById("post-text").value = selectedDraft.text;
         document.getElementById("post-footer").value = selectedDraft.footer;
     }
 }
 
-// СКВОЗНАЯ ПЕРЕНУМЕРАЦИЯ И СБОРКА МАНИФЕСТА В МОМЕНТ СОХРАНЕНИЯ
+// СКВОЗНАЯ ПЕРЕНУМЕРАЦИЯ И СБОРКА МАНИФЕСТА С РАЗДЕЛЬНЫХ ПОЛЕЙ ШАПКИ
 function generateMarkdownOutput() {
     const date = document.getElementById("target-date").value;
-    const comboValue = document.getElementById("discussion-combo").value.trim();
+    // Считываем значения напрямую из независимых полей без ручного парсинга дефиса
+    const discussion = document.getElementById("discussion-combo").value.trim();
+    const commitId = document.getElementById("commit-id").value.trim();
+    
     const title = document.getElementById("post-title").value;
     const text = document.getElementById("post-text").value;
     const footer = document.getElementById("post-footer").value;
     const publishNow = document.getElementById("publish-now-flag").checked;
-
-    let discussion = comboValue;
-    let commitId = "";
-    if (comboValue.includes("-")) {
-        const parts = comboValue.split("-");
-        discussion = parts[0].trim();
-        commitId = parts[1].trim();
-    }
 
     let md = `---\n`;
     md += `discussion_number: ${discussion}\n`;

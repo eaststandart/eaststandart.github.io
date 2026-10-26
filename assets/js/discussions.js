@@ -171,7 +171,7 @@ function toggleDraftBehavior() {
     const publishFlag = document.getElementById("publish-now-flag");
 
     if (isDraftMode) {
-        let html = `<option value="">-- Выберите сохраненный черновик --</option>`;
+        let html = `<option value="">-- Сохраненный черновик --</option>`;
         mockDrafts.forEach(draft => {
             html += `<option value="${draft.id}">[${draft.date}] ${draft.title}</option>`;
         });
@@ -183,7 +183,7 @@ function toggleDraftBehavior() {
         updatePublishLabel();
     } else {
         if (select) {
-            select.innerHTML = `<option value="">черновиков нет</option>`;
+            select.innerHTML = `<option value="">Выберите черновик --></option>`;
             select.disabled = true;
         }
         if (publishFlag) publishFlag.checked = true;

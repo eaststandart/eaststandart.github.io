@@ -60,22 +60,28 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 
 /* КАЛИБРОВКА НОВОЙ ДВУХЛИНЕЙНОЙ ШАПКИ */
 .input-date {
-    width: 110px !important;
+    width: 95px !important;
+    max-width: 95px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;
+    padding: 10px 4px !important; /* Уменьшили боковые паддинги, чтобы текст не сжимался */
 }
 .input-disc {
-    width: 45px !important;
+    width: 38px !important;
+    max-width: 38px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;
+    padding: 10px 2px !important;
 }
 .input-commit {
-    width: 90px !important;
+    width: 78px !important;
+    max-width: 78px !important;
     text-align: center;
     font-family: monospace;
     margin-bottom: 0 !important;
+    padding: 10px 4px !important;
 }
 .draft-select-container {
     flex: 1;

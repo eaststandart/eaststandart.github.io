@@ -36,7 +36,7 @@ let videoBlockIdx = 0;
 function initForm() {
     const select = document.getElementById("draft-select");
     if (select) {
-        select.innerHTML = `<option value="">черновиков нет</option>`;
+        select.innerHTML = `<option value="">Выбирите черновик --></option>`;
         select.disabled = true;
     }
     addPhotoBlock();

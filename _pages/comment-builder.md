@@ -2,7 +2,7 @@
 author: "TechLab"
 layout: page
 description: 
-title: Конструктор комментариев
+title: Система комментариев
 permalink: /comment-builder/
 emoji: ""
 custom_css: "/assets/css/comment-builder.css"

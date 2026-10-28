@@ -11,12 +11,8 @@ emoji: "🎨"
 keywords: {техничекское творчество, creative process}
 ---
 
-
 ---
-
 
 {% for person in site.process %}
   <a href="{{ person.url | relative_url }}">{{ person.title }}</a>
 {% endfor %}
-
-

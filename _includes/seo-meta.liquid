@@ -10,7 +10,7 @@
 {%- assign club_footer = site.club.title | default: "Детско-юношеский инженерный клуб г. Владивосток" %}
 {%- assign club_short = site.club.title_short | default: "Инженерный клуб г. Владивосток" %}
 {%- assign title_short = site.title_short | default: "Творческая лаборатория" %}
-{%- assign default_alt = site.defaults[0].values.image.alt | default: "Радиотехника: техническое творчество учащихся" %}
+{%- assign default_alt = site.image_alt | default: "Радиотехника: техническое творчество учащихся" %}
 {%- if page.url == '/' or page.url == '/index.html' %}
   {%- assign final_title = site.title %}
   {%- assign final_desc = page.description | append: " " | append: site.description %}

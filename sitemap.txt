@@ -1,7 +1,0 @@
----
-layout: null
-permalink: /sitemap.txt
----
-{% for page in site.pages %}{% if page.url contains '.pdf' or page.url contains '.css' %}{% else %}{{ site.url }}{{ page.url | replace: 'index.html', '' }}
-{% endif %}{% endfor %}{% for post in site.posts %}{{ site.url }}{{ post.url }}
-{% endfor %}

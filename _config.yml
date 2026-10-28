@@ -2,6 +2,8 @@
 # Site settings
 # =============================================================================
 
+url: "https://eaststandart.github.io"
+
 # -----------------------------------------------------------------------------
 # 1. Platform Settings (Веб-платформа Лаборатория)
 # -----------------------------------------------------------------------------
@@ -12,7 +14,7 @@ keywords: "творческая лаборатория, инженерный к�
 lang: ru
 icon: "/assets/icons/favicon.svg"
 image: "/assets/icons/logo.svg"
-url: "https://eaststandart.github.io"
+image_alt: "Радиотехника: техническое творчество учащихся"
 
 # -----------------------------------------------------------------------------
 # 2. Club Settings (Физический Инженерный Клуб)
@@ -80,13 +82,11 @@ exclude:
 plugins:
   - jekyll-sitemap
   - jekyll-email-protect
-  - jekyll-minifier
+#  - jekyll-minifier
 
 # Sitemap settings
 defaults:
   - scope:
       path: ""
     values:
-      image:
-        path: "/assets/icons/logo.svg"
-        alt: "Радиотехника: техническое творчество учащихся" 
+      image: "/assets/icons/logo.svg"

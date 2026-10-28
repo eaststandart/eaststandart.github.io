@@ -78,9 +78,9 @@ exclude:
 
 # Plug-ins
 plugins:
-  - jekyll-sitemap
-  - jekyll-email-protect
-  - jekyll-minifier
+#  - jekyll-sitemap
+#  - jekyll-email-protect
+#  - jekyll-minifier
 
 # Sitemap settings
 defaults:

@@ -10,8 +10,3 @@ keywords: [творческий процесс, TechLab]
 ---
 
  🗣️ Обсудить творческий процесс или поделиться своим мнением можно в комментариях ниже ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)
-
-title: "Инженерный лагерь: 2026 – TechLab"
-title: "Летний лагерь: 2026 – TechLab"
-title: "Инженерные занятия: 2026 – TechLab"
-

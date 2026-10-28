@@ -6,7 +6,7 @@ title: "Инженерные занятия: 2026 – TechLab"
 date: 2026-09-24
 teacher: "TechLab"
 discus: "process"
-keywords: [творческий процесс, TechLab]
+keywords: [регулярные занятия, творческий процесс, TechLab]
 ---
 
  🗣️ Обсудить творческий процесс или поделиться своим мнением можно в комментариях ниже ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

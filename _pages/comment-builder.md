@@ -4,7 +4,7 @@ layout: page
 description: 
 title: Конструктор дискусий
 permalink: /comment-builder/
-emoji: ""
+emoji: "💬"
 custom_css: "/assets/css/comment-builder.css"
 ---
 

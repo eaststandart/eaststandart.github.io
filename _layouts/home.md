@@ -268,9 +268,9 @@ purpose: Отображение интерфейса главной страни
 	{% include header-theme.liquid %}
 	{{ content }}
 
-    <!-- Нижняя контентная кнопка перехода в Telegram -->
+    <!-- Нижняя контентная кнопка перехода в Telegram https://t.me/eaststandart-->
     <footer class="main-footer">
-        <a href="https://t.me/eaststandart" target="_blank" class="tg-button" rel="noopener noreferrer">
+        <a href="https://t.me/techlab_guest_bot" target="_blank" class="tg-button" rel="noopener noreferrer">
             <span>✈️</span> Написать в Telegram
         </a>        
     </footer>
@@ -281,22 +281,6 @@ purpose: Отображение интерфейса главной страни
   // Прокидываем квантованную бэкенд-базу Питона напрямую в оперативную память фронтенда
   window.site_feed_data = {{ site.data.feed | jsonify }};
 </script>
-
-{%- comment -%}
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6ae433e1cbc1643472c9ad8f/1k65mlaho';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
-{%- endcomment -%}
 
 </body>
 </html> 

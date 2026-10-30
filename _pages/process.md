@@ -16,3 +16,5 @@ keywords: {техничекское творчество, creative process}
 {% for person in site.process %}
   <a href="{{ person.url | relative_url }}">{{ person.title }}</a>
 {% endfor %}
+
+<script src="https://gist.github.com/eaststandart/ae184a982fd60687fbe7cdecfe3ecf7c.js"></script>

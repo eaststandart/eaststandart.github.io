@@ -4,7 +4,7 @@ layout: default
 description: "Здесь мы публикуем живые кадры из нашего детско-юношеского инженерного клуба во Владивостоке. Вы можете посмотреть, как юные инженеры создают свои проекты, а также поделиться своими фото и видео!"
 title: Творческий процесс
 crumbtitle: Творчество
-year: "2026"
+year: "2026"м
 date: 2026-09-26
 permalink: /process/
 emoji: "🎨"
@@ -16,5 +16,3 @@ keywords: {техничекское творчество, creative process}
 {% for person in site.process %}
   <a href="{{ person.url | relative_url }}">{{ person.title }}</a>
 {% endfor %}
-
-<script src="https://gist.github.com/eaststandart/ae184a982fd60687fbe7cdecfe3ecf7c.js"></script>

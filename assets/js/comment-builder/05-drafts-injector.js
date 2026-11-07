@@ -6,6 +6,8 @@
  * @version 2.0.0
  */
 
+console.log("[TEST 05] Модуль injector загружен");
+
 /**
  * Перерисовка выпадающего списка
  */
@@ -104,6 +106,8 @@ function createDraftFileLink(fileName) {
  * Восстановление одного медиаблока
  */
 function restoreMediaBlock(container, blockData, type) {
+  console.log("[TEST 05] restoreMediaBlock вызвана", blockData.title);
+
   console.log("[INJECTOR 1] Получены данные:", {
     type: type,
     title: blockData.title,

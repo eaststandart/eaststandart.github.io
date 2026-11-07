@@ -53,7 +53,7 @@ function parseManifestContent(fileName, text, sha) {
     ).trim();
 
     matches.forEach((match, position) => {
-      const title = match[1].trim();
+      const title = match[1].replace(/<!--[\s\S]*?-->/g, "").trim();
       const type = match[2].toLowerCase();
       const contentStart = match.index + match[0].length;
       const contentEnd = position + 1 < matches.length

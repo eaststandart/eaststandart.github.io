@@ -114,6 +114,15 @@ async function uploadSingleMediaFile(file, fileName) {
     })
   });
 
+  console.log("UPLOAD RESPONSE CHECK", {
+    status: response.status,
+    statusText: response.statusText,
+    requestId: response.headers.get("x-github-request-id"),
+    rateLimitRemaining: response.headers.get("x-ratelimit-remaining"),
+    rateLimitResource: response.headers.get("x-ratelimit-resource"),
+    authenticate: response.headers.get("www-authenticate")
+  });
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new Error(

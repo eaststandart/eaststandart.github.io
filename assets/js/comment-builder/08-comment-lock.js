@@ -6,7 +6,8 @@
  * @version 1.0.0
  */
 
-let isCommentFormLocked = false;
+// Единое состояние блокировки для всех модулей
+window.commentFormLocked = false;
 
 /**
  * Блокировка и разблокировка рабочей области
@@ -16,9 +17,12 @@ function setFormLock(isLocked, message = "") {
 
   if (!section) return;
 
-  isCommentFormLocked = Boolean(isLocked);
+  window.commentFormLocked = Boolean(isLocked);
 
-  section.classList.toggle("is-locked", isCommentFormLocked);
+  section.classList.toggle(
+    "is-locked",
+    window.commentFormLocked
+  );
 
   const controls = section.querySelectorAll(
     "input, select, textarea, button"
@@ -27,7 +31,7 @@ function setFormLock(isLocked, message = "") {
   controls.forEach(control => {
     if (control.closest("#notification")) return;
 
-    if (isCommentFormLocked) {
+    if (window.commentFormLocked) {
       if (!control.hasAttribute("data-lock-disabled")) {
         control.dataset.lockDisabled = control.disabled ? "1" : "0";
       }

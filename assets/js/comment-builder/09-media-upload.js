@@ -91,6 +91,16 @@ async function uploadSingleMediaFile(file, fileName) {
     tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token")
   });
 
+  console.log("UPLOAD REQUEST CHECK", {
+    url,
+    method: "PUT",
+    tokenExists: !!accessToken,
+    tokenLength: accessToken?.length,
+    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token"),
+    fileName,
+    contentLength: content.length
+  });
+
   const response = await fetch(url, {
     method: "PUT",
     headers: {

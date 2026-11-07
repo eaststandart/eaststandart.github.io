@@ -43,7 +43,6 @@ function parseManifestContent(fileName, text, sha) {
       body = body.replace(titleMatch[0], "").trim();
     }
 
-
     // 3. Извлекаем основной текст по маркерам
     const mainRegex =
       /<!--\s*main-start\s*-->([\s\S]*?)<!--\s*main-end\s*-->/i;

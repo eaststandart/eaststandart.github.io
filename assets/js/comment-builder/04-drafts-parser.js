@@ -30,7 +30,7 @@ function parseManifestContent(fileName, text, sha) {
     });
 
     const body = text.substring(yamlMatch[0].length);
-    const titleMatch = body.match(/^##\s+(.+?)\s*#*\s*$/m);
+    const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
 
     const articleTitle =
       meta.title ||
@@ -50,7 +50,11 @@ function parseManifestContent(fileName, text, sha) {
       matches.length
         ? body.substring(0, matches[0].index)
         : body
-    ).replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    )
+      .replace(titleMatch ? titleMatch[0] : "", "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
 
     matches.forEach((match, position) => {
       const title = match[1].replace(/<!--.*?-->/g, "").trim();

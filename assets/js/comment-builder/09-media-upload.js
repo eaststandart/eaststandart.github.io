@@ -85,6 +85,12 @@ async function uploadSingleMediaFile(file, fileName) {
 
   const content = await mediaFileToBase64(file);
 
+  console.log("UPLOAD AUTH CHECK", {
+    tokenExists: !!accessToken,
+    tokenLength: accessToken?.length,
+    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token")
+  });
+
   const response = await fetch(url, {
     method: "PUT",
     headers: {

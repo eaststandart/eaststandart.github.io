@@ -151,7 +151,7 @@ function restoreMediaBlock(container, blockData, type) {
 
     const link = createDraftFileLink(fileName);
 
-    row.appendChild(document.createTextNode("[Вложение] "));
+    row.appendChild(document.createTextNode("📎: "));
     row.appendChild(link);
 
     indicator.appendChild(row);

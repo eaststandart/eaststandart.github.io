@@ -108,16 +108,20 @@ function restoreMediaBlock(container, blockData, type) {
     ? addPhotoBlock
     : addVideoBlock;
 
-  const cleanTitle = (blockData.title || "")
-    .replace(/<!--\s*\[блок\s+(?:фото|видео)\]\s*-->/gi, "")
-    .trim();
-
-  const blockElement = addFunction(
-    cleanTitle,
-    blockData.description
-  );
+  const blockElement = addFunction("", blockData.description);
 
   if (!blockElement) return;
+
+  // Устанавливаем название непосредственно в поле
+  const titleInput = blockElement.querySelector(
+    type === "photo" ? ".photo-h3-title" : ".video-h3-title"
+  );
+
+  if (titleInput) {
+    titleInput.value = (blockData.title || "")
+      .split("<!--")[0]
+      .trim();
+  }
 
   const indicator = blockElement.querySelector(".file-link-indicator");
 

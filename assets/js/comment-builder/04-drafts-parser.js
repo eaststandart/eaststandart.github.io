@@ -36,8 +36,8 @@ function parseManifestContent(fileName, text, sha) {
     let extractedVideos = [];
 
     // Регулярные выражения сквозного поиска контента внутри русских семафоров блоков
-    const photoRegex = /<!--\s*блок-(\d+)-фотоматериалы-начало\s*-->([\s\S]*?)<!--\s*блок-\1-фотоматериалы-конец\s*-->/g;
-    const videoRegex = /<!--\s*блок-(\d+)-видеоматериалы-начало\s*-->([\s\S]*?)<!--\s*блок-\1-видеоматериалы-конец\s*-->/g;
+    const photoRegex = /<!--\s*(?:блок|block)-(\d+)-фото[а-я]*?-начало\s*-->([\s\S]*?)<!--\s*(?:блок|block)-\1-фото[а-я]*?-конец\s*-->/g;
+    const videoRegex = /<!--\s*(?:блок|block)-(\d+)-видео[а-я]*?-начало\s*-->([\s\S]*?)<!--\s*(?:блок|block)-\1-видео[а-я]*?-конец\s*-->/g;
 
     let match;
     let cleanBodyText = rawBodyText;

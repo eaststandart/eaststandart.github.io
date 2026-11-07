@@ -48,7 +48,7 @@ function toggleDraftBehavior() {
     if (publishFlag) publishFlag.checked = true;
     if (typeof updatePublishLabel === "function") updatePublishLabel();
     
-    // Вычисляем текущую дату без хардкода (1 в 1 из Журнала)
+    // Автоматически рассчитываем текущую календарную дату смены (1 в 1 из Журнала)
     const localToday = new Date();
     const offset = localToday.getTimezoneOffset();
     const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
@@ -68,7 +68,7 @@ function toggleDraftBehavior() {
     document.getElementById("discussion-combo").value = "";
     document.getElementById("commit-id").value = "";
 
-    // Сбрасываем медиа-блоки в дефолтное состояние (по 1 пустому блоку)
+    // Наглухо сбрасываем интерфейс медиа-блоков в стартовое состояние (по 1 пустому блоку)
     if (typeof initCommentInterface === "function") {
       initCommentInterface();
     }
@@ -76,7 +76,7 @@ function toggleDraftBehavior() {
 }
 
 /**
- * ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Наполнение всех полей и блоков 2, 3 и 4 при выборе из списка
+ * ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Наполнение всех полей шапки и Блока 2 при выборе черновика
  */
 function loadDraftData(draftId) {
   if (!draftId) return;
@@ -90,22 +90,21 @@ function loadDraftData(draftId) {
   document.getElementById("discussion-combo").value = selectedDraft.discussion;
   document.getElementById("commit-id").value = selectedDraft.commit || "";
   
-  // 2. Очищаем старые контейнеры медиа-блоков на экране перед восстановлением структуры
+  // 2. Очищаем пустые стартовые медиа-контейнеры на экране перестройки
   const containerPhotos = document.getElementById("photos-meta-container");
   const containerVideos = document.getElementById("videos-meta-container");
   if (containerPhotos) containerPhotos.innerHTML = "";
   if (containerVideos) containerVideos.innerHTML = "";
   
-  // Сбрасываем глобальные индексы блочного генератора
+  // Аппаратно сбрасываем индексы блочного генератора
   photoBlockIdx = 0;
   videoBlockIdx = 0;
 
+  // 3. Вырезаем подвал, если он отделен через черту ---
   let bodyText = selectedDraft.text;
-  let postTitleText = selectedDraft.title !== "Без заголовка" ? selectedDraft.title : "";
   let postMainText = "";
   let postFooterText = "";
 
-  // Вырезаем подвал, если он отделен через черту ---
   if (bodyText.includes("---")) {
     const parts = bodyText.split("---");
     postMainText = parts[0].trim();
@@ -114,71 +113,80 @@ function loadDraftData(draftId) {
     postMainText = bodyText.trim();
   }
 
-  // 4. ПАРСИНГ И ИНТЕЛЛЕКТУАЛЬНОЕ ВОССТАНОВЛЕНИЕ ДИНАМИЧЕСКИХ МЕДИА-БЛОКОВ
-  const sections = postMainText.split(/(?=### )/);
-  let cleanDescriptionText = "";
+  // 4. ВОССТАНОВЛЕНИЕ СТРУКТУРЫ И ВЫВОД КЛИКАБЕЛЬНЫХ СКРЕПОК
+  // Наша правильная базовая ссылка для JavaScript без лишних слов repos (1 в 1 как согласовали)
+  const baseUrl = `https://githubusercontent.com{repo_owner}/${repo_name}/main/_input/`;
 
-  sections.forEach(section => {
-    if (!section.trim()) return;
+  // Восстановление блоков ФОТОМАТЕРИАЛОВ
+  selectedDraft.photos.forEach(photoBlockData => {
+    const rawSection = photoBlockData.rawContent;
 
-    // Ссылка на скачивание контента с GitHub raw для скрепки
-    const baseUrl = `https://raw.githubusercontent.com/${repo_owner}/${repo_name}/main/_input/`;
+    // Вытаскиваем заголовок любого уровня (#) из секции
+    const titleMatch = rawSection.match(/#+\s*(.*?)\n/);
+    const title = titleMatch ? titleMatch[1].trim() : "📸 Фотоматериалы";
 
-    // Восстановление блоков ФОТО
-    if (section.includes("![[photo_") || section.includes("![photo_")) {
-      const titleMatch = section.match(/###\s*(.*?)\n/);
-      const title = titleMatch ? titleMatch[1].trim() : "📸 Фотоматериалы";
-      let desc = section.replace(/###.*?\n/, "").replace(/!\[\[.*?\]\]/, "").replace(/!\[.*?\]\(.*?\)/, "").trim();
-      
-      const fileMatch = section.match(/!\[\[(.*?)\]\]/) || section.match(/!\[.*?\]\((.*?)\)/);
-      
-      if (typeof addPhotoBlock === "function") {
-        const block = addPhotoBlock(title, desc);
-        if (block && fileMatch) {
-          const fileName = fileMatch[1].split("|")[0].trim();
-          const indicator = block.querySelector(".file-link-indicator");
-          if (indicator) {
-            indicator.style.display = "block";
-            indicator.innerHTML = `📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a>`;
-          }
+    // Описание — это текст между заголовком и первой картинкой ![[...]]
+    let desc = rawSection.replace(/#+.*?\n/, "").replace(/!\[\[.*?\]\]/g, "").replace(/!\[.*?\]\(.*?\)/g, "").trim();
+
+    if (typeof addPhotoBlock === "function") {
+      const blockElement = addPhotoBlock(title, desc);
+      if (blockElement) {
+        const indicator = blockElement.querySelector(".file-link-indicator");
+        
+        // Регулярным выражением вытаскиваем ВСЕ файлы картинок из этого блока
+        const fileMatches = rawSection.match(/!\[\[(.*?)\]\]/g) || [];
+        if (fileMatches.length > 0 && indicator) {
+          indicator.style.display = "block";
+          indicator.innerHTML = ""; // Очищаем контейнер под список скрепок
+          
+          fileMatches.forEach(matchStr => {
+            const fileName = matchStr.replace("![[", "").replace("]]", "").split("|")[0].trim();
+            indicator.innerHTML += `<div style="margin-bottom: 2px;">📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a></div>`;
+          });
         }
       }
-    }
-    // Восстановление блоков ВИДЕО
-    else if (section.includes("![[video_") || section.includes("![video_")) {
-      const titleMatch = section.match(/###\s*(.*?)\n/);
-      const title = titleMatch ? titleMatch[1].trim() : "🎥 Видеоматериалы";
-      let desc = section.replace(/###.*?\n/, "").replace(/!\[\[.*?\]\]/, "").replace(/!\[.*?\]\(.*?\)/, "").trim();
-      
-      const fileMatch = section.match(/!\[\[(.*?)\]\]/) || section.match(/!\[.*?\]\((.*?)\)/);
-      
-      if (typeof addVideoBlock === "function") {
-        const block = addVideoBlock(title, desc);
-        if (block && fileMatch) {
-          const fileName = fileMatch[1].split("|")[0].trim();
-          const indicator = block.querySelector(".file-link-indicator");
-          if (indicator) {
-            indicator.style.display = "block";
-            indicator.innerHTML = `📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a>`;
-          }
-        }
-      }
-    }
-    else {
-      cleanDescriptionText += section + "\n";
     }
   });
 
-  // Наполняем контекст полей Блока 2
+  // Восстановление блоков ВИДЕОМАТЕРИАЛОВ
+  selectedDraft.videos.forEach(videoBlockData => {
+    const rawSection = videoBlockData.rawContent;
+
+    const titleMatch = rawSection.match(/#+\s*(.*?)\n/);
+    const title = titleMatch ? titleMatch[1].trim() : "🎥 Видеоматериалы";
+
+    let desc = rawSection.replace(/#+.*?\n/, "").replace(/!\[\[.*?\]\]/g, "").replace(/!\[.*?\]\(.*?\)/g, "").trim();
+
+    if (typeof addVideoBlock === "function") {
+      const blockElement = addVideoBlock(title, desc);
+      if (blockElement) {
+        const indicator = blockElement.querySelector(".file-link-indicator");
+        
+        // Регулярным выражением вытаскиваем ВСЕ видеофайлы из этого блока
+        const fileMatches = rawSection.match(/!\[\[(.*?)\]\]/g) || [];
+        if (fileMatches.length > 0 && indicator) {
+          indicator.style.display = "block";
+          indicator.innerHTML = "";
+          
+          fileMatches.forEach(matchStr => {
+            const fileName = matchStr.replace("![[", "").replace("]]", "").split("|")[0].trim();
+            indicator.innerHTML += `<div style="margin-bottom: 2px;">📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a></div>`;
+          });
+        }
+      }
+    }
+  });
+
+  // 5. Заполнение контекста полей Блока 2
   const titleInput = document.getElementById("post-title");
   const textInput = document.getElementById("post-text");
   const footerInput = document.getElementById("post-footer");
 
   if (titleInput) titleInput.value = postTitleText;
-  if (textInput) textInput.value = cleanDescriptionText.replace(/##.*?\n/, "").trim();
+  if (textInput) textInput.value = postMainText.replace(/##.*?\n/, "").trim(); // Убираем возможные h2 заголовки
   if (footerInput) footerInput.value = postFooterText;
 
-  // Возврат дефолтных блоков, если секции оказались пустыми
+  // Если вдруг в черновике не было медиа-блоков, принудительно возвращаем по 1 дефолтному пустому
   if (document.querySelectorAll("#photos-meta-container .media-sub-block").length === 0) {
     if (typeof addPhotoBlock === "function") addPhotoBlock();
   }
@@ -186,5 +194,5 @@ function loadDraftData(draftId) {
     if (typeof addVideoBlock === "function") addVideoBlock();
   }
 
-  showNotify(`Черновик успешно развернут!`, "success");
+  showNotify(`Черновик от ${selectedDraft.date} успешно развернут!`, "success");
 }

@@ -220,3 +220,10 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 .media-file-remove:hover {
     color: #a50000;
 }
+
+/* Полная блокировка рабочей области конструктора */
+#journal-section.is-locked > :not(#notification) {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.6;
+}

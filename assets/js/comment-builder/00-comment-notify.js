@@ -9,6 +9,7 @@
 function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;
+  const logoutDisabled = window.commentFormLocked ? "disabled" : "";
   
   el.classList.remove("notify-success", "notify-error", "notify-blue");
   
@@ -22,21 +23,30 @@ function showNotify(text, type) {
     el.classList.add("notify-success");
     el.innerHTML = "<div class='notify-flex-content'>" +
                      "<span>" + text + "</span>" +
-                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
+                     "<button " + logoutDisabled + " onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
                    "</div>";
   } 
   else if (type === "error") {
     el.classList.add("notify-error");
     el.innerHTML = "<div class='notify-flex-content'>" +
                      "<span>" + text + "</span>" +
-                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
+                     "<button " + logoutDisabled + " onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
                    "</div>";
   } 
   else if (type === "info") {
     el.classList.add("notify-blue");
     el.innerHTML = "<div class='notify-flex-content'>" +
                      "<span>" + text + "</span>" +
-                     "<button onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
+                     "<button " + logoutDisabled + " onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
                    "</div>";
   }
+
+  const logoutButton = el.querySelector(".btn-logout-svg");
+
+  if (logoutButton) {
+    logoutButton.disabled =
+      typeof isCommentFormLocked !== "undefined" &&
+      isCommentFormLocked;
+  }
+
 }

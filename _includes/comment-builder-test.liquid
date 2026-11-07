@@ -88,6 +88,7 @@
 
 <!-- СНАЧАЛА СЕРВИСНЫЙ СТАТУС-БАР -->
 <script src="{{ '/assets/js/comment-builder/00-comment-notify.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/08-comment-lock.js' | relative_url }}"></script>
 
 <!-- ЗАТЕМ ЦЕПОЧКА ЛОГИКИ И ИНТЕРФЕЙСА -->
 <script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
@@ -101,16 +102,3 @@
 <!-- ЩИТ БЕЗОПАСНОСТИ СТРОК -->
 <script src="{{ '/assets/js/comment-builder/06-comment-validation.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-builder/07-media-files.js' | relative_url }}"></script>
-
-<!-- Заглушка системной блокировки полей до написания финальных модулей интерфейса -->
-<script>
-  if (typeof setFormLock !== 'function') {
-    window.setFormLock = function(isLocked, message = "") {
-      const inputs = document.querySelectorAll("#journal-section input, #journal-section select, #journal-section textarea");
-      inputs.forEach(input => { input.disabled = isLocked; });
-      if (isLocked && message) {
-        showNotify(message, "info");
-      }
-    }
-  }
-</script>

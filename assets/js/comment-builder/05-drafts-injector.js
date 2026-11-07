@@ -138,24 +138,14 @@ function restoreMediaBlock(container, blockData, type) {
     });
   }
 
-  const indicator = blockElement.querySelector(".file-link-indicator");
-
-  if (!indicator || !blockData.files.length) return;
-
-  indicator.innerHTML = "";
-  indicator.style.display = "block";
-
-  blockData.files.forEach(fileName => {
-    const row = document.createElement("div");
-    row.style.marginBottom = "2px";
-
-    const link = createDraftFileLink(fileName);
-
-    row.appendChild(document.createTextNode("📎: "));
-    row.appendChild(link);
-
-    indicator.appendChild(row);
-  });
+  // Восстанавливаем вложения черновика
+  if (typeof registerExistingMediaFiles === "function") {
+    registerExistingMediaFiles(
+      blockElement,
+      blockData.files || [],
+      type
+    );
+  }
 }
 
 /**

@@ -177,3 +177,46 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     font-weight: bold;
     margin-top: 5px;
 }
+
+/* Управление вложениями медиаблоков */
+.drop-zone {
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.drop-zone.is-dragover {
+    background: #eef6ff;
+    border-color: #0076ff;
+}
+
+.media-file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 5px;
+    padding: 5px 8px;
+    background: #f1f1f1;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.media-file-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.media-file-remove {
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: #d93025;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+}
+
+.media-file-remove:hover {
+    color: #a50000;
+}

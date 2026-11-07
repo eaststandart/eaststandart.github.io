@@ -93,7 +93,7 @@ function addPhotoBlock(initialTitle = "", initialDesc = "") {
   subBlock.innerHTML = `
     <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериалов">
     <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока..."></textarea>
-    <div class="drop-zone">Нажмите для выбора или перетащите фото в этот блок</div>
+    <div class="drop-zone" data-media-type="photo">Нажмите для выбора или перетащите фото в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
     <div class="btn-delete-container" style="display: none;">
       <button class="btn-delete-block" type="button" onclick="deletePhotoBlock('${subBlock.id}')">[Удалить блок]</button>
@@ -132,7 +132,7 @@ function addVideoBlock(initialTitle = "", initialDesc = "") {
   subBlock.innerHTML = `
     <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериалов" value="${initialTitle}">
     <textarea class="video-block-desc" rows="2" placeholder="Краткое описание блока...">${initialDesc}</textarea>
-    <div class="drop-zone">Нажмите для выбора или перетащите видео в этот блок</div>
+    <div class="drop-zone" data-media-type="video">Нажмите для выбора или перетащите видео в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
     <div class="btn-delete-container" style="display: none;">
       <button class="btn-delete-block" type="button" onclick="deleteVideoBlock('${subBlock.id}')">[Удалить блок]</button>

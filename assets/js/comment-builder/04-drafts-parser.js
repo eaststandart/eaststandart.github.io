@@ -47,7 +47,7 @@ function parseManifestContent(fileName, text, sha) {
       const blockIndex = match[1];
       const blockContent = match[2];
       
-      // Удаляем этот кусок из основного текста отчета, чтобы он не дублировался в описании
+      // ИСПРАВЛЕНО: Передаем match[0], чтобы чисто вырезать весь блок разметки из текста
       cleanBodyText = cleanBodyText.replace(match[0], "");
       
       extractedPhotos.push({
@@ -61,6 +61,7 @@ function parseManifestContent(fileName, text, sha) {
       const blockIndex = match[1];
       const blockContent = match[2];
       
+      // ИСПРАВЛЕНО: Передаем match[0], чтобы чисто вырезать весь блок разметки из текста
       cleanBodyText = cleanBodyText.replace(match[0], "");
       
       extractedVideos.push({

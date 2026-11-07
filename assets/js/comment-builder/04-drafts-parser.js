@@ -37,7 +37,7 @@ function parseManifestContent(fileName, text, sha) {
       (titleMatch ? titleMatch[1].trim() : "Без заголовка");
 
     const mediaRegex =
-      /^###\s+\[блок\s+(фото|видео)\]\s*(.*?)\s*#*\s*$/gim;
+      /^###\s+(.+?)\s+<!--\s*\[блок\s+(фото|видео)\]\s*-->\s*$/gim;
 
     const matches = [...body.matchAll(mediaRegex)];
     const photos = [];
@@ -53,7 +53,8 @@ function parseManifestContent(fileName, text, sha) {
     ).trim();
 
     matches.forEach((match, position) => {
-      const type = match[1].toLowerCase();
+      const title = match[1].trim();
+      const type = match[2].toLowerCase();
       const contentStart = match.index + match[0].length;
       const contentEnd = position + 1 < matches.length
         ? matches[position + 1].index
@@ -73,7 +74,7 @@ function parseManifestContent(fileName, text, sha) {
 
       const block = {
         index,
-        title: match[2].trim() || (type === "фото" ? "Фотоматериалы" : "Видеоматериалы"),
+        title,
         description,
         files
       };

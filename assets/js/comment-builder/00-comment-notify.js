@@ -1,5 +1,5 @@
 /**
- * @module  06-comment-notify.js
+ * @module  00-comment-notify.js
  * @about   Модуль управления состояниями и уведомлениями.
  * @purpose Отрисовка статус-баров и трансляция логов 1 в 1 из Журнала.
  * @author  TechLab

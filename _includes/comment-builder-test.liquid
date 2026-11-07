@@ -84,11 +84,22 @@
   </div>
 </div>
 
-<!-- Сквозное подключение разрабатываемых JS-модулей TechLab -->
+<!-- Сквозное подключение JS-модулей TechLab -->
+
+<!-- СНАЧАЛА СЕРВИСНЫЙ СТАТУС-БАР -->
+<script src="{{ '/assets/js/comment-builder/00-comment-notify.js' | relative_url }}"></script>
+
+<!-- ЗАТЕМ ЦЕПОЧКА ЛОГИКИ И ИНТЕРФЕЙСА -->
 <script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-builder/02-comment-ui.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/03-comment-drafts.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/06-comment-notify.js' | relative_url }}"></script>
+
+<!-- ПОД СИСТЕМА ЧЕРНОВИКОВ -->
+<script src="{{ '/assets/js/comment-builder/03-drafts-loader.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/04-drafts-parser.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/05-drafts-injector.js' | relative_url }}"></script>
+
+<!-- ЩИТ БЕЗОПАСНОСТИ СТРОК -->
+<script src="{{ '/assets/js/comment-builder/06-comment-validation.js' | relative_url }}"></script>
 
 <!-- Заглушка системной блокировки полей до написания финальных модулей интерфейса -->
 <script>

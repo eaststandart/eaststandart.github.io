@@ -82,24 +82,30 @@ function updateVideoDeleteButtons() {
  */
 function addPhotoBlock(initialTitle = "", initialDesc = "") {
   photoBlockIdx++;
+
   const container = document.getElementById("photos-meta-container");
   if (!container) return null;
-  
+
   const subBlock = document.createElement("div");
   subBlock.className = "media-sub-block";
   subBlock.id = `photo-sub-block-${photoBlockIdx}`;
-  
+
   subBlock.innerHTML = `
-    <input type="text" class="photo-h3-title" placeholder="Заголовок для photoматериалов" value="${initialTitle}">
-    <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока...">${initialDesc}</textarea>
+    <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериалов">
+    <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока..."></textarea>
     <div class="drop-zone">Нажмите для выбора или перетащите фото в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
     <div class="btn-delete-container" style="display: none;">
       <button class="btn-delete-block" type="button" onclick="deletePhotoBlock('${subBlock.id}')">[Удалить блок]</button>
     </div>
   `;
+
+  subBlock.querySelector(".photo-h3-title").value = initialTitle;
+  subBlock.querySelector(".photo-block-desc").value = initialDesc;
+
   container.appendChild(subBlock);
   updatePhotoDeleteButtons();
+
   return subBlock;
 }
 

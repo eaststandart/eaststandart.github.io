@@ -10,6 +10,40 @@
 /**
  * Преобразование File в Base64
  */
+
+// Текущая сессия загрузки
+let currentCommentSession = null;
+
+/**
+ * Получение параметров текущей сессии
+ */
+
+function getCommentUploadSession() {
+  // Редактирование существующего черновика
+  if (currentCommentDraft) {
+    const draft = currentCommentDraft;
+
+    return {
+      date: draft.date,
+      timestamp: draft.timestamp,
+      discussion: draft.discussion,
+      teacher: draft.teacher
+    };
+  }
+
+  // Создание нового комментария
+  if (!currentCommentSession) {
+    currentCommentSession = {
+      date: document.getElementById("target-date")?.value.trim(),
+      timestamp: String(Math.floor(Date.now() / 1000)),
+      discussion: document.getElementById("discussion-combo")?.value.trim(),
+      teacher: localStorage.getItem("github_comment_logged_user")
+    };
+  }
+
+  return currentCommentSession;
+}
+
 async function mediaFileToBase64(file) {
   const buffer = await file.arrayBuffer();
   const bytes = new Uint8Array(buffer);

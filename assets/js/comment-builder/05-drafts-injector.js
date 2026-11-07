@@ -40,6 +40,8 @@ function toggleDraftBehavior() {
   const isDraftMode = document.getElementById("is-draft-mode").checked;
   const select = document.getElementById("draft-select");
   const publishFlag = document.getElementById("publish-now-flag");
+  currentCommentDraft = null;
+  currentCommentSession = null;
 
   if (isDraftMode) {
     if (publishFlag) publishFlag.checked = false;
@@ -151,11 +153,17 @@ function restoreMediaBlock(container, blockData, type) {
 /**
  * Восстановление выбранного черновика
  */
+
+// Текущий редактируемый черновик
+let currentCommentDraft = null;
+
 function loadDraftData(draftId) {
   if (!draftId) return;
 
   const selectedDraft = mockDrafts.find(d => d.id === draftId);
   if (!selectedDraft) return;
+
+  currentCommentDraft = selectedDraft;
 
   console.log("[ИНЪЕКТОР] Восстановление черновика:", draftId);
 

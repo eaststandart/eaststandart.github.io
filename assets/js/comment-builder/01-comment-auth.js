@@ -98,11 +98,19 @@ function checkTeacherAuthorization() {
   Promise.all([timerPromise, networkPromise])
   .then(([_, userData]) => {
     const userLogin = userData.login;
-    localStorage.setItem("github_comment_logged_user", userLogin);
     
     // Идентификация успешно завершена! Передаем управление контуру многократной загрузки данных
-    if (typeof loadCommentDraftsFromApi === "function") {
-      loadCommentDraftsFromApi();
+    if (!allowedTeachers.includes(userLogin)) {
+      showNotify("Критическая ошибка: доступ заблокирован правообладателем.", "error");
+      localStorage.removeItem("github_comment_token");
+      return;
+    }
+
+    localStorage.setItem("github_comment_logged_user", userLogin);
+    
+    // 🔥 ИСПРАВЛЕНО: Сначала строго инициализируем интерфейс на экране!
+    if (typeof initCommentInterface === "function") {
+      initCommentInterface();
     }
   })
   .catch(err => {

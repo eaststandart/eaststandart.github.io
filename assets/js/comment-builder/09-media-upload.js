@@ -104,7 +104,7 @@ async function uploadSingleMediaFile(file, fileName) {
   const response = await fetch(url, {
     method: "PUT",
     headers: {
-      "Authorization": `token ${accessToken}`,
+      "Authorization": `Bearer ${accessToken}`,
       "Accept": "application/vnd.github+json",
       "Content-Type": "application/json"
     },

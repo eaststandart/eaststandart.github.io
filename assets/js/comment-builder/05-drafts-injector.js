@@ -1,27 +1,30 @@
 /**
- * @module  05-drafts-injector.js
- * @about   Модуль инъекции данных черновиков в интерфейс.
- * @purpose Отрисовка селекта Линии 2, жесткая синхронизация полей, автоматическое восстановление структуры медиа-блоков и вывод скрепок-ссылок.
+ * @module 05-drafts-injector.js
+ * @about   Модуль восстановления черновиков в интерфейсе.
+ * @purpose Синхронизация полей и восстановление медиаблоков.
  * @author  TechLab
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 /**
- * Функция перерисовки выпадающего списка на Линии 2
+ * Перерисовка выпадающего списка
  */
 function refreshDraftSelect() {
   const select = document.getElementById("draft-select");
   const isDraftMode = document.getElementById("is-draft-mode")?.checked;
-  
+
   if (!select) return;
 
   if (isDraftMode) {
     let html = `<option value="">-- Сохраненный черновик --</option>`;
+
     mockDrafts.forEach(draft => {
       html += `<option value="${draft.id}">[${draft.date}] ${draft.title}</option>`;
     });
+
     select.innerHTML = html;
     select.disabled = false;
+
   } else {
     select.innerHTML = `<option value="">Выберите черновик --></option>`;
     select.disabled = true;
@@ -29,7 +32,7 @@ function refreshDraftSelect() {
 }
 
 /**
- * ЛИНИЯ 2 В ДЕЙСТВИИ: Включение и отключение селекта Линии 2
+ * Переключение режима черновиков
  */
 function toggleDraftBehavior() {
   const isDraftMode = document.getElementById("is-draft-mode").checked;
@@ -40,35 +43,36 @@ function toggleDraftBehavior() {
     if (publishFlag) publishFlag.checked = false;
     if (typeof updatePublishLabel === "function") updatePublishLabel();
     if (typeof loadCommentDraftsFromApi === "function") loadCommentDraftsFromApi();
+
   } else {
     if (select) {
       select.innerHTML = `<option value="">Выберите черновик --></option>`;
       select.disabled = true;
+      select.value = "";
     }
+
     if (publishFlag) publishFlag.checked = true;
     if (typeof updatePublishLabel === "function") updatePublishLabel();
-    
-    // Автоматически рассчитываем текущую календарную дату смены (1 в 1 из Журнала)
+
     const localToday = new Date();
     const offset = localToday.getTimezoneOffset();
-    const correctedDate = new Date(localToday.getTime() - (offset * 60 * 1000));
-    const defaultDateStr = correctedDate.toISOString().split('T')[0];
+    const correctedDate = new Date(localToday.getTime() - offset * 60000);
+    const defaultDateStr = correctedDate.toISOString().split("T")[0];
 
     const dateInput = document.getElementById("target-date");
     if (dateInput) dateInput.value = defaultDateStr;
-    
+
     const postTitle = document.getElementById("post-title");
     const postText = document.getElementById("post-text");
     const postFooter = document.getElementById("post-footer");
-    
+
     if (postTitle) postTitle.value = "";
     if (postText) postText.value = "";
     if (postFooter) postFooter.value = "";
-    
+
     document.getElementById("discussion-combo").value = "";
     document.getElementById("commit-id").value = "";
 
-    // Наглухо сбрасываем интерфейс медиа-блоков в стартовое состояние (по 1 пустому блоку)
     if (typeof initCommentInterface === "function") {
       initCommentInterface();
     }
@@ -76,124 +80,137 @@ function toggleDraftBehavior() {
 }
 
 /**
- * ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Наполнение всех полей шапки и Блока 2 при выборе черновика
+ * Создание безопасной ссылки на вложение
+ */
+function createDraftFileLink(fileName) {
+  const baseUrl =
+    `https://github.com/${repo_owner}/${repo_name}/blob/main/_input/`;
+
+  const encodedPath = fileName
+    .split("/")
+    .map(part => encodeURIComponent(part))
+    .join("/");
+
+  const link = document.createElement("a");
+  link.href = baseUrl + encodedPath;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = `[${fileName}]`;
+
+  return link;
+}
+
+/**
+ * Восстановление одного медиаблока
+ */
+function restoreMediaBlock(container, blockData, type) {
+  const addFunction = type === "photo"
+    ? addPhotoBlock
+    : addVideoBlock;
+
+  const blockElement = addFunction(
+    blockData.title,
+    blockData.description
+  );
+
+  if (!blockElement) return;
+
+  const indicator = blockElement.querySelector(".file-link-indicator");
+
+  if (!indicator || !blockData.files.length) return;
+
+  indicator.innerHTML = "";
+  indicator.style.display = "block";
+
+  blockData.files.forEach(fileName => {
+    const row = document.createElement("div");
+    row.style.marginBottom = "2px";
+
+    const link = createDraftFileLink(fileName);
+
+    row.appendChild(document.createTextNode("[Вложение] "));
+    row.appendChild(link);
+
+    indicator.appendChild(row);
+  });
+}
+
+/**
+ * Восстановление выбранного черновика
  */
 function loadDraftData(draftId) {
   if (!draftId) return;
+
   const selectedDraft = mockDrafts.find(d => d.id === draftId);
   if (!selectedDraft) return;
 
-  // 1. Наполнение Линии 1 шапки
+  console.log("[ИНЪЕКТОР] Восстановление черновика:", draftId);
+
+  // 1. Параметры комментария
   const dateInput = document.getElementById("target-date");
-  if (dateInput) dateInput.value = selectedDraft.date;
-  
-  document.getElementById("discussion-combo").value = selectedDraft.discussion;
-  document.getElementById("commit-id").value = selectedDraft.commit || "";
-  
-  // 2. Очищаем пустые стартовые медиа-контейнеры на экране перестройки
+  if (dateInput) dateInput.value = selectedDraft.date || "";
+
+  document.getElementById("discussion-combo").value =
+    selectedDraft.discussion || "";
+
+  document.getElementById("commit-id").value =
+    selectedDraft.commit || "";
+
+  // 2. Очищаем медиаконтейнеры
   const containerPhotos = document.getElementById("photos-meta-container");
   const containerVideos = document.getElementById("videos-meta-container");
+
   if (containerPhotos) containerPhotos.innerHTML = "";
   if (containerVideos) containerVideos.innerHTML = "";
-  
-  // Аппаратно сбрасываем индексы блочного генератора
+
   photoBlockIdx = 0;
   videoBlockIdx = 0;
 
-  // 3. Вырезаем подвал, если он отделен через черту ---
-  let bodyText = selectedDraft.text;
+  // 3. Разделяем основной текст и подвал
+  let bodyText = selectedDraft.text || "";
   let postMainText = "";
   let postFooterText = "";
 
-  if (bodyText.includes("---")) {
-    const parts = bodyText.split("---");
+  if (bodyText.includes("\n---")) {
+    const parts = bodyText.split(/\r?\n---\s*(?:\r?\n|$)/);
     postMainText = parts[0].trim();
-    postFooterText = parts.slice(1).join("---").trim();
+    postFooterText = parts.slice(1).join("\n---\n").trim();
   } else {
     postMainText = bodyText.trim();
   }
 
-  // 4. ВОССТАНОВЛЕНИЕ СТРУКТУРЫ И ВЫВОД КЛИКАБЕЛЬНЫХ СКРЕПОК
-  // Наша правильная базовая ссылка для JavaScript без лишних слов repos (1 в 1 как согласовали)
-  const baseUrl = `https://githubusercontent.com{repo_owner}/${repo_name}/main/_input/`;
-
-  // Восстановление блоков ФОТОМАТЕРИАЛОВ
-  selectedDraft.photos.forEach(photoBlockData => {
-    const rawSection = photoBlockData.rawContent;
-
-    // Вытаскиваем заголовок любого уровня (#) из секции
-    const titleMatch = rawSection.match(/#+\s*(.*?)\n/);
-    const title = titleMatch ? titleMatch[1].trim() : "📸 Фотоматериалы";
-
-    // Описание — это текст между заголовком и первой картинкой ![[...]]
-    let desc = rawSection.replace(/#+.*?\n/, "").replace(/!\[\[.*?\]\]/g, "").replace(/!\[.*?\]\(.*?\)/g, "").trim();
-
-    if (typeof addPhotoBlock === "function") {
-      const blockElement = addPhotoBlock(title, desc);
-      if (blockElement) {
-        const indicator = blockElement.querySelector(".file-link-indicator");
-        
-        // Регулярным выражением вытаскиваем ВСЕ файлы картинок из этого блока
-        const fileMatches = rawSection.match(/!\[\[(.*?)\]\]/g) || [];
-        if (fileMatches.length > 0 && indicator) {
-          indicator.style.display = "block";
-          indicator.innerHTML = ""; // Очищаем контейнер под список скрепок
-          
-          fileMatches.forEach(matchStr => {
-            const fileName = matchStr.replace("![[", "").replace("]]", "").split("|")[0].trim();
-            indicator.innerHTML += `<div style="margin-bottom: 2px;">📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a></div>`;
-          });
-        }
-      }
-    }
-  });
-
-  // Восстановление блоков ВИДЕОМАТЕРИАЛОВ
-  selectedDraft.videos.forEach(videoBlockData => {
-    const rawSection = videoBlockData.rawContent;
-
-    const titleMatch = rawSection.match(/#+\s*(.*?)\n/);
-    const title = titleMatch ? titleMatch[1].trim() : "🎥 Видеоматериалы";
-
-    let desc = rawSection.replace(/#+.*?\n/, "").replace(/!\[\[.*?\]\]/g, "").replace(/!\[.*?\]\(.*?\)/g, "").trim();
-
-    if (typeof addVideoBlock === "function") {
-      const blockElement = addVideoBlock(title, desc);
-      if (blockElement) {
-        const indicator = blockElement.querySelector(".file-link-indicator");
-        
-        // Регулярным выражением вытаскиваем ВСЕ видеофайлы из этого блока
-        const fileMatches = rawSection.match(/!\[\[(.*?)\]\]/g) || [];
-        if (fileMatches.length > 0 && indicator) {
-          indicator.style.display = "block";
-          indicator.innerHTML = "";
-          
-          fileMatches.forEach(matchStr => {
-            const fileName = matchStr.replace("![[", "").replace("]]", "").split("|")[0].trim();
-            indicator.innerHTML += `<div style="margin-bottom: 2px;">📎 <a href="${baseUrl}${fileName}" target="_blank">[${fileName}]</a></div>`;
-          });
-        }
-      }
-    }
-  });
-
-  // 5. Заполнение контекста полей Блока 2
+  // 4. Заполняем поля Блока 2
   const titleInput = document.getElementById("post-title");
   const textInput = document.getElementById("post-text");
   const footerInput = document.getElementById("post-footer");
 
-  if (titleInput) titleInput.value = postTitleText;
-  // 🔥 ИСПРАВЛЕНО: Теперь берем идеально чистый текст из объекта парсера 04!
-  if (textInput) textInput.value = selectedDraft.text.replace(/##.*?\n/, "").trim();
+  if (titleInput) titleInput.value = selectedDraft.title || "";
+  if (textInput) textInput.value = postMainText;
   if (footerInput) footerInput.value = postFooterText;
 
-  // Если вдруг в черновике не было медиа-блоков, принудительно возвращаем по 1 дефолтному пустому
-  if (document.querySelectorAll("#photos-meta-container .media-sub-block").length === 0) {
-    if (typeof addPhotoBlock === "function") addPhotoBlock();
-  }
-  if (document.querySelectorAll("#videos-meta-container .media-sub-block").length === 0) {
-    if (typeof addVideoBlock === "function") addVideoBlock();
+  // 5. Восстанавливаем фотоблоки
+  selectedDraft.photos.forEach(blockData => {
+    restoreMediaBlock(containerPhotos, blockData, "photo");
+  });
+
+  // 6. Восстанавливаем видеоблоки
+  selectedDraft.videos.forEach(blockData => {
+    restoreMediaBlock(containerVideos, blockData, "video");
+  });
+
+  // 7. Если блоков не было — создаём пустые
+  if (!selectedDraft.photos.length) {
+    addPhotoBlock();
   }
 
-  showNotify(`Черновик от ${selectedDraft.date} успешно развернут!`, "success");
+  if (!selectedDraft.videos.length) {
+    addVideoBlock();
+  }
+
+  console.log("[ИНЪЕКТОР] Черновик восстановлен");
+
+  showNotify(
+    `Черновик от ${selectedDraft.date} успешно развернут!`,
+    "success"
+  );
 }

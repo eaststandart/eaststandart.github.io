@@ -46,7 +46,7 @@ function initCommentInterface() {
   showNotify("Интерфейс конструктора готов!", "success");
   
   const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";
-  setTimeout(() => { showNotify("👨‍🏫 Автор: " + userLogin, "info"); }, 1500);
+  setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 1500);
 }
 
 /**

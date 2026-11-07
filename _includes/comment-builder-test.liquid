@@ -1,0 +1,59 @@
+<!-- ЗОНА СТАТУС-БАРА (1 в 1 как в Журнале) -->
+<div id="notify-statusbar" class="notify-box notify-info" style="margin-bottom: 12px; padding: 10px; border-radius: 4px; font-weight: bold; text-align: center;">
+  🔒 Ожидание инициализации системы...
+</div>
+
+<!-- БЛОК АВТОРИЗАЦИИ (Отображается, если токена нет) -->
+<div id="auth-section" class="block">
+  <h3>🔓 Авторизация TechLab</h3>
+  <div style="display: flex; gap: 8px;">
+    <input type="password" id="token-input" placeholder="Вставьте ваш Персональный Токен GitHub (PAT)" style="flex: 1; margin-bottom: 0;">
+    <button type="button" id="btn-login" class="btn" style="width: auto; margin-top: 0; padding: 10px 20px;" onclick="submitToken()">Войти</button>
+  </div>
+</div>
+
+<!-- ОСНОВНОЙ БЛОК ИНТЕРФЕЙСА (Скрыт по умолчанию до успешного входа) -->
+<div id="journal-section" class="block hidden">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <h3>1. Параметры комментария (ТЕСТ)</h3>
+    <button type="button" class="btn-delete-block" style="color: #ff3b30;" onclick="logoutTeacher()">[Выйти]</button>
+  </div>
+  
+  <!-- ЛИНИЯ 1: Параметры публикации -->
+  <div class="header-line">
+    <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD">             
+    <span class="inline-label" style="margin-left: auto;">🗣️:</span>
+    <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№">
+    <span class="inline-label">-</span>
+    <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
+  </div>
+
+  <!-- ЛИНИЯ 2: Черновики -->
+  <div class="header-line" style="margin-top: 10px;">
+    <div class="draft-select-container">
+      <select id="draft-select" disabled>
+        <option value="">Выберите черновик --></option>
+      </select>
+    </div>
+    <label class="draft-trigger">
+      <input type="checkbox" id="is-draft-mode" onchange="if(typeof refreshDraftSelect === 'function') refreshDraftSelect(); if(this.checked && typeof loadCommentDraftsFromApi === 'function') loadCommentDraftsFromApi();">
+    </label>
+  </div>
+</div>
+
+<!-- ПОДКЛЮЧЕНИЕ ТЕСТИРУЕМЫХ МОДУЛЕЙ -->
+<script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/02-comment-drafts.js' | relative_url }}"></script>
+
+<!-- ВРЕМЕННАЯ ЗАГЛУШКА БЛОКИРОВКИ ДЛЯ ИЗБЕЖАНИЯ ОШИБОК ДО НАПИСАНИЯ МОДУЛЯ 03 -->
+<script>
+  if (typeof setFormLock !== 'function') {
+    window.setFormLock = function(isLocked, message = "") {
+      const inputs = document.querySelectorAll("#journal-section input, #journal-section select");
+      inputs.forEach(input => { input.disabled = isLocked; });
+      if (isLocked && message) {
+        showNotify(message, "info");
+      }
+    }
+  }
+</script>

@@ -108,8 +108,12 @@ function restoreMediaBlock(container, blockData, type) {
     ? addPhotoBlock
     : addVideoBlock;
 
+  const cleanTitle = (blockData.title || "")
+    .replace(/<!--\s*\[блок\s+(?:фото|видео)\]\s*-->/gi, "")
+    .trim();
+
   const blockElement = addFunction(
-    blockData.title,
+    cleanTitle,
     blockData.description
   );
 

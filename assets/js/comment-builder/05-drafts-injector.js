@@ -183,7 +183,8 @@ function loadDraftData(draftId) {
   const footerInput = document.getElementById("post-footer");
 
   if (titleInput) titleInput.value = postTitleText;
-  if (textInput) textInput.value = postMainText.replace(/##.*?\n/, "").trim(); // Убираем возможные h2 заголовки
+  // 🔥 ИСПРАВЛЕНО: Теперь берем идеально чистый текст из объекта парсера 04!
+  if (textInput) textInput.value = selectedDraft.text.replace(/##.*?\n/, "").trim();
   if (footerInput) footerInput.value = postFooterText;
 
   // Если вдруг в черновике не было медиа-блоков, принудительно возвращаем по 1 дефолтному пустому

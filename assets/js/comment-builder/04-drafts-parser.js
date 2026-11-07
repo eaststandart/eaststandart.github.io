@@ -47,8 +47,8 @@ function parseManifestContent(fileName, text, sha) {
       const blockIndex = match[1];
       const blockContent = match[2];
       
-      // ИСПРАВЛЕНО: Передаем match[0], чтобы чисто вырезать весь блок разметки из текста
-      cleanBodyText = cleanBodyText.replace(match[0], "");
+      // ИСПРАВЛЕНО: Чистая замена по конкретному тексту совпадения
+      cleanBodyText = cleanBodyText.split(match[0]).join("");
       
       extractedPhotos.push({
         index: parseInt(blockIndex, 10),
@@ -61,8 +61,8 @@ function parseManifestContent(fileName, text, sha) {
       const blockIndex = match[1];
       const blockContent = match[2];
       
-      // ИСПРАВЛЕНО: Передаем match[0], чтобы чисто вырезать весь блок разметки из текста
-      cleanBodyText = cleanBodyText.replace(match[0], "");
+      // ИСПРАВЛЕНО: Чистая замена по конкретному тексту совпадения
+      cleanBodyText = cleanBodyText.split(match[0]).join("");
       
       extractedVideos.push({
         index: parseInt(blockIndex, 10),

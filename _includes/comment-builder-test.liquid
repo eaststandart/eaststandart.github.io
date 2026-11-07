@@ -1,51 +1,63 @@
-<!-- ЗОНА СТАТУС-БАРА (1 в 1 как в Журнале) -->
-<div id="notify-statusbar" class="notify-box notify-info" style="margin-bottom: 12px; padding: 10px; border-radius: 4px; font-weight: bold; text-align: center;">
-  🔒 Ожидание инициализации системы...
-</div>
+{%- comment -%}
+@module  comment-builder-test.liquid
+@about   Тестовый шаблон интерфейса Конструктора комментариев.
+@purpose 1 в 1 перенос структуры слоев и CSS-классов авторизации Журнала.
+@author  TechLab
+@version 2.0.0
+{%- endcomment -%}
 
-<!-- БЛОК АВТОРИЗАЦИИ (Отображается, если токена нет) -->
-<div id="auth-section" class="block">
-  <h3>🔓 Авторизация TechLab</h3>
-  <div style="display: flex; gap: 8px;">
-    <input type="password" id="token-input" placeholder="Вставьте ваш Персональный Токен GitHub (PAT)" style="flex: 1; margin-bottom: 0;">
-    <button type="button" id="btn-login" class="btn" style="width: auto; margin-top: 0; padding: 10px 20px;" onclick="submitToken()">Войти</button>
-  </div>
-</div>
-
-<!-- ОСНОВНОЙ БЛОК ИНТЕРФЕЙСА (Скрыт по умолчанию до успешного входа) -->
-<div id="journal-section" class="block hidden">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <h3>1. Параметры комментария (ТЕСТ)</h3>
-    <button type="button" class="btn-delete-block" style="color: #ff3b30;" onclick="logoutTeacher()">[Выйти]</button>
-  </div>
-  
-  <!-- ЛИНИЯ 1: Параметры публикации -->
-  <div class="header-line">
-    <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD">             
-    <span class="inline-label" style="margin-left: auto;">🗣️:</span>
-    <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№">
-    <span class="inline-label">-</span>
-    <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
+<div class="admin-container">
+  <!-- БЛОК АВТОРИЗАЦИИ ЧЕРЕЗ ТОКЕН-ПАРОЛЬ (1 в 1 из Журнала) -->
+  <div id="auth-section" class="auth-box">
+    <h3 class="auth-title">🔑 Доступ к конструктору</h3>
+    <p class="auth-desc">Вставьте ваш личный ключ доступа (ghp_), чтобы открыть конструктор:</p>
+    <input type="password" id="token-input" class="input-text" placeholder="ghp_...">
+    <button id="btn-login" class="btn-big btn-auth" onclick="submitToken()">🔓 Подключить конструктор</button>
   </div>
 
-  <!-- ЛИНИЯ 2: Черновики -->
-  <div class="header-line" style="margin-top: 10px;">
-    <div class="draft-select-container">
-      <select id="draft-select" disabled>
-        <option value="">Выберите черновик --></option>
-      </select>
+  <!-- РАБОЧАЯ ЗОНА КОНСТРУКТОРА (Наглухо скрыта до авторизации) -->
+  <div id="journal-section" class="hidden">
+    <!-- 1. Постоянный статус-бар (1 в 1 из Журнала) -->
+    <div id="notification" class="notify"></div>
+
+    <!-- 2. Форма параметров комментария (Бывшая Линия 1 и Линия 2) -->
+    <div class="block margin-top-15">
+      <h3 style="margin-top: 0; margin-bottom: 10px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 16px;">1. Параметры комментария</h3>
+      
+      <!-- ЛИНИЯ 1: Монолитная строка параметров публикации -->
+      <div class="header-line" style="display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+        <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-11-07" placeholder="YYYY-MM-DD" style="width: 100px !important; text-align: center; font-family: monospace;">             
+        <span class="inline-label" style="margin-left: auto; font-weight: bold; font-size: 15px; color: #444;">🗣️:</span>
+        <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№" style="width: 38px !important; text-align: center; font-family: monospace;">
+        <span class="inline-label" style="font-weight: bold; font-size: 15px; color: #444;">-</span>
+        <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит" style="width: 82px !important; text-align: center; font-family: monospace;">
+      </div>
+
+      <!-- ЛИНИЯ 2: Поле черновиков + Галочка-индикатор -->
+      <div class="header-line" style="display: flex; align-items: center; gap: 6px;">
+        <div class="draft-select-container" style="flex: 1;">
+          <select id="draft-select" disabled style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; background: #fff;">
+            <option value="">Выберите черновик --></option>
+          </select>
+        </div>
+        <label class="draft-trigger" style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="is-draft-mode" style="width: 22px; height: 22px; cursor: pointer; margin: 0;" onchange="if(typeof refreshDraftSelect === 'function') refreshDraftSelect(); if(this.checked && typeof loadCommentDraftsFromApi === 'function') loadCommentDraftsFromApi();">
+        </label>
+      </div>
     </div>
-    <label class="draft-trigger">
-      <input type="checkbox" id="is-draft-mode" onchange="if(typeof refreshDraftSelect === 'function') refreshDraftSelect(); if(this.checked && typeof loadCommentDraftsFromApi === 'function') loadCommentDraftsFromApi();">
-    </label>
+
+    <!-- ВРЕМЕННАЯ ЗАГЛУШКА ТЕКСТА ДЛЯ КОНТРОЛЯ СЛОЕВ -->
+    <div class="auth-box margin-top-15" style="font-size: 14px; text-align: center; color: #6c757d;">
+      🚀 Авторизация пройдена успешно. Конструктор запущен в тестовом режиме.
+    </div>
   </div>
 </div>
 
-<!-- ПОДКЛЮЧЕНИЕ ТЕСТИРУЕМЫХ МОДУЛЕЙ -->
+<!-- Сквозное подключение разрабатываемых JS-модулей TechLab -->
 <script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-builder/02-comment-drafts.js' | relative_url }}"></script>
 
-<!-- ВРЕМЕННАЯ ЗАГЛУШКА БЛОКИРОВКИ ДЛЯ ИЗБЕЖАНИЯ ОШИБОК ДО НАПИСАНИЯ МОДУЛЯ 03 -->
+<!-- Заглушка системной блокировки полей до написания финальных модулей интерфейса -->
 <script>
   if (typeof setFormLock !== 'function') {
     window.setFormLock = function(isLocked, message = "") {

@@ -36,9 +36,10 @@ function loadCommentDraftsFromApi() {
       return;
     }
 
-    // Для каждого найденного файла запускаем параллельный пулл его контента
+    // 2. Для каждого найденного файла запускаем параллельный пулл его контента
     const fetchPromises = myDraftFiles.map(file => {
       const fileUrl = `${file.url}&nocache=${new Date().getTime()}`;
+      // 🔥 ИСПРАВЛЕНО: Добавлен return, который связывает сетевой fetch с массивом Promises
       return fetch(fileUrl, { headers: { "Authorization": `token ${accessToken}` } })
         .then(res => res.ok ? res.json() : null)
         .then(fileData => {

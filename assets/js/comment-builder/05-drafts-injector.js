@@ -104,6 +104,12 @@ function createDraftFileLink(fileName) {
  * Восстановление одного медиаблока
  */
 function restoreMediaBlock(container, blockData, type) {
+  console.log("[INJECTOR 1] Получены данные:", {
+    type: type,
+    title: blockData.title,
+    titleJSON: JSON.stringify(blockData.title)
+  });
+
   const addFunction = type === "photo"
     ? addPhotoBlock
     : addVideoBlock;
@@ -112,7 +118,6 @@ function restoreMediaBlock(container, blockData, type) {
 
   if (!blockElement) return;
 
-  // Устанавливаем название непосредственно в поле
   const titleInput = blockElement.querySelector(
     type === "photo" ? ".photo-h3-title" : ".video-h3-title"
   );
@@ -121,6 +126,12 @@ function restoreMediaBlock(container, blockData, type) {
     titleInput.value = (blockData.title || "")
       .split("<!--")[0]
       .trim();
+
+    console.log("[INJECTOR 2] Значение поля:", {
+      value: titleInput.value,
+      valueJSON: JSON.stringify(titleInput.value),
+      html: titleInput.outerHTML
+    });
   }
 
   const indicator = blockElement.querySelector(".file-link-indicator");

@@ -54,6 +54,14 @@ function parseManifestContent(fileName, text, sha) {
 
     matches.forEach((match, position) => {
       const title = match[1].replace(/<!--.*?-->/g, "").trim();
+
+      console.log("[PARSER] Заголовок медиаблока:", {
+        rawMatch: match[0],
+        capturedTitle: match[1],
+        finalTitle: title,
+        type: match[2]
+      });
+
       const type = match[2].toLowerCase();
       const contentStart = match.index + match[0].length;
       const contentEnd = position + 1 < matches.length

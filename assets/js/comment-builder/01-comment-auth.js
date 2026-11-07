@@ -12,7 +12,7 @@ const repo_name = "techlab-comment-builder";
 const allowedTeachers = ["eaststandart", "eastemitting"];
 
 let accessToken = localStorage.getItem("github_comment_token");
-let studentsData = {}; // Оставляем пустой объект для совместимости структур данных
+let studentsData = {};
 let isRobotChecked = false; // Возвращаем в оперативную память для корректного сброса при Ctrl+F5
 
 // Автоматический вход, если ключ уже сохранен в браузере
@@ -38,20 +38,12 @@ function submitToken() {
   })
   .then(response => {
     if (response.ok) {
-      // Забираем логин пользователя прямо из ответа Гитхаба и проверяем белый список
+      localStorage.setItem("github_comment_token", tokenValue);
+      accessToken = tokenValue;
+      
+      // Забираем логин пользователя прямо из ответа Гитхаба и сохраняем его в кэш браузера
       response.json().then(userData => {
-        const userLogin = userData.login;
-        
-        if (!allowedTeachers.includes(userLogin)) {
-          alert(`Доступ запрещен!\nПользователь "${userLogin}" не имеет прав доступа к Конструктору.`);
-          document.getElementById("btn-login").disabled = false;
-          document.getElementById("btn-login").innerText = "🔓 Подключить конструктор";
-          return;
-        }
-
-        localStorage.setItem("github_comment_token", tokenValue);
-        localStorage.setItem("github_comment_logged_user", userLogin);
-        accessToken = tokenValue;
+        localStorage.setItem("github_comment_logged_user", userData.login);
         showJournal();
       });
     } else {
@@ -83,13 +75,8 @@ function showJournal() {
 function logoutTeacher() {
   if (confirm("Вы уверены, что хотите выйти из конструктора и сменить ключ доступа?")) {
     localStorage.removeItem("github_comment_token");
-    localStorage.removeItem("github_comment_robot_ok"); // Полная зачистка кэша
-    localStorage.removeItem("github_comment_logged_user");
+    localStorage.removeItem("github_comment_logged_user"); // Полная зачистка кэша
     accessToken = null;
-
-    // ПОКАЗЫВАЕМ ИНСТРУКЦИЮ ПРИ ВЫХОДЕ
-    const instr = document.getElementById("instructions-section");
-    if (instr) instr.classList.remove("hidden");
 
     window.location.reload();
   }
@@ -111,22 +98,11 @@ function checkTeacherAuthorization() {
   Promise.all([timerPromise, networkPromise])
   .then(([_, userData]) => {
     const userLogin = userData.login;
-    
-    // Вторичная проверка белого списка при автоматическом входе из localStorage
-    if (!allowedTeachers.includes(userLogin)) {
-      showNotify("Критическая ошибка: доступ заблокирован правообладателем.", "error");
-      localStorage.removeItem("github_comment_token");
-      return;
-    }
-
     localStorage.setItem("github_comment_logged_user", userLogin);
     
-    // Идентификация успешно завершена! Передаем управление следующему контуру (будет в модуле 02)
+    // Идентификация успешно завершена! Передаем управление контуру многократной загрузки данных
     if (typeof loadCommentDraftsFromApi === "function") {
       loadCommentDraftsFromApi();
-    } else {
-      showNotify("Конструктор успешно загружен!", "success");
-      setTimeout(() => { showNotify("👨‍🏫 Преподаватель: " + userLogin, "info"); }, 2000);
     }
   })
   .catch(err => {

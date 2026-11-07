@@ -43,7 +43,23 @@ function parseManifestContent(fileName, text, sha) {
       body = body.replace(titleMatch[0], "").trim();
     }
 
-    // 3. Извлекаем медиаблоки по английским маркерам
+
+    // 3. Извлекаем основной текст по маркерам
+    const mainRegex =
+      /<!--\s*main-start\s*-->([\s\S]*?)<!--\s*main-end\s*-->/i;
+
+    const mainMatch = body.match(mainRegex);
+
+    if (!mainMatch) {
+      throw new Error("Не найдены маркеры основного текста main-start / main-end");
+    }
+
+    const cleanBodyText = mainMatch[1].trim();
+
+    // Удаляем основной текст вместе с маркерами
+    body = body.replace(mainRegex, "");
+
+    // 4. Извлекаем медиаблоки по английским маркерам
     const extractedPhotos = [];
     const extractedVideos = [];
 
@@ -51,17 +67,12 @@ function parseManifestContent(fileName, text, sha) {
       /<!--\s*media-(photo|video)-(\d+)-start\s*-->([\s\S]*?)<!--\s*media-\1-\2-end\s*-->/gi;
 
     let match;
-    const cleanBodyParts = [];
-    let lastIndex = 0;
 
     while ((match = mediaRegex.exec(body)) !== null) {
       const type = match[1].toLowerCase();
       const index = parseInt(match[2], 10);
       const rawContent = match[0];
       const content = match[3].trim();
-
-      // Сохраняем текст перед медиаблоком
-      cleanBodyParts.push(body.substring(lastIndex, match.index));
 
       // Извлекаем заголовок блока
       const headingMatch = content.match(/^#{1,6}\s+(.+)$/m);
@@ -74,8 +85,7 @@ function parseManifestContent(fileName, text, sha) {
       const fileMatches = [...content.matchAll(/!\[\[([^\]]+)\]\]/g)];
 
       const files = fileMatches.map(fileMatch => {
-        const target = fileMatch[1].split("|")[0].trim();
-        return target;
+        return fileMatch[1].split("|")[0].trim();
       });
 
       // Описание без заголовка и вложений
@@ -104,16 +114,12 @@ function parseManifestContent(fileName, text, sha) {
         extractedVideos.push(block);
       }
 
-      console.log(`[ПАРСЕР] Найден блок ${type} №${index}:`, files.length, "файлов");
-
-      lastIndex = mediaRegex.lastIndex;
+      console.log(
+        `[ПАРСЕР] Найден блок ${type} №${index}:`,
+        files.length,
+        "файлов"
+      );
     }
-
-    // Добавляем оставшийся текст после последнего медиаблока
-    cleanBodyParts.push(body.substring(lastIndex));
-
-    // 4. Собираем чистый основной текст
-    const cleanBodyText = cleanBodyParts.join("").trim();
 
     extractedPhotos.sort((a, b) => a.index - b.index);
     extractedVideos.sort((a, b) => a.index - b.index);

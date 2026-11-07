@@ -6,4 +6,4 @@ permalink: /comment-builder-test/
 custom_css: ["/assets/css/comment-builder.css", "/assets/css/journal-attendance.css"]
 ---
 
-{% include comment-builder-test.liquid %}
+{% include comment-builder-test.liquid %} 

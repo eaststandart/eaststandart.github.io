@@ -79,8 +79,7 @@
         <input type="checkbox" id="publish-now-flag" checked onchange="if(typeof updatePublishLabel === 'function') updatePublishLabel();"> 
         <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
       </div>
-      <button type="button" id="upload-media-btn" class="btn" style="background: #28a745; color: #fff; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 8px;" onclick="handleMediaUpload()">Загрузить медиа</button>
-      <button type="button" class="btn" id="submit-btn" style="background: #0076ff; color: #fff; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;" onclick="alert('Сборка Markdown и отправка в разработке')">Создать комментарий</button>
+      <button type="button" class="btn" id="submit-btn" style="background: #0076ff; color: #fff; border: none; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;" onclick="handleCommentSubmit()">Создать комментарий</button>
     </div>
   </div>
 </div>
@@ -104,3 +103,4 @@
 <script src="{{ '/assets/js/comment-builder/07-media-files.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-builder/08-comment-lock.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/comment-builder/09-media-upload.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/10-comment-save.js' | relative_url }}"></script>

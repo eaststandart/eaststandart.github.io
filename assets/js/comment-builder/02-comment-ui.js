@@ -160,16 +160,13 @@ function deleteVideoBlock(blockId) {
 function updatePublishLabel() {
   const publishFlag = document.getElementById("publish-now-flag");
   const labelText = document.getElementById("publish-label-text");
-  const submitBtn = document.getElementById("submit-btn");
   
   if (!publishFlag) return;
   const isChecked = publishFlag.checked;
   
   if (isChecked) {
     if (labelText) labelText.innerText = "🔥 Опубликовать сейчас (published: true)";
-    if (submitBtn) submitBtn.innerText = "Создать комментарий";
   } else {
     if (labelText) labelText.innerText = "🔥 Опубликовать сейчас (published: false)";
-    if (submitBtn) submitBtn.innerText = "Сохранить черновик";
   }
 }

@@ -100,62 +100,52 @@ async function uploadSingleMediaFile(file, fileName) {
 
   const content = await mediaFileToBase64(file);
 
-  console.log("UPLOAD AUTH CHECK", {
-    tokenExists: !!accessToken,
-    tokenLength: accessToken?.length,
-    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token")
+  const headers = {
+    "Authorization": `Bearer ${accessToken}`,
+    "Accept": "application/vnd.github+json",
+    "Content-Type": "application/json"
+  };
+
+  // Проверяем, существует ли файл.
+  const checkResponse = await fetch(`${url}?ref=main`, {
+    method: "GET",
+    headers
   });
 
-  console.log("UPLOAD REQUEST CHECK", {
-    url,
-    method: "PUT",
-    tokenExists: !!accessToken,
-    tokenLength: accessToken?.length,
-    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token"),
-    fileName,
-    contentLength: content.length
-  });
+  let sha;
 
-  console.log("UPLOAD FINAL CHECK", {
-    url,
-    method: "PUT",
-    fileName,
-    contentLength: content.length,
-    tokenExists: !!accessToken,
-    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token"),
-    bodyLength: JSON.stringify({
-      message: `Upload media: ${fileName}`,
-      content
-    }).length
-  });
+  if (checkResponse.ok) {
+    const existingFile = await checkResponse.json();
+    sha = existingFile.sha;
+  } else if (checkResponse.status !== 404) {
+    const error = await checkResponse.json().catch(() => ({}));
+    throw new Error(error.message || `Ошибка проверки ${fileName}: HTTP ${checkResponse.status}`);
+  }
+
+  const body = {
+    message: `${sha ? "Replace" : "Upload"} media: ${fileName}`,
+    content
+  };
+
+  if (sha) body.sha = sha;
 
   const response = await fetch(url, {
     method: "PUT",
-    headers: {
-      "Authorization": `Bearer ${accessToken}`,
-      "Accept": "application/vnd.github+json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: `Upload media: ${fileName}`,
-      content: content
-    })
+    headers,
+    body: JSON.stringify(body)
   });
 
   console.log("UPLOAD RESPONSE CHECK", {
     status: response.status,
     statusText: response.statusText,
     requestId: response.headers.get("x-github-request-id"),
-    rateLimitRemaining: response.headers.get("x-ratelimit-remaining"),
-    rateLimitResource: response.headers.get("x-ratelimit-resource"),
-    authenticate: response.headers.get("www-authenticate")
+    fileName,
+    replaced: !!sha
   });
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(
-      error.message || `Ошибка загрузки ${fileName}: HTTP ${response.status}`
-    );
+    throw new Error(error.message || `Ошибка загрузки ${fileName}: HTTP ${response.status}`);
   }
 
   return response.json();

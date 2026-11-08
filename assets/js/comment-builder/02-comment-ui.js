@@ -52,6 +52,47 @@ function initCommentInterface() {
   setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 1500);
 }
 
+function resetCommentForm() {
+  currentCommentDraft = null;
+  currentCommentSession = null;
+
+  document.getElementById("post-title").value = "";
+  document.getElementById("post-text").value = "";
+  document.getElementById("post-footer").value = "";
+
+  document.getElementById("discussion-combo").value = "";
+  document.getElementById("commit-id").value = "";
+
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const localDate = new Date(today.getTime() - offset * 60000)
+    .toISOString()
+    .split("T")[0];
+
+  document.getElementById("target-date").value = localDate;
+
+  document.getElementById("is-draft-mode").checked = false;
+  document.getElementById("publish-now-flag").checked = true;
+
+  const select = document.getElementById("draft-select");
+  select.innerHTML = `<option value="">Выберите черновик --></option>`;
+  select.disabled = true;
+  select.value = "";
+
+  document.getElementById("photos-meta-container").innerHTML = "";
+  document.getElementById("videos-meta-container").innerHTML = "";
+
+  photoBlockIdx = 0;
+  videoBlockIdx = 0;
+
+  addPhotoBlock();
+  addVideoBlock();
+
+  updatePublishLabel();
+
+  console.log("[COMMENT SAVE] Форма сброшена");
+}
+
 /**
  * АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ФОТО
  */

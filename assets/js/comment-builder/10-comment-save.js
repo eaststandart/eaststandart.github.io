@@ -213,6 +213,10 @@ async function handleCommentSubmit() {
 
     console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
 
+    setTimeout(() => {
+      resetCommentForm();
+    }, 2000);
+
   } catch (error) {
     console.error("[COMMENT SAVE] Ошибка:", error);
     showNotify(error.message || "Ошибка сохранения комментария.", "error");

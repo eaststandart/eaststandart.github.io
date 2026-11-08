@@ -90,6 +90,14 @@ function resetCommentForm() {
 
   updatePublishLabel();
 
+  showNotify("Готово. Форма очищена.", "success");
+
+  const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";
+
+  setTimeout(() => {
+    showNotify("Преподаватель: " + userLogin, "info");
+  }, 2000);
+
   console.log("[COMMENT SAVE] Форма сброшена");
 }
 

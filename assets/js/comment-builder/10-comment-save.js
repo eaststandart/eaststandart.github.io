@@ -114,6 +114,111 @@ function buildCommentMarkdown(session) {
   return `${frontMatter.join("\n")}\n\n${body.join("\n\n")}\n`;
 }
 
+function decodeGithubContent(content) {
+  const binary = atob(content.replace(/\s/g, ""));
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function waitBeforeRetry(seconds, attempt) {
+  return new Promise(resolve => {
+    let remaining = seconds;
+
+    showNotify(
+      `Ошибка сети. Повтор ${attempt}/3 через ${remaining} сек.`,
+      "info"
+    );
+
+    const timer = setInterval(() => {
+      remaining--;
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        resolve();
+        return;
+      }
+
+      showNotify(
+        `Ошибка сети. Повтор ${attempt}/3 через ${remaining} сек.`,
+        "info"
+      );
+    }, 1000);
+  });
+}
+
+async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
+  async function getCurrentFile() {
+    const response = await fetch(`${url}?ref=main`, {
+      method: "GET",
+      headers
+    });
+
+    if (response.status === 404) return null;
+
+    if (!response.ok) {
+      const error = new Error(`Ошибка проверки файла: HTTP ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+
+    return await response.json();
+  }
+
+  async function putFile(sha) {
+    const payload = {
+      message: `${sha ? "Update" : "Create"} comment: ${fileName}`,
+      content: commentToBase64(markdown),
+      branch: "main"
+    };
+
+    if (sha) payload.sha = sha;
+
+    return await fetch(url, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(payload)
+    });
+  }
+
+  const existingFile = await getCurrentFile();
+  let sha = existingFile?.sha || null;
+
+  let response = await putFile(sha);
+
+  if (response.status === 409) {
+    const latestFile = await getCurrentFile();
+
+    if (!latestFile) {
+      response = await putFile(null);
+    } else {
+      if (latestFile.content &&
+          decodeGithubContent(latestFile.content) === markdown) {
+        return {
+          fileName,
+          result: latestFile,
+          alreadySaved: true
+        };
+      }
+
+      response = await putFile(latestFile.sha);
+    }
+  }
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const error = new Error(
+      errorData.message || `Не удалось сохранить комментарий: HTTP ${response.status}`
+    );
+    error.status = response.status;
+    throw error;
+  }
+
+  return {
+    fileName,
+    result: await response.json()
+  };
+}
+
 async function saveCommentMarkdown(session, markdown) {
   const fileName = currentCommentDraft
     ? currentCommentDraft.id
@@ -128,45 +233,22 @@ async function saveCommentMarkdown(session, markdown) {
     "Content-Type": "application/json"
   };
 
-  // Проверяем, существует ли файл, чтобы при повторном сохранении обновить его.
-  const checkResponse = await fetch(`${url}?ref=main`, {
-    method: "GET",
-    headers
-  });
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await saveCommentMarkdownOnce(url, headers, fileName, markdown);
 
-  let sha = null;
+    } catch (error) {
+      const isNetworkError =
+        error instanceof TypeError ||
+        (error.status >= 500 && error.status <= 599);
 
-  if (checkResponse.ok) {
-    const existingFile = await checkResponse.json();
-    sha = existingFile.sha;
-  } else if (checkResponse.status !== 404) {
-    const error = await checkResponse.json().catch(() => ({}));
-    throw new Error(error.message || `Не удалось проверить файл: HTTP ${checkResponse.status}`);
+      if (!isNetworkError || attempt === 3) {
+        throw error;
+      }
+
+      await waitBeforeRetry(60, attempt + 1);
+    }
   }
-
-  const payload = {
-    message: `${sha ? "Update" : "Create"} comment: ${fileName}`,
-    content: commentToBase64(markdown),
-    branch: "main"
-  };
-
-  if (sha) payload.sha = sha;
-
-  const response = await fetch(url, {
-    method: "PUT",
-    headers,
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || `Не удалось сохранить комментарий: HTTP ${response.status}`);
-  }
-
-  return {
-    fileName,
-    result: await response.json()
-  };
 }
 
 async function handleCommentSubmit() {

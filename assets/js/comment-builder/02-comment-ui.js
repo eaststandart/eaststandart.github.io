@@ -95,7 +95,7 @@ function resetCommentForm() {
   const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";
 
   setTimeout(() => {
-    showNotify("Преподаватель: " + userLogin, "info");
+    showNotify("👨‍🎓 Преподаватель: " + userLogin, "info");
   }, 2000);
 
   console.log("[COMMENT SAVE] Форма сброшена");

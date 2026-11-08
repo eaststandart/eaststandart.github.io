@@ -22,7 +22,6 @@ function getCommentUploadSession() {
   // Редактирование существующего черновика
   if (currentCommentDraft) {
     const draft = currentCommentDraft;
-
     return {
       date: draft.date,
       timestamp: draft.timestamp,
@@ -31,14 +30,30 @@ function getCommentUploadSession() {
     };
   }
 
-  // Создание нового комментария
+  // Текущие значения формы
+  const date = document.getElementById("target-date")?.value.trim();
+  const discussion = document.getElementById("discussion-combo")?.value.trim();
+  const teacher = localStorage.getItem("github_comment_logged_user");
+
+  // Создание новой сессии
   if (!currentCommentSession) {
     currentCommentSession = {
-      date: document.getElementById("target-date")?.value.trim(),
+      date,
       timestamp: String(Math.floor(Date.now() / 1000)),
-      discussion: document.getElementById("discussion-combo")?.value.trim(),
-      teacher: localStorage.getItem("github_comment_logged_user")
+      discussion,
+      teacher
     };
+  } else {
+    // Заполняем отсутствующие параметры, не меняя уже сохранённые
+    if (!currentCommentSession.date && date) {
+      currentCommentSession.date = date;
+    }
+    if (!currentCommentSession.discussion && discussion) {
+      currentCommentSession.discussion = discussion;
+    }
+    if (!currentCommentSession.teacher && teacher) {
+      currentCommentSession.teacher = teacher;
+    }
   }
 
   return currentCommentSession;

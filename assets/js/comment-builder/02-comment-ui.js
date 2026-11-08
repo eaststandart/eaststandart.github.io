@@ -43,6 +43,9 @@ function initCommentInterface() {
   const dateInput = document.getElementById("target-date");
   if (dateInput) dateInput.value = defaultDateStr;
 
+  const discussionInput = document.getElementById("discussion-combo");
+  if (discussionInput) discussionInput.value = "";
+
   showNotify("Интерфейс конструктора готов!", "success");
   
   const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";

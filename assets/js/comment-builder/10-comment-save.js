@@ -41,7 +41,7 @@ function collectCommentMedia(containerId, type) {
             .map(file => file.name)
         : [];
 
-      if (!title && !description && !files.length) return null;
+      if (!files.length) return null;
 
       return {
         title: title || (type === "photo" ? "Фотоматериалы" : "Видеоматериалы"),

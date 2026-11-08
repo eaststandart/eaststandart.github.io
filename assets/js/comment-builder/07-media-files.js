@@ -199,6 +199,22 @@ function renderMediaFiles(block) {
 
   const files = getMediaFilesForBlock(block);
 
+  const type = getMediaBlockType(block);
+  const fields = type === "photo"
+    ? [".photo-h3-title", ".photo-block-desc"]
+    : [".video-h3-title", ".video-block-desc"];
+
+  fields.forEach(selector => {
+    const field = block.querySelector(selector);
+    if (!field) return;
+
+    field.disabled = files.length === 0;
+
+    if (!files.length) {
+      field.value = "";
+    }
+  });
+
   indicator.style.display = files.length ? "block" : "none";
 
   files.forEach(mediaFile => {

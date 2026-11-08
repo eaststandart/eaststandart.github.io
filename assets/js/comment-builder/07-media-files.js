@@ -234,7 +234,21 @@ function removeMediaFile(block, fileId) {
   renderMediaFiles(block);
 
   if (block.mediaFiles.length < previousCount) {
-    showNotify("Файл удалён.", "info");
+    const pendingCount = block.mediaFiles.filter(
+      file => file.kind === "local"
+    ).length;
+
+    if (pendingCount > 0) {
+      showNotify(
+        `Осталось файлов: ${pendingCount}. Ожидают загрузки.`,
+        "info"
+      );
+    } else {
+      showNotify(
+        "Новых медиафайлов для загрузки нет.",
+        "info"
+      );
+    }
   }
 }
 

@@ -244,13 +244,21 @@ function removeMediaFile(block, fileId) {
   renderMediaFiles(block);
 
   if (block.mediaFiles.length < previousCount) {
-    const pendingCount = block.mediaFiles.filter(
-      file => file.kind === "local"
-    ).length;
+    const totalPending = Array.from(
+      document.querySelectorAll(".media-sub-block")
+    ).reduce((total, item) => {
+      const files = Array.isArray(item.mediaFiles)
+        ? item.mediaFiles
+        : [];
 
-    if (pendingCount > 0) {
+      return total + files.filter(
+        file => file.kind === "local"
+      ).length;
+    }, 0);
+
+    if (totalPending > 0) {
       showNotify(
-        `Осталось файлов: ${pendingCount}. Ожидают загрузки.`,
+        `Осталось файлов: ${totalPending}. Ожидают загрузки.`,
         "info"
       );
     } else {

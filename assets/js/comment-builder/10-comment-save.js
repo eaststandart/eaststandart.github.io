@@ -203,8 +203,11 @@ async function handleCommentSubmit() {
     showNotify("Сохранение комментария...", "info");
     const saved = await saveCommentMarkdown(session, markdown);
 
+    const published = document.getElementById("publish-now-flag")?.checked === true;
+    const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
+
     showNotify(
-      `Комментарий сохранён: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
+      `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
       "success"
     );
 

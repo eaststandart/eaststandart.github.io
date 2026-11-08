@@ -163,6 +163,13 @@ function updatePublishLabel() {
   
   if (!publishFlag) return;
   const isChecked = publishFlag.checked;
+
+  const submitBtn = document.getElementById("submit-btn");
+  if (submitBtn) {
+    submitBtn.textContent = isChecked
+      ? "Создать комментарий"
+      : "Сохранить черновик";
+  }
   
   if (isChecked) {
     if (labelText) labelText.innerText = "🔥 Опубликовать сейчас (published: true)";

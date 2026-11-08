@@ -267,3 +267,31 @@ async function uploadLocalMediaFiles(session) {
     uploaded: uploaded
   };
 }
+
+/**
+ * Обработчик кнопки загрузки медиафайлов
+ */
+async function handleMediaUpload() {
+  if (window.commentFormLocked) return;
+
+  let message = "";
+  let type = "success";
+
+  try {
+    setFormLock(true, "Загрузка медиафайлов...");
+
+    const session = getCommentUploadSession();
+    const result = await uploadLocalMediaFiles(session);
+
+    message = result.uploaded > 0
+      ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
+      : "Новых медиафайлов для загрузки нет.";
+  } catch (error) {
+    message = error.message || "Ошибка загрузки медиафайлов.";
+    type = "error";
+  } finally {
+    setFormLock(false);
+  }
+
+  showNotify(message, type);
+}

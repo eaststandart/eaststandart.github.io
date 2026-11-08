@@ -108,7 +108,6 @@ function addMediaFiles(block, files, type) {
   }
 
   const rejectedFiles = [];
-  let addedCount = 0;
 
   files.forEach(file => {
     if (!validateMediaFile(file, type)) {
@@ -122,8 +121,6 @@ function addMediaFiles(block, files, type) {
       kind: "local",
       file: file
     });
-
-    addedCount++;
   });
 
   renderMediaFiles(block);
@@ -133,11 +130,24 @@ function addMediaFiles(block, files, type) {
       `Недопустимый формат файла: ${rejectedFiles.join(", ")}`,
       "error"
     );
-  } else if (addedCount > 0) {
-    showNotify(
-      `Добавлено файлов: ${addedCount}. Ожидают загрузки.`,
-      "info"
+  } else {
+    const pendingCount = document.querySelectorAll(
+      ".media-sub-block"
     );
+
+    const totalPending = Array.from(pendingCount).reduce(
+      (total, item) => total + (item.mediaFiles || []).filter(
+        file => file.kind === "local"
+      ).length,
+      0
+    );
+
+    if (totalPending > 0) {
+      showNotify(
+        `Добавлено файлов: ${totalPending}. Ожидают загрузки.`,
+        "info"
+      );
+    }
   }
 }
 

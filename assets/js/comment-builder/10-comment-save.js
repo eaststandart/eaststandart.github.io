@@ -183,6 +183,17 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
   const existingFile = await getCurrentFile();
   let sha = existingFile?.sha || null;
 
+  if (
+    existingFile?.content &&
+    decodeGithubContent(existingFile.content) === markdown
+  ) {
+    return {
+      fileName,
+      result: existingFile,
+      alreadySaved: true
+    };
+  }
+
   let response = await putFile(sha);
 
   if (response.status === 409) {

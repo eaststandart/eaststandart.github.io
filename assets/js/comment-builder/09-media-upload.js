@@ -101,6 +101,19 @@ async function uploadSingleMediaFile(file, fileName) {
     contentLength: content.length
   });
 
+  console.log("UPLOAD FINAL CHECK", {
+    url,
+    method: "PUT",
+    fileName,
+    contentLength: content.length,
+    tokenExists: !!accessToken,
+    tokenMatchesStorage: accessToken === localStorage.getItem("github_comment_token"),
+    bodyLength: JSON.stringify({
+      message: `Upload media: ${fileName}`,
+      content
+    }).length
+  });
+
   const response = await fetch(url, {
     method: "PUT",
     headers: {

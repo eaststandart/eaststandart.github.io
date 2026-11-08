@@ -33,8 +33,9 @@ function parseManifestContent(fileName, text, sha) {
     const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
 
     const articleTitle =
-      meta.title ||
-      (titleMatch ? titleMatch[1].trim() : "Без заголовка");
+      meta.title !== undefined
+        ? meta.title
+        : (titleMatch ? titleMatch[1].trim() : "");
 
     const mediaRegex =
       /^###\s+(.+?)\s*<!--\s*\[блок\s+(фото|видео)\]\s*-->[ \t]*$/gim;

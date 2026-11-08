@@ -14,21 +14,30 @@ console.log("[TEST 05] Модуль injector загружен");
 function refreshDraftSelect() {
   const select = document.getElementById("draft-select");
   const isDraftMode = document.getElementById("is-draft-mode")?.checked;
-
   if (!select) return;
 
-  if (isDraftMode) {
-    let html = `<option value="">-- Сохраненный черновик --</option>`;
+  select.replaceChildren();
 
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = isDraftMode
+    ? "-- Сохраненный черновик --"
+    : "Выберите черновик -->";
+  select.appendChild(placeholder);
+
+  if (isDraftMode) {
     mockDrafts.forEach(draft => {
-      html += `<option value="${draft.id}">[${draft.date}] ${draft.title}</option>`;
+      const option = document.createElement("option");
+      option.value = draft.id;
+
+      const title = String(draft.title || "").trim() || "Без заголовка";
+      option.textContent = `[${draft.date}] ${title}`;
+
+      select.appendChild(option);
     });
 
-    select.innerHTML = html;
     select.disabled = false;
-
   } else {
-    select.innerHTML = `<option value="">Выберите черновик --></option>`;
     select.disabled = true;
   }
 }

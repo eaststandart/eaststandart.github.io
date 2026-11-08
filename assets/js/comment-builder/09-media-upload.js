@@ -196,29 +196,37 @@ async function uploadLocalMediaFiles(session) {
     Array.from(container.querySelectorAll(".media-sub-block"))
   );
 
-  const counters = {
-    photo: 0,
-    video: 0
-  };
-
+  const counters = { photo: 0, video: 0 };
   const uploads = [];
 
+  // Сначала учитываем индексы всех уже загруженных файлов.
   blocks.forEach(block => {
     const type = getMediaBlockType(block);
+    if (!type || !Array.isArray(block.mediaFiles)) return;
 
+    block.mediaFiles.forEach(mediaFile => {
+      if (mediaFile.kind !== "existing") return;
+
+      const match = mediaFile.name?.match(
+        new RegExp(`_${type}_(\\d+)\\.[^.]+$`, "i")
+      );
+
+      if (match) {
+        counters[type] = Math.max(counters[type], Number(match[1]));
+      }
+    });
+  });
+
+  // Затем назначаем новым файлам следующие индексы.
+  blocks.forEach(block => {
+    const type = getMediaBlockType(block);
     if (!type || !Array.isArray(block.mediaFiles)) return;
 
     block.mediaFiles.forEach(mediaFile => {
       if (mediaFile.kind !== "local") return;
 
       counters[type]++;
-
-      uploads.push({
-        block,
-        mediaFile,
-        type,
-        index: counters[type]
-      });
+      uploads.push({ block, mediaFile, type, index: counters[type] });
     });
   });
 

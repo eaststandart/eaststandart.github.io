@@ -94,8 +94,8 @@ function addPhotoBlock(initialTitle = "", initialDesc = "") {
   subBlock.id = `photo-sub-block-${photoBlockIdx}`;
 
   subBlock.innerHTML = `
-    <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериалов">
-    <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока..."></textarea>
+    <input type="text" class="photo-h3-title" placeholder="Заголовок для фотоматериалов" disabled>
+    <textarea class="photo-block-desc" rows="2" placeholder="Краткое описание блока..." disabled></textarea>
     <div class="drop-zone" data-media-type="photo">Нажмите для выбора или перетащите фото в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
     <div class="btn-delete-container" style="display: none;">
@@ -133,8 +133,8 @@ function addVideoBlock(initialTitle = "", initialDesc = "") {
   subBlock.id = `video-sub-block-${videoBlockIdx}`;
   
   subBlock.innerHTML = `
-    <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериалов" value="${initialTitle}">
-    <textarea class="video-block-desc" rows="2" placeholder="Краткое описание блока...">${initialDesc}</textarea>
+    <input type="text" class="video-h3-title" placeholder="Заголовок для видеоматериалов" value="${initialTitle}" disabled>
+    <textarea class="video-block-desc" rows="2" placeholder="Краткое описание блока..." disabled>${initialDesc}</textarea>
     <div class="drop-zone" data-media-type="video">Нажмите для выбора или перетащите видео в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
     <div class="btn-delete-container" style="display: none;">

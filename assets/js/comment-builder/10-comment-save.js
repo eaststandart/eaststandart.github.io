@@ -62,7 +62,7 @@ function buildCommentMarkdown(session) {
   const photos = collectCommentMedia("photos-meta-container", "photo");
   const videos = collectCommentMedia("videos-meta-container", "video");
 
-  if (!title && !mainText && !footer && !photos.length && !videos.length) {
+  if (!currentCommentDraft && !title && !mainText && !footer && !photos.length && !videos.length) {
     throw new Error("Комментарий пустой. Добавьте текст или медиаматериалы.");
   }
 

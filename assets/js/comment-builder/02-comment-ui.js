@@ -121,7 +121,7 @@ function updatePhotoDeleteButtons() {
   blocks.forEach((block) => {
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
-      deleteContainer.style.display = "block";
+      deleteContainer.classList.add("is-visible");
     }
   });
 }
@@ -133,7 +133,7 @@ function updateVideoDeleteButtons() {
   blocks.forEach((block) => {
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
-      deleteContainer.style.display = "block";
+      deleteContainer.classList.add("is-visible");
     }
   });
 }
@@ -154,8 +154,8 @@ function addPhotoBlock(initialTitle = "", initialDesc = "") {
     <input type="text" class="photo-h3-title" data-limit-type="mediaTitle" placeholder="Заголовок для фотоматериалов" disabled>
     <textarea class="photo-block-desc" data-limit-type="mediaDescription" rows="2" placeholder="Краткое описание блока..." disabled></textarea>
     <div class="drop-zone" data-media-type="photo">Нажмите для выбора или перетащите фото в этот блок</div>
-    <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
-    <div class="btn-delete-container" style="display: none;">
+    <div class="file-link-indicator"></div>
+    <div class="btn-delete-container">
       <button class="btn-delete-block" type="button" onclick="deletePhotoBlock('${subBlock.id}')">[Удалить блок]</button>
     </div>
   `;
@@ -194,8 +194,8 @@ function addVideoBlock(initialTitle = "", initialDesc = "") {
     <input type="text" class="video-h3-title" data-limit-type="mediaTitle" placeholder="Заголовок для видеоматериалов" disabled>
     <textarea class="video-block-desc" data-limit-type="mediaDescription" rows="2" placeholder="Краткое описание блока..." disabled></textarea>
     <div class="drop-zone" data-media-type="video">Нажмите для выбора или перетащите видео в этот блок</div>
-    <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
-    <div class="btn-delete-container" style="display: none;">
+    <div class="file-link-indicator"></div>
+    <div class="btn-delete-container">
       <button class="btn-delete-block" type="button" onclick="deleteVideoBlock('${subBlock.id}')">[Удалить блок]</button>
     </div>
   `;
@@ -240,10 +240,7 @@ function updatePublishLabel() {
   if (labelText && labelText.parentNode &&
       !document.getElementById("publish-as-bot-flag")) {
     const botLabel = document.createElement("span");
-    botLabel.style.marginLeft = "12px";
-    botLabel.style.display = "inline-flex";
-    botLabel.style.alignItems = "center";
-    botLabel.style.gap = "5px";
+    botLabel.className = "publish-bot-option";
 
     const botFlag = document.createElement("input");
     botFlag.type = "checkbox";

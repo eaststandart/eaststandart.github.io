@@ -81,7 +81,6 @@ function createMediaFileInput(block, type) {
   input.className = "media-file-input";
   input.accept = MEDIA_FILE_RULES[type].accept;
   input.multiple = true;
-  input.style.display = "none";
 
   input.addEventListener("change", () => {
     addMediaFiles(block, Array.from(input.files || []), type);
@@ -211,7 +210,7 @@ function renderMediaFiles(block) {
     }
   });
 
-  indicator.style.display = files.length ? "block" : "none";
+  indicator.classList.toggle("is-visible", files.length > 0);
 
   files.forEach(mediaFile => {
     const row = document.createElement("div");
@@ -314,9 +313,9 @@ document.addEventListener("click", event => {
     const input = document.createElement("input");
 
     input.type = "file";
+    input.className = "media-file-input";
     input.accept = MEDIA_FILE_RULES[type].accept;
-    input.style.display = "none";
-
+  
     input.addEventListener("change", () => {
       const selectedFile = input.files?.[0];
       const target = block.mediaFiles?.find(

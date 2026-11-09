@@ -6,6 +6,10 @@
  * @version 1.0.0
  */
 
+// ФУНКЦИЯ: showNotify
+
+// НАЗНАЧЕНИЕ: Показывает пользователю уведомление заданного типа.
+
 function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;

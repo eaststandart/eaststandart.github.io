@@ -1,11 +1,9 @@
 ---
 author: "TechLab"
 layout: page
-description: 
-title: Конструктор дискуссий
+title: Тестирование Конструктора
 permalink: /comment-builder/
-emoji: "💬"
-custom_css: "/assets/css/comment-builder.css"
+custom_css: ["/assets/css/comment-builder.css", "/assets/css/journal-attendance.css"]
 ---
 
 {% include comment-builder.liquid %}

@@ -33,9 +33,7 @@ function initCommentInterface() {
   photoBlockIdx = 0;
   videoBlockIdx = 0;
 
-  // Генерируем по одному дефолтному пустому блоку 1 в 1 как в монолитном скрипте
-  addPhotoBlock();
-  addVideoBlock();
+  // Медиаблоки создаются только по нажатию кнопок добавления.
 
   // Настраиваем дефолтное состояние Линии 2 шапки
   const select = document.getElementById("draft-select");
@@ -99,9 +97,6 @@ function resetCommentForm() {
   photoBlockIdx = 0;
   videoBlockIdx = 0;
 
-  addPhotoBlock();
-  addVideoBlock();
-
   updatePublishLabel();
 
   showNotify("Готово. Форма очищена.", "success");
@@ -122,8 +117,7 @@ function updatePhotoDeleteButtons() {
   blocks.forEach((block) => {
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
-      // Если блок единственный на экране — прячем кнопку удаления
-      deleteContainer.style.display = (blocks.length > 1) ? "block" : "none";
+      deleteContainer.style.display = "block";
     }
   });
 }
@@ -135,8 +129,7 @@ function updateVideoDeleteButtons() {
   blocks.forEach((block) => {
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
-      // Если блок единственный на экране — прячем кнопку удаления
-      deleteContainer.style.display = (blocks.length > 1) ? "block" : "none";
+      deleteContainer.style.display = "block";
     }
   });
 }

@@ -45,9 +45,19 @@ function getMarkdownSections(text, level) {
 }
 
 function getMarkdownField(content, fieldName) {
+  const escapedName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\function getMarkdownField(content, fieldName) {
   const fields = getMarkdownSections(content, 3);
   const field = fields.find(item => item.title === fieldName);
   return field ? field.content.trim() : "";
+}");
+  const regex = new RegExp("^###[ \\t]+" + escapedName + "[ \\t]*$", "gm");
+  const matches = [...content.matchAll(regex)];
+  if (!matches.length) return "";
+
+  const match = matches[0];
+  const end = matches.length > 1 ? matches[1].index : content.length;
+
+  return content.substring(match.index + match[0].length, end).trim();
 }
 
 function parseNewManifestBody(body) {
@@ -80,9 +90,11 @@ function parseNewManifestBody(body) {
     if (normalizedType === "🎥 Видеоматериалы") type = "video";
     if (!type) return;
 
-    const fields = getMarkdownSections(section.content, 3);
-    const blockTitle = fields.length ? fields[0].title : "";
-    const blockContent = fields.length ? fields[0].content : section.content;
+    const titleMatch = section.content.match(/^###[ \\t]+([^\\r\\n]+)[ \\t]*(?:\\r?\\n|$)/);
+    const blockTitle = titleMatch ? titleMatch[1].trim() : "";
+    const blockContent = titleMatch
+      ? section.content.substring(titleMatch[0].length).trim()
+      : section.content;
 
     const files = [...blockContent.matchAll(/!\[\[([^\]]+)\]\]/g)]
       .map(file => file[1].split("|")[0].trim());

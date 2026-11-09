@@ -33,6 +33,8 @@ let photoBlockIdx = 0;
 let videoBlockIdx = 0;
 
 // Функция инициализации: жестко набиваем селект дефолтным текстом и блокируем
+// ФУНКЦИЯ: initForm
+// НАЗНАЧЕНИЕ: Инициализирует поля и элементы интерфейса конструктора.
 function initForm() {
     const select = document.getElementById("draft-select");
     if (select) {
@@ -44,11 +46,15 @@ function initForm() {
 }
 
 // Отслеживание ручного изменения поля даты
+// ФУНКЦИЯ: updateNormalDateValue
+// НАЗНАЧЕНИЕ: Устанавливает текущую дату в поле формы.
 function updateNormalDateValue(val) {
     currentNormalDate = val;
 }
 
 // АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ФОТО
+// ФУНКЦИЯ: updatePhotoDeleteButtons
+// НАЗНАЧЕНИЕ: Обновляет доступность кнопок удаления фотоблоков.
 function updatePhotoDeleteButtons() {
     const blocks = document.querySelectorAll("#photos-meta-container .media-sub-block");
     blocks.forEach((block) => {
@@ -60,6 +66,8 @@ function updatePhotoDeleteButtons() {
 }
 
 // АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ВИДЕО
+// ФУНКЦИЯ: updateVideoDeleteButtons
+// НАЗНАЧЕНИЕ: Обновляет доступность кнопок удаления видеоблоков.
 function updateVideoDeleteButtons() {
     const blocks = document.querySelectorAll("#videos-meta-container .media-sub-block");
     blocks.forEach((block) => {
@@ -71,6 +79,8 @@ function updateVideoDeleteButtons() {
 }
 
 // ДОБАВЛЕНИЕ БЛОКА ФОТО С ВАШИМИ ПОДПИСЯМИ И КНОПКОЙ УДАЛЕНИЯ
+// ФУНКЦИЯ: addPhotoBlock
+// НАЗНАЧЕНИЕ: Создаёт и добавляет новый фотоблок в форму.
 function addPhotoBlock() {
     photoBlockIdx++;
     const container = document.getElementById("photos-meta-container");
@@ -92,6 +102,10 @@ function addPhotoBlock() {
     updatePhotoDeleteButtons();
 }
 
+// ФУНКЦИЯ: deletePhotoBlock
+
+// НАЗНАЧЕНИЕ: Удаляет выбранный фотоблок.
+
 function deletePhotoBlock(blockId) {
     const block = document.getElementById(blockId);
     if (block) {
@@ -101,6 +115,8 @@ function deletePhotoBlock(blockId) {
 }
 
 // ДОБАВЛЕНИЕ БЛОКА ВИДЕО С ВАШИМИ ПОДПИСЯМИ И КНОПКОЙ УДАЛЕНИЯ
+// ФУНКЦИЯ: addVideoBlock
+// НАЗНАЧЕНИЕ: Создаёт и добавляет новый видеоблок в форму.
 function addVideoBlock() {
     videoBlockIdx++;
     const container = document.getElementById("videos-meta-container");
@@ -122,6 +138,10 @@ function addVideoBlock() {
     updateVideoDeleteButtons();
 }
 
+// ФУНКЦИЯ: deleteVideoBlock
+
+// НАЗНАЧЕНИЕ: Удаляет выбранный видеоблок.
+
 function deleteVideoBlock(blockId) {
     const block = document.getElementById(blockId);
     if (block) {
@@ -130,6 +150,8 @@ function deleteVideoBlock(blockId) {
     }
 }
 // ФУНКЦИЯ БЛОКИРОВКИ ИНТЕРФЕЙСА ПРИ СТАТУСЕ ON
+// ФУНКЦИЯ: setFormLock
+// НАЗНАЧЕНИЕ: Блокирует или разблокирует рабочую область конструктора.
 function setFormLock(isLocked, message = "") {
     const submitBtn = document.getElementById("submit-btn");
     const inputs = document.querySelectorAll("input, textarea, select");
@@ -150,6 +172,8 @@ function setFormLock(isLocked, message = "") {
 }
 
 // ДИНАМИЧЕСКИЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕКСТА КНОПКИ СТРОГО ПО ТЗ
+// ФУНКЦИЯ: updatePublishLabel
+// НАЗНАЧЕНИЕ: Синхронизирует текст кнопки с состоянием публикации.
 function updatePublishLabel() {
     const isChecked = document.getElementById("publish-now-flag").checked;
     const labelText = document.getElementById("publish-label-text");
@@ -165,6 +189,8 @@ function updatePublishLabel() {
 }
 
 // ЛИНИЯ 2 В ДЕЙСТВИИ: Включение и отключение селекта Линии 2
+// ФУНКЦИЯ: toggleDraftBehavior
+// НАЗНАЧЕНИЕ: Переключает режим выбора и загрузки черновиков.
 function toggleDraftBehavior() {
     const isDraftMode = document.getElementById("is-draft-mode").checked;
     const select = document.getElementById("draft-select");
@@ -202,6 +228,8 @@ function toggleDraftBehavior() {
 }
 
 // ЖЕСТКАЯ СИНХРОНИЗАЦИЯ: Моментальное наполнение раздельных полей Номера и Коммита на Линии 1
+// ФУНКЦИЯ: loadDraftData
+// НАЗНАЧЕНИЕ: Восстанавливает данные выбранного черновика в форме.
 function loadDraftData(draftId) {
     if (!draftId) return;
     const selectedDraft = mockDrafts.find(d => d.id === draftId);
@@ -226,6 +254,8 @@ function loadDraftData(draftId) {
 }
 
 // СКВОЗНАЯ ПЕРЕНУМЕРАЦИЯ И СБОРКА МАНИФЕСТА С РАЗДЕЛЬНЫХ ПОЛЕЙ ШАПКИ
+// ФУНКЦИЯ: generateMarkdownOutput
+// НАЗНАЧЕНИЕ: Формирует Markdown-результат из заполненных полей конструктора.
 function generateMarkdownOutput() {
     const date = document.getElementById("target-date").value;
     // Считываем значения напрямую из независимых полей без ручного парсинга дефиса

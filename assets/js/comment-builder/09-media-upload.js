@@ -17,9 +17,11 @@ function getCommentUploadSession() {
   // Редактирование существующего черновика
   if (currentCommentDraft) {
     const draft = currentCommentDraft;
+    const identityMatch = String(draft.id || "").match(/^\d{4}-\d{2}-\d{2}-(\d+)_discussion_/);
     return {
       date: draft.date,
-      timestamp: draft.timestamp,
+      timestamp: identityMatch ? identityMatch[1] : draft.timestamp,
+      frontMatterTimestamp: draft.timestamp,
       discussion: draft.discussion,
       teacher: draft.teacher
     };
@@ -52,6 +54,48 @@ function getCommentUploadSession() {
   }
 
   return currentCommentSession;
+}
+
+// ФУНКЦИЯ: prepareLocalMediaFileNames
+// НАЗНАЧЕНИЕ: Заранее назначает постоянные имена новым файлам до формирования Markdown.
+function prepareLocalMediaFileNames(session) {
+  const containers = [
+    document.getElementById("photos-meta-container"),
+    document.getElementById("videos-meta-container")
+  ].filter(Boolean);
+
+  const blocks = containers.flatMap(container =>
+    Array.from(container.querySelectorAll(".media-sub-block"))
+  );
+
+  const counters = { photo: 0, video: 0 };
+
+  blocks.forEach(block => {
+    const type = getMediaBlockType(block);
+    if (!type || !Array.isArray(block.mediaFiles)) return;
+
+    block.mediaFiles.forEach(mediaFile => {
+      const name = mediaFile.uploadName || mediaFile.name || "";
+      const match = name.match(new RegExp("_" + type + "_(\\d+)\\.[^.]+$", "i"));
+      if (match) counters[type] = Math.max(counters[type], Number(match[1]));
+    });
+  });
+
+  blocks.forEach(block => {
+    const type = getMediaBlockType(block);
+    if (!type || !Array.isArray(block.mediaFiles)) return;
+
+    block.mediaFiles.forEach(mediaFile => {
+      if (mediaFile.kind !== "local" || mediaFile.uploadName) return;
+      counters[type]++;
+      mediaFile.uploadName = createMediaUploadName(
+        mediaFile.file,
+        type,
+        session,
+        counters[type]
+      );
+    });
+  });
 }
 
 // ФУНКЦИЯ: mediaFileToBase64
@@ -216,7 +260,7 @@ async function uploadLocalMediaFiles(session) {
   let uploaded = 0;
 
   for (const item of uploads) {
-    const fileName = createMediaUploadName(
+    const fileName = item.mediaFile.uploadName || createMediaUploadName(
       item.mediaFile.file,
       item.type,
       session,
@@ -231,6 +275,7 @@ async function uploadLocalMediaFiles(session) {
     // После успешной загрузки сохраняем новое имя.
     // При повторном запуске этот файл уже не загрузится повторно.
     item.mediaFile.name = result.content.name;
+    item.mediaFile.uploadName = result.content.name;
     item.mediaFile.kind = "existing";
     item.mediaFile.file = null;
 

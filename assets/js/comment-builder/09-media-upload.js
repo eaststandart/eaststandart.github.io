@@ -142,7 +142,7 @@ function waitMediaUploadRetry(seconds, attempt) {
     let remaining = seconds;
 
     showNotify(
-      `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
+      `Ошибка сети. Повтор через ${remaining} сек.`,
       "info"
     );
 
@@ -151,12 +151,13 @@ function waitMediaUploadRetry(seconds, attempt) {
 
       if (remaining <= 0) {
         clearInterval(timer);
+        showNotify(`Попытка сохранения ${attempt}/3`, "info");
         resolve();
         return;
       }
 
       showNotify(
-        `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
+        `Ошибка сети. Повтор через ${remaining} сек.`,
         "info"
       );
     }, 1000);

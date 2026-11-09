@@ -69,6 +69,7 @@ function buildCommentMarkdown(session) {
   const footer = document.getElementById("post-footer")?.value.trim() || "";
   const commit = document.getElementById("commit-id")?.value.trim() || "";
   const published = document.getElementById("publish-now-flag")?.checked === true;
+  const publishAsBot = document.getElementById("publish-as-bot-flag")?.checked === true;
 
   const photos = collectCommentMedia("photos-meta-container", "photo");
   const videos = collectCommentMedia("videos-meta-container", "video");
@@ -79,7 +80,7 @@ function buildCommentMarkdown(session) {
 
   const frontMatter = [
     "---",
-    "publish_as_bot: true",
+    `publish_as_bot: ${publishAsBot}`,
     `discussion_number: ${session.discussion}`,
     ...(commit ? [`discussion_comment: ${commit}`] : []),
     `date: ${session.date}`,

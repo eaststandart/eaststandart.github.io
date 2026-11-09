@@ -8,7 +8,8 @@
 
 // ЕДИНЫЕ НАСТРОЙКИ ОГРАНИЧЕНИЙ ДЛИНЫ ТЕКСТА.
 window.COMMENT_TEXT_LIMITS = Object.freeze({
-  commentDescription: 1000,
+  block2Title: 50,
+  block2Description: 1000,
   mediaTitle: 50,
   mediaDescription: 500
 });
@@ -87,12 +88,19 @@ function validateCommentForm() {
     if (error) return error;
   }
 
-  const commentDescription = document.querySelector("#post-text");
-  if (commentDescription) {
+  const block2Fields = [
+    { selector: "#post-title", name: "Заголовок комментария" },
+    { selector: "#post-text", name: "Описание комментария" }
+  ];
+
+  for (const fieldInfo of block2Fields) {
+    const field = document.querySelector(fieldInfo.selector);
+    if (!field) continue;
+
     const error = validateCommentText(
-      commentDescription.value,
-      "Описание комментария",
-      window.COMMENT_TEXT_LIMITS.commentDescription
+      field.value,
+      fieldInfo.name,
+      window.COMMENT_TEXT_LIMITS[field.dataset.limitType]
     );
     if (error) return error;
   }

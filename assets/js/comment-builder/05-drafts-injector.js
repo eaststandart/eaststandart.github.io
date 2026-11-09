@@ -123,7 +123,7 @@ async function toggleDraftBehavior() {
 function createDraftFileLink(fileName) {
   const isVideo = /\.(mp4|mov|avi|mkv|webm)$/i.test(fileName);
   const baseUrl = isVideo
-    ? `https://github.com/${repo_owner}/${repo_name}/raw/refs/heads/main/_input/`
+    ? `https://cdn.jsdelivr.net/gh/${repo_owner}/${repo_name}@main/_input/`
     : `https://github.com/${repo_owner}/${repo_name}/blob/main/_input/`;
 
   const encodedPath = fileName

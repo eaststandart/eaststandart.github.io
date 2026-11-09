@@ -224,7 +224,9 @@ function renderMediaFiles(block) {
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
-      name.textContent = displayName;
+      const link = createDraftFileLink(mediaFile.name);
+      link.textContent = displayName;
+      name.appendChild(link);
     } else {
       name.textContent = mediaFile.kind === "missing"
         ? displayName + " (отсутствует)"

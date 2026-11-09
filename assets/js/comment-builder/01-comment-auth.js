@@ -126,7 +126,7 @@ function checkTeacherAuthorization() {
 
     // Учитываем созданные при инициализации элементы и открываем форму.
     showNotify(
-      "Преподаватель: " + userLogin,
+      "👨‍🎓 Преподаватель: " + userLogin,
       "info"
     );
     setFormLock(true);

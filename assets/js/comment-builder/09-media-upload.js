@@ -170,11 +170,10 @@ async function uploadSingleMediaFileOnce(file, fileName) {
     `https://api.github.com/repos/${repo_owner}/${repo_name}` +
     `/contents/_input/${encodeURIComponent(fileName)}`;
 
-  const tokenAtStart = accessToken;
   const content = await mediaFileToBase64(file);
 
   const headers = {
-    "Authorization": `Bearer ${tokenAtStart}`,
+    "Authorization": `Bearer ${accessToken}`,
     "Accept": "application/vnd.github+json",
     "Content-Type": "application/json"
   };
@@ -203,18 +202,6 @@ async function uploadSingleMediaFileOnce(file, fileName) {
   };
 
   if (sha) body.sha = sha;
-
-  console.log("[MEDIA UPLOAD DIAGNOSTIC]", {
-    fileName,
-    fileSizeBytes: file.size,
-    base64Length: content.length,
-    getStatus: checkResponse.status,
-    tokenLengthAtStart: tokenAtStart?.length || 0,
-    tokenLengthBeforePut: accessToken?.length || 0,
-    tokenUnchanged: tokenAtStart === accessToken,
-    authorizationHeaderMatchesCurrentToken:
-      headers.Authorization === `Bearer ${accessToken}`
-  });
 
   const response = await fetch(url, {
     method: "PUT",

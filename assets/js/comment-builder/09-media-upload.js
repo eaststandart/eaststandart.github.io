@@ -314,9 +314,16 @@ async function handleMediaUpload() {
     const session = getCommentUploadSession();
     const result = await uploadLocalMediaFiles(session);
 
-    message = result.uploaded > 0
-      ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
-      : "Новых медиафайлов для загрузки нет.";
+    message = result.errors.length
+      ? `Загружено: ${result.uploaded}. Не загружено: ${result.errors.length}. Отсутствующие файлы оставлены в списке.`
+      : result.uploaded > 0
+        ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
+        : "Новых медиафайлов для загрузки нет.";
+
+    if (result.errors.length) {
+      type = "error";
+      console.warn("[MEDIA UPLOAD] Не загружены файлы:", result.errors);
+    }
   } catch (error) {
     message = error.message || "Ошибка загрузки медиафайлов.";
     type = "error";

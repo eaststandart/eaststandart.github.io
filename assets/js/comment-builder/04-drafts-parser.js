@@ -51,16 +51,10 @@ function getMarkdownField(content, fieldName) {
 
   if (startIndex === -1) return "";
 
-  const knownFields = [
-    "### Заголовок комментария",
-    "### Основной текст",
-    "### Подвал комментария"
-  ];
-
   let endIndex = lines.length;
 
   for (let index = startIndex + 1; index < lines.length; index++) {
-    if (knownFields.includes(lines[index].trim())) {
+    if (/^###\s+/.test(lines[index].trim())) {
       endIndex = index;
       break;
     }
@@ -98,19 +92,32 @@ function parseNewManifestBody(body) {
     if (normalizedType === "🎥 Видеоматериалы") type = "video";
     if (!type) return;
 
-    const titleMatch = section.content.match(/^###\s+([^\r\n]+)\s*(?:\r?\n|$)/);
-    const blockTitle = titleMatch ? titleMatch[1].trim() : "";
-    const blockContent = titleMatch
-      ? section.content.substring(titleMatch[0].length).trim()
-      : section.content;
+    const hasNamedFields =
+      /^###\s+Заголовок блока\s*$/m.test(section.content) ||
+      /^###\s+Описание блока\s*$/m.test(section.content);
 
-    const files = [...blockContent.matchAll(/!\[\[([^\]]+)\]\]/g)]
+    let blockTitle = "";
+    let description = "";
+
+    if (hasNamedFields) {
+      blockTitle = getMarkdownField(section.content, "Заголовок блока");
+      description = getMarkdownField(section.content, "Описание блока");
+    } else {
+      // Совместимость с промежуточным форматом: первый ### содержит заголовок блока.
+      const titleMatch = section.content.match(/^###\s+([^\r\n]+)\s*(?:\r?\n|$)/);
+      const blockContent = titleMatch
+        ? section.content.substring(titleMatch[0].length).trim()
+        : section.content;
+
+      blockTitle = titleMatch ? titleMatch[1].trim() : "";
+      description = blockContent
+        .replace(/!\[\[[^\]]+\]\]/g, "")
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+        .trim();
+    }
+
+    const files = [...section.content.matchAll(/!\[\[([^\]]+)\]\]/g)]
       .map(file => file[1].split("|")[0].trim());
-
-    const description = blockContent
-      .replace(/!\[\[[^\]]+\]\]/g, "")
-      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-      .trim();
 
     const target = type === "photo" ? photos : videos;
     target.push({

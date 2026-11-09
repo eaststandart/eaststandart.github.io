@@ -94,7 +94,7 @@ async function loadCommentDraftsFromApi() {
       if (typeof refreshDraftSelect === "function") {
         refreshDraftSelect();
       }
-      showNotify("Черновики не обнаружены.", "success");
+      showNotify("Черновиков: 0, Несобрано: 0", "success");
       return true;
     }
 
@@ -142,16 +142,11 @@ async function loadCommentDraftsFromApi() {
       refreshDraftSelect();
     }
 
-    if (mockDrafts.length === 0) {
-      showNotify("Черновики не обнаружены.", "success");
-      return;
-    }
-
     const incompleteCount = mockDrafts.filter(d => d.missingFiles?.length > 0).length;
     const draftCount = mockDrafts.length - incompleteCount;
 
     showNotify(
-      `Загружено: черновиков ${draftCount}, не собрано ${incompleteCount}.`,
+      `Черновиков: ${draftCount}, Несобрано: ${incompleteCount}`,
       "success"
     );
 

@@ -320,6 +320,7 @@ async function handleCommentSubmit() {
       throw new Error(validationError);
     }
 
+    setCommentOperationLock(true);
     setFormLock(true, "Подготовка комментария...");
 
     // При каждом сохранении обновляем только timestamp Front Matter.
@@ -420,5 +421,6 @@ async function handleCommentSubmit() {
 
   } finally {
     setFormLock(false);
+    setCommentOperationLock(false);
   }
 }

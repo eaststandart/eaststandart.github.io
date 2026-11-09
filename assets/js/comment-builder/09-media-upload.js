@@ -57,7 +57,7 @@ function getCommentUploadSession() {
 }
 
 // ФУНКЦИЯ: prepareLocalMediaFileNames
-// НАЗНАЧЕНИЕ: Заранее назначает постоянные имена новым файлам до формирования Markdown.
+// НАЗНАЧЕНИЕ: Назначает новые имена с учётом номеров всех записей, включая отсутствующие.
 function prepareLocalMediaFileNames(session) {
   const containers = [
     document.getElementById("photos-meta-container"),
@@ -75,9 +75,14 @@ function prepareLocalMediaFileNames(session) {
     if (!type || !Array.isArray(block.mediaFiles)) return;
 
     block.mediaFiles.forEach(mediaFile => {
-      const name = mediaFile.uploadName || mediaFile.name || "";
-      const match = name.match(new RegExp("_" + type + "_(\\d+)\\.[^.]+$", "i"));
-      if (match) counters[type] = Math.max(counters[type], Number(match[1]));
+      [
+        mediaFile.missingName,
+        mediaFile.uploadName,
+        mediaFile.name
+      ].filter(Boolean).forEach(name => {
+        const match = name.match(new RegExp("_" + type + "_(\\d+)\\.[^.]+$", "i"));
+        if (match) counters[type] = Math.max(counters[type], Number(match[1]));
+      });
     });
   });
 
@@ -191,7 +196,7 @@ async function uploadSingleMediaFile(file, fileName) {
 }
 
 // ФУНКЦИЯ: uploadLocalMediaFiles
-// НАЗНАЧЕНИЕ: Загрузка всех новых медиафайлов конструктора
+// НАЗНАЧЕНИЕ: Загружает новые файлы, неудачные оставляет в форме как отсутствующие.
 async function uploadLocalMediaFiles(session) {
   if (!accessToken) {
     throw new Error("Нет активного токена GitHub.");
@@ -219,25 +224,24 @@ async function uploadLocalMediaFiles(session) {
   const counters = { photo: 0, video: 0 };
   const uploads = [];
 
-  // Сначала учитываем индексы всех уже загруженных файлов.
+  // Учитываем индексы всех записей, включая отсутствующие.
   blocks.forEach(block => {
     const type = getMediaBlockType(block);
     if (!type || !Array.isArray(block.mediaFiles)) return;
 
     block.mediaFiles.forEach(mediaFile => {
-      if (mediaFile.kind !== "existing") return;
-
-      const match = mediaFile.name?.match(
-        new RegExp(`_${type}_(\\d+)\\.[^.]+$`, "i")
-      );
-
-      if (match) {
-        counters[type] = Math.max(counters[type], Number(match[1]));
-      }
+      [
+        mediaFile.missingName,
+        mediaFile.uploadName,
+        mediaFile.name
+      ].filter(Boolean).forEach(name => {
+        const match = name.match(new RegExp(`_${type}_(\\d+)\\.[^.]+$`, "i"));
+        if (match) counters[type] = Math.max(counters[type], Number(match[1]));
+      });
     });
   });
 
-  // Затем назначаем новым файлам следующие индексы.
+  // Новые файлы получают следующие свободные номера.
   blocks.forEach(block => {
     const type = getMediaBlockType(block);
     if (!type || !Array.isArray(block.mediaFiles)) return;
@@ -245,47 +249,54 @@ async function uploadLocalMediaFiles(session) {
     block.mediaFiles.forEach(mediaFile => {
       if (mediaFile.kind !== "local") return;
 
-      counters[type]++;
-      uploads.push({ block, mediaFile, type, index: counters[type] });
+      if (!mediaFile.uploadName) {
+        counters[type]++;
+        mediaFile.uploadName = createMediaUploadName(
+          mediaFile.file,
+          type,
+          session,
+          counters[type]
+        );
+      }
+
+      uploads.push({ block, mediaFile, type });
     });
   });
 
   if (!uploads.length) {
-    return {
-      success: true,
-      uploaded: 0
-    };
+    return { success: true, uploaded: 0, errors: [] };
   }
 
   let uploaded = 0;
+  const errors = [];
 
   for (const item of uploads) {
-    const fileName = item.mediaFile.uploadName || createMediaUploadName(
-      item.mediaFile.file,
-      item.type,
-      session,
-      item.index
-    );
+    const fileName = item.mediaFile.uploadName;
 
-    const result = await uploadSingleMediaFile(
-      item.mediaFile.file,
-      fileName
-    );
+    try {
+      const result = await uploadSingleMediaFile(item.mediaFile.file, fileName);
 
-    // После успешной загрузки сохраняем новое имя.
-    // При повторном запуске этот файл уже не загрузится повторно.
-    item.mediaFile.name = result.content.name;
-    item.mediaFile.uploadName = result.content.name;
-    item.mediaFile.kind = "existing";
-    item.mediaFile.file = null;
+      item.mediaFile.name = result.content.name;
+      item.mediaFile.uploadName = result.content.name;
+      item.mediaFile.kind = "existing";
+      item.mediaFile.missingName = null;
+      item.mediaFile.file = null;
+      uploaded++;
+    } catch (error) {
+      errors.push({ fileName, message: error.message });
+      item.mediaFile.name = item.mediaFile.missingName || fileName;
+      item.mediaFile.uploadName = null;
+      item.mediaFile.kind = "missing";
+      item.mediaFile.file = null;
+    }
 
-    uploaded++;
     renderMediaFiles(item.block);
   }
 
   return {
-    success: true,
-    uploaded: uploaded
+    success: errors.length === 0,
+    uploaded,
+    errors
   };
 }
 

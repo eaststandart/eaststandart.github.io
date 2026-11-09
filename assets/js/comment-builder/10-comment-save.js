@@ -160,13 +160,14 @@ function waitBeforeRetry(seconds, attempt) {
 
 // ФУНКЦИЯ: saveCommentMarkdownOnce
 // НАЗНАЧЕНИЕ: Выполняет одну попытку создания или обновления Markdown-файла в GitHub.
-async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
+async function saveCommentMarkdownOnce(url, headers, fileName, markdown, knownSha = null) {
   // ФУНКЦИЯ: getCurrentFile
   // НАЗНАЧЕНИЕ: Получает актуальную версию Markdown-файла и его SHA.
   async function getCurrentFile() {
-    const response = await fetch(`${url}?ref=main`, {
+    const response = await fetch(`${url}?ref=main&_=${Date.now()}`, {
       method: "GET",
-      headers
+      headers,
+      cache: "no-store"
     });
 
     if (response.status === 404) return null;
@@ -199,7 +200,7 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
     });
   }
 
-  const existingFile = await getCurrentFile();
+  const existingFile = knownSha ? { sha: knownSha } : await getCurrentFile();
   let sha = existingFile?.sha || null;
 
   if (
@@ -251,7 +252,7 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
 
 // ФУНКЦИЯ: saveCommentMarkdown
 // НАЗНАЧЕНИЕ: Сохраняет Markdown-файл с повторными попытками при временных ошибках.
-async function saveCommentMarkdown(session, markdown) {
+async function saveCommentMarkdown(session, markdown, knownSha = null) {
   const fileName = currentCommentDraft
     ? currentCommentDraft.id
     : `${session.date}-${session.timestamp}_discussion_${session.discussion}_${session.teacher}.md`;
@@ -267,7 +268,10 @@ async function saveCommentMarkdown(session, markdown) {
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      return await saveCommentMarkdownOnce(url, headers, fileName, markdown);
+      return await saveCommentMarkdownOnce(
+        url, headers, fileName, markdown,
+        attempt === 1 ? knownSha : null
+      );
 
     } catch (error) {
       const isNetworkError =
@@ -356,7 +360,8 @@ async function handleCommentSubmit() {
       }
 
       const completedMarkdown = buildCommentMarkdown(session);
-      await saveCommentMarkdown(session, completedMarkdown);
+      const latestSha = saved.result?.content?.sha || null;
+      await saveCommentMarkdown(session, completedMarkdown, latestSha);
     }
 
     const unresolvedMediaCount = [

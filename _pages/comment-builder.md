@@ -7,4 +7,4 @@ emoji: "💬"
 custom_css: ["/assets/css/comment-builder.css"]
 ---
 
-{% include comment-builder.liquid %} 
+{% include comment-builder.liquid %}

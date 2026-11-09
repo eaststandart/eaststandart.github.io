@@ -359,21 +359,34 @@ async function handleCommentSubmit() {
       await saveCommentMarkdown(session, completedMarkdown);
     }
 
+    const unresolvedMediaCount = [
+      document.getElementById("photos-meta-container"),
+      document.getElementById("videos-meta-container")
+    ].filter(Boolean).reduce((total, container) => {
+      const blocks = Array.from(container.querySelectorAll(".media-sub-block"));
+      return total + blocks.reduce((count, block) => {
+        const files = Array.isArray(block.mediaFiles) ? block.mediaFiles : [];
+        return count + files.filter(file => file.kind === "missing").length;
+      }, 0);
+    }, 0);
+
     const published = document.getElementById("publish-now-flag")?.checked === true;
     const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
 
-    // Опубликованный черновик больше не должен оставаться в оперативном списке черновиков.
-    if (published && currentCommentDraft && Array.isArray(mockDrafts)) {
+    // Убираем опубликованный комментарий из списка только после полной комплектации.
+    if (published && unresolvedMediaCount === 0 && currentCommentDraft && Array.isArray(mockDrafts)) {
       mockDrafts = mockDrafts.filter(draft => draft.id !== saved.fileName);
       if (typeof refreshDraftSelect === "function") refreshDraftSelect();
     }
 
-    if (uploadResult.errors.length) {
+    if (uploadResult.errors.length || unresolvedMediaCount > 0) {
       showNotify(
-        `${saveMessage}: ${saved.fileName}. Загружено: ${uploadResult.uploaded}. Не загружено: ${uploadResult.errors.length}. Отсутствующие файлы оставлены в форме.`,
+        `${saveMessage}: ${saved.fileName}. Загружено: ${uploadResult.uploaded}. Ошибок загрузки: ${uploadResult.errors.length}. Отсутствует файлов: ${unresolvedMediaCount}. Сборка не завершена, форма оставлена открытой.`,
         "error"
       );
-      console.warn("[COMMENT SAVE] Не загружены медиафайлы:", uploadResult.errors);
+      if (uploadResult.errors.length) {
+        console.warn("[COMMENT SAVE] Не загружены медиафайлы:", uploadResult.errors);
+      }
     } else {
       showNotify(
         `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,

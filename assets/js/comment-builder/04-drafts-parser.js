@@ -6,6 +6,10 @@
  * @version 1.0.0
  */
 
+// ФУНКЦИЯ: parseManifestYaml
+
+// НАЗНАЧЕНИЕ: Разбирает Front Matter и извлекает метаданные комментария.
+
 function parseManifestYaml(text, fileName, sha) {
   const yamlMatch = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
 
@@ -33,6 +37,10 @@ function parseManifestYaml(text, fileName, sha) {
   };
 }
 
+// ФУНКЦИЯ: getMarkdownSections
+
+// НАЗНАЧЕНИЕ: Разделяет Markdown-документ на именованные разделы.
+
 function getMarkdownSections(text, level) {
   const regex = new RegExp("^" + "#".repeat(level) + "[ \t]+(.+?)[ \t]*#*[ \t]*$", "gm");
   const matches = [...text.matchAll(regex)];
@@ -45,6 +53,10 @@ function getMarkdownSections(text, level) {
     ).trim()
   }));
 }
+
+// ФУНКЦИЯ: getMarkdownField
+
+// НАЗНАЧЕНИЕ: Извлекает содержимое указанного поля Markdown.
 
 function getMarkdownField(content, fieldName) {
   const lines = content.split(/\r?\n/);
@@ -73,6 +85,8 @@ function getMarkdownField(content, fieldName) {
 
   return lines.slice(startIndex + 1, endIndex).join("\n").trim();
 }
+// ФУНКЦИЯ: parseNewManifestBody
+// НАЗНАЧЕНИЕ: Разбирает тело комментария в новой структуре Markdown.
 function parseNewManifestBody(body) {
   const sections = getMarkdownSections(body, 2);
   const mainSection = sections.find(section => section.title === "Структура комментария");
@@ -142,6 +156,10 @@ function parseNewManifestBody(body) {
   return { title, text: mainText, footer, photos, videos };
 }
 
+// ФУНКЦИЯ: parseLegacyManifestBody
+
+// НАЗНАЧЕНИЕ: Разбирает тело комментария в прежнем формате Markdown.
+
 function parseLegacyManifestBody(body) {
   const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
 
@@ -199,6 +217,10 @@ function parseLegacyManifestBody(body) {
     videos
   };
 }
+
+// ФУНКЦИЯ: parseManifestContent
+
+// НАЗНАЧЕНИЕ: Формирует объект черновика из имени файла и содержимого Markdown.
 
 function parseManifestContent(fileName, text, sha) {
   try {

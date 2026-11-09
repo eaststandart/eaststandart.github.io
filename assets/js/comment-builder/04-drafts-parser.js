@@ -45,21 +45,29 @@ function getMarkdownSections(text, level) {
 }
 
 function getMarkdownField(content, fieldName) {
-  const escapedName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\function getMarkdownField(content, fieldName) {
-  const fields = getMarkdownSections(content, 3);
-  const field = fields.find(item => item.title === fieldName);
-  return field ? field.content.trim() : "";
-}");
-  const regex = new RegExp("^###[ \\t]+" + escapedName + "[ \\t]*$", "gm");
-  const matches = [...content.matchAll(regex)];
-  if (!matches.length) return "";
+  const lines = content.split(/\r?\n/);
+  const marker = "### " + fieldName;
+  const startIndex = lines.findIndex(line => line.trim() === marker);
 
-  const match = matches[0];
-  const end = matches.length > 1 ? matches[1].index : content.length;
+  if (startIndex === -1) return "";
 
-  return content.substring(match.index + match[0].length, end).trim();
+  const knownFields = [
+    "### Заголовок комментария",
+    "### Основной текст",
+    "### Подвал комментария"
+  ];
+
+  let endIndex = lines.length;
+
+  for (let index = startIndex + 1; index < lines.length; index++) {
+    if (knownFields.includes(lines[index].trim())) {
+      endIndex = index;
+      break;
+    }
+  }
+
+  return lines.slice(startIndex + 1, endIndex).join("\n").trim();
 }
-
 function parseNewManifestBody(body) {
   const sections = getMarkdownSections(body, 2);
   const mainSection = sections.find(section => section.title === "Структура комментария");
@@ -90,7 +98,7 @@ function parseNewManifestBody(body) {
     if (normalizedType === "🎥 Видеоматериалы") type = "video";
     if (!type) return;
 
-    const titleMatch = section.content.match(/^###[ \\t]+([^\\r\\n]+)[ \\t]*(?:\\r?\\n|$)/);
+    const titleMatch = section.content.match(/^###\s+([^\r\n]+)\s*(?:\r?\n|$)/);
     const blockTitle = titleMatch ? titleMatch[1].trim() : "";
     const blockContent = titleMatch
       ? section.content.substring(titleMatch[0].length).trim()

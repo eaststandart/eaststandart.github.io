@@ -149,7 +149,7 @@ function addPhotoBlock(initialTitle = "", initialDesc = "") {
   subBlock.id = `photo-sub-block-${photoBlockIdx}`;
 
   subBlock.innerHTML = `
-    <input type="text" class="photo-h3-title" maxlength="120" placeholder="Заголовок для фотоматериалов" disabled>
+    <input type="text" class="photo-h3-title" maxlength="50" placeholder="Заголовок для фотоматериалов" disabled>
     <textarea class="photo-block-desc" rows="2" maxlength="500" placeholder="Краткое описание блока..." disabled></textarea>
     <div class="drop-zone" data-media-type="photo">Нажмите для выбора или перетащите фото в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>
@@ -189,7 +189,7 @@ function addVideoBlock(initialTitle = "", initialDesc = "") {
   subBlock.id = `video-sub-block-${videoBlockIdx}`;
   
   subBlock.innerHTML = `
-    <input type="text" class="video-h3-title" maxlength="120" placeholder="Заголовок для видеоматериалов" disabled>
+    <input type="text" class="video-h3-title" maxlength="50" placeholder="Заголовок для видеоматериалов" disabled>
     <textarea class="video-block-desc" rows="2" maxlength="500" placeholder="Краткое описание блока..." disabled></textarea>
     <div class="drop-zone" data-media-type="video">Нажмите для выбора или перетащите видео в этот блок</div>
     <div class="file-link-indicator" style="margin-top: 5px; font-size: 13px; font-family: monospace; display: none;"></div>

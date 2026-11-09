@@ -103,9 +103,7 @@ function addPhotoBlock() {
 }
 
 // ФУНКЦИЯ: deletePhotoBlock
-
 // НАЗНАЧЕНИЕ: Удаляет выбранный фотоблок.
-
 function deletePhotoBlock(blockId) {
     const block = document.getElementById(blockId);
     if (block) {
@@ -139,9 +137,7 @@ function addVideoBlock() {
 }
 
 // ФУНКЦИЯ: deleteVideoBlock
-
 // НАЗНАЧЕНИЕ: Удаляет выбранный видеоблок.
-
 function deleteVideoBlock(blockId) {
     const block = document.getElementById(blockId);
     if (block) {

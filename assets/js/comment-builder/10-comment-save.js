@@ -307,6 +307,11 @@ async function handleCommentSubmit() {
       throw new Error("Не определён преподаватель.");
     }
 
+    const validationError = validateCommentForm();
+    if (validationError) {
+      throw new Error(validationError);
+    }
+
     setFormLock(true, "Подготовка комментария...");
 
     // Сначала загружаем все новые медиафайлы.

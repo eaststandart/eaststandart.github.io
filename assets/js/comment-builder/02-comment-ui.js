@@ -239,7 +239,7 @@ function updatePublishLabel() {
   // Дополнительный независимый флаг способа публикации.
   if (labelText && labelText.parentNode &&
       !document.getElementById("publish-as-bot-flag")) {
-    const botLabel = document.createElement("label");
+    const botLabel = document.createElement("span");
     botLabel.style.marginLeft = "12px";
     botLabel.style.display = "inline-flex";
     botLabel.style.alignItems = "center";

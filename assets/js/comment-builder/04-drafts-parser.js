@@ -241,6 +241,7 @@ function parseManifestContent(fileName, text, sha) {
       videos: content.videos,
       timestamp: meta.timestamp || "",
       published: meta.published || "false",
+      publishAsBot: String(meta.publish_as_bot || "false").toLowerCase() === "true",
       teacher: meta.teacher || ""
     };
   } catch (error) {

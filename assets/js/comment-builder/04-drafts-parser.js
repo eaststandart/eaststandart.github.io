@@ -51,10 +51,18 @@ function getMarkdownField(content, fieldName) {
 
   if (startIndex === -1) return "";
 
+  const knownFields = [
+    "### Заголовок комментария",
+    "### Основной текст",
+    "### Подвал комментария",
+    "### Заголовок блока",
+    "### Описание блока"
+  ];
+
   let endIndex = lines.length;
 
   for (let index = startIndex + 1; index < lines.length; index++) {
-    if (/^###\s+/.test(lines[index].trim())) {
+    if (knownFields.includes(lines[index].trim())) {
       endIndex = index;
       break;
     }

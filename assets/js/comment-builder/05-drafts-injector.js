@@ -121,8 +121,10 @@ async function toggleDraftBehavior() {
 // ФУНКЦИЯ: createDraftFileLink
 // НАЗНАЧЕНИЕ: Создание безопасной ссылки на вложение
 function createDraftFileLink(fileName) {
-  const baseUrl =
-    `https://github.com/${repo_owner}/${repo_name}/blob/main/_input/`;
+  const isVideo = /\.(mp4|mov|avi|mkv)$/i.test(fileName);
+  const baseUrl = isVideo
+    ? `https://github.com/${repo_owner}/${repo_name}/raw/refs/heads/main/_input/`
+    : `https://github.com/${repo_owner}/${repo_name}/blob/main/_input/`;
 
   const encodedPath = fileName
     .split("/")

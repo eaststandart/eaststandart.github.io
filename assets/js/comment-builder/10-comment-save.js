@@ -1,6 +1,9 @@
 /**
- * @module 10-comment-save.js
- * @about Сборка Markdown и сохранение комментария в _input.
+ * @module  10-comment-save.js
+ * @about   Модуль формирования и сохранения комментариев.
+ * @purpose Сборка Markdown с Front Matter, загрузка медиафайлов и сохранение черновика или комментария в GitHub.
+ * @author  TechLab
+ * @version 1.0.0
  */
 
 function commentYamlQuote(value) {

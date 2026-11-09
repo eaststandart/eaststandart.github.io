@@ -395,12 +395,10 @@ async function handleCommentSubmit() {
         console.warn("[COMMENT SAVE] Не загружены медиафайлы:", uploadResult.errors);
       }
     } else {
-      showNotify(
-        `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
-        "success"
-      );
+      showNotify(saveMessage, "success");
 
       console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
+      console.log("[COMMENT SAVE] Загружено новых медиафайлов:", uploadResult.uploaded);
 
       setTimeout(() => {
         resetCommentForm();

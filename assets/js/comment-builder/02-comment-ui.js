@@ -8,6 +8,7 @@
 
 let photoBlockIdx = 0;
 let videoBlockIdx = 0;
+let commentInterfaceInitialized = false;
 
 /**
  * ФУНКЦИЯ №2: Главная инициализация интерфейса Конструктора
@@ -15,7 +16,10 @@ let videoBlockIdx = 0;
  */
 function initCommentInterface() {
   const publishFlag = document.getElementById("publish-now-flag");
-  if (publishFlag) publishFlag.checked = false;
+  if (publishFlag && !commentInterfaceInitialized) {
+    publishFlag.checked = false;
+    commentInterfaceInitialized = true;
+  }
 
   const containerPhotos = document.getElementById("photos-meta-container");
   const containerVideos = document.getElementById("videos-meta-container");
@@ -48,6 +52,8 @@ function initCommentInterface() {
 
   const discussionInput = document.getElementById("discussion-combo");
   if (discussionInput) discussionInput.value = "";
+
+  updatePublishLabel();
 
   showNotify("Интерфейс конструктора готов!", "success");
   
@@ -223,13 +229,13 @@ function updatePublishLabel() {
   const submitBtn = document.getElementById("submit-btn");
   if (submitBtn) {
     submitBtn.textContent = isChecked
-      ? "Создать комментарий"
+      ? "Сохранить комментарий"
       : "Сохранить черновик";
   }
   
   if (isChecked) {
-    if (labelText) labelText.innerText = "🔥 Опубликовать сейчас (published: true)";
+    if (labelText) labelText.innerText = "Опубликовать сейчас (published: true)";
   } else {
-    if (labelText) labelText.innerText = "🔥 Опубликовать сейчас (published: false)";
+    if (labelText) labelText.innerText = "Опубликовать сейчас (published: false)";
   }
 }

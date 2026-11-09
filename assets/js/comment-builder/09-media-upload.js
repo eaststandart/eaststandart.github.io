@@ -361,6 +361,7 @@ async function handleMediaUpload() {
   let type = "success";
 
   try {
+    setCommentOperationLock(true);
     setFormLock(true, "Загрузка медиафайлов...");
 
     const session = getCommentUploadSession();
@@ -381,6 +382,7 @@ async function handleMediaUpload() {
     type = "error";
   } finally {
     setFormLock(false);
+    setCommentOperationLock(false);
   }
 
   showNotify(message, type);

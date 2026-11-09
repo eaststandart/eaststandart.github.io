@@ -6,9 +6,17 @@
  * @version 1.0.0
  */
 
+// ФУНКЦИЯ: commentYamlQuote
+
+// НАЗНАЧЕНИЕ: Безопасно оформляет строковое значение для YAML.
+
 function commentYamlQuote(value) {
   return JSON.stringify(String(value ?? ""));
 }
+
+// ФУНКЦИЯ: commentToBase64
+
+// НАЗНАЧЕНИЕ: Кодирует текст в Base64 с поддержкой UTF-8.
 
 function commentToBase64(value) {
   const bytes = new TextEncoder().encode(value);
@@ -21,6 +29,10 @@ function commentToBase64(value) {
 
   return btoa(binary);
 }
+
+// ФУНКЦИЯ: collectCommentMedia
+
+// НАЗНАЧЕНИЕ: Собирает данные заполненных медиаблоков выбранного типа.
 
 function collectCommentMedia(containerId, type) {
   const container = document.getElementById(containerId);
@@ -54,6 +66,10 @@ function collectCommentMedia(containerId, type) {
     })
     .filter(Boolean);
 }
+
+// ФУНКЦИЯ: buildCommentMarkdown
+
+// НАЗНАЧЕНИЕ: Формирует полный Markdown-документ комментария и его Front Matter.
 
 function buildCommentMarkdown(session) {
   const title = document.getElementById("post-title")?.value.trim() || "";
@@ -114,11 +130,19 @@ function buildCommentMarkdown(session) {
   return `${frontMatter.join("\n")}\n\n${body.join("\n\n")}\n`;
 }
 
+// ФУНКЦИЯ: decodeGithubContent
+
+// НАЗНАЧЕНИЕ: Декодирует содержимое файла GitHub из Base64 в UTF-8.
+
 function decodeGithubContent(content) {
   const binary = atob(content.replace(/\s/g, ""));
   const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
   return new TextDecoder().decode(bytes);
 }
+
+// ФУНКЦИЯ: waitBeforeRetry
+
+// НАЗНАЧЕНИЕ: Ожидает перед повторной попыткой сохранения после временной ошибки.
 
 function waitBeforeRetry(seconds, attempt) {
   return new Promise(resolve => {
@@ -146,7 +170,13 @@ function waitBeforeRetry(seconds, attempt) {
   });
 }
 
+// ФУНКЦИЯ: saveCommentMarkdownOnce
+
+// НАЗНАЧЕНИЕ: Выполняет одну попытку создания или обновления Markdown-файла в GitHub.
+
 async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
+  // ФУНКЦИЯ: getCurrentFile
+  // НАЗНАЧЕНИЕ: Получает актуальную версию Markdown-файла и его SHA.
   async function getCurrentFile() {
     const response = await fetch(`${url}?ref=main`, {
       method: "GET",
@@ -163,6 +193,10 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
 
     return await response.json();
   }
+
+  // ФУНКЦИЯ: putFile
+
+  // НАЗНАЧЕНИЕ: Создаёт или обновляет Markdown-файл через GitHub Contents API.
 
   async function putFile(sha) {
     const payload = {
@@ -230,6 +264,10 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
   };
 }
 
+// ФУНКЦИЯ: saveCommentMarkdown
+
+// НАЗНАЧЕНИЕ: Сохраняет Markdown-файл с повторными попытками при временных ошибках.
+
 async function saveCommentMarkdown(session, markdown) {
   const fileName = currentCommentDraft
     ? currentCommentDraft.id
@@ -261,6 +299,10 @@ async function saveCommentMarkdown(session, markdown) {
     }
   }
 }
+
+// ФУНКЦИЯ: handleCommentSubmit
+
+// НАЗНАЧЕНИЕ: Проверяет форму, загружает медиафайлы и сохраняет комментарий или черновик.
 
 async function handleCommentSubmit() {
   if (window.commentFormLocked) return;

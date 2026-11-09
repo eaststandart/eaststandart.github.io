@@ -177,6 +177,7 @@ function parseManifestContent(fileName, text, sha) {
       title: articleTitle,
       text: content.text,
       footer: content.footer,
+      structured: Boolean(newContent),
       photos: content.photos,
       videos: content.videos,
       timestamp: meta.timestamp || "",

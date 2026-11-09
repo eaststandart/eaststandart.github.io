@@ -124,8 +124,11 @@ function checkTeacherAuthorization() {
       initCommentInterface();
     }
 
-    // Повторно применяем блокировку, чтобы учесть элементы,
-    // которые интерфейс мог создать во время инициализации.
+    // Учитываем созданные при инициализации элементы и открываем форму.
+    showNotify(
+      "Преподаватель: " + userLogin,
+      "info"
+    );
     setFormLock(true);
     setFormLock(false);
   })

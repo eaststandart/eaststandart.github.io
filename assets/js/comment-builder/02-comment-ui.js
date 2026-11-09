@@ -40,7 +40,7 @@ function initCommentInterface() {
   // Настраиваем дефолтное состояние Линии 2 шапки
   const select = document.getElementById("draft-select");
   if (select) {
-    select.innerHTML = `<option value="">Выберите черновик --></option>`;
+    select.innerHTML = `<option value="">Выберите черновик →</option>`;
     select.disabled = true;
   }
 
@@ -88,7 +88,7 @@ function resetCommentForm() {
   if (publishAsBotFlag) publishAsBotFlag.checked = false;
 
   const select = document.getElementById("draft-select");
-  select.innerHTML = `<option value="">Выберите черновик --></option>`;
+  select.innerHTML = `<option value="">Выберите черновик →</option>`;
   select.disabled = true;
   select.value = "";
 

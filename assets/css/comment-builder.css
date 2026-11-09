@@ -371,6 +371,10 @@
     color: inherit;
     transition: opacity 0.2s, transform 0.2s;
 }
+.comment-builder .btn-logout-svg:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
 .comment-builder .notify-flex-content {
     display: flex;
     justify-content: space-between;

@@ -21,7 +21,7 @@ function refreshDraftSelect() {
   placeholder.value = "";
   placeholder.textContent = isDraftMode
     ? "-- Сохраненный черновик --"
-    : "Выберите черновик -->";
+    : "Выберите черновик →";
   select.appendChild(placeholder);
 
   if (isDraftMode) {
@@ -81,7 +81,7 @@ async function toggleDraftBehavior() {
 
   } else {
     if (select) {
-      select.innerHTML = `<option value="">Выберите черновик --></option>`;
+      select.innerHTML = `<option value="">Выберите черновик →</option>`;
       select.disabled = true;
       select.value = "";
     }

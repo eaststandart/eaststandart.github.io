@@ -13,6 +13,11 @@ let commentInterfaceInitialized = false;
 // ФУНКЦИЯ: initCommentInterface
 // НАЗНАЧЕНИЕ: ФУНКЦИЯ №2: Главная инициализация интерфейса Конструктора Вызывается строго из модуля 01-comment-auth.js после успешной авторизации.
 function initCommentInterface() {
+  const commentTitle = document.getElementById("post-title");
+  const commentDescription = document.getElementById("post-text");
+  if (commentTitle) commentTitle.dataset.limitType = "block2Title";
+  if (commentDescription) commentDescription.dataset.limitType = "block2Description";
+
   const publishFlag = document.getElementById("publish-now-flag");
   if (publishFlag && !commentInterfaceInitialized) {
     publishFlag.checked = false;

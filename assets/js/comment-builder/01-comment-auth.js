@@ -63,9 +63,7 @@ function submitToken() {
 }
 
 // ФУНКЦИЯ: showJournal
-
 // НАЗНАЧЕНИЕ: Открывает рабочую область конструктора и запускает проверку доступа.
-
 function showJournal() {
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("journal-section").classList.remove("hidden");
@@ -79,9 +77,7 @@ function showJournal() {
 }
 
 // ФУНКЦИЯ: logoutTeacher
-
 // НАЗНАЧЕНИЕ: Завершает сеанс и удаляет сохранённые данные авторизации.
-
 function logoutTeacher() {
   if (confirm("Вы уверены, что хотите выйти из конструктора и сменить ключ доступа?")) {
     localStorage.removeItem("github_comment_token");
@@ -92,8 +88,6 @@ function logoutTeacher() {
   }
 }
 
-// ФУНКЦИЯ №1: Физическая идентификация токена преподавателя (Срабатывает СТРОГО 1 раз на старте)
-// ФУНКЦИЯ: checkTeacherAuthorization
 // НАЗНАЧЕНИЕ: Проверяет токен GitHub и подтверждает право преподавателя на доступ.
 function checkTeacherAuthorization() {
   showNotify("Идентификация пользователя...", "success");

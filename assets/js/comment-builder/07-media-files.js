@@ -1,7 +1,7 @@
 /**
  * @module  07-media-files.js
- * @about   Управление вложениями медиаблоков.
- * @purpose Выбор, проверка, отображение и точечное удаление фото и видео.
+ * @about   Модуль управления вложениями медиаблоков.
+ * @purpose Выбор, проверка, отображение, восстановление и удаление фото- и видеофайлов.
  * @author  TechLab
  * @version 1.0.0
  */
@@ -27,9 +27,8 @@ const MEDIA_FILE_RULES = {
   }
 };
 
-/**
- * Определение расширения файла
- */
+// ФУНКЦИЯ: getMediaFileExtension
+// НАЗНАЧЕНИЕ: Определение расширения файла
 function getMediaFileExtension(fileName) {
   const dotIndex = fileName.lastIndexOf(".");
   return dotIndex >= 0
@@ -37,9 +36,8 @@ function getMediaFileExtension(fileName) {
     : "";
 }
 
-/**
- * Проверка расширения и MIME-типа
- */
+// ФУНКЦИЯ: validateMediaFile
+// НАЗНАЧЕНИЕ: Проверка расширения и MIME-типа
 function validateMediaFile(file, type) {
   const rules = MEDIA_FILE_RULES[type];
 
@@ -63,18 +61,16 @@ function validateMediaFile(file, type) {
   return true;
 }
 
-/**
- * Получение списка вложений медиаблока
- */
+// ФУНКЦИЯ: getMediaFilesForBlock
+// НАЗНАЧЕНИЕ: Получение списка вложений медиаблока
 function getMediaFilesForBlock(block) {
   return block && Array.isArray(block.mediaFiles)
     ? [...block.mediaFiles]
     : [];
 }
 
-/**
- * Создание поля выбора файлов
- */
+// ФУНКЦИЯ: createMediaFileInput
+// НАЗНАЧЕНИЕ: Создание поля выбора файлов
 function createMediaFileInput(block, type) {
   let input = block.querySelector(".media-file-input");
 
@@ -97,9 +93,8 @@ function createMediaFileInput(block, type) {
   return input;
 }
 
-/**
- * Добавление новых файлов в медиаблок
- */
+// ФУНКЦИЯ: addMediaFiles
+// НАЗНАЧЕНИЕ: Добавление новых файлов в медиаблок
 function addMediaFiles(block, files, type) {
   if (!block || !MEDIA_FILE_RULES[type]) return;
 
@@ -151,9 +146,8 @@ function addMediaFiles(block, files, type) {
   }
 }
 
-/**
- * Регистрация файлов, восстановленных из черновика
- */
+// ФУНКЦИЯ: registerExistingMediaFiles
+// НАЗНАЧЕНИЕ: Регистрация файлов, восстановленных из черновика
 function registerExistingMediaFiles(block, fileNames, type) {
   if (!block || !Array.isArray(fileNames)) return;
 
@@ -187,9 +181,8 @@ function registerExistingMediaFiles(block, fileNames, type) {
   }
 }
 
-/**
- * Отрисовка актуального списка вложений
- */
+// ФУНКЦИЯ: renderMediaFiles
+// НАЗНАЧЕНИЕ: Отрисовка актуального списка вложений
 function renderMediaFiles(block) {
   const indicator = block.querySelector(".file-link-indicator");
 
@@ -245,9 +238,8 @@ function renderMediaFiles(block) {
   });
 }
 
-/**
- * Точечное удаление одного вложения
- */
+// ФУНКЦИЯ: removeMediaFile
+// НАЗНАЧЕНИЕ: Точечное удаление одного вложения
 function removeMediaFile(block, fileId) {
   if (!block || !Array.isArray(block.mediaFiles)) return;
 
@@ -286,9 +278,8 @@ function removeMediaFile(block, fileId) {
   }
 }
 
-/**
- * Определение типа медиаблока
- */
+// ФУНКЦИЯ: getMediaBlockType
+// НАЗНАЧЕНИЕ: Определение типа медиаблока
 function getMediaBlockType(block) {
   if (!block) return null;
 
@@ -298,9 +289,7 @@ function getMediaBlockType(block) {
   return null;
 }
 
-/**
- * Обработка нажатий на зону выбора и кнопки удаления
- */
+// НАЗНАЧЕНИЕ: Обработка нажатий на зону выбора и кнопки удаления
 document.addEventListener("click", event => {
   const removeButton = event.target.closest(".media-file-remove");
 
@@ -323,9 +312,7 @@ document.addEventListener("click", event => {
   createMediaFileInput(block, type).click();
 });
 
-/**
- * Обработка перетаскивания файлов
- */
+// НАЗНАЧЕНИЕ: Обработка перетаскивания файлов
 document.addEventListener("dragover", event => {
   const dropZone = event.target.closest(".drop-zone");
 

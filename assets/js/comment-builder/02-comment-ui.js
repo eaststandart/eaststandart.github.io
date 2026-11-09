@@ -1,7 +1,7 @@
 /**
  * @module  02-comment-ui.js
- * @about   Модуль динамического управления интерфейсом и блочным конструктором.
- * @purpose Генерация полей ввода, добавление/удаление блоков медиа, сквозной пересчет счетчиков.
+ * @about   Модуль управления интерфейсом и блочным конструктором.
+ * @purpose Инициализация формы, создание и удаление медиаблоков, управление элементами интерфейса.
  * @author  TechLab
  * @version 1.0.0
  */
@@ -10,10 +10,8 @@ let photoBlockIdx = 0;
 let videoBlockIdx = 0;
 let commentInterfaceInitialized = false;
 
-/**
- * ФУНКЦИЯ №2: Главная инициализация интерфейса Конструктора
- * Вызывается строго из модуля 01-comment-auth.js после успешной авторизации.
- */
+// ФУНКЦИЯ: initCommentInterface
+// НАЗНАЧЕНИЕ: ФУНКЦИЯ №2: Главная инициализация интерфейса Конструктора Вызывается строго из модуля 01-comment-auth.js после успешной авторизации.
 function initCommentInterface() {
   const publishFlag = document.getElementById("publish-now-flag");
   if (publishFlag && !commentInterfaceInitialized) {
@@ -110,9 +108,8 @@ function resetCommentForm() {
   console.log("[COMMENT SAVE] Форма сброшена");
 }
 
-/**
- * АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ФОТО
- */
+// ФУНКЦИЯ: updatePhotoDeleteButtons
+// НАЗНАЧЕНИЕ: АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ФОТО
 function updatePhotoDeleteButtons() {
   const blocks = document.querySelectorAll("#photos-meta-container .media-sub-block");
   blocks.forEach((block) => {
@@ -124,9 +121,8 @@ function updatePhotoDeleteButtons() {
   });
 }
 
-/**
- * АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ВИДЕО
- */
+// ФУНКЦИЯ: updateVideoDeleteButtons
+// НАЗНАЧЕНИЕ: АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ВИДЕО
 function updateVideoDeleteButtons() {
   const blocks = document.querySelectorAll("#videos-meta-container .media-sub-block");
   blocks.forEach((block) => {
@@ -138,9 +134,8 @@ function updateVideoDeleteButtons() {
   });
 }
 
-/**
- * ДОБАВЛЕНИЕ БЛОКА ФОТО С ОРИГИНАЛЬНЫМИ КЛАССАМИ ОФОРМЛЕНИЯ
- */
+// ФУНКЦИЯ: addPhotoBlock
+// НАЗНАЧЕНИЕ: ДОБАВЛЕНИЕ БЛОКА ФОТО С ОРИГИНАЛЬНЫМИ КЛАССАМИ ОФОРМЛЕНИЯ
 function addPhotoBlock(initialTitle = "", initialDesc = "") {
   photoBlockIdx++;
 
@@ -178,9 +173,8 @@ function deletePhotoBlock(blockId) {
   }
 }
 
-/**
- * ДОБАВЛЕНИЕ БЛОКА ВИДЕО С ОРИГИНАЛЬНЫМИ КЛАССАМИ ОФОРМЛЕНИЯ
- */
+// ФУНКЦИЯ: addVideoBlock
+// НАЗНАЧЕНИЕ: ДОБАВЛЕНИЕ БЛОКА ВИДЕО С ОРИГИНАЛЬНЫМИ КЛАССАМИ ОФОРМЛЕНИЯ
 function addVideoBlock(initialTitle = "", initialDesc = "") {
   videoBlockIdx++;
   const container = document.getElementById("videos-meta-container");
@@ -216,9 +210,8 @@ function deleteVideoBlock(blockId) {
   }
 }
 
-/**
- * ДИНАМИЧЕСКИЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕКСТА КНОПКИ ПРИ СМЕНЕ ФЛАГОВ (Из монолитного скрипта)
- */
+// ФУНКЦИЯ: updatePublishLabel
+// НАЗНАЧЕНИЕ: ДИНАМИЧЕСКИЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕКСТА КНОПКИ ПРИ СМЕНЕ ФЛАГОВ (Из монолитного скрипта)
 function updatePublishLabel() {
   const publishFlag = document.getElementById("publish-now-flag");
   const labelText = document.getElementById("publish-label-text");

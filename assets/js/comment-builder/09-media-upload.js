@@ -1,22 +1,18 @@
-
 /**
- * @module 09-media-upload.js
- * @about   Загрузка новых медиафайлов в буферный репозиторий.
- * @purpose Загрузка local-файлов через GitHub Contents API с сохранением имен.
+ * @module  09-media-upload.js
+ * @about   Модуль загрузки медиафайлов в буферный репозиторий.
+ * @purpose Загрузка новых локальных файлов через GitHub Contents API и обработка результатов загрузки.
  * @author  TechLab
  * @version 1.0.0
  */
 
-/**
- * Преобразование File в Base64
- */
+// НАЗНАЧЕНИЕ: Преобразование File в Base64
 
 // Текущая сессия загрузки
 let currentCommentSession = null;
 
-/**
- * Получение параметров текущей сессии
- */
+// ФУНКЦИЯ: getCommentUploadSession
+// НАЗНАЧЕНИЕ: Получение параметров текущей сессии
 
 function getCommentUploadSession() {
   // Редактирование существующего черновика
@@ -75,9 +71,8 @@ async function mediaFileToBase64(file) {
   return btoa(binary);
 }
 
-/**
- * Формирование имени нового медиафайла
- */
+// ФУНКЦИЯ: createMediaUploadName
+// НАЗНАЧЕНИЕ: Формирование имени нового медиафайла
 function createMediaUploadName(file, type, session, index) {
   const extension = getMediaFileExtension(file.name);
 
@@ -90,9 +85,8 @@ function createMediaUploadName(file, type, session, index) {
   );
 }
 
-/**
- * Загрузка одного файла в _input
- */
+// ФУНКЦИЯ: uploadSingleMediaFile
+// НАЗНАЧЕНИЕ: Загрузка одного файла в _input
 async function uploadSingleMediaFile(file, fileName) {
   const url =
     `https://api.github.com/repos/${repo_owner}/${repo_name}` +
@@ -151,17 +145,8 @@ async function uploadSingleMediaFile(file, fileName) {
   return response.json();
 }
 
-/**
- * Загрузка всех новых медиафайлов конструктора
- *
- * session:
- * {
- *   date: "YYYY-MM-DD",
- *   timestamp: "секундная метка",
- *   discussion: "номер обсуждения",
- *   teacher: "логин преподавателя"
- * }
- */
+// ФУНКЦИЯ: uploadLocalMediaFiles
+// НАЗНАЧЕНИЕ: Загрузка всех новых медиафайлов конструктора
 async function uploadLocalMediaFiles(session) {
   if (!accessToken) {
     throw new Error("Нет активного токена GitHub.");
@@ -258,9 +243,8 @@ async function uploadLocalMediaFiles(session) {
   };
 }
 
-/**
- * Обработчик кнопки загрузки медиафайлов
- */
+// ФУНКЦИЯ: handleMediaUpload
+// НАЗНАЧЕНИЕ: Обработчик кнопки загрузки медиафайлов
 async function handleMediaUpload() {
   if (window.commentFormLocked) return;
 

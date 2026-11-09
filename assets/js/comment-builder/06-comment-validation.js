@@ -41,9 +41,9 @@ function validateCommentForm() {
   }
 
   const mediaFields = [
-    { selector: ".photo-h3-title", name: "Заголовок фотоблока", maxLength: 120 },
+    { selector: ".photo-h3-title", name: "Заголовок фотоблока", maxLength: 50 },
     { selector: ".photo-block-desc", name: "Описание фотоблока", maxLength: 500 },
-    { selector: ".video-h3-title", name: "Заголовок видеоблока", maxLength: 120 },
+    { selector: ".video-h3-title", name: "Заголовок видеоблока", maxLength: 50 },
     { selector: ".video-block-desc", name: "Описание видеоблока", maxLength: 500 }
   ];
 

@@ -110,6 +110,11 @@ async function toggleDraftBehavior() {
     if (typeof initCommentInterface === "function") {
       initCommentInterface();
     }
+
+    const userLogin = localStorage.getItem("github_comment_logged_user");
+    if (userLogin) {
+      showNotify("👨‍🎓 Преподаватель: " + userLogin, "info");
+    }
   }
 }
 

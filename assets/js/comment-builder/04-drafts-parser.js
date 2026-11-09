@@ -5,7 +5,7 @@
  */
 
 function parseManifestYaml(text, fileName, sha) {
-  const yamlMatch = text.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*(?:\\r?\\n|$)/);
+  const yamlMatch = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
 
   if (!yamlMatch) {
     throw new Error("Не найден Front Matter");
@@ -13,7 +13,7 @@ function parseManifestYaml(text, fileName, sha) {
 
   const meta = { id: fileName, sha: sha };
 
-  yamlMatch[1].split(/\\r?\\n/).forEach(line => {
+  yamlMatch[1].split(/\r?\n/).forEach(line => {
     const separator = line.indexOf(":");
     if (separator === -1) return;
 
@@ -32,7 +32,7 @@ function parseManifestYaml(text, fileName, sha) {
 }
 
 function getMarkdownSections(text, level) {
-  const regex = new RegExp("^" + "#".repeat(level) + "[ \\t]+(.+?)[ \\t]*#*[ \\t]*$", "gm");
+  const regex = new RegExp("^" + "#".repeat(level) + "[ \t]+(.+?)[ \t]*#*[ \t]*$", "gm");
   const matches = [...text.matchAll(regex)];
 
   return matches.map((match, index) => ({
@@ -64,7 +64,7 @@ function parseNewManifestBody(body) {
   const videos = [];
 
   sections.forEach(section => {
-    const normalizedType = section.title.replace(/\\s+/g, " ").trim();
+    const normalizedType = section.title.replace(/\s+/g, " ").trim();
     let type = null;
 
     if (normalizedType === "📸 Фотоматериалы") type = "photo";
@@ -75,12 +75,12 @@ function parseNewManifestBody(body) {
     const blockTitle = fields.length ? fields[0].title : "";
     const blockContent = fields.length ? fields[0].content : section.content;
 
-    const files = [...blockContent.matchAll(/!\\[\\[([^\\]]+)\\]\\]/g)]
+    const files = [...blockContent.matchAll(/!\[\[([^\]]+)\]\]/g)]
       .map(file => file[1].split("|")[0].trim());
 
     const description = blockContent
-      .replace(/!\\[\\[[^\\]]+\\]\\]/g, "")
-      .replace(/!\\[[^\\]]*\\]\\([^)]*\\)/g, "")
+      .replace(/!\[\[[^\]]+\]\]/g, "")
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
       .trim();
 
     const target = type === "photo" ? photos : videos;
@@ -96,10 +96,10 @@ function parseNewManifestBody(body) {
 }
 
 function parseLegacyManifestBody(body) {
-  const titleMatch = body.match(/^##[ \\t]+(.+?)[ \\t]*#*[ \\t]*$/m);
+  const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
 
   const mediaRegex =
-    /^###\\s+(.+?)\\s*<!--\\s*\\[блок\\s+(фото|видео)\\]\\s*-->[ \\t]*$/gim;
+    /^###\s+(.+?)\s*<!--\s*\[блок\s+(фото|видео)\]\s*-->[ \t]*$/gim;
 
   const matches = [...body.matchAll(mediaRegex)];
   const photos = [];
@@ -112,8 +112,8 @@ function parseLegacyManifestBody(body) {
     matches.length ? body.substring(0, matches[0].index) : body
   )
     .replace(titleMatch ? titleMatch[0] : "", "")
-    .replace(/\\r\\n/g, "\\n")
-    .replace(/\\n{3,}/g, "\\n\\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 
   matches.forEach((match, position) => {
@@ -124,12 +124,12 @@ function parseLegacyManifestBody(body) {
       : body.length;
     const content = body.substring(contentStart, contentEnd).trim();
 
-    const files = [...content.matchAll(/!\\[\\[([^\\]]+)\\]\\]/g)]
+    const files = [...content.matchAll(/!\[\[([^\]]+)\]\]/g)]
       .map(file => file[1].split("|")[0].trim());
 
     const description = content
-      .replace(/!\\[\\[[^\\]]+\\]\\]/g, "")
-      .replace(/!\\[[^\\]]*\\]\\([^)]*\\)/g, "")
+      .replace(/!\[\[[^\]]+\]\]/g, "")
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
       .trim();
 
     const index = type === "фото" ? ++photoIndex : ++videoIndex;

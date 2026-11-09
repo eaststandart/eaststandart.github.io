@@ -13,7 +13,6 @@ let currentCommentSession = null;
 
 // ФУНКЦИЯ: getCommentUploadSession
 // НАЗНАЧЕНИЕ: Получение параметров текущей сессии
-
 function getCommentUploadSession() {
   // Редактирование существующего черновика
   if (currentCommentDraft) {
@@ -55,6 +54,8 @@ function getCommentUploadSession() {
   return currentCommentSession;
 }
 
+// ФУНКЦИЯ: mediaFileToBase64
+// НАЗНАЧЕНИЕ: Преобразует содержимое медиафайла в строку Base64.
 async function mediaFileToBase64(file) {
   const buffer = await file.arrayBuffer();
   const bytes = new Uint8Array(buffer);

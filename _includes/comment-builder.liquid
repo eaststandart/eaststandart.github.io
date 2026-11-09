@@ -1,67 +1,97 @@
 {%- comment -%}
 @module  comment-builder.liquid
-@about   Модуль шаблона интерфейса Конструктора комментариев.
-@purpose Двухлинейная компактная CMS-шапка публикации, ведение черновиков и отправка медиа-пакетов.
+@about   Шаблон рабочей формы Конструктора комментариев.
+@purpose Авторизация преподавателя, параметры комментария, загрузка черновиков, редактирование текста и медиаблоков, управление публикацией.
 @author  TechLab
-@version 2.0.0
+@version 2.1.0
 {%- endcomment -%}
 
-<div class="block">
-  <h3>1. Параметры коментария</h3>
-  
-  <!-- ЛИНИЯ 1: Монолитная строка параметров публикации (Дата + Дискуссия-Коммит через дефис) -->
-  <div class="header-line">
-    <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="updateNormalDateValue(this.value)">             
-    <span class="inline-label" style="margin-left: auto;">🗣️:</span>
-    <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№">
-    <span class="inline-label">-</span>
-    <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
+<div class="admin-container">
+  <!-- БЛОК АВТОРИЗАЦИИ -->
+  <div id="auth-section" class="auth-box">
+    <h3 class="auth-title">Доступ к конструктору</h3>
+    <p class="auth-desc">Введите персональный токен GitHub для доступа к конструктору:</p>
+    <input type="password" id="token-input" class="input-text" placeholder="ghp_...">
+    <button id="btn-login" class="btn-big btn-auth" type="button" onclick="submitToken()">Подключить конструктор</button>
   </div>
 
-  <!-- ЛИНИЯ 2: Поле черновиков на всю ширину + Бестекстовая галочка-индикатор -->
-  <div class="header-line">
-    <div class="draft-select-container">
-      <select id="draft-select" onchange="loadDraftData(this.value)">
-        <!-- Наполняется скриптом из comment-builder.js -->
-      </select>
+  <!-- ИНСТРУКЦИЯ ПО АВТОРИЗАЦИИ -->
+  <div id="instructions-section" class="auth-box margin-top-15" style="font-size: 13px; color: #6c757d;">
+    <p style="margin: 0;">Для входа используется персональный токен доступа GitHub (PAT).</p>
+  </div>
+
+  <!-- РАБОЧАЯ ОБЛАСТЬ ОТКРЫВАЕТСЯ ПОСЛЕ АВТОРИЗАЦИИ -->
+  <div id="journal-section" class="hidden">
+    <div id="notification" class="notify"></div>
+
+    <!-- БЛОК 1: ПАРАМЕТРЫ КОММЕНТАРИЯ -->
+    <div class="block margin-top-15">
+      <h3>1. Параметры комментария</h3>
+
+      <!-- СТРОКА 1: ДАТА, НОМЕР ОБСУЖДЕНИЯ И ИДЕНТИФИКАТОР КОММИТА -->
+      <div class="header-line">
+        <input type="text" id="target-date" class="input-date" maxlength="10" placeholder="YYYY-MM-DD">
+        <span class="inline-label" style="margin-left: auto;">Обсуждение:</span>
+        <input type="text" id="discussion-combo" class="input-disc" maxlength="3" placeholder="№">
+        <span class="inline-label">/</span>
+        <input type="text" id="commit-id" class="input-commit" maxlength="8" placeholder="коммит">
+      </div>
+
+      <!-- СТРОКА 2: ВЫБОР ЧЕРНОВИКА И ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА ЧЕРНОВИКОВ -->
+      <div class="header-line">
+        <div class="draft-select-container">
+          <select id="draft-select" disabled onchange="loadDraftData(this.value)">
+            <option value="">Выберите черновик</option>
+          </select>
+        </div>
+        <label class="draft-trigger">
+          <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
+        </label>
+      </div>
     </div>
-    
-    <label class="draft-trigger">
-      <input type="checkbox" id="is-draft-mode" onchange="toggleDraftBehavior()">
-    </label>
+
+    <!-- БЛОК 2: ТЕКСТ КОММЕНТАРИЯ -->
+    <div class="block">
+      <h3>2. Структура комментария</h3>
+      <input type="text" id="post-title" placeholder="Заголовок комментария">
+      <textarea id="post-text" rows="5" placeholder="Основной текст комментария: что было сделано или создано на занятии..."></textarea>
+      <textarea id="post-footer" rows="3" placeholder="Дополнительные сведения, автор, метки, ссылки..."></textarea>
+    </div>
+
+    <!-- БЛОК 3: ФОТОМАТЕРИАЛЫ -->
+    <div class="block">
+      <h3>3. Фотоматериалы</h3>
+      <div id="photos-meta-container"></div>
+      <button type="button" class="btn-add" onclick="addPhotoBlock()">Добавить блок фото</button>
+    </div>
+
+    <!-- БЛОК 4: ВИДЕОМАТЕРИАЛЫ -->
+    <div class="block">
+      <h3>4. Видеоматериалы</h3>
+      <div id="videos-meta-container"></div>
+      <button type="button" class="btn-add btn-add-video" onclick="addVideoBlock()">Добавить блок видео</button>
+    </div>
+
+    <!-- БЛОК УПРАВЛЕНИЯ СОХРАНЕНИЕМ И ПУБЛИКАЦИЕЙ -->
+    <div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
+      <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px;">
+        <input type="checkbox" id="publish-now-flag" onchange="updatePublishLabel()">
+        <span id="publish-label-text">Опубликовать</span>
+      </div>
+      <button type="button" class="btn" id="submit-btn" onclick="handleCommentSubmit()">Сохранить черновик</button>
+    </div>
   </div>
 </div>
 
-<!-- БЛОК 2: КОНТЕКСТ ОТЧЕТА -->
-<div class="block">
-  <h3>2. Структура комментария</h3>
-  <input type="text" id="post-title" placeholder="Заголовок комментария (если есть)">
-  <textarea id="post-text" rows="5" placeholder="Описание комментария: основной текст, например, что было сделано или создано на занятии..."></textarea>
-  <textarea id="post-footer" rows="3" placeholder="Подвал комментария: дополнительные сведения, автор, метки, ссылки..."></textarea>
-</div>
-
-<!-- БЛОК 3: ФОТОМАТЕРИАЛЫ -->
-<div class="block">
-  <h3>3. 📸 Фотоматериалы</h3>
-  <div id="photos-meta-container"></div>
-  <button type="button" class="btn-add" onclick="addPhotoBlock()">+ Добавить блок фото</button>
-</div>
-
-<!-- БЛОК 4: ВИДЕОМАТЕРИАЛЫ -->
-<div class="block">
-  <h3>4. 🎥 Видеоматериалы</h3>
-  <div id="videos-meta-container"></div>
-  <button type="button" class="btn-add btn-add-video" onclick="addVideoBlock()">+ Добавить блок видео</button>
-</div>
-
-<!-- БЛОК КОНТРОЛЯ -->
-<div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
-  <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
-    <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()"> 
-    <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
-  </div>
-  <button type="button" class="btn" id="submit-btn" onclick="generateMarkdownOutput()">Создать комментарий</button>
-</div>
-
-<!-- ПОДКЛЮЧЕНИЕ ВЫДЕЛЕННОГО СКРИПТА СТРОГО ПО РЕГЛАМЕНТУ CMS TECHLAB -->
-<script src="{{ '/assets/js/comment-builder/comment-builder.js' | relative_url }}"></script>
+<!-- ПОДКЛЮЧЕНИЕ МОДУЛЕЙ КОНСТРУКТОРА В ПОРЯДКЕ ИХ ЗАВИСИМОСТЕЙ -->
+<script src="{{ '/assets/js/comment-builder/00-comment-notify.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/02-comment-ui.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/03-drafts-loader.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/04-drafts-parser.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/05-drafts-injector.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/06-comment-validation.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/07-media-files.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/08-comment-lock.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/09-media-upload.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/10-comment-save.js' | relative_url }}"></script>

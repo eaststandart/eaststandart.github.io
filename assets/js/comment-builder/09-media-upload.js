@@ -78,7 +78,7 @@ function prepareLocalMediaFileNames(session) {
       [
         mediaFile.missingName,
         mediaFile.uploadName,
-        mediaFile.name
+        mediaFile.kind === "local" ? null : mediaFile.name
       ].filter(Boolean).forEach(name => {
         const match = name.match(new RegExp("_" + type + "_(\\d+)\\.[^.]+$", "i"));
         if (match) counters[type] = Math.max(counters[type], Number(match[1]));
@@ -233,7 +233,7 @@ async function uploadLocalMediaFiles(session) {
       [
         mediaFile.missingName,
         mediaFile.uploadName,
-        mediaFile.name
+        mediaFile.kind === "local" ? null : mediaFile.name
       ].filter(Boolean).forEach(name => {
         const match = name.match(new RegExp(`_${type}_(\\d+)\\.[^.]+$`, "i"));
         if (match) counters[type] = Math.max(counters[type], Number(match[1]));

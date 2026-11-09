@@ -84,9 +84,9 @@ function buildCommentMarkdown(session) {
   ];
 
   const commentFields = [];
-  if (title) commentFields.push("### Заголовок комментария\\n\\n" + title);
-  if (mainText) commentFields.push("### Основной текст\\n\\n" + mainText);
-  if (footer) commentFields.push("### Подвал комментария\\n\\n" + footer);
+  if (title) commentFields.push("### Заголовок комментария\n\n" + title);
+  if (mainText) commentFields.push("### Основной текст\n\n" + mainText);
+  if (footer) commentFields.push("### Подвал комментария\n\n" + footer);
 
   if (commentFields.length) {
     body.push("## Структура комментария", ...commentFields);
@@ -97,7 +97,7 @@ function buildCommentMarkdown(session) {
     if (block.title) section.push("### " + block.title);
     if (block.description) section.push(block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
-    body.push(section.join("\\n\\n"));
+    body.push(section.join("\n\n"));
   });
 
   videos.forEach(block => {
@@ -105,10 +105,10 @@ function buildCommentMarkdown(session) {
     if (block.title) section.push("### " + block.title);
     if (block.description) section.push(block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
-    body.push(section.join("\\n\\n"));
+    body.push(section.join("\n\n"));
   });
 
-  return `${frontMatter.join("\\n")}\\n\\n${body.join("\\n\\n")}\\n`;
+  return `${frontMatter.join("\n")}\n\n${body.join("\n\n")}\n`;
 }
 
 function decodeGithubContent(content) {

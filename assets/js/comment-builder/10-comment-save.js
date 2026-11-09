@@ -183,7 +183,6 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown) {
   // ФУНКЦИЯ: putFile
 
   // НАЗНАЧЕНИЕ: Создаёт или обновляет Markdown-файл через GitHub Contents API.
-
   async function putFile(sha) {
     const payload = {
       message: `${sha ? "Update" : "Create"} comment: ${fileName}`,

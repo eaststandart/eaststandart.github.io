@@ -296,6 +296,12 @@ async function handleCommentSubmit() {
     const published = document.getElementById("publish-now-flag")?.checked === true;
     const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
 
+    // Опубликованный черновик больше не должен оставаться в оперативном списке черновиков.
+    if (published && currentCommentDraft && Array.isArray(mockDrafts)) {
+      mockDrafts = mockDrafts.filter(draft => draft.id !== saved.fileName);
+      if (typeof refreshDraftSelect === "function") refreshDraftSelect();
+    }
+
     showNotify(
       `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
       "success"

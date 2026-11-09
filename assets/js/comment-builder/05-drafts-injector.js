@@ -48,12 +48,10 @@ function refreshDraftSelect() {
 function toggleDraftBehavior() {
   const isDraftMode = document.getElementById("is-draft-mode").checked;
   const select = document.getElementById("draft-select");
-  const publishFlag = document.getElementById("publish-now-flag");
   currentCommentDraft = null;
   currentCommentSession = null;
 
   if (isDraftMode) {
-    if (publishFlag) publishFlag.checked = false;
     if (typeof updatePublishLabel === "function") updatePublishLabel();
     if (typeof loadCommentDraftsFromApi === "function") loadCommentDraftsFromApi();
 
@@ -64,7 +62,6 @@ function toggleDraftBehavior() {
       select.value = "";
     }
 
-    if (publishFlag) publishFlag.checked = true;
     if (typeof updatePublishLabel === "function") updatePublishLabel();
 
     const localToday = new Date();

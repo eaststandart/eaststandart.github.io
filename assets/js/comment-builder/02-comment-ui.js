@@ -14,6 +14,9 @@ let videoBlockIdx = 0;
  * Вызывается строго из модуля 01-comment-auth.js после успешной авторизации.
  */
 function initCommentInterface() {
+  const publishFlag = document.getElementById("publish-now-flag");
+  if (publishFlag) publishFlag.checked = false;
+
   const containerPhotos = document.getElementById("photos-meta-container");
   const containerVideos = document.getElementById("videos-meta-container");
   
@@ -72,7 +75,7 @@ function resetCommentForm() {
   document.getElementById("target-date").value = localDate;
 
   document.getElementById("is-draft-mode").checked = false;
-  document.getElementById("publish-now-flag").checked = true;
+  document.getElementById("publish-now-flag").checked = false;
 
   const select = document.getElementById("draft-select");
   select.innerHTML = `<option value="">Выберите черновик --></option>`;

@@ -6,13 +6,14 @@
 @version 2.0.0
 {%- endcomment -%}
 
+<div class="comment-builder">
 <div class="block">
   <h3>1. Параметры коментария</h3>
   
   <!-- ЛИНИЯ 1: Монолитная строка параметров публикации (Дата + Дискуссия-Коммит через дефис) -->
   <div class="header-line">
     <input type="text" id="target-date" class="input-date" maxlength="10" value="2026-10-25" placeholder="YYYY-MM-DD" onchange="updateNormalDateValue(this.value)">             
-    <span class="inline-label" style="margin-left: auto;">🗣️:</span>
+    <span class="inline-label header-label-spacer">🗣️:</span>
     <input type="text" id="discussion-combo" class="input-disc" maxlength="3" value="" placeholder="№">
     <span class="inline-label">-</span>
     <input type="text" id="commit-id" class="input-commit" maxlength="8" value="" placeholder="коммит">
@@ -55,12 +56,13 @@
 </div>
 
 <!-- БЛОК КОНТРОЛЯ -->
-<div class="block" style="background: #f0f7ff; border-color: #b3d7ff;">
-  <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 15px; color: #0056b3; margin-bottom: 12px; cursor: pointer; user-select: none;">
+<div class="block publish-block">
+  <div class="publish-option">
     <input type="checkbox" id="publish-now-flag" checked onchange="updatePublishLabel()"> 
     <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
   </div>
   <button type="button" class="btn" id="submit-btn" onclick="generateMarkdownOutput()">Создать комментарий</button>
+</div>
 </div>
 
 <!-- ПОДКЛЮЧЕНИЕ ВЫДЕЛЕННОГО СКРИПТА СТРОГО ПО РЕГЛАМЕНТУ CMS TECHLAB -->

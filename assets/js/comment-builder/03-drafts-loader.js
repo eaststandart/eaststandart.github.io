@@ -6,6 +6,10 @@
  * @version 1.0.0
  */
 
+// ФУНКЦИЯ: waitDraftRetry
+
+// НАЗНАЧЕНИЕ: Ожидает заданное время перед повторной попыткой загрузки черновиков.
+
 function waitDraftRetry(seconds, attempt) {
   return new Promise(resolve => {
     let remaining = seconds;
@@ -31,6 +35,10 @@ function waitDraftRetry(seconds, attempt) {
     }, 1000);
   });
 }
+
+// ФУНКЦИЯ: fetchDraftJson
+
+// НАЗНАЧЕНИЕ: Получает JSON-данные из GitHub API с обработкой временных ошибок.
 
 async function fetchDraftJson(url, headers) {
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -60,6 +68,10 @@ async function fetchDraftJson(url, headers) {
     }
   }
 }
+
+// ФУНКЦИЯ: loadCommentDraftsFromApi
+
+// НАЗНАЧЕНИЕ: Загружает из репозитория только черновики текущего преподавателя.
 
 async function loadCommentDraftsFromApi() {
   const userLogin =

@@ -135,9 +135,37 @@ function createMediaUploadName(file, type, session, index) {
   );
 }
 
-// ФУНКЦИЯ: uploadSingleMediaFile
-// НАЗНАЧЕНИЕ: Загрузка одного файла в _input
-async function uploadSingleMediaFile(file, fileName) {
+// ФУНКЦИЯ: waitMediaUploadRetry
+// НАЗНАЧЕНИЕ: Ожидает перед повторной попыткой загрузки медиафайла.
+function waitMediaUploadRetry(seconds, attempt) {
+  return new Promise(resolve => {
+    let remaining = seconds;
+
+    showNotify(
+      `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
+      "info"
+    );
+
+    const timer = setInterval(() => {
+      remaining--;
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        resolve();
+        return;
+      }
+
+      showNotify(
+        `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
+        "info"
+      );
+    }, 1000);
+  });
+}
+
+// ФУНКЦИЯ: uploadSingleMediaFileOnce
+// НАЗНАЧЕНИЕ: Выполняет одну попытку загрузки файла в _input.
+async function uploadSingleMediaFileOnce(file, fileName) {
   const url =
     `https://api.github.com/repos/${repo_owner}/${repo_name}` +
     `/contents/_input/${encodeURIComponent(fileName)}`;
@@ -162,8 +190,10 @@ async function uploadSingleMediaFile(file, fileName) {
     const existingFile = await checkResponse.json();
     sha = existingFile.sha;
   } else if (checkResponse.status !== 404) {
-    const error = await checkResponse.json().catch(() => ({}));
-    throw new Error(error.message || `Ошибка проверки ${fileName}: HTTP ${checkResponse.status}`);
+    const errorData = await checkResponse.json().catch(() => ({}));
+    const error = new Error(errorData.message || `Ошибка проверки ${fileName}: HTTP ${checkResponse.status}`);
+    error.status = checkResponse.status;
+    throw error;
   }
 
   const body = {
@@ -188,11 +218,33 @@ async function uploadSingleMediaFile(file, fileName) {
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || `Ошибка загрузки ${fileName}: HTTP ${response.status}`);
+    const errorData = await response.json().catch(() => ({}));
+    const error = new Error(errorData.message || `Ошибка загрузки ${fileName}: HTTP ${response.status}`);
+    error.status = response.status;
+    throw error;
   }
 
   return response.json();
+}
+
+// ФУНКЦИЯ: uploadSingleMediaFile
+// НАЗНАЧЕНИЕ: Загружает файл с повторными попытками при временных ошибках.
+async function uploadSingleMediaFile(file, fileName) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await uploadSingleMediaFileOnce(file, fileName);
+    } catch (error) {
+      const isTemporaryError =
+        error instanceof TypeError ||
+        (error.status >= 500 && error.status <= 599);
+
+      if (!isTemporaryError || attempt === 3) {
+        throw error;
+      }
+
+      await waitMediaUploadRetry(60, attempt + 1);
+    }
+  }
 }
 
 // ФУНКЦИЯ: uploadLocalMediaFiles

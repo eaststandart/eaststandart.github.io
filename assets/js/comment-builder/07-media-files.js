@@ -225,7 +225,12 @@ function renderMediaFiles(block) {
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      link.textContent = displayName;
+      const shortName = mediaFile.name.match(
+        /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
+      );
+      link.textContent = shortName
+        ? `[${shortName[1]}_${shortName[2]}_${shortName[3]}]`
+        : `[${mediaFile.name}]`;
       name.appendChild(link);
     } else {
       name.textContent = mediaFile.kind === "missing"

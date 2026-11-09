@@ -10,20 +10,21 @@ let mediaFileId = 0;
 
 const MEDIA_FILE_RULES = {
   photo: {
-    extensions: [".jpg", ".jpeg", ".png"],
-    mimeTypes: ["image/jpeg", "image/png"],
-    accept: ".jpg,.jpeg,.png"
+    extensions: [".jpg", ".jpeg", ".png", ".webp"],
+    mimeTypes: ["image/jpeg", "image/png", "image/webp"],
+    accept: ".jpg,.jpeg,.png,.webp"
   },
   video: {
-    extensions: [".mp4", ".mov", ".avi", ".mkv"],
+    extensions: [".mp4", ".mov", ".avi", ".mkv", ".webm"],
     mimeTypes: [
       "video/mp4",
       "video/quicktime",
       "video/x-msvideo",
       "video/avi",
-      "video/x-matroska"
+      "video/x-matroska",
+      "video/webm"
     ],
-    accept: ".mp4,.mov,.avi,.mkv"
+    accept: ".mp4,.mov,.avi,.mkv,.webm"
   }
 };
 

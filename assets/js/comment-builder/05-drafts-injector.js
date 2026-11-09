@@ -196,17 +196,15 @@ function loadDraftData(draftId) {
   photoBlockIdx = 0;
   videoBlockIdx = 0;
 
-  // 3. Разделяем основной текст и подвал
-  let bodyText = selectedDraft.text || "";
-  let postMainText = "";
-  let postFooterText = "";
+  // 3. Получаем основной текст и подвал.
+  // Новая структура хранит их отдельно; старые черновики требуют прежнего разделения.
+  let postMainText = selectedDraft.text || "";
+  let postFooterText = selectedDraft.footer || "";
 
-  if (bodyText.includes("\n---")) {
-    const parts = bodyText.split(/\r?\n---\s*(?:\r?\n|$)/);
+  if (!selectedDraft.structured && postMainText.includes("\\n---")) {
+    const parts = postMainText.split(/\\r?\\n---\\s*(?:\\r?\\n|$)/);
     postMainText = parts[0].trim();
-    postFooterText = parts.slice(1).join("\n---\n").trim();
-  } else {
-    postMainText = bodyText.trim();
+    postFooterText = parts.slice(1).join("\\n---\\n").trim();
   }
 
   // 4. Заполняем поля Блока 2

@@ -19,8 +19,10 @@ function initCommentInterface() {
   if (commentDescription) commentDescription.dataset.limitType = "block2Description";
 
   const publishFlag = document.getElementById("publish-now-flag");
-  if (publishFlag && !commentInterfaceInitialized) {
-    publishFlag.checked = false;
+  const publishAsBotFlag = document.getElementById("publish-as-bot-flag");
+  if (!commentInterfaceInitialized) {
+    if (publishFlag) publishFlag.checked = false;
+    if (publishAsBotFlag) publishAsBotFlag.checked = false;
     commentInterfaceInitialized = true;
   }
 
@@ -85,6 +87,8 @@ function resetCommentForm() {
 
   document.getElementById("is-draft-mode").checked = false;
   document.getElementById("publish-now-flag").checked = false;
+  const publishAsBotFlag = document.getElementById("publish-as-bot-flag");
+  if (publishAsBotFlag) publishAsBotFlag.checked = false;
 
   const select = document.getElementById("draft-select");
   select.innerHTML = `<option value="">Выберите черновик --></option>`;
@@ -230,9 +234,26 @@ function updatePublishLabel() {
       : "Сохранить черновик";
   }
   
-  if (isChecked) {
-    if (labelText) labelText.innerText = "Опубликовать сейчас (published: true)";
-  } else {
-    if (labelText) labelText.innerText = "Опубликовать сейчас (published: false)";
+  if (labelText) labelText.innerText = "Опубликовать";
+
+  // Дополнительный независимый флаг способа публикации.
+  if (labelText && labelText.parentNode &&
+      !document.getElementById("publish-as-bot-flag")) {
+    const botLabel = document.createElement("label");
+    botLabel.style.marginLeft = "12px";
+    botLabel.style.display = "inline-flex";
+    botLabel.style.alignItems = "center";
+    botLabel.style.gap = "5px";
+
+    const botFlag = document.createElement("input");
+    botFlag.type = "checkbox";
+    botFlag.id = "publish-as-bot-flag";
+    botFlag.checked = false;
+
+    const botText = document.createElement("span");
+    botText.textContent = "От робота";
+
+    botLabel.append(botFlag, botText);
+    labelText.insertAdjacentElement("afterend", botLabel);
   }
 }

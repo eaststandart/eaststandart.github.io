@@ -6,7 +6,7 @@
  * @version 1.0.0
  * ============================================================================== */
 
-.block {
+.comment-builder .block {
     background: #fff;
     border: 1px solid #ccc;
     padding: 12px;
@@ -14,7 +14,7 @@
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-h3 {
+.comment-builder h3 {
     margin-top: 0;
     margin-bottom: 10px;
     color: #444;
@@ -22,14 +22,14 @@ h3 {
     padding-bottom: 5px;
     font-size: 16px;
 }
-label {
+.comment-builder label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 14px;
     color: #555;
 }
-input[type="text"], textarea, select {
+.comment-builder input[type="text"], .comment-builder textarea, .comment-builder select {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -39,19 +39,19 @@ input[type="text"], textarea, select {
     background: #fff;
     margin-bottom: 10px;
 }
-input[type="text"]:last-child, textarea:last-child, select:last-child {
+.comment-builder input[type="text"]:last-child, .comment-builder textarea:last-child, .comment-builder select:last-child {
     margin-bottom: 0;
 }
-.header-line {
+.comment-builder .header-line {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 10px;
 }
-.header-line:last-child {
+.comment-builder .header-line:last-child {
     margin-bottom: 0;
 }
-.inline-label {
+.comment-builder .inline-label {
     font-weight: bold;
     font-size: 15px;
     color: #444;
@@ -59,7 +59,7 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 }
 
 /* КАЛИБРОВКА НОВОЙ ДВУХЛИНЕЙНОЙ ШАПКИ */
-.input-date {
+.comment-builder .input-date {
     width: 100px !important;
     max-width: 100px !important;
     text-align: center;
@@ -67,7 +67,7 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     margin-bottom: 0 !important;
     padding: 10px 4px !important; /* Уменьшили боковые паддинги, чтобы текст не сжимался */
 }
-.input-disc {
+.comment-builder .input-disc {
     width: 38px !important;
     max-width: 38px !important;
     text-align: center;
@@ -75,7 +75,7 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     margin-bottom: 0 !important;
     padding: 10px 2px !important;
 }
-.input-commit {
+.comment-builder .input-commit {
     width: 82px !important;
     max-width: 82px !important;
     text-align: center;
@@ -83,19 +83,19 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     margin-bottom: 0 !important;
     padding: 10px 4px !important;
 }
-.draft-select-container {
+.comment-builder .draft-select-container {
     flex: 1;
 }
-.draft-select-container select {
+.comment-builder .draft-select-container select {
     margin-bottom: 0 !important;
 }
-.draft-trigger {
+.comment-builder .draft-trigger {
     display: flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
 }
-.draft-trigger input {
+.comment-builder .draft-trigger input {
     width: 22px;
     height: 22px;
     cursor: pointer;
@@ -103,7 +103,7 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 }
 
 /* СТИЛИ МЕДИА-БЛОКОВ И КНОПОК */
-.media-sub-block {
+.comment-builder .media-sub-block {
     position: relative;
     border-left: 3px solid #0076ff;
     padding-left: 10px;
@@ -113,13 +113,13 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     padding-bottom: 28px;
     border-radius: 0 4px 4px 0;
 }
-.media-sub-block:last-child {
+.comment-builder .media-sub-block:last-child {
     margin-bottom: 0;
 }
-.video-block-border {
+.comment-builder .video-block-border {
     border-left-color: #ff9500;
 }
-.drop-zone {
+.comment-builder .drop-zone {
     border: 2px dashed #bbb;
     padding: 15px;
     text-align: center;
@@ -129,14 +129,14 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     font-size: 14px;
     margin-top: 5px;
 }
-.btn-delete-container {
+.comment-builder .btn-delete-container {
     position: absolute;
     bottom: 5px;
     right: 5px;
     text-align: right;
     width: 100%;
 }
-.btn-delete-block {
+.comment-builder .btn-delete-block {
     background: none;
     color: #ff3b30;
     border: none;
@@ -145,10 +145,10 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     cursor: pointer;
     padding: 2px 5px;
 }
-.btn-delete-block:hover {
+.comment-builder .btn-delete-block:hover {
     text-decoration: underline;
 }
-.btn-add {
+.comment-builder .btn-add {
     background: #fff;
     color: #0076ff;
     border: 1px dashed #0076ff;
@@ -161,11 +161,11 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.btn-add-video {
+.comment-builder .btn-add-video {
     color: #ff9500;
     border-color: #ff9500;
 }
-.btn {
+.comment-builder .btn {
     background: #0076ff;
     color: #fff;
     border: none;
@@ -179,17 +179,17 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
 }
 
 /* Управление вложениями медиаблоков */
-.drop-zone {
+.comment-builder .drop-zone {
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
 }
 
-.drop-zone.is-dragover {
+.comment-builder .drop-zone.is-dragover {
     background: #eef6ff;
     border-color: #0076ff;
 }
 
-.media-file-row {
+.comment-builder .media-file-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -201,12 +201,12 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     font-size: 13px;
 }
 
-.media-file-name {
+.comment-builder .media-file-name {
     min-width: 0;
     overflow-wrap: anywhere;
 }
 
-.media-file-remove {
+.comment-builder .media-file-remove {
     flex-shrink: 0;
     border: none;
     background: none;
@@ -217,13 +217,76 @@ input[type="text"]:last-child, textarea:last-child, select:last-child {
     padding: 2px 6px;
 }
 
-.media-file-remove:hover {
+.comment-builder .media-file-remove:hover {
     color: #a50000;
 }
 
 /* Полная блокировка рабочей области конструктора */
-#journal-section.is-locked > :not(#notification) {
+.comment-builder #journal-section.is-locked > :not(#notification) {
   pointer-events: none;
   user-select: none;
   opacity: 0.6;
+}
+
+/* Дополнительные стили интерфейса конструктора */
+.comment-builder .token-instructions {
+    font-size: 13px;
+    color: #6c757d;
+}
+.comment-builder .token-instructions-text {
+    margin: 0;
+}
+.comment-builder .section-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #444;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+.comment-builder .header-label-spacer {
+    margin-left: auto;
+}
+.comment-builder .publish-block {
+    background: #f0f7ff;
+    border-color: #b3d7ff;
+}
+.comment-builder .publish-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #0056b3;
+    margin-bottom: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+.comment-builder .publish-bot-option {
+    margin-left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.comment-builder .btn-delete-container {
+    display: none;
+}
+.comment-builder .btn-delete-container.is-visible {
+    display: block;
+}
+.comment-builder .file-link-indicator {
+    margin-top: 5px;
+    font-size: 13px;
+    font-family: monospace;
+    display: none;
+}
+.comment-builder .file-link-indicator.is-visible {
+    display: block;
+}
+.comment-builder .media-file-input {
+    display: none;
+}
+.comment-builder #draft-select option.is-incomplete {
+    color: #c92a2a;
+    background-color: #ffe3e3;
 }

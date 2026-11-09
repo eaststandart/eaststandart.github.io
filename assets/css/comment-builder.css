@@ -290,3 +290,92 @@
     color: #c92a2a;
     background-color: #ffe3e3;
 }
+
+/* Общие стили интерфейса конструктора.
+   Скопированы из journal-attendance.css и ограничены областью .comment-builder. */
+.comment-builder .auth-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.comment-builder .auth-title {
+    margin-top: 0;
+    color: #24292e;
+}
+.comment-builder .auth-desc {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+.comment-builder .input-text {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+.comment-builder .hidden {
+    display: none;
+}
+.comment-builder .notify {
+    padding: 12px;
+    margin: 1rem 0;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+}
+.comment-builder .notify-success {
+    background-color: #d3f9d8;
+    color: #2b8a3e;
+}
+.comment-builder .notify-error {
+    background-color: #ffe3e3;
+    color: #c92a2a;
+}
+.comment-builder .notify-blue {
+    background-color: #e7f5ff;
+    color: #1c7ed6;
+}
+.comment-builder .btn-big {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.comment-builder .btn-auth {
+    background-color: #24292e;
+    color: white;
+}
+.comment-builder .margin-top-15 {
+    margin-top: 1rem;
+}
+.comment-builder .btn-logout-svg {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0 0 0 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.comment-builder .notify-flex-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+

@@ -100,7 +100,7 @@ function resetCommentForm() {
 
   updatePublishLabel();
 
-  showNotify("Форма очищена.", "success");
+  showNotify("Форма очищена", "success");
 
   const teacher = localStorage.getItem("github_comment_logged_user");
   if (teacher) {

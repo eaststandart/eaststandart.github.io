@@ -46,8 +46,8 @@ function collectCommentMedia(containerId, type) {
       const description = block.querySelector(descSelector)?.value.trim() || "";
       const files = Array.isArray(block.mediaFiles)
         ? block.mediaFiles
-            .filter(file => file.kind === "existing" && file.name)
-            .map(file => file.name)
+            .filter(file => (file.kind === "existing" && file.name) || file.uploadName)
+            .map(file => file.uploadName || file.name)
         : [];
 
       if (!files.length) return null;
@@ -83,7 +83,7 @@ function buildCommentMarkdown(session) {
     `discussion_number: ${session.discussion}`,
     ...(commit ? [`discussion_comment: ${commit}`] : []),
     `date: ${session.date}`,
-    `timestamp: ${session.timestamp}`,
+    `timestamp: ${session.frontMatterTimestamp || session.timestamp}`,
     `published: ${published}`,
     `title: ${commentYamlQuote(title)}`,
     `teacher: ${commentYamlQuote(session.teacher)}`,
@@ -288,6 +288,9 @@ async function saveCommentMarkdown(session, markdown) {
 async function handleCommentSubmit() {
   if (window.commentFormLocked) return;
 
+  let markdownSaved = false;
+  let mediaUploadCompleted = false;
+
   try {
     if (!accessToken) {
       throw new Error("Нет активного токена GitHub.");
@@ -314,15 +317,47 @@ async function handleCommentSubmit() {
 
     setFormLock(true, "Подготовка комментария...");
 
-    // Сначала загружаем все новые медиафайлы.
-    showNotify("Загрузка новых медиафайлов...", "info");
-    const uploadResult = await uploadLocalMediaFiles(session);
+    // При каждом сохранении обновляем только timestamp Front Matter.
+    // Идентификатор сессии для имён файлов остаётся постоянным.
+    const previousTimestamp = Number(
+      currentCommentDraft?.timestamp || session.frontMatterTimestamp || 0
+    );
+    session.frontMatterTimestamp = String(
+      Math.max(Math.floor(Date.now() / 1000), previousTimestamp + 1)
+    );
 
-    // Markdown формируем только после успешной загрузки всех файлов.
+    // Сначала назначаем имена новым файлам и сохраняем ссылки на них в Markdown.
+    prepareLocalMediaFileNames(session);
     const markdown = buildCommentMarkdown(session);
 
-    showNotify("Сохранение комментария...", "info");
+    showNotify("Сохранение Markdown...", "info");
     const saved = await saveCommentMarkdown(session, markdown);
+    markdownSaved = true;
+
+    if (currentCommentDraft) {
+      currentCommentDraft.timestamp = session.frontMatterTimestamp;
+    }
+
+    // После сохранения манифеста загружаем физические файлы.
+    showNotify("Загрузка новых медиафайлов...", "info");
+    const uploadResult = await uploadLocalMediaFiles(session);
+    mediaUploadCompleted = true;
+
+    // После загрузки файлов обновляем Front Matter ещё раз:
+    // это запускает workflow повторно, когда комплект уже собран.
+    if (uploadResult.uploaded > 0) {
+      const uploadedTimestamp = Number(session.frontMatterTimestamp || 0);
+      session.frontMatterTimestamp = String(
+        Math.max(Math.floor(Date.now() / 1000), uploadedTimestamp + 1)
+      );
+
+      if (currentCommentDraft) {
+        currentCommentDraft.timestamp = session.frontMatterTimestamp;
+      }
+
+      const completedMarkdown = buildCommentMarkdown(session);
+      await saveCommentMarkdown(session, completedMarkdown);
+    }
 
     const published = document.getElementById("publish-now-flag")?.checked === true;
     const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
@@ -346,7 +381,15 @@ async function handleCommentSubmit() {
 
   } catch (error) {
     console.error("[COMMENT SAVE] Ошибка:", error);
-    showNotify(error.message || "Ошибка сохранения комментария.", "error");
+    let message = error.message || "Ошибка сохранения комментария.";
+
+    if (markdownSaved && !mediaUploadCompleted) {
+      message = "Markdown сохранён, но загрузка медиа не завершена: " + message;
+    } else if (markdownSaved && mediaUploadCompleted) {
+      message = "Медиа загружены, но не удалось обновить timestamp для повторной обработки: " + message;
+    }
+
+    showNotify(message, "error");
 
   } finally {
     setFormLock(false);

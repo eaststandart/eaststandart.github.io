@@ -148,8 +148,10 @@ function addMediaFiles(block, files, type) {
 
 // ФУНКЦИЯ: registerExistingMediaFiles
 // НАЗНАЧЕНИЕ: Регистрация файлов, восстановленных из черновика
-function registerExistingMediaFiles(block, fileNames, type) {
+function registerExistingMediaFiles(block, fileNames, type, missingFileNames = []) {
   if (!block || !Array.isArray(fileNames)) return;
+
+  const missing = new Set(missingFileNames);
 
   block.mediaFiles = [];
 
@@ -166,8 +168,9 @@ function registerExistingMediaFiles(block, fileNames, type) {
     block.mediaFiles.push({
       id: ++mediaFileId,
       name: fileName,
-      kind: "existing",
-      file: null
+      kind: missing.has(fileName) ? "missing" : "existing",
+      file: null,
+      uploadName: fileName
     });
   });
 
@@ -221,7 +224,9 @@ function renderMediaFiles(block) {
         typeof createDraftFileLink === "function") {
       name.appendChild(createDraftFileLink(mediaFile.name));
     } else {
-      name.textContent = mediaFile.name;
+      name.textContent = mediaFile.kind === "missing"
+        ? mediaFile.name + " (файл отсутствует)"
+        : mediaFile.name;
     }
 
     const removeButton = document.createElement("button");
@@ -232,8 +237,17 @@ function renderMediaFiles(block) {
     removeButton.textContent = "×";
 
     row.appendChild(name);
-    row.appendChild(removeButton);
 
+    if (mediaFile.kind === "missing") {
+      const replaceButton = document.createElement("button");
+      replaceButton.type = "button";
+      replaceButton.className = "media-file-replace";
+      replaceButton.dataset.fileId = String(mediaFile.id);
+      replaceButton.textContent = "Выбрать файл";
+      row.appendChild(replaceButton);
+    }
+
+    row.appendChild(removeButton);
     indicator.appendChild(row);
   });
 }
@@ -291,6 +305,43 @@ function getMediaBlockType(block) {
 
 // НАЗНАЧЕНИЕ: Обработка нажатий на зону выбора и кнопки удаления
 document.addEventListener("click", event => {
+  const replaceButton = event.target.closest(".media-file-replace");
+
+  if (replaceButton) {
+    const block = replaceButton.closest(".media-sub-block");
+    const fileId = replaceButton.dataset.fileId;
+    const type = getMediaBlockType(block);
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = MEDIA_FILE_RULES[type].accept;
+    input.style.display = "none";
+
+    input.addEventListener("change", () => {
+      const selectedFile = input.files?.[0];
+      const target = block.mediaFiles?.find(
+        file => String(file.id) === String(fileId)
+      );
+
+      if (selectedFile && target) {
+        if (!validateMediaFile(selectedFile, type)) {
+          showNotify("Недопустимый формат файла: " + selectedFile.name, "error");
+        } else {
+          target.kind = "local";
+          target.file = selectedFile;
+          target.uploadName = target.name;
+          renderMediaFiles(block);
+        }
+      }
+
+      input.remove();
+    }, { once: true });
+
+    block.appendChild(input);
+    input.click();
+    return;
+  }
+
   const removeButton = event.target.closest(".media-file-remove");
 
   if (removeButton) {

@@ -118,12 +118,25 @@ async function loadCommentDraftsFromApi() {
       return null;
     });
 
+    const availableFiles = new Set(
+      files.filter(file => file.type === "file").map(file => file.name)
+    );
+
     const parsedDrafts = await Promise.all(fetchPromises);
 
-    mockDrafts = parsedDrafts.filter(d =>
-      d !== null &&
-      String(d.published).toLowerCase() === "false"
-    );
+    mockDrafts = parsedDrafts.filter(d => {
+      if (!d) return false;
+
+      const mediaNames = [
+        ...(d.photos || []).flatMap(block => block.files || []),
+        ...(d.videos || []).flatMap(block => block.files || [])
+      ];
+
+      d.missingFiles = mediaNames.filter(name => !availableFiles.has(name));
+
+      return String(d.published).toLowerCase() === "false" ||
+        (String(d.published).toLowerCase() === "true" && d.missingFiles.length > 0);
+    });
 
     if (typeof refreshDraftSelect === "function") {
       refreshDraftSelect();

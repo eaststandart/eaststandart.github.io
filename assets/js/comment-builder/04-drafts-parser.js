@@ -53,12 +53,21 @@ function getMarkdownField(content, fieldName) {
 function parseNewManifestBody(body) {
   const sections = getMarkdownSections(body, 2);
   const mainSection = sections.find(section => section.title === "Структура комментария");
+  const hasMediaSections = sections.some(section =>
+    section.title === "📸 Фотоматериалы" || section.title === "🎥 Видеоматериалы"
+  );
 
-  if (!mainSection) return null;
+  if (!mainSection && !hasMediaSections) return null;
 
-  const title = getMarkdownField(mainSection.content, "Заголовок комментария");
-  const mainText = getMarkdownField(mainSection.content, "Основной текст");
-  const footer = getMarkdownField(mainSection.content, "Подвал комментария");
+  const title = mainSection
+    ? getMarkdownField(mainSection.content, "Заголовок комментария")
+    : "";
+  const mainText = mainSection
+    ? getMarkdownField(mainSection.content, "Основной текст")
+    : "";
+  const footer = mainSection
+    ? getMarkdownField(mainSection.content, "Подвал комментария")
+    : "";
 
   const photos = [];
   const videos = [];

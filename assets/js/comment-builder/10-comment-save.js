@@ -46,8 +46,8 @@ function collectCommentMedia(containerId, type) {
       const description = block.querySelector(descSelector)?.value.trim() || "";
       const files = Array.isArray(block.mediaFiles)
         ? block.mediaFiles
-            .filter(file => (file.kind === "existing" && file.name) || file.uploadName)
-            .map(file => file.uploadName || file.name)
+            .filter(file => file.missingName || file.uploadName || file.name)
+            .map(file => file.missingName || file.uploadName || file.name)
         : [];
 
       if (!files.length) return null;

@@ -79,39 +79,36 @@ function buildCommentMarkdown(session) {
     "---"
   ];
 
-  const body = [];
+  const body = [
+    published ? "# Комментарий для публикации" : "# Черновик комментария"
+  ];
 
-  if (title) body.push(`## ${title}`);
-  if (mainText) body.push(mainText);
+  const commentFields = [];
+  if (title) commentFields.push("### Заголовок комментария\\n\\n" + title);
+  if (mainText) commentFields.push("### Основной текст\\n\\n" + mainText);
+  if (footer) commentFields.push("### Подвал комментария\\n\\n" + footer);
 
-  if (footer) {
-    body.push("---");
-    body.push(footer);
+  if (commentFields.length) {
+    body.push("## Структура комментария", ...commentFields);
   }
 
   photos.forEach(block => {
-    const section = [
-      `### ${block.title} <!-- [блок фото] -->`
-    ];
-
+    const section = ["## 📸 Фотоматериалы"];
+    if (block.title) section.push("### " + block.title);
     if (block.description) section.push(block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
-
-    body.push(section.join("\n\n"));
+    body.push(section.join("\\n\\n"));
   });
 
   videos.forEach(block => {
-    const section = [
-      `### ${block.title} <!-- [блок видео] -->`
-    ];
-
+    const section = ["## 🎥 Видеоматериалы"];
+    if (block.title) section.push("### " + block.title);
     if (block.description) section.push(block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
-
-    body.push(section.join("\n\n"));
+    body.push(section.join("\\n\\n"));
   });
 
-  return `${frontMatter.join("\n")}\n\n${body.join("\n\n")}\n`;
+  return `${frontMatter.join("\\n")}\\n\\n${body.join("\\n\\n")}\\n`;
 }
 
 function decodeGithubContent(content) {

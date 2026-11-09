@@ -179,6 +179,10 @@ function loadDraftData(draftId) {
     publishFlag.checked = String(selectedDraft.published).toLowerCase() === "true";
   }
   if (typeof updatePublishLabel === "function") updatePublishLabel();
+  const publishAsBotFlag = document.getElementById("publish-as-bot-flag");
+  if (publishAsBotFlag) {
+    publishAsBotFlag.checked = selectedDraft.publishAsBot === true;
+  }
 
   console.log("[ИНЪЕКТОР] Восстановление черновика:", draftId);
 

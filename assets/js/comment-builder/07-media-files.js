@@ -225,7 +225,7 @@ function renderMediaFiles(block) {
       name.appendChild(createDraftFileLink(mediaFile.name));
     } else {
       name.textContent = mediaFile.kind === "missing"
-        ? mediaFile.name + " (файл отсутствует)"
+        ? mediaFile.name + " (отсутствует)"
         : mediaFile.name;
     }
 
@@ -327,9 +327,11 @@ document.addEventListener("click", event => {
         if (!validateMediaFile(selectedFile, type)) {
           showNotify("Недопустимый формат файла: " + selectedFile.name, "error");
         } else {
+          target.missingName = target.name;
           target.kind = "local";
           target.file = selectedFile;
-          target.uploadName = target.name;
+          target.name = selectedFile.name;
+          target.uploadName = null;
           renderMediaFiles(block);
         }
       }

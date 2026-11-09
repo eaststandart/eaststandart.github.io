@@ -46,8 +46,8 @@ function collectCommentMedia(containerId, type) {
       const description = block.querySelector(descSelector)?.value.trim() || "";
       const files = Array.isArray(block.mediaFiles)
         ? block.mediaFiles
-            .filter(file => (file.kind === "existing" && file.name) || file.uploadName)
-            .map(file => file.uploadName || file.name)
+            .filter(file => file.missingName || file.uploadName || file.name)
+            .map(file => file.missingName || file.uploadName || file.name)
         : [];
 
       if (!files.length) return null;
@@ -359,25 +359,46 @@ async function handleCommentSubmit() {
       await saveCommentMarkdown(session, completedMarkdown);
     }
 
+    const unresolvedMediaCount = [
+      document.getElementById("photos-meta-container"),
+      document.getElementById("videos-meta-container")
+    ].filter(Boolean).reduce((total, container) => {
+      const blocks = Array.from(container.querySelectorAll(".media-sub-block"));
+      return total + blocks.reduce((count, block) => {
+        const files = Array.isArray(block.mediaFiles) ? block.mediaFiles : [];
+        return count + files.filter(file => file.kind === "missing").length;
+      }, 0);
+    }, 0);
+
     const published = document.getElementById("publish-now-flag")?.checked === true;
     const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
 
-    // Опубликованный черновик больше не должен оставаться в оперативном списке черновиков.
-    if (published && currentCommentDraft && Array.isArray(mockDrafts)) {
+    // Убираем опубликованный комментарий из списка только после полной комплектации.
+    if (published && unresolvedMediaCount === 0 && currentCommentDraft && Array.isArray(mockDrafts)) {
       mockDrafts = mockDrafts.filter(draft => draft.id !== saved.fileName);
       if (typeof refreshDraftSelect === "function") refreshDraftSelect();
     }
 
-    showNotify(
-      `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
-      "success"
-    );
+    if (uploadResult.errors.length || unresolvedMediaCount > 0) {
+      showNotify(
+        `${saveMessage}: ${saved.fileName}. Загружено: ${uploadResult.uploaded}. Ошибок загрузки: ${uploadResult.errors.length}. Отсутствует файлов: ${unresolvedMediaCount}. Сборка не завершена, форма оставлена открытой.`,
+        "error"
+      );
+      if (uploadResult.errors.length) {
+        console.warn("[COMMENT SAVE] Не загружены медиафайлы:", uploadResult.errors);
+      }
+    } else {
+      showNotify(
+        `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
+        "success"
+      );
 
-    console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
+      console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
 
-    setTimeout(() => {
-      resetCommentForm();
-    }, 2000);
+      setTimeout(() => {
+        resetCommentForm();
+      }, 2000);
+    }
 
   } catch (error) {
     console.error("[COMMENT SAVE] Ошибка:", error);

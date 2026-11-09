@@ -34,8 +34,7 @@ function refreshDraftSelect() {
       option.textContent = "[" + draft.date + "] " + title;
 
       if (isIncomplete) {
-        option.style.color = "#c92a2a";
-        option.style.backgroundColor = "#ffe3e3";
+        option.classList.add("is-incomplete");
       }
 
       select.appendChild(option);

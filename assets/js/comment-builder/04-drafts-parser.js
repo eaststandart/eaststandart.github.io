@@ -111,29 +111,8 @@ function parseNewManifestBody(body) {
     if (normalizedType === "🎥 Видеоматериалы") type = "video";
     if (!type) return;
 
-    const hasNamedFields =
-      /^###\s+Заголовок блока\s*$/m.test(section.content) ||
-      /^###\s+Описание блока\s*$/m.test(section.content);
-
-    let blockTitle = "";
-    let description = "";
-
-    if (hasNamedFields) {
-      blockTitle = getMarkdownField(section.content, "Заголовок блока");
-      description = getMarkdownField(section.content, "Описание блока");
-    } else {
-      // Совместимость с промежуточным форматом: первый ### содержит заголовок блока.
-      const titleMatch = section.content.match(/^###\s+([^\r\n]+)\s*(?:\r?\n|$)/);
-      const blockContent = titleMatch
-        ? section.content.substring(titleMatch[0].length).trim()
-        : section.content;
-
-      blockTitle = titleMatch ? titleMatch[1].trim() : "";
-      description = blockContent
-        .replace(/!\[\[[^\]]+\]\]/g, "")
-        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-        .trim();
-    }
+    const blockTitle = getMarkdownField(section.content, "Заголовок блока");
+    const description = getMarkdownField(section.content, "Описание блока");
 
     const files = [...section.content.matchAll(/!\[\[([^\]]+)\]\]/g)]
       .map(file => file[1].split("|")[0].trim());
@@ -150,66 +129,6 @@ function parseNewManifestBody(body) {
   return { title, text: mainText, footer, photos, videos };
 }
 
-// ФУНКЦИЯ: parseLegacyManifestBody
-// НАЗНАЧЕНИЕ: Разбирает тело комментария в прежнем формате Markdown.
-function parseLegacyManifestBody(body) {
-  const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
-
-  const mediaRegex =
-    /^###\s+(.+?)\s*<!--\s*\[блок\s+(фото|видео)\]\s*-->[ \t]*$/gim;
-
-  const matches = [...body.matchAll(mediaRegex)];
-  const photos = [];
-  const videos = [];
-
-  let photoIndex = 0;
-  let videoIndex = 0;
-
-  const cleanBodyText = (
-    matches.length ? body.substring(0, matches[0].index) : body
-  )
-    .replace(titleMatch ? titleMatch[0] : "", "")
-    .replace(/\r\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-
-  matches.forEach((match, position) => {
-    const type = match[2].toLowerCase();
-    const contentStart = match.index + match[0].length;
-    const contentEnd = position + 1 < matches.length
-      ? matches[position + 1].index
-      : body.length;
-    const content = body.substring(contentStart, contentEnd).trim();
-
-    const files = [...content.matchAll(/!\[\[([^\]]+)\]\]/g)]
-      .map(file => file[1].split("|")[0].trim());
-
-    const description = content
-      .replace(/!\[\[[^\]]+\]\]/g, "")
-      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-      .trim();
-
-    const index = type === "фото" ? ++photoIndex : ++videoIndex;
-    const block = {
-      index,
-      title: match[1].replace(/<!--.*?-->/g, "").trim(),
-      description,
-      files
-    };
-
-    if (type === "фото") photos.push(block);
-    else videos.push(block);
-  });
-
-  return {
-    title: titleMatch ? titleMatch[1].trim() : "",
-    text: cleanBodyText,
-    footer: "",
-    photos,
-    videos
-  };
-}
-
 // ФУНКЦИЯ: parseManifestContent
 // НАЗНАЧЕНИЕ: Формирует объект черновика из имени файла и содержимого Markdown.
 function parseManifestContent(fileName, text, sha) {
@@ -218,8 +137,10 @@ function parseManifestContent(fileName, text, sha) {
     const meta = parsed.meta;
     const body = parsed.body;
 
-    const newContent = parseNewManifestBody(body);
-    const content = newContent || parseLegacyManifestBody(body);
+    const content = parseNewManifestBody(body);
+    if (!content) {
+      throw new Error("Неподдерживаемая структура черновика");
+    }
 
     // YAML title остаётся совместимым с существующей логикой черновиков.
     // Если он отсутствует, используем заголовок из Markdown.
@@ -236,7 +157,7 @@ function parseManifestContent(fileName, text, sha) {
       title: articleTitle,
       text: content.text,
       footer: content.footer,
-      structured: Boolean(newContent),
+      structured: true,
       photos: content.photos,
       videos: content.videos,
       timestamp: meta.timestamp || "",

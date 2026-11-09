@@ -65,6 +65,9 @@ function submitToken() {
 // ФУНКЦИЯ: showJournal
 // НАЗНАЧЕНИЕ: Открывает рабочую область конструктора и запускает проверку доступа.
 function showJournal() {
+  setFormLock(true);
+  showNotify("Загрузка конструктора...", "info");
+
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("journal-section").classList.remove("hidden");
 
@@ -120,6 +123,14 @@ function checkTeacherAuthorization() {
     if (typeof initCommentInterface === "function") {
       initCommentInterface();
     }
+
+    // Учитываем созданные при инициализации элементы и открываем форму.
+    showNotify(
+      "Преподаватель: " + userLogin,
+      "info"
+    );
+    setFormLock(true);
+    setFormLock(false);
   })
   .catch(err => {
     console.error(err);

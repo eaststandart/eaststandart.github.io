@@ -58,10 +58,7 @@ function initCommentInterface() {
 
   updatePublishLabel();
 
-  showNotify("Интерфейс конструктора готов!", "success");
-  
-  const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";
-  setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 1500);
+  // Статус готовности и разблокировка выполняются после завершения инициализации авторизации.
 }
 
 // ФУНКЦИЯ: resetCommentForm
@@ -104,12 +101,6 @@ function resetCommentForm() {
   updatePublishLabel();
 
   showNotify("Готово. Форма очищена.", "success");
-
-  const userLogin = localStorage.getItem("github_comment_logged_user") || "Преподаватель";
-
-  setTimeout(() => {
-    showNotify("👨‍🎓 Преподаватель: " + userLogin, "info");
-  }, 2000);
 
   console.log("[COMMENT SAVE] Форма сброшена");
 }

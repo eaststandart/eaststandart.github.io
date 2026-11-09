@@ -95,7 +95,7 @@ async function loadCommentDraftsFromApi() {
         refreshDraftSelect();
       }
       showNotify("Черновики не обнаружены.", "success");
-      return;
+      return true;
     }
 
     const fetchPromises = myDraftFiles.map(async file => {
@@ -155,12 +155,15 @@ async function loadCommentDraftsFromApi() {
       "success"
     );
 
+    return true;
+
   } catch (error) {
     console.error("[DRAFTS LOADER] Ошибка:", error);
     showNotify(
       error.message || "Ошибка загрузки черновиков.",
       "error"
     );
+    return false;
   }
 }
 

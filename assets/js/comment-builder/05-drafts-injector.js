@@ -48,15 +48,36 @@ function refreshDraftSelect() {
 
 // ФУНКЦИЯ: toggleDraftBehavior
 // НАЗНАЧЕНИЕ: Переключение режима черновиков
-function toggleDraftBehavior() {
-  const isDraftMode = document.getElementById("is-draft-mode").checked;
+async function toggleDraftBehavior() {
+  const draftModeCheckbox = document.getElementById("is-draft-mode");
+  const isDraftMode = draftModeCheckbox.checked;
   const select = document.getElementById("draft-select");
   currentCommentDraft = null;
   currentCommentSession = null;
 
   if (isDraftMode) {
     if (typeof updatePublishLabel === "function") updatePublishLabel();
-    if (typeof loadCommentDraftsFromApi === "function") loadCommentDraftsFromApi();
+
+    setFormLock(true);
+
+    let loaded = false;
+
+    try {
+      loaded = typeof loadCommentDraftsFromApi === "function"
+        ? await loadCommentDraftsFromApi()
+        : false;
+    } finally {
+      if (!loaded) {
+        draftModeCheckbox.checked = false;
+        mockDrafts = [];
+      }
+
+      setFormLock(false);
+
+      if (typeof refreshDraftSelect === "function") {
+        refreshDraftSelect();
+      }
+    }
 
   } else {
     if (select) {

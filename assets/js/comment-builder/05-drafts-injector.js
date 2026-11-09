@@ -219,15 +219,6 @@ function loadDraftData(draftId) {
     restoreMediaBlock(containerVideos, blockData, "video");
   });
 
-  // 7. Если блоков не было — создаём пустые
-  if (!selectedDraft.photos.length) {
-    addPhotoBlock();
-  }
-
-  if (!selectedDraft.videos.length) {
-    addVideoBlock();
-  }
-
   console.log("[ИНЪЕКТОР] Черновик восстановлен");
 
   showNotify(

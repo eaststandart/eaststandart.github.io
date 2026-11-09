@@ -89,6 +89,8 @@ function logoutTeacher() {
 }
 
 // НАЗНАЧЕНИЕ: Проверяет токен GitHub и подтверждает право преподавателя на доступ.
+// ФУНКЦИЯ: checkTeacherAuthorization
+// НАЗНАЧЕНИЕ: Проверяет токен GitHub и подтверждает право преподавателя на доступ.
 function checkTeacherAuthorization() {
   showNotify("Идентификация пользователя...", "success");
 

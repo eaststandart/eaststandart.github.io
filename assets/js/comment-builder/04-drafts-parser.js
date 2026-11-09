@@ -1,7 +1,9 @@
 /**
- * @module 04-drafts-parser.js
- * @about   Парсер черновиков новой структуры Markdown.
- * @version 2.0.0
+ * @module  04-drafts-parser.js
+ * @about   Модуль разбора структуры черновиков Markdown.
+ * @purpose Разбор Front Matter и содержимого Markdown, извлечение полей комментария и медиаблоков.
+ * @author  TechLab
+ * @version 1.0.0
  */
 
 function parseManifestYaml(text, fileName, sha) {

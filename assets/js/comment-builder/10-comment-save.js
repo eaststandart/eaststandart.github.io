@@ -88,22 +88,20 @@ function buildCommentMarkdown(session) {
   if (mainText) commentFields.push("### Основной текст\n\n" + mainText);
   if (footer) commentFields.push("### Подвал комментария\n\n" + footer);
 
-  if (commentFields.length) {
-    body.push("## Структура комментария", ...commentFields);
-  }
+  body.push("## Структура комментария", ...commentFields);
 
   photos.forEach(block => {
     const section = ["## 📸 Фотоматериалы"];
-    if (block.title) section.push("### " + block.title);
-    if (block.description) section.push(block.description);
+    if (block.title) section.push("### Заголовок блока", block.title);
+    if (block.description) section.push("### Описание блока", block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
     body.push(section.join("\n\n"));
   });
 
   videos.forEach(block => {
     const section = ["## 🎥 Видеоматериалы"];
-    if (block.title) section.push("### " + block.title);
-    if (block.description) section.push(block.description);
+    if (block.title) section.push("### Заголовок блока", block.title);
+    if (block.description) section.push("### Описание блока", block.description);
     block.files.forEach(file => section.push(`![[${file}]]`));
     body.push(section.join("\n\n"));
   });

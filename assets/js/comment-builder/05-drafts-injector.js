@@ -238,7 +238,7 @@ function loadDraftData(draftId) {
   console.log("[ИНЪЕКТОР] Черновик восстановлен");
 
   showNotify(
-    `Черновик от ${selectedDraft.date} успешно развернут!`,
+    "Черновик успешно развернут!",
     "success"
   );
 }

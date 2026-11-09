@@ -368,16 +368,24 @@ async function handleCommentSubmit() {
       if (typeof refreshDraftSelect === "function") refreshDraftSelect();
     }
 
-    showNotify(
-      `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
-      "success"
-    );
+    if (uploadResult.errors.length) {
+      showNotify(
+        `${saveMessage}: ${saved.fileName}. Загружено: ${uploadResult.uploaded}. Не загружено: ${uploadResult.errors.length}. Отсутствующие файлы оставлены в форме.`,
+        "error"
+      );
+      console.warn("[COMMENT SAVE] Не загружены медиафайлы:", uploadResult.errors);
+    } else {
+      showNotify(
+        `${saveMessage}: ${saved.fileName}. Загружено новых медиафайлов: ${uploadResult.uploaded}.`,
+        "success"
+      );
 
-    console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
+      console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
 
-    setTimeout(() => {
-      resetCommentForm();
-    }, 2000);
+      setTimeout(() => {
+        resetCommentForm();
+      }, 2000);
+    }
 
   } catch (error) {
     console.error("[COMMENT SAVE] Ошибка:", error);

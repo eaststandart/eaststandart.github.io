@@ -201,10 +201,10 @@ function loadDraftData(draftId) {
   let postMainText = selectedDraft.text || "";
   let postFooterText = selectedDraft.footer || "";
 
-  if (!selectedDraft.structured && postMainText.includes("\\n---")) {
-    const parts = postMainText.split(/\\r?\\n---\\s*(?:\\r?\\n|$)/);
+  if (!selectedDraft.structured && postMainText.includes("\n---")) {
+    const parts = postMainText.split(/\r?\n---\s*(?:\r?\n|$)/);
     postMainText = parts[0].trim();
-    postFooterText = parts.slice(1).join("\\n---\\n").trim();
+    postFooterText = parts.slice(1).join("\n---\n").trim();
   }
 
   // 4. Заполняем поля Блока 2

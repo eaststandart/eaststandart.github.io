@@ -6,6 +6,26 @@
  * @version 1.0.0
  */
 
+// ЕДИНЫЕ НАСТРОЙКИ ОГРАНИЧЕНИЙ ДЛИНЫ ТЕКСТА.
+window.COMMENT_TEXT_LIMITS = Object.freeze({
+  commentDescription: 1000,
+  mediaTitle: 50,
+  mediaDescription: 500
+});
+
+// ФУНКЦИЯ: countVisibleCharacters
+// НАЗНАЧЕНИЕ: Считает видимые символы, включая составные эмодзи, как один символ.
+function countVisibleCharacters(value) {
+  const text = String(value ?? "");
+
+  if (typeof Intl.Segmenter === "function") {
+    const segmenter = new Intl.Segmenter("ru", { granularity: "grapheme" });
+    return Array.from(segmenter.segment(text)).length;
+  }
+
+  return Array.from(text).length;
+}
+
 // ФУНКЦИЯ: validateCommentText
 // НАЗНАЧЕНИЕ: Проверяет текст на управляющие символы и установленное ограничение длины.
 function validateCommentText(value, fieldName, maxLength = null) {
@@ -16,12 +36,39 @@ function validateCommentText(value, fieldName, maxLength = null) {
     return `Поле «${fieldName}» содержит недопустимые управляющие символы.`;
   }
 
-  if (maxLength !== null && text.length > maxLength) {
+  if (maxLength !== null && countVisibleCharacters(text) > maxLength) {
     return `Поле «${fieldName}»: не более ${maxLength} символов.`;
   }
 
   return null;
 }
+
+// Не допускаем ввод, превышающий лимит. Вставка и замена выделенного текста учитываются.
+document.addEventListener("beforeinput", event => {
+  const field = event.target;
+  const limitType = field?.dataset?.limitType;
+  const maxLength = window.COMMENT_TEXT_LIMITS[limitType];
+
+  if (!maxLength || event.isComposing || !event.inputType?.startsWith("insert")) return;
+
+  let insertedText = event.data;
+
+  if (insertedText === null && event.dataTransfer) {
+    insertedText = event.dataTransfer.getData("text/plain");
+  }
+
+  // Если браузер не предоставляет вставляемый текст, окончательная проверка сработает при сохранении.
+  if (typeof insertedText !== "string") return;
+
+  const start = field.selectionStart ?? field.value.length;
+  const end = field.selectionEnd ?? start;
+  const nextValue =
+    field.value.slice(0, start) + insertedText + field.value.slice(end);
+
+  if (countVisibleCharacters(nextValue) > maxLength) {
+    event.preventDefault();
+  }
+});
 
 // ФУНКЦИЯ: validateCommentForm
 // НАЗНАЧЕНИЕ: Проверяет все текстовые поля формы перед загрузкой файлов и сохранением.
@@ -40,11 +87,19 @@ function validateCommentForm() {
     if (error) return error;
   }
 
+  const commentDescription = document.querySelector("#post-text");
+  if (commentDescription) {
+    const error = validateCommentText(
+      commentDescription.value,
+      "Описание комментария",
+      window.COMMENT_TEXT_LIMITS.commentDescription
+    );
+    if (error) return error;
+  }
+
   const mediaFields = [
-    { selector: ".photo-h3-title", name: "Заголовок фотоблока", maxLength: 50 },
-    { selector: ".photo-block-desc", name: "Описание фотоблока", maxLength: 500 },
-    { selector: ".video-h3-title", name: "Заголовок видеоблока", maxLength: 50 },
-    { selector: ".video-block-desc", name: "Описание видеоблока", maxLength: 500 }
+    { selector: ".photo-h3-title, .video-h3-title", name: "Заголовок медиаблока", limitType: "mediaTitle" },
+    { selector: ".photo-block-desc, .video-block-desc", name: "Описание медиаблока", limitType: "mediaDescription" }
   ];
 
   for (const fieldInfo of mediaFields) {
@@ -56,7 +111,7 @@ function validateCommentForm() {
       const error = validateCommentText(
         field.value,
         fieldInfo.name,
-        fieldInfo.maxLength
+        window.COMMENT_TEXT_LIMITS[fieldInfo.limitType]
       );
 
       if (error) return error;

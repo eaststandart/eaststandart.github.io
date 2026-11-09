@@ -7,9 +7,7 @@
  */
 
 // ФУНКЦИЯ: parseManifestYaml
-
 // НАЗНАЧЕНИЕ: Разбирает Front Matter и извлекает метаданные комментария.
-
 function parseManifestYaml(text, fileName, sha) {
   const yamlMatch = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
 
@@ -38,9 +36,7 @@ function parseManifestYaml(text, fileName, sha) {
 }
 
 // ФУНКЦИЯ: getMarkdownSections
-
 // НАЗНАЧЕНИЕ: Разделяет Markdown-документ на именованные разделы.
-
 function getMarkdownSections(text, level) {
   const regex = new RegExp("^" + "#".repeat(level) + "[ \t]+(.+?)[ \t]*#*[ \t]*$", "gm");
   const matches = [...text.matchAll(regex)];
@@ -55,9 +51,7 @@ function getMarkdownSections(text, level) {
 }
 
 // ФУНКЦИЯ: getMarkdownField
-
 // НАЗНАЧЕНИЕ: Извлекает содержимое указанного поля Markdown.
-
 function getMarkdownField(content, fieldName) {
   const lines = content.split(/\r?\n/);
   const marker = "### " + fieldName;
@@ -157,9 +151,7 @@ function parseNewManifestBody(body) {
 }
 
 // ФУНКЦИЯ: parseLegacyManifestBody
-
 // НАЗНАЧЕНИЕ: Разбирает тело комментария в прежнем формате Markdown.
-
 function parseLegacyManifestBody(body) {
   const titleMatch = body.match(/^##[ \t]+(.+?)[ \t]*#*[ \t]*$/m);
 
@@ -219,9 +211,7 @@ function parseLegacyManifestBody(body) {
 }
 
 // ФУНКЦИЯ: parseManifestContent
-
 // НАЗНАЧЕНИЕ: Формирует объект черновика из имени файла и содержимого Markdown.
-
 function parseManifestContent(fileName, text, sha) {
   try {
     const parsed = parseManifestYaml(text, fileName, sha);

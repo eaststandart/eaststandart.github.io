@@ -30,11 +30,13 @@ function refreshDraftSelect() {
       option.value = draft.id;
 
       const title = String(draft.title || "").trim() || "Без заголовка";
-      const isIncompletePublication =
-        String(draft.published).toLowerCase() === "true" &&
-        draft.missingFiles?.length > 0;
-      const status = isIncompletePublication ? "Не собран" : "Черновик";
-      option.textContent = "[" + draft.date + "] [" + status + "] " + title;
+      const isIncomplete = draft.missingFiles?.length > 0;
+      option.textContent = "[" + draft.date + "] " + title;
+
+      if (isIncomplete) {
+        option.style.color = "#c92a2a";
+        option.style.backgroundColor = "#ffe3e3";
+      }
 
       select.appendChild(option);
     });

@@ -147,8 +147,11 @@ async function loadCommentDraftsFromApi() {
       return;
     }
 
+    const incompleteCount = mockDrafts.filter(d => d.missingFiles?.length > 0).length;
+    const draftCount = mockDrafts.length - incompleteCount;
+
     showNotify(
-      `Загружено черновиков: ${mockDrafts.length}.`,
+      `Загружено: черновиков ${draftCount}, не собрано ${incompleteCount}.`,
       "success"
     );
 

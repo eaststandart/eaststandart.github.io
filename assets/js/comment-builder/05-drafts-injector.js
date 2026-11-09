@@ -30,7 +30,11 @@ function refreshDraftSelect() {
       option.value = draft.id;
 
       const title = String(draft.title || "").trim() || "Без заголовка";
-      option.textContent = `[${draft.date}] ${title}`;
+      const isIncompletePublication =
+        String(draft.published).toLowerCase() === "true" &&
+        draft.missingFiles?.length > 0;
+      const status = isIncompletePublication ? "Не собран" : "Черновик";
+      option.textContent = "[" + draft.date + "] [" + status + "] " + title;
 
       select.appendChild(option);
     });
@@ -147,7 +151,8 @@ function restoreMediaBlock(container, blockData, type) {
     registerExistingMediaFiles(
       blockElement,
       blockData.files || [],
-      type
+      type,
+      currentCommentDraft?.missingFiles || []
     );
   }
 }
@@ -166,6 +171,12 @@ function loadDraftData(draftId) {
   if (!selectedDraft) return;
 
   currentCommentDraft = selectedDraft;
+
+  const publishFlag = document.getElementById("publish-now-flag");
+  if (publishFlag) {
+    publishFlag.checked = String(selectedDraft.published).toLowerCase() === "true";
+  }
+  if (typeof updatePublishLabel === "function") updatePublishLabel();
 
   console.log("[ИНЪЕКТОР] Восстановление черновика:", draftId);
 

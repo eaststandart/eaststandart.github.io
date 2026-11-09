@@ -12,7 +12,7 @@ function showNotify(text, type) {
   const el = document.getElementById("notification");
   if (!el) return;
 
-  const logoutDisabled = window.commentFormLocked ? "disabled" : "";
+  const logoutDisabled = window.commentOperationLocked ? "disabled" : "";
 
   el.classList.remove("notify-success", "notify-error", "notify-blue");
 
@@ -43,4 +43,12 @@ function showNotify(text, type) {
                      "<button " + logoutDisabled + " onclick='logoutTeacher()' class='btn-logout-svg' title='Выйти из конструктора'>" + svgIcon + "</button>" +
                    "</div>";
   }
+}
+
+// Управляет доступностью выхода только во время операций сохранения и загрузки медиа.
+window.commentOperationLocked = false;
+function setCommentOperationLock(isLocked) {
+  window.commentOperationLocked = Boolean(isLocked);
+  const logoutButton = document.querySelector("#notification .btn-logout-svg");
+  if (logoutButton) logoutButton.disabled = window.commentOperationLocked;
 }

@@ -112,6 +112,7 @@ function addMediaFiles(block, files, type) {
     block.mediaFiles.push({
       id: ++mediaFileId,
       name: file.name,
+      originalName: file.name,
       kind: "local",
       file: file
     });
@@ -219,20 +220,29 @@ function renderMediaFiles(block) {
     const name = document.createElement("span");
     name.className = "media-file-name";
 
+    const displayName = mediaFile.originalName || mediaFile.name;
+
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
-      name.appendChild(createDraftFileLink(mediaFile.name));
+      const link = createDraftFileLink(mediaFile.name);
+      const shortName = mediaFile.name.match(
+        /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
+      );
+      link.textContent = shortName
+        ? `[${shortName[1]}_${shortName[2]}_${shortName[3]}]`
+        : `[${mediaFile.name}]`;
+      name.appendChild(link);
     } else {
       name.textContent = mediaFile.kind === "missing"
-        ? mediaFile.name + " (отсутствует)"
-        : mediaFile.name;
+        ? displayName + " (отсутствует)"
+        : displayName;
     }
 
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "media-file-remove";
     removeButton.dataset.fileId = String(mediaFile.id);
-    removeButton.setAttribute("aria-label", `Удалить ${mediaFile.name}`);
+    removeButton.setAttribute("aria-label", `Удалить ${displayName}`);
     removeButton.textContent = "×";
 
     row.appendChild(name);
@@ -327,6 +337,7 @@ document.addEventListener("click", event => {
           showNotify("Недопустимый формат файла: " + selectedFile.name, "error");
         } else {
           target.missingName = target.name;
+          target.originalName = selectedFile.name;
           target.kind = "local";
           target.file = selectedFile;
           target.name = selectedFile.name;

@@ -59,6 +59,8 @@ function initCommentInterface() {
   setTimeout(() => { showNotify("👨‍🎓 Преподаватель: " + userLogin, "info"); }, 1500);
 }
 
+// ФУНКЦИЯ: resetCommentForm
+// НАЗНАЧЕНИЕ: Очищает поля формы и возвращает конструктор в исходное состояние.
 function resetCommentForm() {
   currentCommentDraft = null;
   currentCommentSession = null;
@@ -165,6 +167,8 @@ function addPhotoBlock(initialTitle = "", initialDesc = "") {
   return subBlock;
 }
 
+// ФУНКЦИЯ: deletePhotoBlock
+// НАЗНАЧЕНИЕ: Удаляет выбранный фотоблок из формы.
 function deletePhotoBlock(blockId) {
   const block = document.getElementById(blockId);
   if (block) {
@@ -202,6 +206,8 @@ function addVideoBlock(initialTitle = "", initialDesc = "") {
   return subBlock;
 }
 
+// ФУНКЦИЯ: deleteVideoBlock
+// НАЗНАЧЕНИЕ: Удаляет выбранный видеоблок из формы.
 function deleteVideoBlock(blockId) {
   const block = document.getElementById(blockId);
   if (block) {

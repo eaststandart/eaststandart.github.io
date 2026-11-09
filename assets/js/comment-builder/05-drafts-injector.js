@@ -1,16 +1,15 @@
 /**
- * @module 05-drafts-injector.js
+ * @module  05-drafts-injector.js
  * @about   Модуль восстановления черновиков в интерфейсе.
- * @purpose Синхронизация полей и восстановление медиаблоков.
+ * @purpose Заполнение полей конструктора данными выбранного черновика и восстановление его медиаблоков.
  * @author  TechLab
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 console.log("[TEST 05] Модуль injector загружен");
 
-/**
- * Перерисовка выпадающего списка
- */
+// ФУНКЦИЯ: refreshDraftSelect
+// НАЗНАЧЕНИЕ: Перерисовка выпадающего списка
 function refreshDraftSelect() {
   const select = document.getElementById("draft-select");
   const isDraftMode = document.getElementById("is-draft-mode")?.checked;
@@ -42,9 +41,8 @@ function refreshDraftSelect() {
   }
 }
 
-/**
- * Переключение режима черновиков
- */
+// ФУНКЦИЯ: toggleDraftBehavior
+// НАЗНАЧЕНИЕ: Переключение режима черновиков
 function toggleDraftBehavior() {
   const isDraftMode = document.getElementById("is-draft-mode").checked;
   const select = document.getElementById("draft-select");
@@ -89,9 +87,8 @@ function toggleDraftBehavior() {
   }
 }
 
-/**
- * Создание безопасной ссылки на вложение
- */
+// ФУНКЦИЯ: createDraftFileLink
+// НАЗНАЧЕНИЕ: Создание безопасной ссылки на вложение
 function createDraftFileLink(fileName) {
   const baseUrl =
     `https://github.com/${repo_owner}/${repo_name}/blob/main/_input/`;
@@ -110,9 +107,8 @@ function createDraftFileLink(fileName) {
   return link;
 }
 
-/**
- * Восстановление одного медиаблока
- */
+// ФУНКЦИЯ: restoreMediaBlock
+// НАЗНАЧЕНИЕ: Восстановление одного медиаблока
 function restoreMediaBlock(container, blockData, type) {
   console.log("[TEST 05] restoreMediaBlock вызвана", blockData.title);
 
@@ -156,13 +152,13 @@ function restoreMediaBlock(container, blockData, type) {
   }
 }
 
-/**
- * Восстановление выбранного черновика
- */
+// НАЗНАЧЕНИЕ: Текущий редактируемый черновик.
 
 // Текущий редактируемый черновик
 let currentCommentDraft = null;
 
+// ФУНКЦИЯ: loadDraftData
+// НАЗНАЧЕНИЕ: Восстановление выбранного черновика в форме конструктора.
 function loadDraftData(draftId) {
   if (!draftId) return;
 

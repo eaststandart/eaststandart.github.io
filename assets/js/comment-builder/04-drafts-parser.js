@@ -56,7 +56,8 @@ function getMarkdownField(content, fieldName) {
     "### Основной текст",
     "### Подвал комментария",
     "### Заголовок блока",
-    "### Описание блока"
+    "### Описание блока",
+    "### Медиафайлы"
   ];
 
   let endIndex = lines.length;

@@ -94,6 +94,7 @@ function buildCommentMarkdown(session) {
     const section = ["## 📸 Фотоматериалы"];
     if (block.title) section.push("### Заголовок блока", block.title);
     if (block.description) section.push("### Описание блока", block.description);
+    section.push("### Медиафайлы");
     block.files.forEach(file => section.push(`![[${file}]]`));
     body.push(section.join("\n\n"));
   });
@@ -102,6 +103,7 @@ function buildCommentMarkdown(session) {
     const section = ["## 🎥 Видеоматериалы"];
     if (block.title) section.push("### Заголовок блока", block.title);
     if (block.description) section.push("### Описание блока", block.description);
+    section.push("### Медиафайлы");
     block.files.forEach(file => section.push(`![[${file}]]`));
     body.push(section.join("\n\n"));
   });

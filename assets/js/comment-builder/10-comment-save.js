@@ -388,7 +388,7 @@ async function handleCommentSubmit() {
 
     if (uploadResult.errors.length || unresolvedMediaCount > 0) {
       showNotify(
-        `${saveMessage}: ${saved.fileName}. Загружено: ${uploadResult.uploaded}. Ошибок загрузки: ${uploadResult.errors.length}. Отсутствует файлов: ${unresolvedMediaCount}. Сборка не завершена, форма оставлена открытой.`,
+        `Сборка не завершена: ${saveMessage.toLowerCase()} сохранён. Загружено: ${uploadResult.uploaded}, ошибок загрузки: ${uploadResult.errors.length}, отсутствует файлов: ${unresolvedMediaCount}.`,
         "error"
       );
       if (uploadResult.errors.length) {

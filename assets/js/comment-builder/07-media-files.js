@@ -105,16 +105,15 @@ function findDuplicateMediaFile(file) {
           mediaFile.fileType === file.type;
       }
 
-      // Для вики-ссылок сравниваем полное имя из адреса ссылки.
-      // Для ссылок формы — исходное имя из подписи до разделителя " | ".
+      // Для файлов, ранее добавленных через форму, берём исходное имя до " | ".
+      // Для остальных ссылок берём физическое имя из круглых скобок.
       const displayName = String(mediaFile.displayName || "").trim();
-      const isWikiLink = mediaFile.sourceFormat === "obsidian" ||
-        mediaFile.sourceFormat === "mediawiki" ||
-        (mediaFile.sourceFormat === "markdown" && /^MediaWiki\s*\|/i.test(displayName)) ||
-        (mediaFile.sourceFormat === "markdown" && !displayName.includes(" | "));
-      const comparisonName = isWikiLink
-        ? mediaFile.name
-        : displayName.split(" | ")[0].trim();
+      const isFormCreatedName =
+        mediaFile.sourceFormat === "markdown" &&
+        displayName.includes(" | ");
+      const comparisonName = isFormCreatedName
+        ? displayName.split(" | ")[0].trim()
+        : mediaFile.name;
 
       return Number.isFinite(Number(mediaFile.fileSize)) &&
         Number(mediaFile.fileSize) === file.size &&

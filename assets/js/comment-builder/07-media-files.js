@@ -328,28 +328,45 @@ function renderMediaFiles(block) {
       || getMediaShortNameFromUploadName(mediaFile.uploadName || mediaFile.name)
       || mediaFile.name;
 
+    const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
+      mediaFile.sourceFormat === "mediawiki";
+
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      name.append("[");
-      if (mediaFile.sourceFormat === "markdown") {
-        link.textContent = mediaFile.displayName;
-      } else {
-        if (hasOriginalName) {
-          name.append(originalName);
-          name.append(" | ");
-        }
+      if (isMediaWiki) {
+        name.append(mediaFile.embed ? "![" : "[");
+        name.append("MediaWiki | ");
         link.textContent = shortName;
+        name.appendChild(link);
+        name.append("]");
+      } else {
+        name.append("[");
+        if (mediaFile.sourceFormat === "markdown") {
+          link.textContent = mediaFile.displayName;
+        } else {
+          if (hasOriginalName) {
+            name.append(originalName);
+            name.append(" | ");
+          }
+          link.textContent = shortName;
+        }
+        name.appendChild(link);
+        name.append("]");
       }
-      name.appendChild(link);
-      name.append("]");
     } else {
-      const displayName = mediaFile.sourceFormat === "markdown"
-        ? mediaFile.displayName
-        : hasOriginalName
-          ? originalName + " | " + shortName
-          : shortName;
-      name.textContent = "[" + displayName + "]"
+      let displayName;
+      if (isMediaWiki) {
+        displayName = (mediaFile.embed ? "!" : "") +
+          "[MediaWiki | " + shortName + "]";
+      } else {
+        displayName = "[" + (mediaFile.sourceFormat === "markdown"
+          ? mediaFile.displayName
+          : hasOriginalName
+            ? originalName + " | " + shortName
+            : shortName) + "]";
+      }
+      name.textContent = displayName
         + (mediaFile.kind === "missing" ? " (отсутствует)" : "");
     }
 

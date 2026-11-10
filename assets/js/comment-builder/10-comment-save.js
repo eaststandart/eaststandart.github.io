@@ -60,7 +60,9 @@ function collectCommentMedia(containerId, type) {
               // Восстановленные ссылки сохраняют прежнюю подпись.
               const displayName = file.originalName
                 ? file.originalName + " | " + shortName
-                : file.displayName || shortName;
+                : file.sourceFormat === "obsidian"
+                  ? "MediaWiki | " + shortName
+                  : file.displayName || shortName;
 
               return {
                 name: fileName,

@@ -112,7 +112,7 @@ function checkTeacherAuthorization() {
     
     // Идентификация успешно завершена! Передаем управление контуру многократной загрузки данных
     if (!allowedTeachers.includes(userLogin)) {
-      showNotify("Критическая ошибка: доступ заблокирован правообладателем.", "error");
+      showNotify("Доступ заблокирован!", "error");
       localStorage.removeItem("github_comment_token");
       return;
     }
@@ -134,6 +134,6 @@ function checkTeacherAuthorization() {
   })
   .catch(err => {
     console.error(err);
-    showNotify("Ошибка идентификации токена. Проверьте соединение или ключ на GitHub.", "error");
+    showNotify("Ошибка идентификации!", "error");
   });
 }

@@ -188,6 +188,7 @@ async function addMediaFiles(block, files, type) {
       fileSize: file.size,
       fileLastModified: file.lastModified,
       fileType: file.type,
+      embed: true,
       kind: "local",
       file: file
     });

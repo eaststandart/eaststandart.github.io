@@ -63,6 +63,84 @@ function getMediaFilesForBlock(block) {
     : [];
 }
 
+// ФУНКЦИЯ: getMediaShortNameFromUploadName
+// НАЗНАЧЕНИЕ: Получение сокращённого имени из имени загруженного файла.
+function getMediaShortNameFromUploadName(fileName) {
+  const match = String(fileName || "").match(/(?:^|_)(photo|video)_(\d+)(\.[^.]+)$/i);
+  return match ? match[1].toLowerCase() + "_" + match[2] + match[3] : "";
+}
+
+// ФУНКЦИЯ: getNextMediaShortName
+// НАЗНАЧЕНИЕ: Назначение следующего свободного сокращённого имени.
+function getNextMediaShortName(type, extension) {
+  let maxIndex = 0;
+  document.querySelectorAll(".media-sub-block").forEach(block => {
+    if (getMediaBlockType(block) !== type || !Array.isArray(block.mediaFiles)) return;
+    block.mediaFiles.forEach(mediaFile => {
+      [mediaFile.shortName, mediaFile.uploadName, mediaFile.missingName,
+       mediaFile.kind === "local" ? null : mediaFile.name].filter(Boolean).forEach(name => {
+        const match = String(name).match(new RegExp("(?:^|_)" + type + "_(\\d+)(\\.[^.]+)$", "i"));
+        if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
+      });
+    });
+  });
+  return type + "_" + String(maxIndex + 1).padStart(2, "0") + extension;
+}
+
+// ФУНКЦИЯ: findDuplicateMediaFile
+// НАЗНАЧЕНИЕ: Поиск ранее прикреплённого в текущей форме того же файла.
+function findDuplicateMediaFile(file) {
+  let duplicate = null;
+  document.querySelectorAll(".media-sub-block").forEach(block => {
+    if (!Array.isArray(block.mediaFiles)) return;
+    const match = block.mediaFiles.find(mediaFile =>
+      mediaFile.originalName === file.name &&
+      mediaFile.fileSize === file.size &&
+      mediaFile.fileLastModified === file.lastModified &&
+      mediaFile.fileType === file.type
+    );
+    if (!duplicate && match) duplicate = match;
+  });
+  return duplicate;
+}
+
+// ФУНКЦИЯ: askDuplicateMediaFile
+// НАЗНАЧЕНИЕ: Запрос подтверждения повторного прикрепления файла.
+function askDuplicateMediaFile() {
+  return new Promise(resolve => {
+    const dialog = document.createElement("dialog");
+    dialog.setAttribute("aria-label", "Повторное прикрепление файла");
+    dialog.style.cssText = "padding:24px;border:1px solid #ccc;border-radius:8px;max-width:420px;width:calc(100% - 40px);box-shadow:0 8px 32px rgba(0,0,0,.25);";
+    const message = document.createElement("p");
+    message.textContent = "Файл прикреплен. Загрузить повторно?";
+    message.style.margin = "0 0 20px";
+    const buttons = document.createElement("div");
+    buttons.style.cssText = "display:flex;justify-content:flex-end;gap:10px;";
+    const yesButton = document.createElement("button");
+    yesButton.type = "button";
+    yesButton.textContent = "Да";
+    const noButton = document.createElement("button");
+    noButton.type = "button";
+    noButton.textContent = "Нет";
+    const finish = value => {
+      if (dialog.open) dialog.close();
+      dialog.remove();
+      resolve(value);
+    };
+    yesButton.addEventListener("click", () => finish(true));
+    noButton.addEventListener("click", () => finish(false));
+    dialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      finish(false);
+    });
+    buttons.append(yesButton, noButton);
+    dialog.append(message, buttons);
+    document.body.appendChild(dialog);
+    dialog.showModal();
+    noButton.focus();
+  });
+}
+
 // ФУНКЦИЯ: createMediaFileInput
 // НАЗНАЧЕНИЕ: Создание поля выбора файлов
 function createMediaFileInput(block, type) {
@@ -88,54 +166,44 @@ function createMediaFileInput(block, type) {
 
 // ФУНКЦИЯ: addMediaFiles
 // НАЗНАЧЕНИЕ: Добавление новых файлов в медиаблок
-function addMediaFiles(block, files, type) {
+// ФУНКЦИЯ: addMediaFiles
+// НАЗНАЧЕНИЕ: Добавление новых файлов в медиаблок с подтверждением дубликатов.
+async function addMediaFiles(block, files, type) {
   if (!block || !MEDIA_FILE_RULES[type]) return;
-
-  if (!Array.isArray(block.mediaFiles)) {
-    block.mediaFiles = [];
-  }
-
+  if (!Array.isArray(block.mediaFiles)) block.mediaFiles = [];
   const rejectedFiles = [];
-
-  files.forEach(file => {
+  let addedCount = 0;
+  for (const file of files) {
     if (!validateMediaFile(file, type)) {
       rejectedFiles.push(file.name);
-      return;
+      continue;
     }
-
+    const duplicate = findDuplicateMediaFile(file);
+    if (duplicate && !(await askDuplicateMediaFile())) continue;
     block.mediaFiles.push({
       id: ++mediaFileId,
       name: file.name,
       originalName: file.name,
+      shortName: getNextMediaShortName(type, getMediaFileExtension(file.name)),
+      fileSize: file.size,
+      fileLastModified: file.lastModified,
+      fileType: file.type,
       kind: "local",
       file: file
     });
-  });
-
+    addedCount++;
+  }
   renderMediaFiles(block);
-
   if (rejectedFiles.length) {
-    showNotify(
-      "Неподдерживаемые вложения!",
-      "error"
-    );
-  } else {
-    const pendingCount = document.querySelectorAll(
-      ".media-sub-block"
-    );
-
+    showNotify("Неподдерживаемые вложения!", "error");
+  } else if (addedCount > 0) {
+    const pendingCount = document.querySelectorAll(".media-sub-block");
     const totalPending = Array.from(pendingCount).reduce(
-      (total, item) => total + (item.mediaFiles || []).filter(
-        file => file.kind === "local"
-      ).length,
+      (total, item) => total + (item.mediaFiles || []).filter(file => file.kind === "local").length,
       0
     );
-
     if (totalPending > 0) {
-      showNotify(
-        `Добавлено файлов: ${totalPending}. Ожидают загрузки.`,
-        "success"
-      );
+      showNotify("Добавлено файлов: " + totalPending + ". Ожидают загрузки.", "success");
     }
   }
 }
@@ -170,6 +238,7 @@ function registerExistingMediaFiles(
       id: ++mediaFileId,
       name: fileName,
       displayName: displayNames[index] || "",
+      shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",
       file: null,
@@ -223,33 +292,30 @@ function renderMediaFiles(block) {
     const name = document.createElement("span");
     name.className = "media-file-name";
 
-    const displayName = mediaFile.originalName || mediaFile.name;
+    const originalName = mediaFile.originalName || mediaFile.displayName || mediaFile.name;
+    const shortName = mediaFile.shortName
+      || getMediaShortNameFromUploadName(mediaFile.uploadName || mediaFile.name)
+      || mediaFile.name;
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      const shortName = mediaFile.name.match(
-        /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
-      );
-      const linkLabel = mediaFile.displayName
-        || (shortName
-          ? `${shortName[1]}_${shortName[2]}_${shortName[3]}`
-          : mediaFile.name);
       name.append("[");
-      link.textContent = linkLabel;
+      name.append(originalName);
+      name.append(" | ");
+      link.textContent = shortName;
       name.appendChild(link);
       name.append("]");
     } else {
-      name.textContent = mediaFile.kind === "missing"
-        ? displayName + " (отсутствует)"
-        : displayName;
+      name.textContent = "[" + originalName + " | " + shortName + "]"
+        + (mediaFile.kind === "missing" ? " (отсутствует)" : "");
     }
 
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "media-file-remove";
     removeButton.dataset.fileId = String(mediaFile.id);
-    removeButton.setAttribute("aria-label", `Удалить ${displayName}`);
+    removeButton.setAttribute("aria-label", "Удалить " + originalName);
     removeButton.textContent = "×";
 
     row.appendChild(name);
@@ -345,6 +411,9 @@ document.addEventListener("click", event => {
         } else {
           target.missingName = target.name;
           target.originalName = selectedFile.name;
+          target.fileSize = selectedFile.size;
+          target.fileLastModified = selectedFile.lastModified;
+          target.fileType = selectedFile.type;
           target.kind = "local";
           target.file = selectedFile;
           target.name = selectedFile.name;

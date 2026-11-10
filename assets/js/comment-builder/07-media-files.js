@@ -105,22 +105,18 @@ function findDuplicateMediaFile(file) {
           mediaFile.fileType === file.type;
       }
 
-      // Восстановленные из черновика файлы не содержат метаданных исходника.
-      // В новых Markdown-черновиках исходное имя находится до разделителя " | ".
+      // Для восстановленного файла нужны совпадения исходного имени и размера.
+      // Исходное имя новых Markdown-вложений находится до разделителя " | ".
       const displayName = String(mediaFile.displayName || "").trim();
       const restoredOriginalName = displayName.includes(" | ")
         ? displayName.split(" | ")[0].trim()
         : displayName;
 
-      const restoredNames = [
-        restoredOriginalName,
-        mediaFile.name,
-        mediaFile.shortName,
-        mediaFile.uploadName
-      ].filter(Boolean);
-
-      return restoredNames.some(name =>
-        String(name).trim().toLowerCase() === selectedName
+      return Boolean(
+        restoredOriginalName &&
+        restoredOriginalName.toLowerCase() === selectedName &&
+        Number.isFinite(Number(mediaFile.fileSize)) &&
+        Number(mediaFile.fileSize) === file.size
       );
     });
 
@@ -244,7 +240,8 @@ function registerExistingMediaFiles(
   missingFileNames = [],
   displayNames = [],
   embedFlags = [],
-  sourceFormats = []
+  sourceFormats = [],
+  fileSizes = []
 ) {
   if (!block || !Array.isArray(fileNames)) return;
 
@@ -267,6 +264,9 @@ function registerExistingMediaFiles(
       name: fileName,
       displayName: displayNames[index] || "",
       sourceFormat: sourceFormats[index] || "obsidian",
+      fileSize: Number.isFinite(Number(fileSizes[index]))
+        ? Number(fileSizes[index])
+        : null,
       shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",

@@ -114,15 +114,47 @@ function parseNewManifestBody(body) {
     const blockTitle = getMarkdownField(section.content, "Заголовок блока");
     const description = getMarkdownField(section.content, "Описание блока");
 
-    const files = [...section.content.matchAll(/!\[\[([^\]]+)\]\]/g)]
-      .map(file => file[1].split("|")[0].trim());
+    const mediaExtensions = type === "photo"
+      ? /\.(jpg|jpeg|png|webp)$/i
+      : /\.(mp4|webm)$/i;
+
+    const files = [];
+    const displayNames = [];
+
+    // Старый формат Obsidian: короткое имя будет сформировано
+    // существующим алгоритмом отображения в форме.
+    for (const match of section.content.matchAll(/!\[\[([^\]]+)\]\]/g)) {
+      const fileName = match[1].split("|")[0].trim();
+      if (!mediaExtensions.test(fileName)) continue;
+      files.push(fileName);
+      displayNames.push("");
+    }
+
+    // Стандартный Markdown: поддерживаем ссылки с ! и без него
+    // как для фотографий, так и для видео.
+    for (const match of section.content.matchAll(/!?\[([^\]]*)\]\(([^)]+)\)/g)) {
+      const displayName = match[1].trim();
+      let fileName = match[2].trim();
+
+      if (fileName.startsWith("<") && fileName.endsWith(">")) {
+        fileName = fileName.slice(1, -1);
+      }
+
+      // В манифесте ожидаются локальные имена файлов, а не внешние URL.
+      if (/^[a-z][a-z0-9+.-]*:/i.test(fileName) || fileName.startsWith("//")) continue;
+      if (!mediaExtensions.test(fileName)) continue;
+
+      files.push(fileName);
+      displayNames.push(displayName);
+    }
 
     const target = type === "photo" ? photos : videos;
     target.push({
       index: target.length + 1,
       title: blockTitle,
       description,
-      files
+      files,
+      displayNames
     });
   });
 

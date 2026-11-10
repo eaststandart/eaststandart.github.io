@@ -90,6 +90,7 @@ function resetCommentForm() {
   const select = document.getElementById("draft-select");
   select.innerHTML = `<option value="">Выберите черновик →</option>`;
   select.disabled = true;
+  if (window.commentFormLocked) select.dataset.lockDisabled = "1";
   select.value = "";
 
   document.getElementById("photos-meta-container").innerHTML = "";

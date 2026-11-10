@@ -77,8 +77,13 @@ function getNextMediaShortName(type, extension) {
   document.querySelectorAll(".media-sub-block").forEach(block => {
     if (getMediaBlockType(block) !== type || !Array.isArray(block.mediaFiles)) return;
     block.mediaFiles.forEach(mediaFile => {
-      [mediaFile.shortName, mediaFile.uploadName, mediaFile.missingName,
-       mediaFile.kind === "local" ? null : mediaFile.name].filter(Boolean).forEach(name => {
+      [
+        mediaFile.shortName,
+        mediaFile.uploadName,
+        mediaFile.missingName,
+        mediaFile.kind === "local" ? null : mediaFile.name,
+        mediaFile.displayName ? String(mediaFile.displayName).split("|").pop().trim() : null
+      ].filter(Boolean).forEach(name => {
         const match = String(name).match(new RegExp("(?:^|_)" + type + "_(\\d+)(\\.[^.]+)$", "i"));
         if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
       });

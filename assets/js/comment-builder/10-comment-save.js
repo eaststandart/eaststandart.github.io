@@ -158,7 +158,7 @@ function waitBeforeRetry(seconds, attempt) {
 
     showNotify(
       `Ошибка сети. Повтор ${attempt}/3 через ${remaining} сек.`,
-      "info"
+      "error"
     );
 
     const timer = setInterval(() => {
@@ -172,7 +172,7 @@ function waitBeforeRetry(seconds, attempt) {
 
       showNotify(
         `Ошибка сети. Повтор ${attempt}/3 через ${remaining} сек.`,
-        "info"
+        "error"
       );
     }, 1000);
   });
@@ -258,7 +258,7 @@ async function saveCommentMarkdownOnce(url, headers, fileName, markdown, knownSh
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     const error = new Error(
-      errorData.message || `Не удалось сохранить комментарий: HTTP ${response.status}`
+      errorData.message || `Комментарий не сохранён: HTTP ${response.status}`
     );
     error.status = response.status;
     throw error;
@@ -318,21 +318,21 @@ async function handleCommentSubmit() {
 
   try {
     if (!accessToken) {
-      throw new Error("Нет активного токена GitHub.");
+      throw new Error("Нет активного токена!");
     }
 
     const session = getCommentUploadSession();
 
     if (!session?.date || !/^\d{4}-\d{2}-\d{2}$/.test(session.date)) {
-      throw new Error("Проверьте дату комментария.");
+      throw new Error("Проверьте дату комментария");
     }
 
     if (!session.discussion || !/^\d+$/.test(session.discussion)) {
-      throw new Error("Укажите номер обсуждения.");
+      throw new Error("Укажите номер обсуждения");
     }
 
     if (!session.teacher) {
-      throw new Error("Не определён преподаватель.");
+      throw new Error("Преподаватель не определён");
     }
 
     const validationError = validateCommentForm();
@@ -356,7 +356,7 @@ async function handleCommentSubmit() {
     prepareLocalMediaFileNames(session);
     const markdown = buildCommentMarkdown(session);
 
-    showNotify("Сохранение Markdown...", "info");
+    showNotify("Сохранение Markdown...", "success");
     const saved = await saveCommentMarkdown(session, markdown);
     markdownSaved = true;
 
@@ -365,7 +365,7 @@ async function handleCommentSubmit() {
     }
 
     // После сохранения манифеста загружаем физические файлы.
-    showNotify("Загрузка новых медиафайлов...", "info");
+    showNotify("Загрузка новых медиафайлов...", "success");
     const uploadResult = await uploadLocalMediaFiles(session);
     mediaUploadCompleted = true;
 
@@ -398,7 +398,7 @@ async function handleCommentSubmit() {
     }, 0);
 
     const published = document.getElementById("publish-now-flag")?.checked === true;
-    const saveMessage = published ? "Комментарий сохранён" : "Черновик сохранён";
+    const saveMessage = published ? "Комментарий сохранён!" : "Черновик сохранён!";
 
     // Убираем опубликованный комментарий из списка только после полной комплектации.
     if (published && unresolvedMediaCount === 0 && currentCommentDraft && Array.isArray(mockDrafts)) {
@@ -408,7 +408,7 @@ async function handleCommentSubmit() {
 
     if (uploadResult.errors.length || unresolvedMediaCount > 0) {
       showNotify(
-        `Сборка не завершена: ${saveMessage.toLowerCase()} сохранён. Загружено: ${uploadResult.uploaded}, ошибок загрузки: ${uploadResult.errors.length}, отсутствует файлов: ${unresolvedMediaCount}.`,
+        `Сборка не завершена | ${published ? "Комментарий сохранён" : "Черновик сохранён"} | Загружено: ${uploadResult.uploaded} | Ошибок загрузки: ${uploadResult.errors.length} | Отсутствует файлов: ${unresolvedMediaCount}`,
         "error"
       );
       if (uploadResult.errors.length) {
@@ -429,9 +429,9 @@ async function handleCommentSubmit() {
     let message = error.message || "Ошибка сохранения комментария.";
 
     if (markdownSaved && !mediaUploadCompleted) {
-      message = "Markdown сохранён, но загрузка медиа не завершена: " + message;
+      message = "Markdown сохранён. Загрузка медиа не завершена: " + message;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = "Медиа загружены, но не удалось обновить timestamp для повторной обработки: " + message;
+      message = "Медиа загружены. timestamp не обновлён: " + message;
     }
 
     showNotify(message, "error");

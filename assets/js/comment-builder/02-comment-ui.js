@@ -101,7 +101,7 @@ function resetCommentForm() {
 
   updatePublishLabel();
 
-  showNotify("Форма очищена", "success");
+  showNotify("Очистка формы...", "success");
 
   console.log("[COMMENT SAVE] Форма сброшена");
 }

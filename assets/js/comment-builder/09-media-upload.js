@@ -143,7 +143,7 @@ function waitMediaUploadRetry(seconds, attempt) {
 
     showNotify(
       `Ошибка сети. Повтор через ${remaining} сек.`,
-      "info"
+      "error"
     );
 
     const timer = setInterval(() => {
@@ -151,14 +151,14 @@ function waitMediaUploadRetry(seconds, attempt) {
 
       if (remaining <= 0) {
         clearInterval(timer);
-        showNotify(`Попытка сохранения ${attempt}/3`, "info");
+        showNotify(`Попытка сохранения ${attempt}/3`, "success");
         resolve();
         return;
       }
 
       showNotify(
         `Ошибка сети. Повтор через ${remaining} сек.`,
-        "info"
+        "error"
       );
     }, 1000);
   });
@@ -252,7 +252,7 @@ async function uploadSingleMediaFile(file, fileName) {
 // НАЗНАЧЕНИЕ: Загружает новые файлы, неудачные оставляет в форме как отсутствующие.
 async function uploadLocalMediaFiles(session) {
   if (!accessToken) {
-    throw new Error("Нет активного токена GitHub.");
+    throw new Error("Нет активного токена!");
   }
 
   if (
@@ -368,11 +368,9 @@ async function handleMediaUpload() {
     const session = getCommentUploadSession();
     const result = await uploadLocalMediaFiles(session);
 
-    message = result.errors.length
-      ? `Загружено: ${result.uploaded}. Не загружено: ${result.errors.length}. Отсутствующие файлы оставлены в списке.`
-      : result.uploaded > 0
-        ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
-        : "Новых медиафайлов для загрузки нет.";
+    message = result.uploaded > 0 || result.errors.length > 0
+      ? `Загружено: ${result.uploaded} | Не загружено: ${result.errors.length}`
+      : "Новых медиафайлов для загрузки нет.";
 
     if (result.errors.length) {
       type = "error";

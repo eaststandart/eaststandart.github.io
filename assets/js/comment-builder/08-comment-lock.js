@@ -43,7 +43,7 @@ function setFormLock(isLocked, message = "") {
   });
 
   if (message) {
-    showNotify(message, "info");
+    showNotify(message, "success");
   }
 }
 

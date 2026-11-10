@@ -14,7 +14,7 @@ function waitDraftRetry(seconds, attempt) {
 
     showNotify(
       `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
-      "info"
+      "error"
     );
 
     const timer = setInterval(() => {
@@ -28,7 +28,7 @@ function waitDraftRetry(seconds, attempt) {
 
       showNotify(
         `Ошибка сети. Повтор загрузки ${attempt}/3 через ${remaining} сек.`,
-        "info"
+        "error"
       );
     }, 1000);
   });

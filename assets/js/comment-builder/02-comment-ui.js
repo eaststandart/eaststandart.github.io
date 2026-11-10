@@ -102,13 +102,6 @@ function resetCommentForm() {
 
   showNotify("Форма очищена", "success");
 
-  const teacher = localStorage.getItem("github_comment_logged_user");
-  if (teacher) {
-    setTimeout(() => {
-      showNotify("Преподаватель: " + teacher, "info");
-    }, 2000);
-  }
-
   console.log("[COMMENT SAVE] Форма сброшена");
 }
 

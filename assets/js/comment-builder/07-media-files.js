@@ -335,7 +335,13 @@ function renderMediaFiles(block) {
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      if (isMediaWiki) {
+      if (mediaFile.sourceFormat === "markdown") {
+        name.append(mediaFile.embed ? "!" : "");
+        name.append("[");
+        link.textContent = mediaFile.displayName;
+        name.appendChild(link);
+        name.append("]");
+      } else if (isMediaWiki) {
         name.append(mediaFile.embed ? "![" : "[");
         name.append("MediaWiki | ");
         link.textContent = shortName;
@@ -343,15 +349,11 @@ function renderMediaFiles(block) {
         name.append("]");
       } else {
         name.append("[");
-        if (mediaFile.sourceFormat === "markdown") {
-          link.textContent = mediaFile.displayName;
-        } else {
-          if (hasOriginalName) {
-            name.append(originalName);
-            name.append(" | ");
-          }
-          link.textContent = shortName;
+        if (hasOriginalName) {
+          name.append(originalName);
+          name.append(" | ");
         }
+        link.textContent = shortName;
         name.appendChild(link);
         name.append("]");
       }

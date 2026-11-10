@@ -120,21 +120,22 @@ function parseNewManifestBody(body) {
 
     const files = [];
     const displayNames = [];
+    const embedFlags = [];
 
-    // Старый формат Obsidian: короткое имя будет сформировано
-    // существующим алгоритмом отображения в форме.
-    for (const match of section.content.matchAll(/!\[\[([^\]]+)\]\]/g)) {
-      const fileName = match[1].split("|")[0].trim();
+    // Формат Obsidian: поддерживаем embed ![[...]] и обычную ссылку [[...]].
+    for (const match of section.content.matchAll(/(!?)\[\[([^\]]+)\]\]/g)) {
+      const fileName = match[2].split("|")[0].trim();
       if (!mediaExtensions.test(fileName)) continue;
       files.push(fileName);
       displayNames.push("");
+      embedFlags.push(match[1] === "!");
     }
 
-    // Стандартный Markdown: поддерживаем ссылки с ! и без него
-    // как для фотографий, так и для видео.
-    for (const match of section.content.matchAll(/!?\[([^\]]*)\]\(([^)]+)\)/g)) {
-      const displayName = match[1].trim();
-      let fileName = match[2].trim();
+    // Стандартный Markdown: поддерживаем ссылки с ! и без него.
+    for (const match of section.content.matchAll(/(!?)\[([^\]]*)\]\(([^)]+)\)/g)) {
+      const embed = match[1] === "!";
+      const displayName = match[2].trim();
+      let fileName = match[3].trim();
 
       if (fileName.startsWith("<") && fileName.endsWith(">")) {
         fileName = fileName.slice(1, -1);
@@ -146,6 +147,7 @@ function parseNewManifestBody(body) {
 
       files.push(fileName);
       displayNames.push(displayName);
+      embedFlags.push(embed);
     }
 
     const target = type === "photo" ? photos : videos;
@@ -154,7 +156,8 @@ function parseNewManifestBody(body) {
       title: blockTitle,
       description,
       files,
-      displayNames
+      displayNames,
+      embedFlags
     });
   });
 

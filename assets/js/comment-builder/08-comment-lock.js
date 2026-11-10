@@ -46,3 +46,24 @@ function setFormLock(isLocked, message = "") {
     showNotify(message, "info");
   }
 }
+
+// ФУНКЦИЯ: finishCommentFormOperation
+// НАЗНАЧЕНИЕ: Завершает успешную операцию, показывает статус преподавателя и только затем разблокирует форму.
+async function finishCommentFormOperation(resetForm = false) {
+  const wait = milliseconds =>
+    new Promise(resolve => setTimeout(resolve, milliseconds));
+
+  await wait(2000);
+
+  if (resetForm && typeof resetCommentForm === "function") {
+    resetCommentForm();
+    await wait(2000);
+  }
+
+  const teacher = localStorage.getItem("github_comment_logged_user");
+  if (teacher) {
+    showNotify("Преподаватель: " + teacher, "info");
+  }
+
+  setFormLock(false);
+}

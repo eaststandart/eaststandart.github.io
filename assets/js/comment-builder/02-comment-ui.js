@@ -90,6 +90,7 @@ function resetCommentForm() {
   const select = document.getElementById("draft-select");
   select.innerHTML = `<option value="">Выберите черновик →</option>`;
   select.disabled = true;
+  if (window.commentFormLocked) select.dataset.lockDisabled = "1";
   select.value = "";
 
   document.getElementById("photos-meta-container").innerHTML = "";
@@ -101,13 +102,6 @@ function resetCommentForm() {
   updatePublishLabel();
 
   showNotify("Форма очищена", "success");
-
-  const teacher = localStorage.getItem("github_comment_logged_user");
-  if (teacher) {
-    setTimeout(() => {
-      showNotify("Преподаватель: " + teacher, "info");
-    }, 2000);
-  }
 
   console.log("[COMMENT SAVE] Форма сброшена");
 }

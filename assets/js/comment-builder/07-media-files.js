@@ -147,7 +147,8 @@ function registerExistingMediaFiles(
   fileNames,
   type,
   missingFileNames = [],
-  displayNames = []
+  displayNames = [],
+  embedFlags = []
 ) {
   if (!block || !Array.isArray(fileNames)) return;
 
@@ -169,6 +170,7 @@ function registerExistingMediaFiles(
       id: ++mediaFileId,
       name: fileName,
       displayName: displayNames[index] || "",
+      embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",
       file: null,
       uploadName: fileName
@@ -229,12 +231,14 @@ function renderMediaFiles(block) {
       const shortName = mediaFile.name.match(
         /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
       );
-      link.textContent = mediaFile.displayName
-        ? `[${mediaFile.displayName}]`
-        : shortName
-          ? `[${shortName[1]}_${shortName[2]}_${shortName[3]}]`
-          : `[${mediaFile.name}]`;
+      const linkLabel = mediaFile.displayName
+        || (shortName
+          ? `${shortName[1]}_${shortName[2]}_${shortName[3]}`
+          : mediaFile.name);
+      name.append("[");
+      link.textContent = linkLabel;
       name.appendChild(link);
+      name.append("]");
     } else {
       name.textContent = mediaFile.kind === "missing"
         ? displayName + " (отсутствует)"

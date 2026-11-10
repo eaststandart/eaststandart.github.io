@@ -91,16 +91,42 @@ function getNextMediaShortName(type, extension) {
 // НАЗНАЧЕНИЕ: Поиск ранее прикреплённого в текущей форме того же файла.
 function findDuplicateMediaFile(file) {
   let duplicate = null;
+  const selectedName = String(file.name || "").trim().toLowerCase();
+
   document.querySelectorAll(".media-sub-block").forEach(block => {
     if (!Array.isArray(block.mediaFiles)) return;
-    const match = block.mediaFiles.find(mediaFile =>
-      mediaFile.originalName === file.name &&
-      mediaFile.fileSize === file.size &&
-      mediaFile.fileLastModified === file.lastModified &&
-      mediaFile.fileType === file.type
-    );
+
+    const match = block.mediaFiles.find(mediaFile => {
+      // Для файлов, добавленных в текущей сессии, сохраняем точную проверку.
+      if (mediaFile.originalName) {
+        return mediaFile.originalName === file.name &&
+          mediaFile.fileSize === file.size &&
+          mediaFile.fileLastModified === file.lastModified &&
+          mediaFile.fileType === file.type;
+      }
+
+      // Для восстановленного файла нужны совпадения исходного имени и размера.
+      // Исходное имя новых Markdown-вложений находится до разделителя " | ".
+      const displayName = String(mediaFile.displayName || "").trim();
+      const restoredOriginalName = displayName.includes(" | ")
+        ? displayName.split(" | ")[0].trim()
+        : displayName;
+
+      const restoredNames = [
+        restoredOriginalName,
+        mediaFile.name
+      ].filter(Boolean);
+
+      return Number.isFinite(Number(mediaFile.fileSize)) &&
+        Number(mediaFile.fileSize) === file.size &&
+        restoredNames.some(name =>
+          String(name).trim().toLowerCase() === selectedName
+        );
+    });
+
     if (!duplicate && match) duplicate = match;
   });
+
   return duplicate;
 }
 
@@ -218,7 +244,8 @@ function registerExistingMediaFiles(
   missingFileNames = [],
   displayNames = [],
   embedFlags = [],
-  sourceFormats = []
+  sourceFormats = [],
+  fileSizes = []
 ) {
   if (!block || !Array.isArray(fileNames)) return;
 
@@ -241,6 +268,9 @@ function registerExistingMediaFiles(
       name: fileName,
       displayName: displayNames[index] || "",
       sourceFormat: sourceFormats[index] || "obsidian",
+      fileSize: Number.isFinite(Number(fileSizes[index]))
+        ? Number(fileSizes[index])
+        : null,
       shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",

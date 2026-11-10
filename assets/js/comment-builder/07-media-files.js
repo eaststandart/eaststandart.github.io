@@ -75,7 +75,7 @@ function getMediaShortNameFromUploadName(fileName) {
 function getNextMediaShortName(type, extension) {
   let maxIndex = 0;
   const targetNamePattern = new RegExp(
-    "^\\d{4}-\\d{2}-\\d{2}-\\d+_discussion_\\d+_" + type + "_(\\d+)\\.[^.]+$",
+    "^\\d{4}-\\d{2}-\\d{2}-\\d+_discussion_.*_" + type + "_(\\d+)\\.[^.]+$",
     "i"
   );
 

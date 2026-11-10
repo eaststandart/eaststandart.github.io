@@ -105,23 +105,20 @@ function findDuplicateMediaFile(file) {
           mediaFile.fileType === file.type;
       }
 
-      // Для восстановленного файла нужны совпадения исходного имени и размера.
-      // Исходное имя новых Markdown-вложений находится до разделителя " | ".
+      // Для вики-ссылок сравниваем полное имя из адреса ссылки.
+      // Для ссылок формы — исходное имя из подписи до разделителя " | ".
       const displayName = String(mediaFile.displayName || "").trim();
-      const restoredOriginalName = displayName.includes(" | ")
-        ? displayName.split(" | ")[0].trim()
-        : displayName;
-
-      const restoredNames = [
-        restoredOriginalName,
-        mediaFile.name
-      ].filter(Boolean);
+      const isWikiLink = mediaFile.sourceFormat === "obsidian" ||
+        mediaFile.sourceFormat === "mediawiki" ||
+        (mediaFile.sourceFormat === "markdown" && /^MediaWiki\s*\|/i.test(displayName)) ||
+        (mediaFile.sourceFormat === "markdown" && !displayName.includes(" | "));
+      const comparisonName = isWikiLink
+        ? mediaFile.name
+        : displayName.split(" | ")[0].trim();
 
       return Number.isFinite(Number(mediaFile.fileSize)) &&
         Number(mediaFile.fileSize) === file.size &&
-        restoredNames.some(name =>
-          String(name).trim().toLowerCase() === selectedName
-        );
+        String(comparisonName || "").trim().toLowerCase() === selectedName;
     });
 
     if (!duplicate && match) duplicate = match;

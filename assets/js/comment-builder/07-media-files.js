@@ -331,21 +331,7 @@ function renderMediaFiles(block) {
     const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
       mediaFile.sourceFormat === "mediawiki";
 
-    if (mediaFile.kind === "local" && mediaFile.file instanceof Blob) {
-      const link = document.createElement("a");
-      if (!mediaFile.previewUrl) {
-        mediaFile.previewUrl = URL.createObjectURL(mediaFile.file);
-      }
-      link.href = mediaFile.previewUrl;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = hasOriginalName
-        ? originalName + " | " + shortName
-        : shortName;
-      name.append("[");
-      name.appendChild(link);
-      name.append("]");
-    } else if (mediaFile.kind === "existing" &&
+    if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
       if (isMediaWiki) {

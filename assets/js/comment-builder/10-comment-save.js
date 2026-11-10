@@ -47,7 +47,18 @@ function collectCommentMedia(containerId, type) {
       const files = Array.isArray(block.mediaFiles)
         ? block.mediaFiles
             .filter(file => file.missingName || file.uploadName || file.name)
-            .map(file => file.missingName || file.uploadName || file.name)
+            .map(file => {
+              const fileName = file.missingName || file.uploadName || file.name;
+              const shortName = fileName.match(
+                /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
+              );
+              const displayName = file.displayName ||
+                (shortName
+                  ? shortName[1] + "_" + shortName[2] + "_" + shortName[3]
+                  : file.originalName || fileName);
+
+              return { name: fileName, displayName };
+            })
         : [];
 
       if (!files.length) return null;
@@ -107,7 +118,9 @@ function buildCommentMarkdown(session) {
     if (block.title) section.push("### Заголовок блока", block.title);
     if (block.description) section.push("### Описание блока", block.description);
     section.push("### Медиафайлы");
-    block.files.forEach(file => section.push(`![[${file}]]`));
+    block.files.forEach(file => {
+      section.push(`![${file.displayName}](${file.name})`);
+    });
     body.push(section.join("\n\n"));
   });
 
@@ -116,7 +129,9 @@ function buildCommentMarkdown(session) {
     if (block.title) section.push("### Заголовок блока", block.title);
     if (block.description) section.push("### Описание блока", block.description);
     section.push("### Медиафайлы");
-    block.files.forEach(file => section.push(`![[${file}]]`));
+    block.files.forEach(file => {
+      section.push(`[${file.displayName}](${file.name})`);
+    });
     body.push(section.join("\n\n"));
   });
 

@@ -124,7 +124,7 @@ function parseNewManifestBody(body) {
     const sourceFormats = [];
 
     // Единый проход сохраняет исходную последовательность ссылок всех поддерживаемых форматов.
-    const mediaLinkPattern = /(!?)\\[\\[([^\\]]+)\\]\\]|(!?)\\[([^\\]]*)\\]\\(([^)]+)\\)/g;
+    const mediaLinkPattern = /(!?)\[\[([^\]]+)\]\]|(!?)\[([^\]]*)\]\(([^)]+)\)/g;
 
     for (const match of section.content.matchAll(mediaLinkPattern)) {
       let fileName;
@@ -147,7 +147,7 @@ function parseNewManifestBody(body) {
           fileName = fileName.slice(1, -1);
         }
 
-        sourceFormat = /^MediaWiki\\s*\\|/i.test(displayName)
+        sourceFormat = /^MediaWiki\s*\|/i.test(displayName)
           ? "mediawiki"
           : "markdown";
       }

@@ -56,12 +56,11 @@ function collectCommentMedia(containerId, type) {
                 (uploadNameMatch
                   ? uploadNameMatch[1] + "_" + uploadNameMatch[2]
                   : fileName);
-              const originalName = file.originalName ||
-                (file.displayName && file.displayName.includes(" | ")
-                  ? file.displayName.split(" | ")[0]
-                  : file.displayName) ||
-                fileName;
-              const displayName = originalName + " | " + shortName;
+              // Новые файлы с компьютера получают пару имён.
+              // Восстановленные ссылки сохраняют прежнюю подпись.
+              const displayName = file.originalName
+                ? file.originalName + " | " + shortName
+                : file.displayName || shortName;
 
               return {
                 name: fileName,

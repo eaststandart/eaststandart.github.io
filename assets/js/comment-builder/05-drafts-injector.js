@@ -278,7 +278,7 @@ function loadDraftData(draftId) {
     finishCommentFormOperation(false);
   } catch (error) {
     console.error("[DRAFTS INJECTOR] Ошибка восстановления:", error);
-    showNotify(error.message || "Не удалось восстановить черновик.", "error");
+    showNotify("Черновик не восстановлен!", "error");
     setFormLock(false);
   }
 }

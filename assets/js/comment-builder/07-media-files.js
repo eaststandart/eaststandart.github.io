@@ -329,19 +329,12 @@ function renderMediaFiles(block) {
       || mediaFile.name;
 
     const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
-      mediaFile.sourceFormat === "mediawiki" ||
-      /^MediaWiki\\s*\\|/i.test(String(mediaFile.displayName || "").trim());
+      mediaFile.sourceFormat === "mediawiki";
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      if (mediaFile.sourceFormat === "markdown") {
-        name.append(mediaFile.embed ? "!" : "");
-        name.append("[");
-        link.textContent = mediaFile.displayName;
-        name.appendChild(link);
-        name.append("]");
-      } else if (isMediaWiki) {
+      if (isMediaWiki) {
         name.append(mediaFile.embed ? "![" : "[");
         name.append("MediaWiki | ");
         link.textContent = shortName;
@@ -349,11 +342,15 @@ function renderMediaFiles(block) {
         name.append("]");
       } else {
         name.append("[");
-        if (hasOriginalName) {
-          name.append(originalName);
-          name.append(" | ");
+        if (mediaFile.sourceFormat === "markdown") {
+          link.textContent = mediaFile.displayName;
+        } else {
+          if (hasOriginalName) {
+            name.append(originalName);
+            name.append(" | ");
+          }
+          link.textContent = shortName;
         }
-        link.textContent = shortName;
         name.appendChild(link);
         name.append("]");
       }

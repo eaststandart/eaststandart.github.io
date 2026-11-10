@@ -123,24 +123,33 @@ function parseNewManifestBody(body) {
     const embedFlags = [];
     const sourceFormats = [];
 
-    // Формат Obsidian: поддерживаем embed ![[...]] и обычную ссылку [[...]].
-    for (const match of section.content.matchAll(/(!?)\[\[([^\]]+)\]\]/g)) {
-      const fileName = match[2].split("|")[0].trim();
-      if (!mediaExtensions.test(fileName)) continue;
-      files.push(fileName);
-      displayNames.push("");
-      embedFlags.push(match[1] === "!");
-      sourceFormats.push("obsidian");
-    }
+    // Единый проход сохраняет исходную последовательность ссылок всех поддерживаемых форматов.
+    const mediaLinkPattern = /(!?)\\[\\[([^\\]]+)\\]\\]|(!?)\\[([^\\]]*)\\]\\(([^)]+)\\)/g;
 
-    // Стандартный Markdown: поддерживаем ссылки с ! и без него.
-    for (const match of section.content.matchAll(/(!?)\[([^\]]*)\]\(([^)]+)\)/g)) {
-      const embed = match[1] === "!";
-      const displayName = match[2].trim();
-      let fileName = match[3].trim();
+    for (const match of section.content.matchAll(mediaLinkPattern)) {
+      let fileName;
+      let displayName = "";
+      let embed;
+      let sourceFormat;
 
-      if (fileName.startsWith("<") && fileName.endsWith(">")) {
-        fileName = fileName.slice(1, -1);
+      if (match[2] !== undefined) {
+        // Obsidian: ![[имя]] или [[имя]].
+        fileName = match[2].split("|")[0].trim();
+        embed = match[1] === "!";
+        sourceFormat = "obsidian";
+      } else {
+        // Markdown: ![подпись](имя) или [подпись](имя).
+        embed = match[3] === "!";
+        displayName = match[4].trim();
+        fileName = match[5].trim();
+
+        if (fileName.startsWith("<") && fileName.endsWith(">")) {
+          fileName = fileName.slice(1, -1);
+        }
+
+        sourceFormat = /^MediaWiki\\s*\\|/i.test(displayName)
+          ? "mediawiki"
+          : "markdown";
       }
 
       // В манифесте ожидаются локальные имена файлов, а не внешние URL.
@@ -150,7 +159,7 @@ function parseNewManifestBody(body) {
       files.push(fileName);
       displayNames.push(displayName);
       embedFlags.push(embed);
-      sourceFormats.push(/^MediaWiki\s*\|/i.test(displayName) ? "mediawiki" : "markdown");
+      sourceFormats.push(sourceFormat);
     }
 
     const target = type === "photo" ? photos : videos;

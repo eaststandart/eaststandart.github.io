@@ -77,7 +77,7 @@ async function loadCommentDraftsFromApi() {
   };
 
   try {
-    showNotify("Загрузка списка черновиков...", "info");
+    showNotify("Загрузка списка черновиков...", "success");
 
     const inputFolderUrl =
       `https://api.github.com/repos/${repo_owner}/${repo_name}/contents/_input?nocache=${Date.now()}`;

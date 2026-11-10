@@ -78,6 +78,7 @@ function prepareLocalMediaFileNames(session) {
       [
         mediaFile.missingName,
         mediaFile.uploadName,
+        mediaFile.shortName,
         mediaFile.kind === "local" ? null : mediaFile.name
       ].filter(Boolean).forEach(name => {
         const match = name.match(new RegExp("_" + type + "_(\\d+)\\.[^.]+$", "i"));
@@ -92,13 +93,19 @@ function prepareLocalMediaFileNames(session) {
 
     block.mediaFiles.forEach(mediaFile => {
       if (mediaFile.kind !== "local" || mediaFile.uploadName) return;
-      counters[type]++;
-      mediaFile.uploadName = createMediaUploadName(
-        mediaFile.file,
-        type,
-        session,
-        counters[type]
+      const shortMatch = String(mediaFile.shortName || "").match(
+        new RegExp("^" + type + "_(\\d+)(\\.[^.]+)$", "i")
       );
+      let index;
+      if (shortMatch) {
+        index = Number(shortMatch[1]);
+        counters[type] = Math.max(counters[type], index);
+      } else {
+        index = ++counters[type];
+        mediaFile.shortName = type + "_" + String(index).padStart(2, "0")
+          + getMediaFileExtension(mediaFile.file.name);
+      }
+      mediaFile.uploadName = createMediaUploadName(mediaFile.file, type, session, index);
     });
   });
 }
@@ -286,6 +293,7 @@ async function uploadLocalMediaFiles(session) {
       [
         mediaFile.missingName,
         mediaFile.uploadName,
+        mediaFile.shortName,
         mediaFile.kind === "local" ? null : mediaFile.name
       ].filter(Boolean).forEach(name => {
         const match = name.match(new RegExp(`_${type}_(\\d+)\\.[^.]+$`, "i"));
@@ -303,13 +311,19 @@ async function uploadLocalMediaFiles(session) {
       if (mediaFile.kind !== "local") return;
 
       if (!mediaFile.uploadName) {
-        counters[type]++;
-        mediaFile.uploadName = createMediaUploadName(
-          mediaFile.file,
-          type,
-          session,
-          counters[type]
+        const shortMatch = String(mediaFile.shortName || "").match(
+          new RegExp("^" + type + "_(\\d+)(\\.[^.]+)$", "i")
         );
+        let index;
+        if (shortMatch) {
+          index = Number(shortMatch[1]);
+          counters[type] = Math.max(counters[type], index);
+        } else {
+          index = ++counters[type];
+          mediaFile.shortName = type + "_" + String(index).padStart(2, "0")
+            + getMediaFileExtension(mediaFile.file.name);
+        }
+        mediaFile.uploadName = createMediaUploadName(mediaFile.file, type, session, index);
       }
 
       uploads.push({ block, mediaFile, type });
@@ -331,6 +345,8 @@ async function uploadLocalMediaFiles(session) {
 
       item.mediaFile.name = result.content.name;
       item.mediaFile.uploadName = result.content.name;
+      item.mediaFile.shortName = getMediaShortNameFromUploadName(result.content.name)
+        || item.mediaFile.shortName;
       item.mediaFile.kind = "existing";
       item.mediaFile.missingName = null;
       item.mediaFile.file = null;

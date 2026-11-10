@@ -335,9 +335,8 @@ function renderMediaFiles(block) {
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
       if (isMediaWiki) {
-        name.append(mediaFile.embed ? "![" : "[");
-        name.append("MediaWiki | ");
-        link.textContent = shortName;
+        name.append("[");
+        link.textContent = "MediaWiki | " + shortName;
         name.appendChild(link);
         name.append("]");
       } else {
@@ -357,8 +356,7 @@ function renderMediaFiles(block) {
     } else {
       let displayName;
       if (isMediaWiki) {
-        displayName = (mediaFile.embed ? "!" : "") +
-          "[MediaWiki | " + shortName + "]";
+        displayName = "[MediaWiki | " + shortName + "]";
       } else {
         displayName = "[" + (mediaFile.sourceFormat === "markdown"
           ? mediaFile.displayName

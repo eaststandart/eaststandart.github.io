@@ -74,8 +74,12 @@ function getMediaShortNameFromUploadName(fileName) {
 // НАЗНАЧЕНИЕ: Назначение следующего свободного сокращённого имени.
 function getNextMediaShortName(type, extension) {
   let maxIndex = 0;
-  const targetNamePattern = new RegExp(
+  const physicalNamePattern = new RegExp(
     "^\\d{4}-\\d{2}-\\d{2}-\\d+_discussion_.*_" + type + "_(\\d+)\\.[^.]+$",
+    "i"
+  );
+  const shortNamePattern = new RegExp(
+    "^" + type + "_(\\d+)\\.[^.]+$",
     "i"
   );
 
@@ -83,14 +87,20 @@ function getNextMediaShortName(type, extension) {
     if (getMediaBlockType(block) !== type || !Array.isArray(block.mediaFiles)) return;
 
     block.mediaFiles.forEach(mediaFile => {
-      // Учитываем только физическое имя существующего целевого файла ссылки.
-      // Подпись, короткое имя и локальные файлы на нумерацию не влияют.
-      if (mediaFile.kind === "local") return;
+      // Учитываем физические имена существующих файлов и короткие имена
+      // всех записей, включая локальные файлы, уже добавленные в форму.
+      [
+        mediaFile.name,
+        mediaFile.uploadName,
+        mediaFile.missingName,
+        mediaFile.shortName
+      ].filter(Boolean).forEach(name => {
+        const value = String(name).trim();
+        const match = value.match(physicalNamePattern)
+          || value.match(shortNamePattern);
 
-      const physicalName = String(mediaFile.name || "").trim();
-      const match = physicalName.match(targetNamePattern);
-
-      if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
+        if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
+      });
     });
   });
 

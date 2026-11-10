@@ -105,19 +105,19 @@ function findDuplicateMediaFile(file) {
           mediaFile.fileType === file.type;
       }
 
-      // Для вики-ссылок сравниваем полное имя из адреса ссылки.
-      // Для ссылок формы — исходное имя из подписи до разделителя " | ".
+      // Для файлов, ранее добавленных через форму, берём исходное имя до " | ".
+      // Для остальных ссылок берём физическое имя из круглых скобок.
       const displayName = String(mediaFile.displayName || "").trim();
-      const isWikiLink = mediaFile.sourceFormat === "obsidian" ||
-        mediaFile.sourceFormat === "mediawiki" ||
-        (mediaFile.sourceFormat === "markdown" && /^MediaWiki\s*\|/i.test(displayName)) ||
-        (mediaFile.sourceFormat === "markdown" && !displayName.includes(" | "));
-      const comparisonName = isWikiLink
-        ? mediaFile.name
-        : displayName.split(" | ")[0].trim();
+      const isFormCreatedName =
+        mediaFile.sourceFormat === "markdown" &&
+        displayName.includes(" | ");
+      const comparisonName = isFormCreatedName
+        ? displayName.split(" | ")[0].trim()
+        : mediaFile.name;
 
-      return Number.isFinite(Number(mediaFile.fileSize)) &&
-        Number(mediaFile.fileSize) === file.size &&
+      return typeof mediaFile.fileSize === "number" &&
+        Number.isFinite(mediaFile.fileSize) &&
+        mediaFile.fileSize === file.size &&
         String(comparisonName || "").trim().toLowerCase() === selectedName;
     });
 
@@ -265,9 +265,12 @@ function registerExistingMediaFiles(
       name: fileName,
       displayName: displayNames[index] || "",
       sourceFormat: sourceFormats[index] || "obsidian",
-      fileSize: Number.isFinite(Number(fileSizes[index]))
-        ? Number(fileSizes[index])
-        : null,
+      fileSize: fileSizes[index] !== null &&
+        fileSizes[index] !== undefined &&
+        fileSizes[index] !== "" &&
+        Number.isFinite(Number(fileSizes[index]))
+          ? Number(fileSizes[index])
+          : null,
       shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",
@@ -329,39 +332,39 @@ function renderMediaFiles(block) {
       || mediaFile.name;
 
     const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
-      mediaFile.sourceFormat === "mediawiki" ||
-      /^MediaWiki\\s*\\|/i.test(String(mediaFile.displayName || "").trim());
+      mediaFile.sourceFormat === "mediawiki";
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      if (mediaFile.sourceFormat === "markdown") {
-        name.append(mediaFile.embed ? "!" : "");
+      if (isMediaWiki) {
         name.append("[");
-        link.textContent = mediaFile.displayName;
+        link.textContent = "MediaWiki | " + shortName;
         name.appendChild(link);
         name.append("]");
-      } else if (isMediaWiki) {
-        name.append(mediaFile.embed ? "![" : "[");
-        name.append("MediaWiki | ");
-        link.textContent = shortName;
+      } else if (mediaFile.originalName) {
+        name.append("[");
+        link.textContent = originalName + " | " + shortName;
         name.appendChild(link);
         name.append("]");
       } else {
         name.append("[");
-        if (hasOriginalName) {
-          name.append(originalName);
-          name.append(" | ");
+        if (mediaFile.sourceFormat === "markdown") {
+          link.textContent = mediaFile.displayName;
+        } else {
+          if (hasOriginalName) {
+            name.append(originalName);
+            name.append(" | ");
+          }
+          link.textContent = shortName;
         }
-        link.textContent = shortName;
         name.appendChild(link);
         name.append("]");
       }
     } else {
       let displayName;
       if (isMediaWiki) {
-        displayName = (mediaFile.embed ? "!" : "") +
-          "[MediaWiki | " + shortName + "]";
+        displayName = "[MediaWiki | " + shortName + "]";
       } else {
         displayName = "[" + (mediaFile.sourceFormat === "markdown"
           ? mediaFile.displayName

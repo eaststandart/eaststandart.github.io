@@ -368,11 +368,9 @@ async function handleMediaUpload() {
     const session = getCommentUploadSession();
     const result = await uploadLocalMediaFiles(session);
 
-    message = result.errors.length
+    message = result.uploaded > 0 || result.errors.length > 0
       ? `Загружено: ${result.uploaded} | Не загружено: ${result.errors.length}`
-      : result.uploaded > 0
-        ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
-        : "Новых медиафайлов для загрузки нет.";
+      : "Новых медиафайлов для загрузки нет.";
 
     if (result.errors.length) {
       type = "error";

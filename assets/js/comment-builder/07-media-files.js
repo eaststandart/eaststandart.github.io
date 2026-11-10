@@ -292,7 +292,8 @@ function renderMediaFiles(block) {
     const name = document.createElement("span");
     name.className = "media-file-name";
 
-    const originalName = mediaFile.originalName || mediaFile.displayName || mediaFile.name;
+    const hasOriginalName = Boolean(mediaFile.originalName || mediaFile.displayName);
+    const originalName = mediaFile.originalName || mediaFile.displayName || "";
     const shortName = mediaFile.shortName
       || getMediaShortNameFromUploadName(mediaFile.uploadName || mediaFile.name)
       || mediaFile.name;
@@ -301,13 +302,18 @@ function renderMediaFiles(block) {
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
       name.append("[");
-      name.append(originalName);
-      name.append(" | ");
+      if (hasOriginalName) {
+        name.append(originalName);
+        name.append(" | ");
+      }
       link.textContent = shortName;
       name.appendChild(link);
       name.append("]");
     } else {
-      name.textContent = "[" + originalName + " | " + shortName + "]"
+      const displayName = hasOriginalName
+        ? originalName + " | " + shortName
+        : shortName;
+      name.textContent = "[" + displayName + "]"
         + (mediaFile.kind === "missing" ? " (отсутствует)" : "");
     }
 

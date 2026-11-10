@@ -201,7 +201,10 @@ function loadDraftData(draftId) {
   const selectedDraft = mockDrafts.find(d => d.id === draftId);
   if (!selectedDraft) return;
 
-  currentCommentDraft = selectedDraft;
+  setFormLock(true);
+
+  try {
+    currentCommentDraft = selectedDraft;
 
   const publishFlag = document.getElementById("publish-now-flag");
   if (publishFlag) {
@@ -267,8 +270,15 @@ function loadDraftData(draftId) {
 
   console.log("[ИНЪЕКТОР] Черновик восстановлен");
 
-  showNotify(
-    "Черновик успешно развернут!",
-    "success"
-  );
+    showNotify(
+      "Черновик успешно развернут!",
+      "success"
+    );
+
+    finishCommentFormOperation(false);
+  } catch (error) {
+    console.error("[DRAFTS INJECTOR] Ошибка восстановления:", error);
+    showNotify(error.message || "Не удалось восстановить черновик.", "error");
+    setFormLock(false);
+  }
 }

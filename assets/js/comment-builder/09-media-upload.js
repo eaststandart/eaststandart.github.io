@@ -252,7 +252,7 @@ async function uploadSingleMediaFile(file, fileName) {
 // НАЗНАЧЕНИЕ: Загружает новые файлы, неудачные оставляет в форме как отсутствующие.
 async function uploadLocalMediaFiles(session) {
   if (!accessToken) {
-    throw new Error("Нет активного токена GitHub.");
+    throw new Error("Нет активного токена!");
   }
 
   if (

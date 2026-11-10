@@ -143,7 +143,7 @@ function waitMediaUploadRetry(seconds, attempt) {
 
     showNotify(
       `Ошибка сети. Повтор через ${remaining} сек.`,
-      "info"
+      "error"
     );
 
     const timer = setInterval(() => {
@@ -151,14 +151,14 @@ function waitMediaUploadRetry(seconds, attempt) {
 
       if (remaining <= 0) {
         clearInterval(timer);
-        showNotify(`Попытка сохранения ${attempt}/3`, "info");
+        showNotify(`Попытка сохранения ${attempt}/3`, "success");
         resolve();
         return;
       }
 
       showNotify(
         `Ошибка сети. Повтор через ${remaining} сек.`,
-        "info"
+        "error"
       );
     }, 1000);
   });
@@ -369,7 +369,7 @@ async function handleMediaUpload() {
     const result = await uploadLocalMediaFiles(session);
 
     message = result.errors.length
-      ? `Загружено: ${result.uploaded}. Не загружено: ${result.errors.length}. Отсутствующие файлы оставлены в списке.`
+      ? `Загружено: ${result.uploaded} | Не загружено: ${result.errors.length}`
       : result.uploaded > 0
         ? `Загрузка завершена. Файлов загружено: ${result.uploaded}.`
         : "Новых медиафайлов для загрузки нет.";

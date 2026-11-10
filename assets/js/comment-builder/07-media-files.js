@@ -112,12 +112,16 @@ function findDuplicateMediaFile(file) {
         ? displayName.split(" | ")[0].trim()
         : displayName;
 
-      return Boolean(
-        restoredOriginalName &&
-        restoredOriginalName.toLowerCase() === selectedName &&
-        Number.isFinite(Number(mediaFile.fileSize)) &&
-        Number(mediaFile.fileSize) === file.size
-      );
+      const restoredNames = [
+        restoredOriginalName,
+        mediaFile.name
+      ].filter(Boolean);
+
+      return Number.isFinite(Number(mediaFile.fileSize)) &&
+        Number(mediaFile.fileSize) === file.size &&
+        restoredNames.some(name =>
+          String(name).trim().toLowerCase() === selectedName
+        );
     });
 
     if (!duplicate && match) duplicate = match;

@@ -329,7 +329,8 @@ function renderMediaFiles(block) {
       || mediaFile.name;
 
     const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
-      mediaFile.sourceFormat === "mediawiki";
+      mediaFile.sourceFormat === "mediawiki" ||
+      /^MediaWiki\\s*\\|/i.test(String(mediaFile.displayName || "").trim());
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {

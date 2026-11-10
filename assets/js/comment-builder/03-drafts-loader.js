@@ -118,11 +118,26 @@ async function loadCommentDraftsFromApi() {
       return null;
     });
 
-    const availableFiles = new Set(
-      files.filter(file => file.type === "file").map(file => file.name)
+    const availableFileSizes = new Map(
+      files
+        .filter(file => file.type === "file")
+        .map(file => [file.name, Number(file.size)])
     );
+    const availableFiles = new Set(availableFileSizes.keys());
 
     const parsedDrafts = await Promise.all(fetchPromises);
+
+    // Передаём размеры вложений из списка GitHub API в данные каждого медиаблока.
+    parsedDrafts.forEach(draft => {
+      if (!draft) return;
+      [...(draft.photos || []), ...(draft.videos || [])].forEach(block => {
+        block.fileSizes = (block.files || []).map(fileName =>
+          availableFileSizes.has(fileName)
+            ? availableFileSizes.get(fileName)
+            : null
+        );
+      });
+    });
 
     mockDrafts = parsedDrafts.filter(d => {
       if (!d) return false;

@@ -91,16 +91,42 @@ function getNextMediaShortName(type, extension) {
 // НАЗНАЧЕНИЕ: Поиск ранее прикреплённого в текущей форме того же файла.
 function findDuplicateMediaFile(file) {
   let duplicate = null;
+  const selectedName = String(file.name || "").trim().toLowerCase();
+
   document.querySelectorAll(".media-sub-block").forEach(block => {
     if (!Array.isArray(block.mediaFiles)) return;
-    const match = block.mediaFiles.find(mediaFile =>
-      mediaFile.originalName === file.name &&
-      mediaFile.fileSize === file.size &&
-      mediaFile.fileLastModified === file.lastModified &&
-      mediaFile.fileType === file.type
-    );
+
+    const match = block.mediaFiles.find(mediaFile => {
+      // Для файлов, добавленных в текущей сессии, сохраняем точную проверку.
+      if (mediaFile.originalName) {
+        return mediaFile.originalName === file.name &&
+          mediaFile.fileSize === file.size &&
+          mediaFile.fileLastModified === file.lastModified &&
+          mediaFile.fileType === file.type;
+      }
+
+      // Восстановленные из черновика файлы не содержат метаданных исходника.
+      // В новых Markdown-черновиках исходное имя находится до разделителя " | ".
+      const displayName = String(mediaFile.displayName || "").trim();
+      const restoredOriginalName = displayName.includes(" | ")
+        ? displayName.split(" | ")[0].trim()
+        : displayName;
+
+      const restoredNames = [
+        restoredOriginalName,
+        mediaFile.name,
+        mediaFile.shortName,
+        mediaFile.uploadName
+      ].filter(Boolean);
+
+      return restoredNames.some(name =>
+        String(name).trim().toLowerCase() === selectedName
+      );
+    });
+
     if (!duplicate && match) duplicate = match;
   });
+
   return duplicate;
 }
 

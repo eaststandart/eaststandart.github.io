@@ -94,7 +94,7 @@ async function loadCommentDraftsFromApi() {
       if (typeof refreshDraftSelect === "function") {
         refreshDraftSelect();
       }
-      showNotify("Черновиков: 0, Несобрано: 0", "success");
+      showNotify("Черновиков: 0 | Несобрано: 0", "success");
       return true;
     }
 
@@ -146,7 +146,7 @@ async function loadCommentDraftsFromApi() {
     const draftCount = mockDrafts.length - incompleteCount;
 
     showNotify(
-      `Черновиков: ${draftCount}, Несобрано: ${incompleteCount}`,
+      `Черновиков: ${draftCount} | Несобрано: ${incompleteCount}`,
       "success"
     );
 

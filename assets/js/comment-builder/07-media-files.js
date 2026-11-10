@@ -74,16 +74,26 @@ function getMediaShortNameFromUploadName(fileName) {
 // НАЗНАЧЕНИЕ: Назначение следующего свободного сокращённого имени.
 function getNextMediaShortName(type, extension) {
   let maxIndex = 0;
+  const targetNamePattern = new RegExp(
+    "^\\d{4}-\\d{2}-\\d{2}-\\d+_discussion_.*_" + type + "_(\\d+)\\.[^.]+$",
+    "i"
+  );
+
   document.querySelectorAll(".media-sub-block").forEach(block => {
     if (getMediaBlockType(block) !== type || !Array.isArray(block.mediaFiles)) return;
+
     block.mediaFiles.forEach(mediaFile => {
-      [mediaFile.shortName, mediaFile.uploadName, mediaFile.missingName,
-       mediaFile.kind === "local" ? null : mediaFile.name].filter(Boolean).forEach(name => {
-        const match = String(name).match(new RegExp("(?:^|_)" + type + "_(\\d+)(\\.[^.]+)$", "i"));
-        if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
-      });
+      // Учитываем только физическое имя существующего целевого файла ссылки.
+      // Подпись, короткое имя и локальные файлы на нумерацию не влияют.
+      if (mediaFile.kind === "local") return;
+
+      const physicalName = String(mediaFile.name || "").trim();
+      const match = physicalName.match(targetNamePattern);
+
+      if (match) maxIndex = Math.max(maxIndex, Number(match[1]));
     });
   });
+
   return type + "_" + String(maxIndex + 1).padStart(2, "0") + extension;
 }
 

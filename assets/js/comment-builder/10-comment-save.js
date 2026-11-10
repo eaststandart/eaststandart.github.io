@@ -49,13 +49,18 @@ function collectCommentMedia(containerId, type) {
             .filter(file => file.missingName || file.uploadName || file.name)
             .map(file => {
               const fileName = file.missingName || file.uploadName || file.name;
-              const shortName = fileName.match(
-                /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
+              const uploadNameMatch = fileName.match(
+                /^\d{4}-\d{2}-\d{2}-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
               );
-              const displayName = file.displayName ||
-                (shortName
-                  ? shortName[1] + "_" + shortName[2] + "_" + shortName[3]
-                  : file.originalName || fileName);
+              const shortName = file.shortName ||
+                (uploadNameMatch
+                  ? uploadNameMatch[1] + "_" + uploadNameMatch[2]
+                  : fileName);
+              // Новые файлы с компьютера получают пару имён.
+              // Восстановленные ссылки сохраняют прежнюю подпись.
+              const displayName = file.originalName
+                ? file.originalName + " | " + shortName
+                : file.displayName || shortName;
 
               return {
                 name: fileName,

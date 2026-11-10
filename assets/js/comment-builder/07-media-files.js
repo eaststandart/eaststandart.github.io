@@ -134,7 +134,7 @@ function addMediaFiles(block, files, type) {
     if (totalPending > 0) {
       showNotify(
         `Добавлено файлов: ${totalPending}. Ожидают загрузки.`,
-        "info"
+        "success"
       );
     }
   }
@@ -181,7 +181,7 @@ function registerExistingMediaFiles(
 
   if (rejectedFiles.length) {
     showNotify(
-      `В черновике обнаружены неподдерживаемые вложения: ${rejectedFiles.join(", ")}`,
+      "Неподдерживаемые вложения!",
       "error"
     );
   }
@@ -297,12 +297,12 @@ function removeMediaFile(block, fileId) {
     if (totalPending > 0) {
       showNotify(
         `Осталось файлов: ${totalPending}. Ожидают загрузки.`,
-        "info"
+        "success"
       );
     } else {
       showNotify(
         "Новых медиафайлов для загрузки нет.",
-        "info"
+        "success"
       );
     }
   }

@@ -216,7 +216,8 @@ function registerExistingMediaFiles(
   type,
   missingFileNames = [],
   displayNames = [],
-  embedFlags = []
+  embedFlags = [],
+  sourceFormats = []
 ) {
   if (!block || !Array.isArray(fileNames)) return;
 
@@ -238,6 +239,7 @@ function registerExistingMediaFiles(
       id: ++mediaFileId,
       name: fileName,
       displayName: displayNames[index] || "",
+      sourceFormat: sourceFormats[index] || "obsidian",
       shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",
@@ -302,17 +304,23 @@ function renderMediaFiles(block) {
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
       name.append("[");
-      if (hasOriginalName) {
-        name.append(originalName);
-        name.append(" | ");
+      if (mediaFile.sourceFormat === "markdown") {
+        link.textContent = mediaFile.displayName;
+      } else {
+        if (hasOriginalName) {
+          name.append(originalName);
+          name.append(" | ");
+        }
+        link.textContent = shortName;
       }
-      link.textContent = shortName;
       name.appendChild(link);
       name.append("]");
     } else {
-      const displayName = hasOriginalName
-        ? originalName + " | " + shortName
-        : shortName;
+      const displayName = mediaFile.sourceFormat === "markdown"
+        ? mediaFile.displayName
+        : hasOriginalName
+          ? originalName + " | " + shortName
+          : shortName;
       name.textContent = "[" + displayName + "]"
         + (mediaFile.kind === "missing" ? " (отсутствует)" : "");
     }

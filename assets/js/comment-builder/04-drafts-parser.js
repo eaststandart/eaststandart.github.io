@@ -121,6 +121,7 @@ function parseNewManifestBody(body) {
     const files = [];
     const displayNames = [];
     const embedFlags = [];
+    const sourceFormats = [];
 
     // Формат Obsidian: поддерживаем embed ![[...]] и обычную ссылку [[...]].
     for (const match of section.content.matchAll(/(!?)\[\[([^\]]+)\]\]/g)) {
@@ -129,6 +130,7 @@ function parseNewManifestBody(body) {
       files.push(fileName);
       displayNames.push("");
       embedFlags.push(match[1] === "!");
+      sourceFormats.push("obsidian");
     }
 
     // Стандартный Markdown: поддерживаем ссылки с ! и без него.
@@ -148,6 +150,7 @@ function parseNewManifestBody(body) {
       files.push(fileName);
       displayNames.push(displayName);
       embedFlags.push(embed);
+      sourceFormats.push("markdown");
     }
 
     const target = type === "photo" ? photos : videos;
@@ -157,7 +160,8 @@ function parseNewManifestBody(body) {
       description,
       files,
       displayNames,
-      embedFlags
+      embedFlags,
+      sourceFormats
     });
   });
 

@@ -116,7 +116,7 @@ function addMediaFiles(block, files, type) {
 
   if (rejectedFiles.length) {
     showNotify(
-      `Недопустимый формат файла: ${rejectedFiles.join(", ")}`,
+      "Неподдерживаемые вложения!",
       "error"
     );
   } else {
@@ -341,7 +341,7 @@ document.addEventListener("click", event => {
 
       if (selectedFile && target) {
         if (!validateMediaFile(selectedFile, type)) {
-          showNotify("Недопустимый формат файла: " + selectedFile.name, "error");
+          showNotify("Неподдерживаемые вложения!", "error");
         } else {
           target.missingName = target.name;
           target.originalName = selectedFile.name;

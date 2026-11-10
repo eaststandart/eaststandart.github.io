@@ -57,7 +57,11 @@ function collectCommentMedia(containerId, type) {
                   ? shortName[1] + "_" + shortName[2] + "_" + shortName[3]
                   : file.originalName || fileName);
 
-              return { name: fileName, displayName };
+              return {
+                name: fileName,
+                displayName,
+                embed: file.embed === true || file.kind === "local"
+              };
             })
         : [];
 
@@ -119,7 +123,7 @@ function buildCommentMarkdown(session) {
     if (block.description) section.push("### Описание блока", block.description);
     section.push("### Медиафайлы");
     block.files.forEach(file => {
-      section.push(`![${file.displayName}](${file.name})`);
+      section.push(`${file.embed ? "!" : ""}[${file.displayName}](${file.name})`);
     });
     body.push(section.join("\n\n"));
   });
@@ -130,7 +134,7 @@ function buildCommentMarkdown(session) {
     if (block.description) section.push("### Описание блока", block.description);
     section.push("### Медиафайлы");
     block.files.forEach(file => {
-      section.push(`[${file.displayName}](${file.name})`);
+      section.push(`${file.embed ? "!" : ""}[${file.displayName}](${file.name})`);
     });
     body.push(section.join("\n\n"));
   });

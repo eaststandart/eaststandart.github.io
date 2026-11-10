@@ -182,7 +182,8 @@ function restoreMediaBlock(container, blockData, type) {
       blockData.files || [],
       type,
       currentCommentDraft?.missingFiles || [],
-      blockData.displayNames || []
+      blockData.displayNames || [],
+      blockData.embedFlags || []
     );
   }
 }

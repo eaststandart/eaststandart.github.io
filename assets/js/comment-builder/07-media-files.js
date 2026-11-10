@@ -15,16 +15,9 @@ const MEDIA_FILE_RULES = {
     accept: ".jpg,.jpeg,.png,.webp"
   },
   video: {
-    extensions: [".mp4", ".mov", ".avi", ".mkv", ".webm"],
-    mimeTypes: [
-      "video/mp4",
-      "video/quicktime",
-      "video/x-msvideo",
-      "video/avi",
-      "video/x-matroska",
-      "video/webm"
-    ],
-    accept: ".mp4,.mov,.avi,.mkv,.webm"
+    extensions: [".mp4", ".webm"],
+    mimeTypes: ["video/mp4", "video/webm"],
+    accept: ".mp4,.webm"
   }
 };
 
@@ -149,7 +142,13 @@ function addMediaFiles(block, files, type) {
 
 // ФУНКЦИЯ: registerExistingMediaFiles
 // НАЗНАЧЕНИЕ: Регистрация файлов, восстановленных из черновика
-function registerExistingMediaFiles(block, fileNames, type, missingFileNames = []) {
+function registerExistingMediaFiles(
+  block,
+  fileNames,
+  type,
+  missingFileNames = [],
+  displayNames = []
+) {
   if (!block || !Array.isArray(fileNames)) return;
 
   const missing = new Set(missingFileNames);
@@ -158,7 +157,7 @@ function registerExistingMediaFiles(block, fileNames, type, missingFileNames = [
 
   const rejectedFiles = [];
 
-  fileNames.forEach(fileName => {
+  fileNames.forEach((fileName, index) => {
     const file = { name: fileName };
 
     if (!validateMediaFile(file, type)) {
@@ -169,6 +168,7 @@ function registerExistingMediaFiles(block, fileNames, type, missingFileNames = [
     block.mediaFiles.push({
       id: ++mediaFileId,
       name: fileName,
+      displayName: displayNames[index] || "",
       kind: missing.has(fileName) ? "missing" : "existing",
       file: null,
       uploadName: fileName
@@ -229,9 +229,11 @@ function renderMediaFiles(block) {
       const shortName = mediaFile.name.match(
         /^(\d{4}-\d{2}-\d{2})-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
       );
-      link.textContent = shortName
-        ? `[${shortName[1]}_${shortName[2]}_${shortName[3]}]`
-        : `[${mediaFile.name}]`;
+      link.textContent = mediaFile.displayName
+        ? `[${mediaFile.displayName}]`
+        : shortName
+          ? `[${shortName[1]}_${shortName[2]}_${shortName[3]}]`
+          : `[${mediaFile.name}]`;
       name.appendChild(link);
     } else {
       name.textContent = mediaFile.kind === "missing"

@@ -150,7 +150,7 @@ function parseNewManifestBody(body) {
       files.push(fileName);
       displayNames.push(displayName);
       embedFlags.push(embed);
-      sourceFormats.push("markdown");
+      sourceFormats.push(/^MediaWiki\s*\|/i.test(displayName) ? "mediawiki" : "markdown");
     }
 
     const target = type === "photo" ? photos : videos;

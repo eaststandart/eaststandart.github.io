@@ -115,8 +115,9 @@ function findDuplicateMediaFile(file) {
         ? displayName.split(" | ")[0].trim()
         : mediaFile.name;
 
-      return Number.isFinite(Number(mediaFile.fileSize)) &&
-        Number(mediaFile.fileSize) === file.size &&
+      return typeof mediaFile.fileSize === "number" &&
+        Number.isFinite(mediaFile.fileSize) &&
+        mediaFile.fileSize === file.size &&
         String(comparisonName || "").trim().toLowerCase() === selectedName;
     });
 
@@ -264,9 +265,12 @@ function registerExistingMediaFiles(
       name: fileName,
       displayName: displayNames[index] || "",
       sourceFormat: sourceFormats[index] || "obsidian",
-      fileSize: Number.isFinite(Number(fileSizes[index]))
-        ? Number(fileSizes[index])
-        : null,
+      fileSize: fileSizes[index] !== null &&
+        fileSizes[index] !== undefined &&
+        fileSizes[index] !== "" &&
+        Number.isFinite(Number(fileSizes[index]))
+          ? Number(fileSizes[index])
+          : null,
       shortName: getMediaShortNameFromUploadName(fileName) || fileName,
       embed: embedFlags[index] === true,
       kind: missing.has(fileName) ? "missing" : "existing",

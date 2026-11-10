@@ -314,6 +314,7 @@ async function handleCommentSubmit() {
 
   let markdownSaved = false;
   let mediaUploadCompleted = false;
+  let keepFormLocked = false;
 
   try {
     if (!accessToken) {
@@ -419,9 +420,8 @@ async function handleCommentSubmit() {
       console.log("[COMMENT SAVE] Файл сохранён:", saved.fileName);
       console.log("[COMMENT SAVE] Загружено новых медиафайлов:", uploadResult.uploaded);
 
-      setTimeout(() => {
-        resetCommentForm();
-      }, 2000);
+      keepFormLocked = true;
+      finishCommentFormOperation(true);
     }
 
   } catch (error) {
@@ -437,7 +437,7 @@ async function handleCommentSubmit() {
     showNotify(message, "error");
 
   } finally {
-    setFormLock(false);
+    if (!keepFormLocked) setFormLock(false);
     setCommentOperationLock(false);
   }
 }

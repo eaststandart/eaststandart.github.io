@@ -104,24 +104,58 @@
 .emergency-separator { font-weight: bold; font-size: 18px; }
 
 /* Регламент работы с журналом */
-.regulation-summary {
+.admin-container .regulation-summary {
     cursor: pointer;
     color: #24292e;
 }
-.regulation-summary h4 {
+.admin-container .regulation-summary h4 {
     display: inline;
     margin: 0;
     color: #24292e;
     font-size: 15px;
 }
-.regulation-content {
+.admin-container .regulation-content {
     margin-top: 12px;
     font-size: 13px;
     color: #495057;
     line-height: 1.6;
 }
-.regulation-content h4 {
+.admin-container .regulation-content h4 {
     margin-top: 8px;
     color: #24292e;
     font-size: 15px;
+}
+.admin-container .regulation-rule-heading {
+    margin: 8px 0 4px;
+    font-weight: bold;
+}
+.admin-container .regulation-heading-tight {
+    margin-bottom: 2px;
+}
+.admin-container .regulation-rule-text {
+    margin: 0 0 4px;
+}
+.admin-container .regulation-no-bottom {
+    margin-bottom: 0;
+}
+.admin-container .regulation-list {
+    margin: 0;
+    padding-left: 20px;
+}
+.admin-container .regulation-code {
+    font-family: monospace;
+}
+.admin-container .regulation-code-structure {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: monospace;
+}
+.admin-container .regulation-note {
+    margin: 0 0 4px;
+    color: #6c757d;
+}
+.admin-container .regulation-subheading {
+    margin: 4px 0 2px;
+    font-weight: bold;
+    color: #212529;
 }

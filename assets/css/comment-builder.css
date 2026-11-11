@@ -277,21 +277,6 @@
     align-items: center;
     gap: 5px;
 }
-.comment-builder .publish-delete-option {
-    margin-left: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    user-select: none;
-}
-.comment-builder .publish-delete-option input {
-    margin: 0;
-    cursor: pointer;
-}
-.comment-builder .publish-delete-option svg {
-    display: block;
-}
 .comment-builder .publish-block .btn {
     width: 100%;
     flex: 0 0 100%;

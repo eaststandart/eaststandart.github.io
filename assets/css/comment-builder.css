@@ -443,3 +443,8 @@
     padding-left: 20px;
 }
 
+.comment-builder .regulation-content h4 {
+    margin-top: 8px;
+    color: #24292e;
+    font-size: 15px;
+}

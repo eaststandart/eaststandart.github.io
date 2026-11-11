@@ -419,7 +419,7 @@ async function handleCommentSubmit() {
 
     if (uploadResult.errors.length || unresolvedMediaCount > 0) {
       showNotify(
-        `Markdown сохранён | Медиа загружены: ${uploadResult.uploaded} | Ошибок: ${uploadResult.errors.length}`,
+        `Markdown сохранён | Медиа: загружены ${uploadResult.uploaded}, ошибок ${uploadResult.errors.length}`,
         "error"
       );
       if (uploadResult.errors.length) {
@@ -442,9 +442,9 @@ async function handleCommentSubmit() {
 
     if (markdownSaved && !mediaUploadCompleted) {
       mediaUploadErrorCount = Math.max(mediaUploadErrorCount, 1);
-      message = `Markdown сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
+      message = `Markdown сохранён | Медиа: загружены ${uploadedMediaCount}, ошибок ${mediaUploadErrorCount}`;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = `Markdown не сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
+      message = `Markdown не сохранён | Медиа: загружены ${uploadedMediaCount}, ошибок ${mediaUploadErrorCount}`;
     }
 
     showNotify(message, "error");

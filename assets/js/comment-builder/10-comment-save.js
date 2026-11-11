@@ -434,6 +434,7 @@ async function handleCommentSubmit() {
   } catch (error) {
     console.error("[COMMENT SAVE] Ошибка:", error);
     let message = error.message || "Ошибка сохранения комментария.";
+    if (message === "Failed to fetch") message = "Загрузка не удалась!";
 
     if (markdownSaved && !mediaUploadCompleted) {
       message = "Markdown сохранён. Загрузка медиа не завершена: " + message;

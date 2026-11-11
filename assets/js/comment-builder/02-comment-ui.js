@@ -66,6 +66,7 @@ function initCommentInterface() {
 function resetCommentForm() {
   currentCommentDraft = null;
   currentCommentSession = null;
+  if (typeof setDraftDeleteState === "function") setDraftDeleteState(null);
 
   document.getElementById("post-title").value = "";
   document.getElementById("post-text").value = "";

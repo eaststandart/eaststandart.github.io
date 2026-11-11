@@ -149,8 +149,7 @@ async function loadCommentDraftsFromApi() {
 
       d.missingFiles = mediaNames.filter(name => !availableFiles.has(name));
 
-      return String(d.published).toLowerCase() === "false" ||
-        (String(d.published).toLowerCase() === "true" && d.missingFiles.length > 0);
+      return true;
     });
 
     if (typeof refreshDraftSelect === "function") {

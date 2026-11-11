@@ -412,7 +412,11 @@ async function handleCommentSubmit() {
 
     const deleteRequested = document.getElementById("delete-draft-flag")?.checked === true;
     const published = !deleteRequested && document.getElementById("publish-now-flag")?.checked === true;
-    const saveMessage = published ? "Комментарий сохранён!" : "Черновик сохранён!";
+    const saveMessage = deleteRequested
+      ? "Черновик удалён!"
+      : published
+        ? "Комментарий сохранён!"
+        : "Черновик сохранён!";
 
     // Убираем опубликованный комментарий из списка только после полной комплектации.
     if (published && unresolvedMediaCount === 0 && currentCommentDraft && Array.isArray(mockDrafts)) {

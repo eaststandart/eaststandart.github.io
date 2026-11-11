@@ -30,11 +30,16 @@ function refreshDraftSelect() {
       option.value = draft.id;
 
       const title = String(draft.title || "").trim() || "Без заголовка";
+      const isPublished = String(draft.published).toLowerCase() === "true";
       const isIncomplete = draft.missingFiles?.length > 0;
       option.textContent = "[" + draft.date + "] " + title;
 
       if (isIncomplete) {
-        option.classList.add("is-incomplete");
+        option.classList.add(
+          isPublished ? "is-incomplete" : "is-incomplete-draft"
+        );
+      } else if (isPublished) {
+        option.classList.add("is-published-complete");
       }
 
       select.appendChild(option);

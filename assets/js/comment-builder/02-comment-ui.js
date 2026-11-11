@@ -225,7 +225,7 @@ function updatePublishLabel() {
   const submitBtn = document.getElementById("submit-btn");
   if (submitBtn) {
     submitBtn.textContent = isDeleteRequested
-      ? "Удалить комментарий"
+      ? "Удалить черновик"
       : isChecked
         ? "Сохранить комментарий"
         : "Сохранить черновик";

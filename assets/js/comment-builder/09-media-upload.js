@@ -247,6 +247,10 @@ async function uploadSingleMediaFile(file, fileName) {
         (error.status >= 500 && error.status <= 599);
 
       if (!isTemporaryError || attempt === 3) {
+        if (error instanceof TypeError) {
+          console.error("[MEDIA UPLOAD] Ошибка сети после повторных попыток:", error);
+          throw new Error("Загрузка не удалась!");
+        }
         throw error;
       }
 

@@ -293,8 +293,8 @@
     display: block;
 }
 .comment-builder .publish-block .btn {
-    width: auto;
-    flex: 1 1 180px;
+    width: 100%;
+    flex: 0 0 100%;
     margin-top: 0;
 }
 .comment-builder .btn-delete-container {

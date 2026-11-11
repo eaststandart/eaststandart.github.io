@@ -444,7 +444,7 @@ async function handleCommentSubmit() {
       mediaUploadErrorCount = Math.max(mediaUploadErrorCount, 1);
       message = `Markdown сохранён | Медиа: загружены ${uploadedMediaCount}, ошибок ${mediaUploadErrorCount}`;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = `Markdown не сохранён | Медиа: загружены ${uploadedMediaCount}, ошибок ${mediaUploadErrorCount}`;
+      message = `Markdown не обновлён | Медиа: загружены ${uploadedMediaCount}, ошибок ${mediaUploadErrorCount}`;
     }
 
     showNotify(message, "error");

@@ -230,6 +230,7 @@ function updatePublishLabel() {
         ? "Сохранить комментарий"
         : "Сохранить черновик";
     submitBtn.classList.toggle("is-delete-requested", isDeleteRequested);
+    submitBtn.classList.toggle("is-publish-requested", isChecked && !isDeleteRequested);
   }
   
   if (labelText) labelText.innerText = "Опубликовать";

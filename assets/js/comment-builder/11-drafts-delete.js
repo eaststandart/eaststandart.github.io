@@ -11,37 +11,15 @@ let draftDeleteBaselinePublished = false;
 // ФУНКЦИЯ: ensureDraftDeleteControl
 // НАЗНАЧЕНИЕ: Создаёт третий чекбокс с иконкой корзины рядом с существующими флагами.
 function ensureDraftDeleteControl() {
-  const publishOption = document.querySelector(".publish-option");
-  if (!publishOption) return null;
+  const checkbox = document.getElementById("delete-draft-flag");
+  if (!checkbox) return null;
 
-  let label = document.getElementById("delete-draft-option");
-  if (label) return label;
-
-  label = document.createElement("label");
-  label.id = "delete-draft-option";
-  label.className = "publish-delete-option";
-  label.title = "Пометить черновик на удаление";
-
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.id = "delete-draft-flag";
-  checkbox.disabled = true;
-  checkbox.addEventListener("change", handleDraftDeleteChange);
-
-  const icon = document.createElement("span");
-  icon.textContent = "🗑";
-  icon.setAttribute("aria-hidden", "true");
-
-  label.append(checkbox, icon);
-
-  const botOption = document.querySelector(".publish-bot-option");
-  if (botOption) {
-    botOption.insertAdjacentElement("afterend", label);
-  } else {
-    publishOption.appendChild(label);
+  if (checkbox.dataset.deleteHandlerAttached !== "1") {
+    checkbox.addEventListener("change", handleDraftDeleteChange);
+    checkbox.dataset.deleteHandlerAttached = "1";
   }
 
-  return label;
+  return document.getElementById("delete-draft-option");
 }
 
 // ФУНКЦИЯ: setDraftDeleteState

@@ -234,21 +234,5 @@ function updatePublishLabel() {
   
   if (labelText) labelText.innerText = "Опубликовать";
 
-  // Дополнительный независимый флаг способа публикации.
-  if (labelText && labelText.parentNode &&
-      !document.getElementById("publish-as-bot-flag")) {
-    const botLabel = document.createElement("span");
-    botLabel.className = "publish-bot-option";
-
-    const botFlag = document.createElement("input");
-    botFlag.type = "checkbox";
-    botFlag.id = "publish-as-bot-flag";
-    botFlag.checked = false;
-
-    const botText = document.createElement("span");
-    botText.textContent = "Робот";
-
-    botLabel.append(botFlag, botText);
-    labelText.insertAdjacentElement("afterend", botLabel);
-  }
+  // Флаги публикации и удаления заранее присутствуют в HTML.
 }

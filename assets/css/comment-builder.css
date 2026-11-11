@@ -348,6 +348,7 @@
     box-sizing: border-box;
     font-size: 15px;
 }
+.comment-builder.hidden,
 .comment-builder .hidden {
     display: none;
 }

@@ -240,7 +240,7 @@ function updatePublishLabel() {
     botFlag.checked = false;
 
     const botText = document.createElement("span");
-    botText.textContent = "От робота";
+    botText.textContent = "Робот";
 
     botLabel.append(botFlag, botText);
     labelText.insertAdjacentElement("afterend", botLabel);

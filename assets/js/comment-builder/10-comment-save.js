@@ -321,6 +321,7 @@ async function handleCommentSubmit() {
 
   let markdownSaved = false;
   let mediaUploadCompleted = false;
+  let uploadedMediaCount = 0;
   let keepFormLocked = false;
 
   try {
@@ -374,6 +375,7 @@ async function handleCommentSubmit() {
     // После сохранения манифеста загружаем физические файлы.
     showNotify("Загрузка новых медиафайлов...", "success");
     const uploadResult = await uploadLocalMediaFiles(session);
+    uploadedMediaCount = uploadResult.uploaded;
     mediaUploadCompleted = true;
 
     // После загрузки файлов обновляем Front Matter ещё раз:
@@ -439,7 +441,7 @@ async function handleCommentSubmit() {
     if (markdownSaved && !mediaUploadCompleted) {
       message = "Markdown сохранён. Загрузка медиа не завершена: " + message;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = "Markdown не сохранён. Загрузка медиа завершена: " + message;
+      message = `Markdown не сохранён. Медиа загружены: ${uploadedMediaCount}.`;
     }
 
     showNotify(message, "error");

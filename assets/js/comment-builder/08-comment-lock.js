@@ -62,7 +62,7 @@ async function finishCommentFormOperation(resetForm = false) {
 
   const teacher = localStorage.getItem("github_comment_logged_user");
   if (teacher) {
-    showNotify("Преподаватель: " + teacher, "info");
+    showNotify("👨‍🎓 Преподаватель: " + teacher, "info");
   }
 
   setFormLock(false);

@@ -87,13 +87,15 @@ function handleDraftDeleteChange() {
     return;
   }
 
-  if (!checkbox.checked) {
-    const publishFlag = document.getElementById("publish-now-flag");
-    if (publishFlag) {
-      publishFlag.checked = draftDeleteBaselinePublished;
-      if (typeof updatePublishLabel === "function") updatePublishLabel();
-    }
+  const publishFlag = document.getElementById("publish-now-flag");
+
+  if (checkbox.checked) {
+    if (publishFlag) publishFlag.checked = false;
+  } else if (publishFlag) {
+    publishFlag.checked = draftDeleteBaselinePublished;
   }
+
+  if (typeof updatePublishLabel === "function") updatePublishLabel();
 }
 
 // ФУНКЦИЯ: commitDraftDeleteState
@@ -170,6 +172,14 @@ refreshDraftSelect = function(...args) {
 
   return result;
 };
+
+// Публикация и запрос удаления взаимоисключающие состояния.
+document.getElementById("publish-now-flag")?.addEventListener("change", () => {
+  const deleteCheckbox = document.getElementById("delete-draft-flag");
+  if (deleteCheckbox?.checked) {
+    deleteCheckbox.checked = false;
+  }
+});
 
 ensureDraftDeleteControl();
 console.log("[DRAFT DELETE] Модуль 12 загружен");

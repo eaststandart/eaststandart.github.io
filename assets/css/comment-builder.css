@@ -433,6 +433,9 @@
 .comment-builder .regulation-content p {
     margin: 0 0 6px;
 }
+.comment-builder .regulation-content p:has(+ ul) {
+    margin: 8px 0 4px;
+}
 .comment-builder .regulation-content ul {
     margin: 0;
     padding-left: 20px;

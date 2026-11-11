@@ -76,8 +76,8 @@
     <!-- БЛОК УПРАВЛЕНИЯ СОХРАНЕНИЕМ И ПУБЛИКАЦИЕЙ -->
     <div class="block margin-top-15 publish-block">
       <div class="publish-option">
-        <input type="checkbox" id="publish-now-flag" checked onchange="if(typeof updatePublishLabel === 'function') updatePublishLabel();"> 
-        <span id="publish-label-text">🔥 Опубликовать сейчас (published: true)</span>
+        <input type="checkbox" id="publish-now-flag" onchange="if(typeof updatePublishLabel === 'function') updatePublishLabel();"> 
+        <span id="publish-label-text">Опубликовать</span>
       </div>
       <button type="button" class="btn" id="submit-btn" onclick="handleCommentSubmit()">Создать комментарий</button>
     </div>

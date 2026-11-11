@@ -17,7 +17,7 @@ custom_css: "/assets/css/journal-attendance.css"
 <div id="instructions-section" class="admin-container" markdown="1">
   <details class="auth-box margin-top-15 regulation">
     <summary class="regulation-summary"><h4>📋 Инструкция для преподавателей</h4></summary>
-    <div class="regulation-content" markdown="1">
+<div class="regulation-content" markdown="1">
 
 Для получения доступа к журналу посещений вам понадобится личный персональный ключ (токен) GitHub. Полный исходный код системы автоматизации Журнала посещенийм доступны в официальном репозитории: [techlab-journal-attendance](https://github.com/eaststandart/techlab-journal-attendance/).
 
@@ -46,6 +46,6 @@ custom_css: "/assets/css/journal-attendance.css"
 2. Вернитесь на страницу журнала, вставьте скопированный ключ в поле ввода на самом верху экрана и нажмите кнопку **🔓 Подключить журнал**. Браузер запомнит вас, и при следующих визитах вводить ключ заново не потребуется.
 3. **Обратите внимание:** Если в журнале вы нажмёте кнопку **ВЫХОД**, браузер полностью сотрёт ключ из памяти. Чтобы зайти обратно, вам снова потребуется ввести этот токен. Поэтому нажимайте выход только при реальной необходимости, а сам ключ `ghp_...` обязательно сохраните в надёжном месте (в блокноте или в менеджере паролей), чтобы не потерять его!
 
-    </div>
+</div>
   </details>
 </div>

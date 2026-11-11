@@ -28,28 +28,9 @@ function ensureDraftDeleteControl() {
   checkbox.disabled = true;
   checkbox.addEventListener("change", handleDraftDeleteChange);
 
-  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  icon.setAttribute("viewBox", "0 0 24 24");
-  icon.setAttribute("width", "18");
-  icon.setAttribute("height", "18");
-  icon.setAttribute("fill", "none");
-  icon.setAttribute("stroke", "currentColor");
-  icon.setAttribute("stroke-width", "1.8");
-  icon.setAttribute("stroke-linecap", "round");
-  icon.setAttribute("stroke-linejoin", "round");
+  const icon = document.createElement("span");
+  icon.textContent = "🗑";
   icon.setAttribute("aria-hidden", "true");
-
-  [
-    "M3 6h18",
-    "M8 6V4h8v2",
-    "M19 6l-1 14H6L5 6",
-    "M10 11v5",
-    "M14 11v5"
-  ].forEach(d => {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", d);
-    icon.appendChild(path);
-  });
 
   label.append(checkbox, icon);
 
@@ -73,6 +54,9 @@ function setDraftDeleteState(draft) {
   draftDeleteBaselinePublished = status === "true";
   checkbox.checked = status === "delete";
   checkbox.disabled = !draft;
+  if (checkbox.hasAttribute("data-lock-disabled")) {
+    checkbox.dataset.lockDisabled = draft ? "0" : "1";
+  }
 }
 
 // ФУНКЦИЯ: handleDraftDeleteChange

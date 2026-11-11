@@ -90,6 +90,7 @@ document.getElementById("publish-now-flag")?.addEventListener("change", () => {
   const deleteCheckbox = document.getElementById("delete-draft-flag");
   if (deleteCheckbox?.checked) {
     deleteCheckbox.checked = false;
+    if (typeof updatePublishLabel === "function") updatePublishLabel();
   }
 });
 

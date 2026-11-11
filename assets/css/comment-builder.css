@@ -430,13 +430,14 @@
     color: #495057;
     line-height: 1.6;
 }
-.comment-builder .regulation-content p {
-    margin: 0 0 6px;
-}
-.comment-builder .regulation-content p:has(+ ul) {
+.comment-builder .regulation-rule-heading {
     margin: 8px 0 4px;
+    font-weight: bold;
 }
-.comment-builder .regulation-content ul {
+.comment-builder .regulation-rule-text {
+    margin: 0 0 4px;
+}
+.comment-builder .regulation-list {
     margin: 0;
     padding-left: 20px;
 }

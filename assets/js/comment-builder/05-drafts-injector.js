@@ -42,6 +42,10 @@ function refreshDraftSelect() {
         option.classList.add("is-published-complete");
       }
 
+      if (String(draft.published).toLowerCase() === "delete") {
+        option.classList.add("is-delete-requested");
+      }
+
       select.appendChild(option);
     });
 
@@ -75,6 +79,7 @@ async function toggleDraftBehavior() {
       if (!loaded) {
         draftModeCheckbox.checked = false;
         mockDrafts = [];
+        if (typeof setDraftDeleteState === "function") setDraftDeleteState(null);
       }
 
       setFormLock(false);
@@ -115,6 +120,8 @@ async function toggleDraftBehavior() {
     if (typeof initCommentInterface === "function") {
       initCommentInterface();
     }
+
+    if (typeof setDraftDeleteState === "function") setDraftDeleteState(null);
 
     const userLogin = localStorage.getItem("github_comment_logged_user");
     if (userLogin) {
@@ -217,6 +224,7 @@ function loadDraftData(draftId) {
   if (publishFlag) {
     publishFlag.checked = String(selectedDraft.published).toLowerCase() === "true";
   }
+  if (typeof setDraftDeleteState === "function") setDraftDeleteState(selectedDraft);
   if (typeof updatePublishLabel === "function") updatePublishLabel();
   const publishAsBotFlag = document.getElementById("publish-as-bot-flag");
   if (publishAsBotFlag) {

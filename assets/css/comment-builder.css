@@ -314,6 +314,7 @@
     background-color: #d3f9d8;
 }
 .comment-builder #draft-select option.is-delete-requested {
+    color: #6c757d;
     text-decoration: line-through;
 }
 

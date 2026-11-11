@@ -322,6 +322,7 @@ async function handleCommentSubmit() {
   let markdownSaved = false;
   let mediaUploadCompleted = false;
   let uploadedMediaCount = 0;
+  let mediaUploadErrorCount = 0;
   let keepFormLocked = false;
 
   try {
@@ -376,6 +377,7 @@ async function handleCommentSubmit() {
     showNotify("Загрузка новых медиафайлов...", "success");
     const uploadResult = await uploadLocalMediaFiles(session);
     uploadedMediaCount = uploadResult.uploaded;
+    mediaUploadErrorCount = uploadResult.errors.length;
     mediaUploadCompleted = true;
 
     // После загрузки файлов обновляем Front Matter ещё раз:
@@ -439,7 +441,7 @@ async function handleCommentSubmit() {
     if (message === "Failed to fetch") message = "Загрузка не удалась!";
 
     if (markdownSaved && !mediaUploadCompleted) {
-      message = "Markdown сохранён. Загрузка медиа не завершена: " + message;
+      message = `Markdown сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
     } else if (markdownSaved && mediaUploadCompleted) {
       message = `Markdown не сохранён. Медиа загружены: ${uploadedMediaCount}.`;
     }

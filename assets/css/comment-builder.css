@@ -290,6 +290,14 @@
     color: #c92a2a;
     background-color: #ffe3e3;
 }
+.comment-builder #draft-select option.is-incomplete-draft {
+    color: #495057;
+    background-color: #f1f3f5;
+}
+.comment-builder #draft-select option.is-published-complete {
+    color: #2b8a3e;
+    background-color: #d3f9d8;
+}
 
 /* Общие стили интерфейса конструктора.
    Скопированы из journal-attendance.css и ограничены областью .comment-builder. */

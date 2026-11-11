@@ -149,13 +149,13 @@ function findDuplicateMediaFile(file) {
 
 // ФУНКЦИЯ: askDuplicateMediaFile
 // НАЗНАЧЕНИЕ: Запрос подтверждения повторного прикрепления файла.
-function askDuplicateMediaFile() {
+function askDuplicateMediaFile(fileName) {
   return new Promise(resolve => {
     const dialog = document.createElement("dialog");
     dialog.setAttribute("aria-label", "Повторное прикрепление файла");
     dialog.style.cssText = "padding:24px;border:1px solid #ccc;border-radius:8px;max-width:420px;width:calc(100% - 40px);box-shadow:0 8px 32px rgba(0,0,0,.25);";
     const message = document.createElement("p");
-    message.textContent = "Файл прикреплен. Загрузить повторно?";
+    message.textContent = `Файл ${fileName} прикреплен. Загрузить повторно?`;
     message.style.margin = "0 0 20px";
     const buttons = document.createElement("div");
     buttons.style.cssText = "display:flex;justify-content:flex-end;gap:10px;";
@@ -222,7 +222,7 @@ async function addMediaFiles(block, files, type) {
       continue;
     }
     const duplicate = findDuplicateMediaFile(file);
-    if (duplicate && !(await askDuplicateMediaFile())) continue;
+    if (duplicate && !(await askDuplicateMediaFile(file.name))) continue;
     block.mediaFiles.push({
       id: ++mediaFileId,
       name: file.name,

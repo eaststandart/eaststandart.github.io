@@ -426,6 +426,7 @@
 }
 .comment-builder .regulation-content {
     margin-top: 12px;
+    font-family: system-ui, sans-serif;
     font-size: 13px;
     color: #495057;
     line-height: 1.6;

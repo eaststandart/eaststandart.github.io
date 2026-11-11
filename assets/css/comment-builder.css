@@ -271,7 +271,8 @@
     cursor: pointer;
     user-select: none;
 }
-.comment-builder .publish-bot-option {
+.comment-builder .publish-bot-option,
+.comment-builder .publish-draft-option {
     margin-left: 12px;
     display: inline-flex;
     align-items: center;

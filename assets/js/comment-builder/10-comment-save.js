@@ -90,7 +90,8 @@ function buildCommentMarkdown(session) {
   const mainText = document.getElementById("post-text")?.value.trim() || "";
   const footer = document.getElementById("post-footer")?.value.trim() || "";
   const commit = document.getElementById("commit-id")?.value.trim() || "";
-  const published = document.getElementById("publish-now-flag")?.checked === true;
+  const deleteRequested = document.getElementById("delete-draft-flag")?.checked === true;
+  const published = !deleteRequested && document.getElementById("publish-now-flag")?.checked === true;
   const publishAsBot = document.getElementById("publish-as-bot-flag")?.checked === true;
 
   const photos = collectCommentMedia("photos-meta-container", "photo");
@@ -107,7 +108,7 @@ function buildCommentMarkdown(session) {
     ...(commit ? [`discussion_comment: ${commit}`] : []),
     `date: ${session.date}`,
     `timestamp: ${session.frontMatterTimestamp || session.timestamp}`,
-    `published: ${published}`,
+    `published: ${deleteRequested ? "delete" : published}`,
     `title: ${commentYamlQuote(title)}`,
     `teacher: ${commentYamlQuote(session.teacher)}`,
     "---"
@@ -368,6 +369,7 @@ async function handleCommentSubmit() {
     showNotify("Сохранение Markdown...", "success");
     const saved = await saveCommentMarkdown(session, markdown);
     markdownSaved = true;
+    if (typeof commitDraftDeleteState === "function") commitDraftDeleteState();
 
     if (currentCommentDraft) {
       currentCommentDraft.timestamp = session.frontMatterTimestamp;
@@ -408,7 +410,8 @@ async function handleCommentSubmit() {
       }, 0);
     }, 0);
 
-    const published = document.getElementById("publish-now-flag")?.checked === true;
+    const deleteRequested = document.getElementById("delete-draft-flag")?.checked === true;
+    const published = !deleteRequested && document.getElementById("publish-now-flag")?.checked === true;
     const saveMessage = published ? "Комментарий сохранён!" : "Черновик сохранён!";
 
     // Убираем опубликованный комментарий из списка только после полной комплектации.

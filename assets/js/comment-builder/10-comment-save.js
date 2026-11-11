@@ -443,7 +443,7 @@ async function handleCommentSubmit() {
     if (markdownSaved && !mediaUploadCompleted) {
       message = `Markdown сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = `Markdown не сохранён. Медиа загружены: ${uploadedMediaCount}.`;
+      message = `Markdown не сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
     }
 
     showNotify(message, "error");

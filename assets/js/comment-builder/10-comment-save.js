@@ -419,7 +419,7 @@ async function handleCommentSubmit() {
 
     if (uploadResult.errors.length || unresolvedMediaCount > 0) {
       showNotify(
-        `Сборка не завершена | ${published ? "Комментарий сохранён" : "Черновик сохранён"} | Загружено: ${uploadResult.uploaded} | Ошибок загрузки: ${uploadResult.errors.length} | Отсутствует файлов: ${unresolvedMediaCount}`,
+        `Markdown сохранён | Медиа загружены: ${uploadResult.uploaded} | Ошибок: ${uploadResult.errors.length}`,
         "error"
       );
       if (uploadResult.errors.length) {
@@ -441,6 +441,7 @@ async function handleCommentSubmit() {
     if (message === "Failed to fetch") message = "Загрузка не удалась!";
 
     if (markdownSaved && !mediaUploadCompleted) {
+      mediaUploadErrorCount = Math.max(mediaUploadErrorCount, 1);
       message = `Markdown сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;
     } else if (markdownSaved && mediaUploadCompleted) {
       message = `Markdown не сохранён | Медиа загружены: ${uploadedMediaCount} | Ошибок: ${mediaUploadErrorCount}`;

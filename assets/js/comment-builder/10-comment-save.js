@@ -439,7 +439,7 @@ async function handleCommentSubmit() {
     if (markdownSaved && !mediaUploadCompleted) {
       message = "Markdown сохранён. Загрузка медиа не завершена: " + message;
     } else if (markdownSaved && mediaUploadCompleted) {
-      message = "Медиа загружены. timestamp не обновлён: " + message;
+      message = "Markdown не обновлён!";
     }
 
     showNotify(message, "error");

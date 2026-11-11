@@ -39,15 +39,13 @@ function ensureDraftDeleteControl() {
   icon.setAttribute("stroke-linejoin", "round");
   icon.setAttribute("aria-hidden", "true");
 
-  const paths = [
+  [
     "M3 6h18",
     "M8 6V4h8v2",
     "M19 6l-1 14H6L5 6",
     "M10 11v5",
     "M14 11v5"
-  ];
-
-  paths.forEach(d => {
+  ].forEach(d => {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", d);
     icon.appendChild(path);
@@ -66,14 +64,13 @@ function ensureDraftDeleteControl() {
 }
 
 // ФУНКЦИЯ: setDraftDeleteState
-// НАЗНАЧЕНИЕ: Восстанавливает отметку удаления и исходный статус выбранного черновика.
+// НАЗНАЧЕНИЕ: Устанавливает состояние отметки для выбранного черновика.
 function setDraftDeleteState(draft) {
   const checkbox = document.getElementById("delete-draft-flag");
   if (!checkbox) return;
 
   const status = String(draft?.published ?? "false").toLowerCase();
   draftDeleteBaselinePublished = status === "true";
-
   checkbox.checked = status === "delete";
   checkbox.disabled = !draft;
 }
@@ -114,66 +111,19 @@ function commitDraftDeleteState() {
 
   draftDeleteBaselinePublished = deleteRequested ? false : published;
 
-  const option = document.querySelector(
-    `#draft-select option[value="${CSS.escape(currentCommentDraft.id)}"]`
-  );
+  const option = Array.from(
+    document.getElementById("draft-select")?.options || []
+  ).find(item => item.value === currentCommentDraft.id);
 
   if (option) {
     option.classList.toggle("is-delete-requested", deleteRequested);
+    if (deleteRequested) {
+      option.classList.remove("is-published-complete");
+    }
   }
 }
 
-// Подключение управления к существующим функциям без изменения их основной логики.
-const originalUpdatePublishLabelForDelete = updatePublishLabel;
-updatePublishLabel = function(...args) {
-  originalUpdatePublishLabelForDelete.apply(this, args);
-  ensureDraftDeleteControl();
-  const checkbox = document.getElementById("delete-draft-flag");
-  if (checkbox) checkbox.disabled = !currentCommentDraft;
-};
-
-const originalLoadDraftDataForDelete = loadDraftData;
-loadDraftData = function(draftId, ...args) {
-  const result = originalLoadDraftDataForDelete.call(this, draftId, ...args);
-  const draft = mockDrafts.find(item => item.id === draftId) || null;
-  setDraftDeleteState(draft);
-  return result;
-};
-
-const originalToggleDraftBehaviorForDelete = toggleDraftBehavior;
-toggleDraftBehavior = async function(...args) {
-  const result = await originalToggleDraftBehaviorForDelete.apply(this, args);
-  if (!document.getElementById("is-draft-mode")?.checked) {
-    setDraftDeleteState(null);
-  } else if (!currentCommentDraft) {
-    setDraftDeleteState(null);
-  }
-  return result;
-};
-
-const originalResetCommentFormForDelete = resetCommentForm;
-resetCommentForm = function(...args) {
-  const result = originalResetCommentForm.apply(this, args);
-  setDraftDeleteState(null);
-  return result;
-};
-
-const originalRefreshDraftSelectForDelete = refreshDraftSelect;
-refreshDraftSelect = function(...args) {
-  const result = originalRefreshDraftSelect.apply(this, args);
-
-  mockDrafts.forEach(draft => {
-    if (String(draft.published).toLowerCase() !== "delete") return;
-    const option = Array.from(
-      document.getElementById("draft-select")?.options || []
-    ).find(item => item.value === draft.id);
-    if (option) option.classList.add("is-delete-requested");
-  });
-
-  return result;
-};
-
-// Публикация и запрос удаления взаимоисключающие состояния.
+// Отметка публикации и отметка удаления взаимоисключающие.
 document.getElementById("publish-now-flag")?.addEventListener("change", () => {
   const deleteCheckbox = document.getElementById("delete-draft-flag");
   if (deleteCheckbox?.checked) {
@@ -182,4 +132,4 @@ document.getElementById("publish-now-flag")?.addEventListener("change", () => {
 });
 
 ensureDraftDeleteControl();
-console.log("[DRAFT DELETE] Модуль 12 загружен");
+console.log("[DRAFT DELETE] Модуль 11 загружен");

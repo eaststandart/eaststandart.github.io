@@ -178,6 +178,10 @@
     margin-top: 5px;
 }
 
+.comment-builder .btn.is-delete-requested {
+    background: #c92a2a;
+}
+
 /* Управление вложениями медиаблоков */
 .comment-builder .drop-zone {
     cursor: pointer;

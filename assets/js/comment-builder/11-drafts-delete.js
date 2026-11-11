@@ -1,5 +1,5 @@
 /**
- * @module  12-draft-delete.js
+ * @module  11-drafts-delete.js
  * @about   Управление отметкой удаления черновика.
  * @purpose Отображение, переключение и сохранение состояния published: delete.
  * @author  TechLab

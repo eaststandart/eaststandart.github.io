@@ -215,16 +215,21 @@ function deleteVideoBlock(blockId) {
 // НАЗНАЧЕНИЕ: ДИНАМИЧЕСКИЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕКСТА КНОПКИ ПРИ СМЕНЕ ФЛАГОВ (Из монолитного скрипта)
 function updatePublishLabel() {
   const publishFlag = document.getElementById("publish-now-flag");
+  const deleteFlag = document.getElementById("delete-draft-flag");
   const labelText = document.getElementById("publish-label-text");
   
   if (!publishFlag) return;
   const isChecked = publishFlag.checked;
+  const isDeleteRequested = deleteFlag?.checked === true;
 
   const submitBtn = document.getElementById("submit-btn");
   if (submitBtn) {
-    submitBtn.textContent = isChecked
-      ? "Сохранить комментарий"
-      : "Сохранить черновик";
+    submitBtn.textContent = isDeleteRequested
+      ? "Удалить комментарий"
+      : isChecked
+        ? "Сохранить комментарий"
+        : "Сохранить черновик";
+    submitBtn.classList.toggle("is-delete-requested", isDeleteRequested);
   }
   
   if (labelText) labelText.innerText = "Опубликовать";

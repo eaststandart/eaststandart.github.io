@@ -178,6 +178,10 @@
     margin-top: 5px;
 }
 
+.comment-builder .btn.is-delete-requested {
+    background: #c92a2a;
+}
+
 /* Управление вложениями медиаблоков */
 .comment-builder .drop-zone {
     cursor: pointer;
@@ -289,8 +293,8 @@
     display: block;
 }
 .comment-builder .publish-block .btn {
-    width: auto;
-    flex: 1 1 180px;
+    width: 100%;
+    flex: 0 0 100%;
     margin-top: 0;
 }
 .comment-builder .btn-delete-container {

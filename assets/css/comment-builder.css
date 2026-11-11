@@ -413,3 +413,28 @@
     box-sizing: border-box;
 }
 
+/* Регламент работы с конструктором */
+.comment-builder .regulation-summary {
+    cursor: pointer;
+    color: #24292e;
+}
+.comment-builder .regulation-summary h4 {
+    display: inline;
+    margin: 0;
+    color: #24292e;
+    font-size: 15px;
+}
+.comment-builder .regulation-content {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #495057;
+    line-height: 1.6;
+}
+.comment-builder .regulation-content p {
+    margin: 0 0 6px;
+}
+.comment-builder .regulation-content ul {
+    margin: 0 0 10px;
+    padding-left: 20px;
+}
+

@@ -1,3 +1,11 @@
+/**
+ * @module  15-comment-github-save.js
+ * @about   Модуль сохранения Markdown-файлов через GitHub API.
+ * @purpose Создание и обновление файлов комментариев и черновиков через GitHub Contents API, проверка актуальной версии файла и повторные попытки при временных ошибках.
+ * @author  TechLab
+ * @version 1.0.0
+ */
+
 // ФУНКЦИЯ: waitBeforeRetry
 // НАЗНАЧЕНИЕ: Ожидает перед повторной попыткой сохранения после временной ошибки.
 function waitBeforeRetry(seconds, attempt) {

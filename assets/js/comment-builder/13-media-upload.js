@@ -1,7 +1,7 @@
 /**
- * @module  09-media-upload.js
+ * @module  13-media-upload.js
  * @about   Модуль загрузки медиафайлов в буферный репозиторий.
- * @purpose Загрузка новых локальных файлов через GitHub Contents API и обработка результатов загрузки.
+ * @purpose Подготовка имён и данных локальных файлов, загрузка через GitHub Contents API и обработка повторных попыток и результатов загрузки.
  * @author  TechLab
  * @version 1.0.0
  */

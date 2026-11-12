@@ -19,7 +19,8 @@ function getCommentUploadSession() {
     const draft = currentCommentDraft;
     const identityMatch = String(draft.id || "").match(/^\d{4}-\d{2}-\d{2}-(\d+)_discussion_/);
     return {
-      date: draft.date,
+      // Дата редактируемого черновика берётся из поля формы и попадёт в Front Matter.
+      date: document.getElementById("target-date")?.value.trim(),
       timestamp: identityMatch ? identityMatch[1] : draft.timestamp,
       frontMatterTimestamp: draft.timestamp,
       discussion: draft.discussion,

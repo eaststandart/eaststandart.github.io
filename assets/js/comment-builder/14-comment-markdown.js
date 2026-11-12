@@ -1,7 +1,7 @@
 /**
- * @module  10-comment-save.js
- * @about   Модуль формирования и сохранения комментариев.
- * @purpose Сборка Markdown с Front Matter, загрузка медиафайлов и сохранение черновика или комментария в GitHub.
+ * @module  14-comment-markdown.js
+ * @about   Модуль формирования и кодирования Markdown комментария.
+ * @purpose Сбор данных формы и медиафайлов, формирование Markdown с Front Matter, а также кодирование и декодирование содержимого для работы с GitHub.
  * @author  TechLab
  * @version 1.0.0
  */

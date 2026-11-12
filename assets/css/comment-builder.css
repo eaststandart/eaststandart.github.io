@@ -169,13 +169,13 @@
     background: #0076ff;
     color: #fff;
     border: none;
-    padding: 12px;
+    padding: 0.75rem;
     font-size: 16px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     width: 100%;
     font-weight: bold;
-    margin-top: 5px;
+    margin-top: 1rem;
 }
 
 .comment-builder .btn.is-delete-requested {

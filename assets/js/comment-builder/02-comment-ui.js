@@ -225,10 +225,10 @@ function updatePublishLabel() {
   const submitBtn = document.getElementById("submit-btn");
   if (submitBtn) {
     submitBtn.textContent = isDeleteRequested
-      ? "Удалить черновик"
+      ? "✖️ Удалить черновик"
       : isChecked
-        ? "Сохранить комментарий"
-        : "Сохранить черновик";
+        ? "💾 Сохранить комментарий"
+        : "💾 Сохранить черновик";
     submitBtn.classList.toggle("is-delete-requested", isDeleteRequested);
     submitBtn.classList.toggle("is-publish-requested", isChecked && !isDeleteRequested);
   }

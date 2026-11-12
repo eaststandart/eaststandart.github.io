@@ -30,7 +30,7 @@ function setDraftDeleteState(draft) {
 
   const status = String(draft?.published ?? "false").toLowerCase();
   draftDeleteBaselinePublished = status === "true";
-  checkbox.checked = status === "delete";
+  checkbox.checked = false;
   checkbox.disabled = !draft;
   if (checkbox.hasAttribute("data-lock-disabled")) {
     checkbox.dataset.lockDisabled = draft ? "0" : "1";

@@ -83,11 +83,12 @@ function renderMediaFiles(block) {
       if (isMediaWiki) {
         displayName = "[MediaWiki | " + shortName + "]";
       } else {
-        displayName = "[" + (mediaFile.sourceFormat === "markdown"
-          ? mediaFile.displayName
-          : hasOriginalName
-            ? originalName + " | " + shortName
-            : shortName) + "]";
+        displayName = "[" + (mediaFile.sourceFormat === "markdown" &&
+          mediaFile.kind !== "local"
+            ? mediaFile.displayName
+            : hasOriginalName
+              ? originalName + " | " + shortName
+              : shortName) + "]";
       }
       name.textContent = displayName
         + (mediaFile.kind === "missing" ? " (отсутствует)" : "");

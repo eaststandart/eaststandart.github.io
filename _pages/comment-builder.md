@@ -7,7 +7,7 @@ emoji: "💬"
 custom_css: ["/assets/css/comment-builder.css"]
 ---
 
-{% include comment-builder.liquid %}
+{% include comment-builder.liquid %} 
 
 <div id="instructions-section" class="comment-builder" markdown="1">
   <details class="auth-box margin-top-15 regulation">

@@ -22,10 +22,8 @@ async function handleCommentSubmit() {
       throw new Error("Нет активного токена!");
     }
 
-    // Для черновика проверяем дату из Front Matter; для нового комментария — значение формы.
-    const dateToValidate = currentCommentDraft
-      ? currentCommentDraft.date
-      : document.getElementById("target-date")?.value;
+    // Для нового комментария и выбранного черновика проверяем дату из поля формы.
+    const dateToValidate = document.getElementById("target-date")?.value;
 
     if (!isValidCommentDate(dateToValidate)) {
       throw new Error("Неверный формат Даты");
@@ -68,6 +66,7 @@ async function handleCommentSubmit() {
     if (typeof commitDraftDeleteState === "function") commitDraftDeleteState();
 
     if (currentCommentDraft) {
+      currentCommentDraft.date = session.date;
       currentCommentDraft.timestamp = session.frontMatterTimestamp;
     }
 

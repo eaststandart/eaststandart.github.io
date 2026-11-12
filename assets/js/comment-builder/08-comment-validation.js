@@ -27,8 +27,6 @@ function countVisibleCharacters(value) {
   return Array.from(text).length;
 }
 
-// ФУНКЦИЯ: validateCommentText
-// НАЗНАЧЕНИЕ: Проверяет текст на управляющие символы и установленное ограничение длины.
 // ФУНКЦИЯ: isValidCommentDate
 // НАЗНАЧЕНИЕ: Проверяет формат даты и её существование в календаре.
 function isValidCommentDate(value) {
@@ -50,6 +48,8 @@ function isValidCommentDate(value) {
   return day <= daysInMonth[month - 1];
 }
 
+// ФУНКЦИЯ: validateCommentText
+// НАЗНАЧЕНИЕ: Проверяет текст на управляющие символы и установленное ограничение длины.
 function validateCommentText(value, fieldName, maxLength = null) {
   const text = String(value ?? "");
 

@@ -22,11 +22,16 @@ async function handleCommentSubmit() {
       throw new Error("Нет активного токена!");
     }
 
-    const session = getCommentUploadSession();
+    // Для черновика проверяем дату из Front Matter; для нового комментария — значение формы.
+    const dateToValidate = currentCommentDraft
+      ? currentCommentDraft.date
+      : document.getElementById("target-date")?.value;
 
-    if (!session?.date || !/^\d{4}-\d{2}-\d{2}$/.test(session.date)) {
-      throw new Error("Проверьте дату комментария");
+    if (!isValidCommentDate(dateToValidate)) {
+      throw new Error("Неверный формат Даты");
     }
+
+    const session = getCommentUploadSession();
 
     if (!session.discussion || !/^\d+$/.test(session.discussion)) {
       throw new Error("Укажите номер обсуждения");

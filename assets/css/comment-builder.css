@@ -316,7 +316,7 @@
     background-color: #ffe3e3;
 }
 .comment-builder #draft-select option.is-incomplete-draft {
-    color: #495057;
+    color: #000;
     background-color: #f1f3f5;
 }
 .comment-builder #draft-select option.is-published-complete {

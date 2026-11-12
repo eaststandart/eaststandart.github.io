@@ -9,8 +9,8 @@
 .comment-builder .block {
     background: #fff;
     border: 1px solid #ccc;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }

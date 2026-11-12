@@ -149,25 +149,27 @@
 <!-- ПОДКЛЮЧЕНИЕ JS-МОДУЛЕЙ КОНСТРУКТОРА -->
 
 <!-- 1. СЕРВИСНЫЕ УВЕДОМЛЕНИЯ -->
-<script src="{{ '/assets/js/comment-builder/00-comment-notify.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/01-comment-notify.js' | relative_url }}"></script>
 
-<!-- 2. АВТОРИЗАЦИЯ И ИНИЦИАЛИЗАЦИЯ ИНТЕРФЕЙСА -->
-<script src="{{ '/assets/js/comment-builder/01-comment-auth.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/02-comment-form.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/02-media-blocks.js' | relative_url }}"></script>
+<!-- 2. АВТОРИЗАЦИЯ И ИНИЦИАЛИЗАЦИЯ ФОРМЫ -->
+<script src="{{ '/assets/js/comment-builder/02-comment-auth.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/03-comment-form.js' | relative_url }}"></script>
 
-<!-- 3. ЗАГРУЗКА, РАЗБОР И ВОССТАНОВЛЕНИЕ ЧЕРНОВИКОВ -->
-<script src="{{ '/assets/js/comment-builder/03-drafts-loader.js' | relative_url }}"></script>
+<!-- 3. РАБОТА С ЧЕРНОВИКАМИ -->
 <script src="{{ '/assets/js/comment-builder/04-drafts-parser.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/05-drafts-injector.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/05-drafts-loader.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/06-drafts-injector.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/07-drafts-delete.js' | relative_url }}"></script>
 
-<!-- 4. ПРОВЕРКА ДАННЫХ, РАБОТА С МЕДИА И СОХРАНЕНИЕ -->
-<script src="{{ '/assets/js/comment-builder/06-comment-validation.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/07-media-files.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/07-media-files-ui.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/08-comment-lock.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/09-media-upload.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/10-comment-markdown.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/10-comment-github-save.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/11-drafts-delete.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/comment-builder/10-comment-submit.js' | relative_url }}"></script>
+<!-- 4. ПРОВЕРКА, БЛОКИРОВКА И РАБОТА С МЕДИА -->
+<script src="{{ '/assets/js/comment-builder/08-comment-validation.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/09-comment-lock.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/10-media-blocks.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/11-media-files.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/12-media-files-ui.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/13-media-upload.js' | relative_url }}"></script>
+
+<!-- 5. ФОРМИРОВАНИЕ И СОХРАНЕНИЕ КОММЕНТАРИЯ -->
+<script src="{{ '/assets/js/comment-builder/14-comment-markdown.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/15-comment-github-save.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/comment-builder/16-comment-submit.js' | relative_url }}"></script>

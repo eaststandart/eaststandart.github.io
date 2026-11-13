@@ -8,17 +8,17 @@
 eaststandart.github.io/
 └── assets
     └── js
-        ├── comment-builder/
-        ├── journal-attendance/
-        ├── navigation-crumbs.js 
-        ├── image-lazy-load.js
-        ├── pagination-logic.js 
-        ├── posts-page-list.js 
-        ├── posts-page-nav.js 
-        ├── tags-search.js 
-        ├── video-lazy-load.js 
-        ├── zoom.js
-        └── README.md 
+        ├── comment-builder/       # Модули Конструктора комментариев: форма, черновики, медиа и публикация.
+        ├── journal-attendance/    # Модули Журнала посещений: авторизация, данные, интерфейс, команды и проверка.
+        ├── navigation-crumbs.js    # Модуль навигации.
+        ├── image-lazy-load.js     # Отложенная загрузка изображений.
+        ├── pagination-logic.js    # Логика пагинации.
+        ├── posts-page-list.js     # Формирование и фильтрация списка публикаций.
+        ├── posts-page-nav.js      # Навигация по страницам проектов.
+        ├── tags-search.js         # Поиск и фильтрация материалов по тегам.
+        ├── video-lazy-load.js     # Отложенная загрузка видеоплееров.
+        ├── zoom.js                # Увеличение изображений.
+        └── README.md              # Описание структуры и назначения скриптов.
 ```
 
 ### Назначение папок

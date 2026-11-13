@@ -49,7 +49,7 @@ function renderMediaFiles(block) {
       || mediaFile.name;
 
     const isWikiLink = mediaFile.sourceFormat === "obsidian" ||
-      mediaFile.sourceFormat === "mediawiki";
+      mediaFile.sourceFormat === "wikilink";
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {

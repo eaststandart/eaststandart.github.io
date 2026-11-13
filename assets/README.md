@@ -1,53 +1,12 @@
-Может здесь описать основные иконки что за что отвечает?
+# Каталог assets
 
-### Структура папки assets 
+Каталог содержит вспомогательные ресурсы сайта: таблицы стилей, JavaScript-модули, графические материалы и пакетные сценарии.
 
-```text
-eaststandart.github.io/
-├── assets/ 
-│   ├── batchfiles/ 
-│   ├── css/ 
-│   │   ├── biblio.css 
-│   │   ├── diary.css 
-│   │   ├── faire.css 
-│   │   ├── footnotes.css 
-│   │   ├── giscus.css 
-│   │   ├── header-classic.css 
-│   │   ├── header-desktop.css 
-│   │   ├── header-panel.css 
-│   │   ├── img.css 
-│   │   ├── pagination.css 
-│   │   ├── projects.css 
-│   │   ├── style.css 
-│   │   ├── tools.css 
-│   │   └── video.css 
-│   ├── icons/ 
-│   │   ├── aluminum-electrolytic-capacitor.webp 
-│   │   ├── analog-panel-meter.webp 
-│   │   ├── carbon-film-resistor.webp 
-│   │   ├── ceramic-disc-capacitor.webp 
-│   │   ├── chto-novogo.svg 
-│   │   ├── detskij-inzhenernyj-klub.svg 
-│   │   ├── favicon.svg 
-│   │   ├── fritzing.webp 
-│   │   ├── getting-started-in-electronics.webp 
-│   │   ├── logo.svg 
-│   │   ├── logo-github.svg 
-│   │   ├── logo-telegram.svg 
-│   │   ├── magnetic-buzzer.webp 
-│   │   ├── our-dream.webp 
-│   │   ├── sprintlayout.webp 
-│   │   ├── strontium-atom.webp 
-│   │   ├── through-hole-red-led.webp 
-│   │   └── ugolok-mladshego-konstruktora.svg 
-│   ├── img/ 
-│   └── js/ 
-│       ├── navigation-crumbs.js 
-│       ├── pagination-logic.js 
-│       ├── posts-page-list.js 
-│       ├── posts-page-nav.js 
-│       ├── README.md 
-│       ├── tags-search.js 
-│       └── video-lazy-load.js
-```
+## Структура
 
+- `batchfiles/` — пакетные сценарии для выполнения вспомогательных операций: генерации документации, построения дерева каталогов и оптимизации видео.
+- `css/` — таблицы стилей, отвечающие за оформление сайта и его компонентов. Подробное описание — в [README каталога CSS](css/README.md).
+- `icons/` — логотипы, значки разделов сайта, изображения электронных компонентов, программ и другие графические материалы.
+- `js/` — JavaScript-код сайта: отдельные скрипты и группы модулей для интерактивных функций и инструментов. Подробное описание — в [README каталога JS](js/README.md).
+
+Каждый каталог содержит собственную документацию, если для него предусмотрен отдельный README.

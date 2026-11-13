@@ -8,6 +8,15 @@
 @version 1.0.0
 */
 
+/* БАЗОВАЯ ВЕРСИЯ */
+
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+/* ======================================================== */
+/* НАШ КОД: Только отступы и скругления картинок в Giscus   */
+/* ======================================================== */
+
 img.js-gh-image-fallback {
     display: inline-block !important;
     max-width: 350px !important;

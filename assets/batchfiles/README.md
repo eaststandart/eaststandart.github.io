@@ -6,12 +6,12 @@
 
 ```text
 eaststandart.github.io/
-└── assets/ 
-    └── batchfiles/
-│       ├── generate_readme.bat     # Скрипт сбора описаний и документирования файлов
-│       ├── structure_tree.bat      # Скрипт для сбора дерева структуры репозитория
-│       ├── webm_optimization.bat   # Скрипт для оптимизации видео webm  
-│       └── README.md 
+├── assets/
+│   └── batchfiles/
+│       │       ├── generate_readme.bat     # Скрипт сбора описаний и документирования файлов
+│       │       ├── structure_tree.bat      # Скрипт для сбора дерева структуры репозитория
+│       │       ├── webm_optimization.bat   # Скрипт для оптимизации видео webm
+│       │       └── README.md
 ```
 
 ### Список скриптов

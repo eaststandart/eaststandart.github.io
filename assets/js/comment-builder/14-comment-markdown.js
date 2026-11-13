@@ -105,7 +105,7 @@ function buildCommentMarkdown(session) {
     "---",
     `publish_as_bot: ${publishAsBot}`,
     `discussion_number: ${session.discussion}`,
-    ...(commit ? [`discussion_comment: ${commit}`] : []),
+    ...(commit ? [`discussion_comment: ${commentYamlQuote(commit)}`] : []),
     `date: ${session.date}`,
     `timestamp: ${session.frontMatterTimestamp || session.timestamp}`,
     `published: ${deleteRequested ? "delete" : published}`,

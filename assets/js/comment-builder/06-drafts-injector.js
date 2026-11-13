@@ -6,7 +6,6 @@
  * @version 1.0.0
  */
 
-console.log("[TEST 05] Модуль injector загружен");
 
 // ФУНКЦИЯ: refreshDraftSelect
 // НАЗНАЧЕНИЕ: Перерисовка выпадающего списка

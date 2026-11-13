@@ -95,4 +95,3 @@ document.getElementById("publish-now-flag")?.addEventListener("change", () => {
 });
 
 ensureDraftDeleteControl();
-console.log("[DRAFT DELETE] Модуль 11 загружен");

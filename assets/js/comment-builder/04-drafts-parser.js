@@ -148,7 +148,7 @@ function parseNewManifestBody(body) {
         }
 
         sourceFormat = /^WikiLink\s*\|/i.test(displayName)
-          ? "mediawiki"
+          ? "wikilink"
           : "markdown";
       }
 

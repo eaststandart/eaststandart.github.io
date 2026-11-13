@@ -48,15 +48,15 @@ function renderMediaFiles(block) {
       || getMediaShortNameFromUploadName(mediaFile.uploadName || mediaFile.name)
       || mediaFile.name;
 
-    const isMediaWiki = mediaFile.sourceFormat === "obsidian" ||
+    const isWikiLink = mediaFile.sourceFormat === "obsidian" ||
       mediaFile.sourceFormat === "mediawiki";
 
     if (mediaFile.kind === "existing" &&
         typeof createDraftFileLink === "function") {
       const link = createDraftFileLink(mediaFile.name);
-      if (isMediaWiki) {
+      if (isWikiLink) {
         name.append("[");
-        link.textContent = "MediaWiki | " + shortName;
+        link.textContent = "WikiLink | " + shortName;
         name.appendChild(link);
         name.append("]");
       } else if (mediaFile.originalName) {
@@ -80,8 +80,8 @@ function renderMediaFiles(block) {
       }
     } else {
       let displayName;
-      if (isMediaWiki) {
-        displayName = "[MediaWiki | " + shortName + "]";
+      if (isWikiLink) {
+        displayName = "[WikiLink | " + shortName + "]";
       } else {
         displayName = "[" + (mediaFile.sourceFormat === "markdown" &&
           mediaFile.kind !== "local"

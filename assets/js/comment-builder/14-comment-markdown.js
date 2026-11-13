@@ -61,7 +61,7 @@ function collectCommentMedia(containerId, type) {
               const displayName = file.originalName
                 ? file.originalName + " | " + shortName
                 : file.sourceFormat === "obsidian"
-                  ? "MediaWiki | " + shortName
+                  ? "WikiLink | " + shortName
                   : file.displayName || shortName;
 
               return {

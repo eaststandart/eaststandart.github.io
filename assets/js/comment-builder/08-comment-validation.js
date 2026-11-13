@@ -98,7 +98,7 @@ function validateCommentForm() {
   const commit = document.getElementById("commit-id")?.value.trim() || "";
 
   // Идентификатор необязателен, но при заполнении должен быть положительным целым числом.
-  if (commit && !/^(?=.*[1-9])\\d+$/.test(commit)) {
+  if (commit && !/^(?=.*[1-9])\d+$/.test(commit)) {
     return "Поле «Коммит»: укажите положительное целое число или оставьте поле пустым.";
   }
 

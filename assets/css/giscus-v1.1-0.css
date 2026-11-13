@@ -1,12 +1,12 @@
-@charset "UTF-8";
-
 /*
 @module  giscus-v1.1-0.css
 @about   Версия пользовательского оформления Giscus для раздела творческого процесса.
 @purpose Подключает светлую тему Giscus и настраивает отступы текстовых блоков и элементов комментариев.
-@author TechLab
+@author  TechLab
 @version 1.1.0
 */
+
+@charset "UTF-8";
 
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");

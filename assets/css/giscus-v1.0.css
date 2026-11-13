@@ -1,12 +1,12 @@
-@charset "UTF-8";
-
 /*
 @module  giscus-v1.0.css
 @about   Первая версия пользовательского оформления комментариев Giscus.
 @purpose Подключает светлую тему Giscus и корректирует отображение изображений и отступов в комментариях.
-@author TechLab
+@author  TechLab
 @version 1.0.0
 */
+
+@charset "UTF-8";
 
 /* БАЗОВАЯ ВЕРСИЯ */
 

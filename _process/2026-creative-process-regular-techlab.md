@@ -7,6 +7,7 @@ date: 2026-09-24
 teacher: "TechLab"
 discus: "process"
 keywords: [регулярные занятия, творческий процесс, TechLab]
+emoji: "👨‍🏫"
 ---
 
  🗣️ Обсудить творческий процесс или поделиться своим мнением можно в комментариях ниже ... 👇 [Начни обсуждать!](https://github.com/eaststandart/eaststandart.github.io/discussions/29)

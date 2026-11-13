@@ -95,6 +95,13 @@ document.addEventListener("beforeinput", event => {
 // ФУНКЦИЯ: validateCommentForm
 // НАЗНАЧЕНИЕ: Проверяет все текстовые поля формы перед загрузкой файлов и сохранением.
 function validateCommentForm() {
+  const commit = document.getElementById("commit-id")?.value.trim() || "";
+
+  // Идентификатор необязателен, но при заполнении должен быть положительным целым числом.
+  if (commit && !/^(?=.*[1-9])\d+$/.test(commit)) {
+    return "Поле «Коммит»: укажите положительное целое число или оставьте поле пустым.";
+  }
+
   const fields = [
     { selector: "#post-title", name: "Заголовок комментария" },
     { selector: "#post-text", name: "Основной текст" },

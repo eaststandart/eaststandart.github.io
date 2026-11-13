@@ -19,7 +19,7 @@ eaststandart.github.io/
 │       ├── journal_attendance.py                                               # Модуль управления сборкой отчета посещений.
 │       └── README.md
 ├── _engineers/
-│   └── liza-b.md                                                               # - Дневник инженера: Лиза Б.
+│   └── liza-b.md                                                               # Дневник инженера: Лиза Б.
 ├── _includes/
 │   ├── comment-builder.liquid                                                  # Модуль шаблона интерфейса Конструктора комментариев.
 │   ├── discus.liquid                                                           # Интеграция и вывод блока дискуссий giscus.
@@ -46,98 +46,98 @@ eaststandart.github.io/
 │   ├── page.md                                                                 # Шаблон для базовых страниц сайт.
 │   └── README.md
 ├── _pages/
-│   ├── comment-builder.md                                                      # - Конструктор дискуссий
-│   ├── engineers.md                                                            # - Работы юных инженеров
-│   ├── faire.md                                                                # - Ярмарка поделок
-│   ├── feed-journal.md                                                         # - Журнал проектов
-│   ├── feed-media.md                                                           # - Медиа материалы
-│   ├── feed-news.md                                                            # - Новости уголка конструктора
-│   ├── feed-post.md                                                            # - Посты
-│   ├── feed-question.md                                                        # - Вопросы проектов
-│   ├── feed-reference.md                                                       # - Справочные материалы
+│   ├── comment-builder.md                                                      # Конструктор дискуссий
+│   ├── engineers.md                                                            # Работы юных инженеров
+│   ├── faire.md                                                                # Ярмарка поделок
+│   ├── feed-journal.md                                                         # Журнал проектов
+│   ├── feed-media.md                                                           # Медиа материалы
+│   ├── feed-news.md                                                            # Новости уголка конструктора
+│   ├── feed-post.md                                                            # Посты
+│   ├── feed-question.md                                                        # Вопросы проектов
+│   ├── feed-reference.md                                                       # Справочные материалы
 │   ├── journal-attendance.md                                                   # Веб-страница Журнала посещений
-│   ├── people.md                                                               # - Люди
-│   ├── process.md                                                              # - Творческий процесс
+│   ├── people.md                                                               # Люди
+│   ├── process.md                                                              # Творческий процесс
 │   └── README.md
 ├── _people/
-│   └── fran-blanche.md                                                         # - Фрэн Бланш (Fran Blanche)
+│   └── fran-blanche.md                                                         # Фрэн Бланш (Fran Blanche)
 ├── _posts/
-│   ├── 2025-10-26-simple-cardboard-walking-robot.md                            # - Робот двуногий шагающий из картона: галерея
-│   ├── 2025-10-27-simple-cardboard-walking-robot.md                            # - Робот двуногий шагающий из картона: вопросы по проекту
-│   ├── 2025-10-28-simple-cardboard-walking-robot.md                            # - Робот двуногий шагающий из картона: раскачивание корпуса
-│   ├── 2025-10-30-nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                # - Настольная светодиодная лампа с растением: галерея
-│   ├── 2025-10-31-nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                # - Настольная светодиодная лампа с растением: вопросы по проекту
-│   ├── 2025-11-02-besprovodnoj-telegraf.md                                     # - Беспроводной телеграф: галерея
-│   ├── 2025-11-03-besprovodnoj-telegraf.md                                     # - Беспроводной телеграф: вопросы по проекту
-│   ├── 2025-11-06-sputnik-1.md                                                 # - Спутник-1: галерея
-│   ├── 2025-11-07-sputnik-1.md                                                 # - Спутник-1: вопросы по проекту
-│   ├── 2025-11-08-sputnik-1.md                                                 # - Спутник-1: общий вид
-│   ├── 2025-11-12-fonarik-svetodiodnyj-bumazhnyj.md                            # - Фонарик светодиодный бумажный: галерея
-│   ├── 2025-11-13-fonarik-svetodiodnyj-bumazhnyj.md                            # - Фонарик светодиодный бумажный: вопросы по проекту
-│   ├── 2025-11-14-fonarik-svetodiodnyj-bumazhnyj.md                            # - Фонарик светодиодный бумажный: описание работы
-│   ├── 2025-11-21-vibrohod-iz-zubnoj-shchetki.md                               # - Виброход из зубной щетки: галерея
-│   ├── 2025-11-22-vibrohod-iz-zubnoj-shchetki.md                               # - Виброход из зубной щетки: вопросы по проекту
-│   ├── 2025-11-23-vibrohod-iz-zubnoj-shchetki.md                               # - Робот зубочист: вариант конструкции
-│   ├── 2025-11-24-vibrohod-iz-zubnoj-shchetki.md                               # - Робот зубочист: скорость движения
-│   ├── 2025-11-26-robot-strannik.md                                            # - Робот странник: галерея
-│   ├── 2025-11-27-robot-strannik.md                                            # - Робот странник: вопросы по проекту
-│   ├── 2025-11-28-robot-strannik.md                                            # - Робот странник: модель №1
-│   ├── 2025-11-29-robot-strannik.md                                            # - Робот странник: тип движения
-│   ├── 2025-12-22-yablonevoe-derevo.md                                         # - Яблоневое дерево: галерея
-│   ├── 2025-12-23-yablonevoe-derevo.md                                         # - Яблоневое дерево: вопросы по проекту
-│   ├── 2026-01-25-blaster-elektroakusticheskij.md                              # - Бластер электроакустический: галерея
-│   ├── 2026-01-26-blaster-elektroakusticheskij.md                              # - Бластер электроакустический: вопросы по проекту
-│   ├── 2026-01-27-blaster-elektroakusticheskij.md                              # - Бластер электроакустический: подключение индикатора
-│   ├── 2026-01-29-detektor-pereliva.md                                         # - Детектор перелива: галерея
-│   ├── 2026-01-30-detektor-pereliva.md                                         # - Детектор перелива: вопросы по проекту
-│   ├── 2026-01-31-detektor-pereliva.md                                         # - Детектор перелива: общий вид
-│   ├── 2026-02-01-detektor-pereliva.md                                         # - Детектор перелива: описание работы
-│   ├── 2026-02-02-prazdnichnyj-domik.md                                        # - Праздничный домик: галерея
-│   ├── 2026-02-03-prazdnichnyj-domik.md                                        # - Праздничный домик: вопросы по проекту
-│   ├── 2026-02-04-prazdnichnyj-domik.md                                        # - Праздничный домик: создала Лиза Б.
-│   ├── 2026-02-05-prazdnichnyj-domik.md                                        # - Праздничный домик: создал Кирилл К.
-│   ├── 2026-02-10-elektronnyj-organ.md                                         # - Электронный орган: галерея
-│   ├── 2026-02-11-elektronnyj-organ.md                                         # - Электронный орган: вопросы по проекту
-│   ├── 2026-02-12-elektronnyj-organ.md                                         # - Электронный орган: создала Лиза Б.
-│   ├── 2026-02-13-elektronnyj-organ.md                                         # - Электронный орган: этапы создания
-│   ├── 2026-02-14-elektronnyj-organ.md                                         # - Электронный орган: паразитная генерация
-│   ├── 2026-02-22-robot-korova-iz-kartona.md                                   # - Робот корова из картона: галерея
-│   ├── 2026-02-23-robot-korova-iz-kartona.md                                   # - Робот корова из картона: вопросы по проекту
-│   ├── 2026-02-24-robot-korova-iz-kartona.md                                   # - Робот корова из картона: вид и движение
-│   ├── 2026-03-08-robot-krolik-iz-kartona.md                                   # - Робот кролик из картона: галерея
-│   ├── 2026-03-09-robot-krolik-iz-kartona.md                                   # - Робот кролик из картона: вопросы по проекту
-│   ├── 2026-03-10-robot-krolik-iz-kartona.md                                   # - Робот кролик из картона: вид и движение
-│   ├── 2026-03-11-robot-krolik-iz-kartona.md                                   # - Робот кролик из картона: самодельный редуктор
-│   ├── 2026-03-13-plavnoe-zazhiganie-svetodioda.md                             # - Эффект плавного зажигания светодиода: галерея
-│   ├── 2026-03-14-plavnoe-zazhiganie-svetodioda.md                             # - Эффект плавного зажигания светодиода: вопросы по проекту
-│   ├── 2026-03-15-plavnoe-zazhiganie-svetodioda.md                             # - Эффект плавного зажигания светодиода: макет эксперимента
-│   ├── 2026-03-16-plavnoe-zazhiganie-svetodioda.md                             # - Эффект плавного зажигания светодиода: время зажигания и гашения
-│   ├── 2026-04-03-pano-uslovnye-oboznacheniya.md                               # - Условные обозначения: галерея
-│   ├── 2026-04-04-pano-uslovnye-oboznacheniya.md                               # - Условные обозначения: вопросы по проекту
-│   ├── 2026-04-06-avtomobil-s-polnym-privodom-iz-kartona.md                    # - Автомобиль 4wd из картона: галерея
-│   ├── 2026-04-07-avtomobil-s-polnym-privodom-iz-kartona.md                    # - Автомобиль 4wd из картона: вопросы по проекту
-│   ├── 2026-04-08-avtomobil-s-polnym-privodom-iz-kartona.md                    # - Автомобиль 4wd из картона: вид и движение
-│   ├── 2026-04-10-podstavka-dlya-oscillografa.md                               # - Подставка для осциллографа: галерея
-│   ├── 2026-04-11-podstavka-dlya-oscillografa.md                               # - Подставка для осциллографа: вопросы по проекту
-│   ├── 2026-04-12-podstavka-dlya-oscillografa.md                               # - Подставка для осциллографа: общий вид
-│   ├── 2026-04-14-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: галерея
-│   ├── 2026-04-15-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: вопросы по проекту
-│   ├── 2026-04-16-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: общий вид
-│   ├── 2026-04-17-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: сборка
-│   ├── 2026-04-18-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: описание работы
-│   ├── 2026-04-19-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: тестирование
-│   ├── 2026-04-20-muzykalnyj-karandash.md                                      # - Музыкальный карандаш: применение
-│   ├── 2026-05-11-metronom-signalnyj.md                                        # - Метроном сигнальный: галерея
-│   ├── 2026-05-12-metronom-signalnyj.md                                        # - Метроном сигнальный: вопросы по проекту
-│   ├── 2026-05-13-metronom-signalnyj.md                                        # - Метроном сигнальный: изделие №1
-│   ├── 2026-05-14-metronom-signalnyj.md                                        # - Метроном сигнальный: этапы создания
-│   ├── 2026-05-15-metronom-signalnyj.md                                        # - Метроном сигнальный: общий вид
-│   ├── 2026-06-05-robot-krolik-iz-kartona.md                                   # - Робот кролик из картона: модель с разворотом
-│   └── 2026-06-10-multivibrator-nesimmetrichnyj.md                             # - Мультивибратор несимметричный
+│   ├── 2025-10-26-simple-cardboard-walking-robot.md                            # Робот двуногий шагающий из картона: галерея
+│   ├── 2025-10-27-simple-cardboard-walking-robot.md                            # Робот двуногий шагающий из картона: вопросы по проекту
+│   ├── 2025-10-28-simple-cardboard-walking-robot.md                            # Робот двуногий шагающий из картона: раскачивание корпуса
+│   ├── 2025-10-30-nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                # Настольная светодиодная лампа с растением: галерея
+│   ├── 2025-10-31-nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                # Настольная светодиодная лампа с растением: вопросы по проекту
+│   ├── 2025-11-02-besprovodnoj-telegraf.md                                     # Беспроводной телеграф: галерея
+│   ├── 2025-11-03-besprovodnoj-telegraf.md                                     # Беспроводной телеграф: вопросы по проекту
+│   ├── 2025-11-06-sputnik-1.md                                                 # Спутник-1: галерея
+│   ├── 2025-11-07-sputnik-1.md                                                 # Спутник-1: вопросы по проекту
+│   ├── 2025-11-08-sputnik-1.md                                                 # Спутник-1: общий вид
+│   ├── 2025-11-12-fonarik-svetodiodnyj-bumazhnyj.md                            # Фонарик светодиодный бумажный: галерея
+│   ├── 2025-11-13-fonarik-svetodiodnyj-bumazhnyj.md                            # Фонарик светодиодный бумажный: вопросы по проекту
+│   ├── 2025-11-14-fonarik-svetodiodnyj-bumazhnyj.md                            # Фонарик светодиодный бумажный: описание работы
+│   ├── 2025-11-21-vibrohod-iz-zubnoj-shchetki.md                               # Виброход из зубной щетки: галерея
+│   ├── 2025-11-22-vibrohod-iz-zubnoj-shchetki.md                               # Виброход из зубной щетки: вопросы по проекту
+│   ├── 2025-11-23-vibrohod-iz-zubnoj-shchetki.md                               # Робот зубочист: вариант конструкции
+│   ├── 2025-11-24-vibrohod-iz-zubnoj-shchetki.md                               # Робот зубочист: скорость движения
+│   ├── 2025-11-26-robot-strannik.md                                            # Робот странник: галерея
+│   ├── 2025-11-27-robot-strannik.md                                            # Робот странник: вопросы по проекту
+│   ├── 2025-11-28-robot-strannik.md                                            # Робот странник: модель №1
+│   ├── 2025-11-29-robot-strannik.md                                            # Робот странник: тип движения
+│   ├── 2025-12-22-yablonevoe-derevo.md                                         # Яблоневое дерево: галерея
+│   ├── 2025-12-23-yablonevoe-derevo.md                                         # Яблоневое дерево: вопросы по проекту
+│   ├── 2026-01-25-blaster-elektroakusticheskij.md                              # Бластер электроакустический: галерея
+│   ├── 2026-01-26-blaster-elektroakusticheskij.md                              # Бластер электроакустический: вопросы по проекту
+│   ├── 2026-01-27-blaster-elektroakusticheskij.md                              # Бластер электроакустический: подключение индикатора
+│   ├── 2026-01-29-detektor-pereliva.md                                         # Детектор перелива: галерея
+│   ├── 2026-01-30-detektor-pereliva.md                                         # Детектор перелива: вопросы по проекту
+│   ├── 2026-01-31-detektor-pereliva.md                                         # Детектор перелива: общий вид
+│   ├── 2026-02-01-detektor-pereliva.md                                         # Детектор перелива: описание работы
+│   ├── 2026-02-02-prazdnichnyj-domik.md                                        # Праздничный домик: галерея
+│   ├── 2026-02-03-prazdnichnyj-domik.md                                        # Праздничный домик: вопросы по проекту
+│   ├── 2026-02-04-prazdnichnyj-domik.md                                        # Праздничный домик: создала Лиза Б.
+│   ├── 2026-02-05-prazdnichnyj-domik.md                                        # Праздничный домик: создал Кирилл К.
+│   ├── 2026-02-10-elektronnyj-organ.md                                         # Электронный орган: галерея
+│   ├── 2026-02-11-elektronnyj-organ.md                                         # Электронный орган: вопросы по проекту
+│   ├── 2026-02-12-elektronnyj-organ.md                                         # Электронный орган: создала Лиза Б.
+│   ├── 2026-02-13-elektronnyj-organ.md                                         # Электронный орган: этапы создания
+│   ├── 2026-02-14-elektronnyj-organ.md                                         # Электронный орган: паразитная генерация
+│   ├── 2026-02-22-robot-korova-iz-kartona.md                                   # Робот корова из картона: галерея
+│   ├── 2026-02-23-robot-korova-iz-kartona.md                                   # Робот корова из картона: вопросы по проекту
+│   ├── 2026-02-24-robot-korova-iz-kartona.md                                   # Робот корова из картона: вид и движение
+│   ├── 2026-03-08-robot-krolik-iz-kartona.md                                   # Робот кролик из картона: галерея
+│   ├── 2026-03-09-robot-krolik-iz-kartona.md                                   # Робот кролик из картона: вопросы по проекту
+│   ├── 2026-03-10-robot-krolik-iz-kartona.md                                   # Робот кролик из картона: вид и движение
+│   ├── 2026-03-11-robot-krolik-iz-kartona.md                                   # Робот кролик из картона: самодельный редуктор
+│   ├── 2026-03-13-plavnoe-zazhiganie-svetodioda.md                             # Эффект плавного зажигания светодиода: галерея
+│   ├── 2026-03-14-plavnoe-zazhiganie-svetodioda.md                             # Эффект плавного зажигания светодиода: вопросы по проекту
+│   ├── 2026-03-15-plavnoe-zazhiganie-svetodioda.md                             # Эффект плавного зажигания светодиода: макет эксперимента
+│   ├── 2026-03-16-plavnoe-zazhiganie-svetodioda.md                             # Эффект плавного зажигания светодиода: время зажигания и гашения
+│   ├── 2026-04-03-pano-uslovnye-oboznacheniya.md                               # Условные обозначения: галерея
+│   ├── 2026-04-04-pano-uslovnye-oboznacheniya.md                               # Условные обозначения: вопросы по проекту
+│   ├── 2026-04-06-avtomobil-s-polnym-privodom-iz-kartona.md                    # Автомобиль 4wd из картона: галерея
+│   ├── 2026-04-07-avtomobil-s-polnym-privodom-iz-kartona.md                    # Автомобиль 4wd из картона: вопросы по проекту
+│   ├── 2026-04-08-avtomobil-s-polnym-privodom-iz-kartona.md                    # Автомобиль 4wd из картона: вид и движение
+│   ├── 2026-04-10-podstavka-dlya-oscillografa.md                               # Подставка для осциллографа: галерея
+│   ├── 2026-04-11-podstavka-dlya-oscillografa.md                               # Подставка для осциллографа: вопросы по проекту
+│   ├── 2026-04-12-podstavka-dlya-oscillografa.md                               # Подставка для осциллографа: общий вид
+│   ├── 2026-04-14-muzykalnyj-karandash.md                                      # Музыкальный карандаш: галерея
+│   ├── 2026-04-15-muzykalnyj-karandash.md                                      # Музыкальный карандаш: вопросы по проекту
+│   ├── 2026-04-16-muzykalnyj-karandash.md                                      # Музыкальный карандаш: общий вид
+│   ├── 2026-04-17-muzykalnyj-karandash.md                                      # Музыкальный карандаш: сборка
+│   ├── 2026-04-18-muzykalnyj-karandash.md                                      # Музыкальный карандаш: описание работы
+│   ├── 2026-04-19-muzykalnyj-karandash.md                                      # Музыкальный карандаш: тестирование
+│   ├── 2026-04-20-muzykalnyj-karandash.md                                      # Музыкальный карандаш: применение
+│   ├── 2026-05-11-metronom-signalnyj.md                                        # Метроном сигнальный: галерея
+│   ├── 2026-05-12-metronom-signalnyj.md                                        # Метроном сигнальный: вопросы по проекту
+│   ├── 2026-05-13-metronom-signalnyj.md                                        # Метроном сигнальный: изделие №1
+│   ├── 2026-05-14-metronom-signalnyj.md                                        # Метроном сигнальный: этапы создания
+│   ├── 2026-05-15-metronom-signalnyj.md                                        # Метроном сигнальный: общий вид
+│   ├── 2026-06-05-robot-krolik-iz-kartona.md                                   # Робот кролик из картона: модель с разворотом
+│   └── 2026-06-10-multivibrator-nesimmetrichnyj.md                             # Мультивибратор несимметричный
 ├── _process/
 │   ├── 2026-creative-proces-regular.md — about отсутствует
-│   ├── 2026-creative-process-regular-techlab.md                                # - Инженерные занятия: 2026 [TechLab]
-│   └── 2026-creative-process-regular-valery.md                                 # - Инженерные занятия: 2026 – Валерий Р.
+│   ├── 2026-creative-process-regular-techlab.md                                # Инженерные занятия: 2026 [TechLab]
+│   └── 2026-creative-process-regular-valery.md                                 # Инженерные занятия: 2026 – Валерий Р.
 ├── _reference/
 ├── assets/
 │   ├── batchfiles/
@@ -268,15 +268,15 @@ eaststandart.github.io/
 │   │   ├── zak-a-z-intellektika-2-klass-2024.webp
 │   │   ├── zak-a-z-intellektika-3-klass-2024.webp
 │   │   └── zak-a-z-intellektika-4-klass-2024.webp
-│   ├── borisov-v-g-enciklopediya-yunogo-radiolyubitelya-konstruktora-2001.md   # - Энциклопедия юного радиолюбителя-конструктора
-│   ├── chernenko-g-t-puteshestvie-v-stranu-robotov-1977.md                     # - Путешествие в страну роботов
-│   ├── index.md                                                                # - Список литературы
-│   ├── kiselyov-l-kniga-yunogo-tekhnika-1948.md                                # - Книга юного техника
-│   ├── materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.md         # - Материалы для самостоятельного изучения основ электроники
-│   ├── pchyolko-a-s-arifmetika-dlya-nachalnoj-shkoly-1955.md                   # - Книги по арифметике, сборники задач и упражнений к ним
-│   ├── rostovcev-n-n-risovanie-1957.md                                         # - Рисование, 1-4 класс
-│   ├── svoren-r-a-elektronika-shag-za-shagom-1991.md                           # - Электроника шаг за шагом
-│   └── zak-a-z-intellektika-2024.md                                            # - Интеллектика. Тетрадь для развития мыслительных способностей
+│   ├── borisov-v-g-enciklopediya-yunogo-radiolyubitelya-konstruktora-2001.md   # Энциклопедия юного радиолюбителя-конструктора
+│   ├── chernenko-g-t-puteshestvie-v-stranu-robotov-1977.md                     # Путешествие в страну роботов
+│   ├── index.md                                                                # Список литературы
+│   ├── kiselyov-l-kniga-yunogo-tekhnika-1948.md                                # Книга юного техника
+│   ├── materialy-dlya-samostoyatelnogo-izucheniya-osnov-elektroniki.md         # Материалы для самостоятельного изучения основ электроники
+│   ├── pchyolko-a-s-arifmetika-dlya-nachalnoj-shkoly-1955.md                   # Книги по арифметике, сборники задач и упражнений к ним
+│   ├── rostovcev-n-n-risovanie-1957.md                                         # Рисование, 1-4 класс
+│   ├── svoren-r-a-elektronika-shag-za-shagom-1991.md                           # Электроника шаг за шагом
+│   └── zak-a-z-intellektika-2024.md                                            # Интеллектика. Тетрадь для развития мыслительных способностей
 ├── bin/
 │   ├── feed.py                                                                 # Изолированный монолитный сборщик единой ленты обновлений из Источника Правды.
 │   ├── images.py                                                               # Монолитный объединенный модуль предобработки изображений для Obsidian -> Jekyll.
@@ -290,11 +290,11 @@ eaststandart.github.io/
 │   ├── vault.py                                                                # Автономный сквозной точечный сейф исключений для защиты примеров кода.
 │   └── videos.py                                                               # Модуль предобработки видео-ссылок для Obsidian -> Jekyll с поддержкой ленивой загрузки.
 ├── diary/
-│   ├── index.md                                                                # - Дневник инженера
-│   └── note-schematics.md                                                      # - Заметки по схемотехнике
+│   ├── index.md                                                                # Дневник инженера
+│   └── note-schematics.md                                                      # Заметки по схемотехнике
 ├── faire/
 │   ├── avtomobil-s-polnym-privodom-iz-kartona/
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona.md                           # - Автомобиль с полным приводом из картона
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona.md                           # Автомобиль с полным приводом из картона
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona.webp
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webm
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webp
@@ -312,13 +312,13 @@ eaststandart.github.io/
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-10.webp
 │   │   └── avtomobil-s-polnym-privodom-iz-kartona-11.webp
 │   ├── besprovodnoj-telegraf/
-│   │   ├── besprovodnoj-telegraf.md                                            # - Беспроводной телеграф
+│   │   ├── besprovodnoj-telegraf.md                                            # Беспроводной телеграф
 │   │   ├── besprovodnoj-telegraf.webp
 │   │   ├── besprovodnoj-telegraf-01.webm
 │   │   ├── besprovodnoj-telegraf-01.webp
 │   │   └── besprovodnoj-telegraf-02.webp
 │   ├── blaster-elektroakusticheskij/
-│   │   ├── blaster-elektroakusticheskij.md                                     # - Бластер электроакустический
+│   │   ├── blaster-elektroakusticheskij.md                                     # Бластер электроакустический
 │   │   ├── blaster-elektroakusticheskij.webp
 │   │   ├── blaster-elektroakusticheskij-01.webm
 │   │   ├── blaster-elektroakusticheskij-01.webp
@@ -329,7 +329,7 @@ eaststandart.github.io/
 │   │   ├── blaster-elektroakusticheskij-esd.pdf
 │   │   └── blaster-elektroakusticheskij-esd.spl8
 │   ├── detektor-pereliva/
-│   │   ├── detektor-pereliva.md                                                # - Детектор перелива
+│   │   ├── detektor-pereliva.md                                                # Детектор перелива
 │   │   ├── detektor-pereliva.webp
 │   │   ├── detektor-pereliva-01.webm
 │   │   ├── detektor-pereliva-01.webp
@@ -361,7 +361,7 @@ eaststandart.github.io/
 │   │   ├── detektor-perelivaj-ad.dxf
 │   │   └── detektor-perelivaj-ad.pdf
 │   ├── elektronnyj-organ/
-│   │   ├── elektronnyj-organ.md                                                # - Электронный орган
+│   │   ├── elektronnyj-organ.md                                                # Электронный орган
 │   │   ├── elektronnyj-organ.webp
 │   │   ├── elektronnyj-organ-01.webm
 │   │   ├── elektronnyj-organ-01.webp
@@ -412,7 +412,7 @@ eaststandart.github.io/
 │   │   ├── elektronnyj-organ-42.webp
 │   │   └── elektronnyj-organ-pcb.lay6
 │   ├── fonarik-svetodiodnyj-bumazhnyj/
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj.md                                   # - Фонарик светодиодный бумажный
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj.md                                   # Фонарик светодиодный бумажный
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.pdf
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.spl8
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.webp
@@ -424,7 +424,7 @@ eaststandart.github.io/
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj-05.webp
 │   │   └── fonarik-svetodiodnyj-bumazhnyj-trafaret.pdf
 │   ├── metronom-signalnyj/
-│   │   ├── metronom-signalnyj.md                                               # - Метроном сигнальный
+│   │   ├── metronom-signalnyj.md                                               # Метроном сигнальный
 │   │   ├── metronom-signalnyj.webp
 │   │   ├── metronom-signalnyj-01.webm
 │   │   ├── metronom-signalnyj-01.webp
@@ -467,7 +467,7 @@ eaststandart.github.io/
 │   │   ├── metronom-signalnyj-esd.pdf
 │   │   └── metronom-signalnyj-esd.spl8
 │   ├── muzykalnyj-karandash/
-│   │   ├── muzykalnyj-karandash.md                                             # - Музыкальный карандаш
+│   │   ├── muzykalnyj-karandash.md                                             # Музыкальный карандаш
 │   │   ├── muzykalnyj-karandash.webp
 │   │   ├── muzykalnyj-karandash-01.webm
 │   │   ├── muzykalnyj-karandash-01.webp
@@ -519,7 +519,7 @@ eaststandart.github.io/
 │   │   └── muzykalnyj-karandash-trafaret.spl8
 │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem/
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem 1.webp
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                       # - Настольная светодиодная лампа с растением
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.md                       # Настольная светодиодная лампа с растением
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.webp
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webp
@@ -529,13 +529,13 @@ eaststandart.github.io/
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.dxf
 │   │   └── nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.pdf
 │   ├── pano-uslovnye-oboznacheniya/
-│   │   ├── pano-uslovnye-oboznacheniya.md                                      # - Условные обозначения
+│   │   ├── pano-uslovnye-oboznacheniya.md                                      # Условные обозначения
 │   │   ├── pano-uslovnye-oboznacheniya.webp
 │   │   ├── pano-uslovnye-oboznacheniya-01.webm
 │   │   ├── pano-uslovnye-oboznacheniya-01.webp
 │   │   └── pano-uslovnye-oboznacheniya-02.webp
 │   ├── plavnoe-zazhiganie-svetodioda/
-│   │   ├── plavnoe-zazhiganie-svetodioda.md                                    # - Эффект плавного зажигания светодиода
+│   │   ├── plavnoe-zazhiganie-svetodioda.md                                    # Эффект плавного зажигания светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda.webp
 │   │   ├── plavnoe-zazhiganie-svetodioda-01.webm
 │   │   ├── plavnoe-zazhiganie-svetodioda-01.webp
@@ -554,7 +554,7 @@ eaststandart.github.io/
 │   │   ├── plavnoe-zazhiganie-svetodioda-esd.jpg
 │   │   └── plavnoe-zazhiganie-svetodioda-esd.pdf
 │   ├── podstavka-dlya-oscillografa/
-│   │   ├── podstavka-dlya-oscillografa.md                                      # - Подставка для осциллографа
+│   │   ├── podstavka-dlya-oscillografa.md                                      # Подставка для осциллографа
 │   │   ├── podstavka-dlya-oscillografa.webp
 │   │   ├── podstavka-dlya-oscillografa-01.webp
 │   │   ├── podstavka-dlya-oscillografa-02.webp
@@ -567,7 +567,7 @@ eaststandart.github.io/
 │   │   ├── podstavka-dlya-oscillografa-09.webp
 │   │   └── podstavka-dlya-oscillografa-10.webp
 │   ├── prazdnichnyj-domik/
-│   │   ├── prazdnichnyj-domik.md                                               # - Праздничный домик
+│   │   ├── prazdnichnyj-domik.md                                               # Праздничный домик
 │   │   ├── prazdnichnyj-domik.webp
 │   │   ├── prazdnichnyj-domik-01.webm
 │   │   ├── prazdnichnyj-domik-01.webp
@@ -586,7 +586,7 @@ eaststandart.github.io/
 │   │   ├── prazdnichnyj-domik-08.webp
 │   │   └── prazdnichnyj-domik-09.webp
 │   ├── robot-korova-iz-kartona/
-│   │   ├── robot-korova-iz-kartona.md                                          # - Робот корова из картона
+│   │   ├── robot-korova-iz-kartona.md                                          # Робот корова из картона
 │   │   ├── robot-korova-iz-kartona.webp
 │   │   ├── robot-korova-iz-kartona-01.webm
 │   │   ├── robot-korova-iz-kartona-01.webp
@@ -603,7 +603,7 @@ eaststandart.github.io/
 │   │   ├── robot-korova-iz-kartona-09.webp
 │   │   └── robot-korova-iz-kartona-10.webp
 │   ├── robot-krolik-iz-kartona/
-│   │   ├── robot-krolik-iz-kartona.md                                          # - Робот кролик из картона
+│   │   ├── robot-krolik-iz-kartona.md                                          # Робот кролик из картона
 │   │   ├── robot-krolik-iz-kartona.webp
 │   │   ├── robot-krolik-iz-kartona-.webp
 │   │   ├── robot-krolik-iz-kartona--.webp
@@ -638,7 +638,7 @@ eaststandart.github.io/
 │   │   ├── robot-krolik-iz-kartona-24.webp
 │   │   └── robot-krolik-iz-kartona-25.webp
 │   ├── robot-strannik/
-│   │   ├── robot-strannik.md                                                   # - Робот странник
+│   │   ├── robot-strannik.md                                                   # Робот странник
 │   │   ├── robot-strannik.webp
 │   │   ├── robot-strannik-01.webm
 │   │   ├── robot-strannik-01.webp
@@ -658,7 +658,7 @@ eaststandart.github.io/
 │   │   ├── robot-strannik-12.webp
 │   │   └── robot-strannik-13.webp
 │   ├── simple-cardboard-walking-robot/
-│   │   ├── simple-cardboard-walking-robot.md                                   # - Робот двуногий шагающий из картона
+│   │   ├── simple-cardboard-walking-robot.md                                   # Робот двуногий шагающий из картона
 │   │   ├── simple-cardboard-walking-robot.webp
 │   │   ├── simple-cardboard-walking-robot-01.webm
 │   │   ├── simple-cardboard-walking-robot-01.webp
@@ -669,7 +669,7 @@ eaststandart.github.io/
 │   │   ├── simple-cardboard-walking-robotj-ad.dxf
 │   │   └── simple-cardboard-walking-robotj-ad.pdf
 │   ├── sputnik-1/
-│   │   ├── sputnik-1.md                                                        # - Спутник-1
+│   │   ├── sputnik-1.md                                                        # Спутник-1
 │   │   ├── sputnik-1.webp
 │   │   ├── sputnik-1-01.webp
 │   │   ├── sputnik-1-02.webp
@@ -678,7 +678,7 @@ eaststandart.github.io/
 │   │   ├── sputnik-1-05.webp
 │   │   └── sputnik-1-06.webp
 │   ├── vibrohod-iz-zubnoj-shchetki/
-│   │   ├── vibrohod-iz-zubnoj-shchetki.md                                      # - Виброход из зубной щетки
+│   │   ├── vibrohod-iz-zubnoj-shchetki.md                                      # Виброход из зубной щетки
 │   │   ├── vibrohod-iz-zubnoj-shchetki.webp
 │   │   ├── vibrohod-iz-zubnoj-shchetki-01.webm
 │   │   ├── vibrohod-iz-zubnoj-shchetki-01.webp
@@ -695,7 +695,7 @@ eaststandart.github.io/
 │   │   ├── vibrohod-iz-zubnoj-shchetki-07.webm
 │   │   └── vibrohod-iz-zubnoj-shchetki-08.webm
 │   └── yablonevoe-derevo/
-│       ├── yablonevoe-derevo.md                                                # - Яблоневое дерево
+│       ├── yablonevoe-derevo.md                                                # Яблоневое дерево
 │       ├── yablonevoe-derevo.webp
 │       ├── yablonevoe-derevo-01.webm
 │       ├── yablonevoe-derevo-01.webp
@@ -723,31 +723,31 @@ eaststandart.github.io/
 │   │   ├── strontium-atom-2.webp
 │   │   ├── through-hole-red-led-1.webp
 │   │   └── through-hole-red-led-2.webp
-│   ├── aluminum-electrolytic-capacitor.md                                      # - Алюминиевый электролитический конденсатор
-│   ├── analog-panel-meter.md                                                   # - Аналоговый стрелочный измерительный прибор
-│   ├── carbon-film-resistor.md                                                 # - Углеродный пленочный резистор
-│   ├── ceramic-disc-capacitor.md                                               # - Керамический дисковый конденсатор
-│   ├── index.md                                                                # - Техническое вдохновение
-│   ├── magnetic-buzzer.md                                                      # - Магнитный зуммер
-│   ├── our-dream.md                                                            # - Наша мечта ...
-│   ├── strontium-atom.md                                                       # - Одиночный атом стронция в ионной ловушке
-│   └── through-hole-red-led.md                                                 # - Красный светодиод с выводами для сквозного монтажа
+│   ├── aluminum-electrolytic-capacitor.md                                      # Алюминиевый электролитический конденсатор
+│   ├── analog-panel-meter.md                                                   # Аналоговый стрелочный измерительный прибор
+│   ├── carbon-film-resistor.md                                                 # Углеродный пленочный резистор
+│   ├── ceramic-disc-capacitor.md                                               # Керамический дисковый конденсатор
+│   ├── index.md                                                                # Техническое вдохновение
+│   ├── magnetic-buzzer.md                                                      # Магнитный зуммер
+│   ├── our-dream.md                                                            # Наша мечта ...
+│   ├── strontium-atom.md                                                       # Одиночный атом стронция в ионной ловушке
+│   └── through-hole-red-led.md                                                 # Красный светодиод с выводами для сквозного монтажа
 ├── projects/
-│   ├── index.md                                                                # - Учебные проекты
-│   └── novyj-robot-shagohod.md                                                 # - Робот новый
+│   ├── index.md                                                                # Учебные проекты
+│   └── novyj-robot-shagohod.md                                                 # Робот новый
 ├── test/
 │   ├── folder/
 │   │   ├── test.webp
 │   │   ├── test-v.webp
 │   │   └── test-vertical.webm
-│   ├── -figure-single.md                                                       # - Тестирование модуля одиночных журнальных блоков (fig)
-│   ├── img-base.md                                                             # - Тестирование модуля базовых изображений (img_base.py)
-│   ├── img-figure.md                                                           # - Тестирование модуля групповых журнальных блоков (img_figure.py)
-│   ├── links.md                                                                # - Tест с преобразованием ссылок фото и видео
-│   ├── -row-photo.md                                                           # - Tесты с групповыми фото
-│   ├── -single-photo.md                                                        # - Tесты с одиночными фото
-│   ├── vault.md                                                                # - Тестирование изолированных зон безопасности (vault.py)
-│   ├── -video.md                                                               # - Tест с видео
+│   ├── -figure-single.md                                                       # Тестирование модуля одиночных журнальных блоков (fig)
+│   ├── img-base.md                                                             # Тестирование модуля базовых изображений (img_base.py)
+│   ├── img-figure.md                                                           # Тестирование модуля групповых журнальных блоков (img_figure.py)
+│   ├── links.md                                                                # Tест с преобразованием ссылок фото и видео
+│   ├── -row-photo.md                                                           # Tесты с групповыми фото
+│   ├── -single-photo.md                                                        # Tесты с одиночными фото
+│   ├── vault.md                                                                # Тестирование изолированных зон безопасности (vault.py)
+│   ├── -video.md                                                               # Tест с видео
 │   └── Без названия 1.md — about отсутствует
 ├── tools/
 │   ├── files/
@@ -757,21 +757,21 @@ eaststandart.github.io/
 │   ├── img/
 │   │   ├── fritzing-workflow-1-0-5.webp
 │   │   └── sprintlayout-6-0-workflow.webp
-│   ├── fritzing.md                                                             # - Fritzing
-│   ├── index.md                                                                # - Полезные инструменты
-│   └── sprintlayout.md                                                         # - Sprint Layout
+│   ├── fritzing.md                                                             # Fritzing
+│   ├── index.md                                                                # Полезные инструменты
+│   └── sprintlayout.md                                                         # Sprint Layout
 ├── .gitignore                                                                  # Файл исключений системы контроля версий Git
 ├── _config.yml — about отсутствует
 ├── 404.html — about отсутствует
-├── CHANGELOG.md                                                                # - Журнал изменений проекта
+├── CHANGELOG.md                                                                # Журнал изменений проекта
 ├── CODE_OF_CONDUCT.md — about отсутствует
-├── CONTRIBUTING.md                                                             # - Соавторство и вклад в развитие проекта.
+├── CONTRIBUTING.md                                                             # Соавторство и вклад в развитие проекта.
 ├── giscus.json — about отсутствует
-├── index.md                                                                    # - Творческая лаборатория познавательного развития
+├── index.md                                                                    # Творческая лаборатория познавательного развития
 ├── LICENSE.txt — about отсутствует
 ├── README.md
-├── ROADMAP.md                                                                  # - Дорожная карта проекта
+├── ROADMAP.md                                                                  # Дорожная карта проекта
 ├── robots.txt — about отсутствует
 ├── STRUCTURE.md — about отсутствует
-└── tags.md                                                                     # - Поиск по тегам
+└── tags.md                                                                     # Поиск по тегам
 ```

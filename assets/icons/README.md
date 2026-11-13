@@ -8,8 +8,8 @@
 eaststandart.github.io/
 └── assets/
     └── icons/
-        ├── aluminum-electrolytic-capacitor.webp # Изображение алюминиевого электролитического конденсатора.
-        ├── analog-panel-meter.webp              # Изображение аналогового щитового измерительного прибора.
+        ├── aluminum-electrolytic-capacitor.webp  # Изображение алюминиевого электролитического конденсатора.
+        ├── analog-panel-meter.webp               # Изображение аналогового щитового измерительного прибора.
         ├── carbon-film-resistor.webp             # Изображение углеродистого плёночного резистора.
         ├── ceramic-disc-capacitor.webp           # Изображение керамического дискового конденсатора.
         ├── chto-novogo.svg                       # Графический значок раздела «Что нового».

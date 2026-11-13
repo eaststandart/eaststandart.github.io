@@ -8,6 +8,11 @@
 @version 1.1.0
 */
 
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+/* СТИЛИ ДЛЯ ТВОРЧЕСКОГО ПРОЦЕССА */
+
 .gsc-comment-content summary:not(.tmp-px-3):not(.py-2) {
     margin-top: 1rem !important;
 }

@@ -60,14 +60,10 @@ function getCommentUploadSession() {
 // ФУНКЦИЯ: prepareLocalMediaFileNames
 // НАЗНАЧЕНИЕ: Назначает новые имена с учётом номеров всех записей, включая отсутствующие.
 function prepareLocalMediaFileNames(session) {
-  const containers = [
-    document.getElementById("photos-meta-container"),
-    document.getElementById("videos-meta-container")
-  ].filter(Boolean);
-
-  const blocks = containers.flatMap(container =>
-    Array.from(container.querySelectorAll(".media-sub-block"))
-  );
+  const mediaContainer = document.getElementById("media-meta-container");
+  const blocks = mediaContainer
+    ? Array.from(mediaContainer.querySelectorAll(".media-sub-block"))
+    : [];
 
   const counters = { photo: 0, video: 0 };
 
@@ -277,14 +273,10 @@ async function uploadLocalMediaFiles(session) {
     throw new Error("Не переданы все параметры сессии загрузки.");
   }
 
-  const containers = [
-    document.getElementById("photos-meta-container"),
-    document.getElementById("videos-meta-container")
-  ].filter(Boolean);
-
-  const blocks = containers.flatMap(container =>
-    Array.from(container.querySelectorAll(".media-sub-block"))
-  );
+  const mediaContainer = document.getElementById("media-meta-container");
+  const blocks = mediaContainer
+    ? Array.from(mediaContainer.querySelectorAll(".media-sub-block"))
+    : [];
 
   const counters = { photo: 0, video: 0 };
   const uploads = [];

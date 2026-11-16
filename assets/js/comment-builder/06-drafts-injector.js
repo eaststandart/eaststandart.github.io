@@ -242,12 +242,9 @@ function loadDraftData(draftId) {
   document.getElementById("commit-id").value =
     selectedDraft.commit || "";
 
-  // 2. Очищаем медиаконтейнеры
-  const containerPhotos = document.getElementById("photos-meta-container");
-  const containerVideos = document.getElementById("videos-meta-container");
-
-  if (containerPhotos) containerPhotos.innerHTML = "";
-  if (containerVideos) containerVideos.innerHTML = "";
+  // 2. Очищаем общий медиаконтейнер
+  const mediaContainer = document.getElementById("media-meta-container");
+  if (mediaContainer) mediaContainer.innerHTML = "";
 
   photoBlockIdx = 0;
   videoBlockIdx = 0;
@@ -272,14 +269,18 @@ function loadDraftData(draftId) {
   if (textInput) textInput.value = postMainText;
   if (footerInput) footerInput.value = postFooterText;
 
-  // 5. Восстанавливаем фотоблоки
-  selectedDraft.photos.forEach(blockData => {
-    restoreMediaBlock(containerPhotos, blockData, "photo");
-  });
+  // 5. Восстанавливаем медиаблоки в исходной последовательности.
+  const mediaBlocks = [
+    ...(selectedDraft.photos || []).map(blockData => ({ blockData, type: "photo" })),
+    ...(selectedDraft.videos || []).map(blockData => ({ blockData, type: "video" }))
+  ];
 
-  // 6. Восстанавливаем видеоблоки
-  selectedDraft.videos.forEach(blockData => {
-    restoreMediaBlock(containerVideos, blockData, "video");
+  if (mediaBlocks.every(item => Number.isFinite(item.blockData.order))) {
+    mediaBlocks.sort((a, b) => a.blockData.order - b.blockData.order);
+  }
+
+  mediaBlocks.forEach(({ blockData, type }) => {
+    restoreMediaBlock(mediaContainer, blockData, type);
   });
 
   console.log("[ИНЪЕКТОР] Черновик восстановлен");

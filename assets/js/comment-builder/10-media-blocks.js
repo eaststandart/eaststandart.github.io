@@ -9,8 +9,9 @@
 // ФУНКЦИЯ: updatePhotoDeleteButtons
 // НАЗНАЧЕНИЕ: АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ФОТО
 function updatePhotoDeleteButtons() {
-  const blocks = document.querySelectorAll("#photos-meta-container .media-sub-block");
+  const blocks = document.querySelectorAll("#media-meta-container .media-sub-block");
   blocks.forEach((block) => {
+    if (!block.querySelector(".photo-h3-title")) return;
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
       deleteContainer.classList.add("is-visible");
@@ -21,8 +22,9 @@ function updatePhotoDeleteButtons() {
 // ФУНКЦИЯ: updateVideoDeleteButtons
 // НАЗНАЧЕНИЕ: АВТОМАТИЧЕСКИЙ КОНТРОЛЬ КНОПОК УДАЛЕНИЯ ДЛЯ ВИДЕО
 function updateVideoDeleteButtons() {
-  const blocks = document.querySelectorAll("#videos-meta-container .media-sub-block");
+  const blocks = document.querySelectorAll("#media-meta-container .media-sub-block");
   blocks.forEach((block) => {
+    if (!block.querySelector(".video-h3-title")) return;
     const deleteContainer = block.querySelector(".btn-delete-container");
     if (deleteContainer) {
       deleteContainer.classList.add("is-visible");
@@ -35,7 +37,7 @@ function updateVideoDeleteButtons() {
 function addPhotoBlock(initialTitle = "", initialDesc = "") {
   photoBlockIdx++;
 
-  const container = document.getElementById("photos-meta-container");
+  const container = document.getElementById("media-meta-container");
   if (!container) return null;
 
   const subBlock = document.createElement("div");
@@ -75,7 +77,7 @@ function deletePhotoBlock(blockId) {
 // НАЗНАЧЕНИЕ: ДОБАВЛЕНИЕ БЛОКА ВИДЕО С ОРИГИНАЛЬНЫМИ КЛАССАМИ ОФОРМЛЕНИЯ
 function addVideoBlock(initialTitle = "", initialDesc = "") {
   videoBlockIdx++;
-  const container = document.getElementById("videos-meta-container");
+  const container = document.getElementById("media-meta-container");
   if (!container) return null;
   
   const subBlock = document.createElement("div");

@@ -26,22 +26,19 @@ function commentToBase64(value) {
   return btoa(binary);
 }
 
-// ФУНКЦИЯ: collectCommentMedia
-// НАЗНАЧЕНИЕ: Собирает данные заполненных медиаблоков выбранного типа.
-function collectCommentMedia(containerId, type) {
-  const container = document.getElementById(containerId);
+// ФУНКЦИЯ: collectCommentMediaBlocks
+// НАЗНАЧЕНИЕ: Собирает фото- и видеоблоки в порядке их расположения в общей форме.
+function collectCommentMediaBlocks() {
+  const container = document.getElementById("media-meta-container");
   if (!container) return [];
 
   return Array.from(container.querySelectorAll(".media-sub-block"))
     .map(block => {
-      const titleSelector = type === "photo"
-        ? ".photo-h3-title"
-        : ".video-h3-title";
+      const type = getMediaBlockType(block);
+      if (!type) return null;
 
-      const descSelector = type === "photo"
-        ? ".photo-block-desc"
-        : ".video-block-desc";
-
+      const titleSelector = type === "photo" ? ".photo-h3-title" : ".video-h3-title";
+      const descSelector = type === "photo" ? ".photo-block-desc" : ".video-block-desc";
       const title = block.querySelector(titleSelector)?.value.trim() || "";
       const description = block.querySelector(descSelector)?.value.trim() || "";
       const files = Array.isArray(block.mediaFiles)
@@ -53,17 +50,12 @@ function collectCommentMedia(containerId, type) {
                 /^\d{4}-\d{2}-\d{2}-\d+_discussion_.*_(photo|video)_(\d+\.[^.]+)$/i
               );
               const shortName = file.shortName ||
-                (uploadNameMatch
-                  ? uploadNameMatch[1] + "_" + uploadNameMatch[2]
-                  : fileName);
-              // Новые файлы с компьютера получают пару имён.
-              // Восстановленные ссылки сохраняют прежнюю подпись.
+                (uploadNameMatch ? uploadNameMatch[1] + "_" + uploadNameMatch[2] : fileName);
               const displayName = file.originalName
                 ? file.originalName + " | " + shortName
                 : file.sourceFormat === "obsidian"
                   ? "WikiLink | " + shortName
                   : file.displayName || shortName;
-
               return {
                 name: fileName,
                 displayName,
@@ -73,12 +65,7 @@ function collectCommentMedia(containerId, type) {
         : [];
 
       if (!files.length) return null;
-
-      return {
-        title,
-        description,
-        files
-      };
+      return { type, title, description, files };
     })
     .filter(Boolean);
 }
@@ -94,10 +81,9 @@ function buildCommentMarkdown(session) {
   const published = !deleteRequested && document.getElementById("publish-now-flag")?.checked === true;
   const publishAsBot = document.getElementById("publish-as-bot-flag")?.checked === true;
 
-  const photos = collectCommentMedia("photos-meta-container", "photo");
-  const videos = collectCommentMedia("videos-meta-container", "video");
+  const mediaBlocks = collectCommentMediaBlocks();
 
-  if (!currentCommentDraft && !title && !mainText && !footer && !photos.length && !videos.length) {
+  if (!currentCommentDraft && !title && !mainText && !footer && !mediaBlocks.length) {
     throw new Error("Комментарий пустой. Добавьте текст или медиаматериалы.");
   }
 
@@ -125,19 +111,10 @@ function buildCommentMarkdown(session) {
 
   body.push("## Структура комментария", ...commentFields);
 
-  photos.forEach(block => {
-    const section = ["## 📸 Фотоматериалы"];
-    if (block.title) section.push("### Заголовок блока", block.title);
-    if (block.description) section.push("### Описание блока", block.description);
-    section.push("### Медиафайлы");
-    block.files.forEach(file => {
-      section.push(`${file.embed ? "!" : ""}[${file.displayName}](${file.name})`);
-    });
-    body.push(section.join("\n\n"));
-  });
-
-  videos.forEach(block => {
-    const section = ["## 🎥 Видеоматериалы"];
+  mediaBlocks.forEach(block => {
+    const section = [
+      block.type === "photo" ? "## 📸 Фотоматериалы" : "## 🎥 Видеоматериалы"
+    ];
     if (block.title) section.push("### Заголовок блока", block.title);
     if (block.description) section.push("### Описание блока", block.description);
     section.push("### Медиафайлы");

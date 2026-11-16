@@ -102,6 +102,7 @@ function parseNewManifestBody(body) {
 
   const photos = [];
   const videos = [];
+  let mediaOrder = 0;
 
   sections.forEach(section => {
     const normalizedType = section.title.replace(/\s+/g, " ").trim();
@@ -164,6 +165,7 @@ function parseNewManifestBody(body) {
 
     const target = type === "photo" ? photos : videos;
     target.push({
+      order: mediaOrder++,
       index: target.length + 1,
       title: blockTitle,
       description,

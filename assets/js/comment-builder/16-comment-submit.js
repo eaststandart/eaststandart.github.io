@@ -94,16 +94,14 @@ async function handleCommentSubmit() {
       await saveCommentMarkdown(session, completedMarkdown, latestSha);
     }
 
-    const unresolvedMediaCount = [
-      document.getElementById("photos-meta-container"),
-      document.getElementById("videos-meta-container")
-    ].filter(Boolean).reduce((total, container) => {
-      const blocks = Array.from(container.querySelectorAll(".media-sub-block"));
-      return total + blocks.reduce((count, block) => {
-        const files = Array.isArray(block.mediaFiles) ? block.mediaFiles : [];
-        return count + files.filter(file => file.kind === "missing").length;
-      }, 0);
-    }, 0);
+    const mediaContainer = document.getElementById("media-meta-container");
+    const unresolvedMediaCount = mediaContainer
+      ? Array.from(mediaContainer.querySelectorAll(".media-sub-block"))
+          .reduce((total, block) => {
+            const files = Array.isArray(block.mediaFiles) ? block.mediaFiles : [];
+            return total + files.filter(file => file.kind === "missing").length;
+          }, 0)
+      : 0;
 
     const deleteRequested = document.getElementById("delete-draft-flag")?.checked === true;
     const published = !deleteRequested && document.getElementById("publish-now-flag")?.checked === true;

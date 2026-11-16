@@ -167,6 +167,16 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+.comment-builder .media-add-buttons {
+    display: flex;
+    gap: 8px;
+}
+.comment-builder .media-add-buttons .btn-add {
+    flex: 1;
+    width: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .comment-builder .btn-add-video {
     color: #ff9500;
     border-color: #ff9500;

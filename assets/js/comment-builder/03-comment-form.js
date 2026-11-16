@@ -26,11 +26,8 @@ function initCommentInterface() {
     commentInterfaceInitialized = true;
   }
 
-  const containerPhotos = document.getElementById("photos-meta-container");
-  const containerVideos = document.getElementById("videos-meta-container");
-  
-  if (containerPhotos) containerPhotos.innerHTML = "";
-  if (containerVideos) containerVideos.innerHTML = "";
+  const mediaContainer = document.getElementById("media-meta-container");
+  if (mediaContainer) mediaContainer.innerHTML = "";
   
   photoBlockIdx = 0;
   videoBlockIdx = 0;
@@ -94,8 +91,8 @@ function resetCommentForm() {
   if (window.commentFormLocked) select.dataset.lockDisabled = "1";
   select.value = "";
 
-  document.getElementById("photos-meta-container").innerHTML = "";
-  document.getElementById("videos-meta-container").innerHTML = "";
+  const mediaContainer = document.getElementById("media-meta-container");
+  if (mediaContainer) mediaContainer.innerHTML = "";
 
   photoBlockIdx = 0;
   videoBlockIdx = 0;

@@ -17,15 +17,24 @@ function getCommentUploadSession() {
   // Редактирование существующего черновика
   if (currentCommentDraft) {
     const draft = currentCommentDraft;
-    const identityMatch = String(draft.id || "").match(/^(\d{4}-\d{2}-\d{2})-(\d+)_discussion_/);
+    const identityMatch = String(draft.id || "").match(
+      /^(\d{4}-\d{2}-\d{2})-(\d+)_discussion_(\d+)_(.+)\.md$/
+    );
+
+    if (!identityMatch) {
+      throw new Error("Не удалось определить параметры исходного манифеста.");
+    }
+
     return {
       // Дата Front Matter берётся из текущего поля формы.
-      // Дата и timestamp имени медиафайлов остаются привязаны к имени манифеста.
       date: document.getElementById("target-date")?.value.trim() || draft.date,
-      timestamp: identityMatch ? identityMatch[2] : draft.timestamp,
-      frontMatterTimestamp: draft.timestamp,
-      discussion: draft.discussion,
-      teacher: draft.teacher
+      // Все параметры имён медиафайлов берутся из неизменного имени манифеста.
+      mediaDate: identityMatch[1],
+      mediaTimestamp: identityMatch[2],
+      timestamp: identityMatch[2],
+      discussion: identityMatch[3],
+      teacher: identityMatch[4],
+      frontMatterTimestamp: draft.timestamp
     };
   }
 
@@ -36,9 +45,12 @@ function getCommentUploadSession() {
 
   // Создание новой сессии
   if (!currentCommentSession) {
+    const timestamp = String(Math.floor(Date.now() / 1000));
     currentCommentSession = {
       date,
-      timestamp: String(Math.floor(Date.now() / 1000)),
+      timestamp,
+      mediaDate: date,
+      mediaTimestamp: timestamp,
       discussion,
       teacher
     };
@@ -132,7 +144,7 @@ function createMediaUploadName(file, type, session, index) {
   const extension = getMediaFileExtension(file.name);
 
   return (
-    `${session.date}-${session.timestamp}` +
+    `${session.mediaDate}-${session.mediaTimestamp}` +
     `_discussion_${session.discussion}` +
     `_${session.teacher}` +
     `_${type}_${String(index).padStart(2, "0")}` +
@@ -266,8 +278,8 @@ async function uploadLocalMediaFiles(session) {
 
   if (
     !session ||
-    !session.date ||
-    !session.timestamp ||
+    !session.mediaDate ||
+    !session.mediaTimestamp ||
     !session.discussion ||
     !session.teacher
   ) {

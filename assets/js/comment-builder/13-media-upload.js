@@ -17,11 +17,12 @@ function getCommentUploadSession() {
   // Редактирование существующего черновика
   if (currentCommentDraft) {
     const draft = currentCommentDraft;
-    const identityMatch = String(draft.id || "").match(/^\d{4}-\d{2}-\d{2}-(\d+)_discussion_/);
+    const identityMatch = String(draft.id || "").match(/^(\d{4}-\d{2}-\d{2})-(\d+)_discussion_/);
     return {
-      // Дата редактируемого черновика берётся из поля формы и попадёт в Front Matter.
-      date: document.getElementById("target-date")?.value.trim(),
-      timestamp: identityMatch ? identityMatch[1] : draft.timestamp,
+      // Дата и timestamp имени медиафайлов берутся из неизменного имени манифеста.
+      // Новая дата из формы используется только в Front Matter.
+      date: identityMatch ? identityMatch[1] : draft.date,
+      timestamp: identityMatch ? identityMatch[2] : draft.timestamp,
       frontMatterTimestamp: draft.timestamp,
       discussion: draft.discussion,
       teacher: draft.teacher

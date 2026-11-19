@@ -1,6 +1,7 @@
 ---
 description: "Правила техники безопасности и поведения в детско-юношеском инженерном клубе."
 resource: "https://docs.google.com/document/d/10OvDLC8dHV6cvWqmH2nrniypihzUqycqbtkSum7cyJg/edit?usp=sharing"
+published: false
 ---
 
 Связано с: [[../../../notes/как развить кружок технического творчества|как развить кружок технического творчества]]

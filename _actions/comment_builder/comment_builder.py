@@ -8,7 +8,6 @@
 @version 1.0.0
 """
 
-import argparse
 import logging
 import sys
 
@@ -34,18 +33,8 @@ def configure_logging():
     )
 
 
-def main(argv=None):
-    """Запускает полный цикл; реальная публикация требует флага --publish."""
-    parser = argparse.ArgumentParser(
-        description="Получение комплекта и публикация комментария TechLab."
-    )
-    parser.add_argument(
-        "--publish",
-        action="store_true",
-        help="Разрешить реальную публикацию в GitHub Discussions.",
-    )
-    args = parser.parse_args(argv)
-
+def main():
+    """Запускает полный цикл реальной публикации комментария."""
     configure_logging()
     package = None
     exit_code = 1
@@ -66,30 +55,16 @@ def main(argv=None):
             (package.get("metadata") or {}).get("discussion_number", "не указан"),
         )
 
-        if args.publish:
-            logger.info("Загрузка медиафайлов в GitHub Attachments.")
-            package = cb_media_uploader.upload_media(package)
-        else:
-            logger.info("Пробный режим: загрузка вложений отключена.")
+        logger.info("Этап 2/3: загрузка медиафайлов в GitHub Attachments.")
+        package = cb_media_uploader.upload_media(package)
 
-        logger.info(
-            "Этап 2/3: %s.",
-            "реальная публикация нового комментария"
-            if args.publish else "имитация публикации в пробном режиме",
-        )
-        result = cb_comment_builder.publish_comment(
-            package,
-            dry_run=not args.publish,
-        )
+        logger.info("Этап 3/3: реальная публикация комментария.")
+        result = cb_comment_builder.publish_comment(package)
 
         if not isinstance(result, dict) or not result.get("success"):
             raise RuntimeError("Модуль публикации не подтвердил успешный результат.")
 
-        logger.info(
-            "Этап 3/3: очистка обработанного комплекта%s.",
-            " после реальной публикации" if args.publish
-            else " после успешной имитации публикации",
-        )
+        logger.info("Очистка обработанного комплекта после подтверждённой публикации.")
         cleanup_result = cb_gate_closer.clean_source_output(
             package,
             processing_confirmed=True,
@@ -97,18 +72,10 @@ def main(argv=None):
         if not cleanup_result.get("success"):
             raise RuntimeError("Модуль очистки не подтвердил завершение.")
 
-        if result.get("dry_run"):
-            logger.info(
-                "Пробный цикл завершён успешно. Discussion #%s, тело: %d символов. "
-                "Комментарий не публиковался; комплект удалён из _output.",
-                result["discussion_number"],
-                result["body_length"],
-            )
-        else:
-            logger.info(
-                "Конвейер завершён успешно. Ссылка на комментарий: %s",
-                result["url"],
-            )
+        logger.info(
+            "Конвейер завершён успешно. Ссылка на комментарий: %s",
+            result["url"],
+        )
         exit_code = 0
 
     except Exception:

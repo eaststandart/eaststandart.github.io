@@ -11,6 +11,9 @@ name: TechLab Comment Builder Receiver
 on:
   repository_dispatch:
     types: [comment-notify]
+  push:
+    paths:
+      - '_actions/comment_builder/.test-trigger'
 
 permissions:
   contents: write
@@ -34,8 +37,8 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Run Comment Builder Dispatcher (Dry Run)
+      - name: Run Comment Builder Dispatcher (Integration Test)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
-        run: python _actions/comment_builder/comment_builder.py
+        run: python _actions/comment_builder/comment_builder.py --publish

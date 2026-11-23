@@ -3,13 +3,12 @@
 """
 @module  cb_gate_closer.py
 @about   Завершение обработки комплекта Конструктора комментариев.
-@purpose Удаляет файлы комплекта из _output после подтверждённой публикации комментария.
+@purpose Удаляет только файлы подтверждённо опубликованного комплекта из _output.
 @author  TechLab
-@version 1.0.0
+@version 1.1.0
 """
 
 import logging
-import os
 import subprocess
 from pathlib import Path
 
@@ -40,18 +39,38 @@ def _run_git(repository_path, *arguments):
     return result.stdout.strip()
 
 
-def clean_source_output(repository_path, publication_confirmed=False):
-    """
-    Очищает _output в checkout репозитория Конструктора.
+def _safe_output_name(value, field_name):
+    """Разрешает только имя файла непосредственно внутри _output."""
+    if (
+        not isinstance(value, str)
+        or not value
+        or value in (".", "..", KEEP_FILE)
+        or "/" in value
+        or "\\" in value
+    ):
+        raise CommentBuilderCleanupError(
+            f"Недопустимое имя файла в пакете ({field_name}): {value!r}"
+        )
+    return value
 
-    Очистка разрешена только после явного подтверждения успешной публикации.
-    Файл _output/.gitkeep сохраняется. Диспетчер вызывает метод только после
-    успешного возврата подтверждения от модуля публикации.
+
+def clean_source_output(
+    repository_path,
+    package,
+    publication_confirmed=False,
+):
+    """
+    Удаляет только манифест и медиафайлы переданного опубликованного пакета.
+
+    Перед удалением сверяет Git blob SHA каждого файла с SHA, полученными
+    парсером из GitHub. Остальные файлы _output и .gitkeep не затрагиваются.
     """
     if publication_confirmed is not True:
         raise CommentBuilderCleanupError(
             "Очистка запрещена: успешная публикация комментария не подтверждена."
         )
+    if not isinstance(package, dict):
+        raise CommentBuilderCleanupError("Не передан пакет для очистки.")
 
     repository = Path(repository_path).resolve()
     if not repository.is_dir() or not (repository / ".git").exists():
@@ -69,59 +88,86 @@ def clean_source_output(repository_path, publication_confirmed=False):
             f"В checkout отсутствует каталог {OUTPUT_DIRECTORY}."
         )
 
-    tracked = _run_git(repository, "ls-files", "-z", "--", OUTPUT_DIRECTORY)
-    files_to_remove = [
-        item for item in tracked.split("\0")
-        if item and item != f"{OUTPUT_DIRECTORY}/{KEEP_FILE}"
-    ]
+    manifest_name = _safe_output_name(
+        package.get("manifest_name"),
+        "manifest_name",
+    )
+    manifest_sha = package.get("manifest_sha")
+    if not isinstance(manifest_sha, str) or not manifest_sha:
+        raise CommentBuilderCleanupError(
+            "В пакете отсутствует SHA манифеста; безопасная очистка невозможна."
+        )
 
-    if files_to_remove:
-        _run_git(repository, "rm", "-f", "--", *files_to_remove)
+    media = package.get("media")
+    if not isinstance(media, list):
+        raise CommentBuilderCleanupError(
+            "В пакете отсутствует корректный список медиафайлов."
+        )
+
+    expected_files = [(manifest_name, manifest_sha)]
+    for item in media:
+        if not isinstance(item, dict):
+            raise CommentBuilderCleanupError(
+                "В списке медиафайлов обнаружена некорректная запись."
+            )
+        name = _safe_output_name(item.get("name"), "media.name")
+        sha = item.get("sha")
+        if not isinstance(sha, str) or not sha:
+            raise CommentBuilderCleanupError(
+                f"Для вложения {name} отсутствует SHA."
+            )
+        expected_files.append((name, sha))
+
+    names = [name for name, _ in expected_files]
+    if len(names) != len(set(names)):
+        raise CommentBuilderCleanupError(
+            "В пакете обнаружены повторяющиеся имена файлов."
+        )
+
+    dirty_state = _run_git(repository, "status", "--porcelain")
+    if dirty_state:
+        raise CommentBuilderCleanupError(
+            "Checkout исходного репозитория содержит посторонние изменения; "
+            "очистка отменена."
+        )
+
+    paths_to_remove = []
+    for name, expected_sha in expected_files:
+        relative_path = f"{OUTPUT_DIRECTORY}/{name}"
+        actual_sha = _run_git(repository, "rev-parse", f"HEAD:{relative_path}")
+        if actual_sha != expected_sha:
+            raise CommentBuilderCleanupError(
+                f"SHA файла {relative_path} не совпадает с полученным парсером. "
+                "Возможно, комплект в исходном репозитории уже изменился; "
+                "очистка отменена."
+            )
+        paths_to_remove.append(relative_path)
+
+    _run_git(repository, "rm", "-f", "--", *paths_to_remove)
 
     keep_path = output_dir / KEEP_FILE
     if not keep_path.exists():
         keep_path.write_text("\n", encoding="utf-8")
         _run_git(repository, "add", "--", f"{OUTPUT_DIRECTORY}/{KEEP_FILE}")
 
-    changes = subprocess.run(
-        ["git", "-C", str(repository), "diff", "--cached", "--quiet"],
-        check=False,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-    if changes.returncode == 0:
-        logger.info("В _output нет файлов для удаления.")
-        return {"success": True, "deleted_files": 0, "commit": None}
-    if changes.returncode != 1:
-        raise CommentBuilderCleanupError(
-            f"Не удалось проверить индекс Git: {changes.stderr.strip()}"
-        )
-
-    _run_git(
-        repository,
-        "config", "user.name", "TechLab Comment Bot"
-    )
-    _run_git(
-        repository,
-        "config", "user.email", "comment-bot@techlab.local"
-    )
+    _run_git(repository, "config", "user.name", "TechLab Comment Bot")
+    _run_git(repository, "config", "user.email", "comment-bot@techlab.local")
     _run_git(
         repository,
         "commit",
         "-m",
-        "очистка _output после публикации комментария",
+        "очистка опубликованного комплекта из _output",
     )
     commit_sha = _run_git(repository, "rev-parse", "HEAD")
     _run_git(repository, "push", "origin", "HEAD:main")
 
     logger.info(
-        "Очистка _output завершена: удалено файлов — %d; commit — %s.",
-        len(files_to_remove),
+        "Комплект очищен из _output: файлов — %d; commit — %s. .gitkeep сохранён.",
+        len(paths_to_remove),
         commit_sha,
     )
     return {
         "success": True,
-        "deleted_files": len(files_to_remove),
+        "deleted_files": len(paths_to_remove),
         "commit": commit_sha,
     }

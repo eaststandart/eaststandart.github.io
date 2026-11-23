@@ -3,40 +3,35 @@
 """
 @module  cb_gate_closer.py
 @about   Завершение обработки комплекта Конструктора комментариев.
-@purpose Удаляет только файлы подтверждённо опубликованного комплекта из _output.
+@purpose Удаляет обработанный комплект из _output через GitHub REST API и очищает временные файлы.
 @author  TechLab
-@version 1.1.0
+@version 1.2.0
 """
 
 import logging
-import subprocess
-from pathlib import Path
+import os
+import shutil
+import tempfile
+from urllib.parse import quote
+
+import requests
 
 
 logger = logging.getLogger(__name__)
+
+SOURCE_OWNER = "eaststandart"
+SOURCE_REPOSITORY = "techlab-comment-builder"
+SOURCE_BRANCH = "main"
 OUTPUT_DIRECTORY = "_output"
 KEEP_FILE = ".gitkeep"
+API_BASE = (
+    f"https://api.github.com/repos/{SOURCE_OWNER}/{SOURCE_REPOSITORY}"
+)
+REQUEST_TIMEOUT = 30
 
 
 class CommentBuilderCleanupError(Exception):
-    """Ошибка безопасной очистки исходного комплекта."""
-
-
-def _run_git(repository_path, *arguments):
-    """Запускает Git-команду в указанном checkout и возвращает stdout."""
-    result = subprocess.run(
-        ["git", "-C", str(repository_path), *arguments],
-        check=False,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-    if result.returncode != 0:
-        detail = (result.stderr or result.stdout).strip()
-        raise CommentBuilderCleanupError(
-            f"Команда git {' '.join(arguments)} завершилась ошибкой: {detail}"
-        )
-    return result.stdout.strip()
+    """Ошибка безопасного завершения обработки комплекта."""
 
 
 def _safe_output_name(value, field_name):
@@ -54,38 +49,46 @@ def _safe_output_name(value, field_name):
     return value
 
 
-def clean_source_output(
-    repository_path,
-    package,
-    publication_confirmed=False,
-):
-    """
-    Удаляет только манифест и медиафайлы переданного опубликованного пакета.
-
-    Перед удалением сверяет Git blob SHA каждого файла с SHA, полученными
-    парсером из GitHub. Остальные файлы _output и .gitkeep не затрагиваются.
-    """
-    if publication_confirmed is not True:
+def _request(session, method, url, **kwargs):
+    """Выполняет REST-запрос и сообщает об ошибке с деталями GitHub."""
+    try:
+        response = session.request(
+            method,
+            url,
+            timeout=REQUEST_TIMEOUT,
+            **kwargs,
+        )
+    except requests.RequestException as error:
         raise CommentBuilderCleanupError(
-            "Очистка запрещена: успешная публикация комментария не подтверждена."
+            f"Сетевая ошибка GitHub API ({method}): {error}"
+        ) from error
+
+    if response.status_code < 200 or response.status_code >= 300:
+        raise CommentBuilderCleanupError(
+            f"GitHub API {method} {url} вернул HTTP "
+            f"{response.status_code}: {response.text[:1000]}"
+        )
+    return response
+
+
+def clean_source_output(package, processing_confirmed=False):
+    """
+    Удаляет только манифест и медиафайлы переданного пакета.
+
+    SHA сверяются с конкретным commit main. Удаление выполняется одним
+    Git-commit через REST Git Database API; остальные файлы не затрагиваются.
+    """
+    if processing_confirmed is not True:
+        raise CommentBuilderCleanupError(
+            "Очистка запрещена: успешная обработка комплекта не подтверждена."
         )
     if not isinstance(package, dict):
         raise CommentBuilderCleanupError("Не передан пакет для очистки.")
 
-    repository = Path(repository_path).resolve()
-    if not repository.is_dir() or not (repository / ".git").exists():
+    token = os.environ.get("MY_ADMIN_TOKEN")
+    if not token:
         raise CommentBuilderCleanupError(
-            f"Указанный путь не является checkout Git-репозитория: {repository}"
-        )
-
-    output_dir = (repository / OUTPUT_DIRECTORY).resolve()
-    if output_dir.parent != repository or output_dir.name != OUTPUT_DIRECTORY:
-        raise CommentBuilderCleanupError(
-            "Путь к _output не прошёл проверку безопасности."
-        )
-    if not output_dir.is_dir():
-        raise CommentBuilderCleanupError(
-            f"В checkout отсутствует каталог {OUTPUT_DIRECTORY}."
+            "Токен MY_ADMIN_TOKEN не найден. Очистка отменена."
         )
 
     manifest_name = _safe_output_name(
@@ -95,7 +98,7 @@ def clean_source_output(
     manifest_sha = package.get("manifest_sha")
     if not isinstance(manifest_sha, str) or not manifest_sha:
         raise CommentBuilderCleanupError(
-            "В пакете отсутствует SHA манифеста; безопасная очистка невозможна."
+            "В пакете отсутствует SHA манифеста."
         )
 
     media = package.get("media")
@@ -124,50 +127,128 @@ def clean_source_output(
             "В пакете обнаружены повторяющиеся имена файлов."
         )
 
-    dirty_state = _run_git(repository, "status", "--porcelain")
-    if dirty_state:
-        raise CommentBuilderCleanupError(
-            "Checkout исходного репозитория содержит посторонние изменения; "
-            "очистка отменена."
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "TechLab-Comment-Builder",
+    }
+
+    with requests.Session() as session:
+        session.headers.update(headers)
+
+        ref_response = _request(
+            session,
+            "GET",
+            f"{API_BASE}/git/ref/heads/{SOURCE_BRANCH}",
+        )
+        parent_sha = ref_response.json()["object"]["sha"]
+
+        commit_response = _request(
+            session,
+            "GET",
+            f"{API_BASE}/git/commits/{parent_sha}",
+        )
+        base_tree_sha = commit_response.json()["tree"]["sha"]
+
+        tree_entries = []
+        for name, expected_sha in expected_files:
+            relative_path = f"{OUTPUT_DIRECTORY}/{name}"
+            contents_url = (
+                f"{API_BASE}/contents/{OUTPUT_DIRECTORY}/{quote(name, safe='')}"
+                f"?ref={parent_sha}"
+            )
+            file_response = _request(session, "GET", contents_url)
+            actual_sha = file_response.json().get("sha")
+            if actual_sha != expected_sha:
+                raise CommentBuilderCleanupError(
+                    f"SHA файла {relative_path} не совпадает с SHA, "
+                    "полученным парсером. Возможно, исходный комплект изменился. "
+                    "Очистка отменена."
+                )
+
+            tree_entries.append({
+                "path": relative_path,
+                "mode": "100644",
+                "type": "blob",
+                "sha": None,
+            })
+
+        tree_response = _request(
+            session,
+            "POST",
+            f"{API_BASE}/git/trees",
+            json={
+                "base_tree": base_tree_sha,
+                "tree": tree_entries,
+            },
+        )
+        new_tree_sha = tree_response.json()["sha"]
+
+        new_commit_response = _request(
+            session,
+            "POST",
+            f"{API_BASE}/git/commits",
+            json={
+                "message": "очистка обработанного комплекта из _output",
+                "tree": new_tree_sha,
+                "parents": [parent_sha],
+            },
+        )
+        new_commit_sha = new_commit_response.json()["sha"]
+
+        _request(
+            session,
+            "PATCH",
+            f"{API_BASE}/git/refs/heads/{SOURCE_BRANCH}",
+            json={"sha": new_commit_sha, "force": False},
         )
 
-    paths_to_remove = []
-    for name, expected_sha in expected_files:
-        relative_path = f"{OUTPUT_DIRECTORY}/{name}"
-        actual_sha = _run_git(repository, "rev-parse", f"HEAD:{relative_path}")
-        if actual_sha != expected_sha:
-            raise CommentBuilderCleanupError(
-                f"SHA файла {relative_path} не совпадает с полученным парсером. "
-                "Возможно, комплект в исходном репозитории уже изменился; "
-                "очистка отменена."
-            )
-        paths_to_remove.append(relative_path)
-
-    _run_git(repository, "rm", "-f", "--", *paths_to_remove)
-
-    keep_path = output_dir / KEEP_FILE
-    if not keep_path.exists():
-        keep_path.write_text("\n", encoding="utf-8")
-        _run_git(repository, "add", "--", f"{OUTPUT_DIRECTORY}/{KEEP_FILE}")
-
-    _run_git(repository, "config", "user.name", "TechLab Comment Bot")
-    _run_git(repository, "config", "user.email", "comment-bot@techlab.local")
-    _run_git(
-        repository,
-        "commit",
-        "-m",
-        "очистка опубликованного комплекта из _output",
-    )
-    commit_sha = _run_git(repository, "rev-parse", "HEAD")
-    _run_git(repository, "push", "origin", "HEAD:main")
-
     logger.info(
-        "Комплект очищен из _output: файлов — %d; commit — %s. .gitkeep сохранён.",
-        len(paths_to_remove),
-        commit_sha,
+        "Комплект удалён из %s: файлов — %d; commit — %s. Остальные файлы сохранены.",
+        OUTPUT_DIRECTORY,
+        len(expected_files),
+        new_commit_sha,
     )
     return {
         "success": True,
-        "deleted_files": len(paths_to_remove),
-        "commit": commit_sha,
+        "deleted_files": len(expected_files),
+        "commit": new_commit_sha,
     }
+
+
+def cleanup_work_dir(work_dir):
+    """Безопасно удаляет только временную директорию, созданную парсером."""
+    if not work_dir:
+        return {"success": True, "deleted": False}
+
+    safe_root = os.path.realpath(tempfile.gettempdir())
+    candidate = os.path.realpath(work_dir)
+
+    try:
+        is_temp_child = (
+            os.path.commonpath([safe_root, candidate]) == safe_root
+            and candidate != safe_root
+        )
+    except ValueError:
+        is_temp_child = False
+
+    has_expected_prefix = os.path.basename(candidate).startswith(
+        "techlab-comment-builder-"
+    )
+    is_real_directory = os.path.isdir(candidate) and not os.path.islink(work_dir)
+
+    if not (is_temp_child and has_expected_prefix and is_real_directory):
+        raise CommentBuilderCleanupError(
+            f"Временная директория не прошла проверку безопасности: {work_dir}"
+        )
+
+    try:
+        shutil.rmtree(candidate)
+    except OSError as error:
+        raise CommentBuilderCleanupError(
+            f"Не удалось удалить временную директорию {candidate}: {error}"
+        ) from error
+
+    logger.info("Временная директория удалена: %s", candidate)
+    return {"success": True, "deleted": True}

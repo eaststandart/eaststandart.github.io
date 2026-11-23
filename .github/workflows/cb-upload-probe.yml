@@ -1,0 +1,82 @@
+name: Temporary GitHub attachment upload probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/cb-upload-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  upload-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test media
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://raw.githubusercontent.com/eaststandart/techlab-comment-builder/main/_published/test_photo_03.webp" -o /tmp/test_photo_03.webp
+          curl -fsSL "https://raw.githubusercontent.com/eaststandart/techlab-comment-builder/main/_published/test_video_03.webm" -o /tmp/test_video_03.webm
+          ls -lh /tmp/test_photo_03.webp /tmp/test_video_03.webm
+
+      - name: Upload media to GitHub user attachments
+        id: upload
+        env:
+          GH_UPLOAD_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo_id="1218168867"
+
+          photo_url="$(curl -fsS -X POST \
+            "https://uploads.github.com/user-attachments/assets?name=test_photo_03.webp&content_type=image%2Fwebp&repository_id=${repo_id}" \
+            -H "Authorization: Bearer ${GH_UPLOAD_TOKEN}" \
+            -H "Accept: application/json" \
+            -H "Content-Type: image/webp" \
+            --data-binary "@/tmp/test_photo_03.webp" | jq -er '.url')"
+
+          video_url="$(curl -fsS -X POST \
+            "https://uploads.github.com/user-attachments/assets?name=test_video_03.webm&content_type=video%2Fwebm&repository_id=${repo_id}" \
+            -H "Authorization: Bearer ${GH_UPLOAD_TOKEN}" \
+            -H "Accept: application/json" \
+            -H "Content-Type: video/webm" \
+            --data-binary "@/tmp/test_video_03.webm" | jq -er '.url')"
+
+          echo "photo_url=${photo_url}" >> "$GITHUB_OUTPUT"
+          echo "video_url=${video_url}" >> "$GITHUB_OUTPUT"
+          echo "Photo upload succeeded."
+          echo "Video upload succeeded."
+
+      - name: Publish attachment rendering test in Discussion 83
+        env:
+          GH_UPLOAD_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          PHOTO_URL: ${{ steps.upload.outputs.photo_url }}
+          VIDEO_URL: ${{ steps.upload.outputs.video_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          body="$(printf 'Проверка нативной загрузки вложений GitHub.\n\n![Тестовое изображение WebP](%s)\n\n![](%s)' "$PHOTO_URL" "$VIDEO_URL")"
+          payload="$(jq -n --arg body "$body" '{query: "mutation($id: ID!, $body: String!) { addDiscussionComment(input: {discussionId: $id, body: $body}) { comment { id url body } } }", variables: {id: "D_kwDOExample", body: $body}}')"
+
+          discussion_id="$(curl -fsS https://api.github.com/graphql \
+            -H "Authorization: Bearer ${GH_UPLOAD_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"query { repository(owner: \"eaststandart\", name: \"eaststandart.github.io\") { discussion(number: 83) { id } } }"}' | jq -er '.data.repository.discussion.id')"
+
+          payload="$(jq -n --arg id "$discussion_id" --arg body "$body" '{query: "mutation($id: ID!, $body: String!) { addDiscussionComment(input: {discussionId: $id, body: $body}) { comment { id url body } } }", variables: {id: $id, body: $body}}')"
+
+          response="$(curl -fsS https://api.github.com/graphql \
+            -H "Authorization: Bearer ${GH_UPLOAD_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            -d "$payload")"
+
+          echo "$response" | jq -e '.data.addDiscussionComment.comment.url'
+          if [ "$(echo "$response" | jq -r '.errors // empty')" != "" ]; then
+            echo "$response" | jq '.errors'
+            exit 1
+          fi

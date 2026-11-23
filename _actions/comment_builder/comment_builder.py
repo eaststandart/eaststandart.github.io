@@ -17,6 +17,7 @@ import tempfile
 
 import cb_data_parser
 import cb_comment_builder
+import cb_gate_closer
 
 
 LOGGER_NAME = "comment_builder"
@@ -81,6 +82,19 @@ def main(argv=None):
 
         if not result.get("success"):
             raise RuntimeError("Модуль публикации не подтвердил успешный результат.")
+
+        if args.publish:
+            source_repository = os.environ.get(
+                "CB_SOURCE_REPOSITORY_PATH",
+                "_comment_builder_source",
+            )
+            logger.info("Этап 3/3: очистка исходного комплекта после публикации.")
+            cleanup_result = cb_gate_closer.clean_source_output(
+                source_repository,
+                publication_confirmed=True,
+            )
+            if not cleanup_result.get("success"):
+                raise RuntimeError("Модуль очистки не подтвердил завершение.")
 
         if result.get("dry_run"):
             logger.info(

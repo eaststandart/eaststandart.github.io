@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_comment_builder.py
-@about   Создание комментариев в GitHub Discussions.
-@purpose Проверяет целевое обсуждение и недавние дубликаты, затем публикует подготовленный Markdown через GraphQL API.
+@about   Модуль публикации комментариев в GitHub Discussions.
+@purpose Проверяет целевое обсуждение и последние комментарии на точное совпадение текста, затем публикует подготовленный Markdown-комментарий через GraphQL API в GitHub Discussions репозитория eaststandart/eaststandart.github.io.
 @author  TechLab
-@version 1.2.0
+@version 1.0.0
 """
 
 import logging

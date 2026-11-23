@@ -3,15 +3,13 @@
 """
 @module  cb_gate_closer.py
 @about   Завершение обработки комплекта Конструктора комментариев.
-@purpose Удаляет обработанный комплект из _output через GitHub REST API и очищает временные файлы.
+@purpose Удаляет обработанный комплект из _output через GitHub REST API.
 @author  TechLab
-@version 1.2.0
+@version 1.3.0
 """
 
 import logging
 import os
-import shutil
-import tempfile
 from urllib.parse import quote
 
 import requests
@@ -216,39 +214,3 @@ def clean_source_output(package, processing_confirmed=False):
         "commit": new_commit_sha,
     }
 
-
-def cleanup_work_dir(work_dir):
-    """Безопасно удаляет только временную директорию, созданную парсером."""
-    if not work_dir:
-        return {"success": True, "deleted": False}
-
-    safe_root = os.path.realpath(tempfile.gettempdir())
-    candidate = os.path.realpath(work_dir)
-
-    try:
-        is_temp_child = (
-            os.path.commonpath([safe_root, candidate]) == safe_root
-            and candidate != safe_root
-        )
-    except ValueError:
-        is_temp_child = False
-
-    has_expected_prefix = os.path.basename(candidate).startswith(
-        "techlab-comment-builder-"
-    )
-    is_real_directory = os.path.isdir(candidate) and not os.path.islink(work_dir)
-
-    if not (is_temp_child and has_expected_prefix and is_real_directory):
-        raise CommentBuilderCleanupError(
-            f"Временная директория не прошла проверку безопасности: {work_dir}"
-        )
-
-    try:
-        shutil.rmtree(candidate)
-    except OSError as error:
-        raise CommentBuilderCleanupError(
-            f"Не удалось удалить временную директорию {candidate}: {error}"
-        ) from error
-
-    logger.info("Временная директория удалена: %s", candidate)
-    return {"success": True, "deleted": True}

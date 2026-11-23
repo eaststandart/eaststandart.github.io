@@ -5,7 +5,7 @@
 @about   Диспетчер конвейера Конструктора комментариев.
 @purpose Координирует получение комплекта, публикацию или имитацию публикации и очистку.
 @author  TechLab
-@version 1.1.0
+@version 1.2.0
 """
 
 import argparse
@@ -110,13 +110,6 @@ def main(argv=None):
         logger.exception("Конвейер завершился с ошибкой.")
 
     finally:
-        if isinstance(package, dict):
-            try:
-                cb_gate_closer.cleanup_work_dir(package.get("work_dir"))
-            except Exception:
-                logger.exception("Не удалось очистить временную директорию.")
-                exit_code = 1
-
         logger.info("Завершение конвейера. Код результата: %s.", exit_code)
 
     return exit_code

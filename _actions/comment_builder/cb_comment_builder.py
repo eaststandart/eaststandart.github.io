@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_comment_builder.py
-@about   Публикация комментариев в GitHub Discussions.
-@purpose Публикует тело Markdown из пакета парсера как новый комментарий.
+@about   Создание комментариев в GitHub Discussions.
+@purpose Проверяет целевое обсуждение и недавние дубликаты, затем публикует подготовленный Markdown через GraphQL API.
 @author  TechLab
-@version 1.0.0
+@version 1.1.0
 """
 
 import logging
@@ -40,6 +40,7 @@ def _graphql_request(token, query, variables):
         "User-Agent": "TechLab-Comment-Builder",
     }
 
+    logger.info("GraphQL: отправка запроса к GitHub API.")
     try:
         response = requests.post(
             GRAPHQL_URL,
@@ -82,6 +83,7 @@ def _graphql_request(token, query, variables):
             f"GraphQL сообщил об ошибке: {details}"
         )
 
+    logger.info("GraphQL: запрос выполнен успешно.")
     return payload.get("data")
 
 
@@ -176,9 +178,10 @@ def publish_comment(package, dry_run=True):
         )
 
     logger.info(
-        "Обсуждение #%s найдено. Создаю новый комментарий.",
-        discussion_number,
+        "Целевое обсуждение подтверждено: %s/%s, Discussion #%s (ID %s).",
+        DISCUSSION_OWNER, DISCUSSION_REPOSITORY, discussion_number, discussion["id"],
     )
+    logger.info("Проверяю последние 100 комментариев на точное совпадение текста.")
 
     # Защита от повторной публикации после неоднозначного результата предыдущего POST.
     # Сравниваем точное тело среди последних 100 комментариев Discussion.
@@ -219,6 +222,7 @@ def publish_comment(package, dry_run=True):
         existing_connection.get("nodes", [])
         if isinstance(existing_connection, dict) else []
     )
+    logger.info("Получено комментариев для проверки дубликатов: %d.", len(existing_nodes))
     for existing in existing_nodes:
         if isinstance(existing, dict) and existing.get("body") == markdown_body:
             comment_id = existing.get("databaseId")
@@ -238,6 +242,7 @@ def publish_comment(package, dry_run=True):
                     "manifest_name": manifest_name,
                 }
 
+    logger.info("Совпадающий комментарий не найден. Отправляю текст длиной %d символов.", len(markdown_body))
     mutation = """
     mutation($discussionId: ID!, $body: String!) {
       addDiscussionComment(input: {

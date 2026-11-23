@@ -83,12 +83,6 @@ def clean_source_output(repository_path, publication_confirmed=False):
         keep_path.write_text("\n", encoding="utf-8")
         _run_git(repository, "add", "--", f"{OUTPUT_DIRECTORY}/{KEEP_FILE}")
 
-    staged = _run_git(repository, "diff", "--cached", "--quiet")
-    if staged == "":
-        # git diff --quiet обычно возвращает код 1 при staged changes;
-        # _run_git трактует код 1 как ошибку, поэтому этот путь без изменений.
-        pass
-
     changes = subprocess.run(
         ["git", "-C", str(repository), "diff", "--cached", "--quiet"],
         check=False,

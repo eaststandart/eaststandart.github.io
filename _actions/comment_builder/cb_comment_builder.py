@@ -85,7 +85,7 @@ def _graphql_request(token, query, variables):
     return payload.get("data")
 
 
-def publish_comment(package):
+def publish_comment(package, dry_run=True):
     """
     Публикует тело Markdown из пакета парсера в указанном Discussion.
 
@@ -115,15 +115,34 @@ def publish_comment(package):
             "В пакете отсутствует непустое тело Markdown."
         )
 
+    manifest_name = package.get("manifest_name", "неизвестный манифест")
+    logger.info(
+        "Манифест %s: Discussion #%s, тело Markdown — %d символов.",
+        manifest_name,
+        discussion_number,
+        len(markdown_body),
+    )
+
+    if dry_run:
+        logger.info("Пробный режим: публикация отключена. GraphQL-запросы не выполнялись.")
+        return {
+            "success": True,
+            "dry_run": True,
+            "discussion_number": discussion_number,
+            "body_length": len(markdown_body),
+            "comment_id": None,
+            "url": None,
+            "manifest_name": manifest_name,
+        }
+
     token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token:
         raise CommentBuilderPublishError(
-            "Не найден токен MY_ADMIN_TOKEN или GITHUB_TOKEN."
+            "Для публикации не найден токен MY_ADMIN_TOKEN или GITHUB_TOKEN."
         )
 
-    manifest_name = package.get("manifest_name", "неизвестный манифест")
     logger.info(
-        "Подготовлена публикация манифеста %s в Discussion #%s.",
+        "Начинаю реальную публикацию манифеста %s в Discussion #%s.",
         manifest_name,
         discussion_number,
     )

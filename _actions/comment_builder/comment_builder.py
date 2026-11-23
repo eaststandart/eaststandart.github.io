@@ -3,17 +3,14 @@
 """
 @module  comment_builder.py
 @about   Диспетчер конвейера Конструктора комментариев.
-@purpose Координирует получение комплекта, публикацию комментария и очистку временных файлов.
+@purpose Координирует получение комплекта, публикацию или имитацию публикации и очистку.
 @author  TechLab
-@version 1.0.0
+@version 1.1.0
 """
 
 import argparse
 import logging
-import os
-import shutil
 import sys
-import tempfile
 
 import cb_data_parser
 import cb_comment_builder
@@ -57,7 +54,7 @@ def main(argv=None):
     logger.info("Запуск конвейера публикации комментария.")
 
     try:
-        logger.info("Этап 1/2: получение и проверка комплекта Конструктора.")
+        logger.info("Этап 1/3: получение и проверка комплекта Конструктора.")
         package = cb_data_parser.collect_and_parse_raw_data()
 
         if not isinstance(package, dict):
@@ -71,36 +68,34 @@ def main(argv=None):
         )
 
         logger.info(
-            "Этап 2/2: %s.",
+            "Этап 2/3: %s.",
             "реальная публикация нового комментария"
-            if args.publish else "проверка в пробном режиме",
+            if args.publish else "имитация публикации в пробном режиме",
         )
         result = cb_comment_builder.publish_comment(
             package,
             dry_run=not args.publish,
         )
 
-        if not result.get("success"):
+        if not isinstance(result, dict) or not result.get("success"):
             raise RuntimeError("Модуль публикации не подтвердил успешный результат.")
 
-        if args.publish:
-            source_repository = os.environ.get(
-                "CB_SOURCE_REPOSITORY_PATH",
-                "_comment_builder_source",
-            )
-            logger.info("Этап 3/3: очистка исходного комплекта после публикации.")
-            cleanup_result = cb_gate_closer.clean_source_output(
-                source_repository,
-                package=package,
-                publication_confirmed=True,
-            )
-            if not cleanup_result.get("success"):
-                raise RuntimeError("Модуль очистки не подтвердил завершение.")
+        logger.info(
+            "Этап 3/3: очистка обработанного комплекта%s.",
+            " после реальной публикации" if args.publish
+            else " после успешной имитации публикации",
+        )
+        cleanup_result = cb_gate_closer.clean_source_output(
+            package,
+            processing_confirmed=True,
+        )
+        if not cleanup_result.get("success"):
+            raise RuntimeError("Модуль очистки не подтвердил завершение.")
 
         if result.get("dry_run"):
             logger.info(
-                "Пробная проверка завершена. Discussion #%s, тело: %d символов. "
-                "Комментарий не публиковался.",
+                "Пробный цикл завершён успешно. Discussion #%s, тело: %d символов. "
+                "Комментарий не публиковался; комплект удалён из _output.",
                 result["discussion_number"],
                 result["body_length"],
             )
@@ -116,33 +111,11 @@ def main(argv=None):
 
     finally:
         if isinstance(package, dict):
-            work_dir = package.get("work_dir")
-            if work_dir:
-                safe_root = os.path.realpath(tempfile.gettempdir())
-                candidate = os.path.realpath(work_dir)
-                is_temp_child = (
-                    os.path.commonpath([safe_root, candidate]) == safe_root
-                    and candidate != safe_root
-                )
-                has_expected_prefix = os.path.basename(candidate).startswith(
-                    "techlab-comment-builder-"
-                )
-                if not (is_temp_child and has_expected_prefix and os.path.isdir(candidate)):
-                    logger.error(
-                        "Временная директория не удалена: путь не прошёл проверку безопасности: %s",
-                        work_dir,
-                    )
-                    exit_code = 1
-                else:
-                    try:
-                        shutil.rmtree(candidate)
-                        logger.info("Временная директория удалена: %s", candidate)
-                    except OSError:
-                        logger.exception(
-                            "Не удалось удалить временную директорию: %s",
-                            candidate,
-                        )
-                        exit_code = 1
+            try:
+                cb_gate_closer.cleanup_work_dir(package.get("work_dir"))
+            except Exception:
+                logger.exception("Не удалось очистить временную директорию.")
+                exit_code = 1
 
         logger.info("Завершение конвейера. Код результата: %s.", exit_code)
 

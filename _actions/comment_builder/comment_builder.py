@@ -91,6 +91,7 @@ def main(argv=None):
             logger.info("Этап 3/3: очистка исходного комплекта после публикации.")
             cleanup_result = cb_gate_closer.clean_source_output(
                 source_repository,
+                package=package,
                 publication_confirmed=True,
             )
             if not cleanup_result.get("success"):

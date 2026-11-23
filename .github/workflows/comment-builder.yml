@@ -86,6 +86,9 @@ jobs:
           git -C _comment_builder_source config user.name "TechLab Comment Bot"
           git -C _comment_builder_source config user.email "comment-bot@techlab.local"
           git -C _comment_builder_source rm -f _output/*
+          mkdir -p _comment_builder_source/_output
+          printf '\n' > _comment_builder_source/_output/.gitkeep
+          git -C _comment_builder_source add _output/.gitkeep
           if git -C _comment_builder_source diff --cached --quiet; then
             echo "[CB-ОЧИСТКА] В _output нет файлов для удаления."
           else

@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_gate_closer.py
-@about   Завершение обработки комплекта Конструктора комментариев.
-@purpose Удаляет обработанный комплект из _output через GitHub REST API.
+@about   Очистка обработанного комплекта в буферном шлюзе Конструктора.
+@purpose После подтверждённой обработки удаляет только манифест и связанные медиафайлы из _output через GitHub REST API с проверкой SHA.
 @author  TechLab
-@version 1.3.0
+@version 1.4.0
 """
 
 import logging
@@ -125,6 +125,8 @@ def clean_source_output(package, processing_confirmed=False):
             "В пакете обнаружены повторяющиеся имена файлов."
         )
 
+    logger.info("Подготовка очистки _output: манифест=%s; медиафайлов=%d.", manifest_name, len(media))
+    logger.info("Файлы для удаления: %s", ", ".join(names))
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
@@ -141,6 +143,7 @@ def clean_source_output(package, processing_confirmed=False):
             f"{API_BASE}/git/ref/heads/{SOURCE_BRANCH}",
         )
         parent_sha = ref_response.json()["object"]["sha"]
+        logger.info("Текущий commit ветки %s: %s.", SOURCE_BRANCH, parent_sha)
 
         commit_response = _request(
             session,
@@ -165,6 +168,7 @@ def clean_source_output(package, processing_confirmed=False):
                     "Очистка отменена."
                 )
 
+            logger.info("SHA подтверждён: %s.", relative_path)
             tree_entries.append({
                 "path": relative_path,
                 "mode": "100644",
@@ -182,6 +186,7 @@ def clean_source_output(package, processing_confirmed=False):
             },
         )
         new_tree_sha = tree_response.json()["sha"]
+        logger.info("Дерево очистки сформировано: %s.", new_tree_sha)
 
         new_commit_response = _request(
             session,
@@ -194,6 +199,7 @@ def clean_source_output(package, processing_confirmed=False):
             },
         )
         new_commit_sha = new_commit_response.json()["sha"]
+        logger.info("Создан commit очистки: %s.", new_commit_sha)
 
         _request(
             session,

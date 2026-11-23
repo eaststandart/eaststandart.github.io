@@ -3,15 +3,14 @@
 """
 @module  cb_media_uploader.py
 @about   Загрузка медиафайлов в хранилище GitHub Attachments.
-@purpose Загружает подготовленные файлы и преобразует локальные Markdown/Wiki-ссылки в URL вложений.
+@purpose Загружает подготовленные файлы и заменяет локальные ссылки на URL вложений.
 @author  TechLab
-@version 1.0.0
+@version 1.1.0
 """
 
 import logging
-import mimetypes
-import re
 import os
+import re
 import time
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -22,8 +21,13 @@ import requests
 UPLOAD_URL = "https://uploads.github.com/user-attachments/assets"
 TARGET_REPOSITORY_ID = 1218168867
 REQUEST_TIMEOUT = 120
-MAX_ATTEMPTS = 4
+MAX_429_ATTEMPTS = 4
 RETRY_DELAYS = (5, 15, 30)
+MEDIA_EXTENSIONS = {".webp", ".webm"}
+MEDIA_LINK_PATTERN = re.compile(
+    r"(?P<wiki_marker>!?)\[\[(?P<wiki_target>[^\]]+)\]\]"
+    r"|(?P<md_marker>!?)\[(?P<md_alt>[^\]]*)\]\((?P<md_target>[^)]+)\)"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -32,23 +36,87 @@ class CommentBuilderMediaUploadError(Exception):
     """Ошибка загрузки вложения или преобразования ссылок."""
 
 
-def _upload_one(session, token, item):
-    """Загружает один файл и возвращает постоянный URL GitHub Attachment."""
-    name = item.get("name")
-    local_path = item.get("local_path")
-    if not isinstance(name, str) or not name:
-        raise CommentBuilderMediaUploadError("У медиафайла отсутствует имя.")
-    if not isinstance(local_path, str) or not os.path.isfile(local_path):
+def _local_media_reference(target):
+    """Возвращает имя локального медиафайла; внешние URL и другие файлы игнорирует."""
+    target = target.strip()
+    if target.startswith("<") and target.endswith(">"):
+        target = target[1:-1].strip()
+    parsed = urlparse(target)
+    if parsed.scheme or target.startswith("//"):
+        return None
+    clean_target = target.split("#", 1)[0].split("?", 1)[0]
+    name = unquote(Path(clean_target.replace("\\", "/")).name)
+    if Path(name).suffix.lower() not in MEDIA_EXTENSIONS:
+        return None
+    return name
+
+
+def _preflight(body, media):
+    """Проверяет соответствие всех локальных медиа-ссылок и файлов до первого POST."""
+    if not isinstance(media, list):
+        raise CommentBuilderMediaUploadError("Список медиафайлов некорректен.")
+
+    by_name = {}
+    for item in media:
+        if not isinstance(item, dict):
+            raise CommentBuilderMediaUploadError(
+                "В списке медиафайлов обнаружена некорректная запись."
+            )
+        name = item.get("name")
+        local_path = item.get("local_path")
+        if not isinstance(name, str) or not name:
+            raise CommentBuilderMediaUploadError("У медиафайла отсутствует имя.")
+        if name in by_name:
+            raise CommentBuilderMediaUploadError(
+                f"Повторяющаяся запись медиафайла: {name}."
+            )
+        if Path(name).suffix.lower() not in MEDIA_EXTENSIONS:
+            raise CommentBuilderMediaUploadError(
+                f"Неподдерживаемый формат вложения: {name}."
+            )
+        if not isinstance(local_path, str) or not os.path.isfile(local_path):
+            raise CommentBuilderMediaUploadError(
+                f"Локальный файл вложения не найден: {name}."
+            )
+        if os.path.getsize(local_path) <= 0:
+            raise CommentBuilderMediaUploadError(f"Файл вложения {name} пуст.")
+        by_name[name] = item
+
+    references = []
+    for match in MEDIA_LINK_PATTERN.finditer(body):
+        target = (
+            match.group("wiki_target")
+            if match.group("wiki_target") is not None
+            else match.group("md_target")
+        )
+        name = _local_media_reference(target)
+        if name:
+            references.append(name)
+
+    missing = sorted(set(references) - set(by_name))
+    unreferenced = sorted(set(by_name) - set(references))
+    if missing:
         raise CommentBuilderMediaUploadError(
-            f"Локальный файл вложения не найден: {name}."
+            "В Markdown есть ссылки на отсутствующие в пакете медиафайлы: "
+            + ", ".join(missing)
+        )
+    if unreferenced:
+        raise CommentBuilderMediaUploadError(
+            "В пакет включены медиафайлы без ссылок в Markdown: "
+            + ", ".join(unreferenced)
         )
 
-    allowed_types = {".webp": "image/webp", ".webm": "video/webm"}
-    mime_type = allowed_types.get(Path(name).suffix.lower())
-    if not mime_type:
-        raise CommentBuilderMediaUploadError(
-            f"Неподдерживаемый формат вложения: {name}."
-        )
+    return by_name
+
+
+def _upload_one(session, token, item):
+    """Загружает один файл; неоднозначный результат POST автоматически не повторяет."""
+    name = item["name"]
+    local_path = item["local_path"]
+    mime_type = {
+        ".webp": "image/webp",
+        ".webm": "video/webm",
+    }[Path(name).suffix.lower()]
 
     params = {
         "name": name,
@@ -61,19 +129,13 @@ def _upload_one(session, token, item):
         "Content-Type": mime_type,
         "User-Agent": "TechLab-Comment-Builder",
     }
-
     file_size = os.path.getsize(local_path)
-    if file_size <= 0:
-        raise CommentBuilderMediaUploadError(
-            f"Файл вложения {name} пуст."
-        )
-
     logger.info(
         "Загрузка вложения: %s (%d байт, %s).",
         name, file_size, mime_type,
     )
 
-    for attempt in range(MAX_ATTEMPTS):
+    for attempt in range(MAX_429_ATTEMPTS):
         try:
             with open(local_path, "rb") as source:
                 response = session.post(
@@ -83,46 +145,44 @@ def _upload_one(session, token, item):
                     data=source,
                     timeout=REQUEST_TIMEOUT,
                 )
-        except (requests.Timeout, requests.ConnectionError) as error:
-            if attempt == MAX_ATTEMPTS - 1:
-                raise CommentBuilderMediaUploadError(
-                    f"Сетевая ошибка при загрузке {name} после "
-                    f"{MAX_ATTEMPTS} попыток: {error}"
-                ) from error
-            delay = RETRY_DELAYS[attempt]
-            logger.warning(
-                "Временная сетевая ошибка загрузки %s. Повтор %d/%d через %d сек.",
-                name, attempt + 2, MAX_ATTEMPTS, delay,
-            )
-            time.sleep(delay)
-            continue
+        except requests.RequestException as error:
+            raise CommentBuilderMediaUploadError(
+                f"Неоднозначный сетевой результат загрузки {name}; "
+                "автоматический повтор POST остановлен во избежание дубликата. "
+                f"Проверьте вложения перед повторным запуском. Причина: {error}"
+            ) from error
 
-        if response.status_code == 429 or 500 <= response.status_code <= 599:
-            if attempt == MAX_ATTEMPTS - 1:
+        if response.status_code == 429:
+            if attempt == MAX_429_ATTEMPTS - 1:
                 raise CommentBuilderMediaUploadError(
-                    f"GitHub Attachments вернул HTTP {response.status_code} "
-                    f"для {name}: {response.text[:1000]}"
+                    f"GitHub Attachments вернул HTTP 429 для {name} "
+                    f"после {MAX_429_ATTEMPTS} попыток: {response.text[:1000]}"
                 )
             delay = RETRY_DELAYS[attempt]
             logger.warning(
-                "Временная ошибка HTTP %s для %s. Повтор %d/%d через %d сек.",
-                response.status_code, name, attempt + 2, MAX_ATTEMPTS, delay,
+                "GitHub Attachments вернул HTTP 429 для %s. "
+                "Повтор %d/%d через %d сек.",
+                name, attempt + 2, MAX_429_ATTEMPTS, delay,
             )
+            response.close()
             time.sleep(delay)
             continue
 
         if response.status_code < 200 or response.status_code >= 300:
             raise CommentBuilderMediaUploadError(
-                f"GitHub Attachments отклонил {name}: HTTP "
-                f"{response.status_code}: {response.text[:1500]}"
+                f"GitHub Attachments вернул HTTP {response.status_code} "
+                f"для {name}. Повтор POST не выполняется: {response.text[:1500]}"
             )
 
         try:
             payload = response.json()
         except ValueError as error:
             raise CommentBuilderMediaUploadError(
-                f"GitHub Attachments вернул некорректный JSON для {name}."
+                f"GitHub Attachments вернул некорректный JSON для {name}; "
+                "повтор POST не выполняется."
             ) from error
+        finally:
+            response.close()
 
         attachment_url = payload.get("url") or payload.get("href")
         if not isinstance(attachment_url, str):
@@ -143,9 +203,54 @@ def _upload_one(session, token, item):
         logger.info("Вложение загружено: %s -> %s", name, attachment_url)
         return attachment_url
 
-    raise CommentBuilderMediaUploadError(
-        f"Не удалось загрузить вложение {name}."
-    )
+    raise CommentBuilderMediaUploadError(f"Не удалось загрузить вложение {name}.")
+
+
+def _replace_media_links(body, urls, media_by_name):
+    """Преобразует ссылки в формат GitHub Discussions по типу файла."""
+
+    def replace(match):
+        is_wiki = match.group("wiki_target") is not None
+        if is_wiki:
+            raw = match.group("wiki_target").strip()
+            target, separator, alias = raw.partition("|")
+            name = _local_media_reference(target)
+            if not name or name not in urls:
+                return match.group(0)
+            alt = alias.strip() if separator and alias.strip() else name
+        else:
+            target = match.group("md_target").strip()
+            name = _local_media_reference(target)
+            if not name or name not in urls:
+                return match.group(0)
+            alt = match.group("md_alt").strip() or name
+
+        media_type = media_by_name[name].get("type")
+        if media_type not in ("photo", "video"):
+            media_type = "photo" if Path(name).suffix.lower() == ".webp" else "video"
+
+        if media_type == "video":
+            return f"[{alt}]({urls[name]})"
+        return f"![{alt}]({urls[name]})"
+
+    updated = MEDIA_LINK_PATTERN.sub(replace, body)
+
+    unresolved = []
+    for match in MEDIA_LINK_PATTERN.finditer(updated):
+        target = (
+            match.group("wiki_target")
+            if match.group("wiki_target") is not None
+            else match.group("md_target")
+        )
+        name = _local_media_reference(target)
+        if name:
+            unresolved.append(name)
+    if unresolved:
+        raise CommentBuilderMediaUploadError(
+            "После замены остались локальные ссылки на медиафайлы: "
+            + ", ".join(sorted(set(unresolved)))
+        )
+    return updated
 
 
 def upload_media(package):
@@ -156,15 +261,13 @@ def upload_media(package):
     if not isinstance(package, dict):
         raise CommentBuilderMediaUploadError("Передан некорректный пакет.")
 
-    media = package.get("media", [])
-    if not isinstance(media, list):
-        raise CommentBuilderMediaUploadError("Список медиафайлов некорректен.")
-
     body = package.get("body")
     if not isinstance(body, str):
         raise CommentBuilderMediaUploadError("В пакете отсутствует Markdown-тело.")
 
-    if not media:
+    media = package.get("media", [])
+    media_by_name = _preflight(body, media)
+    if not media_by_name:
         logger.info("Медиафайлы отсутствуют. Загрузка не требуется.")
         return dict(package)
 
@@ -176,60 +279,12 @@ def upload_media(package):
 
     urls = {}
     with requests.Session() as session:
-        for item in media:
-            if not isinstance(item, dict):
-                raise CommentBuilderMediaUploadError(
-                    "В списке медиафайлов обнаружена некорректная запись."
-                )
-            name = item.get("name")
-            if name in urls:
-                continue
+        for name, item in media_by_name.items():
             urls[name] = _upload_one(session, token, item)
 
-    def wiki_replace(match):
-        raw = match.group(1).strip()
-        target, separator, alias = raw.partition("|")
-        target = target.strip()
-        filename = unquote(Path(target.split("#", 1)[0]).name)
-        url = urls.get(filename)
-        if not url:
-            return match.group(0)
-        alt = alias.strip() if separator and alias.strip() else filename
-        return f"![{alt}]({url})"
-
-    body = re.sub(r"!\[\[([^\]]+)\]\]", wiki_replace, body)
-
-    def markdown_replace(match):
-        marker, alt, target = match.groups()
-        target = target.strip()
-        if target.startswith("<") and target.endswith(">"):
-            target = target[1:-1].strip()
-        parsed = urlparse(target)
-        if parsed.scheme or target.startswith("//"):
-            return match.group(0)
-        filename = unquote(Path(target.split("#", 1)[0].split("?", 1)[0]).name)
-        url = urls.get(filename)
-        if not url:
-            return match.group(0)
-        return f"{marker}[{alt}]({url})"
-
-    body = re.sub(
-        r"(!?)\[([^\]]*)\]\(([^)]+)\)",
-        markdown_replace,
-        body,
-    )
-
-    unresolved = [
-        item.get("name") for item in media
-        if item.get("name") and item["name"] not in urls
-    ]
-    if unresolved:
-        raise CommentBuilderMediaUploadError(
-            "Не удалось получить URL для вложений: " + ", ".join(unresolved)
-        )
-
+    updated_body = _replace_media_links(body, urls, media_by_name)
     result = dict(package)
-    result["body"] = body
+    result["body"] = updated_body
     result["media_urls"] = urls
     logger.info(
         "Загрузка завершена: файлов — %d; Markdown обновлён.",

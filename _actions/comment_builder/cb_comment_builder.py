@@ -87,7 +87,7 @@ def _graphql_request(token, query, variables):
     return payload.get("data")
 
 
-def publish_comment(package, dry_run=True):
+def publish_comment(package):
     """
     Публикует подготовленное тело Markdown в указанном Discussion.
 
@@ -124,18 +124,6 @@ def publish_comment(package, dry_run=True):
         discussion_number,
         len(markdown_body),
     )
-
-    if dry_run:
-        logger.info("Пробный режим: публикация отключена. GraphQL-запросы не выполнялись.")
-        return {
-            "success": True,
-            "dry_run": True,
-            "discussion_number": discussion_number,
-            "body_length": len(markdown_body),
-            "comment_id": None,
-            "url": None,
-            "manifest_name": manifest_name,
-        }
 
     token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token:

@@ -1,0 +1,49 @@
+# ==============================================================================
+# @module  comment-builder.yml
+# @about   Запуск конвейера Конструктора комментариев.
+# @purpose Получение комплекта, проверка парсером и пробный запуск сборщика.
+# @author  TechLab
+# @version 1.3.0
+# ==============================================================================
+
+name: TechLab Comment Builder Receiver
+
+on:
+  repository_dispatch:
+    types: [comment-notify]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: comment-builder-receiver
+  cancel-in-progress: false
+
+jobs:
+  process_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Site Repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Comment Builder Source
+        uses: actions/checkout@v4
+        with:
+          repository: eaststandart/techlab-comment-builder
+          token: ${{ secrets.MY_ADMIN_TOKEN }}
+          path: _comment_builder_source
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run Comment Builder Dispatcher (Dry Run)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          CB_SOURCE_REPOSITORY_PATH: _comment_builder_source
+        run: python _actions/comment_builder/comment_builder.py

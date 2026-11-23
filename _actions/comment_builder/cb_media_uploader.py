@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_media_uploader.py
-@about   Загрузка медиафайлов в хранилище GitHub Attachments.
-@purpose Загружает подготовленные файлы и заменяет локальные ссылки на URL вложений.
+@about   Загрузка медиафайлов комплекта в GitHub Attachments.
+@purpose Сопоставляет локальные Markdown-ссылки с файлами, загружает фотографии и видео, подставляет URL вложений в текст комментария.
 @author  TechLab
-@version 1.1.0
+@version 1.2.0
 """
 
 import logging
@@ -82,6 +82,7 @@ def _preflight(body, media):
             raise CommentBuilderMediaUploadError(f"Файл вложения {name} пуст.")
         by_name[name] = item
 
+    logger.info("Предварительная проверка: файлов в пакете=%d.", len(by_name))
     references = []
     for match in MEDIA_LINK_PATTERN.finditer(body):
         target = (
@@ -93,6 +94,8 @@ def _preflight(body, media):
         if name:
             references.append(name)
 
+    logger.info("Найдено локальных ссылок на медиафайлы: %d.", len(references))
+    logger.info("Файлы пакета: %s", ", ".join(sorted(by_name)) if by_name else "нет")
     missing = sorted(set(references) - set(by_name))
     unreferenced = sorted(set(by_name) - set(references))
     if missing:
@@ -106,6 +109,7 @@ def _preflight(body, media):
             + ", ".join(unreferenced)
         )
 
+    logger.info("Предварительная проверка пройдена: %d файлов сопоставлено со ссылками.", len(by_name))
     return by_name
 
 
@@ -277,12 +281,15 @@ def upload_media(package):
             "Для загрузки вложений не найден MY_ADMIN_TOKEN."
         )
 
+    logger.info("Начинаю загрузку медиа: файлов=%d.", len(media_by_name))
     urls = {}
     with requests.Session() as session:
         for name, item in media_by_name.items():
             urls[name] = _upload_one(session, token, item)
 
+    logger.info("Загрузка завершена: получено URL=%d. Подставляю ссылки в Markdown.", len(urls))
     updated_body = _replace_media_links(body, urls, media_by_name)
+    logger.info("Markdown обновлён: исходное тело=%d символов; итоговое=%d символов.", len(body), len(updated_body))
     result = dict(package)
     result["body"] = updated_body
     result["media_urls"] = urls

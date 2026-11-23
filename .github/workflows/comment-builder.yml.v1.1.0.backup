@@ -1,0 +1,95 @@
+# ==============================================================================
+# @module  comment-builder.yml
+# @about   Получение и проверка комплекта Конструктора комментариев.
+# @purpose Запуск cb_data_parser.py по сигналу comment-notify и очистка _output после успешной проверки.
+# @author  TechLab
+# @version 1.1.0
+# ==============================================================================
+
+name: TechLab Comment Builder Receiver
+
+on:
+  repository_dispatch:
+    types: [comment-notify]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: comment-builder-receiver
+  cancel-in-progress: false
+
+jobs:
+  parse_package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Site Repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Comment Builder Source
+        uses: actions/checkout@v4
+        with:
+          repository: eaststandart/techlab-comment-builder
+          token: ${{ secrets.MY_ADMIN_TOKEN }}
+          path: _comment_builder_source
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run Data Parser Test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import os
+          import shutil
+
+          module_path = "_actions/comment_builder/cb_data_parser.py"
+          spec = importlib.util.spec_from_file_location("cb_data_parser", module_path)
+          parser = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(parser)
+
+          package = parser.collect_and_parse_raw_data()
+          try:
+              print("[CB-ПРОВЕРКА] Метаданные:", package["metadata"])
+              print("[CB-ПРОВЕРКА] Манифест:", package["manifest_name"])
+              print("[CB-ПРОВЕРКА] Медиафайлы:")
+              for item in package["media"]:
+                  size = os.path.getsize(item["local_path"])
+                  print(f'  {item["name"]} | {item["type"]} | {size} байт')
+              if not package["manifest_text"] or not package["body"]:
+                  raise RuntimeError("Не получен исходный текст манифеста или его тело.")
+              if package["metadata"].get("published") is not True:
+                  raise RuntimeError("Проверка published завершилась ошибкой.")
+              if package["metadata"].get("discussion_number") != 83:
+                  raise RuntimeError("Получен неожиданный discussion_number.")
+              if len(package["media"]) != 6:
+                  raise RuntimeError(f'Ожидалось 6 медиафайлов, получено {len(package["media"])}.')
+              if any(not os.path.isfile(item["local_path"]) for item in package["media"]):
+                  raise RuntimeError("Не все медиафайлы скачаны.")
+              print("[CB-ПРОВЕРКА] Парсер успешно получил и проверил полный комплект.")
+          finally:
+              shutil.rmtree(package["work_dir"], ignore_errors=True)
+          PY
+
+      - name: Clean Source Output After Successful Parse
+        env:
+          SOURCE_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+        run: |
+          test -n "$SOURCE_TOKEN"
+          git -C _comment_builder_source config user.name "TechLab Comment Bot"
+          git -C _comment_builder_source config user.email "comment-bot@techlab.local"
+          git -C _comment_builder_source rm -f _output/*
+          if git -C _comment_builder_source diff --cached --quiet; then
+            echo "[CB-ОЧИСТКА] В _output нет файлов для удаления."
+          else
+            git -C _comment_builder_source commit -m "очистка _output после успешного получения комплекта"
+            git -C _comment_builder_source push origin HEAD:main
+            echo "[CB-ОЧИСТКА] Комплект удалён из _output после успешной проверки парсера."
+          fi

@@ -1,7 +1,7 @@
 # ==============================================================================
 # @module  comment-builder.yml
 # @about   Получение и проверка комплекта Конструктора комментариев.
-# @purpose Запуск cb_data_parser.py по сигналу comment-notify и очистка _output после успешной проверки.
+# @purpose Запуск cb_data_parser.py по сигналу comment-notify и очистка _output после подтверждённой публикации комментария.
 # @author  TechLab
 # @version 1.1.0
 # ==============================================================================
@@ -78,21 +78,3 @@ jobs:
               shutil.rmtree(package["work_dir"], ignore_errors=True)
           PY
 
-      - name: Clean Source Output After Successful Parse
-        env:
-          SOURCE_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
-        run: |
-          test -n "$SOURCE_TOKEN"
-          git -C _comment_builder_source config user.name "TechLab Comment Bot"
-          git -C _comment_builder_source config user.email "comment-bot@techlab.local"
-          git -C _comment_builder_source rm -f _output/*
-          mkdir -p _comment_builder_source/_output
-          printf '\n' > _comment_builder_source/_output/.gitkeep
-          git -C _comment_builder_source add _output/.gitkeep
-          if git -C _comment_builder_source diff --cached --quiet; then
-            echo "[CB-ОЧИСТКА] В _output нет файлов для удаления."
-          else
-            git -C _comment_builder_source commit -m "очистка _output после успешного получения комплекта"
-            git -C _comment_builder_source push origin HEAD:main
-            echo "[CB-ОЧИСТКА] Комплект удалён из _output после успешной проверки парсера."
-          fi

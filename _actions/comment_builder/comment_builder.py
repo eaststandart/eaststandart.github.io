@@ -14,6 +14,7 @@ import sys
 
 import cb_data_parser
 import cb_comment_builder
+import cb_media_uploader
 import cb_gate_closer
 
 
@@ -66,6 +67,12 @@ def main(argv=None):
             len(package.get("media", [])),
             (package.get("metadata") or {}).get("discussion_number", "не указан"),
         )
+
+        if args.publish:
+            logger.info("Загрузка медиафайлов в GitHub Attachments.")
+            package = cb_media_uploader.upload_media(package)
+        else:
+            logger.info("Пробный режим: загрузка вложений отключена.")
 
         logger.info(
             "Этап 2/3: %s.",

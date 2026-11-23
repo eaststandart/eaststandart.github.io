@@ -8,10 +8,12 @@
 @version 1.0.0
 """
 
+import argparse
 import logging
 import os
 import shutil
 import sys
+import tempfile
 
 import cb_data_parser
 import cb_comment_builder
@@ -35,8 +37,18 @@ def configure_logging():
     )
 
 
-def main():
-    """Запускает полный цикл получения и публикации одного комментария."""
+def main(argv=None):
+    """Запускает полный цикл; реальная публикация требует флага --publish."""
+    parser = argparse.ArgumentParser(
+        description="Получение комплекта и публикация комментария TechLab."
+    )
+    parser.add_argument(
+        "--publish",
+        action="store_true",
+        help="Разрешить реальную публикацию в GitHub Discussions.",
+    )
+    args = parser.parse_args(argv)
+
     configure_logging()
     package = None
     exit_code = 1
@@ -57,16 +69,31 @@ def main():
             (package.get("metadata") or {}).get("discussion_number", "не указан"),
         )
 
-        logger.info("Этап 2/2: публикация нового комментария.")
-        result = cb_comment_builder.publish_comment(package)
+        logger.info(
+            "Этап 2/2: %s.",
+            "реальная публикация нового комментария"
+            if args.publish else "проверка в пробном режиме",
+        )
+        result = cb_comment_builder.publish_comment(
+            package,
+            dry_run=not args.publish,
+        )
 
         if not result.get("success"):
             raise RuntimeError("Модуль публикации не подтвердил успешный результат.")
 
-        logger.info(
-            "Конвейер завершён успешно. Ссылка на комментарий: %s",
-            result["url"],
-        )
+        if result.get("dry_run"):
+            logger.info(
+                "Пробная проверка завершена. Discussion #%s, тело: %d символов. "
+                "Комментарий не публиковался.",
+                result["discussion_number"],
+                result["body_length"],
+            )
+        else:
+            logger.info(
+                "Конвейер завершён успешно. Ссылка на комментарий: %s",
+                result["url"],
+            )
         exit_code = 0
 
     except Exception:
@@ -75,16 +102,32 @@ def main():
     finally:
         if isinstance(package, dict):
             work_dir = package.get("work_dir")
-            if work_dir and os.path.isdir(work_dir):
-                try:
-                    shutil.rmtree(work_dir)
-                    logger.info("Временная директория удалена: %s", work_dir)
-                except OSError:
-                    logger.exception(
-                        "Не удалось удалить временную директорию: %s",
+            if work_dir:
+                safe_root = os.path.realpath(tempfile.gettempdir())
+                candidate = os.path.realpath(work_dir)
+                is_temp_child = (
+                    os.path.commonpath([safe_root, candidate]) == safe_root
+                    and candidate != safe_root
+                )
+                has_expected_prefix = os.path.basename(candidate).startswith(
+                    "techlab-comment-builder-"
+                )
+                if not (is_temp_child and has_expected_prefix and os.path.isdir(candidate)):
+                    logger.error(
+                        "Временная директория не удалена: путь не прошёл проверку безопасности: %s",
                         work_dir,
                     )
                     exit_code = 1
+                else:
+                    try:
+                        shutil.rmtree(candidate)
+                        logger.info("Временная директория удалена: %s", candidate)
+                    except OSError:
+                        logger.exception(
+                            "Не удалось удалить временную директорию: %s",
+                            candidate,
+                        )
+                        exit_code = 1
 
         logger.info("Завершение конвейера. Код результата: %s.", exit_code)
 

@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_gate_closer.py
-@about   Очистка обработанного комплекта в буферном шлюзе Конструктора.
-@purpose После подтверждённой обработки удаляет только манифест и связанные медиафайлы из _output через GitHub REST API с проверкой SHA.
+@about   Модуль очистки обработанного комплекта.
+@purpose После подтверждённой обработки удаляет только манифест и связанные с ним медиафайлы из _output репозитория eaststandart/techlab-comment-builder через GitHub REST API с проверкой SHA.
 @author  TechLab
-@version 1.4.0
+@version 1.0.0
 """
 
 import logging

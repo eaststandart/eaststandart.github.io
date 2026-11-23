@@ -1,9 +1,9 @@
 # ==============================================================================
 # @module  comment-builder.yml
-# @about   Получение и проверка комплекта Конструктора комментариев.
-# @purpose Запуск проверки комплекта по сигналу comment-notify без очистки исходного _output.
+# @about   Запуск конвейера Конструктора комментариев.
+# @purpose Получение комплекта, проверка парсером и пробный запуск сборщика.
 # @author  TechLab
-# @version 1.2.0
+# @version 1.3.0
 # ==============================================================================
 
 name: TechLab Comment Builder Receiver
@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  parse_package:
+  process_comment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Site Repository
@@ -41,40 +41,8 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Run Data Parser Test
+      - name: Run Comment Builder Dispatcher (Dry Run)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python - <<'PY'
-          import importlib.util
-          import os
-          import shutil
-
-          module_path = "_actions/comment_builder/cb_data_parser.py"
-          spec = importlib.util.spec_from_file_location("cb_data_parser", module_path)
-          parser = importlib.util.module_from_spec(spec)
-          spec.loader.exec_module(parser)
-
-          package = parser.collect_and_parse_raw_data()
-          try:
-              print("[CB-ПРОВЕРКА] Метаданные:", package["metadata"])
-              print("[CB-ПРОВЕРКА] Манифест:", package["manifest_name"])
-              print("[CB-ПРОВЕРКА] Медиафайлы:")
-              for item in package["media"]:
-                  size = os.path.getsize(item["local_path"])
-                  print(f'  {item["name"]} | {item["type"]} | {size} байт')
-              if not package["manifest_text"] or not package["body"]:
-                  raise RuntimeError("Не получен исходный текст манифеста или его тело.")
-              if package["metadata"].get("published") is not True:
-                  raise RuntimeError("Проверка published завершилась ошибкой.")
-              if package["metadata"].get("discussion_number") != 83:
-                  raise RuntimeError("Получен неожиданный discussion_number.")
-              if len(package["media"]) != 6:
-                  raise RuntimeError(f'Ожидалось 6 медиафайлов, получено {len(package["media"])}.')
-              if any(not os.path.isfile(item["local_path"]) for item in package["media"]):
-                  raise RuntimeError("Не все медиафайлы скачаны.")
-              print("[CB-ПРОВЕРКА] Парсер успешно получил и проверил полный комплект.")
-          finally:
-              shutil.rmtree(package["work_dir"], ignore_errors=True)
-          PY
-
+          CB_SOURCE_REPOSITORY_PATH: _comment_builder_source
+        run: python _actions/comment_builder/comment_builder.py

@@ -45,8 +45,8 @@ def clean_source_output(repository_path, publication_confirmed=False):
     Очищает _output в checkout репозитория Конструктора.
 
     Очистка разрешена только после явного подтверждения успешной публикации.
-    Файл _output/.gitkeep сохраняется. Метод не вызывается автоматически
-    диспетчером и не удаляет комплект после одной лишь проверки парсера.
+    Файл _output/.gitkeep сохраняется. Диспетчер вызывает метод только после
+    успешного возврата подтверждения от модуля публикации.
     """
     if publication_confirmed is not True:
         raise CommentBuilderCleanupError(

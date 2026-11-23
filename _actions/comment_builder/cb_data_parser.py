@@ -103,6 +103,43 @@ def _request_with_retry(session, url, headers=None, stream=False):
     raise CommentBuilderDataError("Не удалось выполнить сетевой запрос.")
 
 
+
+def _download_to_path(session, url, headers, local_path, file_name):
+    """Скачивает файл целиком; повторяет также обрыв соединения во время чтения."""
+    for attempt in range(MAX_ATTEMPTS):
+        response = None
+        try:
+            response = _request_with_retry(
+                session, url, headers=headers, stream=True
+            )
+            with open(local_path, "wb") as output_file:
+                for chunk in response.iter_content(chunk_size=1024 * 1024):
+                    if chunk:
+                        output_file.write(chunk)
+            if not os.path.isfile(local_path) or os.path.getsize(local_path) == 0:
+                raise CommentBuilderDataError(
+                    f"Вложение {file_name} скачано пустым."
+                )
+            return
+        except requests.RequestException as error:
+            if os.path.exists(local_path):
+                os.remove(local_path)
+            if attempt == MAX_ATTEMPTS - 1:
+                raise CommentBuilderDataError(
+                    f"Сетевая ошибка при скачивании {file_name} "
+                    f"после {MAX_ATTEMPTS} попыток: {error}"
+                ) from error
+            delay = RETRY_DELAYS[attempt]
+            print(
+                f"[CB-ПАРСЕР] Передача {file_name} прервана. "
+                f"Повтор {attempt + 2}/{MAX_ATTEMPTS} через {delay} сек."
+            )
+            time.sleep(delay)
+        finally:
+            if response is not None:
+                response.close()
+
+
 def _parse_scalar(value):
     """Разбирает простые скалярные значения Front Matter без внешнего YAML-пакета."""
     value = value.strip()
@@ -330,29 +367,19 @@ def collect_and_parse_raw_data():
         downloaded_media = []
 
         for item in media:
-            response = _request_with_retry(
-                session,
-                item["download_url"],
-                headers=headers,
-                stream=True
-            )
             local_path = os.path.join(work_dir, item["name"])
             try:
-                with open(local_path, "wb") as output_file:
-                    for chunk in response.iter_content(chunk_size=1024 * 1024):
-                        if chunk:
-                            output_file.write(chunk)
+                _download_to_path(
+                    session,
+                    item["download_url"],
+                    headers,
+                    local_path,
+                    item["name"]
+                )
             except OSError as error:
                 raise CommentBuilderDataError(
                     f"Не удалось сохранить вложение {item['name']}: {error}"
                 ) from error
-            finally:
-                response.close()
-
-            if not os.path.isfile(local_path) or os.path.getsize(local_path) == 0:
-                raise CommentBuilderDataError(
-                    f"Вложение {item['name']} скачано пустым или не сохранено."
-                )
 
             downloaded_media.append({
                 "name": item["name"],

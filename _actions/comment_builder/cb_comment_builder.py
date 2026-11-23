@@ -5,7 +5,7 @@
 @about   Создание комментариев в GitHub Discussions.
 @purpose Проверяет целевое обсуждение и недавние дубликаты, затем публикует подготовленный Markdown через GraphQL API.
 @author  TechLab
-@version 1.1.0
+@version 1.2.0
 """
 
 import logging
@@ -89,10 +89,10 @@ def _graphql_request(token, query, variables):
 
 def publish_comment(package, dry_run=True):
     """
-    Публикует тело Markdown из пакета парсера в указанном Discussion.
+    Публикует подготовленное тело Markdown в указанном Discussion.
 
-    Возвращает сведения о созданном комментарии. Вложенные файлы пока
-    не загружаются: ссылки в исходном Markdown остаются без изменений.
+    Локальные ссылки на медиафайлы должны быть предварительно обработаны
+    cb_media_uploader.py и заменены на URL GitHub Attachments.
     """
     if not isinstance(package, dict):
         raise CommentBuilderPublishError("Парсер передал пакет неверного типа.")

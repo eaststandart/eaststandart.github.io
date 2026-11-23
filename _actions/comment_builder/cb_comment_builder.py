@@ -180,6 +180,64 @@ def publish_comment(package, dry_run=True):
         discussion_number,
     )
 
+    # Защита от повторной публикации после неоднозначного результата предыдущего POST.
+    # Сравниваем точное тело среди последних 100 комментариев Discussion.
+    existing_query = """
+    query($owner: String!, $repo: String!, $number: Int!) {
+      repository(owner: $owner, name: $repo) {
+        discussion(number: $number) {
+          comments(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}) {
+            nodes {
+              databaseId
+              url
+              body
+            }
+          }
+        }
+      }
+    }
+    """
+    existing_data = _graphql_request(
+        token,
+        existing_query,
+        {
+            "owner": DISCUSSION_OWNER,
+            "repo": DISCUSSION_REPOSITORY,
+            "number": discussion_number,
+        },
+    )
+    existing_repository = (existing_data or {}).get("repository")
+    existing_discussion = (
+        existing_repository.get("discussion")
+        if isinstance(existing_repository, dict) else None
+    )
+    existing_connection = (
+        existing_discussion.get("comments")
+        if isinstance(existing_discussion, dict) else None
+    )
+    existing_nodes = (
+        existing_connection.get("nodes", [])
+        if isinstance(existing_connection, dict) else []
+    )
+    for existing in existing_nodes:
+        if isinstance(existing, dict) and existing.get("body") == markdown_body:
+            comment_id = existing.get("databaseId")
+            comment_url = existing.get("url")
+            if comment_id and comment_url:
+                logger.warning(
+                    "Найден комментарий с полностью совпадающим текстом "
+                    "(ID %s). Повторная публикация отменена.",
+                    comment_id,
+                )
+                return {
+                    "success": True,
+                    "duplicate": True,
+                    "discussion_number": discussion_number,
+                    "comment_id": comment_id,
+                    "url": comment_url,
+                    "manifest_name": manifest_name,
+                }
+
     mutation = """
     mutation($discussionId: ID!, $body: String!) {
       addDiscussionComment(input: {

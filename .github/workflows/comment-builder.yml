@@ -1,7 +1,7 @@
 # ==============================================================================
 # @module  comment-builder.yml
 # @about   Модуль приёма комплектов комментариев и запуска их публикации.
-# @purpose Принимает событие comment-notify от репозитория eaststandart/techlab-comment-builder, запускает обработку комплекта из _output, загрузку медиафайлов в GitHub Attachments, публикацию комментария в GitHub Discussions репозитория eaststandart/eaststandart.github.io и очистку обработанного комплекта.
+# @purpose Принимает событие comment-notify от репозитория techlab-comment-builder, запускает обработку комплекта из _output, загрузку медиафайлов в GitHub Attachments, публикацию комментария в GitHub Discussions репозитория eaststandart.github.io и очистку обработанного комплекта.
 # @author  TechLab
 # @version 1.0.0
 # ==============================================================================

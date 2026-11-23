@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  comment_builder.py
-@about   Диспетчер конвейера публикации комментариев.
-@purpose Получает комплект из _output Конструктора, загружает медиафайлы, публикует комментарий в GitHub Discussions и очищает обработанный комплект.
+@about   Модуль диспетчера конвейера публикации комментариев.
+@purpose Получает комплект из _output репозитория eaststandart/techlab-comment-builder, передаёт медиафайлы в GitHub Attachments, публикует комментарий в GitHub Discussions репозитория eaststandart/eaststandart.github.io и после подтверждённой обработки очищает исходный комплект.
 @author  TechLab
-@version 1.4.0
+@version 1.0.0
 """
 
 import argparse

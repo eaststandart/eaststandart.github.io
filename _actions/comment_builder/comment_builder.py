@@ -5,7 +5,7 @@
 @about   Диспетчер конвейера публикации комментариев.
 @purpose Получает комплект из _output Конструктора, загружает медиафайлы, публикует комментарий в GitHub Discussions и очищает обработанный комплект.
 @author  TechLab
-@version 1.3.0
+@version 1.4.0
 """
 
 import argparse
@@ -19,8 +19,7 @@ import cb_gate_closer
 
 
 LOGGER_NAME = "comment_builder"
-LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_FORMAT = "[%(name)s] %(message)s"
 
 logger = logging.getLogger(LOGGER_NAME)
 
@@ -30,7 +29,6 @@ def configure_logging():
     logging.basicConfig(
         level=logging.INFO,
         format=LOG_FORMAT,
-        datefmt=LOG_DATE_FORMAT,
         stream=sys.stdout,
         force=True,
     )

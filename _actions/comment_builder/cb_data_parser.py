@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_data_parser.py
-@about   Получение и проверка комплекта комментария из буферного шлюза Конструктора.
-@purpose Читает _output через GitHub REST API, разбирает Front Matter и Markdown, проверяет и скачивает связанные медиафайлы.
+@about   Модуль получения и проверки комплекта комментария.
+@purpose Получает комплект из _output репозитория eaststandart/techlab-comment-builder через GitHub REST API, разбирает Front Matter и Markdown, проверяет метаданные и ссылки, скачивает связанные медиафайлы для дальнейшей обработки в репозитории eaststandart/eaststandart.github.io.
 @author  TechLab
-@version 1.1.0
+@version 1.0.0
 """
 
 import ast

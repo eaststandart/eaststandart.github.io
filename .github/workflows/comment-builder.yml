@@ -1,9 +1,9 @@
 # ==============================================================================
 # @module  comment-builder.yml
-# @about   Запуск конвейера Конструктора комментариев.
-# @purpose Получение комплекта, пробная или реальная публикация и очистка _output.
+# @about   Приём сигнала от Конструктора комментариев и запуск обработки комплекта.
+# @purpose Получает уведомление comment-notify, запускает конвейер публикации комментария и очистки обработанного комплекта в _output.
 # @author  TechLab
-# @version 1.6.0
+# @version 1.7.0
 # ==============================================================================
 
 name: TechLab Comment Builder Receiver
@@ -11,9 +11,6 @@ name: TechLab Comment Builder Receiver
 on:
   repository_dispatch:
     types: [comment-notify]
-  push:
-    paths:
-      - '_actions/comment_builder/.test-trigger'
 
 permissions:
   contents: write
@@ -37,8 +34,8 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Run Comment Builder Dispatcher (Integration Test)
+      - name: Run Comment Builder Dispatcher
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
-        run: python _actions/comment_builder/comment_builder.py --publish
+        run: python _actions/comment_builder/comment_builder.py

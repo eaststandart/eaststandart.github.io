@@ -10,10 +10,11 @@
 
 import logging
 import mimetypes
+import re
 import os
 import time
 from pathlib import Path
-from urllib.parse import quote, unquote, urlparse
+from urllib.parse import unquote, urlparse
 
 import requests
 
@@ -42,10 +43,11 @@ def _upload_one(session, token, item):
             f"Локальный файл вложения не найден: {name}."
         )
 
-    mime_type = mimetypes.guess_type(name)[0]
+    allowed_types = {".webp": "image/webp", ".webm": "video/webm"}
+    mime_type = allowed_types.get(Path(name).suffix.lower())
     if not mime_type:
         raise CommentBuilderMediaUploadError(
-            f"Не удалось определить MIME-тип вложения {name}."
+            f"Неподдерживаемый формат вложения: {name}."
         )
 
     params = {
@@ -184,8 +186,6 @@ def upload_media(package):
                 continue
             urls[name] = _upload_one(session, token, item)
 
-    import re
-
     def wiki_replace(match):
         raw = match.group(1).strip()
         target, separator, alias = raw.partition("|")
@@ -197,7 +197,7 @@ def upload_media(package):
         alt = alias.strip() if separator and alias.strip() else filename
         return f"![{alt}]({url})"
 
-    body = re.sub(r"!\\[\\[([^\\]]+)\\]\\]", wiki_replace, body)
+    body = re.sub(r"!\[\[([^\]]+)\]\]", wiki_replace, body)
 
     def markdown_replace(match):
         marker, alt, target = match.groups()
@@ -214,7 +214,7 @@ def upload_media(package):
         return f"{marker}[{alt}]({url})"
 
     body = re.sub(
-        r"(!?)\\[([^\\]]*)\\]\\(([^)]+)\\)",
+        r"(!?)\[([^\]]*)\]\(([^)]+)\)",
         markdown_replace,
         body,
     )

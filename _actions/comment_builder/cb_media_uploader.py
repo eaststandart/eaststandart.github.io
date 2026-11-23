@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_media_uploader.py
-@about   Загрузка медиафайлов комплекта в GitHub Attachments.
-@purpose Сопоставляет локальные Markdown-ссылки с файлами, загружает фотографии и видео, подставляет URL вложений в текст комментария.
+@about   Модуль загрузки медиафайлов в GitHub Attachments.
+@purpose Проверяет соответствие локальных Markdown-ссылок и файлов комплекта, загружает фотографии и видео в GitHub Attachments и заменяет локальные ссылки URL вложений перед публикацией комментария в GitHub Discussions репозитория eaststandart/eaststandart.github.io.
 @author  TechLab
-@version 1.2.0
+@version 1.0.0
 """
 
 import logging

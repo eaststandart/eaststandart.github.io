@@ -276,7 +276,7 @@ def collect_and_parse_raw_data():
     Возвращает словарь с метаданными, исходным Markdown, списком медиафайлов
     и локальными путями к ним. Исходный репозиторий не изменяется.
     """
-    logger.info("=== ЭТАП ПОЛУЧЕНИЯ КОМПЛЕКТА ИЗ _output ===")
+    logger.info("Получение комплекта из _output.")
     logger.info(
         "Источник: %s/%s, ветка %s, каталог %s.",
         SOURCE_OWNER, SOURCE_REPOSITORY, SOURCE_BRANCH, SOURCE_OUTPUT_PATH,
@@ -442,5 +442,5 @@ def collect_and_parse_raw_data():
         "медиафайлов=%d; временный каталог=%s.",
         manifest_name, metadata["discussion_number"], len(downloaded_media), work_dir,
     )
-    logger.info("=== ЭТАП ПОЛУЧЕНИЯ КОМПЛЕКТА ЗАВЕРШЁН ===")
+    logger.info("Получение комплекта завершено.")
     return package

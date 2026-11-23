@@ -44,5 +44,6 @@ jobs:
       - name: Run Comment Builder Dispatcher (Dry Run)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
           CB_SOURCE_REPOSITORY_PATH: _comment_builder_source
         run: python _actions/comment_builder/comment_builder.py

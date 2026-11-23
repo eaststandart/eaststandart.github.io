@@ -186,7 +186,7 @@ def publish_comment(package, dry_run=True):
     query($owner: String!, $repo: String!, $number: Int!) {
       repository(owner: $owner, name: $repo) {
         discussion(number: $number) {
-          comments(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}) {
+          comments(first: 100) {
             nodes {
               databaseId
               url

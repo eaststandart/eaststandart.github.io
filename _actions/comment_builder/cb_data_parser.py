@@ -33,8 +33,8 @@ REQUEST_TIMEOUT = 30
 MAX_ATTEMPTS = 4
 RETRY_DELAYS = (5, 15, 30)
 
-PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-VIDEO_EXTENSIONS = {".mp4", ".webm"}
+PHOTO_EXTENSIONS = {".webp"}
+VIDEO_EXTENSIONS = {".webm"}
 MEDIA_LINK_PATTERN = re.compile(
     r"(!?)\[\[([^\]]+)\]\]|(!?)\[([^\]]*)\]\(([^)]+)\)"
 )

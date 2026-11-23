@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_data_parser.py
-@about   Получение и разбор комплекта Конструктора комментариев.
-@purpose Загрузка манифеста и вложений из открытого репозитория techlab-comment-builder.
+@about   Получение и проверка комплекта комментария из буферного шлюза Конструктора.
+@purpose Читает _output через GitHub REST API, разбирает Front Matter и Markdown, проверяет и скачивает связанные медиафайлы.
 @author  TechLab
-@version 1.0.0
+@version 1.1.0
 """
 
 import ast
+import logging
 import os
 import re
 import tempfile
@@ -35,6 +36,8 @@ RETRY_DELAYS = (5, 15, 30)
 
 PHOTO_EXTENSIONS = {".webp"}
 VIDEO_EXTENSIONS = {".webm"}
+
+logger = logging.getLogger(__name__)
 MEDIA_LINK_PATTERN = re.compile(
     r"(!?)\[\[([^\]]+)\]\]|(!?)\[([^\]]*)\]\(([^)]+)\)"
 )
@@ -60,9 +63,9 @@ def _request_with_retry(session, url, headers=None, stream=False):
                     f"Сетевая ошибка после {MAX_ATTEMPTS} попыток: {error}"
                 ) from error
             delay = RETRY_DELAYS[attempt]
-            print(
-                f"[CB-ПАРСЕР] Временная сетевая ошибка. "
-                f"Повтор {attempt + 2}/{MAX_ATTEMPTS} через {delay} сек."
+            logger.warning(
+                "Временная сетевая ошибка GET %s: %s. Повтор %d/%d через %d сек.",
+                url, error, attempt + 2, MAX_ATTEMPTS, delay,
             )
             time.sleep(delay)
             continue
@@ -83,9 +86,9 @@ def _request_with_retry(session, url, headers=None, stream=False):
                     f"{MAX_ATTEMPTS} попыток: {detail}"
                 )
             delay = RETRY_DELAYS[attempt]
-            print(
-                f"[CB-ПАРСЕР] Временная ошибка HTTP {status}. "
-                f"Повтор {attempt + 2}/{MAX_ATTEMPTS} через {delay} сек."
+            logger.warning(
+                "GitHub API вернул HTTP %s для %s. Повтор %d/%d через %d сек.",
+                status, url, attempt + 2, MAX_ATTEMPTS, delay,
             )
             response.close()
             time.sleep(delay)
@@ -130,9 +133,9 @@ def _download_to_path(session, url, headers, local_path, file_name):
                     f"после {MAX_ATTEMPTS} попыток: {error}"
                 ) from error
             delay = RETRY_DELAYS[attempt]
-            print(
-                f"[CB-ПАРСЕР] Передача {file_name} прервана. "
-                f"Повтор {attempt + 2}/{MAX_ATTEMPTS} через {delay} сек."
+            logger.warning(
+                "Скачивание %s прервано: %s. Повтор %d/%d через %d сек.",
+                file_name, error, attempt + 2, MAX_ATTEMPTS, delay,
             )
             time.sleep(delay)
         finally:
@@ -273,7 +276,11 @@ def collect_and_parse_raw_data():
     Возвращает словарь с метаданными, исходным Markdown, списком медиафайлов
     и локальными путями к ним. Исходный репозиторий не изменяется.
     """
-    print("\n=== [CB-ПАРСЕР] ПОЛУЧЕНИЕ КОМПЛЕКТА ===")
+    logger.info("=== ЭТАП ПОЛУЧЕНИЯ КОМПЛЕКТА ИЗ _output ===")
+    logger.info(
+        "Источник: %s/%s, ветка %s, каталог %s.",
+        SOURCE_OWNER, SOURCE_REPOSITORY, SOURCE_BRANCH, SOURCE_OUTPUT_PATH,
+    )
 
     headers = {
         "Accept": "application/vnd.github+json",
@@ -305,17 +312,23 @@ def collect_and_parse_raw_data():
                 "GitHub API вернул неожиданный формат списка _output."
             )
 
+        logger.info("GitHub API вернул записей в _output: %d.", len(listing))
         files = {
             item.get("name"): item
             for item in listing
             if item.get("type") == "file" and item.get("name") != ".gitkeep"
         }
 
+        logger.info(
+            "Файлы комплекта: %s",
+            ", ".join(sorted(files)) if files else "нет файлов",
+        )
         manifests = [
             name for name in files
             if name.lower().endswith(".md")
         ]
 
+        logger.info("Найдено Markdown-манифестов: %d.", len(manifests))
         if not manifests:
             raise CommentBuilderDataError(
                 "В _output не найден Markdown-манифест комплекта."
@@ -328,6 +341,11 @@ def collect_and_parse_raw_data():
 
         manifest_name = manifests[0]
         manifest_item = files[manifest_name]
+        logger.info(
+            "Выбран манифест: %s (SHA %s, размер %s байт).",
+            manifest_name, manifest_item.get("sha", "не указан"),
+            manifest_item.get("size", "не указан"),
+        )
         manifest_url = manifest_item.get("download_url")
         if not manifest_url:
             raise CommentBuilderDataError(
@@ -346,9 +364,22 @@ def collect_and_parse_raw_data():
         finally:
             manifest_response.close()
 
+        logger.info("Манифест %s загружен: %d символов.", manifest_name, len(manifest_text))
         metadata, body = _parse_front_matter(manifest_text)
+        logger.info(
+            "Front Matter разобран. Поля: %s.",
+            ", ".join(sorted(metadata)) if metadata else "нет",
+        )
         metadata = _validate_metadata(metadata, manifest_name)
+        logger.info(
+            "Параметры публикации проверены: published=%s, Discussion #%s.",
+            metadata.get("published"), metadata["discussion_number"],
+        )
+        logger.info("Тело Markdown: %d символов.", len(body))
         media = _extract_media(body)
+        logger.info("В Markdown найдено локальных медиафайлов: %d.", len(media))
+        for item in media:
+            logger.info("Медиа в манифесте: %s (%s).", item["name"], item["type"])
 
         for item in media:
             if item["name"] not in files:
@@ -368,6 +399,10 @@ def collect_and_parse_raw_data():
 
         for item in media:
             local_path = os.path.join(work_dir, item["name"])
+            logger.info(
+                "Скачивание вложения: %s (SHA %s, URL %s).",
+                item["name"], item["sha"], item["download_url"],
+            )
             try:
                 _download_to_path(
                     session,
@@ -381,6 +416,10 @@ def collect_and_parse_raw_data():
                     f"Не удалось сохранить вложение {item['name']}: {error}"
                 ) from error
 
+            logger.info(
+                "Вложение получено: %s (%d байт).",
+                item["name"], os.path.getsize(local_path),
+            )
             downloaded_media.append({
                 "name": item["name"],
                 "type": item["type"],
@@ -398,9 +437,10 @@ def collect_and_parse_raw_data():
         "work_dir": work_dir
     }
 
-    print(
-        f"[CB-ПАРСЕР] Комплект получен: {manifest_name}; "
-        f"медиафайлов: {len(downloaded_media)}."
+    logger.info(
+        "Комплект полностью получен: манифест=%s; Discussion #%s; "
+        "медиафайлов=%d; временный каталог=%s.",
+        manifest_name, metadata["discussion_number"], len(downloaded_media), work_dir,
     )
-    print("=== [CB-ПАРСЕР] ПОЛУЧЕНИЕ КОМПЛЕКТА ЗАВЕРШЕНО ===")
+    logger.info("=== ЭТАП ПОЛУЧЕНИЯ КОМПЛЕКТА ЗАВЕРШЁН ===")
     return package

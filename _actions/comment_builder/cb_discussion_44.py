@@ -10,7 +10,6 @@
 
 import logging
 import re
-from datetime import datetime
 
 
 logger = logging.getLogger(__name__)
@@ -90,24 +89,6 @@ def _extract_media_links(content, media_type):
         {"alt": match.group(1), "url": match.group(2).strip()}
         for match in pattern.finditer(content)
     ]
-
-
-def _format_date(value):
-    if value is None or not str(value).strip():
-        raise Discussion44FormatError("В Front Matter отсутствует дата публикации.")
-
-    raw_date = str(value).strip()
-    try:
-        parsed = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
-    except ValueError:
-        try:
-            parsed = datetime.strptime(raw_date[:10], "%Y-%m-%d")
-        except ValueError as error:
-            raise Discussion44FormatError(
-                f"Некорректная дата публикации в Front Matter: {raw_date}"
-            ) from error
-
-    return parsed.strftime("%d.%m.%Y")
 
 
 def _format_teacher(teacher):
@@ -220,8 +201,6 @@ def format_comment(markdown: str, metadata=None) -> str:
         raise Discussion44FormatError("Форматтеру не переданы метаданные Front Matter.")
 
     lines = markdown.splitlines()
-    date_text = _format_date(metadata.get("date"))
-
     title, _, _ = _extract_section(lines, "### Заголовок комментария")
     if not title:
         title = str(metadata.get("title") or "").strip()
@@ -232,11 +211,12 @@ def format_comment(markdown: str, metadata=None) -> str:
     footer, _, _ = _extract_section(lines, "### Подвал комментария")
     extra_footer, footer_values = _parse_footer(footer)
 
-    result = [f"## {date_text} · {title}"]
+    result = [f"## {title}"]
     if main_text:
         result.extend(["", main_text])
 
     media_blocks = _extract_media_blocks(lines)
+    formatted_media_blocks = []
     for block in media_blocks:
         block_lines = block["lines"]
         block_title = _extract_block_field(block_lines, "### Заголовок блока")
@@ -250,7 +230,23 @@ def format_comment(markdown: str, metadata=None) -> str:
             formatted_block = _format_video_block(heading, description, media_content)
 
         if formatted_block:
-            result.extend(["", formatted_block])
+            formatted_media_blocks.append({
+                "content": formatted_block,
+                "has_title": bool(heading),
+            })
+
+    for index, block in enumerate(formatted_media_blocks):
+        result.extend(["", block["content"]])
+
+        next_block_has_title = (
+            index + 1 < len(formatted_media_blocks)
+            and formatted_media_blocks[index + 1]["has_title"]
+        )
+        has_following_user_text = index == len(formatted_media_blocks) - 1 and bool(extra_footer)
+        if not next_block_has_title and (
+            index + 1 < len(formatted_media_blocks) or has_following_user_text
+        ):
+            result.extend(["", "<p></p>"])
 
     if extra_footer:
         result.extend(["", extra_footer])

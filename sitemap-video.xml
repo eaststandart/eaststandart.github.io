@@ -3,8 +3,8 @@ layout: null
 permalink: /sitemap-video.xml
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://sitemaps.org"
-        xmlns:video="http://google.com">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   {% for file in site.static_files %}
     {% if file.extname == '.webm' and file.path contains '/faire/' %}
       {% unless file.path contains '/test/' %}

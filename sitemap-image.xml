@@ -3,8 +3,8 @@ layout: null
 permalink: /sitemap-image.xml
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://sitemaps.org"
-        xmlns:image="http://google.com">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   {% for p in site.pages %}
     {% if p.url contains '/faire/' and p.url != '/faire/' %}
       {% assign folder_url = p.url %}

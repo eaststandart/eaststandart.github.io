@@ -126,12 +126,29 @@ def _format_teacher(teacher):
     return f"@{value}"
 
 
+def _format_media_title(value, media_type):
+    """Пустой заголовок скрывает название; none включает название по умолчанию."""
+    value = str(value or "").strip()
+    if not value:
+        return ""
+
+    if value.casefold() == "none":
+        return PHOTO_DEFAULT_TITLE if media_type == "photo" else VIDEO_DEFAULT_TITLE
+
+    prefix = "📸" if media_type == "photo" else "🎥"
+    return value if value.startswith(prefix) else f"{prefix} {value}"
+
+
 def _format_photo_block(title, description, media_content):
     photos = _extract_media_links(media_content, "photo")
-    parts = [f"### {title}"]
+    parts = []
+    if title:
+        parts.append(f"### {title}")
 
     if description:
-        parts.extend(["", description])
+        if parts:
+            parts.append("")
+        parts.append(description)
 
     if photos:
         gallery = ["<div>"]
@@ -143,17 +160,23 @@ def _format_photo_block(title, description, media_content):
                 "</a>",
             ])
         gallery.append("</div>")
-        parts.extend(["", "\n".join(gallery)])
+        if parts:
+            parts.append("")
+        parts.append("\n".join(gallery))
 
     return "\n".join(parts)
 
 
 def _format_video_block(title, description, media_content):
     videos = _extract_media_links(media_content, "video")
-    parts = [f"### {title}"]
+    parts = []
+    if title:
+        parts.append(f"### {title}")
 
     if description:
-        parts.extend(["", description])
+        if parts:
+            parts.append("")
+        parts.append(description)
 
     if videos:
         video_lines = [
@@ -172,9 +195,28 @@ def _format_video_block(title, description, media_content):
             "</div>",
             "</details>",
         ]
-        parts.extend(["", "\n".join(details)])
+        if parts:
+            parts.append("")
+        parts.append("\n".join(details))
 
     return "\n".join(parts)
+
+
+def _parse_footer(footer):
+    """Извлекает переопределения В кадре, Места и Источника."""
+    values = {"В кадре": None, "Место": None, "Источник": None}
+    labels = {key.casefold(): key for key in values}
+    remaining = []
+
+    for line in footer.splitlines():
+        match = re.match(r"^\s*([^:]+)\s*:\s*(.*?)\s*$", line)
+        key = match.group(1).strip().casefold() if match else ""
+        if key in labels:
+            values[labels[key]] = match.group(2).strip()
+        else:
+            remaining.append(line)
+
+    return "\n".join(remaining).strip(), values
 
 
 def format_comment(markdown: str, metadata=None) -> str:
@@ -195,6 +237,7 @@ def format_comment(markdown: str, metadata=None) -> str:
 
     main_text, _, _ = _extract_section(lines, "### Основной текст")
     footer, _, _ = _extract_section(lines, "### Подвал комментария")
+    extra_footer, footer_values = _parse_footer(footer)
 
     result = [f"## {date_text} · {title}"]
     if main_text:
@@ -206,27 +249,29 @@ def format_comment(markdown: str, metadata=None) -> str:
         description = _extract_block_field(block_lines, "### Описание блока")
         media_content = _extract_block_field(block_lines, "### Медиафайлы")
 
+        heading = _format_media_title(block_title, block["type"])
         if block["type"] == "photo":
-            heading = block_title or PHOTO_DEFAULT_TITLE
-            if not heading.lstrip().startswith("📸"):
-                heading = f"📸 {heading}"
-            result.extend(["", _format_photo_block(heading, description, media_content)])
+            formatted_block = _format_photo_block(heading, description, media_content)
         else:
-            heading = block_title or VIDEO_DEFAULT_TITLE
-            if not heading.lstrip().startswith("🎥"):
-                heading = f"🎥 {heading}"
-            result.extend(["", _format_video_block(heading, description, media_content)])
+            formatted_block = _format_video_block(heading, description, media_content)
 
-    if footer:
-        result.extend(["", footer])
+        if formatted_block:
+            result.extend(["", formatted_block])
+
+    if extra_footer:
+        result.extend(["", extra_footer])
 
     teacher = _format_teacher(metadata.get("teacher"))
+    in_frame = footer_values["В кадре"] or "Юные инженеры"
+    place = footer_values["Место"] or "Детско-юношеский инженерный клуб, г. Владивосток"
+    source = footer_values["Источник"] or "[Творческая лаборатория познавательного развития](https://eaststandart.github.io/)"
+
     result.extend([
         "",
-        "🎬 **В кадре:** Юные инженеры",
+        f"🎬 **В кадре:** {in_frame}",
         f"👨‍🏫 **Преподаватель:** {teacher}",
-        "🏢 **Место:** Детско-юношеский инженерный клуб, г. Владивосток",
-        "🌐 **Источник:** [Творческая лаборатория познавательного развития](https://eaststandart.github.io/)",
+        f"🏢 **Место:** {place}",
+        f"🌐 **Источник:** {source}",
     ])
 
     formatted = "\n".join(result).strip()

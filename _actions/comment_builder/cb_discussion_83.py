@@ -219,15 +219,15 @@ def format_comment(markdown: str, metadata=None) -> str:
 
     if footer:
         result.extend(["", footer])
-    else:
-        teacher = _format_teacher(metadata.get("teacher"))
-        result.extend([
-            "",
-            "🎬 **В кадре:** Юные инженеры",
-            f"👨‍🏫 **Преподаватель:** {teacher}",
-            "🏢 **Место:** Детско-юношеский инженерный клуб, г. Владивосток",
-            "🌐 **Источник:** [Творческая лаборатория познавательного развития](https://eaststandart.github.io/)",
-        ])
+
+    teacher = _format_teacher(metadata.get("teacher"))
+    result.extend([
+        "",
+        "🎬 **В кадре:** Юные инженеры",
+        f"👨‍🏫 **Преподаватель:** {teacher}",
+        "🏢 **Место:** Детско-юношеский инженерный клуб, г. Владивосток",
+        "🌐 **Источник:** [Творческая лаборатория познавательного развития](https://eaststandart.github.io/)",
+    ])
 
     formatted = "\n".join(result).strip()
     logger.info(

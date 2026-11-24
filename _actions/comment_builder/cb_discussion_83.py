@@ -16,18 +16,12 @@ from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
-SECTION_HEADINGS = {
-    "### Заголовок комментария",
-    "### Основной текст",
-    "### Подвал комментария",
-}
 MEDIA_HEADINGS = {
     "## 📸 Фотоматериалы": "photo",
     "## 🎥 Видеоматериалы": "video",
 }
 PHOTO_DEFAULT_TITLE = "📸 Фото-моменты"
 VIDEO_DEFAULT_TITLE = "🎥 Видео-моменты"
-GITHUB_PROFILE_URL = "https://github.com/{}"
 
 
 class Discussion83FormatError(Exception):
@@ -164,9 +158,6 @@ def _format_video_block(title, description, media_content):
         parts.extend(["", description])
 
     if videos:
-        video_lines = [
-            "###PLACEHOLDER"
-        ]
         video_lines = [
             f'[{video["alt"]}]({video["url"]})'
             for video in videos

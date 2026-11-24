@@ -189,7 +189,9 @@ def format_comment(markdown: str, metadata=None) -> str:
 
     title, _, _ = _extract_section(lines, "### Заголовок комментария")
     if not title:
-        raise Discussion83FormatError("В манифесте не заполнен раздел «Заголовок комментария».")
+        title = str(metadata.get("title") or "").strip()
+    if not title:
+        title = "В объективе клуба"
 
     main_text, _, _ = _extract_section(lines, "### Основной текст")
     footer, _, _ = _extract_section(lines, "### Подвал комментария")

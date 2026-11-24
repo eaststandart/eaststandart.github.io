@@ -5,4 +5,4 @@ Allow: /
 
 Sitemap: https://eaststandart.github.io/sitemap.xml
 Sitemap: https://eaststandart.github.io/sitemap-image.xml
-Sitemap: https://eaststandart.github.io/sitemapvideo.xml
+Sitemap: https://eaststandart.github.io/sitemap-video.xml

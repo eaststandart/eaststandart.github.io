@@ -30,7 +30,7 @@ class Discussion44FormatError(Exception):
 
 
 def _heading_level(line):
-    match = re.match(r"^(#{1,6})\\s+", line.strip())
+    match = re.match(r"^(#{1,6})\s+", line.strip())
     return len(match.group(1)) if match else None
 
 
@@ -47,7 +47,7 @@ def _extract_section(lines, heading, start=0, end=None):
                 if level is not None and level <= 3:
                     section_end = next_index
                     break
-            return "\\n".join(lines[index + 1:section_end]).strip(), index, section_end
+            return "\n".join(lines[index + 1:section_end]).strip(), index, section_end
 
     return "", -1, -1
 
@@ -82,9 +82,9 @@ def _extract_block_field(lines, heading):
 def _extract_media_links(content, media_type):
     """Извлекает URL фото или видео после загрузки вложений."""
     if media_type == "photo":
-        pattern = re.compile(r"!\\[([^\\]]*)\\]\\(([^)]+)\\)")
+        pattern = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
     else:
-        pattern = re.compile(r"(?<!!)\\[([^\\]]*)\\]\\(([^)]+)\\)")
+        pattern = re.compile(r"(?<!!)\[([^\]]*)\]\(([^)]+)\)")
 
     return [
         {"alt": match.group(1), "url": match.group(2).strip()}
@@ -155,9 +155,9 @@ def _format_photo_block(title, description, media_content):
         gallery.append("</div>")
         if parts:
             parts.append("")
-        parts.append("\\n".join(gallery))
+        parts.append("\n".join(gallery))
 
-    return "\\n".join(parts)
+    return "\n".join(parts)
 
 
 def _format_video_block(title, description, media_content):
@@ -179,16 +179,16 @@ def _format_video_block(title, description, media_content):
             "",
             "<div>",
             "",
-            "\\n\\n".join(video_lines),
+            "\n\n".join(video_lines),
             "",
             "</div>",
             "</details>",
         ]
         if parts:
             parts.append("")
-        parts.append("\\n".join(details))
+        parts.append("\n".join(details))
 
-    return "\\n".join(parts)
+    return "\n".join(parts)
 
 
 def _parse_footer(footer):
@@ -202,14 +202,14 @@ def _parse_footer(footer):
     remaining = []
 
     for line in footer.splitlines():
-        match = re.match(r"^\\s*([^:]+)\\s*:\\s*(.*?)\\s*$", line)
+        match = re.match(r"^\s*([^:]+)\s*:\s*(.*?)\s*$", line)
         key = match.group(1).strip().casefold() if match else ""
         if key in labels:
             values[labels[key]] = match.group(2).strip()
         else:
             remaining.append(line)
 
-    return "\\n".join(remaining).strip(), values
+    return "\n".join(remaining).strip(), values
 
 
 def format_comment(markdown: str, metadata=None) -> str:
@@ -268,7 +268,7 @@ def format_comment(markdown: str, metadata=None) -> str:
         f"🌐 **Источник:** {source}",
     ])
 
-    formatted = "\\n".join(result).strip()
+    formatted = "\n".join(result).strip()
     logger.info(
         "Discussion #44: сформировано медиаблоков=%d; символов=%d.",
         len(media_blocks),

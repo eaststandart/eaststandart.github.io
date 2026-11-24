@@ -206,9 +206,13 @@ def format_comment(markdown: str, metadata=None) -> str:
 
         if block["type"] == "photo":
             heading = block_title or PHOTO_DEFAULT_TITLE
+            if not heading.lstrip().startswith("📸"):
+                heading = f"📸 {heading}"
             result.extend(["", _format_photo_block(heading, description, media_content)])
         else:
             heading = block_title or VIDEO_DEFAULT_TITLE
+            if not heading.lstrip().startswith("🎥"):
+                heading = f"🎥 {heading}"
             result.extend(["", _format_video_block(heading, description, media_content)])
 
     if footer:

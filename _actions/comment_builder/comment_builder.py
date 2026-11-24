@@ -3,7 +3,7 @@
 """
 @module  comment_builder.py
 @about   Модуль диспетчера конвейера публикации комментариев.
-@purpose Получает комплект из _output репозитория eaststandart/techlab-comment-builder, передаёт медиафайлы в GitHub Attachments, публикует комментарий в GitHub Discussions репозитория eaststandart/eaststandart.github.io и после подтверждённой обработки очищает исходный комплект.
+@purpose Получает комплект из _output репозитория eaststandart/techlab-comment-builder, передаёт медиафайлы в GitHub Attachments, выбирает форматирование по номеру Discussion, публикует комментарий в GitHub Discussions репозитория eaststandart/eaststandart.github.io и после подтверждённой обработки очищает исходный комплект.
 @author  TechLab
 @version 1.0.0
 """
@@ -12,8 +12,9 @@ import logging
 import sys
 
 import cb_data_parser
-import cb_comment_builder
 import cb_media_uploader
+import cb_comment_dispatcher
+import cb_comment_builder
 import cb_gate_closer
 
 
@@ -42,7 +43,7 @@ def main():
     logger.info("Запуск конвейера публикации комментария.")
 
     try:
-        logger.info("Этап 1/3: получение и проверка комплекта Конструктора.")
+        logger.info("Этап 1/4: получение и проверка комплекта Конструктора.")
         package = cb_data_parser.collect_and_parse_raw_data()
 
         if not isinstance(package, dict):
@@ -55,10 +56,13 @@ def main():
             (package.get("metadata") or {}).get("discussion_number", "не указан"),
         )
 
-        logger.info("Этап 2/3: загрузка медиафайлов в GitHub Attachments.")
+        logger.info("Этап 2/4: загрузка медиафайлов в GitHub Attachments.")
         package = cb_media_uploader.upload_media(package)
 
-        logger.info("Этап 3/3: реальная публикация комментария.")
+        logger.info("Этап 3/4: форматирование комментария для целевой Discussion.")
+        package = cb_comment_dispatcher.dispatch_comment(package)
+
+        logger.info("Этап 4/4: реальная публикация комментария.")
         result = cb_comment_builder.publish_comment(package)
 
         if not isinstance(result, dict) or not result.get("success"):

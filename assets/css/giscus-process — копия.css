@@ -1,0 +1,38 @@
+/*
+@module giscus-process.css
+@about Модуль изолированных стилей страницы дискусий раздела Творческий процесс
+@purpose 
+@author TechLab
+*/
+
+@charset "UTF-8";
+
+/* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
+@import url("https://giscus.app/themes/light.css");
+
+.gsc-comment-content div:not([class])[align="left"]:has(img[src*="githubusercontent"]) {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* Намертво делит ряд на 2 равные колонки */
+    gap: 1rem !important;                             /* Идеальный зазор между видео */
+}
+
+.gsc-comment-content div:not([class])[align="left"]:has(video[src*="githubusercontent"]) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; /* Делит ряд на 2 равные колонки */
+    gap: 1rem !important;                             /* Идеальный зазор между видео */
+}
+
+@media screen and (max-width: 500px) {
+
+    .gsc-comment-content div:not([class])[align="left"]:has(img[src*="githubusercontent"]) {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .gsc-comment-content div:not([class])[align="left"]:has(video[src*="githubusercontent"]) {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: unset !important;
+    }
+
+}

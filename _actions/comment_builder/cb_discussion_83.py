@@ -134,7 +134,7 @@ def _format_photo_block(title, description, media_content):
         parts.extend(["", description])
 
     if photos:
-        gallery = ["<div >"]
+        gallery = ["<div>"]
         for photo in photos:
             url = photo["url"]
             gallery.extend([
@@ -165,7 +165,7 @@ def _format_video_block(title, description, media_content):
             " <summary>Смотреть видео-материалы 👀</summary>",
             "&thinsp;",
             "",
-            '<div >',
+            '<div>',
             "",
             "\n\n".join(video_lines),
             "",

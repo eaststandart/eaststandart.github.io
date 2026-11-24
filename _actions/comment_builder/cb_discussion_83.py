@@ -230,16 +230,17 @@ def format_comment(markdown: str, metadata=None) -> str:
     date_text = _format_date(metadata.get("date"))
 
     title, _, _ = _extract_section(lines, "### Заголовок комментария")
+    title = title.strip()
     if not title:
         title = str(metadata.get("title") or "").strip()
-    if not title:
+    if title.casefold() == "none":
         title = "В объективе клуба"
 
     main_text, _, _ = _extract_section(lines, "### Основной текст")
     footer, _, _ = _extract_section(lines, "### Подвал комментария")
     extra_footer, footer_values = _parse_footer(footer)
 
-    result = [f"## {date_text} · {title}"]
+    result = [f"## {date_text}" + (f" · {title}" if title else "")]
     if main_text:
         result.extend(["", main_text])
 

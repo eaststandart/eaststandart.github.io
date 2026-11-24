@@ -11,7 +11,6 @@
 import logging
 import re
 from datetime import datetime
-from urllib.parse import quote
 
 
 logger = logging.getLogger(__name__)
@@ -120,12 +119,11 @@ def _format_teacher(teacher):
     if not value:
         value = "eaststandart"
 
-    # TechLab — имя клуба по умолчанию; eaststandart — его GitHub-аккаунт.
+    # Для аккаунта клуба показываем имя и логин обычным текстом.
     if value.casefold() in {"techlab", "eaststandart"}:
-        return "TechLab **[@eaststandart](https://github.com/eaststandart)**"
+        return "TechLab @eaststandart"
 
-    login = quote(value, safe="-")
-    return f"**[@{value}](https://github.com/{login})**"
+    return f"@{value}"
 
 
 def _format_photo_block(title, description, media_content):

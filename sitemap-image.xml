@@ -1,0 +1,34 @@
+---
+layout: null
+permalink: /sitemap-image.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org"
+        xmlns:image="http://google.com">
+  {% for p in site.pages %}
+    {% if p.url contains '/faire/' and p.url != '/faire/' %}
+      {% assign folder_url = p.url %}
+      {% assign page_images = site.static_files | where_exp: "f", "f.path contains folder_url" %}
+      {% assign has_img = false %}
+      {% for img in page_images %}
+        {% if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' %}
+          {% assign has_img = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      {% if has_img %}
+  <url>
+    <loc>{{ p.url | absolute_url }}</loc>
+        {% for img in page_images %}
+          {% if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' %}
+    <image:image>
+      <image:loc>{{ img.path | absolute_url }}</image:loc>
+      <image:title>{{ p.title | xml_escape }}</image:title>
+    </image:image>
+          {% endif %}
+        {% endfor %}
+  </url>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</urlset>

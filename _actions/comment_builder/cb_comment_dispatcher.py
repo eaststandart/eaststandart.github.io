@@ -14,6 +14,7 @@ import logging
 
 DISCUSSION_FORMATTERS = {
     0: "cb_discussion_0",
+    44: "cb_discussion_44",
     83: "cb_discussion_83",
 }
 DEFAULT_FORMATTER = 0
@@ -73,7 +74,7 @@ def dispatch_comment(package):
             raise CommentDispatchError(
                 f"В модуле {formatter_name} отсутствует функция format_comment()."
             )
-        if formatter_number == 83:
+        if formatter_number in {44, 83}:
             formatted_markdown = format_comment(markdown, metadata)
         else:
             formatted_markdown = format_comment(markdown)

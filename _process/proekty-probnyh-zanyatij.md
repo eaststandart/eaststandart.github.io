@@ -4,7 +4,7 @@ description: "Здесь собраны проекты выполненные н
 title: "Проекты выполненные на пробных занятиях"
 date: 2026-11-24
 teacher: "TechLab"
-discus: "process"
+discus: "gallery"
 keywords: [пробные занятия, бесплатные занятия, творческий процесс]
 emoji: ""
 ---

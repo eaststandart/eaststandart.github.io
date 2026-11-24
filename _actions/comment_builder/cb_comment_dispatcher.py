@@ -73,7 +73,7 @@ def dispatch_comment(package):
             raise CommentDispatchError(
                 f"В модуле {formatter_name} отсутствует функция format_comment()."
             )
-        formatted_markdown = format_comment(markdown)
+        formatted_markdown = format_comment(markdown, metadata)
     except CommentDispatchError:
         raise
     except Exception as error:

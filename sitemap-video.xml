@@ -5,31 +5,25 @@ permalink: /sitemap-video.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  {% for file in site.static_files %}
-    {% if file.extname == '.webm' and file.path contains '/faire/' %}
-      {% unless file.path contains '/test/' %}
-        {% assign folder_path = file.path | remove: file.name %}
-        {% assign target_page = nil %}
-        {% for p in site.pages %}
-          {% if p.url == folder_path %}
-            {% assign target_page = p %}
-            {% break %}
-          {% endif %}
-        {% endfor %}
-        {% if target_page %}
-          {% assign slug = target_page.name | remove: '.md' %}
-          {% assign main_thumb = folder_path | append: slug | append: '.webp' %}
+{%- for p in site.pages -%}
+  {%- if p.url contains '/faire/' and p.url != '/faire/' -%}
+    {%- assign folder_url = p.url -%}
+    {%- assign page_videos = site.static_files | where_exp: "f", "f.path contains folder_url" | where: "extname", ".webm" -%}
+    {%- if page_videos.size > 0 -%}
+      {%- assign slug = p.name | remove: '.md' -%}
+      {%- assign main_thumb = folder_url | append: slug | append: '.webp' %}
   <url>
-    <loc>{{ target_page.url | absolute_url }}</loc>
+    <loc>{{ p.url | absolute_url }}</loc>
+      {%- for vid in page_videos %}
     <video:video>
       <video:thumbnail_loc>{{ main_thumb | absolute_url }}</video:thumbnail_loc>
-      <video:title>{{ target_page.title | default: file.basename | xml_escape }} — видео ({{ file.basename }})</video:title>
-      <video:description>{{ target_page.description | default: target_page.excerpt | default: target_page.title | strip_html | strip_newlines | truncate: 200 | xml_escape }}</video:description>
-      <video:content_loc>{{ file.path | absolute_url }}</video:content_loc>
+      <video:title>{{ p.title | default: vid.basename | xml_escape }} — {{ vid.basename }}</video:title>
+      <video:description>{{ p.description | default: p.excerpt | default: p.title | strip_html | strip_newlines | truncate: 200 | xml_escape }}</video:description>
+      <video:content_loc>{{ vid.path | absolute_url }}</video:content_loc>
     </video:video>
+      {%- endfor %}
   </url>
-        {% endif %}
-      {% endunless %}
-    {% endif %}
-  {% endfor %}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor %}
 </urlset>

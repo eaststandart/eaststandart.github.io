@@ -5,30 +5,29 @@ permalink: /sitemap-image.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  {% for p in site.pages %}
-    {% if p.url contains '/faire/' and p.url != '/faire/' %}
-      {% assign folder_url = p.url %}
-      {% assign page_images = site.static_files | where_exp: "f", "f.path contains folder_url" %}
-      {% assign has_img = false %}
-      {% for img in page_images %}
-        {% if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' %}
-          {% assign has_img = true %}
-          {% break %}
-        {% endif %}
-      {% endfor %}
-      {% if has_img %}
+{%- for p in site.pages -%}
+  {%- if p.url contains '/faire/' and p.url != '/faire/' -%}
+    {%- assign folder_url = p.url -%}
+    {%- assign page_images = site.static_files | where_exp: "f", "f.path contains folder_url" -%}
+    {%- assign has_img = false -%}
+    {%- for img in page_images -%}
+      {%- if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' -%}
+        {%- assign has_img = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if has_img %}
   <url>
     <loc>{{ p.url | absolute_url }}</loc>
-        {% for img in page_images %}
-          {% if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' %}
+      {%- for img in page_images -%}
+        {%- if img.extname == '.webp' or img.extname == '.jpg' or img.extname == '.png' %}
     <image:image>
       <image:loc>{{ img.path | absolute_url }}</image:loc>
-      <image:title>{{ p.title | xml_escape }}</image:title>
     </image:image>
-          {% endif %}
-        {% endfor %}
+        {%- endif -%}
+      {%- endfor %}
   </url>
-      {% endif %}
-    {% endif %}
-  {% endfor %}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor %}
 </urlset>

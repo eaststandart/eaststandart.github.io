@@ -1,0 +1,77 @@
+        <h2 dir="auto">21.11.2026 · В объективе клуба</h2>
+<p dir="auto">Медиа-материалы деятельности в клубе</p>
+<h3 dir="auto">📸 Фото-моменты</h3>
+<p dir="auto">Фото деятельности</p>
+<div align="left" dir="auto">
+<a href="https://github.com/user-attachments/assets/cd801d74-5f13-4f1f-bfd5-a6ad32036cff">
+  <img width="371" height="209" alt="" src="https://private-user-images.githubusercontent.com/278447233/716967714-cd801d74-5f13-4f1f-bfd5-a6ad32036cff.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNzE2OTY3NzE0LWNkODAxZDc0LTVmMTMtNGYxZi1iZmQ1LWE2YWQzMjAzNmNmZi53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YWZjNjkzM2Q3Yzc2MmQ2NTc5ZWY1N2U3ZjUzZDRkNjRhNWYwMjY1N2NiOTU0OTQ0NzNjODYwOGUwYTJlMDc5MSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9._0X6gvnEotuHgWgRyZQ2X9QnHqQrekIjEtJ9gcexBD8" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+<a href="https://github.com/user-attachments/assets/043ceea6-5ad8-44e3-a84a-80aa6dd455ad">
+  <img width="371" height="209" alt="" src="https://private-user-images.githubusercontent.com/278447233/716967721-043ceea6-5ad8-44e3-a84a-80aa6dd455ad.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNzE2OTY3NzIxLTA0M2NlZWE2LTVhZDgtNDRlMy1hODRhLTgwYWE2ZGQ0NTVhZC53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MWQ3NzE3MjAxZTk1YjBmMzFlYjI2MzUzYjU4MTE5YTE0MmY2MzE4MDFiMjRlMGY2NTY1MTc0MGMwMDgwNTY5YSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.gIr14SPjBkpw8VSaCKTfwrCPTKajb0JimDu7SjnNBK0" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+</div>
+<h3 dir="auto">📸 Фото работы</h3>
+<p dir="auto">Дополнительная фотография</p>
+<div align="left" dir="auto">
+<a href="https://github.com/user-attachments/assets/d9ebd3aa-f19a-4128-9dfb-f3450ec6cf54">
+  <img width="371" height="209" alt="" src="https://private-user-images.githubusercontent.com/278447233/716967733-d9ebd3aa-f19a-4128-9dfb-f3450ec6cf54.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNzE2OTY3NzMzLWQ5ZWJkM2FhLWYxOWEtNDEyOC05ZGZiLWYzNDUwZWM2Y2Y1NC53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NDgyNzQzOGM1MDIzN2IwNTViMGYyM2RjMzBiY2VjZmUwYWQxMDhlYTAxYzgyZTc5ZjMwYmFiOWZhYzg0NTNkZCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.o3eE0SSweuZVgspkRxpVkBM8MnNZIaPIujn_XgNsR2c" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+</div>
+<h3 dir="auto">🎥 Видео-моменты</h3>
+<p dir="auto">Видео деятельности</p>
+<details open="">
+ <summary>Смотреть видео-материалы 👀</summary>
+ 
+<div align="left" dir="auto">
+<details open="" class="details-reset border rounded-2">
+  <summary class="tmp-px-3 py-2">
+    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-device-camera-video">
+    <path d="M16 3.75v8.5a.75.75 0 0 1-1.136.643L11 10.575v.675A1.75 1.75 0 0 1 9.25 13h-7.5A1.75 1.75 0 0 1 0 11.25v-6.5C0 3.784.784 3 1.75 3h7.5c.966 0 1.75.784 1.75 1.75v.675l3.864-2.318A.75.75 0 0 1 16 3.75Zm-6.5 1a.25.25 0 0 0-.25-.25h-7.5a.25.25 0 0 0-.25.25v6.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-6.5ZM11 8.825l3.5 2.1v-5.85l-3.5 2.1Z"></path>
+</svg>
+    <span class="m-1">2026-11-21-1795504692_discussion_83_eaststandart_video_01.webm</span>
+    <span class="dropdown-caret"></span>
+  </summary>
+
+  <video src="https://private-user-images.githubusercontent.com/278447233/716967741-c34fe2d5-a1f8-435a-bca2-2e50be1b489b.webm?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIj
+VM494:9 Ручной 
+        <h2 dir="auto">12.09.2026 · В объективе клуба [Русская]</h2>
+<h3 dir="auto">📸 Фото-моменты</h3>
+<div align="left" dir="auto">
+<a href="https://github.com/user-attachments/assets/f0d0de53-72a5-45d7-8b10-d0b372ef8dfa">
+  <img width="371" height="209" alt="2026-regular-creative-process-1790321756242-2026-09-25" src="https://private-user-images.githubusercontent.com/278447233/658748513-f0d0de53-72a5-45d7-8b10-d0b372ef8dfa.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzQ4NTEzLWYwZDBkZTUzLTcyYTUtNDVkNy04YjEwLWQwYjM3MmVmOGRmYS53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NDRhYjRlMzM3Y2JmZGQ1NzdlNTkyN2NhMjQ5NjI0MThkMWU2NDgwNmY0OGE3MTAwZmYzODhmZTBiOGMxOTBiOSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.D9_prFGDlT8uHFFXPdZ3zxhKKlmJ4sOShnYTsvZdTWE" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+<a href="https://github.com/user-attachments/assets/eed7676d-0a39-4fc8-a61a-458a1b07bcf0">
+  <img width="371" height="209" alt="2026-regular-creative-process-1790321806732-2026-09-25" src="https://private-user-images.githubusercontent.com/278447233/658748586-eed7676d-0a39-4fc8-a61a-458a1b07bcf0.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzQ4NTg2LWVlZDc2NzZkLTBhMzktNGZjOC1hNjFhLTQ1OGExYjA3YmNmMC53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NWZkOWRiOTMyMGE5NGM4ZTRiY2I5ZDEwNDQ3M2MxMDk2ZjZlZmU5OTExZTZmOGYwMjQ5YzZkMGM5NzZmZTA3NSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.lq8BWvTji8Y6idGygXXuj6RtoL0sTVcukrZAflIdirg" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+<a href="https://github.com/user-attachments/assets/4f14be48-2baa-4d8b-913c-6ce268207cf1">
+  <img width="371" height="209" alt="2026-regular-creative-process-1790321859379-2026-09-25" src="https://private-user-images.githubusercontent.com/278447233/658753827-4f14be48-2baa-4d8b-913c-6ce268207cf1.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzUzODI3LTRmMTRiZTQ4LTJiYWEtNGQ4Yi05MTNjLTZjZTI2ODIwN2NmMS53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YjY2NjI4N2I2YzM2OWE3YzZlZWU4MTQ1ZGI3ZmYxNWZhOGZkZThmYTJmYTVhYWE5MWI3ODMwY2U1NDQwOGM4MSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.MTj3c8B6uS0ozKe2aLjKPFIHoxuAOzIagllT_k_qj4A" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+<a href="https://github.com/user-attachments/assets/872308c2-b2dc-49bf-8a89-342d5ea9e2ce">
+  <img width="371" height="209" alt="2026-regular-creative-process-1790321818836-2026-09-25" src="https://private-user-images.githubusercontent.com/278447233/658748595-872308c2-b2dc-49bf-8a89-342d5ea9e2ce.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzQ4NTk1LTg3MjMwOGMyLWIyZGMtNDliZi04YTg5LTM0MmQ1ZWE5ZTJjZS53ZWJwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NWIwMjRjNmM4NWY3NzU0ODNkMzMzMDQxNjUzNGE3YmEyNThkNDY3MDMzNTdhY2ZjN2Y5ZjI4Y2Q1MDQ0ZjA5YSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGd2VicCJ9.30qiiIGIHaFOfrEuDgGDCjpkB1UDbAOXgB8h6Kf5PA0" secured-asset-link="" style="max-width: 100%; height: auto; max-height: 209px;; aspect-ratio: 371 / 209; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback">
+</a>
+</div>
+<h3 dir="auto">🎥 Видео-моменты</h3>
+<details>
+ <summary>Смотреть видео-материалы 👀</summary>
+ 
+<div align="left" dir="auto">
+<details open="" class="details-reset border rounded-2">
+  <summary class="tmp-px-3 py-2">
+    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-device-camera-video">
+    <path d="M16 3.75v8.5a.75.75 0 0 1-1.136.643L11 10.575v.675A1.75 1.75 0 0 1 9.25 13h-7.5A1.75 1.75 0 0 1 0 11.25v-6.5C0 3.784.784 3 1.75 3h7.5c.966 0 1.75.784 1.75 1.75v.675l3.864-2.318A.75.75 0 0 1 16 3.75Zm-6.5 1a.25.25 0 0 0-.25-.25h-7.5a.25.25 0 0 0-.25.25v6.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-6.5ZM11 8.825l3.5 2.1v-5.85l-3.5 2.1Z"></path>
+</svg>
+    <span class="m-1">2026-regular-creative-process-1790321865089-2026-09-25.webm</span>
+    <span class="dropdown-caret"></span>
+  </summary>
+
+  <video src="https://private-user-images.githubusercontent.com/278447233/658754910-1e23aad9-9f4e-4057-a439-5b903ce7499c.webm?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzU0OTEwLTFlMjNhYWQ5LTlmNGUtNDA1Ny1hNDM5LTViOTAzY2U3NDk5Yy53ZWJtP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YWYzMDkxZDEwZmRmYjljZjVjMDg3NDFjNjUwNTdhNDM0OTFjMDU1OTE1NWVmMGVkYWNiNDhiN2Y2ODEyYWM1MCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPXZpZGVvJTJGd2VibSJ9.FGnfhxv6spNja2gmBMxySocZ4eIH4s1lUxcA2WmKlU0" data-canonical-src="https://private-user-images.githubusercontent.com/278447233/658754910-1e23aad9-9f4e-4057-a439-5b903ce7499c.webm?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTU1MDYyOTQsIm5iZiI6MTc5NTUwNTk5NCwicGF0aCI6Ii8yNzg0NDcyMzMvNjU4NzU0OTEwLTFlMjNhYWQ5LTlmNGUtNDA1Ny1hNDM5LTViOTAzY2U3NDk5Yy53ZWJtP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MTEyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjExMjRUMDczOTU0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YWYzMDkxZDEwZmRmYjljZjVjMDg3NDFjNjUwNTdhNDM0OTFjMDU1OTE1NWVmMGVkYWNiNDhiN2Y2ODEyYWM1MCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPXZpZGVvJTJGd2VibSJ9.FGnfhxv6spNja2gmBMxySocZ4eIH4s1lUxcA2WmKlU0" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+
+  </video>
+</details>
+
+</div>
+</details>
+<p dir="auto">🎬 <strong>В кадре:</strong> Юные инженеры<br>
+👨‍🏫 <strong>Преподаватель:</strong> TechLab <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/eaststandart/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/eaststandart" aria-keyshortcuts="Alt+ArrowUp">@eaststandart</a><br>
+🏢 <strong>Место:</strong> Детско-юношеский инженерный клуб, г. Владивосток<br>
+🌐 <strong>Источник:</strong> <a href="https://eaststandart.github.io/" rel="nofollow">Творческая лаборатория познавательного развития</a></p>

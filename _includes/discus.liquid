@@ -134,6 +134,8 @@
     if (!fixGiscusFullscreen()) {
         observer.observe(document.documentElement, {
             childList: true,
+            attributes: true,
+            attributeFilter: ["src"],
             subtree: true
         });
     }

@@ -134,7 +134,7 @@ def _format_photo_block(title, description, media_content):
         parts.extend(["", description])
 
     if photos:
-        gallery = ["<div align=\"left\">"]
+        gallery = ["<div>"]
         for photo in photos:
             url = photo["url"]
             gallery.extend([
@@ -165,7 +165,7 @@ def _format_video_block(title, description, media_content):
             " <summary>Смотреть видео-материалы 👀</summary>",
             "&thinsp;",
             "",
-            '<div align="left">',
+            '<div>',
             "",
             "\n\n".join(video_lines),
             "",
@@ -219,15 +219,15 @@ def format_comment(markdown: str, metadata=None) -> str:
 
     if footer:
         result.extend(["", footer])
-    else:
-        teacher = _format_teacher(metadata.get("teacher"))
-        result.extend([
-            "",
-            "🎬 **В кадре:** Юные инженеры",
-            f"👨‍🏫 **Преподаватель:** {teacher}",
-            "🏢 **Место:** Детско-юношеский инженерный клуб, г. Владивосток",
-            "🌐 **Источник:** [Творческая лаборатория познавательного развития](https://eaststandart.github.io/)",
-        ])
+
+    teacher = _format_teacher(metadata.get("teacher"))
+    result.extend([
+        "",
+        "🎬 **В кадре:** Юные инженеры",
+        f"👨‍🏫 **Преподаватель:** {teacher}",
+        "🏢 **Место:** Детско-юношеский инженерный клуб, г. Владивосток",
+        "🌐 **Источник:** [Творческая лаборатория познавательного развития](https://eaststandart.github.io/)",
+    ])
 
     formatted = "\n".join(result).strip()
     logger.info(

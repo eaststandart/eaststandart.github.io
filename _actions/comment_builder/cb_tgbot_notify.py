@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import re
+import urllib.parse
 import urllib.request
 
 
@@ -20,6 +21,76 @@ TELEGRAM_API_URL = "https://api.telegram.org"
 
 logger = logging.getLogger(__name__)
 
+
+
+def _get_discussion_title(token, discussion_number):
+    """Получает реальный заголовок Discussion через GitHub GraphQL API."""
+    query = """
+    query($owner: String!, $repo: String!, $number: Int!) {
+      repository(owner: $owner, name: $repo) {
+        discussion(number: $number) {
+          title
+        }
+      }
+    }
+    """
+    payload = {
+        "query": query,
+        "variables": {
+            "owner": "eaststandart",
+            "repo": "eaststandart.github.io",
+            "number": int(discussion_number),
+        },
+    }
+    request = urllib.request.Request(
+        "https://api.github.com/graphql",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "User-Agent": "TechLab-Comment-Builder",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except Exception as error:
+        logger.error("Не удалось получить заголовок Discussion #%s: %s", discussion_number, error)
+        return None
+
+    errors = result.get("errors") if isinstance(result, dict) else None
+    if errors:
+        logger.error("GitHub GraphQL вернул ошибку при чтении Discussion #%s: %s",
+                     discussion_number, errors)
+        return None
+
+    discussion = (
+        result.get("data", {}).get("repository", {}).get("discussion")
+        if isinstance(result, dict) else None
+    )
+    title = discussion.get("title") if isinstance(discussion, dict) else None
+    if not isinstance(title, str) or not title.strip():
+        logger.error("GitHub не вернул заголовок Discussion #%s.", discussion_number)
+        return None
+
+    return title.strip()
+
+
+def _with_new_sort_parameter(url):
+    """Добавляет sort=new, сохраняя остальные параметры и anchor ссылки."""
+    parts = urllib.parse.urlsplit(url)
+    query = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+    query = [(key, value) for key, value in query if key != "sort"]
+    query.append(("sort", "new"))
+    return urllib.parse.urlunsplit((
+        parts.scheme,
+        parts.netloc,
+        parts.path,
+        urllib.parse.urlencode(query),
+        parts.fragment,
+    ))
 
 def send_public_notification(markdown_body, comment_url, discussion_number,
                              public_config, media_count=0):
@@ -39,22 +110,33 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         logger.error("Критическая ошибка: секрет TELEGRAM_BOT_TOKEN не найден.")
         return False
 
-    # Дата берётся из заголовка опубликованного комментария Discussion #83.
-    date_match = re.search(
-        r"^##\s+(\d{2}\.\d{2}\.\d{4})(?:\s|$)",
-        markdown_body,
-        re.MULTILINE,
+    github_token = (
+        os.environ.get("MY_ADMIN_TOKEN", "").strip()
+        or os.environ.get("GITHUB_TOKEN", "").strip()
     )
-    if not date_match:
-        logger.error("Не удалось определить дату медиаматериалов.")
+    if not github_token:
+        logger.error("Не найден токен MY_ADMIN_TOKEN или GITHUB_TOKEN для GitHub API.")
         return False
 
-    formatted_date = f"{date_match.group(1)} г."
-    safe_url = html.escape(comment_url, quote=True)
+    discussion_title = _get_discussion_title(github_token, discussion_number)
+    if not discussion_title:
+        return False
+
+    # Вторая строка берётся из главного заголовка опубликованного комментария.
+    heading_match = re.search(r"^##\\s+(.+?)\\s*$", markdown_body, re.MULTILINE)
+    if not heading_match:
+        logger.error("В опубликованном комментарии не найден главный заголовок уровня H2.")
+        return False
+
+    comment_heading = heading_match.group(1).strip()
+    normalized_url = _with_new_sort_parameter(comment_url)
+    safe_url = html.escape(normalized_url, quote=True)
+    safe_title = html.escape(discussion_title, quote=False)
+    safe_heading = html.escape(comment_heading, quote=False)
     message_text = (
         f'<a href="{safe_url}">&#8203;</a>'
-        f"<b>🏢🏃‍♀️🏃‍♂️ Инженерные занятия #{discussion_number}</b>\n\n"
-        f"📢 Добавлены медиаматериалы за {formatted_date}\n\n"
+        f"<b>{safe_title}</b>\\n\\n"
+        f"📢 {safe_heading}\\n\\n"
         f'<a href="{safe_url}">👀 Посмотреть на GitHub Discussions</a>'
     )
 

@@ -10,6 +10,7 @@
 
 import html
 import json
+import logging
 import os
 import re
 import urllib.request
@@ -17,23 +18,25 @@ import urllib.request
 
 TELEGRAM_API_URL = "https://api.telegram.org"
 
+logger = logging.getLogger(__name__)
+
 
 def send_public_notification(markdown_body, comment_url, discussion_number,
                              public_config, media_count=0):
     """Отправляет уведомления по плоскому списку адресатов tg_public_notify."""
-    print("\n=== [МОДУЛЬ CB_TGBOT_NOTIFY] ЗАПУСК ПУБЛИЧНОГО ИНФОРМАТОРА ===")
+    logger.info("Запуск публичного Telegram информатора.")
 
     if not public_config:
-        print("[БОТ ТГ ГРУППЫ] Список tg_public_notify пуст. Рассылка пропущена.")
+        logger.info("Список tg_public_notify пуст. Рассылка пропущена.")
         return True
 
     if not media_count:
-        print("[БОТ ТГ ГРУППЫ] Медиаматериалы отсутствуют. Рассылка пропущена.")
+        logger.info("Медиаматериалы отсутствуют. Рассылка пропущена.")
         return True
 
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
-        print("[БОТ ТГ ГРУППЫ] ❌ КРИТИЧЕСКАЯ ОШИБКА: Секрет TELEGRAM_BOT_TOKEN не найден!")
+        logger.error("Критическая ошибка: секрет TELEGRAM_BOT_TOKEN не найден.")
         return False
 
     # Дата берётся из заголовка опубликованного комментария Discussion #83.
@@ -43,7 +46,7 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         re.MULTILINE,
     )
     if not date_match:
-        print("[БОТ ТГ ГРУППЫ] ❌ Не удалось определить дату медиаматериалов.")
+        logger.error("Не удалось определить дату медиаматериалов.")
         return False
 
     formatted_date = f"{date_match.group(1)} г."
@@ -55,7 +58,7 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         f'<a href="{safe_url}">👀 Посмотреть на GitHub Discussions</a>'
     )
 
-    print("[БОТ ТГ ГРУППЫ] Начинаем вещание по плоскому списку адресатов...")
+    logger.info("Начинаем рассылку по плоскому списку адресатов.")
     successful_broadcasts = 0
     total_broadcasts = 0
 
@@ -65,18 +68,18 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
             continue
 
         if "_" not in raw_recipient:
-            print(f"[БОТ ТГ ГРУППЫ] ⚠️ Некорректный адресат: {recipient!r}. Пропуск.")
+            logger.warning("Некорректный адресат: %r. Пропуск.", recipient)
             continue
 
         channel_id, topic_value = raw_recipient.rsplit("_", 1)
         if not re.fullmatch(r"-?\d+", channel_id):
-            print(f"[БОТ ТГ ГРУППЫ] ⚠️ Некорректный ID канала: {recipient!r}. Пропуск.")
+            logger.warning("Некорректный ID канала: %r. Пропуск.", recipient)
             continue
 
         is_general_topic = topic_value.endswith("g")
         topic_digits = re.sub(r"[^\d]", "", topic_value)
         if not is_general_topic and not topic_digits:
-            print(f"[БОТ ТГ ГРУППЫ] ⚠️ Некорректный ID темы: {recipient!r}. Пропуск.")
+            logger.warning("Некорректный ID темы: %r. Пропуск.", recipient)
             continue
 
         payload = {
@@ -93,9 +96,9 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
 
         total_broadcasts += 1
         if is_general_topic:
-            print(f"[БОТ ТГ ГРУППЫ] Подготовка отправки в канал {channel_id} (основная ветка).")
+            logger.info("Подготовка отправки в канал %s (основная ветка).", channel_id)
         else:
-            print(f"[БОТ ТГ ГРУППЫ] Подготовка отправки в канал {channel_id} (чат #{int(topic_digits)}).")
+            logger.info("Подготовка отправки в канал %s (чат #%s).", channel_id, int(topic_digits))
 
         request = urllib.request.Request(
             f"{TELEGRAM_API_URL}/bot{token}/sendMessage",
@@ -108,26 +111,28 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
                 if response.getcode() == 200:
                     successful_broadcasts += 1
                     thread_log = " (основная ветка)" if is_general_topic else f" (чат #{int(topic_digits)})"
-                    print(f"[БОТ ТГ ГРУППЫ] 🚀 УСПЕХ: Анонс доставлен в канал {channel_id}{thread_log}!")
+                    logger.info("Уведомление доставлено в канал %s%s.", channel_id, thread_log)
                 else:
-                    print(
-                        f"[БОТ ТГ ГРУППЫ] ⚠️ Предупреждение: Получен статус "
-                        f"{response.getcode()} для канала {channel_id}."
+                    logger.warning(
+                        "Получен статус %s для канала %s.",
+                        response.getcode(),
+                        channel_id,
                     )
         except Exception as error:
             thread_log = " (основная ветка)" if is_general_topic else f" (чат #{int(topic_digits)})"
-            print(f"[БОТ ТГ ГРУППЫ] ❌ Ошибка сети в канале {channel_id}{thread_log}: {str(error)}")
+            logger.error("Ошибка сети в канале %s%s: %s", channel_id, thread_log, error)
 
     if total_broadcasts == 0:
-        print("[БОТ ТГ ГРУППЫ] ❌ Нет корректных адресатов для отправки.")
+        logger.error("Нет корректных адресатов для отправки.")
         return False
 
     if successful_broadcasts > 0:
-        print(
-            f"[БОТ ТГ ГРУППЫ] Рассылка завершена: успешно доставлено "
-            f"{successful_broadcasts} из {total_broadcasts}."
+        logger.info(
+            "Рассылка завершена: успешно доставлено %s из %s.",
+            successful_broadcasts,
+            total_broadcasts,
         )
         return True
 
-    print("[БОТ ТГ ГРУППЫ] ❌ Ни одно уведомление не удалось доставить.")
+    logger.error("Ни одно уведомление не удалось доставить.")
     return False

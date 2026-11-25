@@ -70,13 +70,13 @@ collections:
 
 include: ["_pages", "robots.txt"]
 exclude:
-  - ARCHITECTURE.md
   - CHANGELOG.md
   - CODE_OF_CONDUCT.md
   - CONTRIBUTING.md
   - LICENSE.txt
   - README.md
   - ROADMAP.md
+  - STRUCTURE.md
 
 # Plug-ins
 plugins:
@@ -90,3 +90,33 @@ defaults:
       path: ""
     values:
       image: "/assets/icons/logo.svg"
+
+  # Исключение статических ресурсов из sitemap.xml
+  - scope:
+      path: "assets"
+    values:
+      sitemap: false
+
+  # Исключение служебных страниц и тестов
+  - scope:
+      path: "_pages"
+    values:
+      sitemap: false
+    values:
+      sitemap: false
+  - scope:
+      path: "test"
+    values:
+      sitemap: false
+  - scope:
+      path: "comment-builder"
+    values:
+      sitemap: false
+  - scope:
+      path: "journal-attendance"
+    values:
+      sitemap: false
+  - scope:
+      path: "media-upload-diagnostic"
+    values:
+      sitemap: false

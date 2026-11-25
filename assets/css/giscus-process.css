@@ -1,7 +1,7 @@
 /*
 @module giscus-process.css
 @about Модуль изолированных стилей страницы дискусий раздела Творческий процесс
-@purpose 
+@purpose
 @author TechLab
 */
 
@@ -33,7 +33,13 @@
     display: inline-block;
     vertical-align: top;
     width: calc(50% - 0.75rem);
-    margin: 0 0.5rem 0.5rem 0;
+    margin: 0 0.5rem -2px 0;
+}
+
+/* Немного расширяем каждое второе видео, не меняя его место в раскладке */
+.gsc-comment-content details:has(> video):nth-child(2n of details:has(> video)) {
+    transform: scaleX(1.015);
+    transform-origin: left center;
 }
 
 .gsc-comment-content details > video {
@@ -98,5 +104,10 @@
         display: block;
         width: 100%;
         margin-right: 0;
+    }
+
+    /* На мобильных растяжение не требуется */
+    .gsc-comment-content details:has(> video) {
+        transform: none;
     }
 }

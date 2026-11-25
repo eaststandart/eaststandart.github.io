@@ -16,6 +16,7 @@ import cb_media_uploader
 import cb_comment_dispatcher
 import cb_comment_builder
 import cb_gate_closer
+import cb_tgbot_notify
 
 
 LOGGER_NAME = "comment_builder"
@@ -75,6 +76,28 @@ def main():
         )
         if not cleanup_result.get("success"):
             raise RuntimeError("Модуль очистки не подтвердил завершение.")
+
+        public_config = (package.get("metadata") or {}).get("tg_public_notify", [])
+        if public_config:
+            logger.info("Отправка публичных Telegram-уведомлений.")
+            try:
+                notification_sent = cb_tgbot_notify.send_public_notification(
+                    markdown_body=package.get("body", ""),
+                    comment_url=result["url"],
+                    discussion_number=result["discussion_number"],
+                    public_config=public_config,
+                    media_count=len(package.get("media", [])),
+                )
+                if not notification_sent:
+                    logger.warning(
+                        "Публикация завершена, но Telegram-уведомление не доставлено."
+                    )
+            except Exception:
+                logger.exception(
+                    "Ошибка Telegram-уведомления. Результат публикации не изменён."
+                )
+        else:
+            logger.info("tg_public_notify пуст. Telegram-рассылка пропущена.")
 
         logger.info(
             "Конвейер завершён успешно. Ссылка на комментарий: %s",

@@ -43,13 +43,13 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
 
     announcement_text = f"Обновлён Творческий процесс за {formatted_date}"
     if media_count:
-        announcement_text += "\\n(Добавлены медиаматериалы занятий)"
+        announcement_text += "\n(Добавлены медиаматериалы занятий)"
 
     safe_url = html.escape(comment_url, quote=True)
     message_text = (
         f'<a href="{safe_url}">&#8203;</a>'
-        f"<b>Творческий процесс #{discussion_number}</b>\\n\\n"
-        f"{announcement_text}\\n\\n"
+        f"<b>Творческий процесс #{discussion_number}</b>\n\n"
+        f"{announcement_text}\n\n"
         f'<a href="{safe_url}">Посмотреть на GitHub Discussions</a>'
     )
 

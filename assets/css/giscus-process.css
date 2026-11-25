@@ -29,33 +29,38 @@
 }
 
 /* Видео без общего div */
-.gsc-comment-content > a:has(> video) {
+.gsc-comment-content > details:has(> video) {
     display: inline-block;
     vertical-align: top;
     width: calc(50% - 0.5rem);
     margin: 0 0.5rem 0.5rem 0;
 }
 
-.gsc-comment-content > a > video {
+.gsc-comment-content > details > video {
     display: block;
     width: 100%;
     height: auto;
+    min-height: 0;
+    max-height: none;
 }
 
 /* Мобильные устройства */
 @media screen and (max-width: 500px) {
+    /* Фотографии */
     .gsc-comment-content > a:has(> img) {
         display: block;
         width: 100%;
         margin-right: 0;
     }
 
-    .gsc-comment-content > a:has(> video) {
+    /* Видео */
+    .gsc-comment-content > details:has(> video) {
         display: block;
         width: 100%;
         margin-right: 0;
     }
 
+    /* Исходные контейнеры */
     .gsc-comment-content div:has(> a > img),
     .gsc-comment-content div:has(> details > video) {
         display: flex;

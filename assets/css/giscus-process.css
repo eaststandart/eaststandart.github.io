@@ -24,24 +24,25 @@
     gap: 1rem;
 }
 
-/* Шапка внутреннего видеоплеера */
+/*
+Шапка внутреннего видеоплеера
 .gsc-comment-content details details > summary.tmp-px-3.py-2 {
     padding-bottom: 0 !important;
     line-height: 1 !important;
     margin-bottom: -4px !important;
 }
 
-/* Скрываем имя видео, оставляем иконку и стрелку */
+Скрываем имя видео
 .gsc-comment-content details details > summary.tmp-px-3.py-2 span.m-1 {
     display: none !important;
 }
 
-/* Вертикальная ориентация мобильных устройств */
 @media screen and (max-width: 500px) and (orientation: portrait) {
     .gsc-comment-content details details > summary.tmp-px-3.py-2 {
         margin-bottom: -16px !important;
     }
 }
+*/
 
 /* Мобильные устройства */
 @media screen and (max-width: 500px) {

@@ -102,8 +102,6 @@ defaults:
       path: "_pages"
     values:
       sitemap: false
-    values:
-      sitemap: false
   - scope:
       path: "test"
     values:

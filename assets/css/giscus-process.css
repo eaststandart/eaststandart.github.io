@@ -10,25 +10,99 @@
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
 
-/* Фотографии */
+/* =========================================================
+   1. СТАРЫЙ ФОРМАТ (обёртки div и details из comment-builder)
+   ========================================================= */
 .gsc-comment-content div:has(> a > img) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
 }
 
-/* Видео */
 .gsc-comment-content div:has(> details > video) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
 }
 
-/* Мобильные устройства */
+/* =========================================================
+   2. НОВЫЙ ФОРМАТ (чистый Markdown без HTML-таблиц и div)
+   ========================================================= */
+
+/* Если в абзаце 2 и более фото подряд — включаем сетку в 3 колонки */
+.gsc-comment-content p:has(img + img),
+.gsc-comment-content p:has(a:has(img) + a:has(img)) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+}
+
+/* Убираем случайные переносы строк внутри фото-сетки */
+.gsc-comment-content p:has(img + img) br,
+.gsc-comment-content p:has(a:has(img) + a:has(img)) br {
+    display: none;
+}
+
+/* Ячейки-ссылки в сетке с единой пропорцией */
+.gsc-comment-content p:has(a:has(img) + a:has(img)) > a {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+/* Сами картинки внутри сетки */
+.gsc-comment-content p:has(img + img) img,
+.gsc-comment-content p:has(a:has(img) + a:has(img)) img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0 !important;
+    transition: transform 0.25s ease;
+}
+
+.gsc-comment-content p:has(a:has(img) + a:has(img)) > a:hover img {
+    transform: scale(1.04);
+}
+
+/* Если фото в абзаце ОДНО — показываем целиком без обрезки и растяжения */
+.gsc-comment-content p:not(:has(img + img)):not(:has(a:has(img) + a:has(img))) img {
+    max-height: 420px;
+    width: auto;
+    max-width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+/* Оформление видеороликов в чистом Markdown (вне details) */
+.gsc-comment-content > video,
+.gsc-comment-content p > video,
+.gsc-comment-content div:not(:has(> details)) > video {
+    max-height: 380px;
+    width: auto;
+    max-width: 100%;
+    border-radius: 8px;
+    background: #000;
+    display: block;
+    margin: 0.75rem 0;
+}
+
+/* =========================================================
+   3. МОБИЛЬНЫЕ УСТРОЙСТВА (экран до 500px)
+   ========================================================= */
 @media screen and (max-width: 500px) {
     .gsc-comment-content div:has(> a > img),
     .gsc-comment-content div:has(> details > video) {
         display: flex;
         flex-direction: column;
+    }
+
+    .gsc-comment-content p:has(img + img),
+    .gsc-comment-content p:has(a:has(img) + a:has(img)) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
     }
 }

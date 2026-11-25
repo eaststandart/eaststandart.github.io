@@ -24,6 +24,10 @@
     gap: 1rem;
 }
 
+.gsc-comment-content video {
+    min-height: 0 !important;
+}
+
 /*
 Шапка внутреннего видеоплеера
 .gsc-comment-content details details > summary.tmp-px-3.py-2 {

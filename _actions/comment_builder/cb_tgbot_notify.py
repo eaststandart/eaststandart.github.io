@@ -13,7 +13,6 @@ import json
 import logging
 import os
 import re
-import urllib.parse
 import urllib.request
 
 
@@ -78,20 +77,6 @@ def _get_discussion_title(token, discussion_number):
     return title.strip()
 
 
-def _with_new_sort_parameter(url):
-    """Добавляет sort=new, сохраняя остальные параметры и anchor ссылки."""
-    parts = urllib.parse.urlsplit(url)
-    query = urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
-    query = [(key, value) for key, value in query if key != "sort"]
-    query.append(("sort", "new"))
-    return urllib.parse.urlunsplit((
-        parts.scheme,
-        parts.netloc,
-        parts.path,
-        urllib.parse.urlencode(query),
-        parts.fragment,
-    ))
-
 def send_public_notification(markdown_body, comment_url, discussion_number,
                              public_config, media_count=0):
     """Отправляет уведомления по плоскому списку адресатов tg_public_notify."""
@@ -129,15 +114,13 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         return False
 
     comment_heading = heading_match.group(1).strip()
-    normalized_url = _with_new_sort_parameter(comment_url)
-    safe_url = html.escape(normalized_url, quote=True)
+    safe_url = html.escape(comment_url, quote=True)
     safe_title = html.escape(discussion_title, quote=False)
     safe_heading = html.escape(comment_heading, quote=False)
     message_text = (
-        f'<a href="{safe_url}">&#8203;</a>'
-        f"<b>{safe_title}</b>\n\n"
-        f"📢 {safe_heading}\n\n"
-        f'<a href="{safe_url}">👀 Посмотреть на GitHub Discussions</a>'
+        f'<a href="{safe_url}">&#8203;</a><b>{safe_title}</b>\\n\\n'
+        f'📢 {safe_heading}\\n\\n'
+        f'👀 <a href="{safe_url}">Посмотреть на GitHub Discussions</a>'
     )
 
     logger.info("Начинаем рассылку по плоскому списку адресатов.")

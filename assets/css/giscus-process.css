@@ -50,6 +50,19 @@
     width: 100%;
 }
 
+
+/* Боковые отступы комментариев */
+.gsc-comment-content {
+    padding-right: 8px !important;
+}
+
+/* Вертикальная ориентация мобильных устройств */
+@media screen and (max-width: 500px) and (orientation: portrait) {
+    .gsc-comment-content {
+        padding-right: 16px !important;
+    }
+}
+
 /* Мобильные устройства */
 @media screen and (max-width: 500px) {
     /* Фотографии */

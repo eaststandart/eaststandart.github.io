@@ -149,6 +149,19 @@ def _parse_scalar(value):
     if not value:
         return ""
 
+    if value.startswith("["):
+        try:
+            parsed = ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            raise CommentBuilderDataError(
+                f"Некорректный список Front Matter: {value}"
+            )
+        if not isinstance(parsed, list):
+            raise CommentBuilderDataError(
+                f"Ожидался список Front Matter: {value}"
+            )
+        return parsed
+
     if value[0:1] in ("'", '"'):
         try:
             return ast.literal_eval(value)

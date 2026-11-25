@@ -8,7 +8,6 @@
 @version 1.0.0
 """
 
-import datetime
 import html
 import json
 import os
@@ -26,31 +25,32 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         print("[БОТ ТГ] Список tg_public_notify пуст. Рассылка пропущена.")
         return True
 
+    if not media_count:
+        print("[БОТ ТГ] Медиаматериалы отсутствуют. Рассылка пропущена.")
+        return True
+
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     if not token:
         print("[БОТ ТГ] Ошибка: секрет TELEGRAM_BOT_TOKEN не найден.")
         return False
 
+    # Дата берётся из заголовка опубликованного комментария Discussion #83.
     date_match = re.search(
-        r"Творческий процесс за ([\d.]+ г\.)",
+        r"^##\s+(\d{2}\.\d{2}\.\d{4})(?:\s|$)",
         markdown_body,
-        re.IGNORECASE,
+        re.MULTILINE,
     )
-    if date_match:
-        formatted_date = date_match.group(1).strip()
-    else:
-        formatted_date = f"{datetime.date.today().strftime('%d.%m.%Y')} г."
+    if not date_match:
+        print("[БОТ ТГ] Не удалось определить дату медиаматериалов.")
+        return False
 
-    announcement_text = f"Обновлён Творческий процесс за {formatted_date}"
-    if media_count:
-        announcement_text += "\n(Добавлены медиаматериалы занятий)"
-
+    formatted_date = f"{date_match.group(1)} г."
     safe_url = html.escape(comment_url, quote=True)
     message_text = (
         f'<a href="{safe_url}">&#8203;</a>'
-        f"<b>Творческий процесс #{discussion_number}</b>\n\n"
-        f"{announcement_text}\n\n"
-        f'<a href="{safe_url}">Посмотреть на GitHub Discussions</a>'
+        f"<b>🏢🏃‍♀️🏃‍♂️ Инженерные занятия #{discussion_number}</b>\n"
+        f"📢 Добавлены медиаматериалы за {formatted_date}\n"
+        f'<a href="{safe_url}">👀 Посмотреть на GitHub Discussions</a>'
     )
 
     successful_broadcasts = 0

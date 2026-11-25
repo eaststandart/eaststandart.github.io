@@ -50,6 +50,21 @@
     width: 100%;
 }
 
+/* Убираем внутреннюю оболочку GitHub вокруг видеоплеера */
+.gsc-comment-content details.details-reset.border.rounded-2 > summary {
+    display: none !important;
+}
+
+.gsc-comment-content details.details-reset.border.rounded-2 {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.gsc-comment-content details.details-reset.border.rounded-2 > video {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
 /* Боковые отступы комментариев */
 .gsc-comment-content {
     padding-right: 8px !important;
@@ -60,17 +75,17 @@
     .gsc-comment-content {
         padding-right: 16px !important;
     }
-}
 
-/* Мобильные устройства */
-@media screen and (max-width: 500px) {
-    /* Фотографии */
+    /* Фотографии: одна в строке */
     .gsc-comment-content > a:has(> img) {
         display: block;
         width: 100%;
         margin-right: 0;
     }
+}
 
+/* Мобильные устройства */
+@media screen and (max-width: 500px) {
     /* Исходные контейнеры */
     .gsc-comment-content div:has(> a > img),
     .gsc-comment-content div:has(> details > video) {

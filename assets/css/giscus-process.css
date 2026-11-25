@@ -1,7 +1,7 @@
 /*
 @module giscus-process.css
 @about Модуль изолированных стилей страницы дискусий раздела Творческий процесс
-@purpose
+@purpose 
 @author TechLab
 */
 
@@ -28,7 +28,7 @@
     height: auto;
 }
 
-/* Видео: два плеера в строке */
+/* Видео без общего div и внутри внешнего details */
 .gsc-comment-content details:has(> video) {
     display: inline-block;
     vertical-align: top;
@@ -36,7 +36,6 @@
     margin: 0 0.5rem 0.5rem 0;
 }
 
-/* Видеоплеер */
 .gsc-comment-content details > video {
     display: block;
     width: 100%;

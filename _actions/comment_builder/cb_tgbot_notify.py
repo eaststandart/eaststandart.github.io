@@ -114,11 +114,12 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         return False
 
     comment_heading = heading_match.group(1).strip()
+    preview_url = html.escape(comment_url.replace("?sort=new", ""), quote=True)
     safe_url = html.escape(comment_url, quote=True)
     safe_title = html.escape(discussion_title, quote=False)
     safe_heading = html.escape(comment_heading, quote=False)
     message_text = (
-        f'<a href="{safe_url}">&#8203;</a><b>{safe_title}</b>\n\n'
+        f'<a href="{preview_url}">&#8203;</a><b>{safe_title}</b>\n\n'
         f'📢 {safe_heading}\n\n'
         f'👀 <a href="{safe_url}">Посмотреть на GitHub Discussions</a>'
     )

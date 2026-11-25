@@ -113,7 +113,7 @@ def _preflight(body, media):
     return by_name
 
 
-def _upload_one(session, token, item):
+def _upload_one(session, token, item, upload_name):
     """Загружает один файл; неоднозначный результат POST автоматически не повторяет."""
     name = item["name"]
     local_path = item["local_path"]
@@ -123,7 +123,7 @@ def _upload_one(session, token, item):
     }[Path(name).suffix.lower()]
 
     params = {
-        "name": name,
+        "name": upload_name,
         "content_type": mime_type,
         "repository_id": str(TARGET_REPOSITORY_ID),
     }
@@ -135,8 +135,8 @@ def _upload_one(session, token, item):
     }
     file_size = os.path.getsize(local_path)
     logger.info(
-        "Загрузка вложения: %s (%d байт, %s).",
-        name, file_size, mime_type,
+        "Загрузка вложения: %s (имя GitHub: %s; %d байт, %s).",
+        name, upload_name, file_size, mime_type,
     )
 
     for attempt in range(MAX_429_ATTEMPTS):
@@ -283,9 +283,26 @@ def upload_media(package):
 
     logger.info("Начинаю загрузку медиа: файлов=%d.", len(media_by_name))
     urls = {}
+    last_upload_timestamp = 0
     with requests.Session() as session:
         for name, item in media_by_name.items():
-            urls[name] = _upload_one(session, token, item)
+            # Для каждого файла используем отдельную Unix-метку в секундах.
+            # Если предыдущая загрузка завершилась в ту же секунду, ждём следующую.
+            upload_timestamp = int(time.time())
+            while upload_timestamp <= last_upload_timestamp:
+                time.sleep(0.1)
+                upload_timestamp = int(time.time())
+
+            suffix = Path(name).suffix.lower()
+            media_label = "video" if suffix == ".webm" else "photo"
+            date_match = re.match(r"^(\d{4}-\d{2}-\d{2})-", name)
+            date_prefix = f"{date_match.group(1)}-" if date_match else ""
+            upload_name = f"{date_prefix}{upload_timestamp}_{media_label}{suffix}"
+            logger.info("Имя вложения для GitHub: %s.", upload_name)
+
+            # Следующий файл начнёт загружаться только после получения URL.
+            urls[name] = _upload_one(session, token, item, upload_name)
+            last_upload_timestamp = upload_timestamp
 
     logger.info("Загрузка завершена: получено URL=%d. Подставляю ссылки в Markdown.", len(urls))
     updated_body = _replace_media_links(body, urls, media_by_name)

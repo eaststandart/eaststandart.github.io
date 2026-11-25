@@ -295,7 +295,9 @@ def upload_media(package):
 
             suffix = Path(name).suffix.lower()
             media_label = "video" if suffix == ".webm" else "photo"
-            upload_name = f"{upload_timestamp}_{media_label}{suffix}"
+            date_match = re.match(r"^(\d{4}-\d{2}-\d{2})-", name)
+            date_prefix = f"{date_match.group(1)}-" if date_match else ""
+            upload_name = f"{date_prefix}{upload_timestamp}_{media_label}{suffix}"
             logger.info("Имя вложения для GitHub: %s.", upload_name)
 
             # Следующий файл начнёт загружаться только после получения URL.

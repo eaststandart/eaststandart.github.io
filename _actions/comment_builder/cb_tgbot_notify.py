@@ -123,7 +123,7 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         return False
 
     # Вторая строка берётся из главного заголовка опубликованного комментария.
-    heading_match = re.search(r"^##\\s+(.+?)\\s*$", markdown_body, re.MULTILINE)
+    heading_match = re.search(r"^##\s+(.+?)\s*$", markdown_body, re.MULTILINE)
     if not heading_match:
         logger.error("В опубликованном комментарии не найден главный заголовок уровня H2.")
         return False
@@ -135,8 +135,8 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
     safe_heading = html.escape(comment_heading, quote=False)
     message_text = (
         f'<a href="{safe_url}">&#8203;</a>'
-        f"<b>{safe_title}</b>\\n\\n"
-        f"📢 {safe_heading}\\n\\n"
+        f"<b>{safe_title}</b>\n\n"
+        f"📢 {safe_heading}\n\n"
         f'<a href="{safe_url}">👀 Посмотреть на GitHub Discussions</a>'
     )
 

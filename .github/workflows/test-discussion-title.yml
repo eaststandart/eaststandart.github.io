@@ -1,0 +1,90 @@
+# ==============================================================================
+# @module  test-discussion-title.yml
+# @about   Проверка заголовка GitHub Discussion через GraphQL API.
+# @purpose Выводит реальный title Discussion в логах GitHub Actions.
+# ==============================================================================
+name: Test Discussion Title
+
+on:
+  workflow_dispatch:
+    inputs:
+      discussion_number:
+        description: "Номер Discussion"
+        required: true
+        default: "83"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test_title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Get Discussion Title
+        env:
+          MY_ADMIN_TOKEN: ${{ secrets.MY_ADMIN_TOKEN }}
+          DISCUSSION_NUMBER: ${{ inputs.discussion_number }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+          import requests
+
+          query = """
+          query($owner: String!, $repo: String!, $number: Int!) {
+            repository(owner: $owner, name: $repo) {
+              discussion(number: $number) {
+                title
+              }
+            }
+          }
+          """
+
+          token = os.environ.get("MY_ADMIN_TOKEN")
+          if not token:
+              sys.exit("ERROR: secret MY_ADMIN_TOKEN is not configured")
+
+          try:
+              number = int(os.environ["DISCUSSION_NUMBER"])
+          except ValueError:
+              sys.exit("ERROR: DISCUSSION_NUMBER must be an integer")
+
+          response = requests.post(
+              "https://api.github.com/graphql",
+              headers={"Authorization": f"Bearer {token}"},
+              json={
+                  "query": query,
+                  "variables": {
+                      "owner": "eaststandart",
+                      "repo": "eaststandart.github.io",
+                      "number": number
+                  }
+              },
+              timeout=30
+          )
+          response.raise_for_status()
+          result = response.json()
+
+          if result.get("errors"):
+              sys.exit(f"GraphQL ERROR: {result['errors']}")
+
+          discussion = (
+              result.get("data", {})
+              .get("repository", {})
+              .get("discussion")
+          )
+          if not discussion or not discussion.get("title"):
+              sys.exit(f"ERROR: Discussion #{number} not found or title is empty")
+
+          print(f"Discussion #{number} title:")
+          print(discussion["title"])
+          PY

@@ -28,20 +28,26 @@
     height: auto;
 }
 
-/* Видео без общего div */
-.gsc-comment-content > details:has(> video) {
+/* Видео без общего div и внутри внешнего details */
+.gsc-comment-content details:has(> video) {
     display: inline-block;
     vertical-align: top;
     width: calc(50% - 0.75rem);
     margin: 0 0.5rem 0.5rem 0;
 }
 
-.gsc-comment-content > details > video {
+.gsc-comment-content details > video {
     display: block;
     width: 100%;
     height: auto;
     min-height: 0;
     max-height: none;
+}
+
+/* Внешний контейнер видео */
+.gsc-comment-content > details:not(:has(> video)) {
+    display: block;
+    width: 100%;
 }
 
 /* Мобильные устройства */
@@ -62,7 +68,7 @@
     }
 
 /* Видео: один плеер в строке */
-.gsc-comment-content > details:has(> video) {
+.gsc-comment-content details:has(> video) {
     display: block;
     width: 100%;
     margin-right: 0;

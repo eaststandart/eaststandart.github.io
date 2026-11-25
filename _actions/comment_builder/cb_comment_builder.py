@@ -180,7 +180,6 @@ def publish_comment(package):
           comments(first: 100) {
             nodes {
               databaseId
-              url
               body
             }
           }
@@ -215,7 +214,7 @@ def publish_comment(package):
         if isinstance(existing, dict) and existing.get("body") == markdown_body:
             comment_id = existing.get("databaseId")
             comment_url = existing.get("url")
-            if comment_id and comment_url:
+            if comment_id:
                 logger.warning(
                     "Найден комментарий с полностью совпадающим текстом "
                     "(ID %s). Повторная публикация отменена.",
@@ -226,7 +225,10 @@ def publish_comment(package):
                     "duplicate": True,
                     "discussion_number": discussion_number,
                     "comment_id": comment_id,
-                    "url": comment_url,
+                    "url": (
+                        f"{DISCUSSION_BASE_URL}/{discussion_number}"
+                        f"?sort=new#discussioncomment-{comment_id}"
+                    ),
                     "manifest_name": manifest_name,
                 }
 
@@ -239,7 +241,6 @@ def publish_comment(package):
       }) {
         comment {
           databaseId
-          url
         }
       }
     }
@@ -265,7 +266,7 @@ def publish_comment(package):
         )
 
     comment_id = comment["databaseId"]
-    comment_url = comment.get("url") or (
+    comment_url = (
         f"{DISCUSSION_BASE_URL}/{discussion_number}"
         f"?sort=new#discussioncomment-{comment_id}"
     )

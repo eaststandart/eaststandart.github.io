@@ -10,19 +10,20 @@
 /* Подгружаем оригинальное цветное оформление темы light с сервера Giscus */
 @import url("https://giscus.app/themes/light.css");
 
-/* Фотографии */
+/* Фотографии без общего div */
 .gsc-comment-content:has(> a > img) {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    display: block;
 }
 
 .gsc-comment-content > a:has(> img) {
-    display: block;
-    min-width: 0;
+    display: inline-block;
+    vertical-align: top;
+    width: calc(33.333% - 0.7rem);
+    margin: 0 0.5rem 0.5rem 0;
 }
 
 .gsc-comment-content > a > img {
+    display: block;
     width: 100%;
     height: auto;
 }
@@ -34,10 +35,11 @@
     gap: 1rem;
 }
 
+/* Мобильные устройства */
 @media screen and (max-width: 500px) {
-    .gsc-comment-content:has(> a > img),
-    .gsc-comment-content div:has(> details > video) {
-        display: flex;
-        flex-direction: column;
+    .gsc-comment-content > a:has(> img) {
+        display: block;
+        width: 100%;
+        margin-right: 0;
     }
 }

@@ -11,7 +11,8 @@
 @import url("https://giscus.app/themes/light.css");
 
 /* Фотографии */
-.gsc-comment-content div:has(> a > img) {
+.gsc-comment-content div:has(> a > img),
+.gsc-comment-content p:has(> a > img) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
@@ -24,11 +25,10 @@
     gap: 1rem;
 }
 
-/* Мобильные устройства */
-@media screen and (max-width: 500px) {
-    .gsc-comment-content div:has(> a > img),
-    .gsc-comment-content div:has(> details > video) {
-        display: flex;
-        flex-direction: column;
-    }
+.gsc-comment-content div:has(> a > img),
+.gsc-comment-content p:has(> a > img),
+.gsc-comment-content div:has(> details > video) {
+    display: flex;
+    flex-direction: column;
+}
 }

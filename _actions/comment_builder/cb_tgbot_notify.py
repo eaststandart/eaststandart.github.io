@@ -29,6 +29,7 @@ def _get_discussion_title(token, discussion_number):
       repository(owner: $owner, name: $repo) {
         discussion(number: $number) {
           title
+          number
         }
       }
     }
@@ -70,11 +71,12 @@ def _get_discussion_title(token, discussion_number):
         if isinstance(result, dict) else None
     )
     title = discussion.get("title") if isinstance(discussion, dict) else None
-    if not isinstance(title, str) or not title.strip():
-        logger.error("GitHub не вернул заголовок Discussion #%s.", discussion_number)
+    number = discussion.get("number") if isinstance(discussion, dict) else None
+    if not isinstance(title, str) or not title.strip() or not isinstance(number, int):
+        logger.error("GitHub не вернул заголовок или номер Discussion #%s.", discussion_number)
         return None
 
-    return title.strip()
+    return title.strip(), number
 
 
 def send_public_notification(markdown_body, comment_url, discussion_number,
@@ -103,9 +105,10 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
         logger.error("Не найден токен MY_ADMIN_TOKEN или GITHUB_TOKEN для GitHub API.")
         return False
 
-    discussion_title = _get_discussion_title(github_token, discussion_number)
-    if not discussion_title:
+    discussion_data = _get_discussion_title(github_token, discussion_number)
+    if not discussion_data:
         return False
+    discussion_title, discussion_number = discussion_data
 
     # Вторая строка берётся из главного заголовка опубликованного комментария.
     heading_match = re.search(r"^##\s+(.+?)\s*$", markdown_body, re.MULTILINE)
@@ -116,7 +119,7 @@ def send_public_notification(markdown_body, comment_url, discussion_number,
     comment_heading = heading_match.group(1).strip()
     preview_url = html.escape(comment_url.replace("?sort=new", ""), quote=True)
     safe_url = html.escape(comment_url, quote=True)
-    safe_title = html.escape(discussion_title, quote=False)
+    safe_title = html.escape(f"{discussion_title} #{discussion_number}", quote=False)
     safe_heading = html.escape(comment_heading, quote=False)
     message_text = (
         f'<a href="{preview_url}">&#8203;</a><b>{safe_title}</b>\n\n'

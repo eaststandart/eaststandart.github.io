@@ -28,7 +28,7 @@
     min-height: 0 !important;
 }
 
-.gsc-comment-content details.details-reset {
+.gsc-comment-content details.details-reset:has(+ h3) {
     margin-bottom: 0 !important;
 }
 

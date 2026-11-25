@@ -24,6 +24,14 @@
     gap: 1rem;
 }
 
+.gsc-comment-content video {
+    min-height: 0 !important;
+}
+
+.gsc-comment-content details.details-reset {
+    margin-bottom: 0 !important;
+}
+
 /* Мобильные устройства */
 @media screen and (max-width: 500px) {
     .gsc-comment-content div:has(> a > img),

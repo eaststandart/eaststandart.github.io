@@ -32,26 +32,6 @@
     margin-bottom: 0 !important;
 }
 
-/*
-Шапка внутреннего видеоплеера
-.gsc-comment-content details details > summary.tmp-px-3.py-2 {
-    padding-bottom: 0 !important;
-    line-height: 1 !important;
-    margin-bottom: -4px !important;
-}
-
-Скрываем имя видео
-.gsc-comment-content details details > summary.tmp-px-3.py-2 span.m-1 {
-    display: none !important;
-}
-
-@media screen and (max-width: 500px) and (orientation: portrait) {
-    .gsc-comment-content details details > summary.tmp-px-3.py-2 {
-        margin-bottom: -16px !important;
-    }
-}
-*/
-
 /* Мобильные устройства */
 @media screen and (max-width: 500px) {
     .gsc-comment-content div:has(> a > img),

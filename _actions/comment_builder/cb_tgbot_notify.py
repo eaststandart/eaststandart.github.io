@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @module  cb_tgbot_notify.py
-@about   Модуль отправки уведомлений о публикации Творческого процесса в Telegram.
+@about   Модуль отправки уведомлений о публикации Инженерных занятий в Telegram.
 @purpose Рассылает уведомления по адресатам tg_public_notify со ссылкой на опубликованный комментарий GitHub Discussions.
 @author  TechLab
 @version 1.0.0

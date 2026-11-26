@@ -72,16 +72,40 @@ def _build_archived_manifest(package, publish_result):
     if not match:
         raise CommentBuilderArchiveError("Не удалось разобрать Front Matter исходного манифеста.")
 
-    front_matter_lines = []
-    for line in match.group(2).splitlines():
-        if re.match(r"^\s*(discussion_comment|source)\s*:", line, re.IGNORECASE):
-            continue
-        front_matter_lines.append(line)
+    front_matter_lines = match.group(2).splitlines()
+    generated_values = {
+        "discussion_comment": f'"{comment_id}"',
+        "source": json.dumps(source_url, ensure_ascii=False),
+    }
+    found_fields = set()
 
-    front_matter_lines.extend([
-        f"discussion_comment: \"{comment_id}\"",
-        f"source: {json.dumps(source_url, ensure_ascii=False)}",
-    ])
+    for index, line in enumerate(front_matter_lines):
+        field_match = re.match(
+            r"^(\\s*)(discussion_comment|source)(\\s*:\\s*)(.*)$",
+            line,
+            re.IGNORECASE,
+        )
+        if not field_match:
+            continue
+
+        field_name = field_match.group(2).lower()
+        if field_name in found_fields:
+            continue
+        found_fields.add(field_name)
+
+        existing_value = field_match.group(4).strip()
+        value_without_comment = re.split(r"\\s+#", existing_value, maxsplit=1)[0].strip()
+        is_empty = value_without_comment.lower() in ("", '""', "''", "null", "~")
+
+        if is_empty:
+            front_matter_lines[index] = (
+                f"{field_match.group(1)}{field_match.group(2)}"
+                f"{field_match.group(3)}{generated_values[field_name]}"
+            )
+
+    for field_name, generated_value in generated_values.items():
+        if field_name not in found_fields:
+            front_matter_lines.append(f"{field_name}: {generated_value}")
 
     archived_front_matter = (
         match.group(1)

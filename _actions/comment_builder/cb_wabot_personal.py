@@ -94,14 +94,8 @@ def send_personal_notification(markdown_body, comment_url, teacher, personal_ids
             logger.warning("Обнаружен пустой номер WhatsApp. Пропуск.")
             continue
 
-        chat_id = (
-            clean_phone
-            if clean_phone.endswith("@c.us")
-            else f"{clean_phone}@c.us"
-        )
-        if not re.fullmatch(r"\+?\d+@c\.us", chat_id):
-            logger.warning("Некорректный Chat ID WhatsApp %r. Пропуск.", chat_id)
-            continue
+        # Точно как в ja_wabot_personal.py: приводим номер к формату GREEN-API.
+        chat_id = f"{clean_phone}@c.us" if "@c.us" not in clean_phone else clean_phone
 
         total_sends += 1
         logger.info("Подготовка отправки получателю %s.", chat_id)

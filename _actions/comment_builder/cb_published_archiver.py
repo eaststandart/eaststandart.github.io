@@ -187,7 +187,7 @@ def _build_archived_manifest(package, publish_result):
                 media_type = "photo" if os.path.splitext(name)[1].lower() == ".webp" else "video"
 
             url = media_urls[name]
-            pattern = re.compile(rf"!?\\[[^\\]]*\\]\\({re.escape(url)}\\)")
+            pattern = re.compile(r"!?\[[^\]]*\]\(" + re.escape(url) + r"\)")
             if media_type == "video":
                 replacement = f"[{attachment_name}]({url})"
             else:

@@ -210,8 +210,8 @@ def _upload_one(session, token, item, upload_name):
     raise CommentBuilderMediaUploadError(f"Не удалось загрузить вложение {name}.")
 
 
-def _replace_media_links(body, urls, media_by_name):
-    """Преобразует ссылки в формат GitHub Discussions по типу файла."""
+def _replace_media_links(body, urls, media_by_name, upload_names=None):
+    """Преобразует ссылки в формат GitHub Discussions; архив получает имена вложений."""
 
     def replace(match):
         is_wiki = match.group("wiki_target") is not None
@@ -228,6 +228,14 @@ def _replace_media_links(body, urls, media_by_name):
             if not name or name not in urls:
                 return match.group(0)
             alt = match.group("md_alt").strip() or name
+
+        if upload_names is not None:
+            attachment_name = upload_names.get(name)
+            if not isinstance(attachment_name, str) or not attachment_name:
+                raise CommentBuilderMediaUploadError(
+                    f"Для медиафайла {name} отсутствует имя GitHub-вложения."
+                )
+            return f"![{attachment_name}|200]({urls[name]})"
 
         media_type = media_by_name[name].get("type")
         if media_type not in ("photo", "video"):
@@ -283,6 +291,7 @@ def upload_media(package):
 
     logger.info("Начинаю загрузку медиа: файлов=%d.", len(media_by_name))
     urls = {}
+    upload_names = {}
     last_upload_timestamp = 0
     with requests.Session() as session:
         for name, item in media_by_name.items():
@@ -302,6 +311,7 @@ def upload_media(package):
 
             # Следующий файл начнёт загружаться только после получения URL.
             urls[name] = _upload_one(session, token, item, upload_name)
+            upload_names[name] = upload_name
             last_upload_timestamp = upload_timestamp
 
     logger.info("Загрузка завершена: получено URL=%d. Подставляю ссылки в Markdown.", len(urls))
@@ -310,6 +320,7 @@ def upload_media(package):
     result = dict(package)
     result["body"] = updated_body
     result["media_urls"] = urls
+    result["media_upload_names"] = upload_names
     logger.info(
         "Загрузка завершена: файлов — %d; Markdown обновлён.",
         len(urls),

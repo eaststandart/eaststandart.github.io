@@ -99,7 +99,7 @@ def send_personal_notification(markdown_body, comment_url, teacher, personal_ids
             if clean_phone.endswith("@c.us")
             else f"{clean_phone}@c.us"
         )
-        if not re.fullmatch(r"\\+?\\d+@c\\.us", chat_id):
+        if not re.fullmatch(r"\+?\d+@c\.us", chat_id):
             logger.warning("Некорректный Chat ID WhatsApp %r. Пропуск.", chat_id)
             continue
 

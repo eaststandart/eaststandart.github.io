@@ -33,7 +33,6 @@ def _build_message(markdown_body, comment_url, teacher):
         return None
 
     heading = heading_match.group(1).strip()
-    heading = re.sub(r"\s*[·•]\s*", " ", heading).strip()
     safe_heading = html.escape(heading, quote=False)
 
     teacher_login = str(teacher or "eaststandart").strip().lstrip("@")

@@ -107,7 +107,7 @@ def _build_archived_manifest(package, publish_result):
     rewritten_lines = []
     for line in front_matter_lines:
         field_match = re.match(
-            r"^(\s*)(discussion_comment|resource|source|title)(\s*:\s*)(.*)$",
+            r"^(\s*)(discussion_comment|resource|title)(\s*:\s*)(.*)$",
             line,
             re.IGNORECASE,
         )
@@ -115,8 +115,7 @@ def _build_archived_manifest(package, publish_result):
             rewritten_lines.append(line)
             continue
 
-        original_field = field_match.group(2).lower()
-        field_name = "resource" if original_field == "source" else original_field
+        field_name = field_match.group(2).lower()
         if field_name in found_fields:
             continue
         found_fields.add(field_name)
@@ -125,15 +124,10 @@ def _build_archived_manifest(package, publish_result):
         value_without_comment = re.split(r"\s+#", existing_value, maxsplit=1)[0].strip()
         is_empty = value_without_comment.lower() in ("", '""', "''", "null", "~")
 
-        if original_field == "source" or is_empty:
-            replacement = (
-                existing_value
-                if original_field == "source" and not is_empty
-                else generated_values.get(field_name, existing_value)
-            )
+        if is_empty:
             rewritten_lines.append(
                 f"{field_match.group(1)}{field_name}"
-                f"{field_match.group(3)}{replacement}"
+                f"{field_match.group(3)}{generated_values.get(field_name, existing_value)}"
             )
         else:
             rewritten_lines.append(line)

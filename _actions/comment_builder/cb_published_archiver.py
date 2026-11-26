@@ -126,7 +126,11 @@ def _build_archived_manifest(package, publish_result):
         is_empty = value_without_comment.lower() in ("", '""', "''", "null", "~")
 
         if original_field == "source" or is_empty:
-            replacement = generated_values.get(field_name, existing_value)
+            replacement = (
+                existing_value
+                if original_field == "source" and not is_empty
+                else generated_values.get(field_name, existing_value)
+            )
             rewritten_lines.append(
                 f"{field_match.group(1)}{field_name}"
                 f"{field_match.group(3)}{replacement}"

@@ -192,11 +192,7 @@ def _build_archived_manifest(package, publish_result):
                 replacement = f"[{attachment_name}]({url})"
             else:
                 replacement = f"![{attachment_name}|200]({url})"
-            archived_body, replaced_count = pattern.subn(replacement, archived_body)
-            if replaced_count != 1:
-                raise CommentBuilderArchiveError(
-                    f"Не удалось однозначно обновить ссылку на медиафайл {name}."
-                )
+            archived_body = pattern.sub(replacement, archived_body)
     except Exception as error:
         raise CommentBuilderArchiveError(
             f"Не удалось заменить ссылки на медиа в исходном манифесте: {error}"

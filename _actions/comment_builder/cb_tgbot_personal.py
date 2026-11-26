@@ -77,7 +77,7 @@ def send_personal_notification(markdown_body, comment_url, teacher, personal_ids
     if not message_text:
         return False
 
-    logger.info("Начинаем персональную рассылку: получателей в манифесте %d.", len(personal_ids))
+    logger.info("Начинаем рассылку по списку персональных адресатов.")
     successful_sends = 0
     total_sends = 0
 
@@ -92,6 +92,7 @@ def send_personal_notification(markdown_body, comment_url, teacher, personal_ids
             continue
 
         total_sends += 1
+        logger.info("Подготовка отправки получателю %s.", target_id)
         payload = {
             "chat_id": target_id,
             "text": message_text,

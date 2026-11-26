@@ -73,22 +73,50 @@ def _build_archived_manifest(package, publish_result):
         raise CommentBuilderArchiveError("Не удалось разобрать Front Matter исходного манифеста.")
 
     front_matter_lines = match.group(2).splitlines()
+    original_body = source_text[match.end():]
+    published_body = package.get("body", "")
+
+    def extract_title(markdown, heading_pattern):
+        heading_match = re.search(heading_pattern, markdown, re.MULTILINE | re.IGNORECASE)
+        if not heading_match:
+            return None
+        value = heading_match.group(1).strip()
+        return value or None
+
+    final_title = extract_title(published_body, r"^##\s+(.+?)\s*$")
+    if not final_title:
+        section_match = re.search(
+            r"^###\s+Заголовок комментария\s*\r?\n([\s\S]*?)(?=\n#{1,6}\s|$)",
+            original_body,
+            re.MULTILINE | re.IGNORECASE,
+        )
+        if section_match:
+            final_title = next(
+                (line.strip() for line in section_match.group(1).splitlines() if line.strip()),
+                None,
+            )
+
     generated_values = {
         "discussion_comment": f'"{comment_id}"',
-        "source": json.dumps(source_url, ensure_ascii=False),
+        "resource": json.dumps(source_url, ensure_ascii=False),
     }
-    found_fields = set()
+    if final_title:
+        generated_values["title"] = json.dumps(final_title, ensure_ascii=False)
 
-    for index, line in enumerate(front_matter_lines):
+    found_fields = set()
+    rewritten_lines = []
+    for line in front_matter_lines:
         field_match = re.match(
-            r"^(\s*)(discussion_comment|source)(\s*:\s*)(.*)$",
+            r"^(\s*)(discussion_comment|resource|source|title)(\s*:\s*)(.*)$",
             line,
             re.IGNORECASE,
         )
         if not field_match:
+            rewritten_lines.append(line)
             continue
 
-        field_name = field_match.group(2).lower()
+        original_field = field_match.group(2).lower()
+        field_name = "resource" if original_field == "source" else original_field
         if field_name in found_fields:
             continue
         found_fields.add(field_name)
@@ -97,12 +125,16 @@ def _build_archived_manifest(package, publish_result):
         value_without_comment = re.split(r"\s+#", existing_value, maxsplit=1)[0].strip()
         is_empty = value_without_comment.lower() in ("", '""', "''", "null", "~")
 
-        if is_empty:
-            front_matter_lines[index] = (
-                f"{field_match.group(1)}{field_match.group(2)}"
-                f"{field_match.group(3)}{generated_values[field_name]}"
+        if original_field == "source" or is_empty:
+            replacement = generated_values.get(field_name, existing_value)
+            rewritten_lines.append(
+                f"{field_match.group(1)}{field_name}"
+                f"{field_match.group(3)}{replacement}"
             )
+        else:
+            rewritten_lines.append(line)
 
+    front_matter_lines = rewritten_lines
     for field_name, generated_value in generated_values.items():
         if field_name not in found_fields:
             front_matter_lines.append(f"{field_name}: {generated_value}")
@@ -129,14 +161,15 @@ def _build_archived_manifest(package, publish_result):
             )
         media_by_name[name] = item
 
-    source_body = source_text[match.end():]
+    source_body = original_body
     if not source_body.strip():
         raise CommentBuilderArchiveError("В исходном манифесте отсутствует тело Markdown.")
 
     try:
         import cb_media_uploader
         archived_body = cb_media_uploader._replace_media_links(
-            source_body, media_urls, media_by_name
+            source_body, media_urls, media_by_name,
+            package.get("media_upload_names", {}),
         )
     except Exception as error:
         raise CommentBuilderArchiveError(

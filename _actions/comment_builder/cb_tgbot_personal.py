@@ -27,13 +27,13 @@ def _build_message(markdown_body, comment_url, teacher):
         logger.error("Не передано Markdown-тело опубликованного комментария.")
         return None
 
-    heading_match = re.search(r"^##\\s+(.+?)\\s*$", markdown_body, re.MULTILINE)
+    heading_match = re.search(r"^##\s+(.+?)\s*$", markdown_body, re.MULTILINE)
     if not heading_match:
         logger.error("В опубликованном комментарии не найден главный заголовок H2.")
         return None
 
     heading = heading_match.group(1).strip()
-    heading = re.sub(r"\\s*[·•]\\s*", " ", heading).strip()
+    heading = re.sub(r"\s*[·•]\s*", " ", heading).strip()
     safe_heading = html.escape(heading, quote=False)
 
     teacher_login = str(teacher or "eaststandart").strip().lstrip("@")
@@ -49,9 +49,9 @@ def _build_message(markdown_body, comment_url, teacher):
         return None
 
     return (
-        "<b>🏢🏃‍♀️🏃‍♂️ Инженерные занятия</b>\\n\\n"
-        f"📢 {safe_heading}\\n\\n"
-        f'👀 <a href="{safe_url}">Посмотреть на GitHub Discussions</a>\\n\\n'
+        "<b>🏢🏃‍♀️🏃‍♂️ Инженерные занятия</b>\n\n"
+        f"📢 {safe_heading}\n\n"
+        f'👀 <a href="{safe_url}">Посмотреть на GitHub Discussions</a>\n\n'
         f"Преподаватель: <b>{safe_teacher}</b>"
     )
 

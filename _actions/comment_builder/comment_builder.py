@@ -18,6 +18,7 @@ import cb_comment_builder
 import cb_gate_closer
 import cb_tgbot_notify
 import cb_tgbot_personal
+import cb_wabot_personal
 
 
 LOGGER_NAME = "comment_builder"
@@ -94,7 +95,7 @@ def main():
         else:
             logger.info("tg_personal_id пуст. Персональная Telegram-рассылка пропущена.")
 
-        public_config = (package.get("metadata") or {}).get("tg_public_notify", [])
+        public_config = metadata.get("tg_public_notify", [])
         if public_config:
             logger.info("Отправка публичных Telegram-уведомлений.")
             try:
@@ -115,6 +116,29 @@ def main():
                 )
         else:
             logger.info("tg_public_notify пуст. Telegram-рассылка пропущена.")
+
+        wa_personal_ids = metadata.get("wa_personal_id", [])
+        if wa_personal_ids:
+            logger.info("Отправка персональных WhatsApp-уведомлений.")
+            try:
+                notification_sent = cb_wabot_personal.send_personal_notification(
+                    markdown_body=package.get("body", ""),
+                    comment_url=result["url"],
+                    teacher=metadata.get("teacher"),
+                    personal_ids=wa_personal_ids,
+                )
+                if not notification_sent:
+                    logger.warning(
+                        "Публикация завершена, но персональные WhatsApp-уведомления "
+                        "не доставлены всем адресатам."
+                    )
+            except Exception:
+                logger.exception(
+                    "Ошибка персональных WhatsApp-уведомлений. "
+                    "Результат публикации не изменён."
+                )
+        else:
+            logger.info("wa_personal_id пуст. WhatsApp-рассылка пропущена.")
 
         logger.info("Очистка обработанного комплекта после подтверждённой публикации.")
         cleanup_result = cb_gate_closer.clean_source_output(

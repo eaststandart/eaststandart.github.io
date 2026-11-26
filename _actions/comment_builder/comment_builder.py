@@ -16,6 +16,7 @@ import cb_media_uploader
 import cb_comment_dispatcher
 import cb_comment_builder
 import cb_gate_closer
+import cb_published_archiver
 import cb_tgbot_notify
 import cb_tgbot_personal
 import cb_wabot_personal
@@ -140,7 +141,15 @@ def main():
         else:
             logger.info("wa_personal_id пуст. WhatsApp-рассылка пропущена.")
 
-        logger.info("Очистка обработанного комплекта после подтверждённой публикации.")
+        logger.info("Архивирование опубликованного манифеста после завершения уведомлений.")
+        archive_result = cb_published_archiver.archive_published_manifest(
+            package,
+            result,
+        )
+        if not archive_result.get("success"):
+            raise RuntimeError("Модуль архивирования не подтвердил сохранение манифеста.")
+
+        logger.info("Очистка обработанного комплекта после успешного архивирования.")
         cleanup_result = cb_gate_closer.clean_source_output(
             package,
             processing_confirmed=True,

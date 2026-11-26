@@ -81,7 +81,7 @@ def _build_archived_manifest(package, publish_result):
 
     for index, line in enumerate(front_matter_lines):
         field_match = re.match(
-            r"^(\\s*)(discussion_comment|source)(\\s*:\\s*)(.*)$",
+            r"^(\s*)(discussion_comment|source)(\s*:\s*)(.*)$",
             line,
             re.IGNORECASE,
         )
@@ -94,7 +94,7 @@ def _build_archived_manifest(package, publish_result):
         found_fields.add(field_name)
 
         existing_value = field_match.group(4).strip()
-        value_without_comment = re.split(r"\\s+#", existing_value, maxsplit=1)[0].strip()
+        value_without_comment = re.split(r"\s+#", existing_value, maxsplit=1)[0].strip()
         is_empty = value_without_comment.lower() in ("", '""', "''", "null", "~")
 
         if is_empty:

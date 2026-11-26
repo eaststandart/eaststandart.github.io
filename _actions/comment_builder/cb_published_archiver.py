@@ -167,8 +167,36 @@ def _build_archived_manifest(package, publish_result):
         import cb_media_uploader
         archived_body = cb_media_uploader._replace_media_links(
             source_body, media_urls, media_by_name,
-            package.get("media_upload_names", {}),
         )
+
+        upload_names = package.get("media_upload_names", {})
+        if not isinstance(upload_names, dict):
+            raise CommentBuilderArchiveError(
+                "В пакете отсутствуют корректные имена загруженных медиафайлов."
+            )
+
+        for name, item in media_by_name.items():
+            attachment_name = upload_names.get(name)
+            if not isinstance(attachment_name, str) or not attachment_name:
+                raise CommentBuilderArchiveError(
+                    f"Для медиафайла {name} отсутствует имя GitHub-вложения."
+                )
+
+            media_type = item.get("type")
+            if media_type not in ("photo", "video"):
+                media_type = "photo" if os.path.splitext(name)[1].lower() == ".webp" else "video"
+
+            url = media_urls[name]
+            pattern = re.compile(rf"!?\\[[^\\]]*\\]\\({re.escape(url)}\\)")
+            if media_type == "video":
+                replacement = f"[{attachment_name}]({url})"
+            else:
+                replacement = f"![{attachment_name}|200]({url})"
+            archived_body, replaced_count = pattern.subn(replacement, archived_body)
+            if replaced_count != 1:
+                raise CommentBuilderArchiveError(
+                    f"Не удалось однозначно обновить ссылку на медиафайл {name}."
+                )
     except Exception as error:
         raise CommentBuilderArchiveError(
             f"Не удалось заменить ссылки на медиа в исходном манифесте: {error}"

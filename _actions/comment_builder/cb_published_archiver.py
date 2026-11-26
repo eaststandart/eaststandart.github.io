@@ -3,7 +3,7 @@
 """
 @module  cb_published_archiver.py
 @about   Модуль сохранения опубликованного манифеста в архив Конструктора.
-@purpose Формирует архивную копию исходного манифеста с фактическим телом опубликованного комментария, идентификатором комментария и URL загруженных медиа; сохраняет файл с исходным именем в _published репозитория eaststandart/techlab-comment-builder.
+@purpose Формирует архивную копию исходного манифеста, добавляет ID и URL опубликованного комментария и заменяет локальные ссылки на URL загруженных медиа; сохраняет файл с исходным именем в _published репозитория eaststandart/techlab-comment-builder.
 @author  TechLab
 @version 1.0.0
 """
@@ -55,14 +55,11 @@ def _safe_manifest_name(value):
 def _build_archived_manifest(package, publish_result):
     """Сохраняет исходный Front Matter и заменяет тело фактически опубликованным."""
     source_text = package.get("manifest_text")
-    body = package.get("body")
     comment_id = publish_result.get("comment_id")
     source_url = publish_result.get("url")
 
     if not isinstance(source_text, str):
         raise CommentBuilderArchiveError("В пакете отсутствует исходный текст манифеста.")
-    if not isinstance(body, str) or not body.strip():
-        raise CommentBuilderArchiveError("В пакете отсутствует итоговое тело комментария.")
     if isinstance(comment_id, bool) or not isinstance(comment_id, int) or comment_id < 1:
         raise CommentBuilderArchiveError("GitHub не вернул корректный ID опубликованного комментария.")
     if not isinstance(source_url, str) or not source_url.startswith("https://github.com/"):
@@ -82,7 +79,7 @@ def _build_archived_manifest(package, publish_result):
         front_matter_lines.append(line)
 
     front_matter_lines.extend([
-        f"discussion_comment: {comment_id}",
+        f"discussion_comment: \"{comment_id}\"",
         f"source: {json.dumps(source_url, ensure_ascii=False)}",
     ])
 
@@ -91,7 +88,38 @@ def _build_archived_manifest(package, publish_result):
         + "\n".join(front_matter_lines)
         + match.group(3)
     )
-    return archived_front_matter + body
+    media = package.get("media", [])
+    media_urls = package.get("media_urls", {})
+    if not isinstance(media, list) or not isinstance(media_urls, dict):
+        raise CommentBuilderArchiveError("В пакете отсутствуют корректные данные медиафайлов.")
+
+    media_by_name = {}
+    for item in media:
+        if not isinstance(item, dict) or not isinstance(item.get("name"), str):
+            raise CommentBuilderArchiveError("Обнаружена некорректная запись медиафайла.")
+        name = item["name"]
+        url = media_urls.get(name)
+        if not isinstance(url, str) or not url.startswith("https://"):
+            raise CommentBuilderArchiveError(
+                f"Для медиафайла {name} отсутствует загруженный URL."
+            )
+        media_by_name[name] = item
+
+    source_body = source_text[match.end():]
+    if not source_body.strip():
+        raise CommentBuilderArchiveError("В исходном манифесте отсутствует тело Markdown.")
+
+    try:
+        import cb_media_uploader
+        archived_body = cb_media_uploader._replace_media_links(
+            source_body, media_urls, media_by_name
+        )
+    except Exception as error:
+        raise CommentBuilderArchiveError(
+            f"Не удалось заменить ссылки на медиа в исходном манифесте: {error}"
+        ) from error
+
+    return archived_front_matter + archived_body
 
 
 def _request(session, method, url, **kwargs):
@@ -192,22 +220,6 @@ def archive_published_manifest(package, publish_result):
     media_urls = package.get("media_urls", {})
     if not isinstance(media, list) or not isinstance(media_urls, dict):
         raise CommentBuilderArchiveError("В пакете отсутствуют корректные данные медиафайлов.")
-
-    body = package.get("body", "")
-    for item in media:
-        if not isinstance(item, dict) or not isinstance(item.get("name"), str):
-            raise CommentBuilderArchiveError("Обнаружена некорректная запись медиафайла.")
-        name = item["name"]
-        url = media_urls.get(name)
-        if not isinstance(url, str) or not url.startswith("https://"):
-            raise CommentBuilderArchiveError(
-                f"Для медиафайла {name} отсутствует загруженный URL."
-            )
-        if url not in body:
-            raise CommentBuilderArchiveError(
-                f"URL медиафайла {name} отсутствует в итоговом комментарии."
-            )
-
     archived_content = _build_archived_manifest(package, publish_result)
     archive_path = f"{PUBLISHED_DIRECTORY}/{manifest_name}"
 

@@ -53,7 +53,7 @@ def _safe_manifest_name(value):
 
 
 def _build_archived_manifest(package, publish_result):
-    """Сохраняет исходный Front Matter и заменяет тело фактически опубликованным."""
+    """Сохраняет исходный Front Matter и структуру Markdown, заменяя локальные ссылки на URL медиа."""
     source_text = package.get("manifest_text")
     comment_id = publish_result.get("comment_id")
     source_url = publish_result.get("url")

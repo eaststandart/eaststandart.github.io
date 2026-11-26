@@ -125,11 +125,25 @@ def publish_comment(package):
         len(markdown_body),
     )
 
-    token = os.environ.get("MY_ADMIN_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    teacher = metadata.get("teacher")
+    publish_as_bot = metadata.get("publish_as_bot", True)
+    if teacher not in ("eaststandart", "TechLab"):
+        publish_as_bot = True
+
+    bot_token = os.environ.get("GITHUB_TOKEN")
+    admin_token = os.environ.get("MY_ADMIN_TOKEN") or bot_token
+    token = bot_token if publish_as_bot else admin_token
     if not token:
+        token_name = "GITHUB_TOKEN" if publish_as_bot else "MY_ADMIN_TOKEN или GITHUB_TOKEN"
         raise CommentBuilderPublishError(
-            "Для публикации не найден токен MY_ADMIN_TOKEN или GITHUB_TOKEN."
+            f"Для выбранного режима публикации не найден токен {token_name}."
         )
+
+    logger.info(
+        "Режим публикации: %s (teacher=%s).",
+        "GitHub Actions Bot" if publish_as_bot else "MY_ADMIN_TOKEN",
+        teacher or "не указан",
+    )
 
     logger.info(
         "Начинаю реальную публикацию манифеста %s в Discussion #%s.",

@@ -70,14 +70,6 @@ def main():
         if not isinstance(result, dict) or not result.get("success"):
             raise RuntimeError("Модуль публикации не подтвердил успешный результат.")
 
-        logger.info("Очистка обработанного комплекта после подтверждённой публикации.")
-        cleanup_result = cb_gate_closer.clean_source_output(
-            package,
-            processing_confirmed=True,
-        )
-        if not cleanup_result.get("success"):
-            raise RuntimeError("Модуль очистки не подтвердил завершение.")
-
         metadata = package.get("metadata") or {}
         personal_ids = metadata.get("tg_personal_id", [])
         if personal_ids:
@@ -123,6 +115,14 @@ def main():
                 )
         else:
             logger.info("tg_public_notify пуст. Telegram-рассылка пропущена.")
+
+        logger.info("Очистка обработанного комплекта после подтверждённой публикации.")
+        cleanup_result = cb_gate_closer.clean_source_output(
+            package,
+            processing_confirmed=True,
+        )
+        if not cleanup_result.get("success"):
+            raise RuntimeError("Модуль очистки не подтвердил завершение.")
 
         logger.info(
             "Конвейер завершён успешно. Ссылка на комментарий: %s",

@@ -140,7 +140,7 @@ def main():
         343, 790, (0.50, 0.50), 22, 20,
     )
     paste_panel(
-        canvas, load_image("faire/pano-uslovnye-oboznacheniya/pano-uslovnye-oboznachения.webp"),
+        canvas, load_image("faire/pano-uslovnye-oboznacheniya/pano-uslovnye-oboznacheniya.webp"),
         770, 1105, (0.50, 0.50), 20, 18,
     )
     paste_panel(

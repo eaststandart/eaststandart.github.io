@@ -35,8 +35,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install image dependency
-        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Install image dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install --disable-pip-version-check Pillow
 
       - name: Build cover
         run: python .github/workflows/scripts/build-faire-cover.py

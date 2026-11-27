@@ -75,6 +75,7 @@ exclude:
   - CODE_OF_CONDUCT.md
   - CONTRIBUTING.md
   - LICENSE.txt
+  - LICENSE
   - README.md
   - ROADMAP.md
   - STRUCTURE.md

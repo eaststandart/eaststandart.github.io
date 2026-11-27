@@ -12,16 +12,19 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
-      - 'ARCHITECTURE.md'
       - 'CHANGELOG.md'
       - 'CODE_OF_CONDUCT.md'
       - 'CONTRIBUTING.md'
       - 'LICENSE.txt'
+      - 'LICENSE'
       - 'README.md'
       - '**/README.md'
       - 'ROADMAP.md'
+      - 'STRUCTURE.md'
+      - 'TRADEMARKS.md'
       - '.github/workflows/**'
       - '_actions/**'
+      - '_issues/**'
       - 'assets/js/**/*.js'
       - 'assets/batchfiles/**'
   workflow_dispatch:

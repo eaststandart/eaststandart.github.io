@@ -70,6 +70,7 @@ collections:
 
 include: ["_pages", "robots.txt"]
 exclude:
+  - _issues
   - CHANGELOG.md
   - CODE_OF_CONDUCT.md
   - CONTRIBUTING.md

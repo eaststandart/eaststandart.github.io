@@ -9,6 +9,11 @@
 name: Build Faire Profile Cover
 
 on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/build-faire-cover.yml"
+      - ".github/workflows/scripts/build-faire-cover.py"
   workflow_dispatch:
 
 permissions:

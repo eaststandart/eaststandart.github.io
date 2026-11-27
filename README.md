@@ -3,12 +3,7 @@
 [![CHANGELOG](https://img.shields.io/badge/История-Changelog-orange.svg?style=flat-square)](CHANGELOG.md)
 [![GitHub Discussions](https://img.shields.io/badge/Дискуссии-активны-red.svg?style=flat-square&logo=github)](https://github.com/eaststandart/eaststandart.github.io/discussions)
 [![ROADMAP](https://img.shields.io/badge/Планы-Roadmap-yellow.svg?style=flat-square)](ROADMAP.md)
-[![Лицензия проекта](https://img.shields.io/badge/Лицензия-CC%20BY%204.0-teal.svg?style=flat-square)](LICENSE.txt)
-
-
 [![Лицензия проекта](https://img.shields.io/github/license/eaststandart/eaststandart.github.io?label=Лицензия&style=flat-square&color=teal)](LICENSE.txt)
-
-
 
 ---
 

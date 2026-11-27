@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/faire-cover-1920x400.jpg
+          git add faire/hackaday-cover-1920x400.jpg
           if ! git diff --cached --quiet; then
             git commit -m "Build Hackaday Faire profile cover"
             git push
@@ -60,6 +60,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hackaday-faire-cover
-          path: output/faire-cover-1920x400.jpg
+          path: faire/hackaday-cover-1920x400.jpg
           if-no-files-found: error
           retention-days: 7

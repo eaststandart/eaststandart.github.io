@@ -3,7 +3,7 @@
 # @about   Сборка редакционной фотокомпозиции Hackaday.io из материалов Faire.
 # @purpose Показывает рабочую среду, осциллограф, электронный эксперимент и робототехнику.
 # @author  TechLab
-# @version 1.4.0
+# @version 1.4.1
 # ==============================================================================
 
 from pathlib import Path
@@ -91,7 +91,7 @@ def main():
         )
         polygon_paste(
             canvas,
-            load_photo("faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-03.webp"),
+            load_photo("faire/podstavka-dlya-oscillografa/podstavka-dlya-oscillografa-06.webp"),
             (500, 0, 1430, 400),
             [(555, 0), (1465, 0), (1395, 400), (485, 400)],
             (0.50, 0.50),

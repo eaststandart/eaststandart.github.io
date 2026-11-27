@@ -11,6 +11,8 @@ assignees: []
 labels: ["site"]
 updateMode: "none"
 allowDelete: true
+parent_issue: 98
+parent_issue_url: "https://api.github.com/repos/eaststandart/eaststandart.github.io/issues/98"
 ---
 
 # [Сайт] Добавить чат сайта с двусторонней связью через Telegram
@@ -60,3 +62,7 @@ allowDelete: true
 
 Сначала сравнить примеры и выбрать подходящую архитектуру. Не переносить в проект избыточные функции готовых систем.
 
+
+
+## Parent Issue
+- [#98 [Сайт] Развитие сервисов и интеграций](https://github.com/eaststandart/eaststandart.github.io/issues/98)

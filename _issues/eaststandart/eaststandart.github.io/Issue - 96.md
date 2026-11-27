@@ -11,6 +11,10 @@ assignees: []
 labels: ["hackaday"]
 updateMode: "none"
 allowDelete: true
+sub_issues: [97]
+sub_issues_count: 1
+sub_issues_open: 1
+sub_issues_closed: 0
 ---
 
 # [Hackaday] Международные публикации
@@ -25,3 +29,7 @@ allowDelete: true
 *(Подзадачи по конкретным статьям и проектам привязаны ниже в блоке Sub-issues)*
 
 
+
+
+## Sub-Issues
+- <span class="github-issues-sub-issue-open">●</span> [#97 [Hackaday / Page] Публикация манифеста «Гибридная связь»](https://github.com/eaststandart/eaststandart.github.io/issues/97)

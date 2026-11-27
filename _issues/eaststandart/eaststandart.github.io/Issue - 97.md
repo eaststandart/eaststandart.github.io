@@ -11,6 +11,8 @@ assignees: []
 labels: ["hackaday"]
 updateMode: "none"
 allowDelete: true
+parent_issue: 96
+parent_issue_url: "https://api.github.com/repos/eaststandart/eaststandart.github.io/issues/96"
 ---
 
 # [Hackaday / Page] Публикация манифеста «Гибридная связь»
@@ -26,3 +28,7 @@ allowDelete: true
 - [ ] Указать в конце публикации ссылки на оригинал сайта, GitHub и DOI
 
 
+
+
+## Parent Issue
+- [#96 [Hackaday] Международные публикации](https://github.com/eaststandart/eaststandart.github.io/issues/96)

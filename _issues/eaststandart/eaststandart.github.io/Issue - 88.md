@@ -11,6 +11,8 @@ assignees: []
 labels: ["documentation"]
 updateMode: "none"
 allowDelete: true
+parent_issue: 99
+parent_issue_url: "https://api.github.com/repos/eaststandart/eaststandart.github.io/issues/99"
 ---
 
 # [Документация] Схема связей и логика работы репозитория
@@ -31,3 +33,7 @@ allowDelete: true
 
 Вернуться к задаче после того, как Конструктор комментариев будет полностью разобран и завершён.
 
+
+
+## Parent Issue
+- [#99 [Документация] Архитектура и регламенты репозитория](https://github.com/eaststandart/eaststandart.github.io/issues/99)

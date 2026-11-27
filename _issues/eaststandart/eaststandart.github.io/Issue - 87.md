@@ -11,6 +11,8 @@ assignees: []
 labels: ["site"]
 updateMode: "none"
 allowDelete: true
+parent_issue: 98
+parent_issue_url: "https://api.github.com/repos/eaststandart/eaststandart.github.io/issues/98"
 ---
 
 # [Сайт] Интеграция с Telegram Bot API для уведомлений родителей
@@ -34,3 +36,7 @@ text
 * Базовый URL для запросов: https://telegram.org secrets.TELEGRAM_BOT_TOKEN /sendMessage
 
 
+
+
+## Parent Issue
+- [#98 [Сайт] Развитие сервисов и интеграций](https://github.com/eaststandart/eaststandart.github.io/issues/98)

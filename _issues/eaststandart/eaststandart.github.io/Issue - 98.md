@@ -11,6 +11,10 @@ assignees: []
 labels: ["site"]
 updateMode: "none"
 allowDelete: true
+sub_issues: [95, 89, 87]
+sub_issues_count: 3
+sub_issues_open: 3
+sub_issues_closed: 0
 ---
 
 # [Сайт] Развитие сервисов и интеграций
@@ -21,3 +25,9 @@ allowDelete: true
 *(Конкретные технические задачи привязаны ниже в блоке Sub-issues)*
 
 
+
+
+## Sub-Issues
+- <span class="github-issues-sub-issue-open">●</span> [#95 [Сайт] Добавить инструмент чтения и редактирования комментариев GitHub Discussions](https://github.com/eaststandart/eaststandart.github.io/issues/95)
+- <span class="github-issues-sub-issue-open">●</span> [#89 [Сайт] Добавить чат сайта с двусторонней связью через Telegram](https://github.com/eaststandart/eaststandart.github.io/issues/89)
+- <span class="github-issues-sub-issue-open">●</span> [#87 [Сайт] Интеграция с Telegram Bot API для уведомлений родителей](https://github.com/eaststandart/eaststandart.github.io/issues/87)

@@ -11,6 +11,8 @@ assignees: []
 labels: ["site"]
 updateMode: "none"
 allowDelete: true
+parent_issue: 98
+parent_issue_url: "https://api.github.com/repos/eaststandart/eaststandart.github.io/issues/98"
 ---
 
 # [Сайт] Добавить инструмент чтения и редактирования комментариев GitHub Discussions
@@ -31,3 +33,7 @@ allowDelete: true
 ## Критерий готовности
 Можно запросить Markdown конкретного комментария, подготовить его новую редакцию, подтвердить изменение и получить проверенный результат из GitHub.
 
+
+
+## Parent Issue
+- [#98 [Сайт] Развитие сервисов и интеграций](https://github.com/eaststandart/eaststandart.github.io/issues/98)

@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: faire-profile-cover
@@ -43,6 +43,18 @@ jobs:
 
       - name: Build cover
         run: python .github/workflows/scripts/build-faire-cover.py
+
+      - name: Save cover to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/faire-cover-1920x400.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m "Build Hackaday Faire profile cover"
+            git push
+          else
+            echo "Обложка не изменилась"
+          fi
 
       - name: Upload cover artifact
         uses: actions/upload-artifact@v4

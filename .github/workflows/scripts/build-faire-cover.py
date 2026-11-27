@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image, ImageOps
 
 ROOT = Path(__file__).resolve().parents[3]
-OUTPUT = ROOT / "output" / "faire-cover-1920x400.jpg"
+OUTPUT = ROOT / "faire" / "hackaday-cover-1920x400.jpg"
 SIZE = (1920, 400)
 GUTTER = 5
 BACKGROUND = (13, 22, 31)

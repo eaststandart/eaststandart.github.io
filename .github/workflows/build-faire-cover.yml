@@ -1,0 +1,45 @@
+# ==============================================================================
+# @module  build-faire-cover.yml
+# @about   Ручная сборка обложки Hackaday.io из фотографий Faire.
+# @purpose Создаёт JPEG-артефакт 1920x400 px, не публикуя сайт и не меняя исходники.
+# @author  TechLab
+# @version 1.0.0
+# ==============================================================================
+
+name: Build Faire Profile Cover
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: faire-profile-cover
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install image dependency
+        run: python -m pip install --disable-pip-version-check Pillow
+
+      - name: Build cover
+        run: python .github/workflows/scripts/build-faire-cover.py
+
+      - name: Upload cover artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hackaday-faire-cover
+          path: output/faire-cover-1920x400.jpg
+          if-no-files-found: error
+          retention-days: 7

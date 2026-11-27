@@ -43,7 +43,7 @@ def panel_image(source, size, centering):
         background.paste(item, (x, y), item.getchannel("A"))
         return background
     return ImageOps.fit(
-        source.convert("RGB), size,
+        source.convert("RGB"), size,
         method=Image.Resampling.LANCZOS,
         centering=centering,
     )

@@ -296,13 +296,13 @@ eaststandart.github.io/
 │   ├── avtomobil-s-polnym-privodom-iz-kartona/
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona.md # Автомобиль с полным приводом из картона
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona.webp # Общий вид: картонный автомобиль с полным приводом
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webm
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webm # Сборка и проверка картонного автомобиля с полным приводом
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webp # Картонный автомобиль с полным приводом: ракурс 1
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02.webm
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02.webm # Испытание движения полноприводной модели на полу
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02.webp # Картонный автомобиль с полным приводом: ракурс 2
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03.webm
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03.webm # Заезд самодельного автомобиля по ровной поверхности
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03.webp # Картонный автомобиль с полным приводом: ракурс 3
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04.webm
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04.webm # Проверка управления и привода картонного автомобиля
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04.webp # Картонный автомобиль с полным приводом: ракурс 4
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-05.webp # Картонный автомобиль с полным приводом: ракурс 5
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-06.webp # Картонный автомобиль с полным приводом: ракурс 6
@@ -314,13 +314,13 @@ eaststandart.github.io/
 │   ├── besprovodnoj-telegraf/
 │   │   ├── besprovodnoj-telegraf.md # Беспроводной телеграф
 │   │   ├── besprovodnoj-telegraf.webp # Общий вид: макеты беспроводного телеграфа
-│   │   ├── besprovodnoj-telegraf-01.webm
+│   │   ├── besprovodnoj-telegraf-01.webm # Передача сигнала между блоками беспроводного телеграфа
 │   │   ├── besprovodnoj-telegraf-01.webp # Макеты беспроводного телеграфа: ракурс 1
 │   │   └── besprovodnoj-telegraf-02.webp # Макеты беспроводного телеграфа: ракурс 2
 │   ├── blaster-elektroakusticheskij/
 │   │   ├── blaster-elektroakusticheskij.md # Бластер электроакустический
 │   │   ├── blaster-elektroakusticheskij.webp # Общий вид: электроакустический бластер
-│   │   ├── blaster-elektroakusticheskij-01.webm
+│   │   ├── blaster-elektroakusticheskij-01.webm # Проверка электроакустического бластера с цифровой индикацией
 │   │   ├── blaster-elektroakusticheskij-01.webp # Электроакустический бластер: ракурс 1
 │   │   ├── blaster-elektroakusticheskij-02.webp # Электроакустический бластер: ракурс 2
 │   │   ├── blaster-elektroakusticheskij-03.webp # Электроакустический бластер: ракурс 3
@@ -331,9 +331,9 @@ eaststandart.github.io/
 │   ├── detektor-pereliva/
 │   │   ├── detektor-pereliva.md # Детектор перелива
 │   │   ├── detektor-pereliva.webp # Общий вид: детектор перелива
-│   │   ├── detektor-pereliva-01.webm
+│   │   ├── detektor-pereliva-01.webm # Сборка и проверка электронного датчика перелива
 │   │   ├── detektor-pereliva-01.webp # Детектор перелива: ракурс 1
-│   │   ├── detektor-pereliva-02.webm
+│   │   ├── detektor-pereliva-02.webm # Демонстрация работы датчика перелива на макете
 │   │   ├── detektor-pereliva-02.webp # Детектор перелива: ракурс 2
 │   │   ├── detektor-pereliva-03.webp # Детектор перелива: ракурс 3
 │   │   ├── detektor-pereliva-04.webp # Детектор перелива: ракурс 4
@@ -363,15 +363,15 @@ eaststandart.github.io/
 │   ├── elektronnyj-organ/
 │   │   ├── elektronnyj-organ.md # Электронный орган
 │   │   ├── elektronnyj-organ.webp # Общий вид: электронный орган
-│   │   ├── elektronnyj-organ-01.webm
+│   │   ├── elektronnyj-organ-01.webm # Демонстрация самодельного электронного органа с громкоговорителем
 │   │   ├── elektronnyj-organ-01.webp # Электронный орган: ракурс 1
-│   │   ├── elektronnyj-organ-02.webm
+│   │   ├── elektronnyj-organ-02.webm # Проверка звучания электронного органа
 │   │   ├── elektronnyj-organ-02.webp # Электронный орган: ракурс 2
-│   │   ├── elektronnyj-organ-03.webm
+│   │   ├── elektronnyj-organ-03.webm # Испытание клавиш и звукового модуля электронного органа
 │   │   ├── elektronnyj-organ-03.webp # Электронный орган: ракурс 3
-│   │   ├── elektronnyj-organ-04.webm
+│   │   ├── elektronnyj-organ-04.webm # Настройка электронного органа на рабочем столе
 │   │   ├── elektronnyj-organ-04.webp # Электронный орган: ракурс 4
-│   │   ├── elektronnyj-organ-05.webm
+│   │   ├── elektronnyj-organ-05.webm # Игра на собранном электронном органе
 │   │   ├── elektronnyj-organ-05.webp # Электронный орган: ракурс 5
 │   │   ├── elektronnyj-organ-06.webp # Электронный орган: ракурс 6
 │   │   ├── elektronnyj-organ-07.webp # Электронный орган: ракурс 7
@@ -416,7 +416,7 @@ eaststandart.github.io/
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.pdf
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.spl8
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.webp # Общий вид: бумажный светодиодный фонарик
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-01.webm
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-01.webm # Включение светодиода в самодельном бумажном фонарике
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj-01.webp # Бумажный светодиодный фонарик: ракурс 1
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj-02.webp # Бумажный светодиодный фонарик: ракурс 2
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj-03.webp # Принципиальная схема светодиодного фонарика
@@ -426,19 +426,19 @@ eaststandart.github.io/
 │   ├── metronom-signalnyj/
 │   │   ├── metronom-signalnyj.md # Метроном сигнальный
 │   │   ├── metronom-signalnyj.webp # Общий вид: сигнальный метроном
-│   │   ├── metronom-signalnyj-01.webm
+│   │   ├── metronom-signalnyj-01.webm # Демонстрация корпуса и работы сигнального метронома
 │   │   ├── metronom-signalnyj-01.webp # Сигнальный метроном: ракурс 1
-│   │   ├── metronom-signalnyj-02.webm
+│   │   ├── metronom-signalnyj-02.webm # Проверка электронной схемы сигнального метронома
 │   │   ├── metronom-signalnyj-02.webp # Сигнальный метроном: ракурс 2
-│   │   ├── metronom-signalnyj-03.webm
+│   │   ├── metronom-signalnyj-03.webm # Настройка и проверка схемы сигнального метронома
 │   │   ├── metronom-signalnyj-03.webp # Сигнальный метроном: ракурс 3
-│   │   ├── metronom-signalnyj-04.webm
+│   │   ├── metronom-signalnyj-04.webm # Демонстрация световой индикации сигнального метронома
 │   │   ├── metronom-signalnyj-04.webp # Сигнальный метроном: ракурс 4
-│   │   ├── metronom-signalnyj-05.webm
+│   │   ├── metronom-signalnyj-05.webm # Проверка переключателей и режимов сигнального метронома
 │   │   ├── metronom-signalnyj-05.webp # Сигнальный метроном: ракурс 5
-│   │   ├── metronom-signalnyj-06.webm
+│   │   ├── metronom-signalnyj-06.webm # Работа метронома в затемнённом помещении
 │   │   ├── metronom-signalnyj-06.webp # Сигнальный метроном: ракурс 6
-│   │   ├── metronom-signalnyj-07.webm
+│   │   ├── metronom-signalnyj-07.webm # Световая индикация метронома в темноте
 │   │   ├── metronom-signalnyj-07.webp # Сигнальный метроном: ракурс 7
 │   │   ├── metronom-signalnyj-08.webp # Сигнальный метроном: ракурс 8
 │   │   ├── metronom-signalnyj-09.webp # Сигнальный метроном: ракурс 9
@@ -469,45 +469,45 @@ eaststandart.github.io/
 │   ├── muzykalnyj-karandash/
 │   │   ├── muzykalnyj-karandash.md # Музыкальный карандаш
 │   │   ├── muzykalnyj-karandash.webp # Общий вид: музыкальный карандаш
-│   │   ├── muzykalnyj-karandash-01.webm
+│   │   ├── muzykalnyj-karandash-01.webm # Игра на бумажной клавиатуре музыкальным карандашом
 │   │   ├── muzykalnyj-karandash-01.webp # Музыкальный карандаш: ракурс 1
-│   │   ├── muzykalnyj-karandash-02.webm
+│   │   ├── muzykalnyj-karandash-02.webm # Проверка музыкального карандаша с измерительным прибором
 │   │   ├── muzykalnyj-karandash-02.webp # Музыкальный карандаш: ракурс 2
-│   │   ├── muzykalnyj-karandash-03.webm
+│   │   ├── muzykalnyj-karandash-03.webm # Наблюдение сигнала музыкального карандаша на осциллографе
 │   │   ├── muzykalnyj-karandash-03.webp # Электрическая схема музыкального карандаша на таймере TLC555
-│   │   ├── muzykalnyj-karandash-04.webm
+│   │   ├── muzykalnyj-karandash-04.webm # Рисование схемы музыкального карандаша на бумаге
 │   │   ├── muzykalnyj-karandash-04.webp # Музыкальный карандаш: ракурс 4
-│   │   ├── muzykalnyj-karandash-05.webm
+│   │   ├── muzykalnyj-karandash-05.webm # Проверка бумажной клавиатуры музыкального карандаша
 │   │   ├── muzykalnyj-karandash-05.webp # Музыкальный карандаш: ракурс 5
-│   │   ├── muzykalnyj-karandash-06.webm
+│   │   ├── muzykalnyj-karandash-06.webm # Подготовка рисунка для музыкального карандаша
 │   │   ├── muzykalnyj-karandash-06.webp # Музыкальный карандаш: ракурс 6
-│   │   ├── muzykalnyj-karandash-07.webm
+│   │   ├── muzykalnyj-karandash-07.webm # Проверка работы музыкального карандаша на бумажной схеме
 │   │   ├── muzykalnyj-karandash-07.webp # Музыкальный карандаш: ракурс 7
-│   │   ├── muzykalnyj-karandash-08.webm
+│   │   ├── muzykalnyj-karandash-08.webm # Нанесение проводящих линий на рисунок музыкального устройства
 │   │   ├── muzykalnyj-karandash-08.webp # Музыкальный карандаш: ракурс 8
-│   │   ├── muzykalnyj-karandash-09.webm
+│   │   ├── muzykalnyj-karandash-09.webm # Соединение бумажных клавиш проводящими линиями
 │   │   ├── muzykalnyj-karandash-09.webp # Музыкальный карандаш: ракурс 9
-│   │   ├── muzykalnyj-karandash-10.webm
+│   │   ├── muzykalnyj-karandash-10.webm # Испытание бумажной клавиатуры музыкального карандаша
 │   │   ├── muzykalnyj-karandash-10.webp # Музыкальный карандаш: ракурс 10
-│   │   ├── muzykalnyj-karandash-11.webm
+│   │   ├── muzykalnyj-karandash-11.webm # Рисование элементов музыкальной схемы карандашом
 │   │   ├── muzykalnyj-karandash-11.webp # Музыкальный карандаш: ракурс 11
-│   │   ├── muzykalnyj-karandash-12.webm
+│   │   ├── muzykalnyj-karandash-12.webm # Игра на самодельной бумажной клавиатуре
 │   │   ├── muzykalnyj-karandash-12.webp # Музыкальный карандаш: ракурс 12
-│   │   ├── muzykalnyj-karandash-13.webm
+│   │   ├── muzykalnyj-karandash-13.webm # Проверка клавиш музыкального карандаша на бумажной панели
 │   │   ├── muzykalnyj-karandash-13.webp # Музыкальный карандаш: ракурс 13
-│   │   ├── muzykalnyj-karandash-14.webm
+│   │   ├── muzykalnyj-karandash-14.webm # Нанесение графических элементов схемы музыкального карандаша
 │   │   ├── muzykalnyj-karandash-14.webp # Музыкальный карандаш: ракурс 14
-│   │   ├── muzykalnyj-karandash-15.webm
+│   │   ├── muzykalnyj-karandash-15.webm # Сборка и проверка электронного блока музыкального карандаша
 │   │   ├── muzykalnyj-karandash-15.webp # Музыкальный карандаш: ракурс 15
-│   │   ├── muzykalnyj-karandash-16.webm
+│   │   ├── muzykalnyj-karandash-16.webm # Испытание музыкального карандаша с бумажными контактами
 │   │   ├── muzykalnyj-karandash-16.webp # Музыкальный карандаш: ракурс 16
-│   │   ├── muzykalnyj-karandash-17.webm
+│   │   ├── muzykalnyj-karandash-17.webm # Проверка срабатывания контактов бумажной клавиатуры
 │   │   ├── muzykalnyj-karandash-17.webp # Музыкальный карандаш: ракурс 17
-│   │   ├── muzykalnyj-karandash-18.webm
+│   │   ├── muzykalnyj-karandash-18.webm # Тестирование бумажных клавиш музыкального устройства
 │   │   ├── muzykalnyj-karandash-18.webp # Музыкальный карандаш: ракурс 18
-│   │   ├── muzykalnyj-karandash-19.webm
+│   │   ├── muzykalnyj-karandash-19.webm # Настройка контактов музыкального карандаша
 │   │   ├── muzykalnyj-karandash-19.webp # Музыкальный карандаш: ракурс 19
-│   │   ├── muzykalnyj-karandash-20.webm
+│   │   ├── muzykalnyj-karandash-20.webm # Проверка контактной клавиатуры музыкального карандаша
 │   │   ├── muzykalnyj-karandash-20.webp # Музыкальный карандаш: ракурс 20
 │   │   ├── muzykalnyj-karandash-21.webp # Музыкальный карандаш: ракурс 21
 │   │   ├── muzykalnyj-karandash-22.webp # Музыкальный карандаш: ракурс 22
@@ -521,7 +521,7 @@ eaststandart.github.io/
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem 1.webp # Настольная лампа с растением на прозрачном фоне
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.md # Настольная светодиодная лампа с растением
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.webp # Общий вид: настольная лампа для растения
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm # Демонстрация настольной светодиодной лампы с декоративным растением
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webp # Настольная лампа для растения: ракурс 1
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-02.webp # Настольная лампа для растения: ракурс 2
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-03.webp # Настольная лампа для растения: ракурс 3
@@ -531,21 +531,21 @@ eaststandart.github.io/
 │   ├── pano-uslovnye-oboznacheniya/
 │   │   ├── pano-uslovnye-oboznacheniya.md # Условные обозначения
 │   │   ├── pano-uslovnye-oboznacheniya.webp # Общий вид: панно с условными обозначениями
-│   │   ├── pano-uslovnye-oboznacheniya-01.webm
+│   │   ├── pano-uslovnye-oboznacheniya-01.webm # Обзор панно с условными обозначениями
 │   │   ├── pano-uslovnye-oboznacheniya-01.webp # Панно с условными обозначениями: ракурс 1
 │   │   └── pano-uslovnye-oboznacheniya-02.webp # Панно с условными обозначениями: ракурс 2
 │   ├── plavnoe-zazhiganie-svetodioda/
 │   │   ├── plavnoe-zazhiganie-svetodioda.md # Эффект плавного зажигания светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda.webp # Общий вид: устройство плавного включения светодиода
-│   │   ├── plavnoe-zazhiganie-svetodioda-01.webm
+│   │   ├── plavnoe-zazhiganie-svetodioda-01.webm # Проверка плавного включения светодиода на электронной плате
 │   │   ├── plavnoe-zazhiganie-svetodioda-01.webp # Устройство плавного включения светодиода: ракурс 1
-│   │   ├── plavnoe-zazhiganie-svetodioda-02.webm
+│   │   ├── plavnoe-zazhiganie-svetodioda-02.webm # Изменение яркости светодиода в схеме плавного зажигания
 │   │   ├── plavnoe-zazhiganie-svetodioda-02.webp # Устройство плавного включения светодиода: ракурс 2
-│   │   ├── plavnoe-zazhiganie-svetodioda-03.webm
+│   │   ├── plavnoe-zazhiganie-svetodioda-03.webm # Демонстрация плавного включения светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda-03.webp # Устройство плавного включения светодиода: ракурс 3
-│   │   ├── plavnoe-zazhiganie-svetodioda-04.webm
+│   │   ├── plavnoe-zazhiganie-svetodioda-04.webm # Проверка светодиодной схемы с регулировкой яркости
 │   │   ├── plavnoe-zazhiganie-svetodioda-04.webp # Устройство плавного включения светодиода: ракурс 4
-│   │   ├── plavnoe-zazhiganie-svetodioda-05.webm
+│   │   ├── plavnoe-zazhiganie-svetodioda-05.webm # Испытание электронного устройства плавного зажигания светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda-05.webp # Принципиальная схема устройства плавного включения светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda-06.webp # Схема транзисторного узла и регулировки времени свечения
 │   │   ├── plavnoe-zazhiganie-svetodioda-07.webp # Сравнение обычного и инверсного включения светодиода
@@ -569,32 +569,32 @@ eaststandart.github.io/
 │   ├── prazdnichnyj-domik/
 │   │   ├── prazdnichnyj-domik.md # Праздничный домик
 │   │   ├── prazdnichnyj-domik.webp # Общий вид: праздничный домик с электроникой
-│   │   ├── prazdnichnyj-domik-01.webm
+│   │   ├── prazdnichnyj-domik-01.webm # Обзор самодельного праздничного домика с подсветкой
 │   │   ├── prazdnichnyj-domik-01.webp # Праздничный домик с электроникой: ракурс 1
-│   │   ├── prazdnichnyj-domik-02.webm
+│   │   ├── prazdnichnyj-domik-02.webm # Установка световых элементов в картонный праздничный домик
 │   │   ├── prazdnichnyj-domik-02.webp # Праздничный домик с электроникой: ракурс 2
-│   │   ├── prazdnichnyj-domik-03.webm
+│   │   ├── prazdnichnyj-domik-03.webm # Декорирование праздничного домика светодиодами
 │   │   ├── prazdnichnyj-domik-03.webp # Праздничный домик с электроникой: ракурс 3
-│   │   ├── prazdnichnyj-domik-04.webm
+│   │   ├── prazdnichnyj-domik-04.webm # Демонстрация разноцветной подсветки праздничного домика
 │   │   ├── prazdnichnyj-domik-04.webp # Праздничный домик с электроникой: ракурс 4
-│   │   ├── prazdnichnyj-domik-05.webm
+│   │   ├── prazdnichnyj-domik-05.webm # Проверка светодиодной подсветки макета праздничного домика
 │   │   ├── prazdnichnyj-domik-05.webp # Праздничный домик с электроникой: ракурс 5
-│   │   ├── prazdnichnyj-domik-06.webm
+│   │   ├── prazdnichnyj-domik-06.webm # Обзор конструкции праздничного домика с подсветкой
 │   │   ├── prazdnichnyj-domik-06.webp # Праздничный домик с электроникой: ракурс 6
-│   │   ├── prazdnichnyj-domik-07.webm
+│   │   ├── prazdnichnyj-domik-07.webm # Демонстрация праздничного домика с включёнными огнями
 │   │   ├── prazdnichnyj-domik-07.webp # Праздничный домик с электроникой: ракурс 7
 │   │   ├── prazdnichnyj-domik-08.webp # Праздничный домик с электроникой: ракурс 8
 │   │   └── prazdnichnyj-domik-09.webp # Праздничный домик с электроникой: ракурс 9
 │   ├── robot-korova-iz-kartona/
 │   │   ├── robot-korova-iz-kartona.md # Робот корова из картона
 │   │   ├── robot-korova-iz-kartona.webp # Общий вид: картонный шагающий робот
-│   │   ├── robot-korova-iz-kartona-01.webm
+│   │   ├── robot-korova-iz-kartona-01.webm # Обзор картонного робота-коровы с подвижными ногами
 │   │   ├── robot-korova-iz-kartona-01.webp # Картонный шагающий робот: ракурс 1
-│   │   ├── robot-korova-iz-kartona-02.webm
+│   │   ├── robot-korova-iz-kartona-02.webm # Испытание механизма движения картонного робота-коровы
 │   │   ├── robot-korova-iz-kartona-02.webp # Картонный шагающий робот: ракурс 2
-│   │   ├── robot-korova-iz-kartona-03.webm
+│   │   ├── robot-korova-iz-kartona-03.webm # Проверка ходовой конструкции робота-коровы
 │   │   ├── robot-korova-iz-kartona-03.webp # Картонный шагающий робот: ракурс 3
-│   │   ├── robot-korova-iz-kartona-04.webm
+│   │   ├── robot-korova-iz-kartona-04.webm # Демонстрация движения самодельного робота-коровы
 │   │   ├── robot-korova-iz-kartona-04.webp # Картонный шагающий робот: ракурс 4
 │   │   ├── robot-korova-iz-kartona-05.webp # Картонный шагающий робот: ракурс 5
 │   │   ├── robot-korova-iz-kartona-06.webp # Картонный шагающий робот: ракурс 6
@@ -607,15 +607,15 @@ eaststandart.github.io/
 │   │   ├── robot-krolik-iz-kartona.webp # Общий вид: картонный робот-кролик
 │   │   ├── robot-krolik-iz-kartona-.webp # Робот-кролик с отдельным блоком управления на прозрачном фоне
 │   │   ├── robot-krolik-iz-kartona--.webp # Вариант изображения робота-кролика на прозрачном фоне
-│   │   ├── robot-krolik-iz-kartona-01.webm
+│   │   ├── robot-krolik-iz-kartona-01.webm # Обзор картонного робота-кролика с подвижными деталями
 │   │   ├── robot-krolik-iz-kartona-01.webp # Картонный робот-кролик: ракурс 1
-│   │   ├── robot-krolik-iz-kartona-02.webm
+│   │   ├── robot-krolik-iz-kartona-02.webm # Проверка механизма движения робота-кролика
 │   │   ├── robot-krolik-iz-kartona-02.webp # Картонный робот-кролик: ракурс 2
-│   │   ├── robot-krolik-iz-kartona-03.webm
+│   │   ├── robot-krolik-iz-kartona-03.webm # Испытание картонного робота-кролика на поверхности
 │   │   ├── robot-krolik-iz-kartona-03.webp # Картонный робот-кролик: ракурс 3
-│   │   ├── robot-krolik-iz-kartona-04.webm
+│   │   ├── robot-krolik-iz-kartona-04.webm # Демонстрация работы механизма робота-кролика
 │   │   ├── robot-krolik-iz-kartona-04.webp # Картонный робот-кролик: ракурс 4
-│   │   ├── robot-krolik-iz-kartona-05.webm
+│   │   ├── robot-krolik-iz-kartona-05.webm # Проверка движения самодельного робота-кролика
 │   │   ├── robot-krolik-iz-kartona-05.webp # Картонный робот-кролик: ракурс 5
 │   │   ├── robot-krolik-iz-kartona-06.webp # Картонный робот-кролик: ракурс 6
 │   │   ├── robot-krolik-iz-kartona-07.webp # Картонный робот-кролик: ракурс 7
@@ -640,13 +640,13 @@ eaststandart.github.io/
 │   ├── robot-strannik/
 │   │   ├── robot-strannik.md # Робот странник
 │   │   ├── robot-strannik.webp # Общий вид: робот-странник и игрушка-робот
-│   │   ├── robot-strannik-01.webm
+│   │   ├── robot-strannik-01.webm # Испытание шагающего робота-странника на полу
 │   │   ├── robot-strannik-01.webp # Робот-странник и игрушка-робот: ракурс 1
-│   │   ├── robot-strannik-02.webm
+│   │   ├── robot-strannik-02.webm # Демонстрация ходьбы шагающего робота-странника
 │   │   ├── robot-strannik-02.webp # Робот-странник и игрушка-робот: ракурс 2
-│   │   ├── robot-strannik-03.webm
+│   │   ├── robot-strannik-03.webm # Проверка устойчивости и движения робота-странника
 │   │   ├── robot-strannik-03.webp # Робот-странник и игрушка-робот: ракурс 3
-│   │   ├── robot-strannik-04.webm
+│   │   ├── robot-strannik-04.webm # Короткий тест шагающего робота-странника
 │   │   ├── robot-strannik-04.webp # Робот-странник и игрушка-робот: ракурс 4
 │   │   ├── robot-strannik-05.webp # Робот-странник и игрушка-робот: ракурс 5
 │   │   ├── robot-strannik-06.webp # Робот-странник и игрушка-робот: ракурс 6
@@ -660,9 +660,9 @@ eaststandart.github.io/
 │   ├── simple-cardboard-walking-robot/
 │   │   ├── simple-cardboard-walking-robot.md # Робот двуногий шагающий из картона
 │   │   ├── simple-cardboard-walking-robot.webp # Общий вид: картонный шагающий робот
-│   │   ├── simple-cardboard-walking-robot-01.webm
+│   │   ├── simple-cardboard-walking-robot-01.webm # Испытание простого шагающего робота из картона
 │   │   ├── simple-cardboard-walking-robot-01.webp # Картонный шагающий робот: ракурс 1
-│   │   ├── simple-cardboard-walking-robot-02.webm
+│   │   ├── simple-cardboard-walking-robot-02.webm # Проверка движения самодельного картонного робота
 │   │   ├── simple-cardboard-walking-robot-02.webp # Картонный шагающий робот: ракурс 2
 │   │   ├── simple-cardboard-walking-robot-03.webp # Картонный шагающий робот: ракурс 3
 │   │   ├── simple-cardboard-walking-robot-04.webp # Картонный шагающий робот: ракурс 4
@@ -680,24 +680,24 @@ eaststandart.github.io/
 │   ├── vibrohod-iz-zubnoj-shchetki/
 │   │   ├── vibrohod-iz-zubnoj-shchetki.md # Виброход из зубной щетки
 │   │   ├── vibrohod-iz-zubnoj-shchetki.webp # Общий вид: виброход из зубной щётки
-│   │   ├── vibrohod-iz-zubnoj-shchetki-01.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-01.webm # Демонстрация виброхода на основе зубной щётки
 │   │   ├── vibrohod-iz-zubnoj-shchetki-01.webp # Виброход из зубной щётки: ракурс 1
-│   │   ├── vibrohod-iz-zubnoj-shchetki-02.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-02.webm # Проверка движения миниатюрного виброхода
 │   │   ├── vibrohod-iz-zubnoj-shchetki-02.webp # Виброход из зубной щётки: ракурс 2
-│   │   ├── vibrohod-iz-zubnoj-shchetki-03.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-03.webm # Испытание виброхода на ровной поверхности
 │   │   ├── vibrohod-iz-zubnoj-shchetki-03.webp # Виброход из зубной щётки: ракурс 3
-│   │   ├── vibrohod-iz-zubnoj-shchetki-04.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-04.webm # Настройка и проверка вибрационного привода
 │   │   ├── vibrohod-iz-zubnoj-shchetki-04.webp # Виброход из зубной щётки: ракурс 4
-│   │   ├── vibrohod-iz-zubnoj-shchetki-05.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-05.webm # Демонстрация перемещения виброхода из зубной щётки
 │   │   ├── vibrohod-iz-zubnoj-shchetki-05.webp # Виброход из зубной щётки: ракурс 5
-│   │   ├── vibrohod-iz-zubnoj-shchetki-06.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-06.webm # Проверка вибрационного механизма мини-робота
 │   │   ├── vibrohod-iz-zubnoj-shchetki-06.webp # Виброход из зубной щётки: ракурс 6
-│   │   ├── vibrohod-iz-zubnoj-shchetki-07.webm
-│   │   └── vibrohod-iz-zubnoj-shchetki-08.webm
+│   │   ├── vibrohod-iz-zubnoj-shchetki-07.webm # Испытание виброхода с установленным мотором
+│   │   └── vibrohod-iz-zubnoj-shchetki-08.webm # Обзор деталей и сборки виброхода из зубной щётки
 │   └── yablonevoe-derevo/
 │       ├── yablonevoe-derevo.md # Яблоневое дерево
 │       ├── yablonevoe-derevo.webp # Общий вид: светодиодное декоративное дерево
-│       ├── yablonevoe-derevo-01.webm
+│       ├── yablonevoe-derevo-01.webm # Демонстрация декоративного светодиодного яблоневого дерева
 │       ├── yablonevoe-derevo-01.webp # Светодиодное декоративное дерево: ракурс 1
 │       ├── yablonevoe-derevo-02.webp # Светодиодное декоративное дерево: ракурс 2
 │       ├── yablonevoe-derevo-03.webp # Декоративное дерево с разноцветным узором на кроне

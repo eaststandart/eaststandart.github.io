@@ -43,10 +43,10 @@ jobs:
             fi
 
             fps=$(awk -v d="$duration" 'BEGIN { printf "%.8f", 12 / d }')
-            ffmpeg -hide_banner -loglevel error -y \
-              -i "$video" \
+            ffmpeg -hide_banner -loglevel error -nostdin -y \
+              -i "$GITHUB_WORKSPACE/$video" \
               -vf "fps=$fps,scale=480:-1,tile=4x3:padding=12:margin=12:color=white" \
-              -frames:v 1 "review-output/$output_name"
+              -frames:v 1 "$GITHUB_WORKSPACE/review-output/$output_name"
 
             printf '%s\t%s\t%s\n' "$relative" "$duration" "$output_name" \
               >> review-output/index.tsv
@@ -56,6 +56,7 @@ jobs:
           count=$(find review-output -maxdepth 1 -type f -name '*.jpg' | wc -l)
           echo "Contact sheets created: $count"
           test "$count" -gt 0
+          echo "Expected videos: $(find faire -type f -iname '*.webm' | wc -l)" 
 
       - name: Upload contact sheets
         uses: actions/upload-artifact@v4

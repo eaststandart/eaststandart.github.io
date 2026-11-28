@@ -295,413 +295,413 @@ eaststandart.github.io/
 ├── faire/
 │   ├── avtomobil-s-polnym-privodom-iz-kartona/
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona.md # Автомобиль с полным приводом из картона
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona.webp
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona # Общий вид: картонный автомобиль с полным приводом
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webm
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01.webp
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-01 # Фото картонный автомобиль с полным приводом: ракурс 1
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02.webm
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02.webp
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-02 # Фото картонный автомобиль с полным приводом: ракурс 2
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03.webm
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03.webp
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-03 # Фото картонный автомобиль с полным приводом: ракурс 3
 │   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04.webm
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-05.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-06.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-07.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-08.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-09.webp
-│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-10.webp
-│   │   └── avtomobil-s-polnym-privodom-iz-kartona-11.webp
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-04 # Фото картонный автомобиль с полным приводом: ракурс 4
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-05 # Фото картонный автомобиль с полным приводом: ракурс 5
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-06 # Фото картонный автомобиль с полным приводом: ракурс 6
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-07 # Фото картонный автомобиль с полным приводом: ракурс 7
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-08 # Фото картонный автомобиль с полным приводом: ракурс 8
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-09 # Фото картонный автомобиль с полным приводом: ракурс 9
+│   │   ├── avtomobil-s-polnym-privodom-iz-kartona-10 # Фото картонный автомобиль с полным приводом: ракурс 10
+│   │   └── avtomobil-s-polnym-privodom-iz-kartona-11 # Фото картонный автомобиль с полным приводом: ракурс 11
 │   ├── besprovodnoj-telegraf/
 │   │   ├── besprovodnoj-telegraf.md # Беспроводной телеграф
-│   │   ├── besprovodnoj-telegraf.webp
+│   │   ├── besprovodnoj-telegraf # Общий вид: макеты беспроводного телеграфа
 │   │   ├── besprovodnoj-telegraf-01.webm
-│   │   ├── besprovodnoj-telegraf-01.webp
-│   │   └── besprovodnoj-telegraf-02.webp
+│   │   ├── besprovodnoj-telegraf-01 # Фото макеты беспроводного телеграфа: ракурс 1
+│   │   └── besprovodnoj-telegraf-02 # Фото макеты беспроводного телеграфа: ракурс 2
 │   ├── blaster-elektroakusticheskij/
 │   │   ├── blaster-elektroakusticheskij.md # Бластер электроакустический
-│   │   ├── blaster-elektroakusticheskij.webp
+│   │   ├── blaster-elektroakusticheskij # Общий вид: электроакустический бластер
 │   │   ├── blaster-elektroakusticheskij-01.webm
-│   │   ├── blaster-elektroakusticheskij-01.webp
-│   │   ├── blaster-elektroakusticheskij-02.webp
-│   │   ├── blaster-elektroakusticheskij-03.webp
+│   │   ├── blaster-elektroakusticheskij-01 # Фото электроакустический бластер: ракурс 1
+│   │   ├── blaster-elektroakusticheskij-02 # Фото электроакустический бластер: ракурс 2
+│   │   ├── blaster-elektroakusticheskij-03 # Фото электроакустический бластер: ракурс 3
 │   │   ├── blaster-elektroakusticheskij-ad.dxf
 │   │   ├── blaster-elektroakusticheskij-ad.pdf
 │   │   ├── blaster-elektroakusticheskij-esd.pdf
 │   │   └── blaster-elektroakusticheskij-esd.spl8
 │   ├── detektor-pereliva/
 │   │   ├── detektor-pereliva.md # Детектор перелива
-│   │   ├── detektor-pereliva.webp
+│   │   ├── detektor-pereliva # Общий вид: детектор перелива
 │   │   ├── detektor-pereliva-01.webm
-│   │   ├── detektor-pereliva-01.webp
+│   │   ├── detektor-pereliva-01 # Фото детектор перелива: ракурс 1
 │   │   ├── detektor-pereliva-02.webm
-│   │   ├── detektor-pereliva-02.webp
-│   │   ├── detektor-pereliva-03.webp
-│   │   ├── detektor-pereliva-04.webp
-│   │   ├── detektor-pereliva-05.webp
-│   │   ├── detektor-pereliva-06.webp
-│   │   ├── detektor-pereliva-07.webp
-│   │   ├── detektor-pereliva-08.webp
-│   │   ├── detektor-pereliva-09.webp
-│   │   ├── detektor-pereliva-10.webp
-│   │   ├── detektor-pereliva-11.webp
-│   │   ├── detektor-pereliva-12.webp
-│   │   ├── detektor-pereliva-13.webp
-│   │   ├── detektor-pereliva-14.webp
-│   │   ├── detektor-pereliva-15.webp
-│   │   ├── detektor-pereliva-16.webp
-│   │   ├── detektor-pereliva-17.webp
-│   │   ├── detektor-pereliva-18.webp
-│   │   ├── detektor-pereliva-19.webp
-│   │   ├── detektor-pereliva-20.webp
-│   │   ├── detektor-pereliva-21.webp
-│   │   ├── detektor-pereliva-22.webp
-│   │   ├── detektor-pereliva-23.webp
+│   │   ├── detektor-pereliva-02 # Фото детектор перелива: ракурс 2
+│   │   ├── detektor-pereliva-03 # Фото детектор перелива: ракурс 3
+│   │   ├── detektor-pereliva-04 # Фото детектор перелива: ракурс 4
+│   │   ├── detektor-pereliva-05 # Фото детектор перелива: ракурс 5
+│   │   ├── detektor-pereliva-06 # Фото детектор перелива: ракурс 6
+│   │   ├── detektor-pereliva-07 # Фото детектор перелива: ракурс 7
+│   │   ├── detektor-pereliva-08 # Фото детектор перелива: ракурс 8
+│   │   ├── detektor-pereliva-09 # Фото детектор перелива: ракурс 9
+│   │   ├── detektor-pereliva-10 # Фото детектор перелива: ракурс 10
+│   │   ├── detektor-pereliva-11 # Фото детектор перелива: ракурс 11
+│   │   ├── detektor-pereliva-12 # Фото детектор перелива: ракурс 12
+│   │   ├── detektor-pereliva-13 # Фото детектор перелива: ракурс 13
+│   │   ├── detektor-pereliva-14 # Фото детектор перелива: ракурс 14
+│   │   ├── detektor-pereliva-15 # Фото детектор перелива: ракурс 15
+│   │   ├── detektor-pereliva-16 # Принципиальная схема звукового сигнализатора с контактным датчиком
+│   │   ├── detektor-pereliva-17 # Схема работы транзисторного узла, этап 1
+│   │   ├── detektor-pereliva-18 # Схема работы транзисторного узла, этап 2
+│   │   ├── detektor-pereliva-19 # Схема работы трансформатора и звукового излучателя
+│   │   ├── detektor-pereliva-20 # Схема формирования звукового сигнала
+│   │   ├── detektor-pereliva-21 # Схема завершающего этапа цикла работы устройства
+│   │   ├── detektor-pereliva-22 # Последовательность этапов работы звукового сигнализатора
+│   │   ├── detektor-pereliva-23 # Пошаговая схема подключения датчика к контактам А и Б
 │   │   ├── detektor-pereliva-esd.pdf
 │   │   ├── detektor-pereliva-esd.spl8
 │   │   ├── detektor-perelivaj-ad.dxf
 │   │   └── detektor-perelivaj-ad.pdf
 │   ├── elektronnyj-organ/
 │   │   ├── elektronnyj-organ.md # Электронный орган
-│   │   ├── elektronnyj-organ.webp
+│   │   ├── elektronnyj-organ # Общий вид: электронный орган
 │   │   ├── elektronnyj-organ-01.webm
-│   │   ├── elektronnyj-organ-01.webp
+│   │   ├── elektronnyj-organ-01 # Фото электронный орган: ракурс 1
 │   │   ├── elektronnyj-organ-02.webm
-│   │   ├── elektronnyj-organ-02.webp
+│   │   ├── elektronnyj-organ-02 # Фото электронный орган: ракурс 2
 │   │   ├── elektronnyj-organ-03.webm
-│   │   ├── elektronnyj-organ-03.webp
+│   │   ├── elektronnyj-organ-03 # Фото электронный орган: ракурс 3
 │   │   ├── elektronnyj-organ-04.webm
-│   │   ├── elektronnyj-organ-04.webp
+│   │   ├── elektronnyj-organ-04 # Фото электронный орган: ракурс 4
 │   │   ├── elektronnyj-organ-05.webm
-│   │   ├── elektronnyj-organ-05.webp
-│   │   ├── elektronnyj-organ-06.webp
-│   │   ├── elektronnyj-organ-07.webp
-│   │   ├── elektronnyj-organ-08.webp
-│   │   ├── elektronnyj-organ-09.webp
-│   │   ├── elektronnyj-organ-10.webp
-│   │   ├── elektronnyj-organ-11.webp
-│   │   ├── elektronnyj-organ-12.webp
-│   │   ├── elektronnyj-organ-13.webp
-│   │   ├── elektronnyj-organ-14.webp
-│   │   ├── elektronnyj-organ-15.webp
-│   │   ├── elektronnyj-organ-16.webp
-│   │   ├── elektronnyj-organ-17.webp
-│   │   ├── elektronnyj-organ-18.webp
-│   │   ├── elektronnyj-organ-19.webp
-│   │   ├── elektronnyj-organ-20.webp
-│   │   ├── elektronnyj-organ-21.webp
-│   │   ├── elektronnyj-organ-22.webp
-│   │   ├── elektronnyj-organ-23.webp
-│   │   ├── elektronnyj-organ-24.webp
-│   │   ├── elektronnyj-organ-25.webp
-│   │   ├── elektronnyj-organ-26.webp
-│   │   ├── elektronnyj-organ-27.webp
-│   │   ├── elektronnyj-organ-28.webp
-│   │   ├── elektronnyj-organ-29.webp
-│   │   ├── elektronnyj-organ-30.webp
-│   │   ├── elektronnyj-organ-31.webp
-│   │   ├── elektronnyj-organ-32.webp
-│   │   ├── elektronnyj-organ-33.webp
-│   │   ├── elektronnyj-organ-34.webp
-│   │   ├── elektronnyj-organ-35.webp
-│   │   ├── elektronnyj-organ-36.webp
-│   │   ├── elektronnyj-organ-37.webp
-│   │   ├── elektronnyj-organ-38.webp
-│   │   ├── elektronnyj-organ-39.webp
-│   │   ├── elektronnyj-organ-40.webp
-│   │   ├── elektronnyj-organ-41.webp
-│   │   ├── elektronnyj-organ-42.webp
+│   │   ├── elektronnyj-organ-05 # Фото электронный орган: ракурс 5
+│   │   ├── elektronnyj-organ-06 # Фото электронный орган: ракурс 6
+│   │   ├── elektronnyj-organ-07 # Фото электронный орган: ракурс 7
+│   │   ├── elektronnyj-organ-08 # Фото электронный орган: ракурс 8
+│   │   ├── elektronnyj-organ-09 # Фото электронный орган: ракурс 9
+│   │   ├── elektronnyj-organ-10 # Фото электронный орган: ракурс 10
+│   │   ├── elektronnyj-organ-11 # Фото электронный орган: ракурс 11
+│   │   ├── elektronnyj-organ-12 # Фото электронный орган: ракурс 12
+│   │   ├── elektronnyj-organ-13 # Фото электронный орган: ракурс 13
+│   │   ├── elektronnyj-organ-14 # Эскиз корпуса и компоновки электронного органа
+│   │   ├── elektronnyj-organ-15 # Деревянная основа клавишного механизма и отдельные платы кнопок
+│   │   ├── elektronnyj-organ-16 # Подготовленные детали корпуса, клавиш и соединительных проводов
+│   │   ├── elektronnyj-organ-17 # Фотошаблоны печатных плат электронного органа
+│   │   ├── elektronnyj-organ-18 # Печатные платы после травления
+│   │   ├── elektronnyj-organ-19 # Печатная плата с маркировкой электронного органа
+│   │   ├── elektronnyj-organ-20 # Крупный план печатной платы с маркировкой
+│   │   ├── elektronnyj-organ-21 # Две платы с маркировкой после обработки
+│   │   ├── elektronnyj-organ-22 # Печатные платы с проявленными медными дорожками
+│   │   ├── elektronnyj-organ-23 # Две платы с рисунком дорожек и маркировкой
+│   │   ├── elektronnyj-organ-24 # Сравнение двух вариантов изготовленных печатных плат
+│   │   ├── elektronnyj-organ-25 # Печатная плата с маркировкой и контактными площадками
+│   │   ├── elektronnyj-organ-26 # Крупный план платы с дорожками и обозначениями компонентов
+│   │   ├── elektronnyj-organ-27 # Печатная плата с маркировкой органа и таймера NE555
+│   │   ├── elektronnyj-organ-28 # Плата с надписями на фоне рабочего стола
+│   │   ├── elektronnyj-organ-29 # Фото электронный орган: ракурс 29
+│   │   ├── elektronnyj-organ-30 # Фото электронный орган: ракурс 30
+│   │   ├── elektronnyj-organ-31 # Фото электронный орган: ракурс 31
+│   │   ├── elektronnyj-organ-32 # Фото электронный орган: ракурс 32
+│   │   ├── elektronnyj-organ-33 # Фото электронный орган: ракурс 33
+│   │   ├── elektronnyj-organ-34 # Фото электронный орган: ракурс 34
+│   │   ├── elektronnyj-organ-35 # Фото электронный орган: ракурс 35
+│   │   ├── elektronnyj-organ-36 # Фото электронный орган: ракурс 36
+│   │   ├── elektronnyj-organ-37 # Фото электронный орган: ракурс 37
+│   │   ├── elektronnyj-organ-38 # Фото электронный орган: ракурс 38
+│   │   ├── elektronnyj-organ-39 # Фото электронный орган: ракурс 39
+│   │   ├── elektronnyj-organ-40 # Фото электронный орган: ракурс 40
+│   │   ├── elektronnyj-organ-41 # Экран осциллографа с прямоугольным сигналом генератора
+│   │   ├── elektronnyj-organ-42 # Рукописные схемы и расчёты электронного органа
 │   │   └── elektronnyj-organ-pcb.lay6
 │   ├── fonarik-svetodiodnyj-bumazhnyj/
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.md # Фонарик светодиодный бумажный
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.pdf
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj.spl8
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj.webp
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj # Общий вид: бумажный светодиодный фонарик
 │   │   ├── fonarik-svetodiodnyj-bumazhnyj-01.webm
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-01.webp
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-02.webp
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-03.webp
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-04.webp
-│   │   ├── fonarik-svetodiodnyj-bumazhnyj-05.webp
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-01 # Фото бумажный светодиодный фонарик: ракурс 1
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-02 # Фото бумажный светодиодный фонарик: ракурс 2
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-03 # Принципиальная схема светодиодного фонарика
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-04 # Учебная иллюстрация с фонарём
+│   │   ├── fonarik-svetodiodnyj-bumazhnyj-05 # Схематичное изображение полярности подключения светодиода
 │   │   └── fonarik-svetodiodnyj-bumazhnyj-trafaret.pdf
 │   ├── metronom-signalnyj/
 │   │   ├── metronom-signalnyj.md # Метроном сигнальный
-│   │   ├── metronom-signalnyj.webp
+│   │   ├── metronom-signalnyj # Общий вид: сигнальный метроном
 │   │   ├── metronom-signalnyj-01.webm
-│   │   ├── metronom-signalnyj-01.webp
+│   │   ├── metronom-signalnyj-01 # Фото сигнальный метроном: ракурс 1
 │   │   ├── metronom-signalnyj-02.webm
-│   │   ├── metronom-signalnyj-02.webp
+│   │   ├── metronom-signalnyj-02 # Фото сигнальный метроном: ракурс 2
 │   │   ├── metronom-signalnyj-03.webm
-│   │   ├── metronom-signalnyj-03.webp
+│   │   ├── metronom-signalnyj-03 # Фото сигнальный метроном: ракурс 3
 │   │   ├── metronom-signalnyj-04.webm
-│   │   ├── metronom-signalnyj-04.webp
+│   │   ├── metronom-signalnyj-04 # Фото сигнальный метроном: ракурс 4
 │   │   ├── metronom-signalnyj-05.webm
-│   │   ├── metronom-signalnyj-05.webp
+│   │   ├── metronom-signalnyj-05 # Фото сигнальный метроном: ракурс 5
 │   │   ├── metronom-signalnyj-06.webm
-│   │   ├── metronom-signalnyj-06.webp
+│   │   ├── metronom-signalnyj-06 # Фото сигнальный метроном: ракурс 6
 │   │   ├── metronom-signalnyj-07.webm
-│   │   ├── metronom-signalnyj-07.webp
-│   │   ├── metronom-signalnyj-08.webp
-│   │   ├── metronom-signalnyj-09.webp
-│   │   ├── metronom-signalnyj-10.webp
-│   │   ├── metronom-signalnyj-11.webp
-│   │   ├── metronom-signalnyj-12.webp
-│   │   ├── metronom-signalnyj-13.webp
-│   │   ├── metronom-signalnyj-14.webp
-│   │   ├── metronom-signalnyj-15.webp
-│   │   ├── metronom-signalnyj-16.webp
-│   │   ├── metronom-signalnyj-17.webp
-│   │   ├── metronom-signalnyj-18.webp
-│   │   ├── metronom-signalnyj-19.webp
-│   │   ├── metronom-signalnyj-20.webp
-│   │   ├── metronom-signalnyj-21.webp
-│   │   ├── metronom-signalnyj-22.webp
-│   │   ├── metronom-signalnyj-23.webp
-│   │   ├── metronom-signalnyj-24.webp
-│   │   ├── metronom-signalnyj-25.webp
-│   │   ├── metronom-signalnyj-26.webp
-│   │   ├── metronom-signalnyj-27.webp
-│   │   ├── metronom-signalnyj-28.webp
-│   │   ├── metronom-signalnyj-29.webp
-│   │   ├── metronom-signalnyj-30.webp
-│   │   ├── metronom-signalnyj-31.webp
+│   │   ├── metronom-signalnyj-07 # Фото сигнальный метроном: ракурс 7
+│   │   ├── metronom-signalnyj-08 # Фото сигнальный метроном: ракурс 8
+│   │   ├── metronom-signalnyj-09 # Фото сигнальный метроном: ракурс 9
+│   │   ├── metronom-signalnyj-10 # Фото сигнальный метроном: ракурс 10
+│   │   ├── metronom-signalnyj-11 # Фото сигнальный метроном: ракурс 11
+│   │   ├── metronom-signalnyj-12 # Фото сигнальный метроном: ракурс 12
+│   │   ├── metronom-signalnyj-13 # Фото сигнальный метроном: ракурс 13
+│   │   ├── metronom-signalnyj-14 # Фото сигнальный метроном: ракурс 14
+│   │   ├── metronom-signalnyj-15 # Фото сигнальный метроном: ракурс 15
+│   │   ├── metronom-signalnyj-16 # Фото сигнальный метроном: ракурс 16
+│   │   ├── metronom-signalnyj-17 # Фото сигнальный метроном: ракурс 17
+│   │   ├── metronom-signalnyj-18 # Фото сигнальный метроном: ракурс 18
+│   │   ├── metronom-signalnyj-19 # Фото сигнальный метроном: ракурс 19
+│   │   ├── metronom-signalnyj-20 # Фото сигнальный метроном: ракурс 20
+│   │   ├── metronom-signalnyj-21 # Фото сигнальный метроном: ракурс 21
+│   │   ├── metronom-signalnyj-22 # Фото сигнальный метроном: ракурс 22
+│   │   ├── metronom-signalnyj-23 # Фото сигнальный метроном: ракурс 23
+│   │   ├── metronom-signalnyj-24 # Фото сигнальный метроном: ракурс 24
+│   │   ├── metronom-signalnyj-25 # Фото сигнальный метроном: ракурс 25
+│   │   ├── metronom-signalnyj-26 # Фото сигнальный метроном: ракурс 26
+│   │   ├── metronom-signalnyj-27 # Фото сигнальный метроном: ракурс 27
+│   │   ├── metronom-signalnyj-28 # Фото сигнальный метроном: ракурс 28
+│   │   ├── metronom-signalnyj-29 # Фото сигнальный метроном: ракурс 29
+│   │   ├── metronom-signalnyj-30 # Фото сигнальный метроном: ракурс 30
+│   │   ├── metronom-signalnyj-31 # Фото сигнальный метроном: ракурс 31
 │   │   ├── metronom-signalnyj-esd.pdf
 │   │   └── metronom-signalnyj-esd.spl8
 │   ├── muzykalnyj-karandash/
 │   │   ├── muzykalnyj-karandash.md # Музыкальный карандаш
-│   │   ├── muzykalnyj-karandash.webp
+│   │   ├── muzykalnyj-karandash # Общий вид: музыкальный карандаш
 │   │   ├── muzykalnyj-karandash-01.webm
-│   │   ├── muzykalnyj-karandash-01.webp
+│   │   ├── muzykalnyj-karandash-01 # Фото музыкальный карандаш: ракурс 1
 │   │   ├── muzykalnyj-karandash-02.webm
-│   │   ├── muzykalnyj-karandash-02.webp
+│   │   ├── muzykalnyj-karandash-02 # Фото музыкальный карандаш: ракурс 2
 │   │   ├── muzykalnyj-karandash-03.webm
-│   │   ├── muzykalnyj-karandash-03.webp
+│   │   ├── muzykalnyj-karandash-03 # Электрическая схема музыкального карандаша на таймере TLC555
 │   │   ├── muzykalnyj-karandash-04.webm
-│   │   ├── muzykalnyj-karandash-04.webp
+│   │   ├── muzykalnyj-karandash-04 # Фото музыкальный карандаш: ракурс 4
 │   │   ├── muzykalnyj-karandash-05.webm
-│   │   ├── muzykalnyj-karandash-05.webp
+│   │   ├── muzykalnyj-karandash-05 # Фото музыкальный карандаш: ракурс 5
 │   │   ├── muzykalnyj-karandash-06.webm
-│   │   ├── muzykalnyj-karandash-06.webp
+│   │   ├── muzykalnyj-karandash-06 # Фото музыкальный карандаш: ракурс 6
 │   │   ├── muzykalnyj-karandash-07.webm
-│   │   ├── muzykalnyj-karandash-07.webp
+│   │   ├── muzykalnyj-karandash-07 # Фото музыкальный карандаш: ракурс 7
 │   │   ├── muzykalnyj-karandash-08.webm
-│   │   ├── muzykalnyj-karandash-08.webp
+│   │   ├── muzykalnyj-karandash-08 # Фото музыкальный карандаш: ракурс 8
 │   │   ├── muzykalnyj-karandash-09.webm
-│   │   ├── muzykalnyj-karandash-09.webp
+│   │   ├── muzykalnyj-karandash-09 # Фото музыкальный карандаш: ракурс 9
 │   │   ├── muzykalnyj-karandash-10.webm
-│   │   ├── muzykalnyj-karandash-10.webp
+│   │   ├── muzykalnyj-karandash-10 # Фото музыкальный карандаш: ракурс 10
 │   │   ├── muzykalnyj-karandash-11.webm
-│   │   ├── muzykalnyj-karandash-11.webp
+│   │   ├── muzykalnyj-karandash-11 # Фото музыкальный карандаш: ракурс 11
 │   │   ├── muzykalnyj-karandash-12.webm
-│   │   ├── muzykalnyj-karandash-12.webp
+│   │   ├── muzykalnyj-karandash-12 # Фото музыкальный карандаш: ракурс 12
 │   │   ├── muzykalnyj-karandash-13.webm
-│   │   ├── muzykalnyj-karandash-13.webp
+│   │   ├── muzykalnyj-karandash-13 # Фото музыкальный карандаш: ракурс 13
 │   │   ├── muzykalnyj-karandash-14.webm
-│   │   ├── muzykalnyj-karandash-14.webp
+│   │   ├── muzykalnyj-karandash-14 # Фото музыкальный карандаш: ракурс 14
 │   │   ├── muzykalnyj-karandash-15.webm
-│   │   ├── muzykalnyj-karandash-15.webp
+│   │   ├── muzykalnyj-karandash-15 # Фото музыкальный карандаш: ракурс 15
 │   │   ├── muzykalnyj-karandash-16.webm
-│   │   ├── muzykalnyj-karandash-16.webp
+│   │   ├── muzykalnyj-karandash-16 # Фото музыкальный карандаш: ракурс 16
 │   │   ├── muzykalnyj-karandash-17.webm
-│   │   ├── muzykalnyj-karandash-17.webp
+│   │   ├── muzykalnyj-karandash-17 # Фото музыкальный карандаш: ракурс 17
 │   │   ├── muzykalnyj-karandash-18.webm
-│   │   ├── muzykalnyj-karandash-18.webp
+│   │   ├── muzykalnyj-karandash-18 # Фото музыкальный карандаш: ракурс 18
 │   │   ├── muzykalnyj-karandash-19.webm
-│   │   ├── muzykalnyj-karandash-19.webp
+│   │   ├── muzykalnyj-karandash-19 # Фото музыкальный карандаш: ракурс 19
 │   │   ├── muzykalnyj-karandash-20.webm
-│   │   ├── muzykalnyj-karandash-20.webp
-│   │   ├── muzykalnyj-karandash-21.webp
-│   │   ├── muzykalnyj-karandash-22.webp
-│   │   ├── muzykalnyj-karandash-23.webp
-│   │   ├── muzykalnyj-karandash-24.webp
-│   │   ├── muzykalnyj-karandash-esd.jpg
+│   │   ├── muzykalnyj-karandash-20 # Фото музыкальный карандаш: ракурс 20
+│   │   ├── muzykalnyj-karandash-21 # Фото музыкальный карандаш: ракурс 21
+│   │   ├── muzykalnyj-karandash-22 # Фото музыкальный карандаш: ракурс 22
+│   │   ├── muzykalnyj-karandash-23 # Принципиальная схема музыкального карандаша
+│   │   ├── muzykalnyj-karandash-24 # Описание работы и расчёт частоты генератора музыкального карандаша
+│   │   ├── muzykalnyj-karandash-esd # Электрическая схема музыкального карандаша в формате ESD
 │   │   ├── muzykalnyj-karandash-esd.pdf
 │   │   ├── muzykalnyj-karandash-trafaret.pdf
 │   │   └── muzykalnyj-karandash-trafaret.spl8
 │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem/
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem 1.webp
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem 1 # Настольная лампа с растением на прозрачном фоне
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.md # Настольная светодиодная лампа с растением
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.webp
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem # Общий вид: настольная лампа для растения
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webp
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-02.webp
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-03.webp
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-04.webp
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01 # Фото настольная лампа для растения: ракурс 1
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-02 # Фото настольная лампа для растения: ракурс 2
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-03 # Фото настольная лампа для растения: ракурс 3
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-04 # Фото настольная лампа для растения: ракурс 4
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.dxf
 │   │   └── nastolnaya-svetodiodnaya-lampa-s-rasteniemj-ad.pdf
 │   ├── pano-uslovnye-oboznacheniya/
 │   │   ├── pano-uslovnye-oboznacheniya.md # Условные обозначения
-│   │   ├── pano-uslovnye-oboznacheniya.webp
+│   │   ├── pano-uslovnye-oboznacheniya # Общий вид: панно с условными обозначениями
 │   │   ├── pano-uslovnye-oboznacheniya-01.webm
-│   │   ├── pano-uslovnye-oboznacheniya-01.webp
-│   │   └── pano-uslovnye-oboznacheniya-02.webp
+│   │   ├── pano-uslovnye-oboznacheniya-01 # Фото панно с условными обозначениями: ракурс 1
+│   │   └── pano-uslovnye-oboznacheniya-02 # Фото панно с условными обозначениями: ракурс 2
 │   ├── plavnoe-zazhiganie-svetodioda/
 │   │   ├── plavnoe-zazhiganie-svetodioda.md # Эффект плавного зажигания светодиода
-│   │   ├── plavnoe-zazhiganie-svetodioda.webp
+│   │   ├── plavnoe-zazhiganie-svetodioda # Общий вид: устройство плавного включения светодиода
 │   │   ├── plavnoe-zazhiganie-svetodioda-01.webm
-│   │   ├── plavnoe-zazhiganie-svetodioda-01.webp
+│   │   ├── plavnoe-zazhiganie-svetodioda-01 # Фото устройство плавного включения светодиода: ракурс 1
 │   │   ├── plavnoe-zazhiganie-svetodioda-02.webm
-│   │   ├── plavnoe-zazhiganie-svetodioda-02.webp
+│   │   ├── plavnoe-zazhiganie-svetodioda-02 # Фото устройство плавного включения светодиода: ракурс 2
 │   │   ├── plavnoe-zazhiganie-svetodioda-03.webm
-│   │   ├── plavnoe-zazhiganie-svetodioda-03.webp
+│   │   ├── plavnoe-zazhiganie-svetodioda-03 # Фото устройство плавного включения светодиода: ракурс 3
 │   │   ├── plavnoe-zazhiganie-svetodioda-04.webm
-│   │   ├── plavnoe-zazhiganie-svetodioda-04.webp
+│   │   ├── plavnoe-zazhiganie-svetodioda-04 # Фото устройство плавного включения светодиода: ракурс 4
 │   │   ├── plavnoe-zazhiganie-svetodioda-05.webm
-│   │   ├── plavnoe-zazhiganie-svetodioda-05.webp
-│   │   ├── plavnoe-zazhiganie-svetodioda-06.webp
-│   │   ├── plavnoe-zazhiganie-svetodioda-07.webp
-│   │   ├── plavnoe-zazhiganie-svetodioda-08.webp
-│   │   ├── plavnoe-zazhiganie-svetodioda-09.webp
-│   │   ├── plavnoe-zazhiganie-svetodioda-esd.jpg
+│   │   ├── plavnoe-zazhiganie-svetodioda-05 # Принципиальная схема устройства плавного включения светодиода
+│   │   ├── plavnoe-zazhiganie-svetodioda-06 # Схема транзисторного узла и регулировки времени свечения
+│   │   ├── plavnoe-zazhiganie-svetodioda-07 # Сравнение обычного и инверсного включения светодиода
+│   │   ├── plavnoe-zazhiganie-svetodioda-08 # Фото устройство плавного включения светодиода: ракурс 8
+│   │   ├── plavnoe-zazhiganie-svetodioda-09 # Фото устройство плавного включения светодиода: ракурс 9
+│   │   ├── plavnoe-zazhiganie-svetodioda-esd # Принципиальная схема устройства в формате ESD
 │   │   └── plavnoe-zazhiganie-svetodioda-esd.pdf
 │   ├── podstavka-dlya-oscillografa/
 │   │   ├── podstavka-dlya-oscillografa.md # Подставка для осциллографа
-│   │   ├── podstavka-dlya-oscillografa.webp
-│   │   ├── podstavka-dlya-oscillografa-01.webp
-│   │   ├── podstavka-dlya-oscillografa-02.webp
-│   │   ├── podstavka-dlya-oscillografa-03.webp
-│   │   ├── podstavka-dlya-oscillografa-04.webp
-│   │   ├── podstavka-dlya-oscillografa-05.webp
-│   │   ├── podstavka-dlya-oscillografa-06.webp
-│   │   ├── podstavka-dlya-oscillografa-07.webp
-│   │   ├── podstavka-dlya-oscillografa-08.webp
-│   │   ├── podstavka-dlya-oscillografa-09.webp
-│   │   └── podstavka-dlya-oscillografa-10.webp
+│   │   ├── podstavka-dlya-oscillografa # Общий вид: подставка для осциллографа
+│   │   ├── podstavka-dlya-oscillografa-01 # Фото подставка для осциллографа: ракурс 1
+│   │   ├── podstavka-dlya-oscillografa-02 # Фото подставка для осциллографа: ракурс 2
+│   │   ├── podstavka-dlya-oscillografa-03 # Фото подставка для осциллографа: ракурс 3
+│   │   ├── podstavka-dlya-oscillografa-04 # Фото подставка для осциллографа: ракурс 4
+│   │   ├── podstavka-dlya-oscillografa-05 # Фото подставка для осциллографа: ракурс 5
+│   │   ├── podstavka-dlya-oscillografa-06 # Фото подставка для осциллографа: ракурс 6
+│   │   ├── podstavka-dlya-oscillografa-07 # Фото подставка для осциллографа: ракурс 7
+│   │   ├── podstavka-dlya-oscillografa-08 # Фото подставка для осциллографа: ракурс 8
+│   │   ├── podstavka-dlya-oscillografa-09 # Фото подставка для осциллографа: ракурс 9
+│   │   └── podstavka-dlya-oscillografa-10 # Фото подставка для осциллографа: ракурс 10
 │   ├── prazdnichnyj-domik/
 │   │   ├── prazdnichnyj-domik.md # Праздничный домик
-│   │   ├── prazdnichnyj-domik.webp
+│   │   ├── prazdnichnyj-domik # Общий вид: праздничный домик с электроникой
 │   │   ├── prazdnichnyj-domik-01.webm
-│   │   ├── prazdnichnyj-domik-01.webp
+│   │   ├── prazdnichnyj-domik-01 # Фото праздничный домик с электроникой: ракурс 1
 │   │   ├── prazdnichnyj-domik-02.webm
-│   │   ├── prazdnichnyj-domik-02.webp
+│   │   ├── prazdnichnyj-domik-02 # Фото праздничный домик с электроникой: ракурс 2
 │   │   ├── prazdnichnyj-domik-03.webm
-│   │   ├── prazdnichnyj-domik-03.webp
+│   │   ├── prazdnichnyj-domik-03 # Фото праздничный домик с электроникой: ракурс 3
 │   │   ├── prazdnichnyj-domik-04.webm
-│   │   ├── prazdnichnyj-domik-04.webp
+│   │   ├── prazdnichnyj-domik-04 # Фото праздничный домик с электроникой: ракурс 4
 │   │   ├── prazdnichnyj-domik-05.webm
-│   │   ├── prazdnichnyj-domik-05.webp
+│   │   ├── prazdnichnyj-domik-05 # Фото праздничный домик с электроникой: ракурс 5
 │   │   ├── prazdnichnyj-domik-06.webm
-│   │   ├── prazdnichnyj-domik-06.webp
+│   │   ├── prazdnichnyj-domik-06 # Фото праздничный домик с электроникой: ракурс 6
 │   │   ├── prazdnichnyj-domik-07.webm
-│   │   ├── prazdnichnyj-domik-07.webp
-│   │   ├── prazdnichnyj-domik-08.webp
-│   │   └── prazdnichnyj-domik-09.webp
+│   │   ├── prazdnichnyj-domik-07 # Фото праздничный домик с электроникой: ракурс 7
+│   │   ├── prazdnichnyj-domik-08 # Фото праздничный домик с электроникой: ракурс 8
+│   │   └── prazdnichnyj-domik-09 # Фото праздничный домик с электроникой: ракурс 9
 │   ├── robot-korova-iz-kartona/
 │   │   ├── robot-korova-iz-kartona.md # Робот корова из картона
-│   │   ├── robot-korova-iz-kartona.webp
+│   │   ├── robot-korova-iz-kartona # Общий вид: картонный шагающий робот
 │   │   ├── robot-korova-iz-kartona-01.webm
-│   │   ├── robot-korova-iz-kartona-01.webp
+│   │   ├── robot-korova-iz-kartona-01 # Фото картонный шагающий робот: ракурс 1
 │   │   ├── robot-korova-iz-kartona-02.webm
-│   │   ├── robot-korova-iz-kartona-02.webp
+│   │   ├── robot-korova-iz-kartona-02 # Фото картонный шагающий робот: ракурс 2
 │   │   ├── robot-korova-iz-kartona-03.webm
-│   │   ├── robot-korova-iz-kartona-03.webp
+│   │   ├── robot-korova-iz-kartona-03 # Фото картонный шагающий робот: ракурс 3
 │   │   ├── robot-korova-iz-kartona-04.webm
-│   │   ├── robot-korova-iz-kartona-04.webp
-│   │   ├── robot-korova-iz-kartona-05.webp
-│   │   ├── robot-korova-iz-kartona-06.webp
-│   │   ├── robot-korova-iz-kartona-07.webp
-│   │   ├── robot-korova-iz-kartona-08.webp
-│   │   ├── robot-korova-iz-kartona-09.webp
-│   │   └── robot-korova-iz-kartona-10.webp
+│   │   ├── robot-korova-iz-kartona-04 # Фото картонный шагающий робот: ракурс 4
+│   │   ├── robot-korova-iz-kartona-05 # Фото картонный шагающий робот: ракурс 5
+│   │   ├── robot-korova-iz-kartona-06 # Фото картонный шагающий робот: ракурс 6
+│   │   ├── robot-korova-iz-kartona-07 # Фото картонный шагающий робот: ракурс 7
+│   │   ├── robot-korova-iz-kartona-08 # Фото картонный шагающий робот: ракурс 8
+│   │   ├── robot-korova-iz-kartona-09 # Фото картонный шагающий робот: ракурс 9
+│   │   └── robot-korova-iz-kartona-10 # Фото картонный шагающий робот: ракурс 10
 │   ├── robot-krolik-iz-kartona/
 │   │   ├── robot-krolik-iz-kartona.md # Робот кролик из картона
-│   │   ├── robot-krolik-iz-kartona.webp
-│   │   ├── robot-krolik-iz-kartona-.webp
-│   │   ├── robot-krolik-iz-kartona--.webp
+│   │   ├── robot-krolik-iz-kartona # Общий вид: картонный робот-кролик
+│   │   ├── robot-krolik-iz-kartona- # Робот-кролик с отдельным блоком управления на прозрачном фоне
+│   │   ├── robot-krolik-iz-kartona-- # Вариант изображения робота-кролика на прозрачном фоне
 │   │   ├── robot-krolik-iz-kartona-01.webm
-│   │   ├── robot-krolik-iz-kartona-01.webp
+│   │   ├── robot-krolik-iz-kartona-01 # Фото картонный робот-кролик: ракурс 1
 │   │   ├── robot-krolik-iz-kartona-02.webm
-│   │   ├── robot-krolik-iz-kartona-02.webp
+│   │   ├── robot-krolik-iz-kartona-02 # Фото картонный робот-кролик: ракурс 2
 │   │   ├── robot-krolik-iz-kartona-03.webm
-│   │   ├── robot-krolik-iz-kartona-03.webp
+│   │   ├── robot-krolik-iz-kartona-03 # Фото картонный робот-кролик: ракурс 3
 │   │   ├── robot-krolik-iz-kartona-04.webm
-│   │   ├── robot-krolik-iz-kartona-04.webp
+│   │   ├── robot-krolik-iz-kartona-04 # Фото картонный робот-кролик: ракурс 4
 │   │   ├── robot-krolik-iz-kartona-05.webm
-│   │   ├── robot-krolik-iz-kartona-05.webp
-│   │   ├── robot-krolik-iz-kartona-06.webp
-│   │   ├── robot-krolik-iz-kartona-07.webp
-│   │   ├── robot-krolik-iz-kartona-08.webp
-│   │   ├── robot-krolik-iz-kartona-09.webp
-│   │   ├── robot-krolik-iz-kartona-10.webp
-│   │   ├── robot-krolik-iz-kartona-11.webp
-│   │   ├── robot-krolik-iz-kartona-12.webp
-│   │   ├── robot-krolik-iz-kartona-13.webp
-│   │   ├── robot-krolik-iz-kartona-14.webp
-│   │   ├── robot-krolik-iz-kartona-15.webp
-│   │   ├── robot-krolik-iz-kartona-16.webp
-│   │   ├── robot-krolik-iz-kartona-17.webp
-│   │   ├── robot-krolik-iz-kartona-18.webp
-│   │   ├── robot-krolik-iz-kartona-19.webp
-│   │   ├── robot-krolik-iz-kartona-20.webp
-│   │   ├── robot-krolik-iz-kartona-21.webp
-│   │   ├── robot-krolik-iz-kartona-22.webp
-│   │   ├── robot-krolik-iz-kartona-23.webp
-│   │   ├── robot-krolik-iz-kartona-24.webp
-│   │   └── robot-krolik-iz-kartona-25.webp
+│   │   ├── robot-krolik-iz-kartona-05 # Фото картонный робот-кролик: ракурс 5
+│   │   ├── robot-krolik-iz-kartona-06 # Фото картонный робот-кролик: ракурс 6
+│   │   ├── robot-krolik-iz-kartona-07 # Фото картонный робот-кролик: ракурс 7
+│   │   ├── robot-krolik-iz-kartona-08 # Фото картонный робот-кролик: ракурс 8
+│   │   ├── robot-krolik-iz-kartona-09 # Фото картонный робот-кролик: ракурс 9
+│   │   ├── robot-krolik-iz-kartona-10 # Фото картонный робот-кролик: ракурс 10
+│   │   ├── robot-krolik-iz-kartona-11 # Фото картонный робот-кролик: ракурс 11
+│   │   ├── robot-krolik-iz-kartona-12 # Фото картонный робот-кролик: ракурс 12
+│   │   ├── robot-krolik-iz-kartona-13 # Фото картонный робот-кролик: ракурс 13
+│   │   ├── robot-krolik-iz-kartona-14 # Фото картонный робот-кролик: ракурс 14
+│   │   ├── robot-krolik-iz-kartona-15 # Фото картонный робот-кролик: ракурс 15
+│   │   ├── robot-krolik-iz-kartona-16 # Фото картонный робот-кролик: ракурс 16
+│   │   ├── robot-krolik-iz-kartona-17 # Фото картонный робот-кролик: ракурс 17
+│   │   ├── robot-krolik-iz-kartona-18 # Фото картонный робот-кролик: ракурс 18
+│   │   ├── robot-krolik-iz-kartona-19 # Фото картонный робот-кролик: ракурс 19
+│   │   ├── robot-krolik-iz-kartona-20 # Фото картонный робот-кролик: ракурс 20
+│   │   ├── robot-krolik-iz-kartona-21 # Фото картонный робот-кролик: ракурс 21
+│   │   ├── robot-krolik-iz-kartona-22 # Фото картонный робот-кролик: ракурс 22
+│   │   ├── robot-krolik-iz-kartona-23 # Фото картонный робот-кролик: ракурс 23
+│   │   ├── robot-krolik-iz-kartona-24 # Фото картонный робот-кролик: ракурс 24
+│   │   └── robot-krolik-iz-kartona-25 # Фото картонный робот-кролик: ракурс 25
 │   ├── robot-strannik/
 │   │   ├── robot-strannik.md # Робот странник
-│   │   ├── robot-strannik.webp
+│   │   ├── robot-strannik # Общий вид: робот-странник и игрушка-робот
 │   │   ├── robot-strannik-01.webm
-│   │   ├── robot-strannik-01.webp
+│   │   ├── robot-strannik-01 # Фото робот-странник и игрушка-робот: ракурс 1
 │   │   ├── robot-strannik-02.webm
-│   │   ├── robot-strannik-02.webp
+│   │   ├── robot-strannik-02 # Фото робот-странник и игрушка-робот: ракурс 2
 │   │   ├── robot-strannik-03.webm
-│   │   ├── robot-strannik-03.webp
+│   │   ├── robot-strannik-03 # Фото робот-странник и игрушка-робот: ракурс 3
 │   │   ├── robot-strannik-04.webm
-│   │   ├── robot-strannik-04.webp
-│   │   ├── robot-strannik-05.webp
-│   │   ├── robot-strannik-06.webp
-│   │   ├── robot-strannik-07.webp
-│   │   ├── robot-strannik-08.webp
-│   │   ├── robot-strannik-09.webp
-│   │   ├── robot-strannik-10.webp
-│   │   ├── robot-strannik-11.webp
-│   │   ├── robot-strannik-12.webp
-│   │   └── robot-strannik-13.webp
+│   │   ├── robot-strannik-04 # Фото робот-странник и игрушка-робот: ракурс 4
+│   │   ├── robot-strannik-05 # Фото робот-странник и игрушка-робот: ракурс 5
+│   │   ├── robot-strannik-06 # Фото робот-странник и игрушка-робот: ракурс 6
+│   │   ├── robot-strannik-07 # Фото робот-странник и игрушка-робот: ракурс 7
+│   │   ├── robot-strannik-08 # Фото робот-странник и игрушка-робот: ракурс 8
+│   │   ├── robot-strannik-09 # Фото робот-странник и игрушка-робот: ракурс 9
+│   │   ├── robot-strannik-10 # Фото робот-странник и игрушка-робот: ракурс 10
+│   │   ├── robot-strannik-11 # Фото робот-странник и игрушка-робот: ракурс 11
+│   │   ├── robot-strannik-12 # Фото робот-странник и игрушка-робот: ракурс 12
+│   │   └── robot-strannik-13 # Этикетка советской игрушки «Робот» с данными производителя
 │   ├── simple-cardboard-walking-robot/
 │   │   ├── simple-cardboard-walking-robot.md # Робот двуногий шагающий из картона
-│   │   ├── simple-cardboard-walking-robot.webp
+│   │   ├── simple-cardboard-walking-robot # Общий вид: картонный шагающий робот
 │   │   ├── simple-cardboard-walking-robot-01.webm
-│   │   ├── simple-cardboard-walking-robot-01.webp
+│   │   ├── simple-cardboard-walking-robot-01 # Фото картонный шагающий робот: ракурс 1
 │   │   ├── simple-cardboard-walking-robot-02.webm
-│   │   ├── simple-cardboard-walking-robot-02.webp
-│   │   ├── simple-cardboard-walking-robot-03.webp
-│   │   ├── simple-cardboard-walking-robot-04.webp
+│   │   ├── simple-cardboard-walking-robot-02 # Фото картонный шагающий робот: ракурс 2
+│   │   ├── simple-cardboard-walking-robot-03 # Фото картонный шагающий робот: ракурс 3
+│   │   ├── simple-cardboard-walking-robot-04 # Фото картонный шагающий робот: ракурс 4
 │   │   ├── simple-cardboard-walking-robotj-ad.dxf
 │   │   └── simple-cardboard-walking-robotj-ad.pdf
 │   ├── sputnik-1/
 │   │   ├── sputnik-1.md # Спутник-1
-│   │   ├── sputnik-1.webp
-│   │   ├── sputnik-1-01.webp
-│   │   ├── sputnik-1-02.webp
-│   │   ├── sputnik-1-03.webp
-│   │   ├── sputnik-1-04.webp
-│   │   ├── sputnik-1-05.webp
-│   │   └── sputnik-1-06.webp
+│   │   ├── sputnik-1 # Общий вид: модель спутника-1
+│   │   ├── sputnik-1-01 # Фото модель спутника-1: ракурс 1
+│   │   ├── sputnik-1-02 # Фото модель спутника-1: ракурс 2
+│   │   ├── sputnik-1-03 # Фото модель спутника-1: ракурс 3
+│   │   ├── sputnik-1-04 # Фото модель спутника-1: ракурс 4
+│   │   ├── sputnik-1-05 # Фото модель спутника-1: ракурс 5
+│   │   └── sputnik-1-06 # Фото модель спутника-1: ракурс 6
 │   ├── vibrohod-iz-zubnoj-shchetki/
 │   │   ├── vibrohod-iz-zubnoj-shchetki.md # Виброход из зубной щетки
-│   │   ├── vibrohod-iz-zubnoj-shchetki.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki # Общий вид: виброход из зубной щётки
 │   │   ├── vibrohod-iz-zubnoj-shchetki-01.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-01.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-01 # Фото виброход из зубной щётки: ракурс 1
 │   │   ├── vibrohod-iz-zubnoj-shchetki-02.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-02.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-02 # Фото виброход из зубной щётки: ракурс 2
 │   │   ├── vibrohod-iz-zubnoj-shchetki-03.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-03.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-03 # Фото виброход из зубной щётки: ракурс 3
 │   │   ├── vibrohod-iz-zubnoj-shchetki-04.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-04.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-04 # Фото виброход из зубной щётки: ракурс 4
 │   │   ├── vibrohod-iz-zubnoj-shchetki-05.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-05.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-05 # Фото виброход из зубной щётки: ракурс 5
 │   │   ├── vibrohod-iz-zubnoj-shchetki-06.webm
-│   │   ├── vibrohod-iz-zubnoj-shchetki-06.webp
+│   │   ├── vibrohod-iz-zubnoj-shchetki-06 # Фото виброход из зубной щётки: ракурс 6
 │   │   ├── vibrohod-iz-zubnoj-shchetki-07.webm
 │   │   └── vibrohod-iz-zubnoj-shchetki-08.webm
 │   └── yablonevoe-derevo/
 │       ├── yablonevoe-derevo.md # Яблоневое дерево
-│       ├── yablonevoe-derevo.webp
+│       ├── yablonevoe-derevo # Общий вид: светодиодное декоративное дерево
 │       ├── yablonevoe-derevo-01.webm
-│       ├── yablonevoe-derevo-01.webp
-│       ├── yablonevoe-derevo-02.webp
-│       ├── yablonevoe-derevo-03.webp
-│       ├── yablonevoe-derevo-04.webp
+│       ├── yablonevoe-derevo-01 # Фото светодиодное декоративное дерево: ракурс 1
+│       ├── yablonevoe-derevo-02 # Фото светодиодное декоративное дерево: ракурс 2
+│       ├── yablonevoe-derevo-03 # Декоративное дерево с разноцветным узором на кроне
+│       ├── yablonevoe-derevo-04 # Обратная сторона дерева с цветным рисунком
 │       ├── yablonevoe-derevo-trafaret.pdf
 │       └── yablonevoe-derevo-trafaret.spl8
 ├── inspiration/

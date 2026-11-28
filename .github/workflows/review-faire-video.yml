@@ -23,19 +23,41 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: Extract contact sheet
+      - name: Extract contact sheets
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p review-output
-          ffmpeg -hide_banner -loglevel error \
-            -i "faire/robot-strannik/robot-strannik-01.webm" \
-            -vf "fps=1/3,scale=480:-1,tile=4x3:padding=12:margin=12:color=white" \
-            -frames:v 1 review-output/robot-strannik-01.jpg
-          ffprobe -v error -show_entries format=duration \
-            -of default=noprint_wrappers=1:nokey=1 \
-            "faire/robot-strannik/robot-strannik-01.webm" \
-            > review-output/duration-seconds.txt
+          : > review-output/index.tsv
 
-      - name: Upload contact sheet
+          while IFS= read -r -d '' video; do
+            relative="${video#faire/}"
+            output_name="${relative//\//__}"
+            output_name="${output_name%.*}.jpg"
+            duration=$(ffprobe -v error -show_entries format=duration \
+              -of default=noprint_wrappers=1:nokey=1 "$video")
+
+            if [[ -z "$duration" || "$duration" == "N/A" ]]; then
+              echo "Cannot read duration: $video" >&2
+              exit 1
+            fi
+
+            fps=$(awk -v d="$duration" 'BEGIN { printf "%.8f", 12 / d }')
+            ffmpeg -hide_banner -loglevel error -y \
+              -i "$video" \
+              -vf "fps=$fps,scale=480:-1,tile=4x3:padding=12:margin=12:color=white" \
+              -frames:v 1 "review-output/$output_name"
+
+            printf '%s\t%s\t%s\n' "$relative" "$duration" "$output_name" \
+              >> review-output/index.tsv
+            echo "Processed: $relative ($duration s)"
+          done < <(find faire -type f -iname '*.webm' -print0 | sort -z)
+
+          count=$(find review-output -maxdepth 1 -type f -name '*.jpg' | wc -l)
+          echo "Contact sheets created: $count"
+          test "$count" -gt 0
+
+      - name: Upload contact sheets
         uses: actions/upload-artifact@v4
         with:
           name: faire-video-review

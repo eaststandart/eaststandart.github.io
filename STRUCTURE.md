@@ -521,7 +521,7 @@ eaststandart.github.io/
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem 1.webp # Настольная лампа с растением на прозрачном фоне
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.md # Настольная светодиодная лампа с растением
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem.webp # Общий вид: настольная лампа для растения
-│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm # Демонстрация настольной светодиодной лампы с декоративным растением
+│   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webm # Демонстрация настольной светодиодной лампы с растением
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-01.webp # Настольная лампа для растения: ракурс 1
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-02.webp # Настольная лампа для растения: ракурс 2
 │   │   ├── nastolnaya-svetodiodnaya-lampa-s-rasteniem-03.webp # Настольная лампа для растения: ракурс 3
